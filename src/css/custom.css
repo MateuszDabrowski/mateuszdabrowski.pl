@@ -1,0 +1,34 @@
+/* stylelint-disable docusaurus/copyright-header */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #e06c72;
+  --ifm-color-primary-dark: #da5158;
+  --ifm-color-primary-darker: #d7434b;
+  --ifm-color-primary-darkest: #c02830;
+  --ifm-color-primary-light: #e6878c;
+  --ifm-color-primary-lighter: #e99599;
+  --ifm-color-primary-lightest: #f1bec1;
+  --ifm-code-font-size: 95%;
+}
+
+html[data-theme='dark'] {
+  --ifm-background-surface-color: #18191a;
+  --ifm-background-color: #212121;
+}
+
+/* Doc Title */
+#__docusaurus > div > div > div > div > article > header > h1 {
+  font-size: 6rem;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+.footer {
+  background-color: #18191a;
+}
