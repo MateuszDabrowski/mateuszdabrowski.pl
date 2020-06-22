@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
@@ -54,7 +56,7 @@ function Feature({ imageUrl, title, description, url, cta }) {
                     <img className={styles.featureImage} src={imgUrl} alt={title} />
                 </div>
             )}
-            <h3>{title}</h3>
+            <h3 className={styles.featureHeading}>{title}</h3>
             <p>{description}</p>
             <div className={styles.buttons}>
                 <Link
@@ -73,27 +75,19 @@ function Feature({ imageUrl, title, description, url, cta }) {
 
 function Home() {
     const context = useDocusaurusContext();
-    const { siteConfig = {} } = context;
+    const { siteConfig: { customFields = {} } = {} } = context;
     return (
-        <Layout title="Ahoj" description="Description will go into a meta tag in <head />">
-            <header className={classnames('hero hero--dark', styles.heroBanner, styles.darkBackground)}>
-                <div className="container">
-                    <h1 className="hero__title">{siteConfig.tagline}</h1>
-                    <p className={classnames('hero__subtitle', styles.noMargin)}>{siteConfig.title}</p>
-                    {/* <div className={styles.buttons}>
-                        <Link
-                            className={classnames(
-                                'button button--outline button--secondary button--lg',
-                                styles.getStarted
-                            )}
-                            to={useBaseUrl('docs/')}
-                        >
-                            Get Started
-                        </Link>
-                    </div> */}
-                </div>
-            </header>
+        <Layout title="Ahoj" description={customFields.description}>
             <main>
+                <div className={styles.hero}>
+                    <div className={styles.heroInner}>
+                        <h1 className={styles.heroProjectTagline}>
+                            Automate <span className={styles.heroProjectKeywords}>Marketing Automation</span>
+                            <br />
+                            Let the <span className={styles.heroProjectKeywords}>code</span> do our job
+                        </h1>
+                    </div>
+                </div>
                 {features && features.length > 0 && (
                     <section className={styles.features}>
                         <div className="container">

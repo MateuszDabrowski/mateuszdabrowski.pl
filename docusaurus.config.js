@@ -1,17 +1,29 @@
+/* eslint-disable global-require */
 module.exports = {
     title: 'Mateusz Dąbrowski',
-    tagline: 'Website under construction',
+    tagline: 'Automate Marketing Automation',
     url: 'https://mateuszdabrowski.pl',
     baseUrl: '/',
     favicon: 'img/favicon.ico',
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
+    customFields: {
+        description: 'My name is Mateusz, and I automate marketing automation. Let the code do our job',
+    },
     themeConfig: {
+        image: 'img/logotyp-og.png', // Default image for meta tag
+        announcementBar: {
+            id: 'announcementBar',
+            content:
+                '🚧 Website under development. If you found any bugs or have a feedback, please share <a href="https://github.com/MateuszDabrowski/mateuszdabrowski.pl/issues" title="Github Issues">here</a>. Thanks! 🚧',
+            backgroundColor: '#F6B355',
+            textColor: '#00001F',
+        },
         navbar: {
-            title: 'mateuszdabrowski.pl',
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
-                src: 'img/logo.svg',
+                src: 'img/logo-horizontal-light-2x.png',
+                srcDark: 'img/logo-horizontal-dark-2x.png',
             },
             links: [
                 {
@@ -36,13 +48,21 @@ module.exports = {
                     href: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
                     label: 'LinkedIn',
                     position: 'right',
+                    className: 'header-linkedin-link',
+                    'aria-label': 'LinkedIn Profile',
                 },
                 {
                     href: 'https://github.com/MateuszDabrowski',
-                    label: 'GitHub',
                     position: 'right',
+                    className: 'header-github-link',
+                    'aria-label': 'GitHub repository',
                 },
             ],
+        },
+        prism: {
+            defaultLanguage: 'javascript',
+            theme: require('prism-react-renderer/themes/github'),
+            darkTheme: require('prism-react-renderer/themes/vsDark'),
         },
         footer: {
             style: 'dark',
@@ -70,11 +90,11 @@ module.exports = {
                     ],
                 },
                 {
-                    title: 'More',
+                    title: 'Legal',
                     items: [
                         {
-                            label: 'GitHub',
-                            href: 'https://github.com/MateuszDabrowski',
+                            label: 'Second Doc',
+                            to: 'docs/doc2/',
                         },
                     ],
                 },
@@ -93,7 +113,7 @@ module.exports = {
                     sidebarPath: require.resolve('./sidebars.js'),
                     showLastUpdateAuthor: true,
                     showLastUpdateTime: true,
-                    editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.github.io/edit/master/',
+                    editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
