@@ -11,6 +11,7 @@
 
 html[data-theme='dark'] {
   --ifm-color-primary: #DA4E55;
+  --ifm-color-tertiary: #1D73C9;
   --ifm-background-surface-color: #18191a;
   --ifm-background-color: #212121;
 }

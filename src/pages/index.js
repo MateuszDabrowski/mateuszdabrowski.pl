@@ -83,9 +83,13 @@ function Home() {
                     <div className={styles.heroInner}>
                         <h1 className={styles.heroProjectTagline}>
                             Automate <span className={styles.heroProjectKeywords}>Marketing Automation</span>
-                            <br />
-                            Let the <span className={styles.heroProjectKeywords}>code</span> do our job
                         </h1>
+                        <h2 className={styles.heroProjectSubTagline}>
+                            <span className={styles.heroCodeFunction}>let</span>{' '}
+                            <span className={styles.heroCodeVariable}>code</span> ={' '}
+                            <span className={styles.heroCodeFunction}>do</span>(
+                            <span className={styles.heroCodeValue}>'our job'</span>)
+                        </h2>
                     </div>
                 </div>
                 {features && features.length > 0 && (

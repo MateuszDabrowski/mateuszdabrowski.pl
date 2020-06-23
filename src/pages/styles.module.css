@@ -16,6 +16,26 @@
   text-align: center;
 }
 
+.heroProjectSubTagline {
+  color: #ffffff;
+  font-size: 44px;
+  font-family: Courier, monospace;
+  margin: 0;
+  text-align: center;
+}
+
+.heroCodeFunction {
+  color: var(--ifm-color-tertiary);
+}
+
+.heroCodeVariable {
+  color: var(--ifm-color-secondary);
+}
+
+.heroCodeValue {
+  color: var(--ifm-color-primary)
+}
+
 .heroProjectKeywords {
   color: var(--ifm-color-primary);
 }
@@ -24,6 +44,9 @@
   .hero {
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  html[data-theme='dark'] .hero {
     padding-bottom: 0px;
   }
 
