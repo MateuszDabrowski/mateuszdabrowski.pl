@@ -46,7 +46,6 @@ module.exports = {
                 },
                 {
                     href: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
-                    label: 'LinkedIn',
                     position: 'right',
                     className: 'header-linkedin-link',
                     'aria-label': 'LinkedIn Profile',
