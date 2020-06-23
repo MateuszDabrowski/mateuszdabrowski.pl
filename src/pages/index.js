@@ -86,9 +86,12 @@ function Home() {
                         </h1>
                         <h2 className={styles.heroProjectSubTagline}>
                             <span className={styles.heroCodeFunction}>let</span>{' '}
-                            <span className={styles.heroCodeVariable}>code</span> ={' '}
-                            <span className={styles.heroCodeFunction}>do</span>&zwnj;(
-                            <span className={styles.heroCodeValue}>'our job'</span>)
+                            <span className={styles.heroCodeVariable}>code</span>{' '}
+                            <span className={styles.heroCodeSymbols}>=</span>{' '}
+                            <span className={styles.heroCodeFunction}>do</span>
+                            <span className={styles.heroCodeSymbols}>(</span>
+                            <span className={styles.heroCodeValue}>'our job'</span>
+                            <span className={styles.heroCodeSymbols}>)</span>
                         </h2>
                     </div>
                 </div>
