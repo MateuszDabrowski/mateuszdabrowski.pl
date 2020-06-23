@@ -8,7 +8,19 @@ module.exports = {
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
     customFields: {
-        description: 'My name is Mateusz, and I automate marketing automation. Let the code do our job',
+        description: 'Automate marketing automation. let code = do("our job").',
+        keywords: [
+            'mateusz',
+            'dąbrowski',
+            'mateuszdabrowski',
+            'eloqua',
+            'oracle eloqua',
+            'marketing cloud',
+            'salesforce marketing cloud',
+            'sfmc',
+            'SSJS',
+            'Developer',
+        ],
     },
     themeConfig: {
         image: 'img/logotyp-og.png', // Default image for meta tag
@@ -98,6 +110,16 @@ module.exports = {
                     ],
                 },
             ],
+            copyright: `Copyright © ${new Date().getFullYear()} Mateusz Dąbrowski.`,
+        },
+        googleAnalytics: {
+            trackingID: 'UA-121919433-1',
+            anonymizeIP: true,
+        },
+        algolia: {
+            apiKey: '',
+            indexName: '',
+            algoliaOptions: {},
         },
     },
     presets: [
@@ -117,7 +139,11 @@ module.exports = {
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
                 },
-                sitemap: {},
+                sitemap: {
+                    cacheTime: 600 * 1000, // 600 sec - cache purge period
+                    changefreq: 'weekly',
+                    priority: 0.5,
+                },
             },
         ],
     ],

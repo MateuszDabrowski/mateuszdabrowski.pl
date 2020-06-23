@@ -4,6 +4,7 @@ import React from 'react';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
+import Head from '@docusaurus/Head';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
@@ -77,37 +78,71 @@ function Home() {
     const context = useDocusaurusContext();
     const { siteConfig: { customFields = {} } = {} } = context;
     return (
-        <Layout title="Ahoj" description={customFields.description}>
-            <main>
-                <div className={styles.hero}>
-                    <div className={styles.heroInner}>
-                        <h1 className={styles.heroProjectTagline}>
-                            Automate <span className={styles.heroProjectKeywords}>Marketing Automation</span>
-                        </h1>
-                        <h2 className={styles.heroProjectSubTagline}>
-                            <span className={styles.heroCodeFunction}>let</span>{' '}
-                            <span className={styles.heroCodeVariable}>code</span>{' '}
-                            <span className={styles.heroCodeSymbols}>=</span>{' '}
-                            <span className={styles.heroCodeFunction}>do</span>
-                            <span className={styles.heroCodeSymbols}>(</span>
-                            <span className={styles.heroCodeValue}>'our job'</span>
-                            <span className={styles.heroCodeSymbols}>)</span>
-                        </h2>
-                    </div>
-                </div>
-                {features && features.length > 0 && (
-                    <section className={styles.features}>
-                        <div className="container">
-                            <div className="row">
-                                {features.map((props, idx) => (
-                                    <Feature key={idx} {...props} />
-                                ))}
-                            </div>
+        <>
+            <Head>
+                <meta name="author" content="Mateusz Dąbrowski" />
+                <meta name="HandheldFriendly" content="True" />
+                <meta name="referrer" content="unsafe-url" />
+
+                <link rel="canonical" href="https://mateuszdabrowski.pl/" />
+
+                <meta property="og:url" content="https://mateuszdabrowski.pl/" />
+                <meta property="og:image:type" content="image/png" />
+                <meta property="og:image:width" content="1500" />
+                <meta property="og:image:height" content="1500" />
+                <meta property="og:type" content="website" />
+
+                <link rel="shortcut icon" sizes="196x196" href="/img/favicon_196.png" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="167x167" href="/img/favicon_167.png" />
+                <link rel="apple-touch-icon" sizes="152x152" href="/img/favicon_152.png" />
+                <link rel="icon" type="image/png" sizes="128x128" href="/img/favicon_128.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon_32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon_16.png" />
+                <link rel="manifest" href="/img/site.webmanifest" />
+                <link rel="mask-icon" href="/img/safari-pinned-tab.svg" color="#DA4E55" />
+
+                <meta name="msapplication-TileColor" content="#f5b458" />
+                <meta name="msapplication-square70x70logo" content="/img/favicon-128.png" />
+                <meta name="msapplication-square150x150logo" content="/img/favicon-270.png" />
+                <meta name="msapplication-TileImage" content="/img/favicon-270.png" />
+                <meta name="msapplication-config" content="none" />
+
+                <meta name="theme-color" content="#1D6CC7" />
+            </Head>
+
+            <Layout title="Ahoj" description={customFields.description} keywords={customFields.keywords}>
+                <main>
+                    <div className={styles.hero}>
+                        <div className={styles.heroInner}>
+                            <h1 className={styles.heroProjectTagline}>
+                                Automate <span className={styles.heroProjectKeywords}>Marketing Automation</span>
+                            </h1>
+                            <h2 className={styles.heroProjectSubTagline}>
+                                <span className={styles.heroCodeFunction}>let</span>{' '}
+                                <span className={styles.heroCodeVariable}>code</span>{' '}
+                                <span className={styles.heroCodeSymbols}>=</span>{' '}
+                                <span className={styles.heroCodeFunction}>do</span>
+                                <span className={styles.heroCodeSymbols}>(</span>
+                                <span className={styles.heroCodeValue}>'our job'</span>
+                                <span className={styles.heroCodeSymbols}>)</span>
+                            </h2>
                         </div>
-                    </section>
-                )}
-            </main>
-        </Layout>
+                    </div>
+                    {features && features.length > 0 && (
+                        <section className={styles.features}>
+                            <div className="container">
+                                <div className="row">
+                                    {features.map((props, idx) => (
+                                        <Feature key={idx} {...props} />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    )}
+                </main>
+            </Layout>
+        </>
     );
 }
 
