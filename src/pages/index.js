@@ -12,35 +12,35 @@ import styles from './styles.module.css';
 const features = [
     {
         title: <>Check the snippets</>,
-        imageUrl: 'img/undraw_docusaurus_mountain.svg',
+        imageUrl: 'img/undraw_snippets_md.svg',
         description: (
             <>
-                Docusaurus was designed from the ground up to be easily installed and used to get your website up and
-                running quickly.
+                I'm gathering knowledge about SSJS and JavaScript in Marketing Cloud. Are you craving for more in-depth
+                documentation or looking for tested code snippets? Hop in!
             </>
         ),
-        url: '/docs/',
+        url: '/docs/ssjs',
         cta: <>Snippets</>,
     },
     {
         title: <>Pick my brain</>,
-        imageUrl: 'img/undraw_docusaurus_tree.svg',
+        imageUrl: 'img/undraw_ideas_md.svg',
         description: (
             <>
-                Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go ahead and move your docs into
-                the <code>docs</code> directory.
+                Snippets and documentation are not enough. Here I'm sharing some ideas on how to leverage them to build
+                business-driven engaging experiences for the customers.
             </>
         ),
-        url: '/docs/',
+        url: '/docs/ideas',
         cta: <>Ideas</>,
     },
     {
         title: <>Let's connect</>,
-        imageUrl: 'img/undraw_docusaurus_react.svg',
+        imageUrl: 'img/undraw_connect_md.svg',
         description: (
             <>
-                Extend or customize your website layout by reusing React. Docusaurus can be extended while reusing the
-                same header and footer.
+                Ahoj! My name is Mateusz Dąbrowski, and I find joy in telling the code to do my job. Do you have any
+                questions or suggestions? Or maybe you just want to get in touch?
             </>
         ),
         url: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
@@ -125,7 +125,7 @@ function Home() {
                                 <span className={styles.heroCodeFunction}>do</span>
                                 <span className={styles.heroCodeSymbols}>(</span>
                                 <span className={styles.heroCodeValue}>'our job'</span>
-                                <span className={styles.heroCodeSymbols}>)</span>
+                                <span className={styles.heroCodeSymbols}>);</span>
                             </h2>
                         </div>
                     </div>

@@ -39,19 +39,19 @@ module.exports = {
             },
             links: [
                 {
-                    to: 'docs/',
+                    to: 'docs/ssjs',
                     activeBasePath: 'docs',
                     label: 'Snippets',
                     position: 'left',
                 },
                 {
-                    to: 'docs/',
+                    to: 'docs/ideas',
                     activeBasePath: 'docs',
                     label: 'Ideas',
                     position: 'left',
                 },
                 {
-                    to: 'docs/',
+                    to: 'docs/toolset',
                     activeBasePath: 'docs',
                     label: 'Toolset',
                     position: 'left',
@@ -79,15 +79,11 @@ module.exports = {
             style: 'dark',
             links: [
                 {
-                    title: 'Docs',
+                    title: 'Snippets',
                     items: [
                         {
-                            label: 'Style Guide',
-                            to: 'docs/',
-                        },
-                        {
-                            label: 'Second Doc',
-                            to: 'docs/doc2/',
+                            label: 'SSJS',
+                            to: 'docs/ssjs',
                         },
                     ],
                 },
@@ -95,8 +91,8 @@ module.exports = {
                     title: 'About',
                     items: [
                         {
-                            label: 'Second Doc',
-                            to: 'docs/doc2/',
+                            label: 'Doc',
+                            to: 'docs/doc1/',
                         },
                     ],
                 },
@@ -104,23 +100,23 @@ module.exports = {
                     title: 'Legal',
                     items: [
                         {
-                            label: 'Second Doc',
-                            to: 'docs/doc2/',
+                            label: 'Doc',
+                            to: 'docs/doc1/',
                         },
                     ],
                 },
             ],
-            copyright: `Copyright © ${new Date().getFullYear()} Mateusz Dąbrowski.`,
+            copyright: `Copyright © ${new Date().getFullYear()} Mateusz Dąbrowski`,
         },
         googleAnalytics: {
             trackingID: 'UA-121919433-1',
             anonymizeIP: true,
         },
-        algolia: {
-            apiKey: '',
-            indexName: '',
-            algoliaOptions: {},
-        },
+        // algolia: {
+        //     apiKey: '',
+        //     indexName: '',
+        //     algoliaOptions: {},
+        // },
     },
     presets: [
         [
@@ -129,7 +125,7 @@ module.exports = {
                 docs: {
                     path: 'docs',
                     routeBasePath: 'docs',
-                    homePageId: 'doc1',
+                    homePageId: 'ssjs',
                     include: ['**/*.md', '**/*.mdx'],
                     sidebarPath: require.resolve('./sidebars.js'),
                     showLastUpdateAuthor: true,

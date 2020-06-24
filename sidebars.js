@@ -1,21 +1,18 @@
 module.exports = {
-    snippets: [
-        {
-            type: 'category',
-            label: 'SSJS',
-            items: ['doc1', 'doc2'],
-        },
-        {
-            type: 'category',
-            label: 'JavaScript',
-            items: ['mdx'],
-        },
-    ],
-    ideas: [
-        {
-            type: 'category',
-            label: 'Engagement',
-            items: ['doc1', 'doc2'],
-        },
-    ],
+    snippets: {
+        SSJS: [
+            'ssjs',
+            {
+                type: 'category',
+                label: 'Data Extensions',
+                items: [
+                    'ssjs-core-data-extensions-add',
+                    'ssjs-core-data-extensions-fields',
+                    'ssjs-core-data-extensions-retrieve',
+                    'ssjs-core-data-extensions-rows',
+                ],
+            },
+        ],
+    },
+    ideas: ['ideas'],
 };

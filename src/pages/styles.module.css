@@ -76,8 +76,7 @@
 }
 
 .featureImage {
-  min-height: 150px;
-  max-height: 200px;
+  height: 150px;
   max-width: 60%;
   padding-top: 20px;
   margin: 0 auto;
