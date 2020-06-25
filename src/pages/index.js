@@ -39,8 +39,8 @@ const features = [
         imageUrl: 'img/undraw_connect_md.svg',
         description: (
             <>
-                Ahoj! My name is Mateusz Dąbrowski, and I find joy in telling the code to do my job. Do you have any
-                questions or suggestions? Or maybe you just want to get in touch?
+                Ahoj! My name is Mateusz Dąbrowski, and I find joy in telling the code to do my job. Got any questions
+                or suggestions? Or maybe just want to get in touch?
             </>
         ),
         url: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',

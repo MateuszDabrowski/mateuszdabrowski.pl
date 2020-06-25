@@ -51,12 +51,6 @@ module.exports = {
                     position: 'left',
                 },
                 {
-                    to: 'docs/toolset',
-                    activeBasePath: 'docs',
-                    label: 'Toolset',
-                    position: 'left',
-                },
-                {
                     href: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
                     position: 'right',
                     className: 'header-linkedin-link',
@@ -91,8 +85,8 @@ module.exports = {
                     title: 'About',
                     items: [
                         {
-                            label: 'Doc',
-                            to: 'docs/doc1/',
+                            label: 'Toolset',
+                            to: 'docs/toolset',
                         },
                     ],
                 },
@@ -100,13 +94,12 @@ module.exports = {
                     title: 'Legal',
                     items: [
                         {
-                            label: 'Doc',
-                            to: 'docs/doc1/',
+                            label: 'Licence & Attribution',
+                            to: 'docs/licence',
                         },
                     ],
                 },
             ],
-            copyright: `Copyright © ${new Date().getFullYear()} Mateusz Dąbrowski`,
         },
         googleAnalytics: {
             trackingID: 'UA-121919433-1',
