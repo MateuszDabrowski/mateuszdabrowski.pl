@@ -1,0 +1,11 @@
+#leadText {
+    font-size: 1.2rem;
+    color: var(--ifm-color-primary);
+    margin: 12px 0px 6px 0px;
+}
+
+@media only screen and (min-width: 768px) {
+    #leadText {
+        font-size: 1.5rem;
+    }
+}
