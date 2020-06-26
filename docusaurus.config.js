@@ -97,6 +97,10 @@ module.exports = {
                             label: 'Licence & Attribution',
                             to: 'docs/licence',
                         },
+                        {
+                            label: 'Privacy',
+                            to: 'docs/privacy',
+                        },
                     ],
                 },
             ],
