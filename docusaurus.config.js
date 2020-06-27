@@ -45,7 +45,7 @@ module.exports = {
                     position: 'left',
                 },
                 {
-                    to: 'docs/ideas',
+                    to: 'docs/engage-with-countdown',
                     activeBasePath: 'docs',
                     label: 'Ideas',
                     position: 'left',
@@ -73,11 +73,15 @@ module.exports = {
             style: 'dark',
             links: [
                 {
-                    title: 'Snippets',
+                    title: 'Read',
                     items: [
                         {
-                            label: 'SSJS',
+                            label: 'Snippets',
                             to: 'docs/ssjs',
+                        },
+                        {
+                            label: 'Ideas',
+                            to: 'docs/engage-with-countdown',
                         },
                     ],
                 },

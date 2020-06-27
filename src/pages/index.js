@@ -31,7 +31,7 @@ const features = [
                 business-driven engaging experiences for the customers.
             </>
         ),
-        url: '/docs/ideas',
+        url: '/docs/engage-with-countdown',
         cta: <>Ideas</>,
     },
     {

@@ -6,5 +6,5 @@ module.exports = {
             'ssjs-useful-functions',
         ],
     },
-    ideas: ['ideas'],
+    ideas: ['engage-with-countdown'],
 };
