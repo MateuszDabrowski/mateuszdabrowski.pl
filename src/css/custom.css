@@ -106,3 +106,9 @@ html[data-theme='dark'] article > header > h1 {
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
 }
+
+@media only screen and (min-width: 768px) {
+div[role='tabpanel'] p {
+  font-size: 20px;
+}
+}
