@@ -26,14 +26,16 @@ export const Countdown = ({ input, inputType = 'time', daysOnly = false, hoursOn
             </>
         );
     }
-    if (Math.floor((counter / 1000 / 60) % 60) === 0) {
+    /* If there is no full minutes left, show only seconds */
+    if (Math.floor(counter / 1000 / 60) === 0) {
         return (
             <>
                 <span className="countDown">{Math.floor((counter / 1000) % 60)} seconds</span>
             </>
         );
     }
-    if (Math.floor((counter / (1000 * 60 * 60)) % 24) === 0) {
+    /* If there is no full hours left, show minutes and seconds */
+    if (Math.floor(counter / (1000 * 60 * 60)) === 0) {
         return (
             <>
                 <span className="countDown">
@@ -42,21 +44,23 @@ export const Countdown = ({ input, inputType = 'time', daysOnly = false, hoursOn
             </>
         );
     }
+    /* If there is no full days left, show hours, minutes and seconds */
     if (Math.floor(counter / (1000 * 60 * 60 * 24)) === 0) {
         return (
             <>
                 <span className="countDown">
-                    {Math.floor((counter / (1000 * 60 * 60)) % 24)} hours {Math.floor((counter / 1000 / 60) % 60)}{' '}
+                    {Math.floor((counter / (1000 * 60 * 60)) % 24)} hours, {Math.floor((counter / 1000 / 60) % 60)}{' '}
                     minutes and {Math.floor((counter / 1000) % 60)} seconds
                 </span>
             </>
         );
     }
+    /* Else show days, minutes, hours and days */
     return (
         <>
             <span className="countDown">
-                {Math.floor(counter / (1000 * 60 * 60 * 24))} days {Math.floor((counter / (1000 * 60 * 60)) % 24)} hours{' '}
-                {Math.floor((counter / 1000 / 60) % 60)} minutes and {Math.floor((counter / 1000) % 60)} seconds
+                {Math.floor(counter / (1000 * 60 * 60 * 24))} days, {Math.floor((counter / (1000 * 60 * 60)) % 24)}{' '}
+                hours, {Math.floor((counter / 1000 / 60) % 60)} minutes and {Math.floor((counter / 1000) % 60)} seconds
             </span>
         </>
     );
