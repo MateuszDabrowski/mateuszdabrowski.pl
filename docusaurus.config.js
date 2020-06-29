@@ -27,7 +27,7 @@ module.exports = {
         announcementBar: {
             id: 'announcementBar',
             content:
-                '🚧 Website under development. If you found any bugs or have a feedback, please share <a href="https://github.com/MateuszDabrowski/mateuszdabrowski.pl/issues" title="Github Issues">here</a>. Thanks! 🚧',
+                '🚧 Website under development. If you found any bug or have a feedback, please share <a href="https://github.com/MateuszDabrowski/mateuszdabrowski.pl/issues" title="Github Issues">here</a>. Thanks! 🚧',
             backgroundColor: '#F6B355',
             textColor: '#00001F',
         },
