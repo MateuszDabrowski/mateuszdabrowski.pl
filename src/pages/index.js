@@ -19,7 +19,7 @@ const features = [
                 documentation or looking for tested code snippets? Hop in!
             </>
         ),
-        url: '/docs/ssjs',
+        url: '/docs/snippets/snippets',
         cta: <>Snippets</>,
     },
     {
@@ -31,7 +31,7 @@ const features = [
                 business-driven engaging experiences for the customers.
             </>
         ),
-        url: '/docs/engage-with-countdown',
+        url: '/docs/ideas/ideas',
         cta: <>Ideas</>,
     },
     {

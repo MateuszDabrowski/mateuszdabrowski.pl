@@ -1,10 +1,18 @@
 module.exports = {
-    snippets: {
-        SSJS: [
-            // 'ssjs',
-            // 'ssjs-data-extensions',
-            'ssjs-useful-functions',
-        ],
-    },
-    ideas: ['engage-with-countdown'],
+    snippets: [
+        {
+            type: 'doc',
+            id: 'snippets/snippets',
+        },
+        {
+            type: 'category',
+            label: 'SSJS',
+            items: [
+                // 'ssjs',
+                // 'ssjs-data-extensions',
+                'snippets/ssjs/useful-functions',
+            ],
+        },
+    ],
+    ideas: ['ideas/ideas', 'ideas/engage-with-countdown'],
 };

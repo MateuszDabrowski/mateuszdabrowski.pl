@@ -39,15 +39,15 @@ module.exports = {
             },
             links: [
                 {
-                    to: 'docs/ssjs',
-                    activeBasePath: 'docs',
                     label: 'Snippets',
+                    to: 'docs/snippets/snippets',
+                    activeBasePath: 'docs',
                     position: 'left',
                 },
                 {
-                    to: 'docs/engage-with-countdown',
-                    activeBasePath: 'docs',
                     label: 'Ideas',
+                    to: 'docs/ideas/ideas',
+                    activeBasePath: 'docs',
                     position: 'left',
                 },
                 {
@@ -77,11 +77,11 @@ module.exports = {
                     items: [
                         {
                             label: 'Snippets',
-                            to: 'docs/ssjs',
+                            to: 'docs/snippets/snippets',
                         },
                         {
                             label: 'Ideas',
-                            to: 'docs/engage-with-countdown',
+                            to: 'docs/ideas/ideas',
                         },
                     ],
                 },
@@ -90,7 +90,7 @@ module.exports = {
                     items: [
                         {
                             label: 'Toolset',
-                            to: 'docs/toolset',
+                            to: 'docs/pages/toolset',
                         },
                     ],
                 },
@@ -99,11 +99,11 @@ module.exports = {
                     items: [
                         {
                             label: 'Licence & Attribution',
-                            to: 'docs/licence',
+                            to: 'docs/pages/licence',
                         },
                         {
                             label: 'Privacy',
-                            to: 'docs/privacy',
+                            to: 'docs/pages/privacy',
                         },
                     ],
                 },
@@ -126,7 +126,7 @@ module.exports = {
                 docs: {
                     path: 'docs',
                     routeBasePath: 'docs',
-                    homePageId: 'ssjs',
+                    homePageId: 'snippets',
                     include: ['**/*.md', '**/*.mdx'],
                     sidebarPath: require.resolve('./sidebars.js'),
                     showLastUpdateAuthor: true,
