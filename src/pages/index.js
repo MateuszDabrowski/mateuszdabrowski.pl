@@ -87,6 +87,7 @@ function Home() {
                 <link rel="canonical" href="https://mateuszdabrowski.pl/" />
 
                 <meta property="og:url" content="https://mateuszdabrowski.pl/" />
+                <meta property="og:image" content="img/logotyp-og.png" />
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1500" />
                 <meta property="og:image:height" content="1500" />
