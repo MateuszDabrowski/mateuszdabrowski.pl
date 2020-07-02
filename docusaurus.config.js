@@ -39,14 +39,14 @@ module.exports = {
             },
             links: [
                 {
-                    label: 'Snippets',
-                    to: 'docs/snippets/snippets',
+                    label: 'Docs & Snippets',
+                    to: 'docs',
                     activeBasePath: 'docs',
                     position: 'left',
                 },
                 {
                     label: 'Ideas',
-                    to: 'docs/ideas/ideas',
+                    to: 'docs/ideas',
                     activeBasePath: 'docs',
                     position: 'left',
                 },
@@ -76,12 +76,12 @@ module.exports = {
                     title: 'Read',
                     items: [
                         {
-                            label: 'Snippets',
-                            to: 'docs/snippets/snippets',
+                            label: 'Docs & Snippets',
+                            to: 'docs',
                         },
                         {
                             label: 'Ideas',
-                            to: 'docs/ideas/ideas',
+                            to: 'docs/ideas',
                         },
                     ],
                 },
@@ -90,7 +90,7 @@ module.exports = {
                     items: [
                         {
                             label: 'Toolset',
-                            to: 'docs/pages/toolset',
+                            to: 'docs/toolset',
                         },
                     ],
                 },
@@ -99,11 +99,11 @@ module.exports = {
                     items: [
                         {
                             label: 'Licence & Attribution',
-                            to: 'docs/pages/licence',
+                            to: 'docs/licence',
                         },
                         {
                             label: 'Privacy',
-                            to: 'docs/pages/privacy',
+                            to: 'docs/privacy',
                         },
                     ],
                 },
@@ -126,7 +126,7 @@ module.exports = {
                 docs: {
                     path: 'docs',
                     routeBasePath: 'docs',
-                    homePageId: 'snippets',
+                    homePageId: 'docs-and-snippets',
                     include: ['**/*.md', '**/*.mdx'],
                     sidebarPath: require.resolve('./sidebars.js'),
                     showLastUpdateAuthor: true,

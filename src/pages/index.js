@@ -11,7 +11,7 @@ import styles from './styles.module.css';
 
 const features = [
     {
-        title: <>Check the snippets</>,
+        title: <>Check the code</>,
         imageUrl: 'img/undraw_snippets_md.svg',
         description: (
             <>
@@ -19,8 +19,8 @@ const features = [
                 documentation or looking for tested code snippets? Hop in!
             </>
         ),
-        url: '/docs/snippets/snippets',
-        cta: <>Snippets</>,
+        url: '/docs',
+        cta: <>Docs & Snippets</>,
     },
     {
         title: <>Pick my brain</>,
@@ -31,7 +31,7 @@ const features = [
                 business-driven engaging experiences for the customers.
             </>
         ),
-        url: '/docs/ideas/ideas',
+        url: '/docs/ideas',
         cta: <>Ideas</>,
     },
     {
