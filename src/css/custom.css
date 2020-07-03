@@ -84,6 +84,10 @@ html[data-theme='dark'] article > header > h1 {
     font-size: 7rem !important;
   }
 
+  .markdown > h2 {
+    font-size: 2.5rem !important;
+  }
+
   .markdown > p,
   .markdown > ul,
   .markdown > ol {
