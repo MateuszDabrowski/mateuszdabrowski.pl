@@ -45,7 +45,15 @@ HTML/CSS/JS | ✅ | ❌
 No Cost |  ❌ | ✅
 Quick Save | ❌ | ✅
 
-## 500 Error
+:::note Email Studio
+
+Some also use Email Studio for testing various scripts, but I recommend against it. It doesn't support SSJS Core Library. Even if you don't need it for your script, it is very useful for debugging.
+
+:::
+
+## 500 - Internal Server Error
+
+TODO: Validate and inform why try/catch won't solve 500
 
 The first type of error you might encounter is the dreaded 500 Error that you see right after *trying* to run your code. Reason? The code backend (SSJS/AMPScript) is invalid. There might be a few reasons for this. The most popular are:
 
@@ -64,16 +72,71 @@ The first one can be done directly in the Marketing Cloud but is a bit of a brut
 
 For many of the reasons leading to 500 error, there is an even faster solution, but with some pre-requisites:
 
-1. You need to have [Visual Studio Code](https://code.visualstudio.com/) with [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) installed.
-2. You need to have [NodeJS](https://nodejs.org/en/) installed.
+1. You need to have [Visual Studio Code](https://code.visualstudio.com/ "Visual Studio Code Website") with [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint "ESLint in Visual Studio Code Marketplace") installed.
+2. You need to have [NodeJS](https://nodejs.org/en/ "NodeJS Website") installed.
 3. You need to have a folder where you will store your SSJS code in files with `.ssjs` file extension.
-4. You need to install the excellent [ESLing configuration for SSJS](https://github.com/JoernBerkefeld/eslint-config-ssjs) made by [Joern Berkefeld](https://www.linkedin.com/in/joernberkefeld/). To do this, run in terminal `npx i -D eslint eslint-config-ssjs` for the SSJS folder.
+4. You need to install the excellent [ESLing configuration for SSJS](https://github.com/JoernBerkefeld/eslint-config-ssjs "Joern Berkefeld Github Project with Config") made by [Joern Berkefeld](https://www.linkedin.com/in/joernberkefeld/ "Joern Berkefeld LinkedIn"). To do this, run in terminal `npx i -D eslint eslint-config-ssjs` for the SSJS folder.
 
-Voila, automatic validation for the correctness of your SSJS code (again, only from the perspective of 500 error - still worth it).
+Voila, automatic SSJS code validation (again, only from the perspective of 500 error - but it is still worth it).
+
+TODO: Validate whether Script Automation might be simplified work around
 
 ## Write the Error down
 
+Once we get past the 500 error, it is time to check what else might be wrong. The easiest way is to use the Write function. It shows whatever you pass in it to the frontend view. This is why, it is good to leverage choose right [Testing Ground](#ssjs-testing-ground). It is especially useful, SSJS does not support console.log due to it server-side nature (a little trick to make it work will be soon).
+
+To use this function, within `<script runat=server>` and `</script>` add `Write('This will be visible on the website')`.
+
+Of course, in real life, you will probably want to use it for variables:
+
+```html {4}
+<script runat=server>
+    Platform.Load('Core','1');
+    var response = HTTP.Get('http://www.example.com');
+    Write('Response from example.com' + response + '<br><br>');
+</script>
+```
+
+:::note Few things to remember
+
+1. `Write` is Core Library function, so you need to load it in your script.
+2. As all Core Library functions, it will not function in Emails or SMS.
+3. If the variable you want to write is an object, you need to parse it to string using `Platform.Function.ParseJSON(response)`.
+
+:::
+
+You probably saw that in the code snippet above I not only have `response` in my `Write`. There is also short description before it and `<br><br>` after. I highly recommend this approach. First element will help you understand what is printed (especially if you use multiple Writes in yoru code). The second will separete it from the rest of the website content (however, it won't work in JSON Code Resource, as it is HTML).
+
 ### Debugging Variable
+
+Whenever you are creating a script that will be used for longer time, it is worth to keep your debugging `Write` functions. Data sources you use change. Marketing Cloud itself too. And sometime this might break your code.
+
+Of course, you don't won't your customers to see those, but there is a neat little trick:
+
+```html {3,7}
+<script runat=server>
+    Platform.Load('Core','1');
+    var debugging = true;
+
+    var response = HTTP.Get('http://www.example.com');
+
+    if (debugging) {
+        Write('Response from example.com' + response + '<br><br>');
+    }
+</script>
+```
+
+As you can see I changed here two things.
+1. There is `var debugging = true` near the top. This is our variable that will allow us to control whether `Write` writes. When debugging, keep it on `true`. When you publish it for production - change the value to `false`.
+2. The above value will be used in second new element - the `if` statement. It checks what is the value of `debugging` variable and runs `Write` only if it is `true`.
+
+### Console Logging
+
+I mentioned before that SSJS does not support `console.log` as it is executing on server. There is however a trick, that might bring the SSJS values to your console. Leverage SSJS personalization in your JavaScript:
+
+```js
+console.log('Response from example.com' + <ctrl:var name=response /> )
+```
 
 ## Try to Catch the Error
 
@@ -84,4 +147,4 @@ Voila, automatic validation for the correctness of your SSJS code (again, only f
 ## Sum Up
 
 ---
-To learn about debugging **AMPScript**, check out [guide by Zuzanna Jarczyńska](https://sfmarketing.cloud/2019/08/09/debugging-ampscript/).
+To learn about debugging **AMPScript**, check out [guide by Zuzanna Jarczyńska](https://sfmarketing.cloud/2019/08/09/debugging-ampscript/ "Blog post on AMPScript Debugging on sfmarketing.cloud").
