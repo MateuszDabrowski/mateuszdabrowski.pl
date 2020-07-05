@@ -14,7 +14,7 @@ module.exports = {
             type: 'category',
             label: 'SSJS Snippets',
             collapsed: false,
-            items: ['ssjs/error-handling'],
+            items: ['ssjs/debugging-ssjs'],
         },
     ],
     ideas: ['ideas', 'ideas/engage-with-countdown'],
