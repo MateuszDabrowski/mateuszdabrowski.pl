@@ -9,21 +9,21 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='To catch, or not to catch, that is debugging.' />
 
-When you start working with programmatic languages in Salesforce Marketing Cloud, you will quickly become close friends with Error 500 page. And if you beat it and go a bit deeper into the code and official documentation, you will also fall in love with unexpected errors in function and API responses. How to survive those?
+When you start working with programmatic languages in Salesforce Marketing Cloud, you will quickly become close friends with Error 500 page. And if you beat it and go forward with the code and official documentation, you will fall in love with unexpected errors in functions and API responses. How to survive those?
 
 ----
 
 ## SSJS Testing Ground
 
-Let's talk where to write the SSJS. The language is useful in many places within the Marketing Cloud ecosystem, among else:
+Before diving deep into errors, let's talk where to write the SSJS. The language is useful in many places within the Marketing Cloud ecosystem. Among else in:
 
 - Cloud Pages (Web Studio)
 - Code Resources (Web Studio)
 - Content Blocks (Content Builder)
-- Emails and other communication (Email Studio / Content Builder)
+- Emails and other communication (Email Studio / Mobile Studio / Content Builder)
 - Script Activities (Automation Studio)
 
-In all of the above cases, you might write more complex logic that will be error-prone and in need of debugging. However, only a few of those are good to test your code, as only some of them will allow you to leverage the methods mentioned later in the article.
+In all of the above cases, you might write more complex logic that will be error-prone and in need of debugging. However, only a few of those are really good to test your code, as only some of them provide access to methods mentioned later in the article.
 
 ### Cloud Page
 
@@ -31,14 +31,14 @@ The most popular recommendation is Cloud Page - write or paste the SSJS code the
 
 It has, however, two flaws that, in some scenarios, might guide you to a different solution.
 
-1. **Cost**. Each view of the Cloud Page cost one Super Message. During debugging, you might hit quite a lot of those. And those tests across your team and over time stack up.
-2. **Speed and context**. Each time you want to republish updated Cloud Page you have to go through the Preview windows that load the whole code in POST method context, confirm it and go to the page via URL to see GET method context.
+1. **Cost**. Each view of the Cloud Page costs one Super Message. During debugging, you might hit quite a lot of those. And those tests - across your team and over time - stack up.
+2. **Speed and context**. Each time you want to republish updated Cloud Page you have to go through the Preview window (that load the whole code in POST method context), confirm it and go to the page via URL to see the GET method context.
 
 ### JSON Code Resource
 
-When I want to go around those issues, I go with JSON Code Resource (also available in Web Studio). It generates a link you can use to check whether everything works just as a Cloud Page. However, page views are free. There is also no preview allowing for faster save-reload.
+When I want to go around those issues, I work in JSON Code Resource (also available in Web Studio). It generates a link you can use to check whether everything works, just like a Cloud Page. However, page views are free. There is also no preview allowing for a faster save-reload cycle.
 
-The cons? You won't be able to use any frontend (neither HTML nor JavaScript), which might be a deal-breaker in some scripts that you want to test.
+The cons? You won't be able to use any frontend (neither HTML nor JavaScript), which might be a deal-breaker in some scenarios.
 
 ### So where?
 
@@ -51,7 +51,7 @@ Quick Save | ❌ | ✅
 
 :::note Email Studio
 
-Some also use Email Studio for testing various scripts, but I recommend against it. It doesn't support SSJS Core Library. Even if you don't need it for your script, it is very useful for debugging.
+Some also use Email Studio for testing various scripts, but I recommend against it. It doesn't support SSJS Core Library. And even if you don't need it for your script, it is handy for debugging.
 
 :::
 
@@ -59,41 +59,45 @@ Some also use Email Studio for testing various scripts, but I recommend against 
 
 ## 500 - Internal Server Error
 
-TODO: Validate and inform why try/catch won't solve 500
-
-The first type of error you might encounter is the dreaded 500 Error that you see right after *trying* to run your code. Reason? The code backend (SSJS/AMPScript) is invalid. There might be a few reasons for this. The most popular are:
+The first type of error you might encounter is the dreaded 500 Error that you see right after *trying* to run your code. Reason? The backend code (SSJS/AMPScript) is invalid. There might be a few reasons for this. The most popular are:
 
 1. Typo in SSJS Function Name
 2. Unclosed or wrongly closed Bracket
-3. Use of JavaScript feature that is not available in SSJS (and there is quite a lot of those...)
-4. Lack of declaration (in most cases either missing `Platform.Load("Core","1");` or `var soap = new Script.Util.WSProxy();` while using related functions)
+3. Use of JavaScript feature that is not available in SSJS (there is quite a lot of those...)
+4. Lack of declaration (in most cases either missing variable declaration, `Platform.Load("Core","1");` or `var soap = new Script.Util.WSProxy();` while using it later in the code)
 
 How to deal with those issues? Apart from just reading through your code line by line, there are two faster solutions.
 
 ### Divide and Conquer
 
-The first one can be done directly in the Marketing Cloud but is a bit of a brute-force approach. You comment out half of your code with `/* here goes the code */` and check again. If it works, you have half of the SSJS validated (from the 500 error perspective). If not, you split the remaining code in half and comment it out. This way, you can quite quickly find the few lines that are leading to the issue and focus only on them.
+The first one can be done directly in the Marketing Cloud but is a bit of a brute-force approach. You block half of your code from running by enclosing it in a multiline comment (`/* here goes the code */`) and check again. If it works, you have half of the SSJS validated (from the 500 error perspective). If not, you split the remaining code in half and comment it out. Rinse, repeat. This way, you can quite quickly find the few lines that are the source of the issue and focus on validating them.
 
 ### SSJS Linting
 
-For many of the reasons leading to 500 error, there is an even faster solution, but with some pre-requisites:
+For many issues leading to 500 error, there is an even faster solution, but it requires some pre-work:
 
 1. You need to have [Visual Studio Code](https://code.visualstudio.com/ "Visual Studio Code Website") with [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint "ESLint in Visual Studio Code Marketplace") installed.
 2. You need to have [NodeJS](https://nodejs.org/en/ "NodeJS Website") installed.
 3. You need to have a folder where you will store your SSJS code in files with `.ssjs` file extension.
 4. You need to install the excellent [ESLing configuration for SSJS](https://github.com/JoernBerkefeld/eslint-config-ssjs "Joern Berkefeld Github Project with Config") made by [Joern Berkefeld](https://www.linkedin.com/in/joernberkefeld/ "Joern Berkefeld LinkedIn"). To do this, run in terminal `npx i -D eslint eslint-config-ssjs` for the SSJS folder.
 
-Voila, automatic SSJS code validation (again, only from the perspective of 500 error - but it is still worth it).
+Once done, you have automatic SSJS code validation (again, only from the perspective of 500 error - but it is still worth it).
 
-TODO: Validate whether Script Automation might be simplified work around
+There is also much more basic and less helpful, but built-in solution that can validate your SSJS code directly in the Marketing Cloud. Script Activity in Automation Studio. After adding your code there and clicking Validate Syntax button, it will check it against some basic rules. However, I recommend going with the ESLint. It provides much more value and is faster once configured.
+
+:::note What about Try/Catch?
+
+There will be a separate section about Try/Catch. It does not work for issues leading to 500 Error.
+
+:::
 
 ----
 
 ## Write the Error down
 
-Once we get past the 500 error, it is time to check what else might be wrong. The easiest way is to use the Write function. It shows whatever you pass in it to the frontend view. This is why, it is good to leverage choose right [Testing Ground](#ssjs-testing-ground). It is especially useful, SSJS does not support console.log due to it server-side nature (a little trick to make it work will be soon).
+You got past the 500 error. Great! The script is still not outputting what you wanted? It is time to check what else might be wrong. The easiest way is to use the `Write` function. It shows whatever you pass in it to the frontend view. It is especially useful as SSJS does not support console.log due to its server-side nature (a little trick to make it work is below).
 
-To use this function, within `<script runat=server>` and `</script>` add `Write('This will be visible on the website')`.
+To use this function just add `Write('This will be visible on the website')` between `<script runat=server> Platform.Load('Core','1');` and `</script>`.
 
 Of course, in real life, you will probably want to use it for variables:
 
@@ -105,21 +109,21 @@ Of course, in real life, you will probably want to use it for variables:
 </script>
 ```
 
-As you can see in the code snippet above I have more than just `response` in my `Write`. The element before is description and will help you understand what is printed (especially if you use multiple Writes in yoru code). The one after - `<br><br>` - will separete it from the rest of the website content (however, it won't work in JSON Code Resource, as it is HTML). I highly recommend this approach.
+As you can see in the code snippet above I have more than just `response` variable within my `Write`. The string before describes what is printed (useful especially if you use multiple Writes in your code). The one after - `<br><br>` - will separete it from the rest of the website content (however, as it is HTML, it won't work in JSON Code Resource). I highly recommend this approach.
 
 :::note Few things to remember
 
-1. `Write` is Core Library function, so you need to load it in your script.
+1. `Write` is Core Library function, so you need to load it first in your script with `Platform.Load('Core','1');`.
 2. As all Core Library functions, it will not function in Emails or SMS.
-3. If the variable you want to write is an object, you need to parse it to string using `Stringify(response)`.
+3. If the variable you want to output is an object, you need to parse it to a string using `Stringify(response)`.
 
 :::
 
 ### Debugging Variable
 
-Whenever you are creating a script that will be used for longer time, it is worth to keep your debugging `Write` functions. Data sources you use change. Marketing Cloud itself too. And sometimes those things might break your code.
+Whenever you are creating a script for a long-term, it is a good idea to keep your debugging `Write` functions. There might be new requirements. Data sources change. Marketing Cloud too. And sometimes those things might break your code.
 
-Of course, keeping the `Writes` as above is a no-go. You don't won't your customers to see those. But there is a neat little trick to eat the cake and have it too:
+Of course, keeping the `Writes` as above is a no-go. You don't want your customers to see those. But there is a neat little trick to eat the cake and have it too:
 
 ```html {3,7}
 <script runat=server>
@@ -134,13 +138,13 @@ Of course, keeping the `Writes` as above is a no-go. You don't won't your custom
 </script>
 ```
 
-I changed here two things:
-1. There is `var debugging = true` near the top. This is our variable that will allow us to control whether `Write` writes. When debugging, keep it on `true`. When you publish it for production - change the value to `false`.
-2. The above value will be used in second new element - the `if` statement. It checks what is the value of `debugging` variable and runs `Write` only if it is `true`.
+I added two things:
+1. There is `var debugging = true;` near the top. When debugging, keep it on `true`. When you publish it for production - change the value to `false`.
+2. The `Write` is within the `if` block. It now works only if the debugging variable equals `true`.
 
 ### Console Logging
 
-I mentioned before that SSJS does not support `console.log` as it is executing on server. There is however a workaround, that might bring the SSJS values to your console. SSJS personalization strings passed to your JavaScript:
+I mentioned before that SSJS does not support `console.log` as it is executing on a server. There is, however, a workaround, that might bring the SSJS values to your console. SSJS personalization strings passed to your JavaScript can help:
 
 ```js
 console.log('Response from example.com' + '<ctrl:var name=response />')
@@ -148,9 +152,9 @@ console.log('Response from example.com' + '<ctrl:var name=response />')
 
 :::note Passing Objects from SSJS to JS
 
-If the variable you want to pass to JavaScript was a SSJS Object, you will need to create a parsed variable to make it work:
-1. In SSJS create for example `var parsedResponse = Stringify(response)`
-2. In JS change the personalization to `console.log(<ctrl:var name=parsedResponse />)` (different name value and lack of quotes around personalization)
+If the variable you want to pass to JavaScript is an SSJS Object, you will need to create a parsed variable to make it work:
+1. In SSJS create `var parsedResponse = Stringify(response);`
+2. In JS change the personalization to `console.log(<ctrl:var name=parsedResponse />)` (notice different `name` value and lack of quotes around personalization string)
 
 :::
 
@@ -158,7 +162,7 @@ If the variable you want to pass to JavaScript was a SSJS Object, you will need 
 
 ## Try to Catch the Error
 
-Using `Write` is great and simple solution, but it will work only if the code will work. And sometimes it won't. For those cases, add a `try/catch` block. Check also the Response tab below to compare difference between writing `response` variable and writing catched error.
+Using `Write` is a great and simple solution, but it will work only if the code runs correctly. And sometimes it won't. For those cases, add a Try/Catch block. Check the Response tab below to compare the difference between standard `Write(response)` and writing the caught error.
 
 <Tabs
     defaultValue='request'
@@ -169,11 +173,12 @@ Using `Write` is great and simple solution, but it will work only if the code wi
 >
 <TabItem value='request'>
 
-```html {5,7} title="GET request to invalid URL within Try/Catch block"
+```html {6,8} title="GET request to invalid URL within Try/Catch block"
 <script runat=server>
     Platform.Load('Core','1');
     var debugging = true;
 
+    // Try/Catch Block with error Write
     try {
         var response = HTTP.Get('http://www.example.c');
     } catch (error) {
@@ -182,6 +187,7 @@ Using `Write` is great and simple solution, but it will work only if the code wi
         }
     }
 
+    // Standard Write
     if (debugging) {
         Write('Response from example.com: ' + response + '<br><br>');
     }
@@ -197,19 +203,18 @@ Error caught: {"message":"An error occurred when attempting to evaluate a HTTPGe
 Response from example.com: undefined
 ```
 
-As you can see, this response is quite long. In most cases the most important information is in the last sentence. In this example we learn that `System.Net.WebException: The remote name could not be resolved: 'www.example.c' - from System`.
+As you can see, this response is quite long. The most important information is in the last sentence of first paragraph. In this example we learn that `System.Net.WebException: The remote name could not be resolved: 'www.example.c' - from System`. It makes it easy to understand that there is issue with the URL we provided.
 
-You can also see why Try/Catch block is so valuable, as our `Write` printed `undefined`, which isn't very helpful. This is due to the fact, that because of the invalid URL, the response to our GET was not filled.
+You can also see why Try/Catch block is so valuable, as in second paragraph our `Write` printed `undefined`, which isn't very helpful. This is due to the fact, that because of the invalid URL, the GET did not return to response variable.
 
 </TabItem>
 </Tabs>
 
-
-During debugging it is especially useful for SSJS Functions that are calling external data. Marketing Cloud Data Extensions, Salesforce Core Objects or even element from outside Salesforce environment. It also might help when you are doing operations on responses from such sources. For example trying to get value from nested response object.
+Try/Catch is especially useful for SSJS Functions that are calling out-of-page data. Marketing Cloud Data Extensions, Salesforce Objects or even data sources from outside Salesforce environment. It also will help when you are handling responses from such sources. For example, trying to get value from a nested object.
 
 :::note You should know
 
-Try/Catch block in SSJS has its own scope, unlike in modern JavaScript. This means that any **variables declared within the block won't be accessible from outside**. Neither in the other parts of SSJS nor in personalization strings.
+Try/Catch block in SSJS has separate scope. It means that any **variables declared within the block won't be accessible from outside**. Neither in the other parts of SSJS nor by personalization strings.
 
 There is a way to overcome this limitation. Declare the variables you want to use globally before the `try` and just modify their values within the block:
 
@@ -232,15 +237,28 @@ There is a way to overcome this limitation. Declare the variables you want to us
 
 ## Error Logging
 
-One you debug your code using the above methods, it is still good idea to program defensively and leverage the Try/Catch block even on production code. It will allow you to handle the errors for the customers (for example, redirect them to a Error Landing Page) and to log the errors to a data extension (it will provide you a history of problems along with description of what happened). You can even try to build something more sophisticated and for example leverage REST API of your JIRA to automatically create a bug ticket.
+Once you debug your code using the above methods, it is still a good idea to program defensively and leverage the Try/Catch block even on the production environment. It will allow you to handle the errors for the customers (for example, redirect to an Error Landing Page) and to log the errors to a data extension (it will provide you with a history of problems along with a description of what happened). You can even build something more sophisticated like automatically create a bug ticket in JIRA.
 
 ### Logging to Data Extension
 
-The easiest way to log your errors is to leverage built-in into Marketing Cloud Data Extensions.
+The easiest way to log your errors is to leverage Marketing Cloud Data Extensions.
 
-My recommendation is to create one Data Extension that will capture the errors from whole instance. It will make it much easier and faster to quickly check whether there are any new issues to check.
+My recommendation is to create one Data Extension that will capture all the errors from the whole instance. It will make it much easier and faster to check whether there are any new issues.
 
-TODO: Add Data Extension Settings Details
+Here you can find sample setup:
+
+Column Name | Primary Key | Length | Type | Nullable | Default Value
+-- | -- | --  | -- | -- | --
+id | Yes | 50 | Text | No |
+errorSource | | 100 | Text | No |
+errorFunction | | 100 | Text | No |
+errorMessage | | 2000 | Text | Yes |
+errorDescription | | 2000 | Text | Yes |
+errorDate | | | Date | Yes | Current Date
+
+If you have multiple Business Units on your instance, add it as a Shared Data Extension.
+
+It shouldn't be sendable or testable, but consider adding retention period. Align it with the internal process for checking it for new issues. Seven days per record is a good starting point.
 
 ### Global Error Catching
 
@@ -250,7 +268,7 @@ This approach might make your code shorter and easier to read, but will limit yo
 
 :::note You Should Know
 
-If you use any kind of redirect within your `try` block, it will be considered as error caught. If you need to use redirect, don't use global Try/Catch and instead leverage it only in potentially problematic code.
+Any kind of redirect within your `try` block is recognized as an error and caught. If you need to use a redirect, don't use global Try/Catch approach and instead leverage it only for potentially problematic code.
 
 :::
 
@@ -258,11 +276,11 @@ If you use any kind of redirect within your `try` block, it will be considered a
 
 ## Error Handler Function
 
-Once you start implementing various solutions mentioned in this article, it might get quite repetitive to add the same lines for conditional `Write`, log to Data Extension, etc.
+Once you start implementing the solutions mentioned above, it might get quite repetitive to add the same lines for conditional `Write`, log to Data Extension, et cetera.
 
-You can solve it by createing an Error Handler function once and then just call it whenever it is needed:
+You can solve it by creating signle Error Handler function and just calling it wherever it is needed:
 
-```html {5,16}
+```html {5-12,17}
 <script runat=server>
     Platform.Load('Core','1');
     var debugging = true;
@@ -271,7 +289,8 @@ You can solve it by createing an Error Handler function once and then just call 
         if (debugging) {
             Write(Stringify(error))
         } else {
-            Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
+            // Remember that if your Logging Data Extension is in Shared Folder, the name must be prefixed with "ENT."
+            Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorFunction', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', 'Name of the function within the try/catch', Stringify(error.message), Stringify(error.description)]);
         }
     }
 
@@ -283,22 +302,18 @@ You can solve it by createing an Error Handler function once and then just call 
 </script>
 ```
 
-Whenever Try/Catch block finds an error, the above snippet will check the value of debugging variable. If it is set to `true`, it will just Write the error to the page to make it easier to quickly debug. If it is set to `false`, it will add the error to the Data Extension instead.
+Whenever Try/Catch block finds an error, the above snippet will check the value of debugging variable. If it is equal to `true`, it will just Write the error to the page to make it easier to debug quickly. If it is `false`, it will add the error to the Data Extension instead.
 
-We are leveraging here the fact that most Marketing Cloud Errors are built as an object with two keys: `message` and `description`. Putting those elements into separate columns of the Data Extension make it easier to read the log.
+Most of the Marketing Cloud Errors are objects with two keys: `message` and `description`. Putting those elements into separate columns of the Data Extension make it easier to read the log.
 
-Using Error Handler Function is useful especially when you are triggering it multiple times in various Try/Catch blocks or when you have elaborate logic for handling (for example API calls to external systems for bug tracking).
+Using Error Handler Function is useful especially when you are triggering it multiple times or when you have elaborate logic for handling (for example API calls to external systems for bug tracking).
 
 :::note You Should Know
 
-You can also create your custom error, by passing your own object to the `handleErrror` function:
+You can also create your custom error, by passing a custom object to the `handleErrror` function:
 
-```js {4}
-try {
-    // Risky code
-} catch (error) {
-    handleError({message: 'Custom Error Message', description: 'Custom Error Description'});
-}
+```js
+handleError({message: 'Custom Error Message', description: 'Custom Error Description'});
 ```
 
 :::

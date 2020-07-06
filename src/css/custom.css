@@ -104,7 +104,8 @@ html[data-theme='dark'] article > header > h1 {
 }
 
 .docusaurus-highlight-code-line {
-  border: 1px solid var(--ifm-color-primary);
+  border-left: 5px solid var(--ifm-color-secondary);
+  background-color: rgba(246, 179, 85, 0.2);
   font-weight: bold;
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
@@ -112,7 +113,7 @@ html[data-theme='dark'] article > header > h1 {
 }
 
 @media only screen and (min-width: 768px) {
-div[role='tabpanel'] p {
-  font-size: 20px;
-}
+  div[role='tabpanel'] p {
+    font-size: 20px;
+  }
 }
