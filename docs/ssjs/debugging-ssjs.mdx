@@ -251,7 +251,6 @@ Column Name | Primary Key | Length | Type | Nullable | Default Value
 -- | -- | --  | -- | -- | --
 id | Yes | 50 | Text | No |
 errorSource | | 100 | Text | No |
-errorFunction | | 100 | Text | No |
 errorMessage | | 2000 | Text | Yes |
 errorDescription | | 2000 | Text | Yes |
 errorDate | | | Date | Yes | Current Date
@@ -290,7 +289,7 @@ You can solve it by creating signle Error Handler function and just calling it w
             Write(Stringify(error))
         } else {
             // Remember that if your Logging Data Extension is in Shared Folder, the name must be prefixed with "ENT."
-            Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorFunction', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', 'Name of the function within the try/catch', Stringify(error.message), Stringify(error.description)]);
+            Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
         }
     }
 
