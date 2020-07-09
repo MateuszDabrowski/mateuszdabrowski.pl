@@ -79,7 +79,7 @@ For many issues leading to 500 error, there is an even faster solution, but it r
 1. You need to have [Visual Studio Code](https://code.visualstudio.com/ "Visual Studio Code Website") with [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint "ESLint in Visual Studio Code Marketplace") installed.
 2. You need to have [NodeJS](https://nodejs.org/en/ "NodeJS Website") installed.
 3. You need to have a folder where you will store your SSJS code in files with `.ssjs` file extension.
-4. You need to install the excellent [ESLing configuration for SSJS](https://github.com/JoernBerkefeld/eslint-config-ssjs "Joern Berkefeld Github Project with Config") made by [Joern Berkefeld](https://www.linkedin.com/in/joernberkefeld/ "Joern Berkefeld LinkedIn"). To do this, run in terminal `npx i -D eslint eslint-config-ssjs` for the SSJS folder.
+4. You need to install the excellent [ESLing configuration for SSJS](https://github.com/JoernBerkefeld/eslint-config-ssjs "Joern Berkefeld Github Project with Config") made by [Joern Berkefeld](https://www.linkedin.com/in/joernberkefeld/ "Joern Berkefeld LinkedIn"). To do this, run in terminal `npm i -D eslint eslint-config-ssjs` for the SSJS folder.
 
 Once done, you have automatic SSJS code validation (again, only from the perspective of 500 error - but it is still worth it).
 
@@ -97,12 +97,12 @@ There will be a separate section about Try/Catch. It does not work for issues le
 
 You got past the 500 error. Great! The script is still not outputting what you wanted? It is time to check what else might be wrong. The easiest way is to use the `Write` function. It shows whatever you pass in it to the frontend view. It is especially useful as SSJS does not support console.log due to its server-side nature (a little trick to make it work is below).
 
-To use this function just add `Write('This will be visible on the website')` between `<script runat=server> Platform.Load('Core','1');` and `</script>`.
+To use this function just add `Write('This will be visible on the website')` between `<script runat="server"> Platform.Load('Core','1');` and `</script>`.
 
 Of course, in real life, you will probably want to use it for variables:
 
 ```html {4}
-<script runat=server>
+<script runat="server">
     Platform.Load('Core','1');
     var response = HTTP.Get('http://www.example.com');
     Write('Response from example.com: ' + response + '<br><br>');
@@ -126,7 +126,7 @@ Whenever you are creating a script for a long-term, it is a good idea to keep yo
 Of course, keeping the `Writes` as above is a no-go. You don't want your customers to see those. But there is a neat little trick to eat the cake and have it too:
 
 ```html {3,7}
-<script runat=server>
+<script runat="server">
     Platform.Load('Core','1');
     var debugging = true;
 
@@ -174,7 +174,7 @@ Using `Write` is a great and simple solution, but it will work only if the code 
 <TabItem value='request'>
 
 ```html {6,8} title="GET request to invalid URL within Try/Catch block"
-<script runat=server>
+<script runat="server">
     Platform.Load('Core','1');
     var debugging = true;
 
@@ -219,7 +219,7 @@ Try/Catch block in SSJS has separate scope. It means that any **variables declar
 There is a way to overcome this limitation. Declare the variables you want to use globally before the `try` and just modify their values within the block:
 
 ```html {4,6}
-<script runat=server>
+<script runat="server">
     Platform.Load('Core','1');
 
     var response;
@@ -280,7 +280,7 @@ Once you start implementing the solutions mentioned above, it might get quite re
 You can solve it by creating signle Error Handler function and just calling it wherever it is needed:
 
 ```html {5-12,17}
-<script runat=server>
+<script runat="server">
     Platform.Load('Core','1');
     var debugging = true;
 
