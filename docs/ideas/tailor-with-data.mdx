@@ -20,7 +20,7 @@ import { Countdown } from '../../src/components/Countdown.js';
 
 ## Leverage the data
 
-Most Marketing Automation tools allow you to use the contact and account data for personalisation. Are you inserting a user-specific value from a data model to landing page or email? Creating custom content tailored to the user? Easy and simple. [Eloqua](https://www.oracle.com/marketingcloud/products/marketing-automation/ "Oracle Eloqua Marketing Automation Platform")'s [Field Merges](https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCAA/Help/FieldMerges/FieldMerges.htm "Field Merge Documentation"), or [Marketing Cloud](https://www.salesforce.com/eu/products/marketing-cloud/overview/ "Salesforce Marketing Cloud Platform")'s personalisation strings can do it. But you can do so much more!
+Most Marketing Automation tools allow you to use the contact and account data for personalisation. Are you inserting a user-specific value from a data model to landing page or email? Creating custom content tailored to the user? Easy and simple. [Eloqua](https://www.oracle.com/marketingcloud/products/marketing-automation/ "Oracle Eloqua Marketing Automation Platform")'s [Field Merges](https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCAA/Help/FieldMerges/FieldMerges.htm "Field Merge Documentation") or [Marketing Cloud](https://www.salesforce.com/eu/products/marketing-cloud/overview/ "Salesforce Marketing Cloud Platform")'s personalisation strings. But you can do so much more!
 
 ### Change the structure of the landing page
 Part of your subscription centre should be visible only to your clients? Instead of creating and managing two separate pages, you can use personalisation to check whether the visitor has any license and unhide product-related data & subscription section.
@@ -29,11 +29,11 @@ Part of your subscription centre should be visible only to your clients? Instead
 Not keen on asking your customers, again and again, the same questions in your content form? Use personalisation to hide form fields that won't give you new knowledge. The shorter the form, the better.
 
 ### Enrich your data
-You got multi picklist storing information on topics that are interesting to your customers? Want to use white paper download form to add such data point? Sure, all Marketing Automation Platforms have form processing that will be able to append such value. But unfortunately, it in most it is not possible to check whether it already is added to that field. You guessed it, personalisation with a simple script can fix it.
+You got multi picklist storing information on topics that are interesting to your customers? Want to use whitepaper download form to add such data point? Sure, all Marketing Automation Platforms have form processing that will be able to append such value. But unfortunately, in most, you won't be able to check whether it will result in a duplicate data point. You guessed it, personalisation with a simple script can fix it.
 
 ## Script your solution
 
-Time to create a script that will solve the problems mentioned above. Firstly, you will need to get the data from your data model.
+Time to create a script that will solve the problems mentioned above. Firstly, you will need to pull from your data model.
 
 <Tabs
     groupId='marketingAutomationPlatforms'
@@ -51,9 +51,7 @@ For Marketing Cloud, the easiest way is to use the personalisation string. The c
 <ctrl:field name=ProfileAttributeName />
 ```
 
-The only thing you need is the name of the Profile Attribute or Data Extension field. It gets a bit more elaborate if you want to leverage other sources, but still viable with SSJS. You can use the Lookup function to capture data points from other Data Extensions. Even Salesforce Objects are in the scope with a bit of AMPScript.
-
-In most places of Marketing Cloud, you can leverage built-in menu to add such personalisation string (in its AMPScript version).
+The only thing you need is the name of the Profile Attribute or Data Extension field. It gets a bit more elaborate if you want to leverage other sources, but still viable. You can use the Lookup function for non-sendable Data Extensions. You can even dig into Salesforce Objects with a bit of AMPScript.
 
 </TabItem>
 <TabItem value='eloqua'>
@@ -71,11 +69,11 @@ In most cases it is very similar to the original Field Merge name, in some - lik
 </TabItem>
 </Tabs>
 
-To create a script that will allow for three use cases mentioned in the first part of the post, we need one more thing - an `id` attribute. Some elements will already have it (for example, in Eloqua each form field exists in separate div element: `<div id='formElement1' ...>`). The rest will need you to add it to the HTML manually.
+To create a script that will allow for three use cases mentioned in the first part of the post, we need one more thing - an `id` attribute. Some elements will already have it (for example, in Eloqua each form field exists in separate div element: `<div id='formElement1' ...>`). For others, you will have to add it to the HTML manually.
 
 :::note You Should Know
 
-You are not limited to the `id` attribute. You can leverage any attribute and capture it with `document.querySelector()` or `document.querySelectorAll()`. Capturing `class` is great to change multiple parts of the website at once.
+You are not limited to the `id` attribute. Leverage any attribute and capture it with `document.querySelector()` or `document.querySelectorAll()`. For example, capturing `class` is great to change multiple related parts of the website at once.
 
 :::
 
@@ -123,17 +121,17 @@ Above script has three important lines that deserve some explanation.
 
 First one tells the web browser to launch the logic only after the whole page loaded. It is essential, as it guarantees that the browser already rendered the website element you want to hide.
 
-Next is the `if` statement. It evaluates the value stored in the data model received via personalisation (left side of ==) with another value we choose (right side of ==). In this case, it checks whether Email Opted In for a particular user is set to True (that value may differ in your data model).
+Next is the `if` statement. It evaluates the data model value received via personalisation (left side of ==) with another value we choose (right side of ==). In this case, it checks whether Email Opted In for a particular user is set to True (names and values may differ in your data model).
 
 The third line looks for an HTML element with id equal to `'idValue'` and hides it from the user.
 
 :::note You Should Know
 
-You can adapt this script to do almost anything. Once you have your element selected with `querySelector` you can programmatically change its value, add or remove a class from it to impact the CSS applied or even add or remove elements around it.
+You can adapt this script to do almost anything. Once you have your element selected with `querySelector` you can programmatically change its value, add or remove a class from it to impact the CSS applied or even create new elements around it.
 
 :::
 
-With this script, you can both modify the structure of your landing page and alter the form fields (or even just form field options) visible for the user. Hide some elements, show other, change the style of a web element to make it more prominent on the website. But that is not all!
+With this script, you can both modify the structure of your landing page and alter the form fields (or even just form field options) visible for the user. Hide some elements, show other, change the style of a web element to make it more prominent on the website. But that's not all!
 
 ### Changing elements on the website
 
@@ -177,23 +175,23 @@ For our data enrichment use case, we will need to alter the script slightly.
 </TabItem>
 </Tabs>
 
-In this scenario, we have a multi picklist field `Interests` that captures what captivates specific customer. If the is fascinated by more than one topic, the names are semicolon-separated. A nice marketing tactic is to enrich this list each time the customer engages with something directly related to a particular topic. For example, downloads whitepaper deep-diving on taxes.
+In this scenario, we have a multi picklist field `Interests` that captures what fascinates specific customer. If he is captivated by more than one topic, the names are semicolon-separated. A nice marketing tactic is to enrich this list each time the customer engages with something directly related to a particular topic. For example, downloads your new whitepaper.
 
-In most Marketing Automation Platforms, it is strightforward to to append interest to such field. Appending, however, leads to a (quite big) possibility of having the same value added multiple times. And this is neither good from the data quality perspective nor field length compliance.
+In most Marketing Automation Platforms, it is straightforward to append a value to a column. Simple adding, however, leads to a (quite big) possibility of having duplicates. And this is neither good from the data quality perspective nor field length compliance.
 
-So how to use the above script to enrich your data cleanly? We will need a hidden form field inside the white paper download form. In the form HTML look for input attribute of this hidden field (`<input id='alreadyInterested' type='hidden' ...>`). The `id` attribute will be useful again.
+So how to use the above script to enrich your data cleanly? We will need a hidden form field inside the whitepaper download form. In the HTML look for (or create) hidden field input (`<input id='alreadyInterested' type='hidden' ...>`). The `id` attribute will be useful again.
 
 You already know the first line from the previous section. The new things come next. We declare value we want to check in our data model picklist. In this example, we will test whether the user is already interested in Tax topic. The `/` before and after the word are special characters used for a [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions "MDN Documentation on Regular_Expressions").
 
-The third line is the fastest way to check whether the declared value is already in the `Interests` field. If it is, then the script will evaluate the line below.
+The third line is the fastest way to check whether the declared value is already in the `Interests` field.
 
-Finally, in case of the value already being in the multi picklist, we put True inside the hidden form field. It enables us to utilise form processing to append new interest conditionally - only if the hidden field is blank in the submission data.
+Finally, in case of the value already being in the multi picklist, we put True inside the hidden form field. It enables us to enforce on form processing to append new interest conditionally - only if the hidden field is blank in the submission data.
 
 ## Create conditional logic
 
 Simple manipulation of visibility and values on your landing page is just beginning. You can get even more out of scripted-backed personalisations and take control over user & data flows.
 
-Looking for an excellent way to tell your Google Analytics whether the user just downloaded a white paper or did he also wanted to receive product presentation on top of that? Not keen on creating two mirror-like Thank You pages with different conversion script? Sure!
+Looking for an excellent way to tell your Google Analytics whether the user just downloaded a whitepaper or did he also wanted to receive product presentation on top of that? Not keen on creating two mirror-like Thank You pages with different conversion script? Sure!
 
 <Tabs
     groupId='marketingAutomationPlatforms'
@@ -205,12 +203,12 @@ Looking for an excellent way to tell your Google Analytics whether the user just
 >
 <TabItem value='sfmc'>
 
-Your form processing page should have a rule for adding step that appends date stamp to a data model field in case of the user becoming a lead (asking for a product presentation). This data, apart from being a great source of knowledge for your lead reporting and data processing trigger, will be handy for this solution.
+Your form processing page should append date stamp to a data model field in case of the user becoming a lead (asking for a product presentation). This data, apart from being a great source of knowledge for your lead reporting and data processing trigger, will be handy for this solution.
 
 ```html
 <script>
     const leadCreationDate = '<ctrl:field name=leadCreationDate />';
-    if (Date.now() - new Date(leadCreationDate) < 22680000) {
+    if (Date.now() - new Date(leadCreationDate) < 93600000) {
         dataLayer.push({
             // Your Lead conversion dataLayer model
         });
@@ -230,7 +228,7 @@ Your form should have a processing step that appends date stamp to a data model 
 ```html
 <script>
     const leadCreationDate = '<span class=eloquaemail>LeadCreationTriggerDate1</span>';
-    if (Date.now() - new Date(leadCreationDate) < 22680000) {
+    if (Date.now() - new Date(leadCreationDate) < 93600000) {
         dataLayer.push({
             // Your Lead conversion dataLayer model
         });
@@ -247,7 +245,7 @@ Your form should have a processing step that appends date stamp to a data model 
 
 Why? Because once you have this script on your Thank You page, you can check how distant in the past the personalised date is. And if it is within minutes, you can be pretty sure the user just became your lead. Which tells the script to push the lead conversion data layer instead of the whitepaper data layer. Simple and quick.
 
-Remember to take into consideration the difference between local time and server time, which might play a role depending on Marketing Automation Platform and configuration.
+Remember to take into consideration the difference between local time and server time, which might play a role depending on the Marketing Automation Platform and configuration.
 
 ### Possibilities are endless.
 
@@ -263,7 +261,7 @@ Want to be sure only recognised users will enter your subscription centre?
 >
 <TabItem value='sfmc'>
 
-Add email address Field Merge. If it is empty, it means Eloqua did not recognise this user. JavaScript can automatically redirect him to your subscription centre entry form.
+Add email address or contact key personalisation. If it is empty, it means Marketing Cloud did not recognise this user. JavaScript can automatically redirect him to your subscription centre entry form that will take care of authorization.
 
 ```js
  if ('<ctrl:field name="Email Address" />' == '') {
@@ -276,7 +274,7 @@ Want to double-check by querying the Salesforce Core? Add API call within the co
 </TabItem>
 <TabItem value='eloqua'>
 
-Add email address or contact key personalisation. If it is empty, it means Marketing Cloud did not recognise this user. JavaScript can automatically redirect him to your subscription centre entry form.
+Add email address Field Merge. If it is empty, it means Eloqua did not recognise this user. JavaScript can automatically redirect him to your subscription centre entry form that will take care of authorization.
 
 ```js
 if ('<span class=eloquaemail>​EmailAddress​</span>' == '') {

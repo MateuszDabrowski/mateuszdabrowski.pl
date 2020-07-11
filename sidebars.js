@@ -17,5 +17,5 @@ module.exports = {
             items: ['ssjs/debugging-ssjs'],
         },
     ],
-    ideas: ['ideas', 'ideas/engage-with-countdown'],
+    ideas: ['ideas', 'ideas/engage-with-countdown', 'ideas/tailor-with-data'],
 };
