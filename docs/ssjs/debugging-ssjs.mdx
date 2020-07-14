@@ -51,7 +51,7 @@ Quick Save | ❌ | ✅
 
 :::note Email Studio
 
-Some also use Email Studio for testing various scripts, but I recommend against it. It doesn't support SSJS Core Library. And even if you don't need it for your script, it is handy for debugging.
+Some also use Email Studio for testing various scripts, but I recommend against it. It is slower than Code Resource and doesn't support SSJS Core Library. And even if you don't need it for your script, it is handy for debugging.
 
 :::
 
@@ -109,13 +109,14 @@ Of course, in real life, you will probably want to use it for variables:
 </script>
 ```
 
-As you can see in the code snippet above I have more than just `response` variable within my `Write`. The string before describes what is printed (useful especially if you use multiple Writes in your code). The one after - `<br><br>` - will separete it from the rest of the website content (however, as it is HTML, it won't work in JSON Code Resource). I highly recommend this approach.
+As you can see in the code snippet above I have more than just `response` variable within my `Write`. The string before describes what is printed (useful especially if you use multiple Writes in your code). The one after - `<br><br>` - will separete it from the rest of the website content (however, as it is HTML, it won't work in JSON Code Resource. You can use `\n\n` instead for the same outcome). I highly recommend this approach.
 
 :::note Few things to remember
 
 1. `Write` is Core Library function, so you need to load it first in your script with `Platform.Load('Core','1');`.
 2. As all Core Library functions, it will not function in Emails or SMS.
 3. If the variable you want to output is an object, you need to parse it to a string using `Stringify(response)`.
+4. If you don't want to load Core Library use Platform versions of those functions: `Platform.Response.Write()` and `Platform.Function.Stringify()`.
 
 :::
 
