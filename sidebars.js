@@ -6,9 +6,9 @@ module.exports = {
         },
         // {
         //     type: 'category',
-        //     label: 'SSJS Docs',
+        //     label: 'WSProxy',
         //     collapsed: false,
-        //     items: ['ssjs/ssjs-basics', 'ssjs/data-extensions'],
+        //     items: ['ssjs/wsproxy'],
         // },
         {
             type: 'category',
