@@ -238,7 +238,7 @@ There is a way to overcome this limitation. Declare the variables you want to us
 
 ## Error Logging
 
-Once you debug your code using the above methods, it is still a good idea to program defensively and leverage the Try/Catch block even on the production environment. It will allow you to handle the errors for the customers (for example, redirect to an Error Landing Page) and to log the errors to a data extension (it will provide you with a history of problems along with a description of what happened). You can even build something more sophisticated like automatically create a bug ticket in JIRA.
+Once you debug your code using the above methods, it is still a good idea to program defensively and leverage the Try/Catch block even on the production environment. It will allow you to handle the errors for the customers and to log the errors to a data extension (it will provide you with a history of problems along with a description of what happened). You can even build something more sophisticated like automatically create a bug ticket in JIRA.
 
 ### Logging to Data Extension
 
@@ -269,6 +269,8 @@ This approach might make your code shorter and easier to read, but will limit yo
 :::note You Should Know
 
 Any kind of redirect within your `try` block is recognized as an error and caught. If you need to use a redirect, don't use global Try/Catch approach and instead leverage it only for potentially problematic code.
+
+You can also leverage one of the approaches mentioned by Gortonington in [his article on Try/Catch](https://www.howtosfmc.com/posts/the-catches-of-try-catch-in-sfmc-ssjs/). It might be especially useful, when you want to leverage redirect as a form of handling the error for the customer.
 
 :::
 
@@ -317,6 +319,8 @@ handleError({message: 'Custom Error Message', description: 'Custom Error Descrip
 ```
 
 :::
+
+There is also a new solution - [SSJS Lib](https://github.com/email360/ssjs-lib) - created by email360. Among other tools, they support [console logging](https://docs.email360.io/#console_log) and simplified [debugging](https://docs.email360.io/#debug). You can read more about the implementation [here](https://blog.email360.io/posts/core/better-debug.html).
 
 ----
 
