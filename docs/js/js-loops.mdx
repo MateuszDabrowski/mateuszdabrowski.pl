@@ -1,0 +1,203 @@
+---
+id: js-loops
+title: Loops & Friends
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='For, While and forEach meet Filter, Map, Find, Reduce' />
+
+## For Loops
+
+### For
+
+The classic for loop. Requires initial expression, condition and increment expression to loop.
+
+```js
+for (let i = 0; i < array.length; i++) {
+    console.log(array[i]);
+}
+```
+
+- Works with `break` and `continue` statements for better looping control.
+- Condition is not limited to iterable size.
+- Really fast across various scenarios. If you don't know what will be fastest, pick the classic.
+
+To optimize speed even more, cache the length in a variable (if you are using it in condition):
+
+```js
+for (let i = 0, arrayLength = array.length; i < arrayLength; i++) {
+    console.log(array[i]);
+}
+```
+
+### For of
+
+Loops over iterables: strings, arrays, nodeLists, maps, sets, etc.
+
+```js
+for (const letter of name) {
+    console.log(letter);
+}
+```
+
+Fastest fast for very small iterables (<100 items). Along with really readable structure, fantastic tool to iterate over nodeLists when working with DOM.
+
+It can iterate over object key-value pairs with `Object.entries()`:
+
+```js
+for (const [key, value] of Object.entries(object)) {
+    console.log(key, value);
+}
+```
+
+It can catch array values along with indexes:
+
+```js
+for (const [index, value] of array.entries()) {
+    console.log(index, value);
+}
+```
+
+It can destructure object on the go:
+
+```js
+const persons = [{ name: 'John Smith' }, { name: 'Jane Doe' }];
+
+for (const { name } of persons) {
+    console.log(name); // 'John Smith, Jane Doe
+}
+```
+
+### For in
+
+Loops over the enumerable properties of an object, in an arbitrary order.
+
+```js
+for (const key in object) {
+    console.log(key);
+}
+```
+
+- Only `For in` loop will return object prototype methods and properties.
+- For any other scenario, different for loops are better option.
+
+### .forEach
+
+For each iterates directly over an array. No need to define a iteration variable. It applies function to each item.
+
+```js
+array.forEach((item, index, array) => {
+    // Logic
+});
+```
+
+- `forEach` does not return anything (it should not be assigned to a variable).
+- In callback function we can leverage up to three parameters for an array: item, index, array.
+- Due to the fact that it uses callback function, the logic is block scoped.
+
+## While Loops
+
+### While
+
+`while` loops are much faster for big arrays (10000>).
+
+```js
+let run = true
+while(run === true) {
+    console.log('To the infinity and beyond!');
+}
+```
+
+To break out of while loop, there must be logic within it that will change the condition:
+
+```js
+let run = true;
+let i = 0;
+while(run === true) {
+    console.log('To the infinity and beyond!');
+    i++;
+    if (i > 10) {
+        run = false;
+    }
+}
+```
+
+### Do While
+
+Same as while, but the code runs once before checking the condition.
+
+```js
+do {
+    console.log('Running!');
+} while (run === true)
+```
+
+## Map, Filter, Find, Reduce
+
+### Map
+
+Map takes a data, applies a function to each element of the data and spits out modified data.
+
+```js
+const result = array.map(callbackFunction);
+```
+
+Map returns an array of the same length but with the modification applied by callbackFunction.
+
+```js title="Example - toProperCase"
+['mateusz', 'sara'].map(name => `${name[0].toUpperCase()}${name.slice(1)}`);
+```
+
+### Filter
+
+Filter takes data, applies a boolean returning function to each element of the data and spits out filtered down data.
+```js
+const result = array.filter(callbackFunction);
+```
+
+### Find
+
+Find takes data, applies a boolean returning function to each element of the data and spits out first results that matches.
+
+```js
+const result = array.find(callbackFunction);
+```
+
+### Reduce
+
+Reduce takes data, applies a reducer function to each element of the data and spits out single output value.
+
+```js
+const result = array.reduce(callbackFunction);
+```
+
+```js title="Example - Sum"
+[1, 2, 3, 4, 5].reduce((accumulator, value) => accumulator + value, 0); // Returns 15; 0 is second optional argument that sets the starting point for accumulating and is useful to safeguard against empty arrays
+```
+
+```js title="Example - Avg"
+[1, 2, 3, 4, 5].reduce((accumulator, value) => accumulator + value, 0) / [1, 2, 3, 4, 5].length;
+```
+
+```js title="Example - objects array reducer"
+const inventory = [
+      { type: 'shirt', price: 4000 },
+      { type: 'pants', price: 4532 },
+      { type: 'socks', price: 234 },
+      { type: 'shirt', price: 2343 },
+      { type: 'pants', price: 2343 },
+      { type: 'socks', price: 542 },
+      { type: 'pants', price: 123 },
+]
+
+const inventoryCount = inventory.reduce((accumulator, item) => {
+    accumulator[item.type] = accumulator[item.type] + 1 || 1
+    return accumulator
+}, {}); // Starting with empty object instead with 0
+
+const inventoryPrice = inventory.reduce((accumulator, item) => accumulator + item.price, 0);
+```
+
