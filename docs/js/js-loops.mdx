@@ -13,31 +13,29 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ### For
 
-`for` loop is the classic available in every version of JavaScript.
+The classic `for` loop might be a bit long to write, but it has a lot of excellent properties:
+- Available in each JavaScript version.
+- Works with `break` and `continue` statements for better looping control.
+- Both initial and increment expressions can do multiple things.
+- Condition is not limited to iterable size.
+- Fast across various scenarios.
 
-```js title="Example of for loop iterating over an array"
+```js {1} title="Example of for loop iterating over an array"
 for (let i = 0; i < array.length; i++) {
     console.log(array[i]);
 }
 ```
 
-`for` loop will:
+Let's break this down to five steps of `for` loop:
 1. Execute initial expression (`let i = 0` in the above example).
 2. Evaluate the condition (`i < array.length`). If it is false - the loop terminates. If true:
 3. The statement within the loop is executed (`console.log(array[i])`).
 4. Finally, the increment expression will evaluate (`i++`).
 5. The loop goes back to step 2 until it is false.
 
+If in doubt of which loop to use, pick the classic. To optimize speed even more, cache the length used for condition:
 
-The classic `for` loop might be a bit long to define, but it has a lot of excellent properties:
-- Works with `break` and `continue` statements for better looping control.
-- Both initial and increment expressions can do multiple things.
-- Condition is not limited to iterable size.
-- Fast across various scenarios.
-
-If you don't know what will be fastest, pick the classic. To optimize speed even more, cache the length used for condition:
-
-```js title="Initial expression assigns array.length to a variable to cache it"
+```js {1} title="Initial expression assigns array.length to a variable to cache it"
 for (let i = 0, arrayLength = array.length; i < arrayLength; i++) {
     console.log(array[i]);
 }
@@ -45,9 +43,9 @@ for (let i = 0, arrayLength = array.length; i < arrayLength; i++) {
 
 ### For of
 
-`For...of` loop came to JavaScript in ES6 (as many good things have). It loops over iterables: strings, arrays, NodeLists, maps, sets and other array-like objects. Functionality and readability make it worth deep-diving.
+`For...of` loop came to JavaScript in ES6 (as many good things have). It loops over iterables: strings, arrays, NodeLists, maps, sets and other array-like objects.
 
-```js title="Example of for-of loop iterating over letters of a string"
+```js {1} title="Example of for...of loop iterating over letters of a string"
 for (const letter of name) {
     console.log(letter);
 }
@@ -119,7 +117,7 @@ for (const key in object) {
 
 ### forEach
 
-`forEach` iterates directly over an array. No need to define a iteration variable. It applies function to each item.
+`forEach` iterates directly over an array. It applies function to each item but does not return anything.
 
 ```js {1}
 array.forEach((item, index, array) => {
@@ -130,12 +128,15 @@ array.forEach((item, index, array) => {
 });
 ```
 
-- `forEach` does not return anything (don't assign it to a variable).
+It differs from other loops:
+- No need to define an iteration variable.
 - `continue` or `break` won't work.
 - In the callback function, we can leverage up to three optional parameters for an array: item, index, array.
 - Because it uses a callback function, the logic is block scoped.
 
 In most scenarios, the `for...of` loop will be a better choice.
+
+----
 
 ## While Loops
 
@@ -152,7 +153,7 @@ while (run === true) {
 
 To break out of `while` loop, there must be logic within it that will change the condition to false (or a `break` statement):
 
-```js
+```js {3}
 let run = true;
 let i = 0;
 while (run === true) {
@@ -161,6 +162,17 @@ while (run === true) {
     if (i > 10) {
         run = false;
     }
+}
+```
+
+or just:
+
+```js {3} title="This loop has the same outcome as the one above"
+let run = true;
+let i = 0;
+while (i <= 10) {
+    console.log('To the infinity and beyond!');
+    i++;
 }
 ```
 
