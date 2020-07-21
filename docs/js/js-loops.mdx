@@ -1,19 +1,19 @@
 ---
 id: js-loops
-title: Loops & Friends
+title: Loops
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='For, While and forEach meet Filter, Map, Find and Reduce' />
+<LeadText content="JavaScript offers four for loops and two while loops. What's the difference?" />
 
 ## For Loops
 
 ### For
 
-The classic for loop is bread and butter in both vanilla JS as well as Marketing Cloud SSJS.
+`for` loop is the classic available in every version of JavaScript.
 
 ```js title="Example of for loop iterating over an array"
 for (let i = 0; i < array.length; i++) {
@@ -21,19 +21,19 @@ for (let i = 0; i < array.length; i++) {
 }
 ```
 
-For loop will:
+`for` loop will:
 1. Execute initial expression (`let i = 0` in the above example).
-2. Evaluete the condition (`i < array.length`). If it is false - the loop terminates. If true:
+2. Evaluate the condition (`i < array.length`). If it is false - the loop terminates. If true:
 3. The statement within the loop is executed (`console.log(array[i])`).
-4. Finally the increment expression will be evalueted (`i++`).
-5. Loop goes back to step 2 until it will be false.
+4. Finally, the increment expression will evaluate (`i++`).
+5. The loop goes back to step 2 until it is false.
 
 
-The classic for loop might be a bit long to define, but it has a lot of great properties:
+The classic `for` loop might be a bit long to define, but it has a lot of excellent properties:
 - Works with `break` and `continue` statements for better looping control.
-- Both initial and incerement expressions can do multiple things.
+- Both initial and increment expressions can do multiple things.
 - Condition is not limited to iterable size.
-- Really fast across various scenarios.
+- Fast across various scenarios.
 
 If you don't know what will be fastest, pick the classic. To optimize speed even more, cache the length used for condition:
 
@@ -45,7 +45,7 @@ for (let i = 0, arrayLength = array.length; i < arrayLength; i++) {
 
 ### For of
 
-For-of loop was added in ES6 (so forget about using it in Marketing Cloud SSJS...). It loops over iterables: strings, arrays, NodeLists, maps, sets and other array-like objects. Functionality and readibility makes it really interesting option. Let's dive in.
+`For...of` loop came to JavaScript in ES6 (as many good things have). It loops over iterables: strings, arrays, NodeLists, maps, sets and other array-like objects. Functionality and readability make it worth deep-diving.
 
 ```js title="Example of for-of loop iterating over letters of a string"
 for (const letter of name) {
@@ -53,9 +53,9 @@ for (const letter of name) {
 }
 ```
 
-This loop is blazing fast for very small iterables. From martech perspective, it is fantastic tool to iterate over NodeLists/HTMLCollections when working with DOM. Works great for working with outputs of API calls. Worth using also for operating on split-string-arrays (for example comma-separated strings).
+This loop is blazing fast for very small iterables. From martech perspective, it is a fantastic tool to iterate over NodeLists/HTMLCollections when working with DOM. Works great for working with outputs of API calls. Worth also using for operating on split-string-arrays (for example comma-separated strings).
 
-It has also multiple qualities that sets it apart from the classic for loop:
+It has many qualities that set it apart from the classic `for` loop:
 
 #### Key-Value Pair of Object
 
@@ -89,11 +89,11 @@ for (const { name } of persons) {
 }
 ```
 
-In this example for-of loop not only iterates over objects within an array, but also automatically destructures them by getting the value of the `name` key. Thanks to it, the `console.log` will be printing the names in one line.
+In this example, `for...of` loop not only iterates over objects within an array but also automatically destructures them by getting the value of the `name` key. Thanks to it, the `console.log` will be printing the names in one line.
 
 #### Iterating over Function Arguments
 
-Thanks to existance of special function variable `arguments`, for-of can loop over undefined amount of arguments.
+Thanks to existance of special function variable `arguments`, `for...of` can loop over undefined amount of arguments.
 
 ```js {3} title="Function will return sum of any number of integers provided thanks to for-of loop"
 function sum() {
@@ -109,7 +109,7 @@ sum(1, 2, 3); // returns: 6
 
 ### For in
 
-For-in loop is good idea, when you want to loop over object prototype methods and properties. Any other scenario? Not worth it. Don't use it. Just don't<sup>*</sup>.
+`for...in` loop is a good idea when you want to loop over object prototype methods and properties. Any other scenario? Not worth it. Don't use it. Just don't.
 
 ```js {1}
 for (const key in object) {
@@ -117,11 +117,9 @@ for (const key in object) {
 }
 ```
 
-<sup>*</sup>Supported by Marketing Cloud SSJS - and there it might have some use for working with objects only (as for-of loop is unsupported).
-
 ### forEach
 
-For each iterates directly over an array. No need to define a iteration variable. It applies function to each item.
+`forEach` iterates directly over an array. No need to define a iteration variable. It applies function to each item.
 
 ```js {1}
 array.forEach((item, index, array) => {
@@ -132,19 +130,18 @@ array.forEach((item, index, array) => {
 });
 ```
 
-- `forEach` does not return anything (it should not be assigned to a variable).
+- `forEach` does not return anything (don't assign it to a variable).
 - `continue` or `break` won't work.
-- In callback function we can leverage up to three optional parameters for an array: item, index, array.
-- Due to the fact that it uses callback function, the logic is block scoped.
-- Not supported by Marketing Cloud SSJS.
+- In the callback function, we can leverage up to three optional parameters for an array: item, index, array.
+- Because it uses a callback function, the logic is block scoped.
 
-In most scenarios for-of loop will be better choice.
+In most scenarios, the `for...of` loop will be a better choice.
 
 ## While Loops
 
 ### While
 
-A `while` loop executes its statement as long as condition evaluates to true.
+A `while` loop executes its statement as long as the condition evaluates to true.
 
 ```js {2} title="Infinite while loop"
 let run = true
@@ -153,7 +150,7 @@ while (run === true) {
 }
 ```
 
-To break out of while loop, there must be logic within it that will change the condition to false (or a `break` statement):
+To break out of `while` loop, there must be logic within it that will change the condition to false (or a `break` statement):
 
 ```js
 let run = true;
@@ -167,13 +164,11 @@ while (run === true) {
 }
 ```
 
-`while` loop is best option for iterating over big arrays.
-
-Supported by Marketing Cloud SSJS.
+`while` loop is the best option for iterating over big arrays.
 
 ### Do While
 
-Same as while, but the code runs once before evaluating the condition.
+Same as `while`, but the code runs once before evaluating the condition.
 
 ```js
 do {
@@ -181,71 +176,4 @@ do {
 } while (run === true)
 ```
 
-Supported by Marketing Cloud SSJS.
-
-## Map, Filter, Find, Reduce
-
-### Map
-
-Map takes a data, applies a function to each element of the data and spits out modified data.
-
-```js
-const result = array.map(callbackFunction);
-```
-
-Map returns an array of the same length but with the modification applied by callbackFunction.
-
-```js title="Example - toProperCase"
-['mateusz', 'sara'].map(name => `${name[0].toUpperCase()}${name.slice(1)}`);
-```
-
-### Filter
-
-Filter takes data, applies a boolean returning function to each element of the data and spits out filtered down data.
-```js
-const result = array.filter(callbackFunction);
-```
-
-### Find
-
-Find takes data, applies a boolean returning function to each element of the data and spits out first results that matches.
-
-```js
-const result = array.find(callbackFunction);
-```
-
-### Reduce
-
-Reduce takes data, applies a reducer function to each element of the data and spits out single output value.
-
-```js
-const result = array.reduce(callbackFunction);
-```
-
-```js title="Example - Sum"
-[1, 2, 3, 4, 5].reduce((accumulator, value) => accumulator + value, 0); // Returns 15; 0 is second optional argument that sets the starting point for accumulating and is useful to safeguard against empty arrays
-```
-
-```js title="Example - Avg"
-[1, 2, 3, 4, 5].reduce((accumulator, value) => accumulator + value, 0) / [1, 2, 3, 4, 5].length;
-```
-
-```js title="Example - objects array reducer"
-const inventory = [
-      { type: 'shirt', price: 4000 },
-      { type: 'pants', price: 4532 },
-      { type: 'socks', price: 234 },
-      { type: 'shirt', price: 2343 },
-      { type: 'pants', price: 2343 },
-      { type: 'socks', price: 542 },
-      { type: 'pants', price: 123 },
-]
-
-const inventoryCount = inventory.reduce((accumulator, item) => {
-    accumulator[item.type] = accumulator[item.type] + 1 || 1
-    return accumulator
-}, {}); // Starting with empty object instead with 0
-
-const inventoryPrice = inventory.reduce((accumulator, item) => accumulator + item.price, 0);
-```
-
+Simply perfect when you need to run an API call, check whether there are more pages of outcomes and act accordingly.

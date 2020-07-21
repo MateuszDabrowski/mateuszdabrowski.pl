@@ -16,6 +16,12 @@ module.exports = {
             collapsed: false,
             items: ['ssjs/debugging-ssjs'],
         },
+        {
+            type: 'category',
+            label: 'JS Documentation',
+            collapsed: false,
+            items: ['js/js-loops'],
+        },
     ],
     ideas: ['ideas', 'ideas/engage-with-countdown', 'ideas/tailor-with-data'],
 };
