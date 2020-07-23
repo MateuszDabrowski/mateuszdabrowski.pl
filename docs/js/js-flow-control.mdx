@@ -1,0 +1,163 @@
+---
+id: js-flow-control
+title: Flow Control
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='If, Ternary, Switch, Shortcircuit, Timer, Interval' />
+
+## If Statements
+
+```js {3,5,7}
+function slugify(sentence, case) {
+   let slug = sentence.replace(/\s/g, '-');
+    if (case === 'lower') {
+        return slug.toLowerCase();
+    } else if (case === 'upper') {
+        return slug.toUpperCase();
+    } else {
+        return slug;
+    }
+}
+```
+
+The logic can also use ORs, ANDs and brackets:
+```js
+if (age < 18 || age > 60) {
+    console.log('Sorry!');
+} else if (age >= 18 && age <= 60) {
+    console.log('Sure!');
+}
+```
+
+If statements can use boolean values of variables/methods/functions to control the flow without operator:
+```js
+const isAwesomeName = 'awesome'.includes('wes');
+if (isAwesomeName) {
+    console.log('Cool!');
+}
+```
+
+Bang can be used to flip booleans:
+```
+if (!isCool) {
+    console.log('Not cool!');
+}
+```
+
+There is also shorthand for one-line if statements:
+```
+if (isAdmin) showAdminBar();
+```
+
+## Ternaries
+
+Shorthand for simple if-else statements with two possible outcomes. Allows to change standard if statement:
+```js
+if (age < 25) {
+    sentence = 'You are young';
+} else {
+    sentence = 'You are old';
+}
+```
+
+can be changed into simpler ternary:
+
+```js
+const sentence = age < 25 ? 'You are young' : 'You are old';
+variable = condition ? if true : if false;
+```
+
+It can be leveraged even with interpolation:
+
+```
+const sentence = `If you are ${age} old, then you are ${age < 25 ? 'young' : 'old'}`;
+and running functions:
+const isAdmin = true;
+isAdmin ? showAdminBar() : null;
+```
+
+## Shortcircuting
+
+```js
+function check1() {
+    return true;
+}
+function check2() {
+    return false;
+}
+function check3() {
+    return true;
+}
+if (check1() && check2()) {
+    console.log('All checks passed');
+} else {
+    console.log('Some checks failed');
+}
+```
+In the above example the check3 won't be even checked, as with && the first false will break whole checking and return the else.
+
+This can be abused to shortcircuit pseudo-ternary:
+
+```js
+isAdmin && showAdminBar() // Very popular in React with components
+```
+
+
+## Switch Statement
+
+```js
+switch (event.key) {
+    case 'ArrowUp':
+        y -= 1;
+        break;
+    case 'ArrowDown':
+        y += 1;
+        break;
+    case 'ArrowLeft':
+        x -= 1;
+        break;
+    case 'ArrowRight':
+        x += 1;
+        break;
+    default:
+        console.log('This is not a valid move');
+        break;
+}
+```
+
+## Intervals & Timers
+
+Timeout allows to launch a function after given delay - it does not stop the JavaScript from running forward (asynchronous).
+```js
+setTimeout(callbackFunction, miliseconds);
+```
+
+Intervals works the same as timeouts, but instead of delaying something, it launches function on and on every interval.
+```js
+setInterval(callbackFunction, miliseconds);
+```
+
+Interval launches for the first time after the given interval time passess. It can be overcome with custom function:
+```js
+function setImmediateInterval(funcToRun, ms) {
+    funcToRun();
+    return setInterval(funcToRun, ms);
+}
+setImmediateInterval(callbackFunction, 500);
+```
+
+### Deleting Interval & Timer
+
+To be able to stop interval or timer, it first needs to be referencable:
+```js
+const timer = setTimeout(callbackFunction, miliseconds);
+clearTimeout(timer);
+const interval = setInterval(callbackFunction, miliseconds);
+clearInterval(interval);
+```
+
+Neat idea might be to use setTimer to clearInterval on concurrently running setInterval.
