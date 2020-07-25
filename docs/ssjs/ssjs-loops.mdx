@@ -9,15 +9,16 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="Let's dive into limited looping options of the SSJS." />
 
+Working with arrays and objects is one of the selling points of SSJS vs AMPScript. And the primary way to utilize those structures is to loop over them. While SSJS doesn't have all the magic of the modern JavaScript, it still has much more to offer than single `FOR` available in AMPScript.
+
 ## For Loops
 
 ### For
 
 The classic `for` loop might be a bit long to write, but it has a lot of excellent properties:
-- Available in each JavaScript version.
 - Works with `break` and `continue` statements for better looping control.
-- Both initial and increment expressions can do multiple things.
-- Condition is not limited to iterable size.
+- Both initial and increment expressions can do multiple things (examples available below).
+- Condition is not limited to iterable length (although it is the most popular way).
 - Fast across various scenarios.
 
 ```js {1} title="Example of for loop iterating over an array"
@@ -27,14 +28,14 @@ for (var i = 0; i < array.length; i++) {
 }
 ```
 
-Let's break this down to five steps of `for` loop:
+Let's break the script down to five steps each `for` loop follows:
 1. Execute initial expression (`var i = 0` in the above example).
 2. Evaluate the condition (`i < array.length`). If it is false - the loop terminates. If true:
 3. The statement within the loop is executed (`Write(array[i])`).
 4. Finally, the increment expression will evaluate (`i++`).
 5. The loop goes back to step 2 until it is false.
 
-To optimize speed even more, cache the length used for condition:
+To optimize speed, cache the length used for condition. By assigning it to a variable in initial expression, the loop won't have to check the length on each iteration.
 
 ```js {1} title="Initial expression assigns array.length to a variable to cache it"
 for (var i = 0, range = array.length; i < range; i++) {
@@ -43,7 +44,7 @@ for (var i = 0, range = array.length; i < range; i++) {
 }
 ```
 
-You can get more logic within the `for` declaration to have a cleaner statement within the loop:
+You can get more logic within the `for` declaration to, for example, have a cleaner statement within the loop:
 
 ```js {1} title="Provide itemValue variable instead of just current iteration"
 for (var i = 0, itemValue = array[i], range = array.length; i < range; i++, itemValue = array[i]) {
@@ -55,17 +56,17 @@ As ES6 [for...of](/docs/js/js-loops#for-of) loop is not available in SSJS, you w
 
 ### For in
 
-`for...in` loop in modern JavaScript is used nearly only for debugging. It is because it loops not only over standard values but also over object prototype methods and properties.
+`for...in` loop in modern JavaScript is used nearly exclusively for debugging. It is because it loops not only over standard values but also over object prototype methods and properties.
 
 In SSJS however, the ES6 [for...of](/docs/js/js-loops#for-of) loop is not available. `Object.keys()` or `Object.entries()` also does not exist. This makes the `for...in` the only solution for iterating over objects.
 
 ```js {1}
 for (var key in object) {
-    Write(key + '<br/><br/>');
+    Write(key + '<br/><br/>');          // Returns string name of the current key
 }
 ```
 
-In simple scripts created in SSJS you shouldn't have issues with the prototype methods and properties, however, if you encounter any issues, use `hasOwnProperty` method:
+In simple scripts created in SSJS you shouldn't have issues with the prototype methods and properties, however, if you encounter any issues (or want to code defensively), use `hasOwnProperty` method:
 
 ```js {2}
 for (var key in object) {
@@ -76,6 +77,12 @@ for (var key in object) {
 ```
 
 Remember to use `for...in` only for looping over objects. For any other scenario classic `for` loop is both safer and more powerful.
+
+:::note You Should Know
+
+If you ever use `for...in` loop for an array, remember that the loop-counter variable will return a string instead of a number. For example `'0'` for first array item instead of `0`.
+
+:::
 
 ----
 

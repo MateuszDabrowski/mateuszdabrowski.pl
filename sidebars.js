@@ -6,25 +6,13 @@ module.exports = {
         },
         {
             type: 'category',
-            label: 'SSJS Documentation',
+            label: 'SSJS',
             collapsed: false,
-            items: ['ssjs/ssjs-loops'],
-        },
-        // {
-        //     type: 'category',
-        //     label: 'WSProxy',
-        //     collapsed: false,
-        //     items: ['ssjs/wsproxy'],
-        // },
-        {
-            type: 'category',
-            label: 'SSJS Snippets',
-            collapsed: false,
-            items: ['ssjs/debugging-ssjs'],
+            items: ['ssjs/ssjs-loops', 'ssjs/debugging-ssjs'],
         },
         {
             type: 'category',
-            label: 'JS Documentation',
+            label: 'JavaScript',
             collapsed: false,
             items: ['js/js-loops'],
         },
