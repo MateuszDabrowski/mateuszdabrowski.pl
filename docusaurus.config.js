@@ -32,12 +32,13 @@ module.exports = {
             textColor: '#00001F',
         },
         navbar: {
+            title: 'Home',
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
                 src: 'img/logo-horizontal-light-2x.png',
                 srcDark: 'img/logo-horizontal-dark-2x.png',
             },
-            links: [
+            items: [
                 {
                     label: 'Docs & Snippets',
                     to: 'docs',
