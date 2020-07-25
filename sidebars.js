@@ -4,6 +4,12 @@ module.exports = {
             type: 'doc',
             id: 'docs-and-snippets',
         },
+        {
+            type: 'category',
+            label: 'SSJS Documentation',
+            collapsed: false,
+            items: ['ssjs/ssjs-loops'],
+        },
         // {
         //     type: 'category',
         //     label: 'WSProxy',
