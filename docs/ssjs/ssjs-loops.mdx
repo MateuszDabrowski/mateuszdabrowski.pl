@@ -35,7 +35,7 @@ Let's break the script down to five steps each `for` loop follows:
 4. Finally, the increment expression will evaluate (`i++`).
 5. The loop goes back to step 2 until it is false.
 
-To optimize speed, cache the length used for condition. By assigning it to a variable in initial expression, the loop won't have to check the length on each iteration.
+To optimize speed, cache the length used for condition. By assigning it to a variable in initial expression, the loop won't have to calculate the length on each iteration.
 
 ```js {1} title="Initial expression assigns array.length to a variable to cache it"
 for (var i = 0, range = array.length; i < range; i++) {
@@ -53,6 +53,26 @@ for (var i = 0, itemValue = array[i], range = array.length; i < range; i++, item
 ```
 
 As ES6 [for...of](/docs/js/js-loops#for-of) loop is not available in SSJS, you will use this one in most scenarios.
+
+#### Labelled loops
+
+JavaScript support labels for loops. It allows you to name each loop for even better control with both `continue` and `break` statements.
+
+```js {1,8}
+MainLoopLabel:
+for (let i = 0; i < array.length; i++) {
+    // Logic
+    SecondaryLoopLabel:
+    for (let j = 0; j < array[i].length; j++) {
+        // Logic
+        if (array[i][j] === 'important') {
+            break MainLoopLabel;
+        };
+    };
+};
+```
+
+As you can see, in the first line we added a label for the first `for` loop. Then, in the statement within the second `for` loop, we used `break` followed by the label. Once executed, it will break both for loops, even if there were still iterations in the main one. The same approach works with the `continue` statement.
 
 ### For in
 
@@ -130,7 +150,7 @@ while (i <= 10) {
 
 Same as `while`, but the code runs once before evaluating the condition.
 
-```js
+```js {1,3}
 do {
     Write('Running!');
 } while (run === true)
