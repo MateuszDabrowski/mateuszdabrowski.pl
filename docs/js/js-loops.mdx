@@ -33,7 +33,7 @@ Let's break the script down to five steps each `for` loop follows:
 4. Finally, the increment expression will evaluate (`i++`).
 5. The loop goes back to step 2 until it is false.
 
-If in doubt of which loop to use, pick the classic. To optimize speed even more, cache the length used for condition:
+If in doubt of which loop to use, pick the classic. To optimize speed, cache the length used for condition:
 
 ```js {1} title="Initial expression assigns array.length to a variable to cache it"
 for (let i = 0, arrayLength = array.length; i < arrayLength; i++) {

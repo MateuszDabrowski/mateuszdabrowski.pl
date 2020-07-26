@@ -52,6 +52,12 @@ module.exports = {
                     position: 'left',
                 },
                 {
+                    label: 'Toolset',
+                    to: 'docs/toolset',
+                    activeBasePath: 'docs',
+                    position: 'left',
+                },
+                {
                     href: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
                     position: 'right',
                     className: 'header-linkedin-link',
