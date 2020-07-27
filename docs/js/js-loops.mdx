@@ -41,26 +41,6 @@ for (let i = 0, arrayLength = array.length; i < arrayLength; i++) {
 }
 ```
 
-#### Labelled loops
-
-JavaScript support labels for loops. It allows you to name each loop for even better control with both `continue` and `break` statements.
-
-```js {1,8}
-MainLoopLabel:
-for (let i = 0; i < array.length; i++) {
-    // Logic
-    SecondaryLoopLabel:
-    for (let j = 0; j < array[i].length; j++) {
-        // Logic
-        if (array[i][j] === 'important') {
-            break MainLoopLabel;
-        };
-    };
-};
-```
-
-As you can see, in the first line we added a label for the first `for` loop. Then, in the statement within the second `for` loop, we used `break` followed by the label. Once executed, it will break both for loops, even if there were still iterations in the main one. The same approach works with the `continue` statement.
-
 ### For of
 
 `For...of` loop came to JavaScript in ES6 (as many good things have). It loops over iterables: strings, arrays, NodeLists, maps, sets and other array-like objects.
@@ -209,3 +189,25 @@ do {
 ```
 
 Perfect when you need to run an API call, check whether there are more pages of outcomes and act accordingly.
+
+:::note You Should Know
+
+JavaScript support labels for loops. It allows you to name each loop for even better control with both `continue` and `break` statements.
+
+```js {1,8} title="Labelled loop example using a nested for loops"
+MainLoopLabel:
+for (let i = 0; i < array.length; i++) {
+    // Logic
+    SecondaryLoopLabel:
+    for (let j = 0; j < array[i].length; j++) {
+        // Logic
+        if (array[i][j] === 'important') {
+            break MainLoopLabel;
+        };
+    };
+};
+```
+
+As you can see, in the first line we added a label for the first `for` loop. Then, in the statement within the second `for` loop, we used `break` followed by the label. Once executed, it will break both for loops, even if there were still iterations in the main one. The same approach works with the `continue` statement.
+
+:::
