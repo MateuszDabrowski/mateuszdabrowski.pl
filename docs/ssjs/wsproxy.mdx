@@ -27,7 +27,7 @@ What is WSProxy? It's a SSJS wrapper around the bad and ugly of the SOAP API. An
 >
 <TabItem value='soap'>
 
-```xml title="Create an Automation with SOAP"
+```xml title="Send a Triggered Send Email with SOAP"
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -44,89 +44,109 @@ What is WSProxy? It's a SSJS wrapper around the bad and ugly of the SOAP API. An
     </soapenv:Header>
     <soapenv:Body>
         <CreateRequest xmlns="http://exacttarget.com/wsdl/partnerAPI">
-            <Options/>
-            <Objects xsi:type="Automation">
-                <Client>
-                    <ID>1234567</ID>
-                </Client>
-                <Name>AUT_ONEOFF</Name>
-                <CustomerKey>AUT_ONEOFF</CustomerKey>
-                <Description>AUT_ONEOFF</Description>
-                <AutomationTasks>
-                    <AutomationTask>
-                        <PartnerKey xsi:nil="true"/>
-                        <ObjectID xsi:nil="true"/>
-                        <Name>Task 1</Name>
-                        <Activities>
-                            <Activity>
-                                <PartnerKey xsi:nil="true"/>
-                                <ObjectID>c7ccca24-4567-4317-b8d0-3874d69c130c</ObjectID>
-                                <Name>Query 1</Name>
-                                <ActivityObject xsi:type="QueryDefinition">
-                                    <PartnerKey xsi:nil="true"/>
-                                    <ObjectID>c7ccca24-4567-4317-b8d0-3874d69c130c</ObjectID>
-                                    <CustomerKey>546012e7-4438-4526-9e6c-5ec73939848b</CustomerKey>
-                                    <Name>BrowseAbandon_US_Unica_Sendable_Audience_Approved</Name>
-                                </ActivityObject>
-                            </Activity>
-                        </Activities>
-                    </AutomationTask>
-                </AutomationTasks>
-                <AutomationType>scheduled</AutomationType>
+            <Objects xsi:type="TriggeredSend">
+                <PartnerKey xsi:nil="true"/>
+                <ObjectID xsi:nil="true"/>
+                <TriggeredSendDefinition>
+                    <PartnerKey xsi:nil="true"/>
+                    <ObjectID xsi:nil="true"/>
+                    <CustomerKey>Definition_Key</CustomerKey>
+                </TriggeredSendDefinition>
+                <Subscribers>
+                    <PartnerKey xsi:nil="true"/>
+                    <ObjectID xsi:nil="true"/>
+                    <EmailAddress>aruiz@example.com</EmailAddress>
+                    <SubscriberKey>aruiz@example.com</SubscriberKey>
+                    <Attributes>
+                        <Name>FirstName</Name>
+                        <ValueMateuszValue>
+                    </Attributes>
+                    <Attributes>
+                        <Name>LastName</Name>
+                        <Value>Dąbrowski</Value>
+                    </Attributes>
+                    <Attributes>
+                        <Name>PurchasedItemName</Name>
+                        <Value>Exway Flex</Value>
+                    </Attributes>
+                    <Attributes>
+                        <Name>PurchasedItemDeliveryDate</Name>
+                        <Value>27/07/2020</Value>
+                    </Attributes>
+                    <Attributes>
+                        <Name>PurchasedItemTracingCode</Name>
+                        <Value>Q1W2E3R4T5Y6</Value>
+                    </Attributes>
+                </Subscribers>
             </Objects>
         </CreateRequest>
     </soapenv:Body>
 </soapenv:Envelope>
 ```
 
-Cleaned code sample from [official Marketing Cloud Documentation](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-apis.meta/mc-apis/interacting_with_automation_studio_via_the_web_service_soap_api.htm)
-
 </TabItem>
 <TabItem value='ssjs'>
 
-TODO: Fix this snippet
-```html
+```html title="Send a Triggered Send Email with SSJS"
 <script runat="server">
     Platform.Load("core","1");
 
-    var Automation = Platform.Function.CreateObject("Automation");
-    Platform.Function.SetObjectProperty(Automation, "Name", "AUT_ONEOFF);
-    Platform.Function.SetObjectProperty(Automation, "CustomerKey", "AUT_ONEOFF);
-    Platform.Function.SetObjectProperty(Automation, "Description", "AUT_ONEOFF);
-    Platform.Function.SetObjectProperty(Automation, "AutomationType", "scheduled");
+    var triggeredSendKey = 123456;
+    var emailAddress = "sendme@triggered.send";
+    var subscriberKey = "ABC-123-XYZ-890";
+    var firstName = "Mateusz";
+    var lastName = "Dąbrowski";
+    var purchasedItemName = "Exway Flex"
+    var purchasedItemDeliveryDate = "27/07/2020"
+    var purchasedItemTrackingCode = "Q1W2E3R4T5Y6";
 
-    var ActivityObject = Platform.Function.CreateObject("ActivityObject");
-    Platform.Function.SetObjectProperty(ActivityObject, "ObjectID", "c7ccca24-4567-4317-b8d0-3874d69c130c");
-    Platform.Function.SetObjectProperty(ActivityObject, "CustomerKey", "546012e7-4438-4526-9e6c-5ec73939848b");
-    Platform.Function.SetObjectProperty(ActivityObject, "Name", "BrowseAbandon_US_Unica_Sendable_Audience_Approved");
+    var triggeredSend = Platform.Function.CreateObject('TriggeredSend');
 
-    var Activity = Platform.Function.CreateObject("Activity");
-    Platform.Function.SetObjectProperty(Activity, "ObjectID", "c7ccca24-4567-4317-b8d0-3874d69c130c");
-    Platform.Function.SetObjectProperty(Activity, "Name", "Query 1");
-    Platform.Function.SetObjectProperty(Activity, "ActivityObject", ActivityObject);
+    var triggeredSendDefinition = Platform.Function.CreateObject("TriggeredSendDefinition");
+    Platform.Function.SetObjectProperty(triggeredSendDefinition, "CustomerKey", triggeredSendKey);
+    Platform.Function.SetObjectProperty(triggeredSend, "TriggeredSendDefinition", triggeredSendDefinition);
 
-    var Activities = Platform.Function.CreateObject("Activities");
-    Platform.Function.SetObjectProperty(Activities, "Activities", Activity);
+    var subsciber = Platform.Function.CreateObject("Subscriber");
+    Platform.Function.SetObjectProperty(subscriber, "EmailAddress", emailAddress);
+    Platform.Function.SetObjectProperty(subscriber, "SubscriberKey", subscriberKey);
 
-    var AutomationTaskOne = Platform.Function.CreateObject("AutomationTask");
-    Platform.Function.SetObjectProperty(AutomationTaskOne, "Name", "Task One");
-    Platform.Function.AddObjectArrayItem(AutomationTaskOne, "Activities", ImportActivity);
-    Platform.Function.AddObjectArrayItem(Automation, "AutomationTasks", AutomationTaskOne);
+    var attribute = Platform.Function.CreateObject("Attribute");
+    Platform.Function.SetObjectProperty(attribute, "Name", "FirstName");
+    Platform.Function.SetObjectProperty(attribute, "Value", firstName);
+    Platform.Function.AddObjectArrayItem(subscriber, "Attributes", attribute);
 
-    var CreateRequest = Platform.Function.CreateObject("CreateRequest");
-    var CreateOptions = Platform.Function.CreateObject("CreateOptions");
-    Platform.Function.SetObjectProperty(CreateRequest, "Options", CreateOptions);
-    Platform.Function.AddObjectArrayItem(CreateRequest, "Objects", Automation);
+    attribute = Platform.Function.CreateObject("Attribute");
+    Platform.Function.SetObjectProperty(attribute, "Name", "LastName");
+    Platform.Function.SetObjectProperty(attribute, "Value", lastName);
+    Platform.Function.AddObjectArrayItem(subscriber, "Attributes", attribute);
 
-    var StatusAndRequestID = [0,0];
-    var CreateResults = Platform.Function.InvokeCreate(CreateRequest, StatusAndRequestID);
+    attribute = Platform.Function.CreateObject("Attribute");
+    Platform.Function.SetObjectProperty(attribute, "Name", "PurchasedItemName");
+    Platform.Function.SetObjectProperty(attribute, "Value", purchasedItemName);
+    Platform.Function.AddObjectArrayItem(subscriber, "Attributes", attribute);
+
+    attribute = Platform.Function.CreateObject("Attribute");
+    Platform.Function.SetObjectProperty(attribute, "Name", "PurchasedItemDeliveryDate");
+    Platform.Function.SetObjectProperty(attribute, "Value", purchasedItemDeliveryDate);
+    Platform.Function.AddObjectArrayItem(subscriber, "Attributes", attribute);
+
+    attribute = Platform.Function.CreateObject("Attribute");
+    Platform.Function.SetObjectProperty(attribute, "Name", "PurchasedItemTracingCode");
+    Platform.Function.SetObjectProperty(attribute, "Value", purchasedItemTrackingCode);
+    Platform.Function.AddObjectArrayItem(subscriber, "Attributes", attribute);
+
+    Platform.Function.AddObjectArrayItem(triggeredSend, "Subscribers", subscriber);
+
+    var statusAndReustID = [0, 0];
+
+    vat response = Platform.Function.InvokeCreate(triggeredSend, statusAndReustID, null);
 </script>
 ```
 
 </TabItem>
 <TabItem value='wsproxy'>
 
-```
+```html title="Send a Triggered Send Email with WSProxy"
 
 ```
 
