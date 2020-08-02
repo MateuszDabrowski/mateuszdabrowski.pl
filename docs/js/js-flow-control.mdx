@@ -11,74 +11,136 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## If Statements
 
-```js {3,5,7}
-function slugify(sentence, case) {
-   let slug = sentence.replace(/\s/g, '-');
-    if (case === 'lower') {
-        return slug.toLowerCase();
-    } else if (case === 'upper') {
-        return slug.toUpperCase();
-    } else {
-        return slug;
+The most popular way of handling conditional logic is the `if` statement. It is universal, flexible, and easy to understand.
+
+```js {2} title="Create a segment of customers that made more than two purchases"
+for (let customer of customers) {
+    if (customer.purchases > 2) {
+        marketingSegment.push(customer.email);
     }
 }
 ```
 
-The logic can also use ORs, ANDs and brackets:
-```js
-if (age < 18 || age > 60) {
-    console.log('Sorry!');
-} else if (age >= 18 && age <= 60) {
-    console.log('Sure!');
+### And, Or, Brackets
+
+The `if` statement is even more powerful if you also use ORs (`||`), ANDs (`&&`) and brackets:
+```js {2,4} title="Split customers into two segments depending on a condition group"
+for (let customer of customers) {
+    if (customer.purchases <=2 || customer.lastPurchaseDate <= new Date('2019-12-31')) {
+        reengagementCampaignSegment.push(customer);
+    } else if (customer.purchases > 2 && customer.lastPurchaseDate > new Date('2019-12-31')) {
+        upsellCampaignSegment.push(customer);
+    }
 }
 ```
 
-If statements can use boolean values of variables/methods/functions to control the flow without operator:
-```js
-const isAwesomeName = 'awesome'.includes('wes');
-if (isAwesomeName) {
-    console.log('Cool!');
+### Boolean evaluation
+
+You can use boolean values of variables/methods/functions to control the flow without operator:
+```js {3} title="If the customer has domain of your competiton, add him to blocklist"
+for (let customer of customers) {
+    const competitionUser = customer.email.includes('@competition.com');
+    if (competitionUser) {  // if comptetitionUser evaluates to true, if content will be exectuted
+        blocklist.push(customer);
+    }
 }
 ```
 
-Bang can be used to flip booleans:
-```
-if (!isCool) {
-    console.log('Not cool!');
+### Flip Booleans with Bang
+
+Bang symbol (`!`) can be used to flip booleans:
+```js {3} title="If the customer does not have competition domain in email, add him to campaign"
+for (let customer of customers) {
+    const competitionUser = customer.email.includes('@competition.com');
+    if (!competitionUser) {  // if not competition user, execute content
+        campaignSegment.push(customer);
+    }
 }
 ```
 
-There is also shorthand for one-line if statements:
+Bang not only functions as a NOT operator, it also changes truthy and falsy values into a (opposite) boolean.
+
+Falsy values in JavaScript are: `false`, `0`, empty string `""`, `null`, `undefined`, `NaN`.
+All other possible values are considered truthy.
+
+This is very useful, as it allows you to leverage boolean evaluation on truthy values:
+
+``` js {3} title="Applies either personalized name or default value"
+for (let customer of customers) {
+    let helloPersonalization;
+    if (customer.firstName) {
+        helloPersonalization = customer.firstName;
+    } else if (!customer.firstName) {
+        helloPersonalization = 'Valued Customer';
+    }
+}
 ```
-if (isAdmin) showAdminBar();
+
+Just to make it clear - above code is very "dirty" and can be wrriten much better (for example without `else if` by applying default value on variable initialization). Example how to write it better will be shown soon.
+
+:::note You Should Know
+
+You can leverage this feature twice by using double bang `!!` to convert truthy/falsy value into (appropriate) boolean.
+
+```js title="If optInDate has any value (is not empty) the isOptedIn variable will evaluate to true"
+const isOptedIn = !!optInDate;
 ```
+
+:::
+
+### If shorthand
+
+For simple, one-line `if` statements, there is also a shorthand:
+```js title="If the customer is opted in, send an email"
+if (isOptedIn) sendEmail(emailAddress, emailID);
+```
+
+You could probably use the `if` statements only for the logic of your code. But you shouldn't. There are some very interesing and useful alternatives worth checking out.
+
+----
 
 ## Ternaries
 
-Shorthand for simple if-else statements with two possible outcomes. Allows to change standard if statement:
-```js
-if (age < 25) {
-    sentence = 'You are young';
-} else {
-    sentence = 'You are old';
+If a simple `if` statement has only two possible outcomes depending on a condition, ternary is a simpler and more readable. Based on previous example, instead of:
+```js {2-7}
+for (let customer of customers) {
+    let helloPersonalization;
+    if (customer.firstName) {
+        helloPersonalization = customer.firstName;
+    } else if (!customer.firstName) {
+        helloPersonalization = 'Valued Customer';
+    }
 }
 ```
 
-can be changed into simpler ternary:
+we can use a clean ternary:
 
-```js
-const sentence = age < 25 ? 'You are young' : 'You are old';
-variable = condition ? if true : if false;
+```js {2}
+for (let customer of customers) {
+    let helloPersonalization = customer.firstName ? customer.firstName : 'Valued Customer';
+}
 ```
 
-It can be leveraged even with interpolation:
+Instead of 6 lines of code, we have 1. Awesome. But how does it work? Ternary structure looks like this: `variable = condition ? valueIfTrue : valueIfFalse;`. So in the example above, if the `customer.firstName` is not empty (is truthy), it will be pushed as the value of `helloPersonalization`. If it is empty, the default value will be assigned instead.
 
+:::note You Should Know
+
+Ternary can be used not only for the if statement.
+It can be awesome to customize text with interpolation:
+
+```js title="Fill in the sentence with different words depending on boolean value of isOptedIn"
+const areYouOptedIn = `You are ${isOptedIn ? 'opted in' : 'not opted in'}`;
 ```
-const sentence = `If you are ${age} old, then you are ${age < 25 ? 'young' : 'old'}`;
-and running functions:
-const isAdmin = true;
-isAdmin ? showAdminBar() : null;
+
+Ternaries are not limited to variables and strings. They can also run functions:
+
+```js title="If isLoggedIn is false, the redirectToLogInPage function will be executed"
+isLoggedIn ? redirectToLogInPage() : null;
 ```
+
+:::
+
+----
 
 ## Shortcircuting
 
@@ -106,6 +168,7 @@ This can be abused to shortcircuit pseudo-ternary:
 isAdmin && showAdminBar() // Very popular in React with components
 ```
 
+----
 
 ## Switch Statement
 
@@ -129,6 +192,8 @@ switch (event.key) {
 }
 ```
 
+----
+
 ## Intervals & Timers
 
 Timeout allows to launch a function after given delay - it does not stop the JavaScript from running forward (asynchronous).
@@ -149,6 +214,8 @@ function setImmediateInterval(funcToRun, ms) {
 }
 setImmediateInterval(callbackFunction, 500);
 ```
+
+----
 
 ### Deleting Interval & Timer
 
