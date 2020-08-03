@@ -1,0 +1,285 @@
+---
+id: js-if-and-switch
+title: If & Switch
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Deep dive into the two pillars of JavaScript flow control' />
+
+## If Statements
+
+The most popular way of handling conditional logic is the `if` statement. It is universal, flexible, and easy to understand.
+
+```js {2} title="Create a segment of customers that made more than two purchases"
+for (let customer of customers) {
+    if (customer.purchases > 2) {
+        marketingSegment.push(customer.email);
+    }
+}
+```
+
+### And, Or, Brackets
+
+The `if` statement is even more powerful if you also use ORs (`||`), ANDs (`&&`) and brackets:
+```js {2,4} title="Split customers into two segments depending on a condition group"
+for (let customer of customers) {
+    if (customer.purchases <=2 || customer.lastPurchaseDate <= new Date('2019-12-31')) {
+        reengagementCampaignSegment.push(customer);
+    } else if (customer.purchases > 2 && customer.lastPurchaseDate > new Date('2019-12-31')) {
+        upsellCampaignSegment.push(customer);
+    }
+}
+```
+
+### Boolean evaluation
+
+You can use boolean values of variables/methods/functions to control the flow without operator:
+```js {3} title="If the customer has domain of your competiton, add him to blocklist"
+for (let customer of customers) {
+    const competitionUser = customer.email.includes('@competition.com');
+    if (competitionUser) {  // if comptetitionUser evaluates to true, if content will be exectuted
+        blocklist.push(customer);
+    }
+}
+```
+
+### Flip Booleans with Bang
+
+Bang symbol (`!`) can be used to flip booleans:
+```js {3} title="If the customer does not have competition domain in email, add him to campaign"
+for (let customer of customers) {
+    const competitionUser = customer.email.includes('@competition.com');
+    if (!competitionUser) {  // if not competition user, execute content
+        campaignSegment.push(customer);
+    }
+}
+```
+
+Bang not only functions as a NOT operator, it also changes truthy and falsy values into a (opposite) boolean.
+
+Falsy values in JavaScript are: `false`, `0`, empty string `""`, `null`, `undefined`, `NaN`.
+All other possible values are considered truthy.
+
+This is very useful, as it allows you to leverage boolean evaluation on truthy values:
+
+``` js {3} title="Applies either personalized name or default value"
+for (let customer of customers) {
+    let helloPersonalization;
+    if (customer.firstName) {
+        helloPersonalization = customer.firstName;
+    } else if (!customer.firstName) {
+        helloPersonalization = 'Valued Customer';
+    }
+}
+```
+
+Just to make it clear - above code is very "dirty" and can be wrriten much better (for example without `else if` by applying default value on variable initialization). Example how to write it better will be shown soon.
+
+:::note You Should Know
+
+You can leverage this feature twice by using double bang `!!` to convert truthy/falsy value into (appropriate) boolean.
+
+```js title="If optInDate has any value (is not empty) the isOptedIn variable will evaluate to true"
+const isOptedIn = !!optInDate;
+```
+
+:::
+
+### If shorthand
+
+For simple, one-line `if` statements, there is also a shorthand:
+```js title="If the customer is opted in, send an email"
+if (isOptedIn) sendEmail(emailAddress, emailID);
+```
+
+You could probably use the `if` statements only for the logic of your code. But you shouldn't. There are some very interesing and useful alternatives worth checking out.
+
+----
+
+## Ternary
+
+If a simple `if` statement has only two possible outcomes depending on a condition, ternary is a simpler and more readable. Based on previous example, instead of:
+```js {2-7}
+for (let customer of customers) {
+    let helloPersonalization;
+    if (customer.firstName) {
+        helloPersonalization = customer.firstName;
+    } else if (!customer.firstName) {
+        helloPersonalization = 'Valued Customer';
+    }
+}
+```
+
+we can use a clean ternary:
+
+```js {2}
+for (let customer of customers) {
+    let helloPersonalization = customer.firstName ? customer.firstName : 'Valued Customer';
+}
+```
+
+Instead of 6 lines of code, we have 1. Awesome! But how does it work? Ternary structure looks like this: `variable = condition ? valueIfTrue : valueIfFalse;`. So in the example above, if the `customer.firstName` is not empty (is truthy), it will be pushed as the value of `helloPersonalization`. If it is empty, the default value will be assigned instead.
+
+:::note You Should Know
+
+Ternary can be used not only for the if statement.
+It can be awesome to customize text with interpolation:
+
+```js title="Fill in the sentence with different words depending on boolean value of isOptedIn"
+const optInStatusMessage = `You are ${isOptedIn ? 'opted in' : 'not opted in'}`;
+```
+
+Ternaries are not limited to variables and strings. They can also run functions:
+
+```js title="If isLoggedIn is false, the redirectToLogInPage function will be executed"
+isLoggedIn ? redirectToLogInPage() : null;
+```
+
+:::
+
+----
+
+## Shortcircuting
+
+We already covered using OR `||` + AND `&&` operators. But by using them correctly, you can optimize the speed of your scripts greatly. Shortcircuting fully uses the evaluation pattern of those two operators and left-to-right order of execution in JavaScript.
+
+### Shortcircuiting OR
+
+OR evaluates to `true` if at least one value is equal to `true`.
+
+This means that with left-to-right order of execution of JavaScript, if the left side of the OR evaluates to `true`, we know for sure that the whole statement is `true`. Checking whether the right side is also `true` is not needed. And JavaScript knows this also.
+
+Thanks to it, if we want to use an OR statement and we suspect that one side is much faster than the other, we should use that faster on the left side.
+
+```js {2} title="If last purchase was before 2020 or a very complex check requiring calls to eCommerce API evaluates to false, filter out the customer from the campaign"
+for (let customer of customers) {
+    if (customer.lastPurchaseDate < new Date('2019-12-31') || complexRequestToEcommerceAPI() === false) {
+        exclusionSegment.push(customer)
+    }
+}
+```
+
+Left side in above example is a very simple and quick check, as all the data is already within the script. Right side however, might take seconds to get the data from other system and calculate the value. If the `lastPurchaseDate` is before our threshold, we don't have to waste time and API calls. Win for us, win for customer waiting for the script to finish.
+
+### Shortcircuiting AND
+
+Similar logic can be applied to AND operator. `&&` evaluates to `true` only if both sides are `true`. This means that if we have a condition that is simpler or we suspect might be evaluating to `false`, we should put it on the left side. If it indeed will evaluate to `false`, JavaScript won't be checking the right side of the AND operator.
+
+```js {1} title="If the email provided for login is in valid format, check if password has correct length. If yes, check if this login and password are matching pair for a user. If yes, consider the login to be valid"
+if (isValidEmail(login) && isValidPassword(password) && isValidPair(email, password)) {
+    const isValidLogin = true;
+}
+```
+
+In the above example, we are doing multiple tests from the easiest to the hardest. Thanks to it, if the login is not in correct format for an email address, we won't have to even check the password or query our encripted database with hashed version of the password.
+
+### Defensive shortcircuiting
+
+We can leverage the above mentioned behaviour of `&&` and `||` to create more robust code.
+
+```js titile="Create simple personalization used in the begining of nearly every email"
+const greetingPersonalization = `Hello ${customer.firstName}!`;
+```
+
+This code, although looks nice, might quite easily crash. If we made error and did not provide the `customer` object prior to it, we will get `ReferenceError: Can't find variable: customer`. If the object is there, but it doesn't have property of `firstName`, we will get `TypeError: undefined is not an object (evaluating 'customer.firstName')` instead. By using shortcircuit we can write it in a safer way:
+
+```js title="Before creating a string, check if the object exist and if yes - if the property exists"
+const greetingPersonalization = customer && customer.firstName && `Hello ${customer.firstName}!` || `Hello Valued Customer!`;
+```
+
+This is longer, but won't drop any error on execution (thanks to checks using `&&`). It will also check if `firstName` is empty and in such scenario provide the default version (thanks to `||`).
+
+Another example? This time lets simplify the code. Instead of wordy & ify discount check:
+
+```js {2} title="If there is discount, apply it to the final price"
+let finalPrice = product.price;
+if (cart.discount !== undefined || cart.discount !== null) {
+    finalPrice -= product.price * cart.discount;
+}
+```
+
+We can leverage minimal evaluation of the OR operator:
+
+```js title="Same as above, but in one readable line"
+let finalPrice = book.price — book.price * (book.discount || 0);
+```
+
+:::note You Should Know
+
+This is quite popular pattern especially for managing user interface compontents:
+
+```js title="If the user is not an admin, shortcircuit and don't render the AdminBar component"
+isAdmin && showAdminBar()
+```
+
+:::
+
+----
+
+## Switch Statement
+
+Sometimes you have a lot of options for a single condition. You could write it with simple `if`, but the `switch` might be much more readable.
+
+```js title="Return the name of an error provided by the ID"
+switch (error) {
+    case 400:
+        return 'Bad Request';
+    case 401:
+        return 'Unauthorized';
+    case 403:
+        return 'Forbidden';
+    case 404:
+        return 'Not Found'
+    default:
+        return 'Unknown Error';
+}
+```
+
+Some things to remember when working with a `switch`:
+
+- If multiple cases match the provided value, `switch` will execute the first from top.
+- You can assign multiple cases to the same code block:
+
+```js {3-5,8-9}title="Return either sum or difference of two values (sum by default)"
+let outcome;
+switch (a, operation, b) {
+    default:
+    case '+':
+    case 'plus':
+        outcome = a + b;
+        break;
+    case '-':
+    case 'minus':
+        outcome = a - b;
+        break;
+}
+```
+
+- Use either `return` statement within the case, or end the case with `break` statement. Otherwise, the switch will execute also all below cases until it encounters one of the above keywords (or hits the last scenario). Of course, there might be some edge scenarious where you want this exact behaviour to happen.
+- Always use `default` statement, even if you believe it will never be triggered (not required, but best practice). Use it to handle the scenario you haven't thought of.
+- Cases in `switch` are using strict comparision (`===`) for evaluation, so the provided value must match the case not only by value but also by type. String value of `'0'` won't trigger integer `0` case.
+
+:::note You Should Know
+
+By default the switch statement is a single block for the scope. If you however won't to declare variables of the same name in different cases, you can do it by adding parentheses:
+
+```js {4,7,9,12} title="Despite 'outcome' variable being initialized twice with 'let', it will not drop an error because of two different block scopes"
+switch (a, operation, b) {
+    default:
+    case '+':
+    case 'plus': {
+        let outcome = a + b;
+        break;
+    }
+    case '-':
+    case 'minus': {
+        let outcome = a - b;
+        break;
+    }
+}
+```
+
+:::
