@@ -8,18 +8,18 @@ import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
 import { Countdown } from '../../src/components/Countdown.js';
 
-<LeadText content="Start boosting conversion rates right now! There are many ways to engage customers and urgency is the king among them. Learn how to leverage it today." />
+<LeadText content="Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today." />
 
 ## Outline
 
 1. [Learn how to implement the solution](#final-countdown)
 2. [Adapt it to the story you are telling](#counting-options)
-3. [Leverage personalization for even better results](#take-advantage-of-dynamic-content)
+3. [Leverage personalisation for even better results](#take-advantage-of-dynamic-content)
 
 Lured visitors to your landing page? Great! Now it is time to convert them to your cause. Whitepaper download, product purchase or enrollment, doesn't matter. In each case, you will fight for the attention of the user and drive him towards the goal set for him. It's not easy in the modern web environment, but even the basics might give you the upper hand.
 
 ## Final countdown
-Let's talk about a simple solution you can implement on your landing page in just <Countdown input={8 * 60 * 1000} />. A counter.
+Let's talk about a simple solution you can implement on your landing page in just <Countdown input={8 * 60 * 1000} /> — a counter.
 
 To add a dynamic countdown to your website, you will need basic HTML (to put it into a specific place) and a JavaScript code to do the math. CSS is optional but might spice up the style of your page.
 
@@ -83,7 +83,7 @@ For example, did you know there is only <Countdown input='July 20, 2024, 20:17:4
 
 ### JavaScript
 
-There is much more fun in the JavaScript part. Worry not - you don't need to know the language at all. Let's have a look on the lines to understand what is happening on the general level and then focus on personalisation options.
+There is much more fun in the JavaScript part. Worry not - you don't need to know the language at all. Let's have a look at the lines to understand what is happening on the general level and then focus on personalisation options.
 
 #### Function `getTimeRemaining`
 
@@ -145,20 +145,20 @@ To do this, make your marketing automation tool push a date value (in above ment
 >
 <TabItem value='sfmc'>
 
-In Salesforce Marketing Cloud you can use either [AMPScript personalization string](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/personalizationStringsAMPscript.htm) or SSJS personalization string:
+In Salesforce Marketing Cloud, you can use either [AMPScript personalisation string](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/personalisationStringsAMPscript.htm) or SSJS personalisation string:
 
 ```js
 /* Remember to check whether the date you are using has Local or System based timezone */
 const deadline = new Date('<ctrl:field name=DateTypeAttributeName />').getTime();
 ```
 
-Wondering what will happen with visitors that don't have this date value? With just personalization string such users will see the counter set to zero right from the start. Of course, we would rather not have it that way. Thankfully SSJS personalizations tring allows us to add default value very easily:
+Wondering what will happen with visitors that don't have this date value? With just personalisation string such users will see the counter set to zero right from the start. Of course, we would rather not have it that way. Thankfully SSJS personalisations strings allow us to add default value very easily:
 
 ```js
 const deadline = new Date('<ctrl:field name=DateTypeAttributeName default='2077-07-20T20:17:00+00:00' />').getTime();
 ```
 
-You can also easily create dynamic content block that will be visible only when the date from personalization string is soon enough, by leveraging a simple `if/else` logic of SSJS.
+You can also easily create a dynamic content block that will be visible only when the date from personalisation string is soon enough, by leveraging a simple `if/else` logic of SSJS.
 
 </TabItem>
 <TabItem value='eloqua'>
@@ -181,3 +181,11 @@ Wondering what will happen with visitors that don't have this date value? With j
 Use it hard. How? Put that renewal offer with a counter inside a dynamic content and insert it into every content landing page. Simple and quick solution to make sure your customers will be notified *when* they should. You can also put single dynamic content box related to events or webinars and push information with the counter about the nearest happening one. Just be sure to leverage dynamic content options to show different texts depending on visitor persona. And, of course, update that dynamic content after the event.
 
 What next? Take the code, implement on a landing page, build an urgency fueled story and watch boosted engagement do its job. You can count on it.
+
+:::note You Should Know
+
+As emails don't support JavaScript, you won't be able to leverage the above code for your sends. However, that doesn't mean you cannot increase engagement with a countdown in your outbound.
+
+Multiple solutions create dynamically changing .gifs that allows you to create a real-time timer in your email. I'm using [Sendtric](https://www.sendtric.com). A different approach, same engagement boosting value.
+
+:::
