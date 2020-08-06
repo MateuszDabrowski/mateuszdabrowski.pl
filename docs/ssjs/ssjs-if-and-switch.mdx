@@ -1,0 +1,234 @@
+---
+id: ssjs-if-and-switch
+title: If & Switch
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Deep dive into the two pillars of SSJS flow control' />
+
+## If Statements
+
+The most popular way of handling conditional logic is with the `if` statement. It is universal, flexible, and easy to understand. By evaluating a condition, it allows your script to either execute or omit part of the code.
+
+```js {2} title="Create a segment of customers that made more than two purchases"
+for (var customer in customers) {
+    if (customer.purchases > 2) {
+        marketingSegment.push(customer.email);
+    }
+}
+```
+
+Basic `if` can be extended by adding optional `else if` for an additional condition with the different outcome or optional `else` for all scenarios not caught by above conditions.
+
+```js {2,4,6} title="Create multiple segments for different levels of customers"
+for (var customer in customers) {
+    if (customer.purchases > 10) {
+        goldCustomerSegment.push(customer.email);
+    } else if (customer.purchases > 5) {
+        silverCustomerSegment.push(customer.email);
+    } else {
+        bronzeCustomerSegment.push(customer.email);
+    }
+}
+```
+
+### And, Or, Brackets
+
+The `if` statement is even more powerful if you enhance your conditions with the ORs (`||`), ANDs (`&&`) and brackets:
+
+```js {2,4} title="Split customers into two segments depending on a condition group"
+for (var customer in customers) {
+    if (customer.purchases <=2 || customer.lastPurchaseDate <= new Date('2019-12-31')) {
+        reengagementCampaignSegment.push(customer);
+    } else if (customer.purchases > 2 && customer.lastPurchaseDate > new Date('2019-12-31')) {
+        upsellCampaignSegment.push(customer);
+    }
+}
+```
+
+### Boolean evaluation
+
+You can use boolean values of variables/methods/functions to omit the operator in your condition and make the code more readable.
+
+```js {3} title="If the customer has domain of your competiton, add him to blocklist"
+for (var customer in customers) {
+    var competitionUser = customer.email.includes('@competition.com');
+    if (competitionUser) {  // if comptetitionUser is true, block will be exectuted
+        blocklist.push(customer);
+    }
+}
+```
+
+### Flip Booleans with Bang
+
+Bang symbol (`!`) can be used to flip the value of a boolean:
+
+```js {3} title="If the customer does not have competition domain in email, add him to campaign"
+for (var customer in customers) {
+    var competitionUser = customer.email.toLowerCase().indexOf('@competition.com') >= 0;
+    if (!competitionUser) {  // if not competition user, execute content
+        campaignSegment.push(customer);
+    }
+}
+```
+
+Bang not only functions as a NOT operator but also changes truthy and falsy values into an (opposite) boolean.
+
+Falsy values in JavaScript are: `false`, `0`, empty string `""`, `null`, `undefined`, `NaN`.
+All other possible values are considered truthy.
+
+This is very useful, as it allows you to leverage boolean evaluation on truthy values:
+
+``` js {3} title="Applies either personalized name or default value"
+for (var customer in customers) {
+    var helloPersonalization;
+    if (customer.firstName) { // if customer.firstName has characters, it is truthy
+        helloPersonalization = customer.firstName;
+    } else if (!customer.firstName) { // if it does not have any characterrs, it will be falsy
+        helloPersonalization = 'Valued Customer';
+    }
+}
+```
+
+To make it clear - above code is very "dirty" and can be written much better (for example without `else if` by applying default value on variable initialization). You will find an example of how to write it better later.
+
+:::note You Should Know
+
+You can level up the use of this feature by leveraging double bang `!!` to convert truthy/falsy value into an (appropriate) boolean.
+
+```js title="If optInDate has any value (is not empty) the isOptedIn variable will evaluate to true"
+var isOptedIn = !!optInDate;
+```
+
+:::
+
+### If shorthand
+
+For simple, one-line `if` statements, there is also a one-line shorthand:
+
+```js title="If the customer is opted in, send an email"
+if (isOptedIn) sendEmail(emailAddress, emailID);
+```
+
+You could probably use simple `if` conditions for the whole logic of your code. But you shouldn't. There are some interesting and useful options worth checking out.
+
+----
+
+## Shortcircuiting
+
+We already covered using OR `||` + AND `&&` operators. But by using them correctly, you can optimize the speed of your scripts greatly.
+
+### Shortcircuiting OR
+
+OR evaluates to `true` if _at least one_ value is equal to `true`.
+
+If the left side of the OR evaluates to `true`, we know for sure that the whole statement is `true`. Checking the value of the right side is not needed. And JavaScript knows this too.
+
+Thanks to it, if we want to use an OR statement and we suspect that one side is much faster than the other, we should use it on the left side.
+
+```js {2} title="If last purchase was before 2020 or a very complex check requiring calls to eCommerce API evaluates to false, filter out the customer from the campaign"
+for (var customer in customers) {
+    if (customer.lastPurchaseDate < new Date('2019-12-31') || complexRequestToEcommerceAPI() === false) {
+        exclusionSegment.push(customer)
+    }
+}
+```
+
+Left side in the above example is a straightforward and quick check, as all parts of the condition are already within the script. The right side, however, might take seconds to get the data from other system and calculate the value. If the `lastPurchaseDate` is before our threshold, we don't have to waste time and API calls. A win for us, and a win for the customer waiting for the script to finish.
+
+### Shortcircuiting AND
+
+Similar logic can be applied to AND operator. `&&` evaluates to `true` only if _both sides_ are `true`. If we have a more straightforward condition or we suspect it might frequently evaluate to `false`, we should put it on the left side. If it ends up being falsy, JavaScript won't be checking the right side of the AND operator.
+
+```js {1} title="If the email provided for login is in correct format, check if password has required length. Once validated, check if this login and password are matching pair for a user. Only then consider the login to be valid"
+if (isValidEmail(login) && isValidPassword(password) && isValidPair(email, password)) {
+    var isLoggedIn = true;
+}
+```
+
+In the above example, we are doing multiple tests ordered from the easiest to the hardest. Thanks to it, if the login is not in the correct format for an email address, we won't have even to check the password or query our encrypted database with a hashed version of the password.
+
+### Pseudo-Ternary
+
+Despite the JavaScript [ternary](/docs/js/js-if-and-switch#ternary) operator is not supported in SSJS, you can leverage shortcircuiting to get the same outcome. If a simple `if` statement has only two possible outcomes depending on a condition, ternary is more straightforward and readable alternative. Based on previous example, instead of:
+
+```js {2-7} title="Dirty if statement using basic 'if'"
+for (var customer in customers) {
+    var helloPersonalization;
+    if (customer.firstName) {
+        helloPersonalization = 'Hello' + customer.firstName;
+    } else if (!customer.firstName) {
+        helloPersonalization = 'Hello Valued Customer';
+    }
+}
+```
+
+we can use a clean pseudo-ternary:
+
+```js {2} title="Same logic changed to a pseudo-ternary"
+for (var customer in customers) {
+    var helloPersonalization = customer.firstName && 'Hello' + customer.firstName || 'Hello Valued Customer';
+}
+```
+
+Instead of 6 lines of code, we have 1. Awesome! But how does it work? The pseudo-ternary structure looks like this: `variable = condition && valueIfTrue || valueIfFalse;`. So in the example above, if the `customer.firstName` is not empty (is truthy), it will be pushed as the value of `helloPersonalization`. If it is empty, the default value will be assigned instead.
+
+:::note You Should Know
+
+You can leverage similar logic to trigger functions or [debugging](/docs/ssjs/debugging-ssjs#debugging-variable):
+
+```js title="If isLoggedIn is false, the redirectToLogInPage function will be executed"
+!isLoggedIn && redirectToLogInPage();
+```
+
+:::
+
+----
+
+## Switch Statement
+
+Sometimes you have many options for a single condition. You could write it with a simple `if`, but the `switch` might be much more readable than a long list of `else if` statements with nearly identical conditions. In SSJS switch is especially useful for centralized handler page you query from multiple front ends.
+
+```js title="Return the error type based on the code"
+function errorDescription(error) {
+    switch (error.code) {
+        case 400:
+            return 'Bad Request';
+        case 401:
+            return 'Unauthorized';
+        case 403:
+            return 'Forbidden';
+        case 404:
+            return 'Not Found'
+        default:
+            return 'Unknown Error';
+    }
+}
+```
+
+Some things to remember when working with a `switch`:
+
+- If multiple cases fulfil the condition, a `switch` will execute the first from the top.
+- You can assign multiple cases to the same code block:
+
+```js {3-5,8-9} title="Return either sum or difference of two values (sum by default)"
+var outcome;
+switch (a, operation, b) {
+    default:
+    case '+':
+    case 'plus':
+        outcome = a + b;
+        break;
+    case '-':
+    case 'minus':
+        outcome = a - b;
+        break;
+}
+```
+
+- Use either `break` statement to end each case or use the `return` statement if in function. Otherwise, the switch will also execute all below cases until it encounters one of the above keywords (or hits the last scenario). Of course, there might be some edge scenarios where you want this exact behaviour to happen.
+- Always use `default` statement, even if you believe it will never be triggered (not required, but best practice). Use it to handle the scenario you haven't considered.
+- Cases in a `switch` are using strict comparison (`===`) for evaluation, so the provided value must match the case not only by value but also by type. A string value of `'0'` won't trigger an integer `0` case.
