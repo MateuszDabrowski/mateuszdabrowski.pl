@@ -31,7 +31,7 @@ const features = [
                 business-driven engaging experiences for the customers.
             </>
         ),
-        url: '/docs/ideas',
+        url: '/ideas',
         cta: <>Ideas</>,
     },
     {

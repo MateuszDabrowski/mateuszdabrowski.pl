@@ -10,27 +10,29 @@ module.exports = {
     customFields: {
         description: 'Automate marketing automation. let code = do("our job").',
         keywords: [
-            'mateusz',
-            'dąbrowski',
+            'Mateusz',
+            'Dąbrowski',
             'mateuszdabrowski',
-            'eloqua',
-            'oracle eloqua',
-            'marketing cloud',
-            'salesforce marketing cloud',
-            'sfmc',
+            'Eloqua',
+            'Oracle Eloqua',
+            'Marketing Cloud',
+            'Salesforce Marketing Cloud',
+            'SFMC',
             'SSJS',
+            'JS',
+            'JavaScript',
             'Developer',
         ],
     },
     themeConfig: {
         image: 'img/logotyp-og.png', // Default image for meta tag
-        announcementBar: {
-            id: 'announcementBar',
-            content:
-                '🚧 Website under development. If you found any bug or have a feedback, please share <a href="https://github.com/MateuszDabrowski/mateuszdabrowski.pl/issues" title="Github Issues">here</a>. Thanks! 🚧',
-            backgroundColor: '#F6B355',
-            textColor: '#00001F',
-        },
+        // announcementBar: {
+        //     id: 'announcementBar',
+        //     content:
+        //         '🚧 Website under development. If you found any bug or have a feedback, please share <a href="https://github.com/MateuszDabrowski/mateuszdabrowski.pl/issues" title="Github Issues">here</a>. Thanks! 🚧',
+        //     backgroundColor: '#F6B355',
+        //     textColor: '#00001F',
+        // },
         navbar: {
             title: 'Home',
             logo: {
@@ -44,17 +46,27 @@ module.exports = {
                     to: 'docs',
                     activeBasePath: 'docs',
                     position: 'left',
+                    items: [
+                        {
+                            label: 'SSJS',
+                            to: 'docs/ssjs/ssjs-if-and-switch',
+                        },
+                        {
+                            label: 'JS',
+                            to: 'docs/js/js-if-and-switch',
+                        },
+                    ],
                 },
                 {
                     label: 'Ideas',
-                    to: 'docs/ideas',
-                    activeBasePath: 'docs',
+                    to: 'ideas',
+                    activeBasePath: 'ideas',
                     position: 'left',
                 },
                 {
                     label: 'Toolset',
-                    to: 'docs/toolset',
-                    activeBasePath: 'docs',
+                    to: 'sites/my-toolset',
+                    activeBasePath: 'sites',
                     position: 'left',
                 },
                 {
@@ -88,7 +100,7 @@ module.exports = {
                         },
                         {
                             label: 'Ideas',
-                            to: 'docs/ideas',
+                            to: 'ideas',
                         },
                     ],
                 },
@@ -97,7 +109,7 @@ module.exports = {
                     items: [
                         {
                             label: 'Toolset',
-                            to: 'docs/toolset',
+                            to: 'sites/my-toolset',
                         },
                     ],
                 },
@@ -106,11 +118,11 @@ module.exports = {
                     items: [
                         {
                             label: 'Licence & Attribution',
-                            to: 'docs/licence',
+                            to: 'sites/licence',
                         },
                         {
                             label: 'Privacy',
-                            to: 'docs/privacy',
+                            to: 'sites/privacy',
                         },
                     ],
                 },
@@ -135,7 +147,7 @@ module.exports = {
                     routeBasePath: 'docs',
                     homePageId: 'docs-and-snippets',
                     include: ['**/*.md', '**/*.mdx'],
-                    sidebarPath: require.resolve('./sidebars.js'),
+                    sidebarPath: require.resolve('./docs/docsSidebar.js'),
                     showLastUpdateAuthor: true,
                     showLastUpdateTime: true,
                     editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
@@ -148,6 +160,54 @@ module.exports = {
                     changefreq: 'weekly',
                     priority: 0.5,
                 },
+            },
+        ],
+    ],
+    plugins: [
+        [
+            '@docusaurus/plugin-content-docs',
+            {
+                id: 'ideas',
+                path: 'ideas',
+                routeBasePath: 'ideas',
+                homePageId: 'ideas',
+                include: ['**/*.md', '**/*.mdx'],
+                sidebarPath: require.resolve('./ideas/ideasSidebar.js'),
+                showLastUpdateAuthor: true,
+                showLastUpdateTime: true,
+                editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
+            },
+        ],
+        [
+            '@docusaurus/plugin-content-docs',
+            {
+                id: 'sites',
+                path: 'sites',
+                routeBasePath: 'sites',
+                homePageId: 'my-toolset',
+                include: ['**/*.md', '**/*.mdx'],
+                showLastUpdateAuthor: true,
+                showLastUpdateTime: true,
+                editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
+            },
+        ],
+        [
+            '@docusaurus/plugin-client-redirects', // Works only on production
+            {
+                redirects: [
+                    {
+                        from: ['/docs/ideas'],
+                        to: '/ideas/',
+                    },
+                    {
+                        from: ['/docs/ideas/engage-with-countdown.mdx'],
+                        to: '/ideas/engage-with-countdown.mdx',
+                    },
+                    {
+                        from: ['/docs/ideas/tailor-with-data.mdx'],
+                        to: '/ideas/tailor-with-data.mdx',
+                    },
+                ],
             },
         ],
     ],
