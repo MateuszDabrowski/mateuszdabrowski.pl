@@ -134,7 +134,7 @@ for (let customer of customers) {
 
 we can use a clean ternary:
 
-```js {2} title="Same logic changed to a clean ternary. Even better approach will be shown in next section"
+```js {2} title="Same logic changed to a clean ternary"
 for (let customer of customers) {
     let helloPersonalization = customer.firstName ? customer.firstName : 'Valued Customer';
 }
@@ -153,7 +153,7 @@ const optInStatusMessage = `You are ${isOptedIn ? 'opted in' : 'not opted in'}`;
 Ternaries are not limited to variables and strings. They can also run functions:
 
 ```js title="If isLoggedIn is false, the redirectToLogInPage function will be executed"
-isLoggedIn ? redirectToLogInPage() : null;
+!isLoggedIn ? redirectToLogInPage() : null;
 ```
 
 :::
@@ -232,7 +232,7 @@ Some things to remember when working with a `switch`:
 - If multiple cases fulfil the condition, a `switch` will execute the first from the top.
 - You can assign multiple cases to the same code block:
 
-```js {3-5,8-9}title="Return either sum or difference of two values (sum by default)"
+```js {3-5,8-9} title="Return either sum or difference of two values (sum by default)"
 let outcome;
 switch (a, operation, b) {
     default:
