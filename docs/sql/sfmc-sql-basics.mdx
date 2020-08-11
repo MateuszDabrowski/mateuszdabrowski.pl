@@ -19,17 +19,33 @@ Finally, the very important limitation that you might hit as your Marketing Clou
 
 ## Fundamentals of SQL queries
 
-Marketing Cloud Commands
-* SELECT: command to locate data on a database
-* FROM: location where data reside within Marketing Cloud (usually a data extension)
-* JOIN: allows the query to search multiple tables and/or data extensions
-* WHERE: used to filter out data you do/don’t want
+The most important two SQL commands that you will be using in every single query are `SELECT` and `FROM`.
 
+### SELECT
+
+`SELECT` is starting each query and defines to columns of data extension that will be used within the query.
+
+The simplect version of this statement is `SELECT *`, which targets all available columns from the source, but it is not recommended approach. It is awful for both readability and performance of your query.
+
+The prefered method is targeting columns by their names:
+
+```sql
+SELECT emailaddress, [Favorite Colour]
+```
+
+
+
+* `FROM`: location where data reside within Marketing Cloud (usually a data extension)
+* `JOIN`/`ON`: allows the query to search multiple tables and/or data extensions
+* `WHERE`: used to filter out data you do/don’t want
+
+```sql
 SELECT emailaddress as ‘Email_Address’, [Favorite Colour] as ‘Favorite_Color’
 FROM [MasterData Extension] m
 INNER JOIN JuneMarketingSend j
 ON m.emailaddress = j.emailaddress
 WHERE m.emailaddress is not NULL
+```
 
 Running this query retrieves email and favorite color from the master data extension, and joins it with any matching email addresses from the June marketing send. Additionally, it only returns emails that are not missing. Also notice the m and the j. These are SQL aliases that are used to give a table, or a field in a table, a temporary name. This is especially helpful when you have a common field name between data extensions, like CustomerID or EmailAddress. You can also see it written like the following.
 
