@@ -15,7 +15,7 @@ const features = [
         imageUrl: 'img/undraw_snippets_md.svg',
         description: (
             <>
-                I'm gathering knowledge about SSJS and JavaScript in Marketing Cloud. Are you craving for more in-depth
+                My notes on SSJS, JavaScript and SQL used in Marketing Automation. Are you craving for more in-depth
                 documentation or looking for tested code snippets? Hop in!
             </>
         ),

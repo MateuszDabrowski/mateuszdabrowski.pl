@@ -19,6 +19,7 @@ module.exports = {
             'Salesforce Marketing Cloud',
             'SFMC',
             'SSJS',
+            'SQL',
             'JS',
             'JavaScript',
             'Developer',
@@ -54,6 +55,10 @@ module.exports = {
                         {
                             label: 'JS',
                             to: 'docs/js/js-if-and-switch',
+                        },
+                        {
+                            label: 'SQL',
+                            to: 'docs/sql/sfmc-sql-basics',
                         },
                     ],
                 },
