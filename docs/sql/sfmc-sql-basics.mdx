@@ -1,6 +1,6 @@
 ---
 id: sfmc-sql-basics
-title: SFMC SQL Basics
+title: SQL Basics
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
@@ -9,30 +9,30 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## SQL in Salesforce Marketing Cloud
 
-SQL (Structured Query Language) is one of the best way to work with relational databases. And Marketing Cloud's Data Extensions, with the help of Data Designer, offer exactly that. A relational database. Same for system Data Views containing tracking data.Because of this, SQL is used in SFMC whenever powerful segmentation is needed (mostly using Automation Studio).
+SQL (Structured Query Language) is one of the best ways to work with relational databases. And Marketing Cloud's Data Extensions, with the help of Data Designer, offers precisely that. A relational database. Same for system Data Views containing tracking data. Because of this, SQL is used in SFMC whenever powerful segmentation is needed (mostly using Automation Studio).
 
-The main difference from standard SQL (SFMC uses more or less SQL Server 2005) is that SFMC supports only `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. This is because the queries are executed as a part of backend query and are limited to provide non-breakable functionality.
+The main difference from standard SQL (SFMC uses more or less SQL Server 2005) is that SFMC supports only `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
 
-Another limiting characteristic of SFMC SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, the results are always saved in data extensions. The reason is other data structures of SFMC are not relational databases.
+Another limiting characteristic of SFMC SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of SFMC are not relational databases.
 
-Finally, the very important limitation that you might hit as your Marketing Cloud grows is the AutoKill. It will automatically stop your query if execution time exceeds the 30 minutes limit. Think about the query with future in the mind. It is especially important for queries that are supposed to be backbones of your data management flow in Marketign Cloud. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
+Finally, the significant limitation that you might hit as your Marketing Cloud grows is the AutoKill. It will automatically stop your query if execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is especially important for queries that are supposed to be backbones of your data management flow in Marketing Cloud. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
 
 ## Fundamentals of SQL queries
 
-SQL is very easy to read, but requires a bit of understanding to write. However, with only the `SELECT` being availble, it is really easy to grasp.
+SQL is straightforward to read but requires a bit of understanding to write. However, with only the `SELECT` being available, it is effortless to grasp.
 
-There are four most important elements you will be using in nearly every query in SFMC:
+There are four most important elements that you will be using in nearly every query in SFMC:
 
 * `SELECT`: tell the query what data you want to leverage
 * `FROM`: tell the query where the data is in Marketing Cloud (name of Data Extension or System Data View)
 * `JOIN`/`ON`: tell the query how you want to merge data from multiple sources
 * `WHERE`: tell the query which part of the above data is interesting to you
 
-To learn more about writing queries check out articles on [SQL Statements](/docs/sql/sfmc-sql-statements) and [SFMC Data Views](/docs/sql/sfmc-sql-system-data-views).
+To learn more about writing queries, check out deep-dive on [SQL Statements](/docs/sql/sfmc-sql-statements) and [SFMC Data Views](/docs/sql/sfmc-sql-system-data-views).
 
 ## Query Studio
 
-Working with queries in out-of-the-box version of Salesforce Marketing Cloud is quite hard. Whenever you want to check the output of your query you must run the SQL Query in Automation Studio and check the output Data Extension. There is, however, a better way.
+Working with queries in the out-of-the-box version of Salesforce Marketing Cloud is quite hard. Whenever you want to check the output of your query, you must run the SQL Query in Automation Studio and check the output Data Extension. There is, however, a better way.
 
-A [Query Studio](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) created by Salesforce itself. It is Marketign Cloud App available in [AppExchange](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) that is must-have for anyone interested in working with SQL in SFMC. Think about SQL Server Studio or, if this is not telling you much, a one-stop-shop for writing, validating, checking and saving your queries. Test it. You will never look back.
+A [Query Studio](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) by Salesforce. It is a Marketing Cloud App available in [AppExchange](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) that is must-have for anyone interested in working with SQL in SFMC. Think about SQL Server Studio or, if this is not telling you much, a one-stop-shop for writing, validating, checking and saving your queries. Check it. You will never look back. Learn more on [sfmarketing.cloud](https://sfmarketing.cloud/2019/08/05/query-studio-for-marketing-cloud/).
 
