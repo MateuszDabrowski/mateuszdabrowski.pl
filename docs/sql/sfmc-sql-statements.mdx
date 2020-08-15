@@ -1,0 +1,115 @@
+---
+id: sfmc-sql-statements
+title: SQL Statements
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='All you need to know about SQL to segment your contacts in SFMC.' />
+
+## Select
+
+`SELECT` statement opens each query. It both defines the columns of data extensions and system data views that will be needed, as well as allows you to create completly new data points.
+
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. It is not recommended approach. Bad for both readability and performance of your query. This is why [Query Studio](/docs/sql/sfmc-sql-basics#query-studio) does not support this shortcut.
+
+The prefered method is targeting columns explicitly by their names:
+
+```sql
+SELECT
+    ContactKey,
+    EmailAddres
+```
+
+If a column name contains a space, you need to capture it with squared brackets:
+
+```sql {4}
+SELECT
+    ContactKey,
+    EmailAddres,
+    [External Contact Id]
+```
+
+### Labels
+
+You can also utilize `SELECT` as a tool to rename the source columns to match your needs in outcome data extension. It is especially useful, when you are pulling the data from Synchronized Data Extension with names coming from Salesforce custom fields.
+
+```sql {4-5}
+SELECT
+    ContactKey,
+    EmailAddress,
+    [External Contact Id] AS ExternalContactId,
+    Gender__c AS Gender
+```
+
+### Adding new values
+
+Labels are also used for passing new values directly from your query. Need to add a custom string to outcome data extension? Or maybe synchonization timestamp for debugging purposes? You can leverage SQL for it.
+
+```sql {6} title="Add custom column labaled 'ImportDate' with value equal to the UTC time of the script execution for each record"
+ SELECT
+    ContactKey,
+    EmailAddress,
+    [External Contact Id] AS ExternalContactId,
+    Gender__c AS Gender,
+    GETUTCDATE() AS ImportDate
+```
+
+### Conditional statements
+
+#### If
+
+#### Case
+
+## From
+
+## Join
+
+## On
+
+## Where
+
+## Group by
+
+## Union
+
+## Nested statements
+
+* `FROM`: location where data reside within Marketing Cloud (usually a data extension)
+* `JOIN`/`ON`: allows the query to search multiple tables and/or data extensions
+* `WHERE`: used to filter out data you do/don’t want
+
+3. Avoid Data Extensions spanning a cumulative field width greater than 4000 characters.
+
+1. Avoid non-searchable operators for the WHERE clause (OR, NOT, <, >, NOT EXISTS, NOT IN, NOT LIKE, intrinsic functions). Those operators cannot take advantage of indexes and cause the query activity to run more slowly. More efficient operators (=, AND) improve queries.
+
+```sql
+SELECT emailaddress as ‘Email_Address’, [Favorite Colour] as ‘Favorite_Color’
+FROM [MasterData Extension] m
+INNER JOIN JuneMarketingSend j
+ON m.emailaddress = j.emailaddress
+WHERE m.emailaddress is not NULL
+```
+
+Running this query retrieves email and favorite color from the master data extension, and joins it with any matching email addresses from the June marketing send. Additionally, it only returns emails that are not missing. Also notice the m and the j. These are SQL aliases that are used to give a table, or a field in a table, a temporary name. This is especially helpful when you have a common field name between data extensions, like CustomerID or EmailAddress. You can also see it written like the following.
+
+SELECT o.OrderID, o.OrderDate, c.CustomerName
+FROM Customers AS c, Orders AS o
+WHERE c.CustomerID=o.CustomerID
+
+Example for exclusive offer to customers who have opened an email in the last 6 months and have made a purchase during that time.
+
+SELECT c.EmailAddress, c.CustomerID, c.First_Name
+FROM Customers c
+INNER JOIN Purchases p
+ON c.CustomerID = p.CustomerID
+WHERE [Purchase Date] > DateAdd(month, -6, GetDate()) AND [Open Date] > DateAdd(month, -6, GetDate())
+
+
+Common Queries
+Parent Accounts
+You can query data extensions in the Shared Data Extension folder from the parent account by adding the prefix ent. to the data extension name in the query. 
+SELECT EmailAddress
+FROM ent.MasterDataExtension
+
+
