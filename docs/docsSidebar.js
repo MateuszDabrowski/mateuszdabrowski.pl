@@ -7,7 +7,6 @@ module.exports = {
         {
             type: 'category',
             label: 'SSJS',
-            collapsed: false,
             items: ['ssjs/ssjs-if-and-switch', 'ssjs/ssjs-loops', 'ssjs/debugging-ssjs'],
         },
         {

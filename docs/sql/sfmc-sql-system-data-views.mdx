@@ -1,0 +1,37 @@
+---
+id: sfmc-sql-system-data-views
+title: System Data Views
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='' />
+
+2. For queries involving data views, implement a 6-month cap. Often the performance is dramatically better limited to no more than 30 days.
+
+System Data Views
+System data views are Salesforce-created queries that you can use to find information about your subscribers. Just remember, you won’t be able to make changes to these precreated data views. Here are some of the most commonly used views.
+Full list: https://help.salesforce.com/articleView?id=mc_as_data_views.htm&type=5
+
+Bounce
+_bounce
+Identify and then suppress commonly bounced email addresses from sends.
+
+Click and Open
+_Click
+_Open
+Query these data views in Automation Studio to view click and open data for emails from your Marketing Cloud account.
+Helps to identify additional messaging opportunities by indicating subscriber engagement on a specific JobID.
+Click and open tracking data displays in Central Standard Time, does not observe Daylight Savings Time, and is rounded to the nearest second.
+
+Complaint
+_Complaint
+Query this data view in Automation Studio to view complaints data related to emails from your Marketing Cloud account.
+Use to prune your lists to ensure more accurate audiences and improve deliverability.
+
+SELECT SubscriberKey,JobID,SMTPBounceReason
+FROM _Complaint
+
+Journey
+_Journey
+Find a journey's status, created and last modified date, and other general journey information using this Journey Builder data view.
