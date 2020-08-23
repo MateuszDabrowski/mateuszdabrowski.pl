@@ -13,7 +13,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 `SELECT` statement opens each query. It both defines the columns of data extensions and system data views that will be needed, as well as allows you to create completly new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. It is not recommended approach. Bad for both readability and performance of your query. This is why [Query Studio](/docs/sql/sfmc-sql-basics#query-studio) does not support this shortcut.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. It is not recommended approach. Bad for both readability and performance of your query. This is why [Query Studio](sfmc-sql-basics.mdx#query-studio) does not support this shortcut.
 
 The prefered method is targeting columns explicitly by their names:
 
@@ -49,7 +49,7 @@ SELECT
 Labels are also used for passing new values directly from your query. Need to add a custom string to outcome data extension? Or maybe synchonization timestamp for debugging purposes? You can leverage SQL for it.
 
 ```sql {6} title="Add custom column labaled 'ImportDate' with value equal to the UTC time of the script execution for each record"
- SELECT
+SELECT
     ContactKey,
     EmailAddress,
     [External Contact Id] AS ExternalContactId,
@@ -57,23 +57,131 @@ Labels are also used for passing new values directly from your query. Need to ad
     GETUTCDATE() AS ImportDate
 ```
 
-### Conditional statements
+### Conditions
 
-#### If
+`CASE` statement evaluates a list of conditions and returns one of multiple possible result expressions. For Marketing Cloud purposes it is especially useful when you not only want to select a column, but also modify the values within it. Perfect for translating numeric codes to descriptive ones for personalization purposes. Awesome for standarizing data (change those `1`, `true` and `on` values of opt-in to a single format).
 
-#### Case
+```sql {7-13}
+SELECT
+    ContactKey,
+    EmailAddress,
+    [External Contact Id] AS ExternalContactId,
+    Gender__c AS Gender,
+    GETUTCDATE() AS ImportDate,
+    CASE MemberType__c
+        WHEN 1 THEN 'Bronze'
+        WHEN 2 THEN 'Silver'
+        WHEN 3 THEN 'Gold'
+        WHEN 4 THEN 'Platinum'
+        ELSE 'Unregistered'
+    END
+```
+
+You can also leverage [labels](#labels) to also manipulate the column name at the same time:
+
+```sql {13}
+SELECT
+    ContactKey,
+    EmailAddress,
+    [External Contact Id] AS ExternalContactId,
+    Gender__c AS Gender,
+    GETUTCDATE() AS ImportDate,
+    CASE MemberType__c
+        WHEN 1 THEN 'Bronze'
+        WHEN 2 THEN 'Silver'
+        WHEN 3 THEN 'Gold'
+        WHEN 4 THEN 'Platinum'
+        ELSE 'Unregistered'
+    END AS MemberType
+```
+
+Above examples are already useful in segmentation, but there is also one more way to write and use `CASE` statement that gives even more power. The search `CASE`.
+
+The difference is that you are not passign the column name on which you will be building conditions. Instead, you create boolean expression from scratch for each scenario.
+
+```sql {7-13} title="The same Query as the previous one, but written with Search Case"
+SELECT
+    ContactKey,
+    EmailAddress,
+    [External Contact Id] AS ExternalContactId,
+    Gender__c AS Gender,
+    GETUTCDATE() AS ImportDate,
+    CASE
+        WHEN MemberType__c = 1 THEN 'Bronze'
+        WHEN MemberType__c = 2 THEN 'Silver'
+        WHEN MemberType__c = 3 THEN 'Gold'
+        WHEN MemberType__c = 4 THEN 'Platinum'
+        ELSE 'Unregistered'
+    END AS MemberType
+```
+
+The example above doesn't show why it is worth to use the search `CASE`. It is actually a bit longer than the standard approach! But there is a reason to use this form of `CASE` statement that is visible once you want to create more elaborate conditions that are possible only with this version:
+
+```sql {3-7} title="Lets calculate what channel we should use in our campaign for a given user"
+SELECT
+    ContactKey,
+    CASE
+        WHEN IsAppInstalled = 1 THEN 'Push'
+        WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
+        WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
+    END AS PrefferedChannel
+```
+
+As you can see, thanks to search `CASE` statement we were able to check conditions on multiple different columns and connect them with `AND`/`OR` statements for better control. You can use this version of the `CASE` statement for all your needs (even those covered by the basic one) to worry not about two ways of formatting.
+
+:::note You Should Know
+You can use `CASE` statements inside a `CASE` statement to have even more dynamic query.
+
+```sql {3-16} title="Lets add another dimension of membership level to differentiate available channels"
+SELECT
+    ContactKey,
+    CASE
+        WHEN MemberType = 'Platinum' THEN 'Key Account Manager'
+        WHEN MemberType = 'Gold' OR MemberType = 'Silver' THEN
+            CASE
+                WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
+                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
+                WHEN IsAppInstalled = 1 THEN 'Push'
+            END
+        WHEN MemberType = 'Bronze' THEN
+            CASE
+                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
+                WHEN IsAppInstalled = 1 THEN 'Push'
+            END
+    END AS PrefferedChannel
+```
+
+:::
+
+### Flow control
+
+`IF` statement
+
+https://docs.microsoft.com/en-us/sql/t-sql/language-elements/if-else-transact-sql?view=sql-server-ver15
+
+### Variables & Functions
+
+Unfortunately, SFMC SQL does not support variables.
+
+Fortunately, it does support functions. Learn more about them in [SFMC SQL Functions documentation](sfmc-sql-functions.mdx).
 
 ## From
 
-## Join
-
-## On
+## Join on
 
 ## Where
 
+### Conditions
+
+Also supports `CASE`
+
 ## Group by
 
+## Order by
+
 ## Union
+
+https://docs.microsoft.com/en-us/sql/t-sql/language-elements/set-operators-union-transact-sql?view=sql-server-ver15
 
 ## Nested statements
 
