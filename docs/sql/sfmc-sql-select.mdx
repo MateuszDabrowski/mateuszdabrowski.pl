@@ -1,7 +1,7 @@
 ---
-id: sfmc-sql-statements
-title: SFMC SQL Statements
-sidebar_label: SQL Statements
+id: sfmc-sql-select
+title: SFMC SQL Select
+sidebar_label: SQL Select
 description: All you need to know about SQL to segment your contacts in SFMC
 ---
 
@@ -163,74 +163,21 @@ Unfortunately, SFMC SQL does not support variables.
 
 Fortunately, it does support functions. Learn more about them in [SFMC SQL Functions documentation](sfmc-sql-functions.mdx).
 
-## From
 
-The `SELECT` statement alone won't do anything. Once you have selected columns you want to work with, you need also to pick the table (Data Extension or System Data View) from which those columns should be taken. The code for this is simple:
-
-```sql {4}
-SELECT
-    ContactKey,
-    EmailAddress,
-FROM MasterSubscriberDE
-```
-
-Just as with column names, if the name of your Data Extension has spaces in it, be sure to enclose it in brackets.
-
-```sql {4}
-SELECT
-    ContactKey,
-    EmailAddress,
-FROM [Master Subscriber DE]
-```
-
-There are, however, two cases, specific to Salesforce Marketing Cloud, that adds a twist. System Data Views and Enterprise Data Extensions.
-
-### System Data Views
-
-[System Data Views](sfmc-sql-system-data-views.mdx) are partially hidden Data Extensions used by the Salesforce Marketing Cloud to store data. Thing about Email Sent history, Opens and Clicks, Bounces and Complaints. You can find there also tracking data for SMS and Social channels. Also more technical data points, like Jobs and Enterprise Attributes, are using System Data Views. The difference related to those tables is in naming convention. When querying them you must leverage `_` prefix:
-
-```sql {8}
-SELECT
-    JobID,
-    EmailID,
-    EmailName,
-    EmailSubject,
-    EmailSendDefinition,
-    DeliveredTime
-FROM _Job
-```
-
-### Enterprise Data Extension
-
-If you want to query Shared Data Extensions or Synchronized Data Extensions you must use different special prefix, `ENT.`:
-
-```sql {4}
-SELECT
-    ContactKey,
-    EmailAddress,
-FROM ENT.SharedSegment
-```
-
-Remember that account permissons restrictions may apply.
-
-:::note You Should Know
-
-In some scenarios you might want to use both above options in the same time. For example, if you query System Data View _Subscribers on child Business Unit, you will receive data only for the subscribers stored in this child. In case you want to query all your subscribers, you should point to Enterprise level System Data View:
-
-```sql {6}
-SELECT
-    SubscriberKey,
-    EmailAddress,
-    DateJoined,
-    DateUnsubscribed
-FROM ENT._Subscribers
-```
-
-:::
-
-When selecting Data Extensions to pull data from, remember about a best practice to avoid ones spanning a cumulative field width greater than 4000 characters. They will badly impact performance of your query. If needed, consider splitting your query into multiple consecutive queries.
 
 ## Join on
+
+There will be some cases where all you need is to pull (and maybe transform) data from a single source Data Extension. But true magic of SQL is visible when you need to combine information from multiple data points. Here comes a `JOIN` statement.
+
+```sql {5} title="Create table with SubscriberKey and Email Name pair per sending Job"
+SELECT
+    _Sent.SubscriberKey,
+    _Job.EmailName
+FROM _Sent
+LEFT JOIN _Job ON _Sent.JobID = _Job.JobID
+```
+
+There is quite a lot to unpack.
 
 ## Where
 
