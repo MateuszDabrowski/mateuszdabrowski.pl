@@ -150,7 +150,6 @@ module.exports = {
                 docs: {
                     path: 'docs',
                     routeBasePath: 'docs',
-                    homePageId: 'docs-and-snippets',
                     include: ['**/*.md', '**/*.mdx'],
                     sidebarPath: require.resolve('./docs/docsSidebar.js'),
                     showLastUpdateAuthor: true,
@@ -175,7 +174,6 @@ module.exports = {
                 id: 'ideas',
                 path: 'ideas',
                 routeBasePath: 'ideas',
-                homePageId: 'ideas',
                 include: ['**/*.md', '**/*.mdx'],
                 sidebarPath: require.resolve('./ideas/ideasSidebar.js'),
                 showLastUpdateAuthor: true,
