@@ -1,0 +1,99 @@
+---
+id: sfmc-sql-join
+title: SFMC SQL Join
+sidebar_label: Join
+description: Data Extensions. System Data Views. With JOIN statement use one query to rule them all.
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Data Extensions. System Data Views. With JOIN statement use one query to rule them all.' />
+
+There will be some cases where all you need is to pull (and maybe transform) data from a single source Data Extension. But true magic of SQL is visible when you need to combine information from multiple data points. Here comes a `JOIN` statement.
+
+```sql {6} title="Create table with SubscriberKey and Email Name pair per sending Job"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    o.EventDate as OpenDate,
+FROM [Welcome-Campaign-Segment] de
+JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```
+
+There are three things to unpack.
+
+## JOIN Types
+
+In the example above you can see `JOIN` word. There are many `JOIN` statement types available in SQL. The appropriate joinining will allow you to segment your records exactly the way you want and without the need for extensive `WHERE` clauses. Understanding differences between various types and using the correct one for the task at hand will make your code shorter, easier to read and optimized. Let's check what is in the quiver:
+
+### Inner Join
+
+The simplest join is `INNER JOIN`. It takes records from first table (`Welcome-Campaign-Segment` Data Extension in the above example) and second table (`_Open` System Data View in this case) to output records available in both of them. In our query, it will ignore contacts that are not visible in the `_Open` System Data View and all the email opens that are not related to contacts in the `Welcome-Campaign-Segment` Data Extension. Of course, this query in its current state is definitely not perfect and could output wrong results (like Opens for the right contacts, but from completly different campaign). We will fix it later.
+
+```sql {6} title="Simplified version of inner join statement"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    o.EventDate as OpenDate,
+FROM [Welcome-Campaign-Segment] de
+INNER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```
+
+When using `INNER JOIN` you can write just the word `JOIN`, as in the first example, to have the same result. However, it is best practice to state the type explicitly by writing the full name.
+
+### Left and Right Joins
+
+Next type of joins are `LEFT JOIN` (also known as `LEFT OUTER JOIN`) and `RIGHT JOIN` (also known as `RIGHT OUTER JOIN`). Instead of limiting the output to only those records that are available in the both tables, they are taking full data from one table and just append the additional information from the second one (if it is available). `LEFT JOIN` will take full data of the first table (in our example, Data Extension selected by `FROM`) and extend it with information from second one (`_Open` System Data View joined with `LEFT JOIN`). You can go the other way around with `RIGHT JOIN` (in our example it would output everything in `_Open` System Data View and append to it the data from the Data Extension - not good).
+
+```sql {5} title="Same query as above, but this time joined with LEFT JOIN"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    o.EventDate as OpenDate,
+FROM [Welcome-Campaign-Segment] de
+LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```
+
+As you can see the only thing we changed in above query is the type of the join. This simple change will alter our outcomes to show full list of all Subscriber Keys and Email Addresses from `Welcome-Campaign-Segment` Data Extension with the date of email open for those contacts who engaged with the communication. Unegaged ones would have `null` values in the `OpenDate` column. Again, it is not a proper way of building such report yet.
+
+Due to similarity of `LEFT JOIN` and `RIGHT JOIN` I highly recommend to choose one type and use it consistently to lower the risk of an error.
+
+:::note You Should Know
+
+If you would want to see all contacts from our Data Extension that did not open the email, you could use `JOIN` with exclusion:
+
+```sql {7} title="Example of exclusion applied to LEFT JOIN"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    o.EventDate as OpenDate,
+FROM [Welcome-Campaign-Segment] de
+LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+WHERE o.SubscriberKey IS NULL
+```
+
+Find more about it in the [`WHERE` statement guide](sfmc-sql-where).
+
+:::
+
+### Full Join
+
+### Self Join
+
+## Joining ON
+
+## Table Name Prefix
+
+You do not have to write full data source name every time. You can leverage labels just as with columns to make it shorter:
+
+```sql {5} title="Query from the very beginning but with data source labels"
+SELECT
+    s.SubscriberKey,
+    j.EmailName
+FROM _Sent s
+LEFT JOIN _Job j ON _Sent.JobID = _Job.JobID
+```
+
+All you need to do is to write you label after a data source name. Now you can leverage the shortened name to prefix the selected columns.
+
+## Multiple Joins
