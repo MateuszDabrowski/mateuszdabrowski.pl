@@ -15,7 +15,7 @@ There will be some cases where all you need is to pull (and maybe transform) dat
 SELECT
     de.SubscriberKey,
     de.EmailAddress,
-    o.EventDate as OpenDate,
+    o.EventDate as OpenDate
 FROM [Welcome-Campaign-Segment] de
 JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 ```
@@ -34,7 +34,7 @@ The simplest join is `INNER JOIN`. It takes records from first table (`Welcome-C
 SELECT
     de.SubscriberKey,
     de.EmailAddress,
-    o.EventDate as OpenDate,
+    o.EventDate as OpenDate
 FROM [Welcome-Campaign-Segment] de
 INNER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 ```
@@ -45,13 +45,13 @@ When using `INNER JOIN` you can write just the word `JOIN`, as in the first exam
 
 Next type of joins are `LEFT JOIN` (also known as `LEFT OUTER JOIN`) and `RIGHT JOIN` (also known as `RIGHT OUTER JOIN`). Instead of limiting the output to only those records that are available in the both tables, they are taking full data from one table and just append the additional information from the second one (if it is available). `LEFT JOIN` will take full data of the first table (in our example, Data Extension selected by `FROM`) and extend it with information from second one (`_Open` System Data View joined with `LEFT JOIN`). You can go the other way around with `RIGHT JOIN` (in our example it would output everything in `_Open` System Data View and append to it the data from the Data Extension - not good).
 
-```sql {5} title="Same query as above, but this time joined with LEFT JOIN"
+```sql {6} title="Same query as above, but this time joined with LEFT JOIN"
 SELECT
     de.SubscriberKey,
     de.EmailAddress,
-    o.EventDate as OpenDate,
+    o.EventDate as OpenDate
 FROM [Welcome-Campaign-Segment] de
-LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+LEFT OUTER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 ```
 
 As you can see the only thing we changed in above query is the type of the join. This simple change will alter our outcomes to show full list of all Subscriber Keys and Email Addresses from `Welcome-Campaign-Segment` Data Extension with the date of email open for those contacts who engaged with the communication. Unegaged ones would have `null` values in the `OpenDate` column. Again, it is not a proper way of building such report yet.
@@ -66,34 +66,142 @@ If you would want to see all contacts from our Data Extension that did not open 
 SELECT
     de.SubscriberKey,
     de.EmailAddress,
-    o.EventDate as OpenDate,
+    o.EventDate as OpenDate
 FROM [Welcome-Campaign-Segment] de
-LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+LEFT OUTER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 WHERE o.SubscriberKey IS NULL
 ```
 
-Find more about it in the [`WHERE` statement guide](sfmc-sql-where).
+Find more about it in the [WHERE statement guide](sfmc-sql-where).
 
 :::
 
 ### Full Join
 
+The last classic SQL join is the `FULL JOIN` (also known as `FULL OUTER JOIN`) that allows you to get data from both sources. In our example it would mean all contacts from `Welcome-Campaign-Segment` Data Extension and all records from `_Open` System Data View, with `null` values in the columns where there is no match.
+
+```sql {6} title="Not a best use case for the FULL JOIN"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    o.EventDate as OpenDate
+FROM [Welcome-Campaign-Segment] de
+FULL OUTER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```
+
+`FULL JOIN` is an awesome tool when you, for example, want to create master segment from multiple smaller ones.
+
 ### Self Join
+
+And then there is Self Join. It is not a separate type of `JOIN` statement, but rather a specific use case for the above types. It join the table to itself, which is useful when you have columns in your data extension that point to other columns in the same extension. A use case I can think of in the world of Salesforce Marketing Cloud could be for example a Data Extension that stores product categories and subcategories.
+
+Input Data Extension:
+
+CategoryName | CategoryID | ParentCategoryID
+-- | -- | --
+Wristwatches | 1 |
+Diver Watches | 2 | 1
+Pilot Watches | 3 | 1
+
+In such scenario you can use Self Join to build more readable table that might be really useful for personalization:
+
+```sql {5} title="Self Join using INNER JOIN will output only categories that have a parent category"
+SELECT
+    c.CategoryName AS Category,
+    p.CategoryName AS ParentCategory
+FROM [Wristwatches-DE] c
+INNER JOIN [Wristwatches-DE] p ON p.ParentCategoryID = c.CategoryID
+```
+
+Output Data Extension:
+
+Category | ParentCategory
+-- | --
+Diver Watches | Wristwatches
+Pilot Watches | Wristwatches
+
+Another use case? You might have a product table for your e-commerce where in one column you store recommeded products that are oftern pruchased together. To personalize email with such offers self join on that column will be perfect.
+
+You won't be using Self Join a lot, but it might be huge timesaver when needed.
 
 ## Joining ON
 
+I was writing a lot about the various `JOIN` statements, but there is also the `ON` element. It is used to define relation between the joined data sources.
+
+In our example we used `ON de.SubscriberKey = o.SubscriberKey` that takes the SubscriberKey from the Data Extension and from the System Data View and matches the rows based on it.
+
+This column does not have to be the Primary Key of the Data Extension or System Data View. You can select any column, of any name, as long as its values have a match in any column of the second source.
+
+You can also add a bit of logic to it, by leveraging `AND`/`OR` statements. This is especially useful when either:
+1. You are not sure in which column you will have a match. For example, you have separate columns for 15 character Salesforce ID and 18 character one and want to match on either one.
+2. You want to match on multiple criterias. For example, not only EmailAddress field, but also LastName to cover shared email address.
+3. You want to join more than two data sources together. You will find example soon in the [Multiple Joins](#multiple-joins) section.
+
 ## Table Name Prefix
 
-You do not have to write full data source name every time. You can leverage labels just as with columns to make it shorter:
+When you are joining multiple data sources that have columns of the same name, you will have to tell the SQL from which source you select each column. You can do it by using the table name prefix before the column name:
 
-```sql {5} title="Query from the very beginning but with data source labels"
+```sql title="Example of SQL with full table name prefixes"
 SELECT
-    s.SubscriberKey,
-    j.EmailName
-FROM _Sent s
-LEFT JOIN _Job j ON _Sent.JobID = _Job.JobID
+    _Sent.SubscriberKey,
+    _Job.EmailName
+FROM _Sent
+LEFT JOIN _Job ON _Sent.JobID = _Job.JobID
 ```
 
-All you need to do is to write you label after a data source name. Now you can leverage the shortened name to prefix the selected columns.
+However, you probably saw in the previous examples that there is another way. You don't have to write full name of data source every time. You can leverage labels just as with columns to make it shorter:
+
+```sql title="Example of SQL with labeled table name prefixes"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    o.EventDate as OpenDate
+FROM [Welcome-Campaign-Segment] de
+INNER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```
+
+All you need to do is to write your label after a data source name. Now you can leverage the shortened name to prefix the selected columns. It's especially useful, when pulling data from Data Extensions.
 
 ## Multiple Joins
+
+Joining two tables is just the beginning. Working with multiple columns can be much more mindbogling and in some cases taking a paper and pencil to draw some Venn Digramas can make a huge difference. Let's check some of the most popular use cases.
+
+### Multiple Inner Joins
+
+In many cases, you will want to get a segment of people that fulfill multiple requiremts simultaneously. For example, contacts that were part of three different TOFU campains related to particular product. Such data might make for great audience for your next campaign further in the marketing funnel. For such scenario, you will want to use multiple `INNER JOIN` statements chained in one query:
+
+```sql {6-8} title="Contacts that were used for three different TOFU campaigns and are ready for MOFU campaign"
+SELECT
+    de1.SubscriberKey,
+    de1.EmailAddress,
+    de2.PhoneNumber,
+    de3.EbookName
+FROM [Welcome-Campaign-Segment] de1
+INNER JOIN [Newsletter-Promo-Campaign-Segment] de2 ON de1.SubscriberKey = de2.SubscriberKey
+INNER JOIN [Ebook-Download-Campaign-Segment] de3 ON de1.SubscriberKey = de3.SubscriberKey
+```
+
+This SQL will give you only those contacts that were in all three Data Extensions.
+
+### Multiple Left Joins
+
+Another huge group of cases you might encounter are SQLs with multiple `LEFT JOIN` statements. They are great when you want to extend the data for your main data source with multiple other datapoints. Awesome for building a segment for a campaign from Master Subscribers Data Extensions with extensive personalization:
+
+```sql {7-9} title="To the list of contacts add the product details we want to use in the email content along with special offer description"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    prod.ProductName
+    prod.ProductPrice
+    promo.Offer
+FROM [Up-Sell-Campaign-Segment] de
+LEFT JOIN [Product-Details-List] prod ON de.OfferedProduct = prod.ProductId
+LEFT JOIN [Custom-Offer-List] promo ON de.OfferedPromotion = promo.PromotionId
+```
+
+Notice that this time we joined additional Data Extensions on different columns. What is more, we don't need to `SELECT` those columns to be able to filter on them.
+
+### Multiple Various Joins
+
+You are not limited to just one type of join when creating your query. You can mix and match different types of joins to extract exactly the data you need. However, the more complexity you want (either by the number of sources or by number of various joins), the more useful drawing the Venn Diagrams with the solution will be.
+
