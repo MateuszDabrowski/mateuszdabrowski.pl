@@ -11,7 +11,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 The `SELECT` statement opens each query. It both defines the columns of data extensions and system data views that will be needed, as well as allows you to create entirely new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for both readability and performance of your query. It is why [Query Studio](sfmc-sql-basics.mdx#query-studio) does not support this shortcut.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for both readability and performance of your query. It is why [Query Studio](sfmc-sql-basics#query-studio) does not support this shortcut.
 
 The prefered method is targeting columns explicitly by their names:
 
@@ -30,7 +30,7 @@ SELECT
     [External Contact Id]
 ```
 
-There are also some exceptional cases related to selected [System Data Views](sfmc-sql-system-data-views.mdx) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example when taking Subscriber ID from Enterprise Attributes):
+There are also some exceptional cases related to selected [System Data Views](sfmc-sql-system-data-views) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example when taking Subscriber ID from Enterprise Attributes):
 
 ```sql {2}
 SELECT
@@ -62,6 +62,21 @@ SELECT
     'Lead' AS RecordType,
     GETUTCDATE() AS ImportDate
 ```
+
+:::note You Should Know
+
+You can even go further with creating new values by leveraging existing data! For example, if you have first name and last name, you can use SQL to create a FullName column from scratch:
+
+```sql {4}
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    FirstName + ' ' + LastName AS FullName
+```
+
+This becomes truly powerful with the [SQL functions](sfmc-sql-functions).
+
+:::
 
 ### Conditions
 
@@ -172,7 +187,7 @@ SELECT
     _EnterpriseAttribute.LastName
 ```
 
-I'm covering this topic in-depth in [`JOIN` statement documentation](sfmc-sql-join.mdx#table-name-prefix).
+I'm covering this topic in-depth in [`JOIN` statement documentation](sfmc-sql-join#table-name-prefix).
 
 ### Flow control
 
@@ -182,4 +197,4 @@ Despite official [SFMC SQL documentation](https://help.salesforce.com/articleVie
 
 Unfortunately, SFMC SQL does not support variables.
 
-Fortunately, it does support (selected) functions. Learn more about them in [SFMC SQL Functions documentation](sfmc-sql-functions.mdx).
+Fortunately, it does support (selected) functions. Learn more about them in [SFMC SQL Functions documentation](sfmc-sql-functions).
