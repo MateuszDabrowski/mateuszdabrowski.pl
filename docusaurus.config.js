@@ -137,11 +137,11 @@ module.exports = {
             trackingID: 'UA-121919433-1',
             anonymizeIP: true,
         },
-        // algolia: {
-        //     apiKey: '',
-        //     indexName: '',
-        //     algoliaOptions: {},
-        // },
+        algolia: {
+            apiKey: '3fbd31ec489532e5020df55b3410e6e6',
+            indexName: 'mateuszdabrowski',
+            placeholder: 'Search Docs & Snipptes',
+        },
     },
     presets: [
         [
