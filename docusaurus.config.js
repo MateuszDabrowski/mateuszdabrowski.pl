@@ -213,4 +213,5 @@ module.exports = {
             },
         ],
     ],
+    onBrokenLinks: 'warn',
 };
