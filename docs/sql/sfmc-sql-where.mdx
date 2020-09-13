@@ -10,54 +10,104 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Writing in Progress' />
 
+With just [`SELECT`](sfmc-sql-select) and [`FROM`](sfmc-sql-from) statements you can already start building your queries. With the addition of [`JOIN`](sfmc-sql-join) you can do much more then in the Salesforce Marketing Cloud UI. `WHERE` grants you even more power by allowing you to filter the outcomes of your queries.
 
-## Where
+```sql {5} title="Aall subscribers from mateuszdabrowski.pl domain"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE Domain = 'mateuszdabrowski.pl'
+```
 
-### Conditions
+## Basic operators
+
+In many scenarios you will be using the basic operators in your where clauses. In the above example you already seen the equality operator (`=`). There are few more available.
+
+Operator | Description
+-- | --
+`=` | Equal to
+`<>` | Not equal to
+`>` | Greater than
+`<` | Less than
+`>=` | Greater or equal to
+`<=` | Less or equal to
+
+### Equality
+
+Equality operators (`=`, `<>`) are great when you have a controlled value. Think booleans (for example Opt-in information) and piclists (for example Status field on _Subscribers System Data View that is limited to four values).
+
+```sql {5} title="All subscribers that are not unsubscribed"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE Status <> 'unsubscribed'
+```
+
+### Comparision
+
+Comparision operators (`<`, `>`, `>=`, `<=`) are perfect when you are operating on numbers (for example selecting contacts with low Customer Lifetime Value) or dates.
+
+```sql {5} title="All subscribers that joined within the last month"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE CONVERT(DATE, DateJoined) >= DATEADD(MONTH, -1, CONVERT(DATE, GETUTCDATE()))
+```
+
+With dates in many cases you will want to use a bit more complex structure for the comparision to work correctly. In this case we are converting the `DateJoined` value to simple date (day, month, year without the time), we are getting current date in UTC format and also convert it to a simple date, subtract one month from it and compare on it. I will cover more such examples in the [SFMC SQL Functions](sfmc-sql-functions).
+
+## LIKE operator
+
+Another really useful operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. Think about filtering with a part of a Text field (for example email domain in `EmailAddress` field) or element within multipicklist (for example comma separated list of all purchased products).
+
+To use `LIKE` operator fully, you need to leverage at least one of the two available wildcards:
+
+Wildcard | Description
+-- | --
+`%` | Zero, one or more characters
+`_` | Exactly one character
+
+For example, you can search for `%@mateuszdabrowski.pl` in `EmailAddress` to get all contacts with email address ending with `@mateuszdabrowski.pl`. However, you can change this filter to `%@mateuszdabrowski%`. Now, due to second wildcard at the end, it will be looking for any email address that domain starts with `@mateuszdabrowski`. It will capture `@mateuszdabrowski.pl` domain just as the previous filter, but also return `@mateuszdabrowski.com`, `@mateuszdabrowski.sfmc.eu` and other domains.
+
+```sql {5} title="All subscribers that have email address ending with @mateuszdabrowski followed by two-character top level domain"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE EmailAddress LIKE '%@mateuszdabrowski.__'
+```
+
+In marketing automation world, however, `LIKE` operator is especially useful for selecting contacts based on the multipicklist Text columns. Consider column `ActiveSubscriptions` that can have any compbintation of values `Phone`, `TV`, `Internet`.
+
+If you would like to select all contacts with active phone subscription you shouldn't use [equality operator](#equality) (`WHERE ActiveSubscription = 'Phone'`), as it would return you only contacts that have just this one subscription. Some of them might, however, have multiple and for SQL `'Phone'` is not equal to `'Phone', Internet'`. `LIKE` operator is here to save the day.
+
+```sql {5} title="All subscribers that have at least Phone subscription"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM MasterSubscriberDE
+WHERE ActiveSubscription LIKE '%Phone%'
+```
+
+:::note You Should Know
+
+Always be sure to check whether you apply the wildcards correctly. It is very easy to have either too narrow or too wide scope of your filter. Especially common issue is lack of `%` operator in the end or beginning of the searched string. For your query it means that the value should end there.
+
+For example `WHERE EmailAddress LIKE '%@gmail'` should provide you zero results, as it would be looking for any address ending with `@gmail` - without any top level domain like `.com`.
+
+:::
+
+## Conditions
 
 Also supports `CASE`
 
-## Group by
-
-## Order by
-
-## Union
-
-https://docs.microsoft.com/en-us/sql/t-sql/language-elements/set-operators-union-transact-sql?view=sql-server-ver15
-
-## Nested statements
 
 
+:::note You Should Know
 
+Avoid non-searchable operators for the WHERE clause (OR, NOT, <, >, NOT EXISTS, NOT IN, NOT LIKE, intrinsic functions). Those operators cannot take advantage of indexes and cause the query activity to run more slowly. More efficient operators (=, AND) improve queries.
 
-1. Avoid non-searchable operators for the WHERE clause (OR, NOT, <, >, NOT EXISTS, NOT IN, NOT LIKE, intrinsic functions). Those operators cannot take advantage of indexes and cause the query activity to run more slowly. More efficient operators (=, AND) improve queries.
-
-```sql
-SELECT emailaddress as ‘Email_Address’, [Favorite Colour] as ‘Favorite_Color’
-FROM [MasterData Extension] m
-INNER JOIN JuneMarketingSend j
-ON m.emailaddress = j.emailaddress
-WHERE m.emailaddress is not NULL
-```
-
-Running this query retrieves email and favorite color from the master data extension, and joins it with any matching email addresses from the June marketing send. Additionally, it only returns emails that are not missing. Also notice the m and the j. These are SQL aliases that are used to give a table, or a field in a table, a temporary name. This is especially helpful when you have a common field name between data extensions, like CustomerID or EmailAddress. You can also see it written like the following.
-
-SELECT o.OrderID, o.OrderDate, c.CustomerName
-FROM Customers AS c, Orders AS o
-WHERE c.CustomerID=o.CustomerID
-
-Example for exclusive offer to customers who have opened an email in the last 6 months and have made a purchase during that time.
-
-SELECT c.EmailAddress, c.CustomerID, c.First_Name
-FROM Customers c
-INNER JOIN Purchases p
-ON c.CustomerID = p.CustomerID
-WHERE [Purchase Date] > DateAdd(month, -6, GetDate()) AND [Open Date] > DateAdd(month, -6, GetDate())
-
-
-Common Queries
-Parent Accounts
-You can query data extensions in the Shared Data Extension folder from the parent account by adding the prefix ent. to the data extension name in the query. 
-SELECT EmailAddress
-FROM ent.MasterDataExtension
-
+:::
