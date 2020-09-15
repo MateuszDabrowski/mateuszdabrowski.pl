@@ -100,14 +100,33 @@ For example `WHERE EmailAddress LIKE '%@gmail'` should provide you zero results,
 
 :::
 
-## Conditions
+## NOT operator
 
-Also supports `CASE`
+Sometimes you want to rather exclude some records instead of search them. And while in many cases it can be done by just adjusting the operators, there are some situations where the `NOT` operator is the best tool for the job.
 
+TODO
 
+## Logical operators
+
+As you may have guessed, the `WHERE` statement supports standard logical operators - `AND` & `OR`.
+
+### BETWEEN shorthand
+
+### IN shorthand
 
 :::note You Should Know
 
 Avoid non-searchable operators for the WHERE clause (OR, NOT, <, >, NOT EXISTS, NOT IN, NOT LIKE, intrinsic functions). Those operators cannot take advantage of indexes and cause the query activity to run more slowly. More efficient operators (=, AND) improve queries.
 
 :::
+
+## Conditions
+
+Also supports `CASE`
+
+## Sub-query & EXISTS
+
+https://sqlinthewild.co.za/index.php/2009/08/17/exists-vs-in/
+https://sqlinthewild.co.za/index.php/2010/02/18/not-exists-vs-not-in/
+
+

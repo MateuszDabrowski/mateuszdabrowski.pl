@@ -17,7 +17,13 @@ module.exports = {
         {
             type: 'category',
             label: 'SFMC SQL',
-            items: ['sql/sfmc-sql-basics', 'sql/sfmc-sql-select', 'sql/sfmc-sql-from', 'sql/sfmc-sql-join'],
+            items: [
+                'sql/sfmc-sql-basics',
+                'sql/sfmc-sql-select',
+                'sql/sfmc-sql-from',
+                'sql/sfmc-sql-join',
+                'sql/sfmc-sql-where',
+            ],
         },
     ],
 };
