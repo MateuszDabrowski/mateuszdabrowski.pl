@@ -100,33 +100,136 @@ For example `WHERE EmailAddress LIKE '%@gmail'` should provide you zero results,
 
 :::
 
-## NOT operator
-
-Sometimes you want to rather exclude some records instead of search them. And while in many cases it can be done by just adjusting the operators, there are some situations where the `NOT` operator is the best tool for the job.
-
-TODO
-
 ## Logical operators
 
-As you may have guessed, the `WHERE` statement supports standard logical operators - `AND` & `OR`.
+The `WHERE` statement supports standard logical operators - `AND` & `OR`.
+
+This allows you to create a lot more finetuned queries evaluating either multiple values or a single value from multiple points of view. You can use as many `AND`s and `OR`s as you want, but keep AutoKill 30 minut limit for query execution in mind.
+
+```sql {5-7} title="All subscribers that have at least Phone subscription and are in its twelfth month"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM MasterSubscriberDE
+WHERE ActiveSubscription LIKE '%Phone%'
+    AND CONVERT(DATE, SubscriptionStart) >= DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
+    AND CONVERT(DATE, SubscriptionStart) < DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
+```
+
+What is more, you can use parentheses `()` to create even more complex filters:
+
+```sql {5} title="All subscribers that have at least either Phone or Internet subscription and are in its twelfth month"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM MasterSubscriberDE
+WHERE (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%')
+    AND CONVERT(DATE, SubscriptionStart) >= DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
+    AND CONVERT(DATE, SubscriptionStart) < DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
+```
+
+There are many use cases for using `AND` or `OR`, but the most popular ones are filtering by interval (numerical or date-based) and capturing records fulfilling at least one of multiple criteria. For both, there is an optional shorthand making the query a bit more readable.
 
 ### BETWEEN shorthand
 
+Whenever you want to work on ranges, instead of binding `>=` & `<=` scopes (closed range) with `AND`, you can leverage `BETWEEN` statement.
+
+```sql {6-8}
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM MasterSubscriberDE
+WHERE (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%')
+    AND CONVERT(DATE, SubscriptionStart)
+        BETWEEN DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
+        AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
+```
+
+You must however remember, that `BETWEEN` is replacing only a scenario where your interval is expected to greater or equal to first value and smaller or equal to the second value. Any other range cannot be replaced by `BETWEEN`.
+
+Additionally, `BETWEEN` behaves weird when working with dates or datetime values. For example: `WHERE Date BETWEEN "01/01/2020" AND "31/01/2020"` will work as if you wrote `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 00:00:00"`. This would result in lack of data for the last day. In most cases you would rather want `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 23:59:59"`.
+
+This is why I recommended to not use `BETWEEN`. Its cons doesn't overcome the only pro of slightly shorter syntax.
+
 ### IN shorthand
+
+There is another shorthand available - the `IN` statement. And it is much more interesting than the `BETWEEN`.
+
+It allows you to simplify where statement with multiple `OR` operators (`WHERE Status = 'held' OR Status = 'unsubscribed' OR Status = 'bounced'`) by using a list of searched values:
+
+```sql {5} title="All subscribers that are unsubscribed, bounced or temporarily held"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE Status IN ('held', 'unsubscribed', 'bounced')
+```
+
+As you can see above, the syntax is much shorter and more readable. But the beauty of `IN` statement doesn't end there. It additionally optimizes the search speed by sorting the data and performing the binary search.
+
+This can lead to significant performance improvements on bigger fields and makes using the `IN` statement worth every time when applicable.
 
 :::note You Should Know
 
-Avoid non-searchable operators for the WHERE clause (OR, NOT, <, >, NOT EXISTS, NOT IN, NOT LIKE, intrinsic functions). Those operators cannot take advantage of indexes and cause the query activity to run more slowly. More efficient operators (=, AND) improve queries.
+Unfortunatelly you cannot use `IN` statement together with `LIKE` statement. For such use case you need to just use one or more `OR` operators.
 
 :::
 
-## Conditions
+## NOT operator
 
-Also supports `CASE`
+Sometimes you want to rather exclude some records instead of searching for them. And while in many cases it can be done by just adjusting the operators (for example `<>` instead of `=`), there are some situations where the `NOT` operator is the best tool for the job.
 
-## Sub-query & EXISTS
+It is especially apparent when working with `LIKE`, `BETWEEN`, `IN` and `EXISTS` operators.
 
-https://sqlinthewild.co.za/index.php/2009/08/17/exists-vs-in/
-https://sqlinthewild.co.za/index.php/2010/02/18/not-exists-vs-not-in/
+```sql {5} title="All subscribers that are NOT unsubscribed, bounced or temporarily held"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE Status NOT IN ('held', 'unsubscribed', 'bounced')
+```
 
+```sql {5} title="All subscribers that have email address NOT ending with @mateuszdabrowski followed by two-character top level domain"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.__'
+```
+
+## CASE in WHERE
+
+`CASE` statemetn is not only useful in [`SELECT`](sfmc-sql-select#conditions) part of the query. You can use it also within the `WHERE`. There are two approaches to do this.
+
+First compares `1` to the `CASE` statement that evaluates conditions to either `1` or `0`. If the comparision evaluates to `WHERE 1 = 1` it will resolve to `TRUE` and therefore return the row.
+
+```sql {5-10} title="All subscribers that are NOT unsubscribed, bounced or temporarily held"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE 1 = CASE Status
+    WHEN 'active' THEN 1
+    WHEN 'held' THEN 0
+    WHEN 'unsubscribed' THEN 0
+    WHEN 'bounced' THEN 0
+    END
+```
+
+It works, but in most cases you can write it better with other means. This query was previously written with single-line `WHERE` utilizing `NOT IN`.
+
+Second approach compares a value to the `CASE` statement and is much more useful:
+
+```sql {5-8} title="All subscribers that have EmailAddress different from the Preferred Email and should be fixed"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM MasterSubscriberDE
+WHERE EmailAddress <> CASE
+    WHEN PreferredEmail = 'Personal Email' THEN PersonalEmail
+    WHEN PreferredEmail = 'Work Email' THEN WorkEmail
+    END
+```
+
+It still can be written using multiple `AND` & `OR` statements, but thanks to the `CASE` statement it is much more readable.
 
