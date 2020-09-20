@@ -2,17 +2,18 @@
 id: sfmc-sql-where
 title: SFMC SQL Where
 sidebar_label: Where
-description: Writing in Progress
-draft: true
+description: Use WHERE to make your query lean and to the point. Less is more.
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Writing in Progress' />
+<LeadText content='Use WHERE to make your query lean and to the point. Less is more.' />
 
-With just [`SELECT`](sfmc-sql-select) and [`FROM`](sfmc-sql-from) statements you can already start building your queries. With the addition of [`JOIN`](sfmc-sql-join) you can do much more then in the Salesforce Marketing Cloud UI. `WHERE` grants you even more power by allowing you to filter the outcomes of your queries.
+With just [`SELECT`](sfmc-sql-select) and [`FROM`](sfmc-sql-from) statements, you can already start building your queries. With the addition of [`JOIN`](sfmc-sql-join), you can do much more than in the Salesforce Marketing Cloud UI. `WHERE` grants you even more power by allowing you to filter the outcomes of your queries.
 
-```sql {5} title="Aall subscribers from mateuszdabrowski.pl domain"
+The concept behind it is straightforward. It takes all the results you obtained with the query above the `WHERE`, and for each, it applies one or more conditions. If they evaluate to `TRUE` - this particular result will be available in the output Data Extension. If evaluation ends with `FALSE`, it will be filtered out.
+
+```sql {5} title="All subscribers with domain equal to 'mateuszdabrowski.pl'"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -22,7 +23,7 @@ WHERE Domain = 'mateuszdabrowski.pl'
 
 ## Basic operators
 
-In many scenarios you will be using the basic operators in your where clauses. In the above example you already seen the equality operator (`=`). There are few more available.
+In many scenarios, you will be using the basic operators in your `WHERE` clauses. In the example above, you already saw the equality operator (`=`). There are a few more available.
 
 Operator | Description
 -- | --
@@ -33,11 +34,11 @@ Operator | Description
 `>=` | Greater or equal to
 `<=` | Less or equal to
 
-### Equality
+### Equality operators
 
-Equality operators (`=`, `<>`) are great when you have a controlled value. Think booleans (for example Opt-in information) and piclists (for example Status field on _Subscribers System Data View that is limited to four values).
+Equality operators (`=`, `<>`) are great when you have a controlled value. Think booleans (for example Opt-in information) and picklists (for example Status field on `_Subscribers` System Data View that is limited to four values).
 
-```sql {5} title="All subscribers that are not unsubscribed"
+```sql {5} title="All subscribers that do not have the unsubscribed status"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -45,9 +46,9 @@ FROM _Subscribers
 WHERE Status <> 'unsubscribed'
 ```
 
-### Comparision
+### Comparison operators
 
-Comparision operators (`<`, `>`, `>=`, `<=`) are perfect when you are operating on numbers (for example selecting contacts with low Customer Lifetime Value) or dates.
+Comparison operators (`<`, `>`, `>=`, `<=`) are perfect when you are operating on numbers (for example selecting contacts with low Customer Lifetime Value) or dates.
 
 ```sql {5} title="All subscribers that joined within the last month"
 SELECT
@@ -57,22 +58,22 @@ FROM _Subscribers
 WHERE CONVERT(DATE, DateJoined) >= DATEADD(MONTH, -1, CONVERT(DATE, GETUTCDATE()))
 ```
 
-With dates in many cases you will want to use a bit more complex structure for the comparision to work correctly. In this case we are converting the `DateJoined` value to simple date (day, month, year without the time), we are getting current date in UTC format and also convert it to a simple date, subtract one month from it and compare on it. I will cover more such examples in the [SFMC SQL Functions](sfmc-sql-functions).
+With dates, you will frequently want to use a bit more complex structure for the comparison to work correctly. In this case, we are converting the `DateJoined` value to simple date (day, month, year without the time). We are also getting a current date in UTC format and convert it to a simple date too. Next, we subtract one month and compare it to the `DateJoined` transformed value. I cover more such examples in the [SFMC SQL Functions](sfmc-sql-functions).
 
 ## LIKE operator
 
-Another really useful operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. Think about filtering with a part of a Text field (for example email domain in `EmailAddress` field) or element within multipicklist (for example comma separated list of all purchased products).
+Another handy operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. Think about filtering with just a part of a text (for example email domain in `EmailAddress` field) or with a single element within multi picklist (for instance finding one value within the comma-separated list of all purchased products).
 
-To use `LIKE` operator fully, you need to leverage at least one of the two available wildcards:
+To use `LIKE` operator, you need to leverage at least one of the two available wildcards:
 
 Wildcard | Description
 -- | --
 `%` | Zero, one or more characters
 `_` | Exactly one character
 
-For example, you can search for `%@mateuszdabrowski.pl` in `EmailAddress` to get all contacts with email address ending with `@mateuszdabrowski.pl`. However, you can change this filter to `%@mateuszdabrowski%`. Now, due to second wildcard at the end, it will be looking for any email address that domain starts with `@mateuszdabrowski`. It will capture `@mateuszdabrowski.pl` domain just as the previous filter, but also return `@mateuszdabrowski.com`, `@mateuszdabrowski.sfmc.eu` and other domains.
+For example, you can search for `%@mateuszdabrowski.pl` in `EmailAddress` to get all contacts with an email address ending with `@mateuszdabrowski.pl`. However, you can change this filter to `%@mateuszdabrowski%`. With the second wildcard at the end, it will be looking for any email address that contains `@mateuszdabrowski` but may have more text on either side of it. It will capture `@mateuszdabrowski.pl` domain just as the previous filter, but also return `@mateuszdabrowski.com`, `@mateuszdabrowski.sfmc.eu` and other such domains.
 
-```sql {5} title="All subscribers that have email address ending with @mateuszdabrowski followed by two-character top level domain"
+```sql {5} title="All subscribers that have an email address ending with @mateuszdabrowski followed by a two-character top-level domain"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -80,9 +81,9 @@ FROM _Subscribers
 WHERE EmailAddress LIKE '%@mateuszdabrowski.__'
 ```
 
-In marketing automation world, however, `LIKE` operator is especially useful for selecting contacts based on the multipicklist Text columns. Consider column `ActiveSubscriptions` that can have any compbintation of values `Phone`, `TV`, `Internet`.
+In the marketing automation world, however, `LIKE` operator is especially useful for selecting contacts based on the multi picklist columns. Consider `ActiveSubscriptions` field that can have any combination of values `Phone`, `TV`, `Internet`.
 
-If you would like to select all contacts with active phone subscription you shouldn't use [equality operator](#equality) (`WHERE ActiveSubscription = 'Phone'`), as it would return you only contacts that have just this one subscription. Some of them might, however, have multiple and for SQL `'Phone'` is not equal to `'Phone', Internet'`. `LIKE` operator is here to save the day.
+Suppose you would like to select all contacts with active phone subscription. In that case, you shouldn't use [equality operator](#equality) (`WHERE ActiveSubscription = 'Phone'`), as it would return only contacts that have just this one subscription. Some of your customers might, however, have multiple (phone and tv or phone and internet plans). For SQL, a field containing `'Phone'` is not equal with the one having a value of `'Phone', Internet'`. `LIKE` operator is here to save the day.
 
 ```sql {5} title="All subscribers that have at least Phone subscription"
 SELECT
@@ -94,9 +95,9 @@ WHERE ActiveSubscription LIKE '%Phone%'
 
 :::note You Should Know
 
-Always be sure to check whether you apply the wildcards correctly. It is very easy to have either too narrow or too wide scope of your filter. Especially common issue is lack of `%` operator in the end or beginning of the searched string. For your query it means that the value should end there.
+Always be sure to check whether you apply the wildcards correctly. Popular error is to have either too narrow or too wide scope of your filter. A common issue is lack of `%` operator in the end or beginning of the searched string. For your query, it means that the value should end there.
 
-For example `WHERE EmailAddress LIKE '%@gmail'` should provide you zero results, as it would be looking for any address ending with `@gmail` - without any top level domain like `.com`.
+For example `WHERE EmailAddress LIKE '%@gmail'` should provide you zero results, as it would be looking for any address ending with `@gmail` - without any top-level domain like `.com`.
 
 :::
 
@@ -104,9 +105,9 @@ For example `WHERE EmailAddress LIKE '%@gmail'` should provide you zero results,
 
 The `WHERE` statement supports standard logical operators - `AND` & `OR`.
 
-This allows you to create a lot more finetuned queries evaluating either multiple values or a single value from multiple points of view. You can use as many `AND`s and `OR`s as you want, but keep AutoKill 30 minut limit for query execution in mind.
+They allow you to create more fine-tuned filters evaluating either multiple values or a single value from various points of view. You can use as many `AND`s and `OR`s as you want, but keep in mind the AutoKill 30 minute limit for query execution.
 
-```sql {5-7} title="All subscribers that have at least Phone subscription and are in its twelfth month"
+```sql {5-7} title="All subscribers that have at least Phone subscription AND are in its twelfth month"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -116,9 +117,9 @@ WHERE ActiveSubscription LIKE '%Phone%'
     AND CONVERT(DATE, SubscriptionStart) < DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
 ```
 
-What is more, you can use parentheses `()` to create even more complex filters:
+The standard order of execution is evaluating the pairs joined by `AND` first and then considering the ones with `OR`. But you can use parentheses `()` to enforce your order:
 
-```sql {5} title="All subscribers that have at least either Phone or Internet subscription and are in its twelfth month"
+```sql {5} title="All subscribers that have at least either Phone OR Internet subscription AND are in its twelfth month"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -128,7 +129,7 @@ WHERE (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%'
     AND CONVERT(DATE, SubscriptionStart) < DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
 ```
 
-There are many use cases for using `AND` or `OR`, but the most popular ones are filtering by interval (numerical or date-based) and capturing records fulfilling at least one of multiple criteria. For both, there is an optional shorthand making the query a bit more readable.
+There are many use cases for using `AND` or `OR`. The most popular ones are filtering by range (numerical or date-based) and capturing records fulfilling at least one of multiple criteria. For both, there is an optional shorthand.
 
 ### BETWEEN shorthand
 
@@ -145,19 +146,19 @@ WHERE (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%'
         AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
 ```
 
-You must however remember, that `BETWEEN` is replacing only a scenario where your interval is expected to greater or equal to first value and smaller or equal to the second value. Any other range cannot be replaced by `BETWEEN`.
+The `BETWEEN` is replacing only a range greater or equal to the first value and smaller or equal to the second value. Additionally, it behaves weird when working with dates or datetime values.
 
-Additionally, `BETWEEN` behaves weird when working with dates or datetime values. For example: `WHERE Date BETWEEN "01/01/2020" AND "31/01/2020"` will work as if you wrote `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 00:00:00"`. This would result in lack of data for the last day. In most cases you would rather want `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 23:59:59"`.
+For example: `WHERE Date BETWEEN "01/01/2020" AND "31/01/2020"` will work as if you wrote `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 00:00:00"`. It would result in a lack of data for the last day of the range. In most cases you would rather want `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 23:59:59"`.
 
-This is why I recommended to not use `BETWEEN`. Its cons doesn't overcome the only pro of slightly shorter syntax.
+Due to the above, I recommended to not use `BETWEEN` statement, unless you are sure the range is correct.
 
 ### IN shorthand
 
 There is another shorthand available - the `IN` statement. And it is much more interesting than the `BETWEEN`.
 
-It allows you to simplify where statement with multiple `OR` operators (`WHERE Status = 'held' OR Status = 'unsubscribed' OR Status = 'bounced'`) by using a list of searched values:
+It allows you to simplify `WHERE` statement with multiple `OR` operators (like `WHERE Status = 'held' OR Status = 'unsubscribed' OR Status = 'bounced'`) by using a list of searched values:
 
-```sql {5} title="All subscribers that are unsubscribed, bounced or temporarily held"
+```sql {5} title="All subscribers with the unsubscribed, bounced or temporarily held status"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -165,23 +166,23 @@ FROM _Subscribers
 WHERE Status IN ('held', 'unsubscribed', 'bounced')
 ```
 
-As you can see above, the syntax is much shorter and more readable. But the beauty of `IN` statement doesn't end there. It additionally optimizes the search speed by sorting the data and performing the binary search.
+As you can see above, the syntax is much shorter and more readable.
 
-This can lead to significant performance improvements on bigger fields and makes using the `IN` statement worth every time when applicable.
+But the beauty of `IN` statement doesn't end there. It additionally optimizes the search speed by sorting the data and performing the binary search. Thanks to it, using `IN` instead of multiple `OR`s can lead to significant performance improvements.
 
 :::note You Should Know
 
-Unfortunatelly you cannot use `IN` statement together with `LIKE` statement. For such use case you need to just use one or more `OR` operators.
+Unfortunately, you cannot use `IN` statement together with `LIKE` statement. For such use case, you need to use one or more `OR` operators.
 
 :::
 
 ## NOT operator
 
-Sometimes you want to rather exclude some records instead of searching for them. And while in many cases it can be done by just adjusting the operators (for example `<>` instead of `=`), there are some situations where the `NOT` operator is the best tool for the job.
+Sometimes you want to rather exclude some records instead of searching for them. In many cases, it can be done by just adjusting the operators (for example `<>` instead of `=`). There are, however, some situations where the `NOT` operator is the best tool for the job.
 
 It is especially apparent when working with `LIKE`, `BETWEEN`, `IN` and `EXISTS` operators.
 
-```sql {5} title="All subscribers that are NOT unsubscribed, bounced or temporarily held"
+```sql {5} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -189,21 +190,21 @@ FROM _Subscribers
 WHERE Status NOT IN ('held', 'unsubscribed', 'bounced')
 ```
 
-```sql {5} title="All subscribers that have email address NOT ending with @mateuszdabrowski followed by two-character top level domain"
+```sql {5} title="All subscribers that have email address NOT ending with @mateuszdabrowski.pl"
 SELECT
     SubscriberKey,
     EmailAddress
 FROM _Subscribers
-WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.__'
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
 ```
 
 ## CASE in WHERE
 
-`CASE` statemetn is not only useful in [`SELECT`](sfmc-sql-select#conditions) part of the query. You can use it also within the `WHERE`. There are two approaches to do this.
+The `CASE` statement is not only useful in a [`SELECT`](sfmc-sql-select#conditions) part of the query. You can use it also within the `WHERE`. There are two approaches to do this.
 
-First compares `1` to the `CASE` statement that evaluates conditions to either `1` or `0`. If the comparision evaluates to `WHERE 1 = 1` it will resolve to `TRUE` and therefore return the row.
+The first compare `1` to the outcome of the `CASE` statement that evaluates each of its conditions to either `1` or `0`. If the comparison evaluates to `WHERE 1 = 1` it will resolve to `TRUE` and therefore return the result.
 
-```sql {5-10} title="All subscribers that are NOT unsubscribed, bounced or temporarily held"
+```sql {5-10} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -216,11 +217,11 @@ WHERE 1 = CASE Status
     END
 ```
 
-It works, but in most cases you can write it better with other means. This query was previously written with single-line `WHERE` utilizing `NOT IN`.
+It works, but in most cases, you can write it better with other means mentioned above. This query was previously written with single-line `WHERE` utilizing `NOT IN` statement.
 
-Second approach compares a value to the `CASE` statement and is much more useful:
+The second approach compares a value to the `CASE` statement and is much more useful:
 
-```sql {5-8} title="All subscribers that have EmailAddress different from the Preferred Email and should be fixed"
+```sql {5-8} title="All subscribers that have EmailAddress different from the Preferred Email"
 SELECT
     SubscriberKey,
     EmailAddress
@@ -231,5 +232,5 @@ WHERE EmailAddress <> CASE
     END
 ```
 
-It still can be written using multiple `AND` & `OR` statements, but thanks to the `CASE` statement it is much more readable.
+It still can be written using multiple `AND` & `OR` statements, but thanks to the `CASE` statement, it is shorter and more readable.
 
