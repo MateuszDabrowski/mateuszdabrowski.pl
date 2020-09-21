@@ -219,7 +219,7 @@ WHERE 1 = CASE Status
 
 It works, but in most cases, you can write it better with other means mentioned above. This query was previously written with single-line `WHERE` utilizing `NOT IN` statement.
 
-The second approach compares a value to the `CASE` statement and is much more useful:
+The second approach compares a field to the `CASE` statement evaluation and is much more useful:
 
 ```sql {5-8} title="All subscribers that have EmailAddress different from the Preferred Email"
 SELECT
