@@ -82,7 +82,7 @@ This becomes truly powerful with the [SQL functions](sfmc-sql-functions).
 
 `CASE` statement evaluates a list of conditions and returns one of the multiple possible result expressions. For Marketing Cloud purposes, it is especially useful when you not only want to select a column but also modify the values within it. Perfect for translating numeric codes to descriptive ones for personalization purposes. Excellent for standardizing data (change those `1`, `true` and `on` values of opt-in to a single format).
 
-```sql {7-13}
+```sql {7-14}
 SELECT
     ContactKey,
     EmailAddress,
@@ -101,7 +101,7 @@ SELECT
 
 You can also leverage [labels](#labels) to manipulate the column name at the same time:
 
-```sql {13}
+```sql {14}
 SELECT
     ContactKey,
     EmailAddress,
@@ -122,7 +122,7 @@ Above examples are already useful in segmentation, but there is also one more wa
 
 The difference is that you are not passing the column name on which you will be building conditions. Instead, you create a boolean expression from scratch for each scenario.
 
-```sql {7-13} title="The same Query as the previous one, but written with Search Case"
+```sql {7-14} title="The same Query as the previous one, but written with Search Case"
 SELECT
     ContactKey,
     EmailAddress,
