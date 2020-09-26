@@ -49,7 +49,7 @@ SELECT
     Gender__c AS Gender
 ```
 
-### New values
+### Custom values
 
 Use labels also for passing new values directly from your query. Need to add a custom string to outcome data extension? Or maybe synchronization timestamp for debugging purposes? You can leverage SQL for it.
 
@@ -78,7 +78,7 @@ This becomes truly powerful with the [SQL functions](sfmc-sql-functions).
 
 :::
 
-### Conditions
+### CASE Conditional values
 
 `CASE` statement evaluates a list of conditions and returns one of the multiple possible result expressions. For Marketing Cloud purposes, it is especially useful when you not only want to select a column but also modify the values within it. Perfect for translating numeric codes to descriptive ones for personalization purposes. Excellent for standardizing data (change those `1`, `true` and `on` values of opt-in to a single format).
 
@@ -174,6 +174,57 @@ SELECT
             END
     END AS PrefferedChannel
 ```
+
+:::
+
+#### LIKE in CASE
+
+`LIKE` is not only useful in the [`WHERE` Statement](sfmc-sql-where#like-operator). Is is also awesome tool empowering `CASE` statement. It allows you to build flexible conditions on freetext values:
+
+```sql {4} title="Great way to split your database between Internal and External users for different communication"
+SELECT
+    ContactKey,
+    CASE
+        WHEN EmailAddress LIKE '%@mateuszdabrowski.pl' THEN 'Internal'
+        ELSE 'External'
+    END AS ContactType
+```
+
+To use basic `LIKE`, you need to leverage at least one of the two available wildcards:
+
+Wildcard | Description
+-- | --
+`%` | Zero, one or more characters
+`_` | Exactly one character
+
+For example, you can search for `%@mateuszdabrowski.pl` in `EmailAddress` to get all contacts with an email address ending with `@mateuszdabrowski.pl`. However, you can change this filter to `%@mateuszdabrowski%`. With the second wildcard at the end, it will be looking for any email address that contains `@mateuszdabrowski` but may have more text on either side of it. It will capture `@mateuszdabrowski.pl` domain just as the previous filter, but also return `@mateuszdabrowski.com`, `@mateuszdabrowski.sfmc.eu` and other such domains.
+
+There are also more advanced `LIKE` features allowing you to create even more complex conditions:
+
+Advanced Wildcard | Description
+-- | --
+`[]` | Any single character from the list specified inside
+`-` | Range operator for `[]`
+`^` | Exclusion operator for `[]`
+
+:::note You Should Know
+
+Group wildcard (`[]`) is also useful as a way to escape character in the `LIKE` statement. For example, you might want to look for all values including a percent sign (`%`).
+
+Writing `LIKE '10%'` is not good idea, as it would return to you all values starting with `10` - as the percent sign is a wildcard meaning zero, one or more characters. You can, however, obtain exactly what you want by writing:
+
+```sql {4-5} title="If the client has discount between 1 and 9%, let's bump it up to either 5% or 10%. If he or she has higher - leave it as it is. If no discount is available, make it 2%"
+SELECT
+    ContactKey,
+    CASE
+        WHEN Discount LIKE '[5-9][%]' THEN '10%'
+        WHEN Discount LIKE '[1-4][%]' THEN '5%'
+        WHEN Discount IS NOT NULL THEN Discount
+        ELSE '2%'
+    END AS NewDiscount
+```
+
+By wrapping the percent sign with the grouping sign `[]` we are telling SQL to look for exactly the percent sign. Thanks to it `'[1-4][%]'` search will look for `1%`, `2%`, `3%` or `4%` values only.
 
 :::
 
