@@ -15,7 +15,7 @@ The simplest version of this statement is `SELECT *`, which targets all availabl
 
 The prefered method is targeting columns explicitly by their names:
 
-```sql
+```sql title="Select ContactKey and EmailAddress columns"
 SELECT
     ContactKey,
     EmailAddres
@@ -23,7 +23,7 @@ SELECT
 
 If a column name contains a space, you need to capture it with squared brackets:
 
-```sql {4}
+```sql {4} title="Let's add another column with spaces in its name"
 SELECT
     ContactKey,
     EmailAddres,
@@ -32,16 +32,16 @@ SELECT
 
 There are also some exceptional cases related to selected [System Data Views](sfmc-sql-system-data-views) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example when taking Subscriber ID from Enterprise Attributes):
 
-```sql {2}
+```sql {2} title="There are some special column names with underscore prefix"
 SELECT
     _SubscriberId
 ```
 
-### Labels
+## Labeling with AS
 
 You can also utilize `SELECT` as a tool to rename the source columns to match your needs in an outcome data extension. It is especially useful when you are pulling the data from Synchronized Data Extension with names coming from Salesforce custom fields.
 
-```sql {4-5}
+```sql {4-5} title="Improve readability and consistency with labeling"
 SELECT
     ContactKey,
     EmailAddress,
@@ -67,7 +67,7 @@ SELECT
 
 You can even go further with creating new values by leveraging existing data! For example, if you have first name and last name, you can use SQL to create a FullName column from scratch:
 
-```sql {4}
+```sql {4} title="Let's create a concatenated column for easier personalization"
 SELECT
     SubscriberKey,
     EmailAddress,
@@ -78,7 +78,7 @@ This becomes truly powerful with the [SQL functions](sfmc-sql-functions).
 
 :::
 
-### CASE Conditional values
+## Conditional values with CASE
 
 `CASE` statement evaluates a list of conditions and returns one of the multiple possible result expressions. For Marketing Cloud purposes, it is especially useful when you not only want to select a column but also modify the values within it. Perfect for translating numeric codes to descriptive ones for personalization purposes. Excellent for standardizing data (change those `1`, `true` and `on` values of opt-in to a single format).
 
@@ -99,7 +99,9 @@ SELECT
     END
 ```
 
-You can also leverage [labels](#labels) to manipulate the column name at the same time:
+You can have as many `WHEN`/`THEN` conditions as you want. Also, the `ELSE` statement is optional, but a good idea to catch unexpected values.
+
+Feel free to also leverage [labels](#labels) to manipulate the column name at the same time:
 
 ```sql {14}
 SELECT
@@ -117,6 +119,8 @@ SELECT
         ELSE 'Unregistered'
     END AS MemberType
 ```
+
+### Search version of CASE
 
 Above examples are already useful in segmentation, but there is also one more way to write and use `CASE` statement that gives even more power. The search `CASE`.
 
@@ -151,9 +155,18 @@ SELECT
     END AS PrefferedChannel
 ```
 
+:::note You Should Know
+
+`CASE` statement returns `THEN` value of the first condition that evaluated to `TRUE`. It means that in the above example, if the `IsAppInstalled = 1` is true, other conditions won't be evaluated. Even if for selected contact all of them will be true, it will still be have the value `Push` in PrefferedChannel. This is perfect, as it allows us to prioritze cheaper channels.
+
+Always consider the order of the conditions in your `CASE` statement. It both might lead to errors if you don't expect above mentioned behaviour, as well as make your live much easier if you know it works that way.
+
+:::
+
 As you can see, thanks to search `CASE` statement we were able to check conditions on multiple different columns and connect them with `AND`/`OR` statements for better control. You can use this version of the `CASE` statement for all your needs (even those covered by the basic one) to worry not about two ways of formatting.
 
 :::note You Should Know
+
 You can use `CASE` statements inside a `CASE` statement to have an even more dynamic query.
 
 ```sql {3-16} title="Let's add another dimension of membership level to differentiate available channels"
@@ -163,21 +176,21 @@ SELECT
         WHEN MemberType = 'Platinum' THEN 'Key Account Manager'
         WHEN MemberType = 'Gold' OR MemberType = 'Silver' THEN
             CASE
-                WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
-                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
                 WHEN IsAppInstalled = 1 THEN 'Push'
+                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
+                WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
             END
         WHEN MemberType = 'Bronze' THEN
             CASE
-                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
                 WHEN IsAppInstalled = 1 THEN 'Push'
+                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
             END
     END AS PrefferedChannel
 ```
 
 :::
 
-#### LIKE in CASE
+### LIKE in CASE
 
 `LIKE` is not only useful in the [`WHERE` Statement](sfmc-sql-where#like-operator). Is is also awesome tool empowering `CASE` statement. It allows you to build flexible conditions on freetext values:
 
@@ -190,7 +203,9 @@ SELECT
     END AS ContactType
 ```
 
-To use basic `LIKE`, you need to leverage at least one of the two available wildcards:
+#### LIKE Character Wildcards
+
+There are two basic wildcards available in `LIKE`:
 
 Wildcard | Description
 -- | --
@@ -199,13 +214,59 @@ Wildcard | Description
 
 For example, you can search for `%@mateuszdabrowski.pl` in `EmailAddress` to get all contacts with an email address ending with `@mateuszdabrowski.pl`. However, you can change this filter to `%@mateuszdabrowski%`. With the second wildcard at the end, it will be looking for any email address that contains `@mateuszdabrowski` but may have more text on either side of it. It will capture `@mateuszdabrowski.pl` domain just as the previous filter, but also return `@mateuszdabrowski.com`, `@mateuszdabrowski.sfmc.eu` and other such domains.
 
-There are also more advanced `LIKE` features allowing you to create even more complex conditions:
+#### LIKE Group Wildcards
+
+There is also a group wildcard for `LIKE` allowing you to create even more complex conditions:
 
 Advanced Wildcard | Description
 -- | --
 `[]` | Any single character from the list specified inside
 `-` | Range operator for `[]`
 `^` | Exclusion operator for `[]`
+
+##### Group Operator
+
+The group operator `[]` allows you to provide a list of characters that you want to find a match for. For example, you might have a field containing multiple IDs of your subscription products and want to categorize them for personalization purposes. Instead of creating a long list of `WHEN`/`THEN` conditions for every one of them, you can use group to simplify your query:
+
+```sql {4-5} title="Subscriptions starting with 0 are Lite, subscriptions from 10 to 14 are Standard and 15-19 are Premium"
+SELECT
+    ContactKey,
+    CASE
+        WHEN ActiveSubscription LIKE '%1[56789]%' THEN 'Premium Subscription'
+        WHEN ActiveSubscription LIKE '%1[01234]%' THEN 'Standard Subscription'
+        WHEN ActiveSubscription LIKE '%0_%' THEN 'Lite Subscription'
+        ELSE 'No Subscription'
+    END AS SubscriptionTier
+```
+
+In this example query you can see that in first condition we are checking whether the multipicklist column contains at least one subscription from the Premium tier by searching for a string that contains digit `1` followed by either `5`, `6`, `7`, `8` or `9`. If not, in second condition we are looking for at least one Standard tier subscription in the same way. If there is no such ID in the list, we check for Lite tier subscriptions that starts with `0` followed by any digit.
+
+In each of those cases, we are allowing for any characters either before or after, as the contact might have multiple subscriptions. Thanks to proper ordering, we will get the highest owned tier by each subscriber, even if various are available.
+
+Finally, if neither of the above conditions are met, we assign `No Subscription` information. This query will allow us to make much easier dynamic content or much cleaner decision split in the Journey Builder, thanks to value grouping.
+
+##### Range Operator
+
+This can be further simplified with the use of range operator `-`. Instead of writing each possible charakter within our group `[]` (it gets really awful when we are looking for any letter regardless of its case), we can ask for a range:
+
+```sql {4-5} title="Same query as above, but with range operator"
+SELECT
+    ContactKey,
+    CASE
+        WHEN ActiveSubscription LIKE '%1[5-9]%' THEN 'Premium Subscription'
+        WHEN ActiveSubscription LIKE '%1[0-4]%' THEN 'Standard Subscription'
+        WHEN ActiveSubscription LIKE '%0_%' THEN 'Lite Subscription'
+        ELSE 'No Subscription'
+    END AS SubscriptionTier
+```
+
+As you can see, all we need to do, it to put range operator `-` between first and last value that we want to catch. For alphabetical searches where we want both lowercase and uppercase letters, you will need to write it like this: `LIKE '[a-zA-Z]'`.
+
+##### Exclusion Operator
+
+There is one more operator that is sometimes useful - the exclusion operator `^`. By adding it to the beginning of your group, you are telling the SQL to look for any character not like the ones within the group. For example, `LIKE '[^0-9]'` will look for any character that is not a digit. It is, however, much more useful in the [`WHERE` Statement](sfmc-sql-where#like-operator).
+
+Remember, you can use multiple Group operators within a single `LIKE`.
 
 :::note You Should Know
 
@@ -218,7 +279,7 @@ SELECT
     ContactKey,
     CASE
         WHEN Discount LIKE '[5-9][%]' THEN '10%'
-        WHEN Discount LIKE '[1-4][%]' THEN '5%'
+        WHEN Discount LIKE '[0-4][%]' THEN '5%'
         WHEN Discount IS NOT NULL THEN Discount
         ELSE '2%'
     END AS NewDiscount
@@ -226,9 +287,24 @@ SELECT
 
 By wrapping the percent sign with the grouping sign `[]` we are telling SQL to look for exactly the percent sign. Thanks to it `'[1-4][%]'` search will look for `1%`, `2%`, `3%` or `4%` values only.
 
+If you want to search for a hyphen '-' within a grouping operator using a range, just add it in the very beginning. `LIKE '[-0-9]` will look for either `-` or any digit.
+
 :::
 
-### Table Prefixes
+### NOT LIKE
+
+You can add `NOT` statement before `LIKE` to search for not matching records.
+
+```sql {4} title="Same query as in the beggining of our CASE journey, but flipped"
+SELECT
+    ContactKey,
+    CASE
+        WHEN EmailAddress NOT LIKE '%@mateuszdabrowski.pl' THEN 'External'
+        ELSE 'Internal'
+    END AS ContactType
+```
+
+## Table Prefixes
 
 Additional elements that you will be using in many of your queries are table prefixes for selecting columns from multiple joined Data Extensions.
 
@@ -240,11 +316,11 @@ SELECT
 
 I'm covering this topic in-depth in [`JOIN` statement documentation](sfmc-sql-join#table-name-prefix).
 
-### Flow control
+## Flow control
 
 Despite official [SFMC SQL documentation](https://help.salesforce.com/articleView?id=mc_as_sql_reference.htm&type=5) states that it supports the `IF` constructs, I was not able to make it work.
 
-### Variables & Functions
+## Variables & Functions
 
 Unfortunately, SFMC SQL does not support variables.
 
