@@ -11,7 +11,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 With just [`SELECT`](sfmc-sql-select) and [`FROM`](sfmc-sql-from) statements, you can already start building your queries. With the addition of [`JOIN`](sfmc-sql-join), you can do much more than in the Salesforce Marketing Cloud UI. `WHERE` grants you even more power by allowing you to filter the outcomes of your queries.
 
-The concept behind it is straightforward. It takes all the results you obtained with the query above the `WHERE`, and for each, it applies one or more conditions. If they evaluate to `TRUE` - this particular result will be available in the output Data Extension. If evaluation ends with `FALSE`, it will be filtered out.
+The concept behind it is straightforward. It takes all the results you obtained with the query above the `WHERE`, and for each, it applies one or more conditions. If they evaluate to `TRUE` - this particular result will be available in the output Data Extension. If evaluation ends with `FALSE`, `WHERE` will filter it out.
 
 ```sql {5} title="All subscribers with domain equal to 'mateuszdabrowski.pl'"
 SELECT
@@ -62,24 +62,7 @@ With dates, you will frequently want to use a bit more complex structure for the
 
 ## LIKE operator
 
-Another handy operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. Think about filtering with just a part of a text (for example email domain in `EmailAddress` field) or with a single element within multi picklist (for instance finding one value within the comma-separated list of all purchased products).
-
-To use `LIKE` operator, you need to leverage at least one of the two available wildcards:
-
-Wildcard | Description
--- | --
-`%` | Zero, one or more characters
-`_` | Exactly one character
-
-For example, you can search for `%@mateuszdabrowski.pl` in `EmailAddress` to get all contacts with an email address ending with `@mateuszdabrowski.pl`. However, you can change this filter to `%@mateuszdabrowski%`. With the second wildcard at the end, it will be looking for any email address that contains `@mateuszdabrowski` but may have more text on either side of it. It will capture `@mateuszdabrowski.pl` domain just as the previous filter, but also return `@mateuszdabrowski.com`, `@mateuszdabrowski.sfmc.eu` and other such domains.
-
-```sql {5} title="All subscribers that have an email address ending with @mateuszdabrowski followed by a two-character top-level domain"
-SELECT
-    SubscriberKey,
-    EmailAddress
-FROM _Subscribers
-WHERE EmailAddress LIKE '%@mateuszdabrowski.__'
-```
+Another handy operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. You may know it from the [`SELECT` statement](sfmc-sql-select#like-in-case), but it is much more useful with `WHERE`. Think about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element within multi picklist (for instance finding one value within the comma-separated list of all purchased products).
 
 In the marketing automation world, however, `LIKE` operator is especially useful for selecting contacts based on the multi picklist columns. Consider `ActiveSubscriptions` field that can have any combination of values `Phone`, `TV`, `Internet`.
 
@@ -93,13 +76,7 @@ FROM MasterSubscriberDE
 WHERE ActiveSubscription LIKE '%Phone%'
 ```
 
-:::note You Should Know
-
-Always be sure to check whether you apply the wildcards correctly. Popular error is to have either too narrow or too wide scope of your filter. A common issue is lack of `%` operator in the end or beginning of the searched string. For your query, it means that the value should end there.
-
-For example `WHERE EmailAddress LIKE '%@gmail'` should provide you zero results, as it would be looking for any address ending with `@gmail` - without any top-level domain like `.com`.
-
-:::
+It is also an excellent tool for database cleaning by finding incorrect values within automation. To learn more about the possibilities, check out the [`LIKE` guide](sfmc-sql-like).
 
 ## Logical operators
 
@@ -178,7 +155,7 @@ Unfortunately, you cannot use `IN` statement together with `LIKE` statement. For
 
 ## NOT operator
 
-Sometimes you want to rather exclude some records instead of searching for them. In many cases, it can be done by just adjusting the operators (for example `<>` instead of `=`). There are, however, some situations where the `NOT` operator is the best tool for the job.
+Sometimes you want to rather exclude some records instead of searching for them. In many cases, you can do it just adjusting the operators (for example `<>` instead of `=`). There are, however, some situations where the `NOT` operator is the best tool for the job.
 
 It is especially apparent when working with `LIKE`, `BETWEEN`, `IN` and `EXISTS` operators.
 
@@ -217,7 +194,7 @@ WHERE 1 = CASE Status
     END
 ```
 
-It works, but in most cases, you can write it better with other means mentioned above. This query was previously written with single-line `WHERE` utilizing `NOT IN` statement.
+It works, but in most cases, you can write it better with other means mentioned above. This query was previously coded with single-line `WHERE` utilizing `NOT IN` statement.
 
 The second approach compares a field to the `CASE` statement evaluation and is much more useful:
 
@@ -234,3 +211,10 @@ WHERE EmailAddress <> CASE
 
 It still can be written using multiple `AND` & `OR` statements, but thanks to the `CASE` statement, it is shorter and more readable.
 
+:::note You Should Know
+
+`CASE` statement returns `THEN` value of the first condition that evaluated to `TRUE`. It means that if in your query first condition is true, the rest will be ignored. Even if for the selected contact, all of them would be true.
+
+Always consider the order of the conditions in your `CASE` statement. It both might lead to errors if you don't expect behaviour mentioned above, as well as make your life much easier if you know it works that way.
+
+:::
