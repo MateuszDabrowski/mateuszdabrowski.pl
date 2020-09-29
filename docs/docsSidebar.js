@@ -23,6 +23,7 @@ module.exports = {
                 'sql/sfmc-sql-from',
                 'sql/sfmc-sql-join',
                 'sql/sfmc-sql-where',
+                'sql/sfmc-sql-like',
             ],
         },
     ],
