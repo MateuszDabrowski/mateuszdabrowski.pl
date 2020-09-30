@@ -136,6 +136,27 @@ Another use case? You might have a product table for your e-commerce wherein one
 
 You won't be using Self-join a lot, but it might be a colossal timesaver when needed.
 
+:::note You Should Know
+
+Self-join might be the perfect tool when you are working with data coming from Salesforce through Marketing Cloud Connect to Synchronized Data Extensions.
+
+Very often, you might encounter Accounts that are related to another Account. This hierarchical structure uses the ParentId field. With self-join, you can flatten this relationship for use in personalization and journeys.
+
+```sql {8-10} title="Flattening three levels of Salesforce Account hierarchy"
+SELECT
+    a1.Id AS Level1AccountId,
+    a1.Name AS Level1AccountName,
+    a2.Id AS Level2AccountId,
+    a2.Name AS Level2AccountName,
+    a3.Id AS Level3AccountId,
+    a3.Name AS Level3AccountName
+FROM Account_Salesforce a1
+LEFT JOIN Account_Salesforce a2 ON a2.Id = a1.ParentId
+LEFT JOIN Account_Salesforce a3 ON a3.Id = a2.ParentId
+```
+
+:::
+
 ## Joining ON
 
 I was writing a lot about the various `JOIN` statements, but there is also the `ON` element. We use it to define the relationship between the joined data sources. It tells the query which value should it should consider to decide whether the record is available in both columns.
