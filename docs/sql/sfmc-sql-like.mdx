@@ -115,9 +115,9 @@ SELECT
     RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE RecommendedProducts LIKE '_'
-    OR RecommendedProducts LIKE '_,'
-    OR RecommendedProducts LIKE ',_,'
-    OR RecommendedProducts LIKE ',_'
+    OR RecommendedProducts LIKE '_,%'
+    OR RecommendedProducts LIKE '%,_,%'
+    OR RecommendedProducts LIKE '%,_'
 ```
 
 In the query above we are filtering our database with `RecommendedProducts` field. To add a contact to our segment, in four steps we check if at least one condition is true:
@@ -131,9 +131,9 @@ SELECT
     EmailAddress,
     CASE
         WHEN RecommendedProducts LIKE '_' THEN 'True'
-        WHEN RecommendedProducts LIKE '_,' THEN 'True'
-        WHEN RecommendedProducts LIKE ',_,' THEN 'True'
-        WHEN RecommendedProducts LIKE '_,' THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%' THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_,%' THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%' THEN 'True'
         ELSE 'False'
     END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
@@ -161,43 +161,175 @@ Advanced Operator | Description
 
 ### [] Operator
 
----TODO
+The group operator `[]` allows you to provide a list of characters that you want to find a match for.
 
-The group operator `[]` allows you to provide a list of characters that you want to find a match for. For example, you might have a field containing multiple IDs of your subscription products and want to categorize them for personalization purposes. Instead of creating a long list of `WHEN`/`THEN` conditions for every one of them, you can use group to simplify your query:
+For example, consider the previous example with a field containing multiple IDs of your subscription and standard products. The field stores subscriptions in a form of single digit product IDs. First four IDs are related to Premium subscriptions. IDs from 5 to 9 are Standard subscriptions.
 
-```sql {4-5} title="Subscriptions starting with 0 are Lite, subscriptions from 10 to 14 are Standard and 15-19 are Premium"
+<Tabs
+    defaultValue='where'
+    values={[
+        {label: 'WHERE', value: 'where'},
+        {label: 'SELECT', value: 'select'},
+    ]}
+>
+<TabItem value='where'>
+
+If we would like to output only the Premium subscriptions, we would have to create a separate filter for each ID.
+
+
+```sql {6-14} title="Thus approach would require 16 lines to cover the use case"
 SELECT
-    ContactKey,
-    CASE
-        WHEN ActiveSubscription LIKE '%1[56789]%' THEN 'Premium Subscription'
-        WHEN ActiveSubscription LIKE '%1[01234]%' THEN 'Standard Subscription'
-        WHEN ActiveSubscription LIKE '%0_%' THEN 'Lite Subscription'
-        ELSE 'No Subscription'
-    END AS SubscriptionTier
+    SubscriberKey,
+    EmailAddress,
+    RecommendedProducts
+FROM EcommerceUpsellDE
+WHERE RecommendedProducts LIKE '1'
+    OR RecommendedProducts LIKE '1,%'
+    OR RecommendedProducts LIKE '%,1,%'
+    OR RecommendedProducts LIKE '%,1'
+    OR RecommendedProducts LIKE '2'
+    OR RecommendedProducts LIKE '2,%'
+    OR RecommendedProducts LIKE '%,2,%'
+    OR RecommendedProducts LIKE '%,2'
+    ...
 ```
 
-In this example query you can see that in first condition we are checking whether the multipicklist column contains at least one subscription from the Premium tier by searching for a string that contains digit `1` followed by either `5`, `6`, `7`, `8` or `9`. If not, in second condition we are looking for at least one Standard tier subscription in the same way. If there is no such ID in the list, we check for Lite tier subscriptions that starts with `0` followed by any digit.
+With group, we can optimize it. A lot.
 
-In each of those cases, we are allowing for any characters either before or after, as the contact might have multiple subscriptions. Thanks to proper ordering, we will get the highest owned tier by each subscriber, even if various are available.
+```sql {6-9} title="Same outcome with just 4 lines"
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    RecommendedProducts
+FROM EcommerceUpsellDE
+WHERE RecommendedProducts LIKE '[1234]'
+    OR RecommendedProducts LIKE '[1234],%'
+    OR RecommendedProducts LIKE '%,[1234],%'
+    OR RecommendedProducts LIKE '%,[1234]'
+```
 
-Finally, if neither of the above conditions are met, we assign `No Subscription` information. This query will allow us to make much easier dynamic content or much cleaner decision split in the Journey Builder, thanks to value grouping.
+</TabItem>
+<TabItem value='select'>
+
+If we would like to categorize them using Wildcards, we would have to create a separate WHEN for each ID.
+
+```sql {5-14} title="This approach would require 36 WHEN/THEN lines to cover the use case"
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    CASE
+        WHEN RecommendedProducts LIKE '1' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,1,%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2,%' THEN 'Premium'
+        ...
+        WHEN RecommendedProducts LIKE '5' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5,%' THEN 'Standard'
+        ...
+        ELSE 'No Subscription'
+    END AS RecommendedSubscriptionType
+FROM EcommerceUpsellDE
+```
+
+With group, we can optimize it. A lot.
+
+```sql {5-12} title="Same outcome with just 8 WHEN/THEN lines"
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    CASE
+        WHEN RecommendedProducts LIKE '[1234]' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1234],%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1234],%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1234],%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[56789]' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[56789],%' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[56789],%' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[56789],%' THEN 'Standard'
+        ELSE 'No Subscription'
+    END AS RecommendedSubscriptionType
+FROM EcommerceUpsellDE
+```
+
+</TabItem>
+</Tabs>
+
+Thanks to group operator, instead of covering every single case, we can just provide them all within the `[]`. Short, clean and readable. And it can get even better.
+
+:::note You Should Know
+
+Group operator has also another use. It allows you to search for the `%` or `_` symbols with `LIKE`. As those two symbols are wildcards, you must TODO
+
+:::
 
 ### - Operator
 
-This can be further simplified with the use of range operator `-`. Instead of writing each possible charakter within our group `[]` (it gets really awful when we are looking for any letter regardless of its case), we can ask for a range:
+We can simplify more with the use of range operator `-`. Instead of writing each possible character within our group `[]` (it gets really awful when we are looking for any letter regardless of its case), we can ask for a range:
 
-```sql {4-5} title="Same query as above, but with range operator"
+<Tabs
+    defaultValue='where'
+    values={[
+        {label: 'WHERE', value: 'where'},
+        {label: 'SELECT', value: 'select'},
+    ]}
+>
+<TabItem value='where'>
+
+```sql {6-9} title="Now with range operator"
 SELECT
-    ContactKey,
-    CASE
-        WHEN ActiveSubscription LIKE '%1[5-9]%' THEN 'Premium Subscription'
-        WHEN ActiveSubscription LIKE '%1[0-4]%' THEN 'Standard Subscription'
-        WHEN ActiveSubscription LIKE '%0_%' THEN 'Lite Subscription'
-        ELSE 'No Subscription'
-    END AS SubscriptionTier
+    SubscriberKey,
+    EmailAddress,
+    RecommendedProducts
+FROM EcommerceUpsellDE
+WHERE RecommendedProducts LIKE '[1-4]'
+    OR RecommendedProducts LIKE '[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4]'
 ```
 
+</TabItem>
+<TabItem value='select'>
+
+```sql {5-12} title="Now with range operator"
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    CASE
+        WHEN RecommendedProducts LIKE '[1-4]' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4],%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[5-9]' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9],%' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%' THEN 'Standard'
+        ELSE 'No Subscription'
+    END AS RecommendedSubscriptionType
+FROM EcommerceUpsellDE
+```
+
+</TabItem>
+</Tabs>
+
 As you can see, all we need to do, it to put range operator `-` between first and last value that we want to catch. For alphabetical searches where we want both lowercase and uppercase letters, you will need to write it like this: `LIKE '[a-zA-Z]'`.
+
+:::note You Should Know
+
+You can mix and match groups, ranges and wildcards.
+
+```sql title="Simplified Job Title categorization"
+SELECT
+    SubscriberKey
+    CASE
+        WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]' THEN 'C-Suite'
+        WHEN FreeTextJobTitle LIKE '%[Mm]anager%' THEN 'Management'
+        WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%' THEN 'Specialists'
+    END AS CorporateJobTitleGroup
+FROM _Subscriber
+
+:::
 
 ### ^ Operator
 
