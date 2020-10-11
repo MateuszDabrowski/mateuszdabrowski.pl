@@ -11,9 +11,9 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Get a LIKE and build more flexible SQL queries' />
 
-`LIKE` operator allows you to leverage wildcards to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](sfmc-sql-select#like-in-case) and [`WHERE`](sfmc-sql-where) statements.
+`LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](sfmc-sql-select#like-in-case) and [`WHERE`](sfmc-sql-where) statements.
 
-In [`SELECT`](sfmc-sql-select#like-in-case), think about normalizing and categorizing data. In [`WHERE`](sfmc-sql-where) - about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element within multi picklist (for instance finding one value within the comma-separated list of all purchased products).
+In [`SELECT`](sfmc-sql-select#like-in-case), think about normalizing and categorizing data. In [`WHERE`](sfmc-sql-where) - about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element of multi picklist (for instance finding one value within the comma-separated list of all purchased products).
 
 There are two levels of `LIKE` usage. First is focused on two essential character wildcards and is very straightforward — the second use full potential of group operator. Let's go through both with practical examples.
 
@@ -88,7 +88,7 @@ In the above example, I used two wildcards - one before and one just after `@` s
 
 Always be sure to check whether you apply the wildcards correctly. Popular error is to have either too narrow or too wide scope of your filter. A common issue is lack of `%` operator in the end or beginning of the searched string. For your query, it means that the value should end there.
 
-For example `WHERE EmailAddress LIKE '@gmail.com'` should provide you zero results, as it would be looking for precisely the `@gmail.com` value in the `EmailAddress` field - without any characters before the `@` symbol.
+For example, `WHERE EmailAddress LIKE '@gmail.com'` should provide you zero results, as it would be looking for precisely the `@gmail.com` value in the `EmailAddress` field - without any characters before the `@` symbol.
 
 :::
 
@@ -268,14 +268,14 @@ Writing `LIKE '10%'` is not a good idea, as it would return you all values start
 SELECT
     ContactKey,
     CASE
-        WHEN Discount LIKE '[5-9][%]' THEN '10%'
-        WHEN Discount LIKE '[0-4][%]' THEN '5%'
+        WHEN Discount LIKE '[56789][%]' THEN '10%'
+        WHEN Discount LIKE '[01234][%]' THEN '5%'
         WHEN Discount IS NOT NULL THEN Discount
         ELSE '2%'
     END AS NewDiscount
 ```
 
-By wrapping the `%` with the grouping sign `[]`, we are telling SQL to look for exactly the per cent sign. Thanks to it `'[1-4][%]'` search will look for `1%`, `2%`, `3%` or `4%` values only.
+By wrapping the `%` with the grouping sign `[]`, we are telling SQL to look for exactly the per cent sign. Thanks to it `'[1234][%]'` search will look for `1%`, `2%`, `3%` or `4%` values only.
 
 Same works with `_` wildcard.
 
@@ -357,7 +357,7 @@ FROM _Subscriber
 
 There is one more operator that is sometimes useful - the exclusion operator `^`. Add it to the beginning of your group, and SQL will not look for any of the grouped characters. For example, `LIKE '[^0-9]'` will look for any character that is not a digit.
 
-This operator is especially useful for the use in `WHERE` statement. Best example? SQL for finding with Subscriber Key not being correct Salesforce ID:
+This operator is especially useful for the use in `WHERE` statement. Best example? SQL for finding contacts with Subscriber Key not being correct Salesforce ID:
 
 ```sql {4} title="Find all records in All Subscribers with Subscriber Key other than Salesforce ID"
 SELECT

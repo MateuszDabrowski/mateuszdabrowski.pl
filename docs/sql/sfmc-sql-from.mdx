@@ -9,7 +9,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Tell the SQL query FROM where you need the data' />
 
-The [`SELECT`](sfmc-sql-select) statement alone won't do anything. Once you have selected columns you want to work with, you also need to pick the table (Data Extension or System Data View) `FROM` which the query will take the right columns. The code for this is simple:
+The [`SELECT`](sfmc-sql-select) statement alone won't do much. In most cases, once you have selected data you want to work with, you also need to pick the table (Data Extension or System Data View) `FROM` which the query will take the right columns. The code for this is simple:
 
 ```sql {4} title="Get ContactKey and EmailAddress from Data Extension named MasterSubscriberDE"
 SELECT
