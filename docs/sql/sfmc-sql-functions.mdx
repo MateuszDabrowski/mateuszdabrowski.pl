@@ -1,0 +1,56 @@
+---
+id: sfmc-sql-functions
+title: SFMC SQL Functions
+sidebar_label: Functions
+description: Writing in Progress
+draft: true
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Writing in Progress' />
+
+Saleforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are really useful on day-to-day basis when working with queries. Here, I will cover only selected list of them, that I find most useful for Marketing Automation purposes.
+
+## String Manipulation
+
+First category of SQL functions is for working with string values. Those functions will help you change the values, split or concatenate them, or find elements within.
+
+:::note You Should Know
+
+All string functions in SQL are using 1-based index instead of 0-based indexing known from, for example, JavaScript. First character starts at index 1. It is important for both providing correct value to parameters, as well as correctly interpreting the results.
+
+:::
+
+### CHARINDEX
+
+`CHARINDEX` function lets you find if and where one string is in another. You pass the value you want to find, the value in which you want to search and, optionally, the index of from which you want to start the search.
+
+```sql title="Search for 'Manager' in JobTitle column starting with first index"
+CHARINDEX("Manager", JobTitle, 1)
+```
+
+In the example above I used the optional starting index, but in most cases you will not be using it. The `CHARINDEX` defaults to starting from the beginning, so the above line can be written shorter as `CHARINDEX("Manager", JobTitle)`.
+
+The function returns one three possible values:
+
+1. NULL - if either value to find or searched value is NULL
+2. 0 - if the value to find is not within the searched value
+3. any other digit - the index where the value to find starts within the searched value - if there are multiple ocurrences, the result will shown starting index of just the first one.
+
+By default, `CHARINDEX` in SFMC is case-insensitive in its searches. You can, however, enforce case-sensitivity by adding `COLLATE`:
+
+```sql title="Case sensitive CHARINDEX search - note lack of comma between the value and COLLATE"
+CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
+```
+
+:::note You Should Know
+
+`CHARINDEX` is especially useful when combined with `SUBSTRING` function, as it allows for smart string operations:
+
+```sql
+```
+
+:::
+
+### CONCAT
