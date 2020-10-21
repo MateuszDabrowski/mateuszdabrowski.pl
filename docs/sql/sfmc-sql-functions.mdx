@@ -1,7 +1,7 @@
 ---
 id: sfmc-sql-functions
 title: SFMC SQL Functions
-sidebar_label: Functions
+sidebar_label: SQL Functions
 description: Writing in Progress
 draft: true
 ---
@@ -54,3 +54,23 @@ CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
 :::
 
 ### CONCAT
+
+`CONCAT` function allows you to join two or more strings together.
+
+You can use it on both existing values pulled from source data extension, as well as on custom strings and digits added directly in the query. In most cases, you will mix both.
+
+```sql {4} title="Perfect to prepare your data for personalization"
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    CONCAT(FirstName, ' ', LastName) AS FullName
+```
+
+You can concatenate any number of strings by just adding them comma separated.
+
+Sometimes, especially when concatenating long list of strings, you might want to use `CONCAT_WS` instead. It works nearly identical, but first argument will be used as a separator in the outcome string.
+
+```sql {4} title="Perfect to prepare your data for personalization"
+SELECT
+    CONCAT_WS('</br>', FirstName, LastName, Phone, Street, City, ZipCode, Country) AS DeliveryData
+```
