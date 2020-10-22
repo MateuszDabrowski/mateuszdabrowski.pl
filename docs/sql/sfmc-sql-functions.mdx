@@ -46,7 +46,7 @@ CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
 
 :::note You Should Know
 
-`CHARINDEX` is especially useful when combined with `SUBSTRING` function, as it allows for smart string operations:
+`CHARINDEX` is especially useful when combined with [`LEFT`](#left), [`RIGHT`](#right) and [`SUBSTRING`](#substring) functions, as it allows for smart string operations:
 
 ```sql
 ```
@@ -68,9 +68,36 @@ SELECT
 
 You can concatenate any number of strings by just adding them comma separated.
 
-Sometimes, especially when concatenating long list of strings, you might want to use `CONCAT_WS` instead. It works nearly identical, but first argument will be used as a separator in the outcome string.
+### FORMAT with Strings
 
-```sql {4} title="Perfect to prepare your data for personalization"
+`FORMAT` function lets you quickly change the data into a different format. In Salesforce Marketing Cloud it is especially useful, as you cannot create your own functions. `FORMAT` might save you huge headaches.
+
+The `FORMAT` works only with datetime and numeric values and requires:
+
+1. Value to be formatted (can be column, string or function)
+2. Format to be applied (more on that later)
+3. Optionally - ISO culture code
+
+Why I'm writing about `FORMAT` here, when I just wrote that it doesn't work with Strings? Because you can use [`CONVERT`](#convert) function to change some of your strings into working data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](#format-with-dates) and [`FORMAT` with Numbers](#format-with-numbers) for more information.
+
+## Date Manipulation
+
+### FORMAT with Dates
+
+I already highlighted most important information about `FORMAT` function when covering String Manipulation (check [here](#format-with-strings)), so now is time to dive into use cases.
+
+First that comes to mind when dealing with US-centric SFMC is to change the date format. For personalization. For comparision between system and imported dates outside of the query. For preparing data that will be exported to external system.
+
+```sql {2-4} title="Instead of creating complex AMPScript logic to adapt dates, just format them"
 SELECT
-    CONCAT_WS('</br>', FirstName, LastName, Phone, Street, City, ZipCode, Country) AS DeliveryData
+    FORMAT(CONVERT(DATETIME, '10/30/2020'), 'd', 'en-GB') AS DateOrderedProperly,
+    FORMAT(GETUTCDATE(), 'dd/MM/yyyy') AS TodayCustomFormat,
+    FORMAT(DateJoined, 'D', 'sa-IN') AS DateExpandedIndian
+
 ```
+
+In the example above, first two `FORMAT` functions return date in the same format - `30/10/2020`. First using manually provided one. Second by taking current UTC date. The last line outputs `Freitag, 7. Februar 2020`. Use case? Run it with [`CASE`](sfmc-sql-case) to change your basic date into language-personalized expanded date.
+
+## Numeric Manipulation
+
+### FORMAT with Numbers
