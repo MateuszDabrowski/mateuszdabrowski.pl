@@ -58,7 +58,7 @@ FROM _Subscribers
 WHERE CONVERT(DATE, DateJoined) >= DATEADD(MONTH, -1, CONVERT(DATE, GETUTCDATE()))
 ```
 
-With dates, you will frequently want to use a bit more complex structure for the comparison to work correctly. In this case, we are converting the `DateJoined` value to simple date (day, month, year without the time). We are also getting a current date in UTC format and convert it to a simple date too. Next, we subtract one month and compare it to the `DateJoined` transformed value. I cover more such examples in the [SFMC SQL Functions](sfmc-sql-functions).
+With dates, you will frequently want to use a bit more complex structure for the comparison to work correctly. In this case, we are converting the `DateJoined` value to simple date (day, month, year without the time). We are also getting a current date in UTC format and convert it to a simple date too. Next, we subtract one month and compare it to the `DateJoined` transformed value. I cover more such examples in the [SFMC SQL Date Functions](sfmc-sql-date-functions).
 
 ## LIKE operator
 
