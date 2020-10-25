@@ -70,10 +70,4 @@ You can concatenate any number of strings by just adding them comma separated.
 
 `FORMAT` function lets you quickly change the data into a different format. In Salesforce Marketing Cloud it is especially useful, as you cannot create your own functions. `FORMAT` might save you huge headaches.
 
-The `FORMAT` works only with datetime and numeric values and requires:
-
-1. Value to be formatted (can be column, string or function)
-2. Format specifier to be applied
-3. Optionally - ISO culture code
-
-Why I'm writing about `FORMAT` here, when I just wrote that it doesn't work with Strings? Because you can use [`CONVERT`](#convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](sfmc-sql-date-functions#format-with-dates) and [`FORMAT` with Numbers](sfmc-sql-numeric-functions#format-with-numbers) for more information.
+The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](sfmc-sql-conversion-functions#convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](sfmc-sql-date-functions#format-with-dates) and [`FORMAT` with Numbers](sfmc-sql-numeric-functions#format-with-numbers) for more information.
