@@ -44,10 +44,18 @@ CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
 
 :::note You Should Know
 
-`CHARINDEX` is especially useful when combined with [`LEFT`](#left), [`RIGHT`](#right) and [`SUBSTRING`](#substring) functions, as it allows for smart string operations:
+`CHARINDEX` is especially useful when combined with `WHEN` and `LEFT`/`RIGHT` functions, as it allows for smart string operations:
 
-```sql
+```sql {3} title="Dynamically pull part of the Institution Name value"
+SELECT
+    CASE
+        WHEN CHARINDEX(' ', InstitutionName) > 0 THEN LEFT(InstitutionName, CHARINDEX(' ', InstitutionName) - 1)
+        ELSE InstitutionName
+    END AS InstitutionType
+FROM Accounts
 ```
+
+The above query checks whether there is a space within `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create new simplified data point categorizing them by type.
 
 :::
 
