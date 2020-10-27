@@ -2,13 +2,17 @@
 id: sfmc-sql-date-functions
 title: SFMC SQL Date Functions
 sidebar_label: Date Functions
-description: Writing in Progress
+description: Take control over dates with built-in SQL functions. Let the query do the job.
 draft: true
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Writing in Progress' />
+<LeadText content='Take control over dates with built-in SQL functions. Let the query do the job.' />
+
+Saleforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are really useful on day-to-day basis when working with queries.
+
+Here, I will cover only selected date functions, that I find most useful for Marketing Automation purposes. They will help you find the current date or format it to match your needs.
 
 ## GETDATE & GETUTCDATE
 
@@ -112,9 +116,9 @@ You can use above format specifiers to obtain the exact format needed:
 
 ```sql
 SELECT
-    FORMAT(GETUTCDATE(), 'HH:mm - dddd (dd MMMM yyyy)', 'en-GB') AS FormattedDate
+    FORMAT(GETUTCDATE(), 'dddd (dd MMMM yyyy) - HH:mm', 'en-GB') AS FormattedDate
 ```
 
-Above query will return `02:15 - Saturday (30 October 2020)`.
+Above query will return `Saturday (30 October 2020) - 02:15`.
 
 You can find full list of custom date format specifiers [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
