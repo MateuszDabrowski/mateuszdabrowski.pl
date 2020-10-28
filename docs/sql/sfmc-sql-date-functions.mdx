@@ -3,66 +3,65 @@ id: sfmc-sql-date-functions
 title: SFMC SQL Date Functions
 sidebar_label: Date Functions
 description: Take control over dates with built-in SQL functions. Let the query do the job.
-draft: true
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Take control over dates with built-in SQL functions. Let the query do the job.' />
 
-Saleforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are really useful on day-to-day basis when working with queries.
+Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
 Here, I will cover only selected date functions, that I find most useful for Marketing Automation purposes. They will help you find the current date or format it to match your needs.
 
 ## GETDATE & GETUTCDATE
 
-The `GETDATE` function is easiest way to get current timestamp within your query.
+The `GETDATE` function is the most straightforward way to get current timestamp within your query.
 
-```sql
+```sql {2}
 SELECT
     GETDATE() as CurrentDate
 ```
 
 :::note You Should Know
 
-`GETDATE()` gets server time. For Salesforce Marketing Cloud it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. This cannot be changed, even with timezone and culture settings in Setup.
+`GETDATE()` gets server time. For Salesforce Marketing Cloud it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. It cannot be changed, even with timezone and culture settings in Setup.
 
 :::
 
-The `GETUTCDATE` function works exactly the same as `GETDATE` but returns datetime in UTC timezone.
+The `GETUTCDATE` function works the same as `GETDATE` but returns DateTime in UTC timezone.
 
-```sql
+```sql {2}
 SELECT
     GETUTCDATE() as CurrentUTCDate
 ```
 
-Both return a datetime object (for example: `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
+Both return a DateTime object (for example `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
 
 You can, however, limit its output to either only date or time part by using [`CONVERT`](sfmc-sql-conversion-functions#convert) or [`FORMAT`](#format-with-dates) Functions.
 
 ## FORMAT with Dates
 
-The `FORMAT` works only with datetime and numeric values and requires:
+The `FORMAT` works only with DateTime and numeric values and requires:
 
-1. Value to be formatted (can be column, string or function)
+1. Value to be formatted (can be a column, string or function)
 2. Format specifier to be applied
 3. Optionally - ISO culture code
 
-It is perfect tool to manipulate any dates (or date strings) available in your Data Extensions. For personalization. For comparision between system and imported dates outside of the query. For preparing data that will be exported to external system with specific format requirements.
+It is a perfect tool to manipulate any dates (or date strings) available in your Data Extensions. For personalization. For comparison between system and imported dates outside of the query. For preparing data to export it to an external system with specific format requirements.
 
-```sql {2-4} title="Instead of creating complex AMPScript logic to adapt dates, just format them"
+```sql {2-4} title="Instead of creating complex AMPScript logic to adapt dates, format them"
 SELECT
-    FORMAT(CONVERT(DATETIME, '10/30/2020'), 'd', 'en-GB') AS DateOrderedProperly,
+    FORMAT(CONVERT(DateTime, '10/30/2020'), 'd', 'en-GB') AS DateOrderedProperly,
     FORMAT(GETUTCDATE(), 'dd/MM/yyyy') AS TodayCustomFormat,
     FORMAT(DateJoined, 'D', 'de-DE') AS DateExpandedIndian
 
 ```
 
-In the example above, first two `FORMAT` functions return date in the same format - `30/10/2020`. First using manually provided one. Second by taking current UTC date. The last line outputs `Freitag, 7. Februar 2020`. Use case? For example run it with [`CASE`](sfmc-sql-case) to change your short date into language-personalized long date.
+In the example above, the first two `FORMAT` functions return date in the same format - `30/10/2020` - one by using manually provided one, another by taking the current UTC date. The last line outputs `Freitag, 7. Februar 2020`. Use case? For example, run it with [`CASE`](sfmc-sql-case) to change your short date into a language-personalized extended date.
 
 ### Standard date formats
 
-In the above example you could see three different format specifiers used to manipulate the date, but there is much more avaialble. You can find the most useful below:
+Above, you have seen three different format specifiers used to manipulate the date, but there is much more available. You can find the most useful below:
 
 | Format specifier | Description | Example (for US culture) |
 | -- | -- | -- |
@@ -78,13 +77,13 @@ In the above example you could see three different format specifiers used to man
 | 'F' | Full long time | Friday, October 30, 2020 2:15:30 PM |
 | 'r'/'R' | RFC1123 | Fri, 30 Oct 2020 14:15:30 GMT |
 
-Just as highlighted in the table header - the examples are for the SFMC default US culture formating. If you add another culture code as third parameter, the outcome will be different, as various countries have different defaults of elements order.
+Just as highlighted in the table header - the examples are for the SFMC default US culture formating. If you add another culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order.
 
-You can find full list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings).
+You can find the full list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings).
 
 ### Custom date formats
 
-Of course, you are not limited to the formats shown above. Whenever you want something different, you can create your own format by just providing full pattern instead of short specifier by using those:
+Of course, you are not limited to the formats shown above. Whenever you want something different, you can create your format by just providing full pattern instead of short specifier by using those:
 
 | Format specifier | Description | Example (for US culture) |
 | -- | -- | -- |
@@ -110,15 +109,15 @@ Of course, you are not limited to the formats shown above. Whenever you want som
 | ':' | Time separator | ':' |
 | '/' | Date separator | '/' |
 
-Again, the examples are for the default US culture formatting and might look different for different cultures (for example hour separator might be changed automatically to `.` for Italy).
+Again, the examples are for the default US culture formatting and might look different for different cultures (for example, hour separator might be changed automatically to `.` for Italy).
 
-You can use above format specifiers to obtain the exact format needed:
+You can use the above format specifiers to obtain the exact format needed:
 
-```sql
+```sql {2}
 SELECT
     FORMAT(GETUTCDATE(), 'dddd (dd MMMM yyyy) - HH:mm', 'en-GB') AS FormattedDate
 ```
 
 Above query will return `Saturday (30 October 2020) - 02:15`.
 
-You can find full list of custom date format specifiers [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
+You can find the full list of custom date format specifiers [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
