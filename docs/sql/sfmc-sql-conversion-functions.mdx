@@ -2,10 +2,145 @@
 id: sfmc-sql-conversion-functions
 title: SFMC SQL Conversion Functions
 sidebar_label: Conversion Functions
-description: Writing in Progress
+description: Break from the limits of Data Extension data types. Use full power of SQL to control your values.
 draft: true
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Writing in Progress' />
+<LeadText content='Break from the limits of Data Extension data types. Use full power of SQL to control your values.' />
+
+Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
+
+Here, I will cover only selected conversion functions, that I find most useful for Marketing Automation purposes. They will help you change the value types to enable type-based Salesforce Marketing Cloud User Interface elements and type-specific function use.
+
+## CAST & CONVERT
+
+In Salesforce Marketing Cloud you can use two universal conversion functions - `CAST` and `CONVERT`.
+
+### CAST
+
+The first one, `CAST`, is available in all SQL dialects and is really straightforward:
+
+```sql {4} title="Find all subscribers that joined after given date"
+SELECT
+    SubscriberKey
+FROM ENT._Subscribers
+WHERE DateJoined > CAST('2020-10-30' AS DATE)
+```
+
+It takes a value and expected datatype with `AS` operator in between.
+
+However, in Salesforce Marketing Cloud it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](sfmc-sql-basics#query-studio) (for example, you cannot use `CAST` in `SELECT` part of the query there).
+
+### CONVERT
+
+The basic form of `CONVERT` is nearly the same:
+
+```sql {4} title="Find all subscribers that joined after given date"
+SELECT
+    SubscriberKey
+FROM ENT._Subscribers
+WHERE DateJoined > CONVERT(DATE, '2020-10-30')
+```
+
+With both `CASE` and `CONVERT` you can stack functions within for more complex calculations:
+
+```sql
+SELECT
+    CONCAT('Just a month till ', CONVERT(NVARCHAR, CONVERT(DATE, DATEADD(MM, 1, GETUTCDATE())), 107)) AS UsefulInformation
+```
+This awful line will get UTC Date, add 1 month to it, convert it to date only value then again to string value with proper style (more on that right after it) and finally concatenate it with another string. Final value: `Just a month till Nov 28, 2020`.
+
+Up to this point, `CAST` and `CONVERT` seem simillar in the features.
+
+However, only `CONVERT` have an additional third optional argument - style. Thanks to it, you can convert even from non-standard (for the server) formats.
+
+```sql {4} title="Converting dd/MM/yyyy format"
+SELECT
+    SubscriberKey
+FROM _Subscribers
+WHERE DateJoined > CONVERT(DATE, '30/10/2019')
+```
+
+Results in an error: `Could not convert date and/or time from string data type`. However, we can make it work with a style code:
+
+```sql {4} title="Converting dd/MM/yyyy format with apropriate style code"
+SELECT
+    SubscriberKey
+FROM _Subscribers
+WHERE DateJoined > CONVERT(DATE, '30/10/2019', 103)
+```
+
+This is not possible with `CAST`.
+
+:::note You Should Know
+
+You can also leverage style codes to format your dates during conversion to string, without the need to use `FORMAT` function additionally.
+
+```sql
+SELECT
+    CONVERT(NVARCHAR, GETDATE(), 101) AS DateFormat1,   /* Output: 10/30/2020 */
+    CONVERT(NVARCHAR, GETDATE(), 102) AS DateFormat2,   /* Output: 2020.10.30 */
+    CONVERT(NVARCHAR, GETDATE(), 107) AS DateFormat3    /* Output: Oct 30, 2020 */
+```
+
+:::
+
+### Data Types
+
+There are over 30 data types available for conversion, but there are only few that are useful on day-to-day basis in Salesforce Marketing Cloud:
+
+| Data Type | Description | Comment |
+| -- | -- | -- |
+| CHAR | Fixed-length string | Good option for fixed-length IDs like Salesforce Object ID |
+| NCHAR | Fixed-length string with Unicode support |
+| VARCHAR | Variable-length string |
+| NVARCHAR | Variable-length string with Unicode support | Best option for most SFMC string use cases |
+| DECIMAL/NUMERIC | Decimal number with big precision | Best option if you need decimal number |
+| INT | Integer number | Best option if your number is not decimal |
+| DATETIME | Date and time | Best when you need both date and time |
+| DATE | Only date | Best when you need date only |
+| TIME | Only time | Best when you need time only |
+
+:::note You Should Know
+
+Always double check the data type you want to convert to, as it might have massive impact into outcome.
+
+```sql title="Different outcomes depending on output data type"
+SELECT
+    CAST(6.9 AS INT) AS CastToInt,               /* Output: 6 */
+    CAST(6.9 AS DECIMAL) AS CastToNumeric,       /* Output: 7 */
+    CONVERT(INT, 6.9) AS ConvertToInt,           /* Output: 6 */
+    CONVERT(DECIMAL, 6.9) AS ConvertToNumeric    /* Output: 7 */
+```
+
+This is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are trunctated. The rest is rounded.
+
+:::
+
+### CONVERT Style Codes
+
+Just as with data types - there is a lot style codes available. Here I will cover just the most popular ones (if you don't understand some formats, check [date formats guide](smfc-sql-date-functions#custom-date-formats)):
+
+| Date format | Style code |
+| -- | -- |
+| MMM dd yyyy hh:mmtt | 100 |
+| MM/dd/yyyy | 101 |
+| yyyy.mm.dd | 102 |
+| dd/mm/yyyy | 103 |
+| dd.mm.yyyy | 104 |
+| dd-mm-yyyy | 105 |
+| dd MMM yyyy | 106 |
+| MMM dd, yyyy | 107 |
+| HH:mm:ss | 108 |
+| MM-dd-yyyy | 110 |
+| yyyy/MM/dd | 111 |
+| yyyyMMdd | 112 |
+| yyyy-MM-dd HH:mm:ss | 120 |
+| MM/dd/yy hh:mm:ss tt | 22 |
+| yyyy-mm-dd| 23 |
+
+You can find the full list of style codes on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver15#date-and-time-styles).
+
+
