@@ -3,26 +3,25 @@ id: sfmc-sql-conversion-functions
 title: SFMC SQL Conversion Functions
 sidebar_label: Conversion Functions
 description: Break from the limits of Data Extension data types. Use full power of SQL to control your values.
-draft: true
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Break from the limits of Data Extension data types. Use full power of SQL to control your values.' />
+<LeadText content='Break from the limits of source data types. Use the full power of SQL to transform your values.' />
 
 Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
-Here, I will cover only selected conversion functions, that I find most useful for Marketing Automation purposes. They will help you change the value types to enable type-based Salesforce Marketing Cloud User Interface elements and type-specific function use.
+Here, I will cover only selected conversion functions, that I find most useful for Marketing Automation purposes. They will help you change the value types to enable use of type-based Salesforce Marketing Cloud User Interface elements and type-specific functions.
 
 ## CAST & CONVERT
 
-In Salesforce Marketing Cloud you can use two universal conversion functions - `CAST` and `CONVERT`.
+In Salesforce Marketing Cloud, you can use two universal conversion functions - `CAST` and `CONVERT`.
 
 ### CAST
 
-The first one, `CAST`, is available in all SQL dialects and is really straightforward:
+The first one, `CAST`, is straightforward and available in all SQL dialects:
 
-```sql {4} title="Find all subscribers that joined after given date"
+```sql {4} title="Find all subscribers that joined after the given date"
 SELECT
     SubscriberKey
 FROM ENT._Subscribers
@@ -31,52 +30,51 @@ WHERE DateJoined > CAST('2020-10-30' AS DATE)
 
 It takes a value and expected datatype with `AS` operator in between.
 
-However, in Salesforce Marketing Cloud it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](sfmc-sql-basics#query-studio) (for example, you cannot use `CAST` in `SELECT` part of the query there).
+However, in Salesforce Marketing Cloud, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](sfmc-sql-basics#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there).
 
 ### CONVERT
 
-The basic form of `CONVERT` is nearly the same:
+The basic form of `CONVERT` is nearly the same as the `CASE` with reversed order of arguments:
 
-```sql {4} title="Find all subscribers that joined after given date"
+```sql {4} title="Find all subscribers that joined after the given date"
 SELECT
     SubscriberKey
 FROM ENT._Subscribers
 WHERE DateJoined > CONVERT(DATE, '2020-10-30')
 ```
 
-With both `CASE` and `CONVERT` you can stack functions within for more complex calculations:
+With both functions you can stack functions within for more complex calculations:
 
-```sql
+```sql {2} title="Calculate the end of the trial period and output date only"
 SELECT
-    CONCAT('Just a month till ', CONVERT(NVARCHAR, CONVERT(DATE, DATEADD(MM, 1, GETUTCDATE())), 107)) AS UsefulInformation
+    CONVERT(DATE, DATEADD(MM, 1, GETUTCDATE())) AS TrialPeriodEndDate
 ```
-This awful line will get UTC Date, add 1 month to it, convert it to date only value then again to string value with proper style (more on that right after it) and finally concatenate it with another string. Final value: `Just a month till Nov 28, 2020`.
 
-Up to this point, `CAST` and `CONVERT` seem simillar in the features.
+Up to this point, `CAST` and `CONVERT` seem similar in the features.
 
-However, only `CONVERT` have an additional third optional argument - style. Thanks to it, you can convert even from non-standard (for the server) formats.
+However, only `CONVERT` have an additional third optional argument - style. Thanks to it, you can convert even from non-standard (for the server) formats that would result in an error:
 
-```sql {4} title="Converting dd/MM/yyyy format"
+```sql {4} title="Converting dd/MM/yyyy format throws 'Could not convert date and/or time from string data type '"
 SELECT
     SubscriberKey
 FROM _Subscribers
-WHERE DateJoined > CONVERT(DATE, '30/10/2019')
+WHERE DateJoined > CONVERT(DATE, '30/10/2019') /* Error */
 ```
 
-Results in an error: `Could not convert date and/or time from string data type`. However, we can make it work with a style code:
+With style codes we can make it work with minimal change:
 
-```sql {4} title="Converting dd/MM/yyyy format with apropriate style code"
+```sql {4} title="Converting dd/MM/yyyy format with appropriate style code"
 SELECT
     SubscriberKey
 FROM _Subscribers
 WHERE DateJoined > CONVERT(DATE, '30/10/2019', 103)
 ```
 
-This is not possible with `CAST`.
+It is not possible with `CAST`.
 
 :::note You Should Know
 
-You can also leverage style codes to format your dates during conversion to string, without the need to use `FORMAT` function additionally.
+You can also leverage style codes to format your dates during conversion to string, without the need to use `FORMAT` function on top.
 
 ```sql
 SELECT
@@ -89,25 +87,46 @@ SELECT
 
 ### Data Types
 
-There are over 30 data types available for conversion, but there are only few that are useful on day-to-day basis in Salesforce Marketing Cloud:
+There are over 30 data types available for conversion, but there are only a few that are useful on a day-to-day basis in Salesforce Marketing Cloud:
 
 | Data Type | Description | Comment |
 | -- | -- | -- |
-| CHAR | Fixed-length string | Good option for fixed-length IDs like Salesforce Object ID |
-| NCHAR | Fixed-length string with Unicode support |
-| VARCHAR | Variable-length string |
+| CHAR | Fixed-length string | |
+| NCHAR | Fixed-length string with Unicode support | |
+| VARCHAR | Variable-length string | |
 | NVARCHAR | Variable-length string with Unicode support | Best option for most SFMC string use cases |
-| DECIMAL/NUMERIC | Decimal number with big precision | Best option if you need decimal number |
+| DECIMAL/NUMERIC | Decimal number with big precision | Best option if you need a decimal number |
 | INT | Integer number | Best option if your number is not decimal |
-| DATETIME | Date and time | Best when you need both date and time |
+| DATETIME | Legacy date and time | More friendly default formatting |
+| DATETIME2 | Modern date and time | Best when you need both date and time |
 | DATE | Only date | Best when you need date only |
 | TIME | Only time | Best when you need time only |
 
+When converting values to the selected data type, you can have even more control by passing optional argument right after type to declare the length of the output.
+
+It is especially useful with `DECIMAL` as it allows you to provide expected precision (number of digits in a number) and scale (number of digits to the right of the decimal point in a number).
+
+For example, you may have a string field containing a product price - `'123.99'`. If you convert it to `DECIMAL` without any arguments, it will round to `124`. However, you can provide precision and scale to keep the current format:
+
+```sql {2-3}
+SELECT
+    CONVERT(DECIMAL, '123.99') AS RoundedConversion      /* Output: 124 */
+    CONVERT(DECIMAL(5,2), '123.99') AS FullConversion    /* Output: 123.99 */
+```
+
+Be sure to add correct precision. If it is smaller then the values in your source, it will lead to an error. It's better to have too big precision than too small.
+
+As for scale - if your scale is smaller than in your source, the value is rounded.
+
+You can also use a single argument with string data types. In this case, it won't directly limit the number of characters, but rather the number of bytes (which might be equal or not to the number of characters depending on what characters you are using).
+
+`CHAR` allows for 1-8000 bytes range, whereas `NCHAR` due to Unicode support allows for only 1-4000. `VARCHAR` and `NVARCHAR` support the same ranges respectively but also have an additional possible option - `max` that you can use if some values might exceed the range.
+
 :::note You Should Know
 
-Always double check the data type you want to convert to, as it might have massive impact into outcome.
+Always double-check the choice of data type you want to convert to, as it might have a massive impact into outcome.
 
-```sql title="Different outcomes depending on output data type"
+```sql title="Different outcomes depending on the output data type"
 SELECT
     CAST(6.9 AS INT) AS CastToInt,               /* Output: 6 */
     CAST(6.9 AS DECIMAL) AS CastToNumeric,       /* Output: 7 */
@@ -115,13 +134,13 @@ SELECT
     CONVERT(DECIMAL, 6.9) AS ConvertToNumeric    /* Output: 7 */
 ```
 
-This is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are trunctated. The rest is rounded.
+It is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are truncated. The rest is rounded if no specific precision/scale argument is available.
 
 :::
 
 ### CONVERT Style Codes
 
-Just as with data types - there is a lot style codes available. Here I will cover just the most popular ones (if you don't understand some formats, check [date formats guide](smfc-sql-date-functions#custom-date-formats)):
+Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](smfc-sql-date-functions#custom-date-formats)):
 
 | Date format | Style code |
 | -- | -- |
