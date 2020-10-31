@@ -11,7 +11,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
-Here, I will cover only selected conversion functions, that I find most useful for Marketing Automation purposes. They will help you change the value types to enable use of type-based Salesforce Marketing Cloud User Interface elements and type-specific functions.
+Here, I will cover only selected conversion functions, that I find most useful for Marketing Automation purposes. They will help you change the value types to enable the use of type-based Salesforce Marketing Cloud User Interface elements and type-specific functions.
 
 ## CAST & CONVERT
 
@@ -61,7 +61,7 @@ FROM _Subscribers
 WHERE DateJoined > CONVERT(DATE, '30/10/2019') /* Error */
 ```
 
-With style codes we can make it work with minimal change:
+With style codes, we can make it work with minimal change:
 
 ```sql {4} title="Converting dd/MM/yyyy format with appropriate style code"
 SELECT
@@ -74,7 +74,7 @@ It is not possible with `CAST`.
 
 :::note You Should Know
 
-You can also leverage style codes to format your dates during conversion to string, without the need to use `FORMAT` function on top.
+You can also leverage style codes to format your dates during conversion to string, without the need to use [`FORMAT`](sfmc-sql-date-functions#format-with-dates) function on top.
 
 ```sql
 SELECT
