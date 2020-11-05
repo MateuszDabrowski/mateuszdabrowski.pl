@@ -1,0 +1,298 @@
+---
+id: sfmc-config-permissions
+title: SFMC Permissions
+sidebar_label: Permissions
+description: Welcome to the jungle, we've got Roles and Permissions.
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content="Welcome to the jungle, we've got Roles and Permissions." />
+
+## Roles and Permissions Best Practices
+
+### Standard Roles vs Custom Roles
+
+The best way to work with Roles and Permissions in Salesforce Marketing Cloud is to leverage standard roles and only build on top of them with custom permissions/roles. Creating custom roles from scratch (even by copying existing standard role) is not recommended. There are two reasons for this:
+
+1. Standard Roles are updated every release to support changes in permissions structure.
+2. In many Marketing Cloud spaces, you need multiple permissions from various permission groups.
+
+:::note You Should Know
+
+An excellent example of it might be the Journey Builder.
+
+It is not enough to add full Journey Builder permissions to allow someone to work with that part of Marketing Cloud, because Activities used on Journey canvas require additional permissions to work:
+
+```md
+1. Decision Splits and Wait by Attribute requires:
+    - Email > Subscribers > Data Extensions > View
+    - Salesforce Marketing Cloud > Contacts > Read Contact Data
+2. Update Contact requires:
+    - Email > Subscribers > Data Extensions > View
+    - Email > Subscribers > List > View
+3. Engagement Splits requires:
+    - Email > Content > Email > View
+    - Content Builder > Assets > View
+4. Journey Entry Sources requires:
+    - Email > Subscribers > Data Extensions > View
+    - Email > Subscribers > List > View
+    - Salesforce Marketing Cloud > Contacts > Read Contact Data
+5. Goals, Exit Criteria, Default Email and Mobile Number settings require:
+    - Email > Subscribers > Data Extensions > View
+    - Salesforce Marketing Cloud > Contacts > Read Contact Data
+```
+
+Such mixes are happening in multiple parts of Marketing Cloud and might change from release to release, which makes creating custom roles from scratch very hard to make and maintain.
+
+:::
+
+However, Standard Roles not always align perfectly with your needs. The widespread use case would be hiding shared folders via permissions or blocking deletion rights for some users. It is where custom work is needed. Below I have listed details on the permissions currently available in Salesforce Marketing Cloud Setup.
+
+For better readability, I have split them by Studio/Builder, so they are not in the same order as in Setup.
+
+---
+
+## General Permissions
+
+### Salesforce Marketing Cloud
+
+Contains a mix of permissions for:
+- Marketing Cloud Dashboard tools
+- Contacts
+- Marketing Cloud Roles
+- Some __Legacy__ or unreleased functions like _Pulse_ or _Watchdog_.
+
+### Tags
+
+Permissions for Marketing Cloud tagging solution.
+
+### Administration
+
+Permissions for most of the Setup items.
+
+### Event Notifications
+
+Permissions for REST API Event Notifications Service.
+
+### Audit Trail
+
+Permissions for Audit Trail tools.
+
+### Database Encryption
+
+Permissions for Transparent Database Encryption.
+
+---
+
+## Email Studio Permissions
+
+### Email
+
+Huge permission set for most of the _Email Studio_ features.
+
+Contains also some permissions for __Legacy__ features like _Omniture TnT_ and _3sixty_.
+
+### Email Send Wizard
+
+Enables Email Send process in Email Studio and partially for single send in Journey Builder.
+
+### Distributed Sending
+
+Permissions for _Distributed Sending_.
+
+### Transactional Sending
+
+Permissions for _Transactional Messaging API_.
+
+---
+
+## Mobile Studio Permissions
+
+### MobileConnect
+
+Permissions for _MobileConnect_.
+
+### MobilePush
+
+Permissions for _MobilePush_.
+
+### GroupConnect
+
+Permissions for _Group Connect_.
+
+---
+
+## Social Studio Permissions
+
+Most permissions are managed from within _Social Studio_ and not available in global Setup.
+
+### SocialEngage
+
+Permissions for Engage, part of _Social Studio_.
+
+_Perform Workgroup Leader Role_ is permission for an unreleased feature.
+
+---
+
+## Web Studio Permissions
+
+### CloudPages
+
+Permissions for _Cloud Pages_.
+
+---
+
+## Interaction Studio Permissions
+
+Most permissions are managed from within _Interaction Studio_ and not available in global Setup.
+
+### Interaction Studio
+
+Permissions for _Interaction Studio_ (_Evergage_).
+
+### Interaction Studio - Legacy
+
+__Legacy__ permissions for previous _Interaction Studio_ solution.
+
+---
+
+## Analytics Builder Permissions
+
+_Tracking_ within _Email Studio_ is managed by separate permissions available within [Email](#email) permission group.
+
+### Reports
+
+Permissions for _Reports_.
+
+### Analytics
+
+Permissions for integration with _Google Analytics_.
+
+### CampaignAnalytics
+
+Permissions enabling Campaign objects for _Reports_.
+Available only on Role level (cannot be limited as individual permission).
+
+### Discover
+
+Permissions for _Discover_ premium feature.
+
+---
+
+## Journey Builder Permissions
+
+### Automation Studio
+
+Permissions for _Automation Studio_.
+
+### Journey Builder
+
+Permissions for _Journey Builder_.
+
+---
+
+## Content Builder Permissions
+
+### Content Builder
+
+Permissions for _Content Builder_.
+
+### Approvals (Email)
+
+?
+
+### Workflows and Approvals
+
+Permissions for Content Builder Approval tool.
+
+---
+
+## Audience Builder Permissions
+
+### Contact Builder
+
+Permissions for _Contact Builder_.
+
+### Audience Builder
+
+Permissions for _Audience Builder_.
+
+### Active Audiences
+
+Permissions for _Active Audiences_ - part of _Audience Builder_.
+
+### Audience Builder Enabler
+
+Permission for enabling _Audience Builder_.
+
+### Data Factory Utility
+
+Permission related to _Audience Builder_ and _Discover_ (_Analytics Builder_ add-on). Moves data between environments. Configured during implementation. Do not touch.
+
+### Salesforce DMP
+
+Most permissions are managed from within _Salesforce DMP_ and not available in global Setup.
+
+### Einstein Data Analytics
+
+Most permissions are managed from within _Einstein Analytics_ and not available in global Setup.
+
+### Datorama
+
+Most permissions are managed from within _Datorama_ and not available in global Setup.
+
+### Datorama Reports
+
+Permissions for _Datorama Reports_ - part of _Datorama_.
+
+---
+
+## AppExchange Permissions
+
+### DeveloperApp
+
+?
+
+### HubExchange
+
+Permissions for _AppExchange_.
+
+---
+
+## Legacy Permissions
+
+### Marketo
+
+__Legacy__ permissions for integration with _Adobe Marketo_.
+
+### Xpress
+
+__Legacy__ permissions.
+
+### AdobeAnalytics
+
+__Legacy__ permissions for integration with _Adobe Analytics_.
+
+### tmMessenger
+
+__Legacy__ permissions for integration with _TicketMaster_.
+
+### LEMI
+
+__Legacy__ permissions.
+
+### 3sixty
+
+__Legacy__ permissions for integration with _3sixty_ elearning platform.
+
+### Extension Manager
+
+__Legacy__ permissions for _Marketing Cloud Extension Manager_.
+
+
+
+
+
+
+
