@@ -30,5 +30,10 @@ module.exports = {
                 'sql/sfmc-sql-conversion-functions',
             ],
         },
+        {
+            type: 'category',
+            label: 'SFMC Config',
+            items: ['config/sfmc-config-permissions'],
+        },
     ],
 };

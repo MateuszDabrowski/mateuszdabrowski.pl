@@ -53,12 +53,16 @@ module.exports = {
                             to: 'docs/ssjs/ssjs-if-and-switch',
                         },
                         {
-                            label: 'JS',
+                            label: 'JavaScript',
                             to: 'docs/js/js-if-and-switch',
                         },
                         {
-                            label: 'SQL',
+                            label: 'SFMC SQL',
                             to: 'docs/sql/sfmc-sql-basics',
+                        },
+                        {
+                            label: 'SFMC Config',
+                            to: 'docs/config/sfmc-config-permissions',
                         },
                     ],
                 },
