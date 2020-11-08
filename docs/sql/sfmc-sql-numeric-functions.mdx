@@ -10,11 +10,11 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Take control over numbers with built-in SQL functions. Let the query do the job.' />
 
-Saleforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are really useful on day-to-day basis when working with queries.
+Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
 Here, I will cover only selected numeric functions, that I find most useful for Marketing Automation purposes. They will help you do basic calculations or format the numbers to match your needs.
 
-### FORMAT with Numbers
+## FORMAT with Numbers
 
 The `FORMAT` works only with datetime and numeric values and requires:
 
@@ -22,4 +22,47 @@ The `FORMAT` works only with datetime and numeric values and requires:
 2. Format specifier to be applied
 3. Optionally - ISO culture code
 
-It is perfect tool to manipulate any numbers (or numeric strings) available in your Data Extensions.
+It is perfect tool to manipulate any numbers (or numeric strings with the help of [conversion](sfmc-sql-conversion-functions)) available in your Data Extensions.
+
+### Standard number formats
+
+Standard formats are built with one required and one optional element.
+
+The first one is format specifier. It tells the `FORMAT` function what the outcome should be. The second is precision. It allows you to change the value on the go (for example, round it to two decimal places). If you do not use precision, the value will be formatted with its current precision.
+
+```sql {2-3} title="Precision might lead to rounding. Note also the US thousands separator"
+SELECT
+    FORMAT(1234.56, 'N') AS FullWithoutPrecision,   /* Output: 1,234.56 */
+    FORMAT(1234.56, 'N1') AS RoundedWithPrecision      /* Output: 1,234.6 */
+```
+
+There are 9 standard formats available, but only a few are useful on a day-to-day basis in Salesforce Marketing Cloud:
+
+| Format specifier | Description | Example (for US culture) | Comment |
+| -- | -- | -- | -- |
+| 'C'/'c' | Currency | $1,234.56 | You can pass a culture code as a thrid argument to format the value stright to needed currency (including currency symbol and approriate separators) |
+| 'D'/'d' | Decimal | 1235 | Support only integers. Precision enforces minimum number of digits (great for adding leading zeroes) |
+| 'N'/'n' | Number | 1,234.56 | Precision enforces number of decimal places. You can pass a culture code as a third argument to format the value to country-specific notation |
+| 'P'/'p' | Percent | 12.34 % | Precision enforces number of decimal places. You can pass a culture code as a third argument to format the value to country-specific notation |
+
+Just as highlighted in the table header - the examples are for the SFMC default US culture formating.
+
+You can find the full list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings).
+
+### Custom number formats
+
+Of course, you are not limited to the formats shown above. Whenever you want something different, you can create custom format by just providing a pattern:
+
+| Format specifier | Description | Comments |
+| -- | -- | -- |
+| '0' | Zero placeholder | Replaces the zero with the digit if one is provided; otherwise, zero appears in the result string. |
+| '#'' | Number placeholder | Replaces the zero with the digit if one is provided; otherwise, no number appears in the result string. It also ignores not significant zeroes (like leading ones) |
+| '.' | Leading point | Informs the format function about desired decimal separator place |
+| '%' | Percentage placeholder | Multiplies the number by 100 and inserts percent sign in selected place |
+| '\' | Escape character | Allows you to escape any format specifier symbol if you want it literally in the outcome |
+| 'string'/"string" | String literal | Passess the string stright to the outcome |
+| ';' | Section separator | Allows you to pass different custom formats for positive, zero and negative values |
+
+Again, the examples are for the default US culture formatting and might look different for different cultures (for example, hour separator might be changed automatically to `.` for Italy).
+
+You can find the full list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings).
