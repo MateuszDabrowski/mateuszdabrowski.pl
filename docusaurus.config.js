@@ -137,8 +137,8 @@ module.exports = {
                 },
             ],
         },
-        googleAnalytics: {
-            trackingID: 'UA-121919433-1',
+        gtag: {
+            trackingID: 'GTM-N46LB5K',
             anonymizeIP: true,
         },
         algolia: {
