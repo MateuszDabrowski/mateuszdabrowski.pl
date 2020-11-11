@@ -14,6 +14,102 @@ Salesforce Marketing Cloud SQL implementation does not support user-defined func
 
 Here, I will cover only selected numeric functions, that I find most useful for Marketing Automation purposes. They will help you do basic calculations or format the numbers to match your needs.
 
+## COUNT
+
+`COUNT` function allows you to count the number of rows that matches a query. It is great for both _ad hoc_ data exploration as well as creating administrative queries that helps maintain your instance.
+
+```sql {2} title="How many Subscribers do you have?"
+SELECT
+    COUNT(*)
+FROM _Subscribers
+```
+
+:::note You Should Know
+
+If you are counting huge dataset (more than 2,147,483,647 records) use `COUNT_BIG` instead of `COUNT`.
+
+:::
+
+Nice, but it does not give us any information that we couldn't find easier in the User Interface. So where is the value? For example in finding whether you have potential duplicate contacts:
+
+```sql {3,6} title="This query will show you which Email Addresses exists on more than one contact"
+SELECT
+    s.EmailAddress,
+    COUNT(s.EmailAddress) AS EmailCount
+FROM _Subscribers s
+GROUP BY s.EmailAddress
+HAVING COUNT(s.EmailAddress) > 1
+```
+
+:::note You Should Know
+
+This can be taken to the next level with sub query approach:
+
+```sql {8,11} title="Returns Subscriber Key, Email Address and Duplicate Count of your database"
+SELECT
+    s.SubscriberKey,
+    s.EmailAddress,
+    d.EmailCount
+FROM (
+    SELECT
+        s.EmailAddress AS EmailAddress,
+        COUNT(s.EmailAddress) AS EmailCount
+    FROM _Subscribers s
+    GROUP BY s.EmailAddress
+    HAVING COUNT(s.EmailAddress) > 1
+) d
+INNER JOIN _Subscribers s ON s.EmailAddress = d.EmailAddress
+```
+
+This extended query will not only tell you that there are potential duplicates. It will also give you Subscriber Keys of duplicate contacts so that you can investigate the reason and clean after fixing the issue.
+
+Pack it into Automation with Verification Activity on top and keep you database clean with ease.
+
+:::
+
+## MIN and MAX
+
+`MIN` and `MAX` functions allow you to find the minimum and maximum values of column(s) in selected data extension.
+
+```sql {2} title="What is your highest subscriber bounce count?"
+SELECT
+    MAX(s.BounceCount) AS HighestBounceCount
+FROM _Subscribers s
+```
+
+Will you use it frequently? Probably not. Is it useless? Oh no.
+
+Let's say you have a data extension storing information about a competition - including number of points that participants gathered. Now it is time to send congratulations to the winner.
+
+```sql {6} title="Get a Subscriber Key and Points of all the customers that have the biggest amount of points"
+SELECT
+    de.SubscriberKey,
+    de.CompetitionPoints
+FROM CompetitionDataExtension de
+WHERE de.CompetitionPoints = (
+    SELECT MAX(de2.CompetitionPoints)
+    FROM CompetitionDataExtension de2
+)
+```
+
+My favourite, however, use case for `MAX` function is related to debugging Data Extensions and its values. It is especially useful, when you are working with data imports from external systems. For example, pulling data from Sales Cloud via Marketing Cloud Connect.
+
+You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to normal Data Extensions crashes with cryptic information about truncated data. In most cases it will be related to some value exceeding the maximum length you set for the column in your local Data Extension.
+
+How to find the culprit? With `MAX` function:
+
+```sql {2-3} title="For Datetime functions it will be showing you 19 characters"
+SELECT
+    MAX(LEN(c.Id)) AS SubscriberKey,
+    MAX(LEN(c.Email)) AS EmailAddress,
+    /* Rest of the Contact fields you synchronized from Contact object */
+FROM Contact_Salesforce AS c
+```
+
+This function can be used _ad hoc_ in [Query Studio](sfmc-sql-basics#query-studio) to quickly show you current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in destination data extension to see which column is crashing your Automation.
+
+You can also extend it with [`WHERE`](sfmc-sql-where) containing current lengths of fields in that data extension and make it part of your automation. It will find only records that are too long for the data extension, log it into error logging data extension and allow you to leverage Verification Activity to alert you about the issue. Clean and handy.
+
 ## FORMAT with Numbers
 
 The `FORMAT` works only with datetime and numeric values and requires:
@@ -66,3 +162,27 @@ Of course, you are not limited to the formats shown above. Whenever you want som
 Again, the examples are for the default US culture formatting and might look different for different cultures (for example, hour separator might be changed automatically to `.` for Italy).
 
 You can find the full list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings).
+
+The custom number formats can do wonders for you personalization needs. Example? Sure!
+
+Let's say you want to you want your customers validate their phone numbers before leveraging SMS channel. You have them in Mobile Connect compliant format (only numbers, no spaces, including country code). `48520935815` is not very user friendly format to validate. Let's fix it:
+
+```sql {3} title="From '48520935815' to '(48) 520 935 815' in two functions"
+SELECT
+    s.SubscriberKey,
+    FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone,   /* Output: (48) 520 935 815 */
+FROM _Subscribers s
+JOIN EnterpriseAttribute ea ON ea._SubscriberID = s.SubscriberID
+```
+
+As you can see we had to use [`CONVERT`](sfmc-sql-conversion-functions#case--convert) function with BIGINT, as the MobileNumber is stored in Text field. Thanks to conversion, we can use numeric functions to easily format it. This could get even better with [`LIKE` in `CASE`][sfmc-sql-like] to create different formats depending on the country code.
+
+Another use case? Let's assume we have a VIPDiscount field containing a number between 0.00 and 0.99 that tells what discount is appropriate for selected user based on their VIP status. It is stored in decimal numeric, because it makes it much easier to use SSJS or AMPScript to programatically calculate final price of items promoted in communication.
+
+However, showing the customer that he have `0.33` discount is not a good idea. `FORMAT` can help us once more:
+
+```sql {2-3} title="Depending on your needs you may use Standard format or a Custom one"
+SELECT
+    FORMAT(VIPDiscount, 'P') AS StandardVIPDiscount,        /* Output: 33.00 % */
+    FORMAT(VIPDiscount, '-00.##%') AS CustomVIPDiscount     /* Output: -33% */
+```
