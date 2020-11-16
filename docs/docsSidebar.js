@@ -24,7 +24,7 @@ module.exports = {
                 'sql/sfmc-sql-join',
                 'sql/sfmc-sql-where',
                 'sql/sfmc-sql-like',
-                // 'sql/sfmc-sql-string-functions',
+                'sql/sfmc-sql-string-functions',
                 'sql/sfmc-sql-date-functions',
                 'sql/sfmc-sql-numeric-functions',
                 'sql/sfmc-sql-conversion-functions',

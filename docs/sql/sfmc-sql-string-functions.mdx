@@ -19,7 +19,35 @@ All string functions in SQL are using a 1-based index instead of 0-based indexin
 
 :::
 
-### CHARINDEX
+## LEFT & RIGHT
+
+`LEFT` and `RIGHT` functions allows you to cut down the string to just part of it.
+
+Both uses two parameters - source value and the number of characters that should be returned (must be bigger than zero).
+
+```sql {2} title="LEFT and RIGHT can work both on strings as well as on other data types"
+SELECT
+    LEFT(FirstName, 1) AS FirstNameInitialLetter,
+    RIGHT(FirstName, 1) AS FirstNameEndingLetter,
+    LEFT(s.DateJoined, 3) AS MonthJoined
+```
+
+Both those functions can be really useful to clean and streamline your data by themselves, but their real power becomes evident when you mix them with [`CHARINDEX`](#charindex) for content-aware cuts.
+
+## LEN
+
+`LEN` function returns a number of characters in the value.
+
+```sql {4} title="If you use Salesforce Contact ID as Subscriber Key, use LEN to quickly find invalid records"
+SELECT
+    s.SubscriberKey
+FROM _Subscribers s
+WHERE LEN(s.SubscriberKey) <> 18
+```
+
+It is less useful for segmentation, but awesome for various administrative purposes. Apart from the example above, I highly recommend checking how this function combines with [`MAX` function](sfmc-sql-numeric-functions#min--max).
+
+## CHARINDEX
 
 `CHARINDEX` function lets you find if and where one string is in another. You pass the value you want to find, the value in which you wish to search and, optionally, the index from which you want to start the search.
 
@@ -43,7 +71,7 @@ CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
 
 :::note You Should Know
 
-`CHARINDEX` is especially useful when combined with `WHEN` and `LEFT`/`RIGHT` functions, as it allows for smart string operations:
+`CHARINDEX` is especially useful when combined with [`CASE`](sfmc-sql-select#conditional-values-with-case) and [`LEFT`](#left--right)/[`RIGHT`](#left--right) functions, as it allows for smart string operations:
 
 ```sql {3} title="Dynamically pull part of the Institution Name value"
 SELECT
@@ -58,7 +86,7 @@ The above query checks whether there is a space within `InstitutionName` value a
 
 :::
 
-### CONCAT
+## CONCAT
 
 `CONCAT` function allows you to join two or more strings together.
 
@@ -73,8 +101,41 @@ SELECT
 
 You can concatenate any number of strings by just adding them comma-separated.
 
-### FORMAT with Strings
+## TRIM
+
+`TRIM` functions allows you to quickly clean your data by deleting unneeded characters from the beginning and the end of the provided string. By default it deletes whitespace.
+
+```sql {2} title="Noone likes useless whitespace in their database"
+SELECT
+    TRIM('    data from webform ') AS CleanData   /* Output: 'data from webform' */
+```
+
+There are also two child functions - `RTRIM` and `LTRIM` that works exactly he same but limit the cleaning to just one side of the value.
+
+```sql {2-4} title="Noone likes useless whitespace in their database"
+SELECT
+    LTRIM('    data from webform ') AS CleanLeftSide        /* Output: 'data from webform ' */
+    RTRIM('    data from webform ') AS CleanRightSide       /* Output: '    data from webform' */
+    LTRIM(RTRIM('    data from webform ')) AS SameAsTRIM    /* Output: 'data from webform' */
+```
+
+:::note You Should Know
+
+You can also use `TRIM` to clean specified characters instead of (just) whitespace:
+
+```sql {2} title="No more '__-- Owner --__' in your values"
+SELECT
+    TRIM('_- ' FROM DirtyWebformData) AS CleanData
+```
+
+In the above code we firstly added a string `'_- '` containing all characters we want automatically deleted from the beginning and end, then used `FROM` to provide the value to be cleaned.
+
+:::
+
+Remember, that if any of those characters exists in the middle of the string, it will stay there.
+
+## FORMAT with Strings
 
 `FORMAT` function lets you quickly change the data into a different format. In Salesforce Marketing Cloud, it is especially useful, as you cannot create your functions. `FORMAT` might save you massive headaches.
 
-The `FORMAT` works only with DateTime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](sfmc-sql-conversion-functions#convert) function to change some of your strings into compliant data types. Consider changing string dates into DateTime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](sfmc-sql-date-functions#format-with-dates) and [`FORMAT` with Numbers](sfmc-sql-numeric-functions#format-with-numbers) for more information.
+The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](sfmc-sql-conversion-functions#case--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](sfmc-sql-date-functions#format-with-dates) and [`FORMAT` with Numbers](sfmc-sql-numeric-functions#format-with-numbers) for more information. The outcome of formatting both number as well as date with this function is a string.
