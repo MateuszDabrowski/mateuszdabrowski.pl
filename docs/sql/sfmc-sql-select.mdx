@@ -11,7 +11,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 The `SELECT` statement opens each query. It both defines the columns of data extensions and system data views that will be needed, as well as allows you to create entirely new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for both readability and performance of your query. It is why [Query Studio](sfmc-sql-basics#query-studio) does not support this shortcut.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for both readability and performance of your query. As Salesforce Marketing Cloud caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](sfmc-sql-basics#query-studio) does not support this shortcut. Don't use `*`.
 
 The prefered method is targeting columns explicitly by their names:
 

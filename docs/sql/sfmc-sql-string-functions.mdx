@@ -21,9 +21,9 @@ All string functions in SQL are using a 1-based index instead of 0-based indexin
 
 ## LEFT & RIGHT
 
-`LEFT` and `RIGHT` functions allows you to cut down the string to just part of it.
+`LEFT` and `RIGHT` functions allow you to cut down the string to just part of it.
 
-Both uses two parameters - source value and the number of characters that should be returned (must be bigger than zero).
+Both require two parameters - source value and the number of characters to return.
 
 ```sql {2} title="LEFT and RIGHT can work both on strings as well as on other data types"
 SELECT
@@ -32,20 +32,20 @@ SELECT
     LEFT(s.DateJoined, 3) AS MonthJoined
 ```
 
-Both those functions can be really useful to clean and streamline your data by themselves, but their real power becomes evident when you mix them with [`CHARINDEX`](#charindex) for content-aware cuts.
+Both those functions can be beneficial to clean and streamline your data by themselves, but their real power becomes evident when you mix them with [`CHARINDEX`](#charindex) for content-aware cuts.
 
 ## LEN
 
-`LEN` function returns a number of characters in the value.
+`LEN` function returns a count of characters in the value.
 
-```sql {4} title="If you use Salesforce Contact ID as Subscriber Key, use LEN to quickly find invalid records"
+```sql {4} title="If you use Salesforce Contact ID as Subscriber Key, use LEN to find invalid records quickly"
 SELECT
     s.SubscriberKey
 FROM _Subscribers s
 WHERE LEN(s.SubscriberKey) <> 18
 ```
 
-It is less useful for segmentation, but awesome for various administrative purposes. Apart from the example above, I highly recommend checking how this function combines with [`MAX` function](sfmc-sql-numeric-functions#min--max).
+It is less useful for segmentation but awesome for various administrative purposes. Apart from the example above, I highly recommend checking how this function combines with [`MAX` function](sfmc-sql-numeric-functions#min--max).
 
 ## CHARINDEX
 
@@ -82,7 +82,7 @@ SELECT
 FROM Accounts
 ```
 
-The above query checks whether there is a space within `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create new simplified data point categorizing them by type.
+The above query checks whether there is a space within `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create new simplified data point categorizing records by type.
 
 :::
 
@@ -101,41 +101,56 @@ SELECT
 
 You can concatenate any number of strings by just adding them comma-separated.
 
+:::note You Should Know
+
+In many cases, you might see concatenation done with the plus sign notation.
+
+```sql {4} title="Same as above, but with the plus notation"
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    FirstName + ' ' + LastName AS FullName
+```
+
+It might seem cleaner, but there are two downsides to this method:
+1. With the plus notation, if at least one provided value is `NULL`, then the whole outcome becomes `NULL`. `CONCAT` function treats such values as empty strings.
+2. If you want to join a string with a date type value, you need to use [`CONVERT`](sfmc-sql-conversion-functions#case--convert), but `CONCAT` will do the implicit conversion for you.
+
+:::
+
 ## TRIM
 
-`TRIM` functions allows you to quickly clean your data by deleting unneeded characters from the beginning and the end of the provided string. By default it deletes whitespace.
+`TRIM` function allows you to quickly clean your data by deleting unneeded characters from the beginning and the end of the provided string. By default it deletes whitespace.
 
 ```sql {2} title="Noone likes useless whitespace in their database"
 SELECT
-    TRIM('    data from webform ') AS CleanData   /* Output: 'data from webform' */
+    TRIM('   data from webform ') AS CleanData   /* Output: 'data from webform' */
 ```
 
-There are also two child functions - `RTRIM` and `LTRIM` that works exactly he same but limit the cleaning to just one side of the value.
+There are also two child functions - `RTRIM` and `LTRIM` that works the same but limit the cleaning to just one side of the value.
 
 ```sql {2-4} title="Noone likes useless whitespace in their database"
 SELECT
-    LTRIM('    data from webform ') AS CleanLeftSide        /* Output: 'data from webform ' */
-    RTRIM('    data from webform ') AS CleanRightSide       /* Output: '    data from webform' */
-    LTRIM(RTRIM('    data from webform ')) AS SameAsTRIM    /* Output: 'data from webform' */
+    LTRIM('   data from webform ') AS CleanLeftSide      /* Output: 'data from webform ' */
+    RTRIM('   data from webform ') AS CleanRightSide     /* Output: '   data from webform' */
+    LTRIM(RTRIM('   data from webform ')) AS SameAsTRIM  /* Output: 'data from webform' */
 ```
 
 :::note You Should Know
 
-You can also use `TRIM` to clean specified characters instead of (just) whitespace:
+You can also use `TRIM` to clean specified characters instead of (just) whitespace.
 
 ```sql {2} title="No more '__-- Owner --__' in your values"
 SELECT
     TRIM('_- ' FROM DirtyWebformData) AS CleanData
 ```
 
-In the above code we firstly added a string `'_- '` containing all characters we want automatically deleted from the beginning and end, then used `FROM` to provide the value to be cleaned.
+In the above code, we firstly added a string `'_- '` containing all characters we want automatically deleted from the beginning and end. Then - after `FROM` joiner - the value, we want to clean.
 
 :::
-
-Remember, that if any of those characters exists in the middle of the string, it will stay there.
 
 ## FORMAT with Strings
 
 `FORMAT` function lets you quickly change the data into a different format. In Salesforce Marketing Cloud, it is especially useful, as you cannot create your functions. `FORMAT` might save you massive headaches.
 
-The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](sfmc-sql-conversion-functions#case--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](sfmc-sql-date-functions#format-with-dates) and [`FORMAT` with Numbers](sfmc-sql-numeric-functions#format-with-numbers) for more information. The outcome of formatting both number as well as date with this function is a string.
+The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](sfmc-sql-conversion-functions#case--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](sfmc-sql-date-functions#format-with-dates) and [`FORMAT` with Numbers](sfmc-sql-numeric-functions#format-with-numbers) for more information. The outcome of formatting both number and date types with this function is a string.
