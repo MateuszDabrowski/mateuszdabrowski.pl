@@ -11,7 +11,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 The `SELECT` statement opens each query. It both defines the columns of data extensions and system data views that will be needed, as well as allows you to create entirely new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for both readability and performance of your query. As Salesforce Marketing Cloud caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](sfmc-sql-basics#query-studio) does not support this shortcut. Don't use `*`.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for both readability and performance of your query. As Salesforce Marketing Cloud caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](./sfmc-sql-basics.mdx#query-studio) does not support this shortcut. Don't use `*`.
 
 The prefered method is targeting columns explicitly by their names:
 
@@ -30,7 +30,7 @@ SELECT
     [External Contact Id]
 ```
 
-There are also some exceptional cases related to selected [System Data Views](sfmc-sql-system-data-views) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example when taking Subscriber ID from Enterprise Attributes):
+There are also some exceptional cases related to selected [System Data Views](./sfmc-sql-system-data-views.mdx) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example when taking Subscriber ID from Enterprise Attributes):
 
 ```sql {2} title="There are some special column names with an underscore prefix"
 SELECT
@@ -74,7 +74,7 @@ SELECT
     FirstName + ' ' + LastName AS FullName
 ```
 
-It becomes mighty with the [SQL String functions](sfmc-sql-string-functions).
+It becomes mighty with the [SQL String functions](./sfmc-sql-string-functions.mdx).
 
 :::
 
@@ -192,7 +192,7 @@ SELECT
 
 ### LIKE in CASE
 
-`LIKE` is not only useful in the [`WHERE` Statement](sfmc-sql-where#like-operator). It is also an awesome tool empowering `CASE` statement. It allows you to build flexible conditions on free text values:
+`LIKE` is not only useful in the [`WHERE` Statement](./sfmc-sql-where.mdx#like-operator). It is also an awesome tool empowering `CASE` statement. It allows you to build flexible conditions on free text values:
 
 ```sql {4} title="Great way to split your database between Internal and External users for different communication"
 SELECT
@@ -203,7 +203,7 @@ SELECT
     END AS ContactType
 ```
 
-In the `SELECT` statement, the `LIKE` operator is especially useful for fixing data coming from the free text fields. To learn more about the possibilities, check out the [`LIKE` guide](sfmc-sql-like).
+In the `SELECT` statement, the `LIKE` operator is especially useful for fixing data coming from the free text fields. To learn more about the possibilities, check out the [`LIKE` guide](./sfmc-sql-like.mdx).
 
 ## Table Prefixes
 
@@ -215,7 +215,7 @@ SELECT
     _EnterpriseAttribute.LastName
 ```
 
-I'm covering this topic in-depth in [`JOIN` statement documentation](sfmc-sql-join#table-name-prefix).
+I'm covering this topic in-depth in [`JOIN` statement documentation](./sfmc-sql-join.mdx#table-name-prefix).
 
 ## Flow control
 
@@ -225,4 +225,4 @@ Despite official [SFMC SQL documentation](https://help.salesforce.com/articleVie
 
 Unfortunately, SFMC SQL does not support variables.
 
-Fortunately, it does support (selected) functions. Learn more about them in SFMC SQL Functions documentation pages related to [Strings](sfmc-sql-string-functions), [Dates](sfmc-sql-date-functions), [Numbers](sfmc-sql-numeric-functions).
+Fortunately, it does support (selected) functions. Learn more about them in SFMC SQL Functions documentation pages related to [Strings](./sfmc-sql-string-functions.mdx), [Dates](./sfmc-sql-date-functions.mdx), [Numbers](./sfmc-sql-numeric-functions.mdx).

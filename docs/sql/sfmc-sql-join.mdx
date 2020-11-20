@@ -9,7 +9,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.' />
 
-There will be some cases where all you need is to pull (and maybe transform) data [`FROM`](sfmc-sql-from) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
+There will be some cases where all you need is to pull (and maybe transform) data [`FROM`](./sfmc-sql-from.mdx) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
 
 ```sql {6} title="Check who opened the email and when by querying the _Open System Data View"
 SELECT
@@ -24,7 +24,7 @@ There are three things to unpack.
 
 ## JOIN Types
 
-In the example above, you can see `JOIN` word. There are many `JOIN` statement types available in SQL. The appropriate joining will allow you to segment your records precisely the way you want and without the need for extensive [`WHERE`](sfmc-sql-where) clauses. Understanding differences between various types and using the correct one for the task at hand will make your code shorter, easier to read and optimized. Let's check what is in the quiver:
+In the example above, you can see `JOIN` word. There are many `JOIN` statement types available in SQL. The appropriate joining will allow you to segment your records precisely the way you want and without the need for extensive [`WHERE`](./sfmc-sql-where.mdx) clauses. Understanding differences between various types and using the correct one for the task at hand will make your code shorter, easier to read and optimized. Let's check what is in the quiver:
 
 ### Inner Join
 
@@ -80,7 +80,7 @@ LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 WHERE o.SubscriberKey IS NULL
 ```
 
-Find more about it in the [WHERE statement guide](sfmc-sql-where).
+Find more about it in the [WHERE statement guide](./sfmc-sql-where.mdx).
 
 :::
 

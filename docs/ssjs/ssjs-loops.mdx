@@ -54,13 +54,13 @@ for (var i = 0, itemValue = array[i], range = array.length; i < range; i++, item
 }
 ```
 
-As ES6 [for...of](/docs/js/js-loops#for-of) loop is not available in SSJS, you will use this one in most scenarios.
+As ES6 [for...of](../js/js-loops.mdx#for-of) loop is not available in SSJS, you will use this one in most scenarios.
 
 ### For in
 
 `for...in` loop in modern JavaScript is used nearly exclusively for debugging. It is because it loops not only over standard values but also over object prototype methods and properties.
 
-In SSJS however, the ES6 [for...of](/docs/js/js-loops#for-of) loop is not available. `Object.keys()` or `Object.entries()` also does not exist. This makes the `for...in` the only solution for iterating over objects.
+In SSJS however, the ES6 [for...of](../js/js-loops.mdx#for-of) loop is not available. `Object.keys()` or `Object.entries()` also does not exist. This makes the `for...in` the only solution for iterating over objects.
 
 ```js {1}
 for (var key in object) {

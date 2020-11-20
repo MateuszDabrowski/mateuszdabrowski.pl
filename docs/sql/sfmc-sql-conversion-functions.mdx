@@ -30,7 +30,7 @@ WHERE DateJoined > CAST('2020-10-30' AS DATE)
 
 It takes a value and expected datatype with `AS` operator in between.
 
-However, in Salesforce Marketing Cloud, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](sfmc-sql-basics#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there).
+However, in Salesforce Marketing Cloud, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](./sfmc-sql-basics#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there).
 
 ### CONVERT
 
@@ -74,7 +74,7 @@ It is not possible with `CAST`.
 
 :::note You Should Know
 
-You can also leverage style codes to format your dates during conversion to string, without the need to use [`FORMAT`](sfmc-sql-date-functions#format-with-dates) function on top.
+You can also leverage style codes to format your dates during conversion to string, without the need to use [`FORMAT`](./sfmc-sql-date-functions#format-with-dates.mdx) function on top.
 
 ```sql
 SELECT
@@ -141,7 +141,7 @@ It is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are trunc
 
 ### CONVERT Style Codes
 
-Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](sfmc-sql-date-functions/#custom-date-formats)):
+Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](./sfmc-sql-date-functions.mdx#custom-date-formats)):
 
 | Date format | Style code |
 | -- | -- |

@@ -37,7 +37,7 @@ SELECT
 
 Both return a datetime object (for example `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
 
-You can, however, limit its output to either only date or time part by using [`CONVERT`](sfmc-sql-conversion-functions#case--convert) or [`FORMAT`](#format-with-dates) Functions.
+You can, however, limit its output to either only date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) or [`FORMAT`](#format-with-dates.mdx) Functions.
 
 ## DATEADD
 
@@ -55,7 +55,7 @@ It requires three things:
 2. Number - The integer (or an expression evaluating to integer) for interval
 3. Date - The original date that will be changed by the `DATEADD` function. It can be in any date data type. The output will be of the same type.
 
-`DATEADD` is especially useful when used with the [`WHERE`](sfmc-sql-where) statement, as it allows to filter records dynamically:
+`DATEADD` is especially useful when used with the [`WHERE`](./sfmc-sql-where.mdx) statement, as it allows to filter records dynamically:
 
 ```sql {5} title="Find all Subscribers that joined within the last month"
 SELECT
@@ -111,7 +111,7 @@ The `FORMAT` works only with datetime and numeric values, outputs a string and r
 2. Format specifier to be applied
 3. Optionally - ISO culture code
 
-It is a perfect tool to manipulate any dates (or date-like strings with the help of [conversion](sfmc-sql-conversion-functions)) available in your Data Extensions. For personalization. For comparison between system and imported dates outside of the query. For preparing data to export it to an external system with specific format requirements.
+It is a perfect tool to manipulate any dates (or date-like strings with the help of [conversion](./sfmc-sql-conversion-functions.mdx)) available in your Data Extensions. For personalization. For comparison between system and imported dates outside of the query. For preparing data to export it to an external system with specific format requirements.
 
 ```sql {2-4} title="Instead of creating complex AMPScript logic to adapt dates, format them"
 SELECT
@@ -123,7 +123,7 @@ SELECT
 
 In the example above, the first two `FORMAT` functions return date in the same format - `30/10/2020` - one by using manually provided value, another by taking the current UTC date from the function.
 
-The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CASE`](sfmc-sql-select#conditional-values-with-case) to change your short date into an extended date personalized on user language.
+The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CASE`](./sfmc-sql-select.mdx#conditional-values-with-case) to change your short date into an extended date personalized on user language.
 
 ### Standard date formats
 

@@ -100,7 +100,7 @@ However, my favourite use case for `MAX` is debugging Data Extensions and its va
 
 You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to standard Data Extensions crashes with cryptic information about truncated data. In most cases, the reason is a value exceeding the maximum length you set for the column in your local Data Extension.
 
-How to find the culprit? With `MAX` and [`LEN`](#smfc-sql-string-functions#len) functions:
+How to find the culprit? With `MAX` and [`LEN`](./sfmc-sql-string-functions.mdx#len) functions:
 
 ```sql {2-3} title="For Datetime values, it will output 19 characters"
 SELECT
@@ -110,9 +110,9 @@ SELECT
 FROM Contact_Salesforce AS c
 ```
 
-This query can be used _ad hoc_ in [Query Studio](sfmc-sql-basics#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in destination data extension to see which column is crashing your automation.
+This query can be used _ad hoc_ in [Query Studio](./sfmc-sql-basics.mdx#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in destination data extension to see which column is crashing your automation.
 
-You can also extend it with [`WHERE`](sfmc-sql-where) containing current lengths of fields in that data extension and make it part of your automation. It will find the records that are too long for the data extension, log it into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
+You can also extend it with [`WHERE`](./sfmc-sql-where.mdx) containing current lengths of fields in that data extension and make it part of your automation. It will find the records that are too long for the data extension, log it into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
 
 ## FORMAT with Numbers
 
@@ -122,7 +122,7 @@ The `FORMAT` works only with datetime and numeric values, outputs a string and r
 2. Format specifier to be applied
 3. Optionally - ISO culture code
 
-It is a perfect tool to manipulate any numbers (or numeric strings with the help of [conversion](sfmc-sql-conversion-functions)) available in your Data Extensions.
+It is a perfect tool to manipulate any numbers (or numeric strings with the help of [conversion](./sfmc-sql-conversion-functions.mdx)) available in your Data Extensions.
 
 ### Standard number formats
 
@@ -179,7 +179,7 @@ FROM _Subscribers s
 JOIN EnterpriseAttribute ea ON ea._SubscriberID = s.SubscriberID
 ```
 
-As you can see we had to use [`CONVERT`](sfmc-sql-conversion-functions#case--convert) function with BIGINT parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it easily. It could get even better with [`LIKE` in `CASE`](sfmc-sql-like) used to create different formats depending on the country code.
+As you can see we had to use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) function with BIGINT parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it easily. It could get even better with [`LIKE` in `CASE`](./sfmc-sql-like.mdx) used to create different formats depending on the country code.
 
 Another use case? Let's assume we have a VIPDiscount field. It contains a number between 0.00 and 0.99 that tells what discount is appropriate for the selected user based on their VIP status. You store it in decimal numeric because it is a much more accessible format for SSJS or AMPScript to calculate the final price of items promoted in communication.
 
