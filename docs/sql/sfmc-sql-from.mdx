@@ -31,7 +31,7 @@ There are, however, two cases, specific to Salesforce Marketing Cloud, that adds
 
 ## System Data Views
 
-Salesforce Marketing Cloud is partially hiding the [System Data Views](./sfmc-sql-system-data-views.mdx) Data Extensions that store tracking data. Think about Email Sent history, Opens and Clicks, Bounces and Complaints. You can find there tracking data for SMS and Social channels. Also, more technical data points, like Jobs and Enterprise Attributes, are available in the System Data Views. You won't find them in the User Interface but can query them with the SQL. The difference related to those tables is in naming convention. When querying them, you must leverage `_` prefix:
+Salesforce Marketing Cloud is partially hiding the [System Data Views](../config/sfmc-config-system-data-views.mdx) Data Extensions that store tracking data. Think about Email Sent history, Opens and Clicks, Bounces and Complaints. You can find there tracking data for SMS and Social channels. Also, more technical data points, like Jobs and Enterprise Attributes, are available in the System Data Views. You won't find them in the User Interface but can query them with the SQL. The difference related to those tables is in naming convention. When querying them, you must leverage `_` prefix:
 
 ```sql {8}
 SELECT
