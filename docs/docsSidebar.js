@@ -28,6 +28,9 @@ module.exports = {
                 'sql/sfmc-sql-date-functions',
                 'sql/sfmc-sql-numeric-functions',
                 'sql/sfmc-sql-conversion-functions',
+                {
+                    'SQL Snippets': ['sql/sfmc-sql-snippet-debugging-email-sends'],
+                },
             ],
         },
         {

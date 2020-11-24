@@ -1,0 +1,92 @@
+---
+id: sfmc-sql-snippet-debugging-email-sends
+title: SFMC SQL Debugging Email Sends
+sidebar_label: Debugging Email Sends
+description: Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with Query Studio to the rescue.
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with the Query Studio to the rescue.' />
+
+## Problem
+
+Deliverability issues, unfortunately, are a standard both during the Salesforce Marketing Cloud implementation phase, as well as after the go-live.
+
+The test you sent to yourself during the Marketing Cloud implementation that never arrived at the inbox. The subscriber that asks where is his newsletter with the promo code.
+
+You can try to debug it with Journey Builder data or Reports, but in most cases, those solutions provide either not enough or way too much for the specific check you need to make.
+
+## Solution
+
+My favourite way to debug email sends is by using a SQL Query. Open your [Query Studio](./sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
+
+```sql
+SELECT
+    s.SubscriberKey,
+    sub.EmailAddress,
+    sub.BounceCount,
+    sub.Status,
+    j.EmailName,
+    s.EventDate AS SentDate,
+    j.DeliveredTime AS DeliveryDate,
+    o.EventDate AS OpenDate,
+    c.EventDate AS ClickDate,
+    b.EventDate AS BounceDate,
+    b.BounceCategory,
+    b.BounceSubcategory,
+    b.SMTPBounceReason AS BounceReason,
+    u.EventDate AS UnsubscribeDate
+FROM _Sent s
+LEFT JOIN _Job j ON s.JobID = j.JobID
+LEFT JOIN _Open o ON s.JobID = o.JobID
+    AND s.ListID = o.ListID
+    AND s.BatchID = o.BatchID
+    AND s.SubscriberID = o.SubscriberID
+    AND o.IsUnique = 1
+LEFT JOIN _Click c ON s.JobID = c.JobID
+    AND s.ListID = c.ListID
+    AND s.BatchID = c.BatchID
+    AND s.SubscriberID = c.SubscriberID
+    AND c.IsUnique = 1
+LEFT JOIN _Bounce b ON s.JobID = b.JobID
+    AND s.ListID = b.ListID
+    AND s.BatchID = b.BatchID
+    AND s.SubscriberID = b.SubscriberID
+    AND b.IsUnique = 1
+LEFT JOIN _Unsubscribe u ON s.JobID = u.JobID
+    AND s.ListID = u.ListID
+    AND s.BatchID = u.BatchID
+    AND s.SubscriberID = u.SubscriberID
+    AND u.IsUnique = 1
+LEFT JOIN _Subscribers sub ON s.SubscriberKey = sub.SubscriberKey
+WHERE CONVERT(DATE, s.EventDate) >= DATEADD(DAY, -1, CONVERT(DATE, GETUTCDATE()))
+```
+
+Within a few seconds you will see information about sends from the last day. With all the details that might be useful for debugging, like STMP Bounce Reason, Subscriber Status, Unsubscribe Date, etc.
+
+## Options
+
+You can even adapt the above query to better suit your needs.
+
+### Change timeframe
+
+My default is checking the sends from last day. You can change it by modifying the [`DATEADD` function](./sfmc-sql-date-functions.mdx#dateadd).
+
+### Limit to single subscriber
+
+If you are looking for a problem related to only one specific subscriber you can add `s.SubscriberKey = 'SubscriberKeyOfThatContact'` or `sub.EmailAddress = 'specific@email.address'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+
+### Limit to single domain
+
+If you see problems with deliverability for a particular user, I highly recommend checking whether any other users from the same domain are also having such issues. Maybe it is related to corporate server policy? Add `sub.Domain = 'Recipients.Domain'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+
+### Limit to single email
+
+If the problem is related to just one particular Email asset, you can limit your outcomes by adding `j.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+
+### Limit to single engagement type
+
+If you are interested only in bounces and do not need any other sends, add `b.IsUnique = 1` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators).
+
+You can use the same approach to output only opens or clicks by changing the prefix from `b` to the [alias](./sfmc-sql-join.mdx#table-name-prefix) representing the needed [System Data View](../config/sfmc-config-system-data-views.mdx).
