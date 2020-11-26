@@ -25,11 +25,12 @@ My favourite way to debug email sends is by using a SQL Query. Open your [Query 
 SELECT
     s.SubscriberKey,
     sub.EmailAddress,
-    sub.BounceCount,
     sub.Status,
-    j.EmailName,
+    j.JourneyName,
+    j.JourneyVersion,
+    job.EmailName,
     s.EventDate AS SentDate,
-    j.DeliveredTime AS DeliveryDate,
+    job.DeliveredTime AS DeliveryDate,
     o.EventDate AS OpenDate,
     c.EventDate AS ClickDate,
     b.EventDate AS BounceDate,
@@ -38,7 +39,7 @@ SELECT
     b.SMTPBounceReason AS BounceReason,
     u.EventDate AS UnsubscribeDate
 FROM _Sent s
-LEFT JOIN _Job j ON s.JobID = j.JobID
+LEFT JOIN _Job job ON s.JobID = job.JobID
 LEFT JOIN _Open o ON s.JobID = o.JobID
     AND s.ListID = o.ListID
     AND s.BatchID = o.BatchID
@@ -59,11 +60,19 @@ LEFT JOIN _Unsubscribe u ON s.JobID = u.JobID
     AND s.BatchID = u.BatchID
     AND s.SubscriberID = u.SubscriberID
     AND u.IsUnique = 1
+LEFT JOIN _JourneyActivity ja ON s.TriggeredSendDefinitionObjectID = ja.JourneyActivityObjectID
+LEFT JOIN _Journey j ON ja.VersionID = j.VersionID
 LEFT JOIN _Subscribers sub ON s.SubscriberKey = sub.SubscriberKey
-WHERE CONVERT(DATE, s.EventDate) >= DATEADD(DAY, -1, CONVERT(DATE, GETUTCDATE()))
+WHERE CONVERT(DATE, s.EventDate) >= DATEADD(DAY, -1, CONVERT(DATE, GETDATE()))
 ```
 
 Within a few seconds you will see information about sends from the last day. With all the details that might be useful for debugging, like STMP Bounce Reason, Subscriber Status, Unsubscribe Date, etc.
+
+:::note You Should Know
+
+If you are running it from child Business Unit and do not see EmailAddress, BounceCount and Status, add `ENT.` prefix to `_Subscribers` Data View name in the last `JOIN`. It will pull the data from _Subscribers of parent Business Unit.
+
+:::
 
 ## Options
 
@@ -83,7 +92,11 @@ If you see problems with deliverability for a particular user, I highly recommen
 
 ### Limit to single email
 
-If the problem is related to just one particular Email asset, you can limit your outcomes by adding `j.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+If the problem is related to just one particular Email asset, you can limit your outcomes by adding `job.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+
+### Limit to single journey
+
+If you want to focus on a single Journey, you can limit your outcomes by adding `j.JourneyName = 'ProblematicJourneyName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe. You can also pinpoint it even further by filtering on `j.JourneyVersion`.
 
 ### Limit to single engagement type
 

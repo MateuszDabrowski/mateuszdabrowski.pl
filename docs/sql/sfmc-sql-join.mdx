@@ -256,50 +256,6 @@ In the example above, we took the same query as for the Multiple Left Joins, but
 
 This approach might be better for our needs, as we would be sure that all contacts have available data for Product Name and Product Price. A great way to make our content better and more comfortable to create.
 
-:::note You Should Know
-
-How complex a `JOIN` can get? Very. You will encounter such monstrosities especially in the world of reporting queries that requires information from multiple System Data Views:
-
-```sql title="Reporting query for each sent email within the last month"
-SELECT
-    s.SubscriberKey,
-    j.EmailName,
-    j.DeliveredTime AS DeliveryDate,
-    s.EventDate AS SentDate,
-    o.EventDate AS OpenDate,
-    c.EventDate AS ClickDate,
-    b.EventDate AS BounceDate,
-    b.BounceCategory,
-    u.EventDate AS UnsubscribeDate
-FROM _Sent s
-LEFT JOIN _Job j ON s.JobID = j.JobID
-LEFT JOIN _Open o ON s.JobID = o.JobID
-    AND s.ListID = o.ListID
-    AND s.BatchID = o.BatchID
-    AND s.SubscriberID = o.SubscriberID
-    AND o.IsUnique = 1
-LEFT JOIN _Click c ON s.JobID = c.JobID
-    AND s.ListID = c.ListID
-    AND s.BatchID = c.BatchID
-    AND s.SubscriberID = c.SubscriberID
-    AND c.IsUnique = 1
-LEFT JOIN _Bounce b ON s.JobID = b.JobID
-    AND s.ListID = b.ListID
-    AND s.BatchID = b.BatchID
-    AND s.SubscriberID = b.SubscriberID
-    AND b.IsUnique = 1
-LEFT JOIN _Unsubscribe u ON s.JobID = u.JobID
-    AND s.ListID = u.ListID
-    AND s.BatchID = u.BatchID
-    AND s.SubscriberID = u.SubscriberID
-    AND u.IsUnique = 1
-WHERE CONVERT(DATE, s.EventDate) >= DATEADD(MONTH, -1, CONVERT(DATE, GETUTCDATE()))
-```
-
-Here you can see ready-to-use reporting query for all email sends from the last month from the current Business Unit.
-
-We are matching the System Data Views by multiple criteria to be sure that the data is for each particular send (that's the issue we were highlighting in query examples in the top of this page). We also limit the `JOIN ON` selection to only the Unique behavioural events - so the dates are showing the first engagement with our content, even if there were multiple ones.
-
-:::
+How complex a `JOIN` can get? Very. You will encounter such monstrosities especially in the world of reporting queries that requires information from multiple System Data Views - for example when you want to [debug your email sends](./sfmc-sql-snippet-debugging-email-sends.mdx).
 
 One thing to remember - the more complex query you create, the more error-prone it is and the closer you are to the 30 minutes AutoKill limit for the query execution. Always minimize your query to only the data you truly need.
