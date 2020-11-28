@@ -1,0 +1,222 @@
+---
+id: sfmc-config-system-data-views
+title: SFMC System Data Views
+sidebar_label: System Data Views
+description: Writing in Progress
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Writing in Progress' />
+
+
+## Basics
+
+System Data Views are built-in backend Data Extensions that you can use to find information about your subscribers and sends. You cannot change them, but you can leverage their data in SQL queries or pull it to standard Data Extension.
+
+For queries involving data views, implement a 6-month cap. Often the performance is dramatically better limited to no more than 30 days.
+
+---
+
+## _Subscribers
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number |
+DateUndeliverable | The date an email for the subscriber was returned as undeliverable | Date | X
+DateJoined | The date the subscriber joined your list | Date | X
+DateUnsubscribed | The date the subscriber unsubscribed from your list | Date | X
+Domain | The domain of the subscriber | Text | X
+EmailAddress | The subscriber's email address | Email |
+BounceCount | The total number of bounces accrued by the subscriber | Number |
+SubscriberKey | A potential alternate identifier for subscribers. Defaults to the value of Email Address. | Text |
+SubscriberType Text |
+Status | The status of the subscriber: active, held, unsubscribed, or bounced. | Text | X
+Locale | The locale code for the subscriber | Locale | X
+
+---
+
+## _EnterpriseAttribute
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+_SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record stored. | Number
+
+---
+
+## _Job
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+JobID | The job ID number for the email send | Number |
+EmailID | The email ID for the job | Number | X
+AccountID | The ID number for the account that performed the job | Number | X
+AccountUserID | The ID number for the account user that performed the job | Number | X
+FromName | The from name in the email send | Text | X
+FromEmail | The from email address in the email send | Email | X
+SchedTime | The time the job was scheduled | Date | X
+PickupTime | The time the Marketing Cloud application started the job | Date | X
+DeliveredTime | The time the email was delivered | Date | X
+EventID | The ID for the job event | Text | X
+IsMultipart | Whether the job was sent as multipart MIME or not | Boolean |
+JobType | The type of job | Text | X
+JobStatus | The status of the job | Text | X
+ModifiedBy | If modified, the user who modified the job | Number | X
+ModifiedDate | The date the job was modified | Date | X
+EmailName | The name of the email sent by the job | Text | X
+EmailSubject | The subject of the email send | Text | X
+IsWrapped | Whether the links in the email were wrapped for tracking | Boolean |
+TestEmailAddr | The test email address used in the job | Email | X
+Category | The job category | Text |
+BccEmail | Any email address send in the BCC field | Email | X
+OriginalSchedTime | The original scheduled time for the job | Date | X
+CreatedDate | The date the job was created | Date |
+CharacterSet | The character set used in the job | Text | X
+IPAddress | This value will always be a null value. | Text | X
+SalesForceTotalSubscriberCount | The total number of Salesforce subscribers included in the job | Number |
+SalesForceErrorSubscriberCount | The total number of Salesforce subscribers included in the job that received errors | Number |
+SendType | The type of send used in the job | Text |
+DynamicEmailSubject | The dynamic email subject included in the job | ntext | Text | X
+SuppressTracking | If tracking information for this job was suppressed | Boolean |
+SendClassificationType | The send classification type for the job | Text | X
+SendClassification | The send classification for the job | Text | X
+ResolveLinksWithCurrentData | If the job resolved links with current data | Boolean |
+EmailSendDefinition | The email send definition used in the job | Text | X
+DeduplicateByEmail | Whether the email addresses in the job are used to deduplicate subscribers | Boolean |
+TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Number | X
+TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+---
+
+## _Sent
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+AccountID | Your account ID number | Number |
+OYBAccountID | The account ID number for any related On-Your-Behalf accounts. This field applies to enterprise accounts only. | Number | X
+JobID | The job ID number for the email send | Number |
+ListID | The list ID number for the list used in the send | Number |
+BatchID | The batch ID number for any batches used in the send | Number |
+SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number |
+SubscriberKey | The subscriber key for the affected subscriber | Text |
+EventDate | The date the send took place | Date |
+Domain | The domain at which the send occurred | Text |
+TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
+TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+---
+
+## _Open
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+AccountID | Your account ID number | Number |
+OYBAccountID | The account ID number for any related On-Your-Behalf accounts. This field applies to enterprise accounts only. | Number | X
+JobID | The job ID number for the email send | Number |
+ListID | The list ID number for the list used in the send | Number |
+BatchID | The batch ID number for any batches used in the send | Number |
+SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number |
+SubscriberKey | The subscriber key for the affected subscriber | Text |
+EventDate | The date the open took place | Date |
+Domain | The domain at which the open occurred | Text |
+IsUnique | Whether the event is unique or repeated | bool | X
+TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
+TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+---
+
+## _Click
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+AccountID | The account ID number of the Marketing Cloud account. | Number |
+OYBAccountID | The account ID number for any related On-Your-Behalf (OYB) accounts. This field applies to enterprise accounts only. | Number | X
+JobID | The job ID number for the email send | Number |
+ListID | The list ID number for the list used in the send | Number |
+BatchID | The batch ID number for any batches used in the send | Number |
+SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number |
+SubscriberKey | The subscriber key for the affected subscriber | Text |
+EventDate | The date the click took place | Date |
+Domain | The domain at which the click occurred | Text |
+URL | The URL for the link clicked. Dynamic elements are shown as code: `www.example.com?id=%%SubID%%` | Text | X
+LinkName | The link name assigned in the email send | Text | X
+LinkContent | The link content assigned in the email send. Dynamic elements are shown as result: `www.example.com?id=12345` | Text | X
+IsUnique | Whether the event is unique or repeated|
+TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
+TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+When working with `_Click` Data View:
+
+1.
+
+---
+
+## _Bounce
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+AccountID | Your account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
+JobID | The job ID number for the email send | Number |
+ListID | The list ID number for the list used in the send | Number |
+BatchID | The batch ID number for any batches used in the send | Number |
+SubscriberID | The subscriber ID for the affected subscriber | Number |
+SubscriberKey | The subscriber key for the affected subscriber | Text |
+EventDate | The date the bounce took place | Date |
+IsUnique | Whether the event is unique or repeated - 1 for the first occurance, 0 for subsequent | Boolean |
+Domain | The domain at which the bounce occurred | Text |
+BounceCategoryID | The ID number for the bounce category | Number |
+BounceCategory | The category of the bounce | Text | X
+BounceSubcategoryID | The ID number for the bounce subcategory | Number | X
+BounceSubcategory | The subcategory of the bounce | Text | X
+BounceTypeID | The ID number for the bounce type | Number |
+BounceType | The type of bounce that occurred | Text | X
+SMTPBounceReason | The reason for the bounce relayed by the mail system | Text | X
+SMTPMessage | The message regarding the bounce from the mail system | Text | X
+SMTPCode | The error code for the bounce from the mail system | Number | X
+TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Number | X
+TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+When working with `_Bounce` Data View:
+
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. `Domain` is useful for aggregating the bounce data to see whether there is any domain-specific problem with deliverability.
+4. `SMTPBounceReason` is the most useful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by server owner. Some administrators are using this to inform you about a specific issue. Some are faking the information to limit the emails coming to their servers from selected sources.
+5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases it means you are considered a spammer by the server or already blacklisted. I recommend you to create an Automation with Verification Activity to get automated warning whenever there are more then few occurances. Triage immediately.
+
+:::note You Should Know
+
+`SMTPBounceReason` field is `nvarchar(max)` SQL type and due to that might be longer then the 4000 characters limit for the Data Extension string length in Salesforce Marketing Cloud. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](../sql/sfmc-sql-string-functions.mdx#left--right).
+
+:::
+
+---
+
+## _JourneyActivity
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+VersionID | The unique identifier for the version of the journey | Text |
+ActivityID | The unique identifier for the activity. There are one or more ActivityID’s associated to a VersionID. | Text |
+ActivityName | The name of the activity | Text | X
+ActivityExternalKey | The external key associated with the activity | Text |
+JourneyActivityObjectID | Use this unique identifier to join to email tracking system data views to identify a journey email’s Triggered Send Definition. | Text | X
+ActivityType | The type of activity | Text | X
+
+---
+
+## _Journey
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+VersionID | The unique identifier for the version of the journey | Text |
+JourneyID | The unique identifier for the journey. There are one or more VersionID’s associated to a JourneyID. | Text |
+JourneyName | The name of the journey | Text |
+VersionNumber | The version number of the version of the journey | Number |
+CreatedDate | The date that the version of the journey was created | Date |
+LastPublishedDate | The date that the version of the journey was last published | Date | X
+ModifiedDate | The date that the version of the journey was last edited | Date |
+JourneyStatus | The current running mode of the journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
+
+---

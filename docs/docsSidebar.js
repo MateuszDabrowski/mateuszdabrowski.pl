@@ -36,7 +36,7 @@ module.exports = {
         {
             type: 'category',
             label: 'SFMC Config',
-            items: ['config/sfmc-config-permissions'],
+            items: ['config/sfmc-config-permissions', 'config/sfmc-config-system-data-views'],
         },
     ],
 };
