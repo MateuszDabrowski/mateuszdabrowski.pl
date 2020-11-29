@@ -29,10 +29,17 @@ DateUnsubscribed | The date the subscriber unsubscribed from your list | Date | 
 Domain | The domain of the subscriber | Text | X
 EmailAddress | The subscriber's email address | Email |
 BounceCount | The total number of bounces accrued by the subscriber | Number |
-SubscriberKey | A potential alternate identifier for subscribers. Defaults to the value of Email Address. | Text |
-SubscriberType Text |
+SubscriberKey | A potential alternate identifier for subscribers. | Text |
+SubscriberType | The subscriber type for the affected subscriber | Text |
 Status | The status of the subscriber: active, held, unsubscribed, or bounced. | Text | X
 Locale | The locale code for the subscriber | Locale | X
+
+When working with `_Subscribers` Data View:
+
+1. If you are using the query in child Business Unit always check whether you are querying local or enterprise Data View (`ENT.` prefix).
+2.  If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more however - why subscriber bounced? Where did he unsubscribe? - you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) some more data points.
+3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from other engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
+4. `Status` field is great for quick check quality of your data base. It is also good way to manage multiple records. Pull selection of your subscribers with SQL Query, apply a status (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension. This will change data in your All Subscribers list.
 
 ---
 
@@ -41,6 +48,13 @@ Locale | The locale code for the subscriber | Locale | X
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 _SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record stored. | Number
+
+When working with `_EnterpriseAttribute` Data View:
+
+1. If you are using the query in child Business Unit always use `ENT.` prefix as it is enterprise level only Data View.
+2. When querying or joining `_EnterpriseAttribute` always be sure to include the underscore before SubscriberID - this is the only Data View that requires it.
+3. Despite `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get an Email Address, query `_Subscribers`.
+4. All field names in Data Views are written without spaces. However, `_EnterpriseAttribute` is special, as it is built using the Profile Attributes you created in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
 
 ---
 
@@ -86,14 +100,26 @@ DeduplicateByEmail | Whether the email addresses in the job are used to deduplic
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Number | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
+When working with `_Job` Data View:
+
+
+
+:::note You Should Know
+
+`_Job` Data View is unique, as it is limited to single Business Unit. You have access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Job`. You are able to query only those jobs that occured in the Business Unit where you execute your SQL snippet.
+
+Always take this into consideration when choosing type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+
+:::
+
 ---
 
 ## _Sent
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-AccountID | Your account ID number | Number |
-OYBAccountID | The account ID number for any related On-Your-Behalf accounts. This field applies to enterprise accounts only. | Number | X
+AccountID | Your account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
 JobID | The job ID number for the email send | Number |
 ListID | The list ID number for the list used in the send | Number |
 BatchID | The batch ID number for any batches used in the send | Number |
@@ -104,14 +130,18 @@ Domain | The domain at which the send occurred | Text |
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
+When working with `_Sent` Data View:
+
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+
 ---
 
 ## _Open
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-AccountID | Your account ID number | Number |
-OYBAccountID | The account ID number for any related On-Your-Behalf accounts. This field applies to enterprise accounts only. | Number | X
+AccountID | Your account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
 JobID | The job ID number for the email send | Number |
 ListID | The list ID number for the list used in the send | Number |
 BatchID | The batch ID number for any batches used in the send | Number |
@@ -123,14 +153,19 @@ IsUnique | Whether the event is unique or repeated | bool | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
+When working with `_Open` Data View:
+
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+
 ---
 
 ## _Click
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-AccountID | The account ID number of the Marketing Cloud account. | Number |
-OYBAccountID | The account ID number for any related On-Your-Behalf (OYB) accounts. This field applies to enterprise accounts only. | Number | X
+AccountID | Your account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
 JobID | The job ID number for the email send | Number |
 ListID | The list ID number for the list used in the send | Number |
 BatchID | The batch ID number for any batches used in the send | Number |
@@ -147,7 +182,8 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Click` Data View:
 
-1.
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 
 ---
 
@@ -204,6 +240,8 @@ ActivityExternalKey | The external key associated with the activity | Text |
 JourneyActivityObjectID | Use this unique identifier to join to email tracking system data views to identify a journey email’s Triggered Send Definition. | Text | X
 ActivityType | The type of activity | Text | X
 
+When working with `_JourneyActivity` Data View:
+
 ---
 
 ## _Journey
@@ -218,5 +256,7 @@ CreatedDate | The date that the version of the journey was created | Date |
 LastPublishedDate | The date that the version of the journey was last published | Date | X
 ModifiedDate | The date that the version of the journey was last edited | Date |
 JourneyStatus | The current running mode of the journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
+
+When working with `_Journey` Data View:
 
 ---
