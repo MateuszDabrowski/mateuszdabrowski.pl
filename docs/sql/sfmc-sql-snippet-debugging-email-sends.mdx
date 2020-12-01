@@ -27,7 +27,7 @@ SELECT
     sub.EmailAddress,
     sub.Status,
     j.JourneyName,
-    j.JourneyVersion,
+    j.VesionNumber AS JourneyVersion,
     job.EmailName,
     s.EventDate AS SentDate,
     job.DeliveredTime AS DeliveryDate,
@@ -60,7 +60,7 @@ LEFT JOIN _Unsubscribe u ON s.JobID = u.JobID
     AND s.BatchID = u.BatchID
     AND s.SubscriberID = u.SubscriberID
     AND u.IsUnique = 1
-LEFT JOIN _JourneyActivity ja ON s.TriggeredSendDefinitionObjectID = ja.JourneyActivityObjectID
+LEFT JOIN _JourneyActivity ja ON s.TriggererSendDefinitionObjectID = ja.JourneyActivityObjectID
 LEFT JOIN _Journey j ON ja.VersionID = j.VersionID
 LEFT JOIN _Subscribers sub ON s.SubscriberKey = sub.SubscriberKey
 WHERE CONVERT(DATE, s.EventDate) >= DATEADD(DAY, -1, CONVERT(DATE, GETDATE()))
