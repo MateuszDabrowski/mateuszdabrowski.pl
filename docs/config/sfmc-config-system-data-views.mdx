@@ -20,6 +20,8 @@ For queries involving data views, implement a 6-month cap. Often the performance
 
 ## _Subscribers
 
+Stores information about your Subscribers. Great for high level perspective or adding Email Address field to other more detailed Data Views.
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number |
@@ -37,13 +39,15 @@ Locale | The locale code for the subscriber | Locale | X
 When working with `_Subscribers` Data View:
 
 1. If you are using the query in child Business Unit always check whether you are querying local or enterprise Data View (`ENT.` prefix).
-2.  If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more however - why subscriber bounced? Where did he unsubscribe? - you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) some more data points.
+2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more however - why subscriber bounced? Where did he unsubscribe? - you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) some more data points.
 3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from other engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
 4. `Status` field is great for quick check quality of your data base. It is also good way to manage multiple records. Pull selection of your subscribers with SQL Query, apply a status (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension. This will change data in your All Subscribers list.
 
 ---
 
 ## _EnterpriseAttribute
+
+Stores information about your Profile Attributes from Email Studio.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -54,11 +58,13 @@ When working with `_EnterpriseAttribute` Data View:
 1. If you are using the query in child Business Unit always use `ENT.` prefix as it is enterprise level only Data View.
 2. When querying or joining `_EnterpriseAttribute` always be sure to include the underscore before SubscriberID - this is the only Data View that requires it.
 3. Despite `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get an Email Address, query `_Subscribers`.
-4. All field names in Data Views are written without spaces. However, `_EnterpriseAttribute` is special, as it is built using the Profile Attributes you created in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
+4. All field names in other Data Views are written without spaces. However, `_EnterpriseAttribute` Data View is special, as it is built using the Profile Attributes you created in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
 
 ---
 
 ## _Job
+
+Stores information about your Email Send Jobs. Great for capturing detailed data about your communication, especially when paired with Send Log. Must have for properly joining various engagement-based Data Views.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -116,6 +122,8 @@ Always take this into consideration when choosing type of [`JOIN`](../sql/sfmc-s
 
 ## _Sent
 
+Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication was blocked before even leaving your system.
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 AccountID | Your account ID (MID) number | Number |
@@ -133,10 +141,13 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 When working with `_Sent` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. The most useful data here is the `EventDate` field that let's you know when the email was sent (and whether that happened at all).
 
 ---
 
 ## _Open
+
+Stores information about your Email Opens. For when you need to know when someone opened your email. Kinda.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -157,10 +168,19 @@ When working with `_Open` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The most useful data here is the `EventDate` field that let's you know when the email was opened (and whether that happened at all). But with email opens its not that easy. In many cases lack of Open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some cases tracked open might not mean he did. Let me explain.
+
+There is no official feedback loop that informs Marketing Cloud (or any other Email Sender Platform) that the email was opened.
+
+What all the players do is putting an invisible 1px wide image in the email body that is unique for every single email you send. When someone opens an email, its images are being downloaded from the Marketing Cloud server. When that happens with that unique image, SFMC treats it as a proof that the email was opened. And in most cases it is right. But...
+
+The images are not always rendered. Many users block images from loading by default. It can be because of comapny policy, the privacy concerns or limited internet bandwith.
 
 ---
 
 ## _Click
+
+Stores information about your Email Clicks. Detailed click reporting and behavioral logic is possible thanks to this one.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -188,6 +208,8 @@ When working with `_Click` Data View:
 ---
 
 ## _Bounce
+
+Stores information about your Email Bounces. Best place in Marketing Cloud to understand why your messages are not getting delivered.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -231,6 +253,8 @@ When working with `_Bounce` Data View:
 
 ## _JourneyActivity
 
+Stores information about Activities available in your Journeys. Must have for joining Email data with Journey data.
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 VersionID | The unique identifier for the version of the journey | Text |
@@ -245,6 +269,8 @@ When working with `_JourneyActivity` Data View:
 ---
 
 ## _Journey
+
+Stores information about your Journeys. When context matters.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
