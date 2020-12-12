@@ -16,6 +16,12 @@ System Data Views are built-in backend Data Extensions that you can use to find 
 
 For queries involving data views, implement a 6-month cap. Often the performance is dramatically better limited to no more than 30 days.
 
+:::note You Should Know
+
+Below you can find selected Salesforce Marketing Cloud Data Views. I plan to cover all of them in the future.
+
+:::
+
 ---
 
 ## _Subscribers
@@ -142,6 +148,7 @@ When working with `_Sent` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. The most useful data here is the `EventDate` field that let's you know when the email was sent (and whether that happened at all).
+3. If you have triggered a send for an email and after few minutes you don't see it here, in most cases it means that the send was blocked and never left Marketing Cloud. Check personalisation, data source, `RaiseError` scripts, etc.
 
 ---
 
@@ -168,13 +175,21 @@ When working with `_Open` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. The most useful data here is the `EventDate` field that let's you know when the email was opened (and whether that happened at all). But with email opens its not that easy. In many cases lack of Open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some cases tracked open might not mean he did. Let me explain.
+3. The most useful data here is the `EventDate` field that let's you know when the email was opened (and whether that happened at all). But with email opens its not that easy. In many cases lack of Open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some cases tracked open might not mean he did.
 
-There is no official feedback loop that informs Marketing Cloud (or any other Email Sender Platform) that the email was opened.
+:::note You Should Know
 
-What all the players do is putting an invisible 1px wide image in the email body that is unique for every single email you send. When someone opens an email, its images are being downloaded from the Marketing Cloud server. When that happens with that unique image, SFMC treats it as a proof that the email was opened. And in most cases it is right. But...
+There is **no official feedback loop** that informs Marketing Cloud (or any other Email Sender Platform) that the email was opened.
 
-The images are not always rendered. Many users block images from loading by default. It can be because of comapny policy, the privacy concerns or limited internet bandwith.
+What all the Marketing Automation Platforms do is putting an **invisible 1px wide image in the email** body that is unique for every single email you send. When someone opens an email, its images are being downloaded from the Marketing Cloud server. When that happens with that unique image, SFMC treats it as a proof that the email was opened. And in most cases it is right. But...
+
+The **images are not always rendered**. Many users block images from loading by default. It can be because of comapny policy, the privacy concerns or limited internet bandwith. In such case, even if user opens an email, you won't have information about it.
+
+This might lead to weird data, like clicks visible for contacts that did not open. This is normal, as clicks are tracked via different approach. It can also lead to cases, where user have both click and open data, but click data is earlier then the open. This is also ok - your recipient clicked something in your email and after that decided to allow his email program to load the images in it.
+
+There might however be some cases, where the data is wrong the other way - when you see that email was opened, but in reality the user didn't engage with it. This is sometimes happening for B2B sends when your recipients administrator uses bots that automatically check the emails for malicious or spammy content. You can recognize such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open email and click all its links within few seconds. Something not possible for real human.
+
+:::
 
 ---
 
@@ -204,6 +219,16 @@ When working with `_Click` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The most useful data here is the `EventDate` field that let's you know when the email was clicked (and whether that happened at all). You can greatly improve the value of that information by checking the `LinkName` and `LinkContent` fields to understand which links proved interesting for your customers.
+
+:::note You Should Know
+
+There might however be some cases, where the click data is wrong - when you see that email was clicked, but in reality the user didn't engage with it. This is sometimes happening for B2B sends when your recipients administrator uses bots that automatically check the emails for malicious or spammy content. You can recognize such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open email and click all its links within few seconds. Something not possible for real human.
+
+:::
+
+4. If you want to create a big report on link clicks you might want to use `URL` field instead of `LinkContent` as due to not showing final personalisation values it will be much easier to group clicks or even cleanly delete all AMPScript from them.
+
 
 ---
 
