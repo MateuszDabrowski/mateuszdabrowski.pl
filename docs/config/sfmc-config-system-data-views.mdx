@@ -10,19 +10,19 @@ import { LeadText } from '../../src/components/LeadText.js';
 <LeadText content='Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
 
 
-## Basics
+## Data Views Basics
 
-System Data Views are built-in backend Data Extensions that you can use to find information about your subscribers and sends. You cannot change them, but you can leverage their data in SQL queries for quick reports in [Query Studio](../sql/sfmc-sql-basics.mdx#query-studio) or outputting it to the standard Data Extension.
+System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [Query Studio](../sql/sfmc-sql-basics.mdx#query-studio) or outputting to the standard Data Extension.
 
-What you need to know is that Data Views have data retention settings set to 6 months, so if you want to store any data for more extended period, you must create an Automation that will be copying data to your own Data Extension.
+Data Views have **data retention settings set to 6 months**. If you want to store any data for a more extended period, you must create an Automation that will be copying data to your Data Extension.
 
-Be careful, however, as some of the System Data Views can get absurdly big really quick, and making copies within your Marketing Cloud Instance may lead to perormance issues. In such cases much better idea might be to export that data on scheduled basis to an external Data Warehouse.
+Be careful, however, as some of the System Data Views can get absurdly big quick, and making copies within your Marketing Cloud Instance may lead to performance issues. In such cases, a much better idea might be to export that data on a scheduled basis to an external Data Warehouse.
 
-Another important point related to Data Views to always be aware which Data View you trully want to use - for example, in most cases you will be interested in parent-level [`_Subscribers`](#_Subscribers) Data View, which means you will need to use [`ENT.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix in your query.
+Another important point related to Data Views to always be aware of which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](#_subscribers) Data View, which means you will need to use the [`ENT.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix in your query.
 
 :::note You Should Know
 
-Below you can find selected Salesforce Marketing Cloud Data Views. I plan to cover all of them in the future.
+Below you can find selected Salesforce Marketing Cloud Data Views focused on Subscribers and Email Channel. I plan to cover the rest of them in the future.
 
 :::
 
@@ -30,7 +30,7 @@ Below you can find selected Salesforce Marketing Cloud Data Views. I plan to cov
 
 ## _Subscribers
 
-Stores information about your Subscribers. Great for high level perspective or adding Email Address field to other more detailed Data Views.
+Stores information about your Subscribers. Great for high-level perspective or adding Email Address field to other more detailed Data Views.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -48,10 +48,10 @@ Locale | The locale code for the subscriber | Locale | X
 
 When working with `_Subscribers` Data View:
 
-1. If you are using the query in child Business Unit always check whether you are querying local or enterprise Data View (`ENT.` prefix).
-2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more however - why subscriber bounced? Where did he unsubscribe? - you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) some more data points.
-3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from other engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
-4. `Status` field is great for quick check quality of your data base. It is also good way to manage multiple records. Pull selection of your subscribers with SQL Query, apply a status (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension. This will change data in your All Subscribers list.
+1. If you are using the query in child Business Unit, always check whether you are querying local or enterprise Data View ([`ENT.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix).
+2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example why subscriber bounced, where did he unsubscribe) you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) other Data Views.
+3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from different engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
+4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull selection of your subscribers with SQL Query, add a new status with [custom value](../sql/sfmc-sql-select.mdx#custom-values) (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.
 
 ---
 
@@ -65,16 +65,16 @@ _SubscriberID | The subscriber ID for the affected subscriber. This number repre
 
 When working with `_EnterpriseAttribute` Data View:
 
-1. If you are using the query in child Business Unit always use `ENT.` prefix as it is enterprise level only Data View.
+1. If you are using the query in child Business Unit always use `ENT.` prefix as it is enterprise-level only Data View.
 2. When querying or joining `_EnterpriseAttribute` always be sure to include the underscore before SubscriberID - this is the only Data View that requires it.
-3. Despite `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get an Email Address, query `_Subscribers`.
-4. All field names in other Data Views are written without spaces. However, `_EnterpriseAttribute` Data View is special, as it is built using the Profile Attributes you created in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
+3. Despite `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get an Email Address of your Subscriber, query the `_Subscribers` Data View.
+4. `_EnterpriseAttribute` Data View is unique, as it might contain spaces in field names. You build it by creating the Profile Attributes in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
 
 ---
 
 ## _Job
 
-Stores information about your Email Send Jobs. Great for capturing detailed data about your communication, especially when paired with Send Log. Must have for properly joining various engagement-based Data Views.
+Stores information about your Email Sends Jobs. Great for capturing detailed data about your communication, especially when paired with Send Log. Must-have for extending your engagement-based Email Data Views.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -117,17 +117,17 @@ TriggererSendDefinitionObjectID | The object ID for the triggered send definitio
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Job` Data View:
-1. `JobID` field will be your bread and butter for [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
-2. `EmailName`, `FromName`, `FromEmail` are very useful data points that are missing in the [`_Sent`](#_Sent) Data View and definitely worth checking for reporting needs.
-3. If you are performing A/B tests or just want to create an analysis of subject impact on performance, be sure to also pick `EmailSubject`.
-4. For debugging purposes be sure to check out `IsWrapped` and `SuppressTracking` - if you are missing tracking data, `CharacterSet` - if you have issues with formatting, `SendClassification` - if you have issues with unsubscribers or spam complaints.
-5. `AccountUserID` field is awesome for `_Job` based Audit Log creation, but unofortunatelly there is currently no easy way to find out which user has which UserID, as it is not availble anywhere in the UI. You can either use SOAP API or match based on this SQL results.
+1. `JobID` field will be your bread and butter to [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
+2. `EmailName`, `FromName`, `FromEmail` are handy data points that are missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and [`_Bounce`](#_bounce) Data Views and worth checking for reporting needs.
+3. If you are performing A/B tests or want to create an analysis of the subject impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) to create a great source of knowledge for your content team.
+4. For debugging purposes be sure to check out `IsWrapped` and `SuppressTracking` - if you are missing tracking data, `CharacterSet` - if you have problems with formatting, `SendClassification` - if you have issues with unsubscribers or spam complaints.
+5. `AccountUserID` field is fantastic for `_Job`-based Audit Log creation. Unfortunately, there is no UI-based easy way to find out which user has which UserID. You can either use SOAP API or match based on these SQL results.
 
 :::note You Should Know
 
-`_Job` Data View is unique, as it is limited to single Business Unit. You have access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Job`. You are able to query only those jobs that occured in the Business Unit where you execute your SQL snippet.
+`_Job` Data View is unique, as it is limited to a single Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Job`. You can query only those jobs that occurred in the Business Unit where you execute your SQL snippet.
 
-Always take this into consideration when choosing type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
 :::
 
@@ -135,7 +135,7 @@ Always take this into consideration when choosing type of [`JOIN`](../sql/sfmc-s
 
 ## _Sent
 
-Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication was blocked before even leaving your system.
+Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication did not even leave your system.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -153,15 +153,15 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Sent` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. The most useful data here is the `EventDate` field that let's you know when the email was sent (and whether that happened at all).
-3. If you have triggered a send for an email and after few minutes you don't see it here, in most cases it means that the send was blocked and never left Marketing Cloud. Check personalisation, data source, `RaiseError` scripts, etc.
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. The most useful data here is the `EventDate` field that lets you know when the email was sent (and whether that happened at all).
+3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases it means that the send was blocked and never left Marketing Cloud. Check personalisation, data source, `RaiseError` scripts.
 
 ---
 
 ## _Open
 
-Stores information about your Email Opens. For when you need to know when someone opened your email. Kinda.
+Stores information about your Email Opens. For when you need to know when someone opened your email. Kind of.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -180,21 +180,23 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Open` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. The most useful data here is the `EventDate` field that let's you know when the email was opened (and whether that happened at all). But with email opens its not that easy. In many cases lack of Open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some cases tracked open might not mean he did.
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The most useful data here is the `EventDate` field that lets you know when the email was opened (and whether that happened at all). But with email opens it's not that easy. In many cases, lack of open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some instances tracked open might not mean he did.
 
 :::note You Should Know
 
-There is **no official feedback loop** that informs Marketing Cloud (or any other Email Sender Platform) that the email was opened.
+There is **no official feedback loop** that informs Marketing Cloud (or any other Marketing Automation Platform) that your recipient opened the email.
 
-What all the Marketing Automation Platforms do is putting an **invisible 1px wide image in the email** body that is unique for every single email you send. When someone opens an email, its images are being downloaded from the Marketing Cloud server. When that happens with that unique image, SFMC treats it as a proof that the email was opened. And in most cases it is right. But...
+What all the Marketing Automation Platforms do is putting an **invisible 1px wide image in the email** body that is unique for every single email you send. When someone opens an email, its images are downloaded from the server. When that happens with that unique image, SFMC treats it as proof that the email was opened. And in most cases it is right. But...
 
-The **images are not always rendered**. Many users block images from loading by default. It can be because of comapny policy, the privacy concerns or limited internet bandwith. In such case, even if user opens an email, you won't have information about it.
+The **images don't always render** (that's why you should always use alt-text). Some recipients opt-in on a per-email basis to download email graphics. Government audiences might not even have this option. It can be because of the admin policy, the privacy concerns over engagement tracking or limited internet bandwidth. In such a case, even if the user opens an email, you won't have information about it.
 
-This might lead to weird data, like clicks visible for contacts that did not open. This is normal, as clicks are tracked via different approach. It can also lead to cases, where user have both click and open data, but click data is earlier then the open. This is also ok - your recipient clicked something in your email and after that decided to allow his email program to load the images in it.
+It might lead to weird data, like clicks visible for contacts that did not open. Marketing Automation Platforms track Clicks via a different, more confident approach.
 
-There might however be some cases, where the data is wrong the other way - when you see that email was opened, but in reality the user didn't engage with it. This is sometimes happening for B2B sends when your recipients administrator uses bots that automatically check the emails for malicious or spammy content. You can recognize such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open email and click all its links within few seconds. Something not possible for real human.
+It can also lead to cases, where user have both click and open data, but click data is earlier than the open. Why? Your recipient clicked something in your email and only after that decided to allow his email program to load the images in it.
+
+There might however be some cases, where the data is wrong the other way - when you see that email as opened, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within few seconds. Something not possible for a real human.
 
 :::
 
@@ -202,7 +204,7 @@ There might however be some cases, where the data is wrong the other way - when 
 
 ## _Click
 
-Stores information about your Email Clicks. Detailed click reporting and behavioral logic is possible thanks to this one.
+Stores information about your Email Clicks. Detailed click reporting and behavioural logic are possible thanks to this one.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -224,18 +226,17 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Click` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. The most useful data here is the `EventDate` field that let's you know when the email was clicked (and whether that happened at all). You can greatly improve the value of that information by checking the `LinkName` and `LinkContent` fields to understand which links proved interesting for your customers.
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The most useful data here is the `EventDate` field that lets you know when the email was clicked (and whether that happened at all).
+4. You can significantly improve the value of that information by checking the `LinkName` and `LinkContent` fields to understand which links proved interesting for your customers.
+5. If you want to create a big report on link clicks you might want to use `URL` field instead of `LinkContent` as due to not showing final personalisation values it will be much easier to group clicks or even cleanly delete all AMPScript from them.
 
 :::note You Should Know
 
-There might however be some cases, where the click data is wrong - when you see that email was clicked, but in reality the user didn't engage with it. This is sometimes happening for B2B sends when your recipients administrator uses bots that automatically check the emails for malicious or spammy content. You can recognize such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open email and click all its links within few seconds. Something not possible for real human.
+There might be some cases, where the click data is wrong - when you see that email as clicked, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within few seconds. Something not possible for a real human.
 
 :::
-
-4. If you want to create a big report on link clicks you might want to use `URL` field instead of `LinkContent` as due to not showing final personalisation values it will be much easier to group clicks or even cleanly delete all AMPScript from them.
-
 
 ---
 
@@ -269,15 +270,15 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Bounce` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurances of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. `Domain` is useful for aggregating the bounce data to see whether there is any domain-specific problem with deliverability.
-4. `SMTPBounceReason` is the most useful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by server owner. Some administrators are using this to inform you about a specific issue. Some are faking the information to limit the emails coming to their servers from selected sources.
-5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases it means you are considered a spammer by the server or already blacklisted. I recommend you to create an Automation with Verification Activity to get automated warning whenever there are more then few occurances. Triage immediately.
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The `Domain` is useful for aggregating the bounce data to see whether there is any domain-specific problem with deliverability.
+4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
+5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases, it means you are considered a spammer by the server or already blacklisted. I recommend you to create an Automation with Verification Activity to get an automated warning whenever there are more than a few occurrences. Triage immediately.
 
 :::note You Should Know
 
-`SMTPBounceReason` field is `nvarchar(max)` SQL type and due to that might be longer then the 4000 characters limit for the Data Extension string length in Salesforce Marketing Cloud. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](../sql/sfmc-sql-string-functions.mdx#left--right).
+`SMTPBounceReason` field is `nvarchar(max)` SQL type and due to that might be longer than the 4000 characters limit for the Data Extension string length in Salesforce Marketing Cloud. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](../sql/sfmc-sql-string-functions.mdx#left--right).
 
 :::
 
@@ -285,7 +286,7 @@ When working with `_Bounce` Data View:
 
 ## _JourneyActivity
 
-Stores information about Activities available in your Journeys. Must have for joining Email data with Journey data.
+Stores information about Activities available in your Journeys. Must-have for joining Email data with Journey data.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -293,19 +294,18 @@ VersionID | The unique identifier for the version of the journey | Text |
 ActivityID | The unique identifier for the activity. There are one or more ActivityID’s associated to a VersionID. | Text |
 ActivityName | The name of the activity | Text | X
 ActivityExternalKey | The external key associated with the activity | Text |
-JourneyActivityObjectID | Use this unique identifier to join to email tracking system data views to identify a journey email’s Triggered Send Definition. | Text | X
+JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a journey email’s Triggered Send Definition. | Text | X
 ActivityType | The type of activity | Text | X
 
 When working with `_JourneyActivity` Data View:
-1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Just use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_Job), [`_Sent`](#_Sent), [`_Open`](#_open), [`_Click` ](#_Click) or [`_Bounce`](#_Bounce) Data View. This is especially useful when you later use `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_Journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Awesome for full scope reporting.
-2. With the help of [`_Journey`](#_Journey) Data View you can use `ActivityType` field for a nice little report created with SQL that will show which Journeys use which channels and what types of logic. For more in-depth understanding of what happens in the Journey you would rather need to use Script Activity with REST API, but for quick glance on the multi-channel use it is great.
-3. Check sample data on all fields
+1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Just use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
+2. With the help of [`_Journey`](#_journey) Data View, you can use `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you would instead need to use Script Activity with REST API, but for a glance on the multi-channel use, it is perfect.
 
 ---
 
 ## _Journey
 
-Stores information about your Journeys. When context matters.
+Stores information about your Journeys, for when context matters.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -319,8 +319,8 @@ ModifiedDate | The date that the version of the journey was last edited | Date |
 JourneyStatus | The current running mode of the journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
 
 When working with `_Journey` Data View:
-1. `VersionID` field will be perfect for [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_JourneyActivity`](#_JourneyActivity). It will allow you to map multi-channel engagement to particular Journey (visible in `JourneyName`) and it's specific version (as shown in `VersionNumber`).
-2. Use `JourneyStatus` to check what is the current Journey Status. It is awesome for both [`WHERE`](../sql/sfmc-sql-where.mdx) statement, as well as a datapoint for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which of them are in the Active Journeys - for any found it sends you a notification to check and improve. For really bad results you can even move that data to Script Activity to automatically Stop the Journey with the SFMC REST API.
-3. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) might be cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_Sent) data. For example, you can create monthly Automatiuon that checks all Journeys that were last modified at least 6 months ago and based on the send volume or performance it stops them and notify you about that.
+1. `VersionID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_JourneyActivity`](#_journeyactivity). It allows you to map multi-channel engagement to particular Journey (visible in `JourneyName`) and its specific version (as shown in `VersionNumber`).
+2. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both [`WHERE`](../sql/sfmc-sql-where.mdx) statement, as well as a datapoint for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which of them are in the Active Journeys. For all found it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
+3. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and based on the send volume or performance, stop them and notify you about that.
 
 ---
