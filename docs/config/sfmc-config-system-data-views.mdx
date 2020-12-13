@@ -2,19 +2,23 @@
 id: sfmc-config-system-data-views
 title: SFMC System Data Views
 sidebar_label: System Data Views
-description: Writing in Progress
+description: Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Writing in Progress' />
+<LeadText content='Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
 
 
 ## Basics
 
-System Data Views are built-in backend Data Extensions that you can use to find information about your subscribers and sends. You cannot change them, but you can leverage their data in SQL queries or pull it to standard Data Extension.
+System Data Views are built-in backend Data Extensions that you can use to find information about your subscribers and sends. You cannot change them, but you can leverage their data in SQL queries for quick reports in [Query Studio](../sql/sfmc-sql-basics.mdx#query-studio) or outputting it to the standard Data Extension.
 
-For queries involving data views, implement a 6-month cap. Often the performance is dramatically better limited to no more than 30 days.
+What you need to know is that Data Views have data retention settings set to 6 months, so if you want to store any data for more extended period, you must create an Automation that will be copying data to your own Data Extension.
+
+Be careful, however, as some of the System Data Views can get absurdly big really quick, and making copies within your Marketing Cloud Instance may lead to perormance issues. In such cases much better idea might be to export that data on scheduled basis to an external Data Warehouse.
+
+Another important point related to Data Views to always be aware which Data View you trully want to use - for example, in most cases you will be interested in parent-level [`_Subscribers`](#_Subscribers) Data View, which means you will need to use [`ENT.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix in your query.
 
 :::note You Should Know
 
@@ -113,8 +117,11 @@ TriggererSendDefinitionObjectID | The object ID for the triggered send definitio
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Job` Data View:
-
-
+1. `JobID` field will be your bread and butter for [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
+2. `EmailName`, `FromName`, `FromEmail` are very useful data points that are missing in the [`_Sent`](#_Sent) Data View and definitely worth checking for reporting needs.
+3. If you are performing A/B tests or just want to create an analysis of subject impact on performance, be sure to also pick `EmailSubject`.
+4. For debugging purposes be sure to check out `IsWrapped` and `SuppressTracking` - if you are missing tracking data, `CharacterSet` - if you have issues with formatting, `SendClassification` - if you have issues with unsubscribers or spam complaints.
+5. `AccountUserID` field is awesome for `_Job` based Audit Log creation, but unofortunatelly there is currently no easy way to find out which user has which UserID, as it is not availble anywhere in the UI. You can either use SOAP API or match based on this SQL results.
 
 :::note You Should Know
 
@@ -290,6 +297,9 @@ JourneyActivityObjectID | Use this unique identifier to join to email tracking s
 ActivityType | The type of activity | Text | X
 
 When working with `_JourneyActivity` Data View:
+1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Just use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_Job), [`_Sent`](#_Sent), [`_Open`](#_open), [`_Click` ](#_Click) or [`_Bounce`](#_Bounce) Data View. This is especially useful when you later use `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_Journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Awesome for full scope reporting.
+2. With the help of [`_Journey`](#_Journey) Data View you can use `ActivityType` field for a nice little report created with SQL that will show which Journeys use which channels and what types of logic. For more in-depth understanding of what happens in the Journey you would rather need to use Script Activity with REST API, but for quick glance on the multi-channel use it is great.
+3. Check sample data on all fields
 
 ---
 
@@ -309,5 +319,8 @@ ModifiedDate | The date that the version of the journey was last edited | Date |
 JourneyStatus | The current running mode of the journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
 
 When working with `_Journey` Data View:
+1. `VersionID` field will be perfect for [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_JourneyActivity`](#_JourneyActivity). It will allow you to map multi-channel engagement to particular Journey (visible in `JourneyName`) and it's specific version (as shown in `VersionNumber`).
+2. Use `JourneyStatus` to check what is the current Journey Status. It is awesome for both [`WHERE`](../sql/sfmc-sql-where.mdx) statement, as well as a datapoint for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which of them are in the Active Journeys - for any found it sends you a notification to check and improve. For really bad results you can even move that data to Script Activity to automatically Stop the Journey with the SFMC REST API.
+3. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) might be cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_Sent) data. For example, you can create monthly Automatiuon that checks all Journeys that were last modified at least 6 months ago and based on the send volume or performance it stops them and notify you about that.
 
 ---
