@@ -1,0 +1,33 @@
+---
+id: sfmc-config-behavioral-triggers
+title: SFMC Behavioral Triggers
+sidebar_label: Behavioral Triggers
+description: Win-back your e-commerce customers with SFMC Behaviortal Triggers.
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content="Win-back your e-commerce customers with SFMC Behaviortal Triggers." />
+
+## Marketing Cloud Behavioral Triggers
+
+Behavioral Triggers are a solution for easily moving abandoned engagement data from your e-commerce to Salesforce Marketing Cloud. They enables powerful win-back communication to be created with minimal technical knowledge in express time.
+
+Currently, there are three scenarios avaialble:
+
+1. [Abandoned Cart](#abandoned-cart)
+2. [Abandoned Browse](#abandoned-browse)
+3. [Abandoned Wishlist](abandoned-wishlist)
+
+What Behaviortal Triggers does in each case is push relevant data (items left in the cart, browsed without conversion or added to wishlist) to the Einstein Backend and - after configured time - to Marketing Cloud Data Extension.
+
+Then you can leverage this data extension as both Journey Entry, as well as a source of personalization using built-in Behaviortal Trigger Content Block that allows you to use clean UI to configure basic dynamic content using the obtained engagement data.
+
+## What you need for Behavioral Triggers
+
+1. As Behavioral Triggers are extending the Einstein Recommendations you need to have it licensed and enabled in your Business Unit.
+2. Behavioral data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to have Einstein Data Extensions enabled.
+3. A lot of data leveraged by Triggers is coming from Product Catalog, so be sure to configure it prior to
+
+
+As you can see, if you already use Einstein Recommendations, most of the required work is already done and whole implementation should take you just a few minutes.
