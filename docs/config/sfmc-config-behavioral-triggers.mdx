@@ -21,13 +21,289 @@ Currently, there are three scenarios avaialble:
 
 What Behaviortal Triggers does in each case is push relevant data (items left in the cart, browsed without conversion or added to wishlist) to the Einstein Backend and - after configured time - to Marketing Cloud Data Extension.
 
-Then you can leverage this data extension as both Journey Entry, as well as a source of personalization using built-in Behaviortal Trigger Content Block that allows you to use clean UI to configure basic dynamic content using the obtained engagement data.
+Then you can leverage this data extension as both Journey Entry, as well as a source of personalization using built-in Behavioral Trigger Content Block that allows you to use clean UI to configure basic dynamic content using the obtained engagement data.
 
-## What you need for Behavioral Triggers
+### Behavioral Triggers Pre-Work
 
-1. As Behavioral Triggers are extending the Einstein Recommendations you need to have it licensed and enabled in your Business Unit.
-2. Behavioral data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to have Einstein Data Extensions enabled.
-3. A lot of data leveraged by Triggers is coming from Product Catalog, so be sure to configure it prior to
+Before you use the Behavioral Triggers be sure to fulfill pre-requisites:
 
+1. As Behavioral Triggers are extending the **Einstein Recommendations**, **get a license and enable** it in your Business Unit.
+2. Behavioral data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to **enable Einstein Data Extensions**.
+3. A lot of data leveraged by Triggers is coming from the **Product Catalog**, so be sure to **configure** it prior to capturing the events.
+4. **Implement the [Collect.js](#collectjs)** script on your e-commerce to capture session and engagement data.
+5. Finally, **configure Behavioral Triggers** to bring relevant data to Marketing Cloud Data Extensions.
 
-As you can see, if you already use Einstein Recommendations, most of the required work is already done and whole implementation should take you just a few minutes.
+As you can see, if you already use Einstein Recommendations, most of the required work is already done and whole implementation should take you just a few minutes. In such case, you will only need to slightly update Collect.js and configure the Behavioral Triggers.
+
+### How the Behavioral Triggers work
+
+Behavioral Triggers seems to be really easy to implement, but there is a lot going in the back end. It is good to understand the basics of it, as it might help a lot when triaging a problem or customizing the solution.
+
+1. Customer enters your e-commerce site - you trigger first [Collect.js](#collectjs) scripts to capture the Session and Page View.
+2. Customer clicks on a product page - you trigger [Page View data layer](#page-view-data-layer) with link to that product (This might be used for [Abandoned Browse](#abandoned-browse) scenario).
+3. Customer finds interesting product and adds it to the wishlist - you trigger [Wishlist data layer](#wishlist-data-layer) (This might be used for [Abandoned Wishlist](#abandoned-wishlist) scenario).
+4. Customer decides on one of the products and adds it to the cart - you trigger [Cart data layer](#cart-data-layer) (This might be used for [Abandoned Cart](#abandoned-cart) scenario).
+5. Customer goes through the purchase process and buys the product - you trigger [Cart data layer](#cart-data-layer) with clear parameter (This blocks [Abandoned Cart](#abandoned-cart) from launching communication).
+6. Each of the above triggers is sent to Einstein Backend (IgoDigital) that stores the information.
+7. Marketing Cloud Behavioral Triggers query the Einstein Backend for any events that occured some time ago - you can configure it in range from 15 minutes to 3 hours (in 15 minutes increments).
+8. If there is a matching event, it checks whether there is any other event that overwrites it - for example if your customer viewed a product page, but few minutes later he added this product to the cart, the page view will be ignored and the Behavioral Trigger will wait for the abandoned cart.
+9. Once there is an event ripe for reengagement, Behavioral Trigger will put it into system created Data Extension (one per scenario) with three data points: subscriber key, time stamp and the encrypted data.
+10. Now you can use this to add the customer to a Customer Journey
+11. In the Journey you can use an Email with built-in Behavioral Trigger Content Block. This block, in the moment of send, makes a call to Einstein Backend (IgoDigital) and gets real-time state of your customer interaction. It validates that he or she did not convert to purchase in the meantime and provides all the detailes required for creating personalized content in the email presenting the abandoned products.
+
+As you can see, there is a lot happening and it's time to dive deeper into each step to understand it better.
+
+:::note You Should Know
+
+There are many quirks and tricks - read on to learn how to get more out of Behavioral Triggers.
+
+:::
+
+## Collect.js
+
+You have seen the Collect.js script mentioned multiple times here and it is also the most technical element of the standard Behavioral Triggers implementation. Time for details.
+
+### Collect Code Script
+
+Before you start building your data layers you first need to import the code responsible for pushing data to Einstein Backend (IgoDigital). You do this by putting this line on every page:
+
+```html title="Collect Code Script"
+<script type="text/javascript" src="https://MID.collect.igodigital.com/collect.js"></script>
+```
+
+Be sure to change the `MID` in the above url to the ID of the Business Unit that you want to use for your Behavioral Triggers.
+
+Once you have it, you may start building the data layers that will move the information from your e-commerce to Marketing Cloud.
+
+### Set Org ID
+
+The first data layer you need to push contains, again, the MID of the Business Unit. Just as with the [Collect Code Script](#collect-code-script) - be sure to change the `MID` to the real ID of your SFMC BU.
+
+```html {2} title="Set Org ID Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+</script>
+```
+
+### Set User Info
+
+The second data layer that will be a key for the sending behavioral triggered communication is focused on pushing the data about the customer itself.
+
+```html {3} title="Set User Info Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+</script>
+```
+
+The base is pushing the unique identifier of your customer (don't be intimidated by the `email` in that code - you do not have to pass the email address there). Depending on your use case it might be Subscriber Key (if you plan on sending only to contacts known to Marketing Cloud or have an option to generate Subscriber stright from your e-commerce) or it might be an Email Address (this is recommended if you want to push win-back emails to users that are not yet known in your Marketing Cloud and you do not have an option to create them properly.)
+
+:::note You Should Know
+
+If you decide to push an Email Address to communicate with people not yet in the Marketing Cloud, be sure to make them Subscribers. You can do it easily by using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. This can be done easily by using SQL Activity to copy the needed data to another Data Extension using this query:
+
+```sql title="Basic Subscriber data preparation"
+SELECT
+    GUID() AS SubscriberKey, // OR: subscriber_key AS SubscriberKey,
+    subscriber_key AS EmailAddress
+FROM abandoned_cart_123456789
+```
+
+Be sure to update the name of the Behavioral Trigger Data Extension.
+
+You can leverage the same automation to also be trigger for the Journey Entry to be sure that all records in the Journey are already created as a Subscribers.
+
+:::
+
+You can provide more data in this data layer by adding Custom Einstein Profile Attributes as second parameter:
+
+```html {5} title="Extended Set User Info Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {
+        "email": "UniqueIdentifier",
+        "details": {"gender": "male"}
+    }]);
+</script>
+```
+
+Be sure to create all those Custom Profile Attributes in your Einstein implementation prior to pushing it via Collect.js.
+
+### Track Page View
+
+Time for our first real tracking - Page View. The basic data layer pushes just the information about the event:
+
+```html {4} title="Page View Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackPageView"]);
+</script>
+```
+
+However, you can do much more with this data layer by providing additional parameters. The most important for Behavioral Triggers is `item`:
+
+```html {4} title="Page View Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackPageView", {"item": "ProductCode"}]);
+</script>
+```
+
+Once you swap `ProductCode` for the real product code matching one of the items in Einstein Product Catalog, you will be able to leverage the first Behavioral Trigger scenario - [Abandoned Browse](#abandoned-browse). Once you push this event and the customer does not convert further, this will populate Abandoned Browse Data Extension and allow win-back communication.
+
+You can also add other parameters that are not used by the Behavioral Triggers but rather standard Einstein Recommendations - category and search:
+
+```html {6-7} title="Page View Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackPageView", {
+        "item": "ProductCode",
+        "category": "ProductCategory",
+        "search": "SearchTerm"
+        }]);
+</script>
+```
+
+You do not have to use all three, you can trigger various ones depending on the page the user is on. The floor is yours.
+
+### Catalog Update Streaming
+
+There are two options to keep your Einstein Catalog up-to-date. Manual uploads and Catalog Update Streaming.
+
+Manual uploads might be fine if you nearly never update items or their parameters in your e-commerce. For all other use cases you should be using Catalog Update Streaming Data Layer.
+
+```html {5-17} title="Page View Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackPageView", {"item": "ProductCode",}]);
+    _etmc.push(["updateItem", {
+        "item_type": "product",
+        "item": "ProductCode",
+        "name": "ProductName",
+        "url": "ProductURL",
+        "unique_id": "ProductSKU",
+        "available": "y",
+        "image_url": "ProductImage",
+        "sale_price": "ProductSalePrice",
+        "price": "ProductRegularPrice",
+        "release_date": "ProductReleaseDate",
+        "custom_attribute": "ProductAttribute"
+    }]);
+</script>
+```
+
+With this data layer you can be sure that the Catalog stored in Marketing Cloud is always up-to-date. This is crucial, as everything in the Behavioral Trigger Content Block is created using the Catalog data.
+
+The `available` parameter is important as it is the best way to make sure the personalization in the email won't show the product that is no longer available - even if it was in the abdoned cart (of course, this is true for the moment of email send, not the moment of email open).
+
+You can either add this data layer to other pushes of Collect.js as shown in the snippet above or create a separate process on the backend of your e-commerce that shoots an update whenever there is a change in the product parameters. The first approach is easy, the second is wise.
+
+:::note You Should Know that
+
+Remember, that this data layer is used for updating the Catalog. Even if you push it in context of specific subscriber and along the [Track Cart](#track-cart) data layer, it will still update the global Catalog for everyone.
+
+If your customer has special product price (for example via VIP status or coupon) use the [Track Cart](#track-cart) data layer to share this information.
+
+:::
+
+### Track Wishlist
+
+The second Behavioral Trigger scenario - [Abandoned Wishlist](#abandoned-wishlist) has its own data layer:
+
+```html {4-7} title="Track Cart Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackWishlist", { "wishlist": [
+        {"item": "ProductCode", "unique_id": "ProductSKU"},
+        {"item": "ProductCode", "unique_id": "ProductSKU"}
+    ]}]);
+</script>
+```
+
+TODO
+
+### Track Cart
+
+The third Behavioral Trigger scenario - [Abandoned Cart](#abandoned-cart) also has its own data layer:
+
+```html {4-7} title="Track Cart Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackCart", { "cart": [
+        {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"},
+        {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"}
+    ]}]);
+</script>
+```
+
+Few things here are important to consider:
+
+1. As you can see, there are four possible parameters for each item - `item` and `unique_id` are required and must be available in your Einstein Product Catalog to work. The other two - `quantity` and `price` are optional.
+2. The `price` parameter here is different from `price` or `sales_price` available in [Catalog Update](#catalog-update-streaming). The Catalog ones are global - same for all your customers. The `price` pushed within Track Cart is unique for this particular customer and might be different from the global ones (think VIP status or a coupon used). It won't update your Einstein Catalog.
+3. You should always push whole cart. If your customer have more then one item in it - put all of them in this data layer. If customer deletes item from the cart - just push the data layer without the deleted one. Last version pushed is considered the final state of the cart for personalization purposes.
+4. Always be sure to clear the Track Cart data whenever the cart data is no longer needed. If the customer purchased the products, be sure to use [Track Purchase](#track-purchase) data layer. If the customer deleted all the products from their cart, use Clear Cart parameter:
+
+```html {4} title="Clear the Track Cart Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackCart", {"clear_cart": true}]);
+</script>
+```
+
+Otherwise your customers might receive win-back communication for products that they already bought.
+
+### Track Purchase
+
+Whenever the customer converts be sure to track this purchase. It is not only important for Einstein Recommendations and Discover's ROI calculation. For the purpose of Behavioral Triggers it is crucial, as it informs that the cart converted and is no longer abandoned. This will block win-back communication for already purchased products.
+
+The basic structure of the Track Purchase data layer is very similar to the [Track Cart](#track-cart) one:
+
+```html {5-8} title="Track Cart Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackPageView", {"item": "ProductCode"}]);
+    _etmc.push(["trackConversion", { "cart": [
+        {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"},
+        {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"}
+    ]}]);
+</script>
+```
+
+You can, however, extend it with additional information that will provide more context to the conversion:
+
+```html {5-8} title="Track Cart Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["trackPageView", {"item": "ProductCode"}]);
+    _etmc.push(["trackConversion", {
+        "cart": [
+            {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"},
+            {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"}
+        ],
+        "order_number": "OrderNumber",
+        "discount": "DiscountAmount",
+        "shipping": "ShippingPrice",
+        "details": {"CustomAttribute": "CustomValue"}
+   }]);
+</script>
+```
+
+### Do Not Track
+
+You may supress all of the configured tracking by using a special data layer based on customer decision and local laws.
+
+```html {3} title="Do Not Track Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["doNotTrack"]);
+</script>
+```
