@@ -5,6 +5,8 @@ sidebar_label: Behavioral Triggers
 description: Win-back your e-commerce customers with SFMC Behaviortal Triggers.
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="Win-back your e-commerce customers with SFMC Behaviortal Triggers." />
@@ -15,9 +17,9 @@ Behavioral Triggers are a solution for easily moving abandoned engagement data f
 
 Currently, there are three scenarios avaialble:
 
-1. [Abandoned Cart](#abandoned-cart)
-2. [Abandoned Browse](#abandoned-browse)
-3. [Abandoned Wishlist](abandoned-wishlist)
+1. Abandoned Cart
+2. Abandoned Browse
+3. Abandoned Wishlist
 
 What Behaviortal Triggers does in each case is push relevant data (items left in the cart, browsed without conversion or added to wishlist) to the Einstein Backend and - after configured time - to Marketing Cloud Data Extension.
 
@@ -27,9 +29,9 @@ Then you can leverage this data extension as both Journey Entry, as well as a so
 
 Before you use the Behavioral Triggers be sure to fulfill pre-requisites:
 
-1. As Behavioral Triggers are extending the **Einstein Recommendations**, **get a license and enable** it in your Business Unit.
-2. Behavioral data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to **enable Einstein Data Extensions**.
-3. A lot of data leveraged by Triggers is coming from the **Product Catalog**, so be sure to **configure** it prior to capturing the events.
+1. As Behavioral Triggers are extending the **Einstein Recommendations**, **get a license and [enable](#email-recommendations-configuration)** it in your Business Unit.
+2. A lot of data leveraged by Triggers is coming from the **Product Catalog**, so be sure to **[configure](#initial-catalog-upload)** it prior to capturing the events.
+3. Behavioral data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to **enable Einstein Data Extensions**.
 4. **Implement the [Collect.js](#collectjs)** script on your e-commerce to capture session and engagement data.
 5. Finally, **configure Behavioral Triggers** to bring relevant data to Marketing Cloud Data Extensions.
 
@@ -40,10 +42,10 @@ As you can see, if you already use Einstein Recommendations, most of the require
 Behavioral Triggers seems to be really easy to implement, but there is a lot going in the back end. It is good to understand the basics of it, as it might help a lot when triaging a problem or customizing the solution.
 
 1. Customer enters your e-commerce site - you trigger first [Collect.js](#collectjs) scripts to capture the Session and Page View.
-2. Customer clicks on a product page - you trigger [Page View data layer](#page-view-data-layer) with link to that product (This might be used for [Abandoned Browse](#abandoned-browse) scenario).
-3. Customer finds interesting product and adds it to the wishlist - you trigger [Wishlist data layer](#wishlist-data-layer) (This might be used for [Abandoned Wishlist](#abandoned-wishlist) scenario).
-4. Customer decides on one of the products and adds it to the cart - you trigger [Cart data layer](#cart-data-layer) (This might be used for [Abandoned Cart](#abandoned-cart) scenario).
-5. Customer goes through the purchase process and buys the product - you trigger [Cart data layer](#cart-data-layer) with clear parameter (This blocks [Abandoned Cart](#abandoned-cart) from launching communication).
+2. Customer clicks on a product page - you trigger [Page View data layer](#page-view-data-layer) with link to that product (This might be used for Abandoned Browse scenario).
+3. Customer finds interesting product and adds it to the wishlist - you trigger [Wishlist data layer](#wishlist-data-layer) (This might be used for Abandoned Wishlist scenario).
+4. Customer decides on one of the products and adds it to the cart - you trigger [Cart data layer](#cart-data-layer) (This might be used for Abandoned Cart scenario).
+5. Customer goes through the purchase process and buys the product - you trigger [Cart data layer](#cart-data-layer) with clear parameter (This blocks Abandoned Cart from launching communication).
 6. Each of the above triggers is sent to Einstein Backend (IgoDigital) that stores the information.
 7. Marketing Cloud Behavioral Triggers query the Einstein Backend for any events that occured some time ago - you can configure it in range from 15 minutes to 3 hours (in 15 minutes increments).
 8. If there is a matching event, it checks whether there is any other event that overwrites it - for example if your customer viewed a product page, but few minutes later he added this product to the cart, the page view will be ignored and the Behavioral Trigger will wait for the abandoned cart.
@@ -59,6 +61,90 @@ There are many quirks and tricks - read on to learn how to get more out of Behav
 
 :::
 
+---
+
+## Marketing Cloud Configuration
+
+Before you implement the [Collect.js](#collectjs) you have to make the basic configuration of the Behavioral Triggers.
+
+### Email Recommendations Configuration
+
+If you haven't yet configured the Einstein Email Recommendations, you will have to do it first. Go to Einstein » Einstein Overview » Email Recommendations » Admin » Implementation and it will guide you through the steps needed.
+
+If you already configured it previously, go to Einstein » Einstein Overview » Email Recommendations » Admin » Options and make sure you have the additional options related to Behavioral Triggers enabled as described below.
+
+For the Behavioral Triggers purposes be sure to select Product Catalog implementation.
+
+#### Catalog and Product Attributes
+
+On the next screen you will be able to select which Standard Attributes for your products you want to use plus have option to create a Custom ones. This is very important step, as the data you select and create here will be the basis for the Behavioral Trigger Content Block available in the win-back email.
+
+Just remember that those attributes are global (linked to product, not to particular subscriber), so don't add here parameters that are individual (like PersonalisationString).
+
+#### User and Profile Attributes
+
+Next step allows you to configure Custom Profile Attributes. It is really useful for general Einstein purposes, but it is also crucial for Behavioral Triggers if you want to personalize your win-back email for unknown (to Marketing Cloud) customers.
+
+If this is something that you want to do, enable Custom User Profile Attributes and add necessary ones.
+
+You can also enable localization here, which will allow you to present the product name in the language of the user.
+
+#### Activity Tracking
+
+On this last step before Summary you configure what you will be tracking. Category View and In-Site Search are nice to have for general Einstein features, but for Behavioral Triggers be sure to check Cart Activity and Purchase Activity. You will need it for [Collect.js](#collectjs).
+
+#### Initial Catalog Upload
+
+Once the Email Recommendations are configured it is time to make the first upload of the Catalog. Go to Einstein » Einstein Overview » Email Recommendations » Admin » Catalog and click Connect a New Catalog. Select the product catalog, import method and format. Pass the name of the column that contains Unique ID and tell SFMC whether it is full or partial Catalog import.
+
+Once the upload is done, be sure to map the fields from your source to the Standard and Custom Fields available in the Catalog.
+
+#### Einstein Data Extension
+
+Last step here is to enable Einstein Data Extensions. To do this go to Einstein » Einstein Overview » Email Recommendations » Admin » Status. Click on the cog icon in top right and select Data Extension Settings. Enable them with a toggle.
+
+If the toggle is inactive, you need to:
+
+1. Make sure your Catalog is [uploaded and mapped](#initial-catalog-upload).
+2. Make test Collect.js push to initialize Einstein. To start you can utilize ready-to-use base script:
+
+```html title="Initialize Einstein with basic Collect.js"
+<script type="text/javascript" src="MID.collect.igodigital.com/collect.js"></script>
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "Initialize Einstein"}]);
+    _etmc.push(["trackPageView"]);
+</script>
+```
+
+Create a Cloud Page, paste above snippet in the HTML block  - update the both `MID` with the Business Unit you implement the Behavioral Triggers on - and publish it. After opening the website you can delete the Cloud Page - so that it doesn't affect your future Einstein data.
+
+You will find details on what is happening in this script in the [Collect.js](#collectjs) section below. As for now, you have to wait for the initialization to happen. It can take a day. To check whether it is ready just try to again Enable the Einstein Data Extensions. During the initialization the Status page won't be loading (you will see the circle spinning infinitely).
+
+### Behavioral Triggers Configuration
+
+Once your Email Recommendations settings are configured it is time to set up the Behavioral Triggers themselves. It will be simpler and easier. Head to Journey Builder » Behavioral Triggers.
+
+First, click New Trigger in the top right. You can select from the three available abandonment scenarios:
+
+1. Abandoned Cart
+2. Abandoned Browse
+3. Abandoned Wishlist
+
+Select the one you want to start with and you will be able to configure supression rules - one related to multiple triggers and the second to recent purchase. For initial confugration I recommend setting both to 0. It will make the testing much easier. Once you go to production, change those approprietly as per your business requirements.
+
+Confirming your setup will create the system Data Extension that will be used to store Behavioral Trigger data (one per scenario).
+
+The only left option is Session Timeout Limit. You can access it by clicking cog icon next to New Trigger button. You can select from a range starting at 15 minutes and going in 15 minutes increments up to 3 hours. Again, for testing purposes make it the shortest possible and later update based on business needs.
+
+:::note You Should Know
+
+Currently this setting is not working at all - it does not save the selected setting and it always show 1 hour. Until it is fixed, you can manage this by going to Einstein » Einstein Overview » Email Recommendations » Admin » Implementation and clicking Advanced Settings on the left pane. There will be Session Length option with the same range. This is the same setting.
+
+:::
+
+---
+
 ## Collect.js
 
 You have seen the Collect.js script mentioned multiple times here and it is also the most technical element of the standard Behavioral Triggers implementation. Time for details.
@@ -68,12 +154,12 @@ You have seen the Collect.js script mentioned multiple times here and it is also
 Before you start building your data layers you first need to import the code responsible for pushing data to Einstein Backend (IgoDigital). You do this by putting this line on every page:
 
 ```html title="Collect Code Script"
-<script type="text/javascript" src="https://MID.collect.igodigital.com/collect.js"></script>
+<script type="text/javascript" src="MID.collect.igodigital.com/collect.js"></script>
 ```
 
 Be sure to change the `MID` in the above url to the ID of the Business Unit that you want to use for your Behavioral Triggers.
 
-Once you have it, you may start building the data layers that will move the information from your e-commerce to Marketing Cloud.
+Once you have it, you may start building the data layers that will move the information from your e-commerce to Marketing Cloud. For simplicity, I won't be writing the above code in the snippets below.
 
 ### Set Org ID
 
@@ -87,7 +173,7 @@ The first data layer you need to push contains, again, the MID of the Business U
 
 ### Set User Info
 
-The second data layer that will be a key for the sending behavioral triggered communication is focused on pushing the data about the customer itself.
+The second data layer that will be a key for the sending behavioral triggered communication is focused on pushing the data about the customer itself. Remember that this layer must be added to your Collect.js before any tracking layer for proper attribution.
 
 ```html {3} title="Set User Info Data Layer"
 <script type="text/javascript">
@@ -127,7 +213,71 @@ You can provide more data in this data layer by adding Custom Einstein Profile A
 </script>
 ```
 
+:::note You Should Know
+
+Remember that the snippet I shared above is just an example. You will probably use different Custom Profile Attributes. To get the snippet based on your configuration go to Einstein » Email Recommendations » Admin » Implementation.
+
+:::
+
 Be sure to create all those Custom Profile Attributes in your Einstein implementation prior to pushing it via Collect.js.
+
+### Catalog Update Streaming
+
+There are two options to keep your Einstein Catalog up-to-date. Manual uploads and Catalog Update Streaming.
+
+Manual uploads might be fine if you nearly never update items or their parameters in your e-commerce. For all other use cases you should be using Catalog Update Streaming Data Layer.
+
+```html {4-16} title="Page View Data Layer"
+<script type="text/javascript">
+    _etmc.push(["setOrgId", "MID"]);
+    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
+    _etmc.push(["updateItem", {
+        "item_type": "product",
+        "item": "ProductCode",
+        "name": "ProductName",
+        "url": "ProductURL",
+        "unique_id": "ProductSKU",
+        "available": "y",
+        "image_url": "ProductImage",
+        "sale_price": "ProductSalePrice",
+        "price": "ProductRegularPrice",
+        "release_date": "ProductReleaseDate",
+        "custom_attribute": "ProductAttribute"
+    }]);
+</script>
+```
+
+:::note You Should Know
+
+Remember that the snippet I shared above is for fully fledged Catalog with one sample Custom Attribute. You may use only some of those parameters or utilize multiple custom attributes.
+
+You can get the full list of the parameters that you need to use by going to Einstein » Email Recommendations » Admin » Implementation. If you have Streaming Updates enabled (and you should have to be able to use this data layer) below you will see full snippet adapted to your configuration.
+
+Be sure to check also the Domain table visible above it - you should add all the domains that are connected to your Streaming Update, so:
+
+1. Domain where the Stream is happening
+2. Domain of the Product URL
+3. Domain of the Product Image URL
+
+In many cases all those domains might be exactly the same, but if you are using Content Delivery Network or different subdomain for backend, those might differ. If you cannot click `Register`, be sure you are passing just the domain - the bolded part of https://**domain.name**/folder/structure?query=string.
+
+:::
+
+With this data layer you can be sure that the Catalog stored in Marketing Cloud is always up-to-date. This is crucial, as everything in the Behavioral Trigger Content Block is created using the Catalog data.
+
+The `available` parameter is important as it is the best way to make sure the personalization in the email won't show the product that is no longer available - even if it was in the abdoned cart (of course, this is true for the moment of email send, not the moment of email open).
+
+You can either add this data layer to other pushes of Collect.js as shown in the snippet above or create a separate process on the backend of your e-commerce that shoots an update whenever there is a change in the product parameters. The first approach is easy, the second is wise.
+
+:::note You Should Know that
+
+Remember, that this data layer is used for updating the Catalog. Even if you push it in context of specific subscriber and along the [Track Cart](#track-cart) data layer, it will still update the global Catalog for everyone.
+
+If your customer has special product price (for example via VIP status or coupon) use the [Track Cart](#track-cart) data layer to share this information.
+
+:::
+
+If you are using Localization, you may also pass the translated product name using `"locale_pl_name": "PolishProductName"`. It can also be leveraged by the Behavioral Trigger Content Block with some basic custom coding.
 
 ### Track Page View
 
@@ -151,7 +301,7 @@ However, you can do much more with this data layer by providing additional param
 </script>
 ```
 
-Once you swap `ProductCode` for the real product code matching one of the items in Einstein Product Catalog, you will be able to leverage the first Behavioral Trigger scenario - [Abandoned Browse](#abandoned-browse). Once you push this event and the customer does not convert further, this will populate Abandoned Browse Data Extension and allow win-back communication.
+Once you swap `ProductCode` for the real product code matching one of the items in Einstein Product Catalog, you will be able to leverage the first Behavioral Trigger scenario - Abandoned Browse. Once you push this event and the customer does not convert further, this will populate Abandoned Browse Data Extension and allow win-back communication.
 
 You can also add other parameters that are not used by the Behavioral Triggers but rather standard Einstein Recommendations - category and search:
 
@@ -169,50 +319,9 @@ You can also add other parameters that are not used by the Behavioral Triggers b
 
 You do not have to use all three, you can trigger various ones depending on the page the user is on. The floor is yours.
 
-### Catalog Update Streaming
-
-There are two options to keep your Einstein Catalog up-to-date. Manual uploads and Catalog Update Streaming.
-
-Manual uploads might be fine if you nearly never update items or their parameters in your e-commerce. For all other use cases you should be using Catalog Update Streaming Data Layer.
-
-```html {5-17} title="Page View Data Layer"
-<script type="text/javascript">
-    _etmc.push(["setOrgId", "MID"]);
-    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
-    _etmc.push(["trackPageView", {"item": "ProductCode",}]);
-    _etmc.push(["updateItem", {
-        "item_type": "product",
-        "item": "ProductCode",
-        "name": "ProductName",
-        "url": "ProductURL",
-        "unique_id": "ProductSKU",
-        "available": "y",
-        "image_url": "ProductImage",
-        "sale_price": "ProductSalePrice",
-        "price": "ProductRegularPrice",
-        "release_date": "ProductReleaseDate",
-        "custom_attribute": "ProductAttribute"
-    }]);
-</script>
-```
-
-With this data layer you can be sure that the Catalog stored in Marketing Cloud is always up-to-date. This is crucial, as everything in the Behavioral Trigger Content Block is created using the Catalog data.
-
-The `available` parameter is important as it is the best way to make sure the personalization in the email won't show the product that is no longer available - even if it was in the abdoned cart (of course, this is true for the moment of email send, not the moment of email open).
-
-You can either add this data layer to other pushes of Collect.js as shown in the snippet above or create a separate process on the backend of your e-commerce that shoots an update whenever there is a change in the product parameters. The first approach is easy, the second is wise.
-
-:::note You Should Know that
-
-Remember, that this data layer is used for updating the Catalog. Even if you push it in context of specific subscriber and along the [Track Cart](#track-cart) data layer, it will still update the global Catalog for everyone.
-
-If your customer has special product price (for example via VIP status or coupon) use the [Track Cart](#track-cart) data layer to share this information.
-
-:::
-
 ### Track Wishlist
 
-The second Behavioral Trigger scenario - [Abandoned Wishlist](#abandoned-wishlist) has its own data layer:
+The second Behavioral Trigger scenario - Abandoned Wishlist - has its own data layer:
 
 ```html {4-7} title="Track Cart Data Layer"
 <script type="text/javascript">
@@ -225,11 +334,11 @@ The second Behavioral Trigger scenario - [Abandoned Wishlist](#abandoned-wishlis
 </script>
 ```
 
-TODO
+As you can see, not much is configurable here - all of the product data is pulled from the Einstein Catalog, so be sure to have it up to date.
 
 ### Track Cart
 
-The third Behavioral Trigger scenario - [Abandoned Cart](#abandoned-cart) also has its own data layer:
+The third Behavioral Trigger scenario - Abandoned Cart - also has its own data layer:
 
 ```html {4-7} title="Track Cart Data Layer"
 <script type="text/javascript">
@@ -279,7 +388,7 @@ The basic structure of the Track Purchase data layer is very similar to the [Tra
 
 You can, however, extend it with additional information that will provide more context to the conversion:
 
-```html {5-8} title="Track Cart Data Layer"
+```html {10-13} title="Track Cart Data Layer"
 <script type="text/javascript">
     _etmc.push(["setOrgId", "MID"]);
     _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
@@ -307,3 +416,247 @@ You may supress all of the configured tracking by using a special data layer bas
     _etmc.push(["doNotTrack"]);
 </script>
 ```
+
+---
+
+## Behavioral Trigger Usage
+
+Once everything is configured you can go forward with Behavioral Triggers. [Collect.js](#collectjs) will push the required data to Einstein backend and after Session Timeout Limit it will be evaluated against Supression Rules as per your [configuration](#behavioral-triggers-configuration). If it passess, the Abandoned Engagement data will be added to the respective Data Extension that was created automatically when you [enabled Behavioral Trigger scenario](#behavioral-triggers-configuration). Now it's time to use it.
+
+### Behavioral Trigger Content Block
+
+The standard way the leverage this information is to use those abandondonment Data Extensions as a Journey Entry Source. The true magic, however, will happen in the email you will be sending in this Journey. And that is thanks to the out-of-the-box Behavioral Trigger Content Block.
+
+To check it out, edit an Email and on the bottom of the left pane containing all the Content Blocks you will find the Behavioral Trigger one. Drag and drop it to the email so that you can start configuring it.
+
+When you click that block after adding it to the email you will be able to limit maximum number of products shown, control the layout with columns, change order and decide which data points should be visible for products.
+
+It's easy, it's quick, but there are multiple issues if you want anything a bit more customized for your needs. With the out-of-the-box solution:
+
+1. You don't have easy way to control the style of this information. You can only go to Styling tab of the editor and modify the CSS available there.
+2. You are limited only to the fields that you [configured for the Product Catalog](#catalog-and-product-attributes). You cannot, for example, use the individual price that you passed in the [Track Cart](#track-cart) data layer.
+3. Due to [try/catch behaviour of SSJS](../ssjs/debugging-ssjs.mdx#try-to-catch-the-error) you don't have access to any data obtained from the Einstein API within the Content Block.
+4. You cannot leverage the full potential of the Einstein API, as the hard-coded request does not have parameter responsible for pulling the [Einstein Custom Profile Attributes](#user-and-profile-attributes).
+5. You cannot use multiple Content Blocks pointing to various Behavioral Trigger scenarios (for example first focus on cart, and then present the wishlist).
+
+As far as the first issue might be fixed with good CSS knowledge, the rest of them require a bit more work.
+
+### Custom Content Block
+
+So what can you do? Configure the the Content Block to be as close as possible to what you want, go to Code View of your Email and look for `Concat('{"trigger_payload":"', data, '"}')`. This starts the code responsible for Behavioral Trigger Content Block.
+
+<Tabs
+    groupId='behavioralTriggerContentBlock'
+    defaultValue='highlights'
+    values={[
+        {label: 'Snippet Highlights', value: 'highlights'},
+        {label: 'Full Content Block', value: 'block'},
+    ]}
+>
+<TabItem value='highlights'>
+
+```html title="Sample code with my test configuration"
+<!--
+AMPScript responsible for pulling the data from Abandoned Engagement Data Extension.
+If you want to use multiple different Behavioral Trigger scenarios, you can do a Lookup here to point into specific Data Extension.
+-->
+%%[
+  Set @data = Concat('{"trigger_payload":"', data, '"}')
+  Set @mid = memberid
+]%%
+```
+
+</TabItem>
+<TabItem value='block'>
+
+```html title="Sample code with my test configuration"
+%%[
+  Set @data = Concat('{"trigger_payload":"', data, '"}')
+  Set @mid = memberid
+]%%
+
+<script runat="server">
+  Platform.Load("Core", "1");
+  try {
+    var defaults = {
+      "link" : "Link",
+      "image_link" : "ImageLink",
+      "product_code" : "ProductCode",
+      "name" : "Name",
+      "regular_price" : "RegularPrice",
+      "sale_price" : "SalePrice",
+      "sku_id" : "SkuID"
+    };
+
+    // Data from block settings
+    var settings = {"fields":{"image_link":"ImageLink","name":"ProductName","regular_price":"RegularPrice","sale_price":"SalePrice"},"maxItems":4,"sortBy":"item_order","sortDirection":"desc","desktopCols":4,"mobileCols":0,"useSalePricing":true};
+    var markupFragments = {
+      "header" : '<div class="wrapper" align="center" style="--max-table-width: 600px; --max-column-width: 130px; width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #ffffff;"><div class="webkit" style="max-width: 600px; margin: 0 auto;"><!--[if (gte mso 9)|(IE)]><table width="600" align="center"><tr><td><![endif]--><table class="outer" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; margin: 0 auto; width: 100%; max-width: 600px;"><tr><td class="multi-column" style="padding: 0; text-align: center; font-size: 0; padding-top: 10px; padding-bottom: 10px;">',
+      "product" : [
+        '<div class="column" style="--max-table-width: 600px; --max-column-width: 130px; width: 100%; max-width: 130px; display: inline-block; vertical-align: top;"><table width="100%" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333;"><tr> <td style="padding: 0;">',
+'<a href="--product_link--">',
+'<!--[if (gte mso 9)|(IE)]>',
+'<table width="130" align="center"><tr><td width="130" valign="top">',
+'<img src="--image_link--" width="130" alt class="mcbt_image_link" align="center" style="--max-table-width: 600px; --max-column-width: 130px; border: 0; width: 100%; max-width: 130px; height: auto;">',
+'</td></tr></table>',
+'<div style="display:none;width:0px;max-height:0px;overflow:hidden;mso-hide:all;height:0;font-size:0;max-height:0;line-height:0;margin:0 auto;">',
+'<![endif]-->',
+'<img src="--image_link--" alt class="mcbt_image_link" style="border: 0; width: 100%; max-width: 130px; height: auto;">',
+'<!--[if (gte mso 9)|(IE)]>',
+'</div>',
+'<![endif]-->',
+'</a>',
+'</td></tr><tr><td style="padding: 0;"><table class="text_table" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; width: 100%; max-width: 130px;"><tr><td class="mcbt_name" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 130px;">--name--</td></tr><tr><td class="mcbt_regular_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 130px;">$--regular_price--</td></tr><tr><td class="mcbt_sale_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; color: red; width: 100%; max-width: 130px;">$--sale_price--</td></tr>',
+'</table></td></tr><tr></tr></table></div>'
+      ],
+      "attributes" : {"image_link":"image_link","product_link":"link","name":"name","regular_price":"regular_price","sale_price":"sale_price"},
+      "footer" : '</td></tr></table><!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></div></div>',
+      "salePricingStyle" : "text-decoration:line-through;"
+    };
+    var defaultProductMarkup = markupFragments["product"].join("");
+
+    // Read data from MC
+    var data = Platform.Variable.GetValue("@data");
+    var mid = Platform.Variable.GetValue("@mid");
+    var event_locale = Platform.Variable.GetValue("@event_locale");
+
+    // Build the url
+    var protocol = "https";
+    var hostname = mid + ".recs.igodigital.com";
+    var qs = "?item_count=" + settings["maxItems"] + "&sort_by=" + settings["sortBy"] + "&sort_direction=" + settings["sortDirection"];
+    var includes = [];
+    for (var key in settings["fields"]) {
+      if(defaults[key] == null) {
+        includes = includes.concat(settings["fields"][key]);
+      }
+    }
+    if(includes.length > 0) {
+      qs += "&include=" + includes.join("|")
+    }
+    if(event_locale){
+      qs += "&locale=" + event_locale
+    }
+    var url = protocol + "://" + hostname + "/" + mid + "/trigger" + qs;
+
+    var result = HTTP.Post(url, "application/json", data, []);
+    if (result.StatusCode == 200) {
+      var response = Platform.Function.ParseJSON(result.Response[0]);
+
+      // Expose fields in response as Ampscript variables
+      for(var responseField in response) {
+        var value = response[responseField];
+
+        if(responseField === "products" || responseField === "current_cart") {
+          var prefix = (responseField === "products") ? "@item_" : "@cart_";
+          for(var i=0; i<value.length; i++) {
+            for(var itemField in value[i]) {
+              var name = prefix + itemField + "_" + (i+1);
+              var val = value[i][itemField];
+              Platform.Variable.SetValue(name, val);
+            }
+          }
+        }
+        else if(responseField === "user") {
+          var prefix = "@user_";
+          for(var userField in value) {
+            var name = prefix + userField;
+            var val = value[userField];
+            Platform.Variable.SetValue(name, val);
+          }
+        }
+        else {
+          Platform.Variable.SetValue("@"+responseField, value);
+        }
+      }
+
+      // Use abandoned items or current items?
+      var useRecentItems = false;
+      if (useRecentItems && response["current_cart"] !== undefined) {
+        var products = response["current_cart"];
+        if(products.length === 0) {
+          Write("User has an empty cart so stop send");
+          Platform.Function.RaiseError("Trigger no longer valid - User has an empty cart.", true, "statusCode","3");
+        }
+      } else {
+        var products = response["products"];
+      }
+
+      // Exit the send if the user made a purchase since the trigger
+      if (response["purchased"] === true) {
+        Write("User has purchased so stop send");
+        Platform.Function.RaiseError("Trigger no longer valid - User has purchased since trigger.", true, "statusCode","3");
+      };
+
+      // true to use salePricing style, false if not
+      var useSalePricing = true;
+
+      // Write email contents
+      Write(response["tracking_pixel"]);
+      Write(markupFragments["header"].replace('\"', '"'));
+      Write('<!--[if (gte mso 9)|(IE)]>');
+      Write('<table>');
+      Write('<![endif]-->');
+      for (var i=0; i < products.length; i++) {
+        var product = products[i];
+        var productAttributes = markupFragments["attributes"];
+
+        Write('<!--[if (gte mso 9)|(IE)]>');
+        if(i % 4 === 0) {
+          Write('<tr>');
+        }
+        Write('<td width="130px" valign="top">');
+        Write('<![endif]-->');
+
+        var productMarkup = defaultProductMarkup;
+        if(useSalePricing && product["sale_price"] > 0 && product["sale_price"] < product["regular_price"] && productMarkup.indexOf("regular_price") > 0) {
+          var matches = productMarkup.match('(class="mcbt_regular_price" style=")(.*?)"');
+          if(matches != null && matches.length > 0) {
+            productMarkup = productMarkup.replace(matches[0], matches[1] + matches[2] + ' ' + markupFragments["salePricingStyle"] + '"');
+          }
+        }
+
+        for(var markupKey in productAttributes) {
+          var productKey = productAttributes[markupKey];
+          var pattern = "--" + markupKey + "--";
+          var value = product[productKey];
+          if (markupKey === "rating") {
+            value = Math.round((value / 5) * 98);
+          }
+          else if (markupKey === "regular_price" || markupKey === "sale_price") {
+            var parsed = value.toString().split(".");
+            if (parsed.length > 1 && parsed[1].length === 1 && parsed[1] !== "0") {
+              value = value.toString() + "0";
+            }
+          }
+          while(productMarkup.indexOf(pattern) > 0) {
+            productMarkup = productMarkup.replace(pattern, function(){return value});
+          }
+        }
+
+        Write(productMarkup.replace('\"', '"'));
+
+        Write('<!--[if (gte mso 9)|(IE)]>');
+        Write('</td>');
+        if( (i+1) % columnCount === 0 || i === products.length-1) {
+          Write('</tr>');
+        }
+        Write('<![endif]-->');
+      }
+      Write('<!--[if (gte mso 9)|(IE)]>');
+      Write('</table>');
+      Write('<![endif]-->');
+      Write(markupFragments["footer"].replace('\"', '"'));
+    }
+    else {
+      Write("Unable to retrieve product information: statusCode=" + result.StatusCode);
+      Platform.Function.RaiseError("Quit send.", true, "statusCode","3");
+    }
+  } catch(e) {
+    Write(e);
+    Platform.Function.RaiseError("Quit send.", true, "statusCode","3");
+  }
+</script>
+```
+
+</TabItem>
+</Tabs>
