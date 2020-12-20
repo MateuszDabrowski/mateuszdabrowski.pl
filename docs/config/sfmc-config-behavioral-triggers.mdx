@@ -419,11 +419,9 @@ You may supress all of the configured tracking by using a special data layer bas
 
 ---
 
-## Behavioral Trigger Usage
+## Behavioral Trigger Content Block
 
 Once everything is configured you can go forward with Behavioral Triggers. [Collect.js](#collectjs) will push the required data to Einstein backend and after Session Timeout Limit it will be evaluated against Supression Rules as per your [configuration](#behavioral-triggers-configuration). If it passess, the Abandoned Engagement data will be added to the respective Data Extension that was created automatically when you [enabled Behavioral Trigger scenario](#behavioral-triggers-configuration). Now it's time to use it.
-
-### Behavioral Trigger Content Block
 
 The standard way the leverage this information is to use those abandondonment Data Extensions as a Journey Entry Source. The true magic, however, will happen in the email you will be sending in this Journey. And that is thanks to the out-of-the-box Behavioral Trigger Content Block.
 
@@ -443,27 +441,22 @@ As far as the first issue might be fixed with good CSS knowledge, the rest of th
 
 So what can you do? Configure the the Content Block to be as close as possible to what you want, go to Code View of your Email and look for `Concat('{"trigger_payload":"', data, '"}')`. This starts the code responsible for Behavioral Trigger Content Block.
 
-### Customize Content Block
+Below you can see two tabs.
 
-Below you can see three tabs.
-
-1. In **Original Code** you will find full code of the built-in Behavioral Trigger Content Block. It is configured to show product image with name and regular + sale price. Number of items is limited to 4 and so is number of columns. You can change this configuration by playing with value of `var settings`.
+1. In **Original Code** you will find full code of the built-in Behavioral Trigger Content Block. It is configured to show product image with name and description plus regular/sale price. Number of items is limited to four and they are shown in two-column layouyt.
 2. In **Code Highlights** tab I focus on some part of the code that I found interesting and deserve some attention.
-3. In **Customized Code** I share my own modification of the Behavioral Trigger Content Block that solves a lot of its issues.
 
 <Tabs
     groupId='behavioralTriggerContentBlock'
     defaultValue='highlights'
     values={[
         {label: 'Original Code', value: 'original'},
-        {label: 'Code Highlights', value: 'highlights'},
-        {label: 'Customized Code', value: 'customized'},
+        {label: 'Code Highlights', value: 'highlights'}
     ]}
 >
 <TabItem value='original'>
 
 ```html title="Original  Behavioral Trigger Content Block code"
-
 %%[
   Set @data = Concat('{"trigger_payload":"', data, '"}')
   Set @mid = memberid
@@ -484,27 +477,27 @@ Below you can see three tabs.
     };
 
     // Data from block settings
-    var settings = {"fields":{"image_link":"ImageLink","name":"ProductName","regular_price":"RegularPrice","sale_price":"SalePrice"},"maxItems":4,"sortBy":"item_order","sortDirection":"desc","desktopCols":4,"mobileCols":0,"useSalePricing":true};
+    var settings = {"fields":{"image_link":"ImageLink","name":"ProductName","description":"Description","regular_price":"RegularPrice","sale_price":"SalePrice"},"maxItems":4,"sortBy":"item_order","sortDirection":"desc","desktopCols":2,"mobileCols":0,"useSalePricing":true};
     var markupFragments = {
-      "header" : '<div class="wrapper" align="center" style="--max-table-width: 600px; --max-column-width: 130px; width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #ffffff;"><div class="webkit" style="max-width: 600px; margin: 0 auto;"><!--[if (gte mso 9)|(IE)]><table width="600" align="center"><tr><td><![endif]--><table class="outer" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; margin: 0 auto; width: 100%; max-width: 600px;"><tr><td class="multi-column" style="padding: 0; text-align: center; font-size: 0; padding-top: 10px; padding-bottom: 10px;">',
+      "header" : '<div class="wrapper" align="center" style="--max-table-width: 600px; --max-column-width: 210px; width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #ffffff;"><div class="webkit" style="max-width: 600px; margin: 0 auto;"><!--[if (gte mso 9)|(IE)]><table width="600" align="center"><tr><td><![endif]--><table class="outer" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; margin: 0 auto; width: 100%; max-width: 600px;"><tr><td class="multi-column" style="padding: 0; text-align: center; font-size: 0; padding-top: 10px; padding-bottom: 10px;">',
       "product" : [
-        '<div class="column" style="--max-table-width: 600px; --max-column-width: 130px; width: 100%; max-width: 130px; display: inline-block; vertical-align: top;"><table width="100%" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333;"><tr> <td style="padding: 0;">',
+        '<div class="column" style="--max-table-width: 600px; --max-column-width: 210px; width: 100%; max-width: 210px; display: inline-block; vertical-align: top;"><table width="100%" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333;"><tr> <td style="padding: 0;">',
 '<a href="--product_link--">',
 '<!--[if (gte mso 9)|(IE)]>',
-'<table width="130" align="center"><tr><td width="130" valign="top">',
-'<img src="--image_link--" width="130" alt class="mcbt_image_link" align="center" style="--max-table-width: 600px; --max-column-width: 130px; border: 0; width: 100%; max-width: 130px; height: auto;">',
+'<table width="210" align="center"><tr><td width="210" valign="top">',
+'<img src="--image_link--" width="210" alt class="mcbt_image_link" align="center" style="--max-table-width: 600px; --max-column-width: 210px; border: 0; width: 100%; max-width: 210px; height: auto;">',
 '</td></tr></table>',
 '<div style="display:none;width:0px;max-height:0px;overflow:hidden;mso-hide:all;height:0;font-size:0;max-height:0;line-height:0;margin:0 auto;">',
 '<![endif]-->',
-'<img src="--image_link--" alt class="mcbt_image_link" style="border: 0; width: 100%; max-width: 130px; height: auto;">',
+'<img src="--image_link--" alt class="mcbt_image_link" style="border: 0; width: 100%; max-width: 210px; height: auto;">',
 '<!--[if (gte mso 9)|(IE)]>',
 '</div>',
 '<![endif]-->',
 '</a>',
-'</td></tr><tr><td style="padding: 0;"><table class="text_table" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; width: 100%; max-width: 130px;"><tr><td class="mcbt_name" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 130px;">--name--</td></tr><tr><td class="mcbt_regular_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 130px;">$--regular_price--</td></tr><tr><td class="mcbt_sale_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; color: red; width: 100%; max-width: 130px;">$--sale_price--</td></tr>',
+'</td></tr><tr><td style="padding: 0;"><table class="text_table" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; width: 100%; max-width: 210px;"><tr><td class="mcbt_name" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 210px;">--name--</td></tr><tr><td class="mcbt_description" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 210px;">--description--</td></tr><tr><td class="mcbt_regular_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 210px;">$--regular_price--</td></tr><tr><td class="mcbt_sale_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; color: red; width: 100%; max-width: 210px;">$--sale_price--</td></tr>',
 '</table></td></tr><tr></tr></table></div>'
       ],
-      "attributes" : {"image_link":"image_link","product_link":"link","name":"name","regular_price":"regular_price","sale_price":"sale_price"},
+      "attributes" : {"image_link":"image_link","product_link":"link","name":"name","description":"description","regular_price":"regular_price","sale_price":"sale_price"},
       "footer" : '</td></tr></table><!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></div></div>',
       "salePricingStyle" : "text-decoration:line-through;"
     };
@@ -651,6 +644,142 @@ Below you can see three tabs.
     Platform.Function.RaiseError("Quit send.", true, "statusCode","3");
   }
 </script>
+```
+
+```css title="Original Behavioral Trigger Content Block CSS"
+  :root {
+    --max-table-width: 600px;
+    --max-column-width: 210px;
+  }
+
+  .mcbt_name {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_regular_price {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_sale_price {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_on_sale {
+    text-decoration: line-through;
+  }
+
+  .mcbt_image_link {
+    width: 100%;
+    max-width: var(--max-column-width);
+    height: auto;
+  }
+
+  table {
+    border-spacing: 0;
+    font-family: sans-serif;
+    color: #333333;
+  }
+  td {
+    padding: 0;
+  }
+  img {
+    border: 0;
+  }
+  div[style*="margin: 16px 0"] {
+    margin:0 !important;
+  }
+  .wrapper {
+    width: 100%;
+    table-layout: fixed;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    background-color: #ffffff;
+  }
+  .webkit {
+    max-width: var(--max-table-width);
+    margin: 0 auto;
+  }
+  .outer {
+    margin: 0 auto;
+    width: 100%;
+    max-width: var(--max-table-width);
+  }
+  .multi-column {
+    text-align: center;
+    font-size: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .column {
+    width: 100%;
+    max-width: var(--max-column-width);
+    display: inline-block;
+    vertical-align: top;
+  }
+  .text_table {
+    width: 100%;
+    max-width: var(--max-column-width);
+  }
+  table.text_table td {
+    width: 100%;
+    max-width: var(--max-column-width);
+  }
+  .star {
+    height: var(--star-size);
+  }
+  .empty-star {
+    background-color: black;
+    width: var(--star-empty-width);
+  }
+  .filled-star {
+    background-color: #6699cc;
+    width: var(--star-filled-width);
+  }
+  .image-star {
+    width: var(--star-size);
+  }
+
+  .mcbt_description {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_custom1 {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_sku_id {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_num_reviews {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_online_availability {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .mcbt_product_code {
+    font-size: 0.8125rem;
+    padding-top: 10px;
+    text-align: center;
+  }
 ```
 
 </TabItem>
@@ -687,203 +816,102 @@ This can be fixed in two ways. Either the variables can be declared before the t
 #### 3. Settings & Markup Fragments
 
 ```js
-var settings = {(...)};
-var markupFragments = {(...)};
+var settings = {
+    // Content Block settings from UI
+};
+var markupFragments = {
+    // HTML fragments
+};
 ```
 
-Those two variables store all options that you have selected when configuring the Behavioral Trigger Content Block. You can alter them outside of what is possible in the UI. You can also change the HTML that is being generated for the products. Remember however, that the classes visible here are used by the Behavioral Content CSS, so any changes might break the styling.
+Those two variables store all options that you have selected when configuring the Behavioral Trigger Content Block. You can alter them outside of what is possible in the UI. You can also change the HTML that is being generated for the products.
 
-</TabItem>
-<TabItem value='customized'>
+Remember however, that the classes visible in the `markupFragments` are used by the Behavioral Trigger Content Block CSS, so changes might break the styling.
 
-```html title="Customized Behavioral Trigger Content Block code"
-%%[
-  Set @data = Concat('{"trigger_payload":"', data, '"}')
-  Set @mid = memberid
-]%%
+Later there are also two other settings-related lines:
 
-<script runat="server">
-  Platform.Load("Core", "1");
-  try {
-    var defaults = {
-      "link" : "Link",
-      "image_link" : "ImageLink",
-      "product_code" : "ProductCode",
-      "name" : "Name",
-      "regular_price" : "RegularPrice",
-      "sale_price" : "SalePrice",
-      "sku_id" : "SkuID"
-    };
+```js
+var useRecentItems = false;
+// Some code
+var useSalePricing = true;
+```
 
-    // Data from block settings
-    var settings = {"fields":{"image_link":"ImageLink","name":"ProductName","regular_price":"RegularPrice","sale_price":"SalePrice"},"maxItems":4,"sortBy":"item_order","sortDirection":"desc","desktopCols":4,"mobileCols":0,"useSalePricing":true};
-    var markupFragments = {
-      "header" : '<div class="wrapper" align="center" style="--max-table-width: 600px; --max-column-width: 130px; width: 100%; table-layout: fixed; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #ffffff;"><div class="webkit" style="max-width: 600px; margin: 0 auto;"><!--[if (gte mso 9)|(IE)]><table width="600" align="center"><tr><td><![endif]--><table class="outer" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; margin: 0 auto; width: 100%; max-width: 600px;"><tr><td class="multi-column" style="padding: 0; text-align: center; font-size: 0; padding-top: 10px; padding-bottom: 10px;">',
-      "product" : [
-        '<div class="column" style="--max-table-width: 600px; --max-column-width: 130px; width: 100%; max-width: 130px; display: inline-block; vertical-align: top;"><table width="100%" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333;"><tr> <td style="padding: 0;">',
-'<a href="--product_link--">',
-'<!--[if (gte mso 9)|(IE)]>',
-'<table width="130" align="center"><tr><td width="130" valign="top">',
-'<img src="--image_link--" width="130" alt class="mcbt_image_link" align="center" style="--max-table-width: 600px; --max-column-width: 130px; border: 0; width: 100%; max-width: 130px; height: auto;">',
-'</td></tr></table>',
-'<div style="display:none;width:0px;max-height:0px;overflow:hidden;mso-hide:all;height:0;font-size:0;max-height:0;line-height:0;margin:0 auto;">',
-'<![endif]-->',
-'<img src="--image_link--" alt class="mcbt_image_link" style="border: 0; width: 100%; max-width: 130px; height: auto;">',
-'<!--[if (gte mso 9)|(IE)]>',
-'</div>',
-'<![endif]-->',
-'</a>',
-'</td></tr><tr><td style="padding: 0;"><table class="text_table" align="center" style="border-spacing: 0; font-family: sans-serif; color: #333333; width: 100%; max-width: 130px;"><tr><td class="mcbt_name" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 130px;">--name--</td></tr><tr><td class="mcbt_regular_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 130px;">$--regular_price--</td></tr><tr><td class="mcbt_sale_price" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; color: red; width: 100%; max-width: 130px;">$--sale_price--</td></tr>',
-'</table></td></tr><tr></tr></table></div>'
-      ],
-      "attributes" : {"image_link":"image_link","product_link":"link","name":"name","regular_price":"regular_price","sale_price":"sale_price"},
-      "footer" : '</td></tr></table><!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></div></div>',
-      "salePricingStyle" : "text-decoration:line-through;"
-    };
-    var defaultProductMarkup = markupFragments["product"].join("");
+Those two settings can also be configured within the Behavioral Trigger Content Block UI, by - respectivtely - checking the "If the subscriber's abandoned items have changed since the triggering event, include the updated items" and "Only show sale price if sale price is > 0" checkboxes in the Product Fields section (the second one is visible only if you add `sale_price` field).
 
-    // Read data from MC
-    var data = Platform.Variable.GetValue("@data");
-    var mid = Platform.Variable.GetValue("@mid");
-    var event_locale = Platform.Variable.GetValue("@event_locale");
+#### 4. Pulling data
 
-    // Build the url
-    var protocol = "https";
-    var hostname = mid + ".recs.igodigital.com";
-    var qs = "?item_count=" + settings["maxItems"] + "&sort_by=" + settings["sortBy"] + "&sort_direction=" + settings["sortDirection"];
-    var includes = [];
-    for (var key in settings["fields"]) {
-      if(defaults[key] == null) {
-        includes = includes.concat(settings["fields"][key]);
-      }
+```js
+var data = Platform.Variable.GetValue("@data");
+var mid = Platform.Variable.GetValue("@mid");
+var event_locale = Platform.Variable.GetValue("@event_locale");
+```
+
+Two first lines here are pulling data from the AMPScript described in first highlight. As mentioned, it can be optimized by making the personalisation here and removing AMPScript alltogether.
+
+More interesting, however, is the third line. You can configure localization for your products in [Email Recommendations Configuration](#user-and-profile-attributes), but it is not used by the Behavioral Triggers - officially. Thanks to this little line you can - even with the built-in standard Content Block - decalre the locale source for the Subscriber and set it to `@event_locale` AMPScript variable. Bam, your Behavioral Triggers are now localized.
+
+#### 5. Building the API query
+
+```js {16}
+var protocol = "https";
+var hostname = mid + ".recs.igodigital.com";
+var qs = "?item_count=" + settings["maxItems"] + "&sort_by=" + settings["sortBy"] + "&sort_direction=" + settings["sortDirection"];
+var includes = [];
+for (var key in settings["fields"]) {
+    if(defaults[key] == null) {
+    includes = includes.concat(settings["fields"][key]);
     }
-    if(includes.length > 0) {
-      qs += "&include=" + includes.join("|")
-    }
-    if(event_locale){
-      qs += "&locale=" + event_locale
-    }
-    var url = protocol + "://" + hostname + "/" + mid + "/trigger" + qs;
+}
+if(includes.length > 0) {
+    qs += "&include=" + includes.join("|")
+}
+if(event_locale){
+    qs += "&locale=" + event_locale
+}
+var url = protocol + "://" + hostname + "/" + mid + "/trigger" + qs;
+```
 
-    var result = HTTP.Post(url, "application/json", data, []);
-    if (result.StatusCode == 200) {
-      var response = Platform.Function.ParseJSON(result.Response[0]);
+The above snippet is responsible for building the url that will be used for an `HTTP.Post` API call to Einstein Backend (IgoDigital). You can make a simple addition that will enable you access to [Einstein Custom Profile Attributes](#user-and-profile-attributes). Must-have, if you want to boost engagement with personalization for new customers.
 
-      // Expose fields in response as Ampscript variables
-      for(var responseField in response) {
-        var value = response[responseField];
+To do so, just before the line highlighted in the snippet above add a new one with:
 
-        if(responseField === "products" || responseField === "current_cart") {
-          var prefix = (responseField === "products") ? "@item_" : "@cart_";
-          for(var i=0; i<value.length; i++) {
-            for(var itemField in value[i]) {
-              var name = prefix + itemField + "_" + (i+1);
-              var val = value[i][itemField];
-              Platform.Variable.SetValue(name, val);
-            }
-          }
-        }
-        else if(responseField === "user") {
-          var prefix = "@user_";
-          for(var userField in value) {
-            var name = prefix + userField;
-            var val = value[userField];
+```js
+qs += "&user_attributes=CustomProfileAttribute1,CustomProfileAttribute2"
+```
+
+Just change the change the values after the equal sign to the exact names of your [Custom Profile Attributes](#user-and-profile-attributes) that you want to have available in your code.
+
+#### 6. Response parsing
+
+```js
+for(var responseField in response) {
+    var value = response[responseField];
+
+    if(responseField === "products" || responseField === "current_cart") {
+        var prefix = (responseField === "products") ? "@item_" : "@cart_";
+        for(var i=0; i<value.length; i++) {
+        for(var itemField in value[i]) {
+            var name = prefix + itemField + "_" + (i+1);
+            var val = value[i][itemField];
             Platform.Variable.SetValue(name, val);
-          }
         }
-        else {
-          Platform.Variable.SetValue("@"+responseField, value);
         }
-      }
-
-      // Use abandoned items or current items?
-      var useRecentItems = false;
-      if (useRecentItems && response["current_cart"] !== undefined) {
-        var products = response["current_cart"];
-        if(products.length === 0) {
-          Write("User has an empty cart so stop send");
-          Platform.Function.RaiseError("Trigger no longer valid - User has an empty cart.", true, "statusCode","3");
+    }
+    else if(responseField === "user") {
+        var prefix = "@user_";
+        for(var userField in value) {
+        var name = prefix + userField;
+        var val = value[userField];
+        Platform.Variable.SetValue(name, val);
         }
-      } else {
-        var products = response["products"];
-      }
-
-      // Exit the send if the user made a purchase since the trigger
-      if (response["purchased"] === true) {
-        Write("User has purchased so stop send");
-        Platform.Function.RaiseError("Trigger no longer valid - User has purchased since trigger.", true, "statusCode","3");
-      };
-
-      // true to use salePricing style, false if not
-      var useSalePricing = true;
-
-      // Write email contents
-      Write(response["tracking_pixel"]);
-      Write(markupFragments["header"].replace('\"', '"'));
-      Write('<!--[if (gte mso 9)|(IE)]>');
-      Write('<table>');
-      Write('<![endif]-->');
-      for (var i=0; i < products.length; i++) {
-        var product = products[i];
-        var productAttributes = markupFragments["attributes"];
-
-        Write('<!--[if (gte mso 9)|(IE)]>');
-        if(i % 4 === 0) {
-          Write('<tr>');
-        }
-        Write('<td width="130px" valign="top">');
-        Write('<![endif]-->');
-
-        var productMarkup = defaultProductMarkup;
-        if(useSalePricing && product["sale_price"] > 0 && product["sale_price"] < product["regular_price"] && productMarkup.indexOf("regular_price") > 0) {
-          var matches = productMarkup.match('(class="mcbt_regular_price" style=")(.*?)"');
-          if(matches != null && matches.length > 0) {
-            productMarkup = productMarkup.replace(matches[0], matches[1] + matches[2] + ' ' + markupFragments["salePricingStyle"] + '"');
-          }
-        }
-
-        for(var markupKey in productAttributes) {
-          var productKey = productAttributes[markupKey];
-          var pattern = "--" + markupKey + "--";
-          var value = product[productKey];
-          if (markupKey === "rating") {
-            value = Math.round((value / 5) * 98);
-          }
-          else if (markupKey === "regular_price" || markupKey === "sale_price") {
-            var parsed = value.toString().split(".");
-            if (parsed.length > 1 && parsed[1].length === 1 && parsed[1] !== "0") {
-              value = value.toString() + "0";
-            }
-          }
-          while(productMarkup.indexOf(pattern) > 0) {
-            productMarkup = productMarkup.replace(pattern, function(){return value});
-          }
-        }
-
-        Write(productMarkup.replace('\"', '"'));
-
-        Write('<!--[if (gte mso 9)|(IE)]>');
-        Write('</td>');
-        if( (i+1) % columnCount === 0 || i === products.length-1) {
-          Write('</tr>');
-        }
-        Write('<![endif]-->');
-      }
-      Write('<!--[if (gte mso 9)|(IE)]>');
-      Write('</table>');
-      Write('<![endif]-->');
-      Write(markupFragments["footer"].replace('\"', '"'));
     }
     else {
-      Write("Unable to retrieve product information: statusCode=" + result.StatusCode);
-      Platform.Function.RaiseError("Quit send.", true, "statusCode","3");
+        Platform.Variable.SetValue("@"+responseField, value);
     }
-  } catch(e) {
-    Write(e);
-    Platform.Function.RaiseError("Quit send.", true, "statusCode","3");
-  }
-</script>
+}
 ```
+
+TODO: Validate whether those AMP variables works and update first highlight based on the answer
 
 </TabItem>
 </Tabs>
