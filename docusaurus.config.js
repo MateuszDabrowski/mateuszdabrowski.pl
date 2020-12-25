@@ -85,6 +85,12 @@ module.exports = {
                     'aria-label': 'LinkedIn Profile',
                 },
                 {
+                    href: 'https://trailblazer.me/id/madabrowski',
+                    position: 'right',
+                    className: 'header-salesforce-link',
+                    'aria-label': 'Trailblazer Profile',
+                },
+                {
                     href: 'https://github.com/MateuszDabrowski',
                     position: 'right',
                     className: 'header-github-link',
