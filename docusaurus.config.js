@@ -101,15 +101,23 @@ module.exports = {
             style: 'dark',
             links: [
                 {
-                    title: 'Read',
+                    title: 'Docs & Snippets',
                     items: [
                         {
-                            label: 'Docs & Snippets',
-                            to: 'docs',
+                            label: 'SSJS',
+                            to: 'docs/ssjs/ssjs-if-and-switch',
                         },
                         {
-                            label: 'Ideas',
-                            to: 'ideas',
+                            label: 'JavaScript',
+                            to: 'docs/js/js-if-and-switch',
+                        },
+                        {
+                            label: 'SFMC SQL',
+                            to: 'docs/sql/sfmc-sql-basics',
+                        },
+                        {
+                            label: 'SFMC Config',
+                            to: 'docs/config/sfmc-config-permissions',
                         },
                     ],
                 },
@@ -119,6 +127,10 @@ module.exports = {
                         {
                             label: 'Toolset',
                             to: 'sites/my-toolset',
+                        },
+                        {
+                            label: 'Ideas',
+                            to: 'ideas',
                         },
                     ],
                 },
@@ -179,7 +191,6 @@ module.exports = {
                 path: 'ideas',
                 routeBasePath: 'ideas',
                 include: ['**/*.md', '**/*.mdx'],
-                sidebarPath: require.resolve('./ideas/ideasSidebar.js'),
                 showLastUpdateAuthor: true,
                 showLastUpdateTime: true,
                 editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',

@@ -7,12 +7,25 @@ module.exports = {
         {
             type: 'category',
             label: 'SSJS',
-            items: ['ssjs/ssjs-if-and-switch', 'ssjs/ssjs-loops', 'ssjs/debugging-ssjs'],
+            items: [
+                'ssjs/ssjs-if-and-switch',
+                'ssjs/ssjs-loops',
+                'ssjs/debugging-ssjs',
+                {
+                    'SSJS Use Cases': ['usecase/engage-with-countdown', 'usecase/tailor-with-data'],
+                },
+            ],
         },
         {
             type: 'category',
             label: 'JavaScript',
-            items: ['js/js-if-and-switch', 'js/js-loops'],
+            items: [
+                'js/js-if-and-switch',
+                'js/js-loops',
+                {
+                    'JS Use Cases': ['usecase/engage-with-countdown', 'usecase/tailor-with-data'],
+                },
+            ],
         },
         {
             type: 'category',
