@@ -2,12 +2,95 @@
 id: ideas
 title: Ideas
 slug: /
-description: Step-by-step implementation guides on various Marketing Automation ideas
+description: Here you can find all my Salesforce IdeaExchange contributions. Let's make the change!
 ---
 
 import { LeadText } from '../src/components/LeadText.js';
 
-<LeadText content="Step-by-step implementation guides on various Marketing Automation ideas." />
+<LeadText content="Here you can find all my Salesforce IdeaExchange contributions. Let's make the change!" />
 
-In this part of my website, I focus on marketing automation solutions and best practices. Expect longer articles on specific topics that showcase implementation from A to Z along with necessary code and settings.
+## Journey Builder
+
+### `DeliveryTime` for Journey Builder emails
+
+`DeliveryTime` is [`_Job` Data View](../docs/config/sfmc-config-system-data-views#_job) field that stores timestamp for the delivery of the email (the moment when it successfully reached the target Email Service Provider). Currently it is not possible to get delivery time for emails sent via Journey Builder.
+
+All other engagement datapoints are available (`EventDate` field for [_Sent](../docs/config/sfmc-config-system-data-views#_sent), [_Open](../docs/config/sfmc-config-system-data-views#_Open), [_Click](../docs/config/sfmc-config-system-data-views#_click), [_Bounce](../docs/config/sfmc-config-system-data-views#_Bounce)) but `DeliveryTime` from [`_Job` Data View](../docs/config/sfmc-config-system-data-views#_job) returns `NULL` for Journey Builder emails.
+
+This is happening, however, only for Journey Builder emails, as for sends via any other methods (for example Send Flow) are correctly displaying delivery time.
+
+This is huge limitation for automations focused on keeping the database clean and debugging sends.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000001HkZgQAK">Vote on IdeaExchange</a>
+
+### `_DataSourceName` for Entry Data Extension in Journey Builder
+
+`_DataSourceName` personalisation string, as per [documentation](https://help.salesforce.com/articleView?id=mc_es_available_personalization_strings.htm&type=5), should show name of the audience the communication is sent to. This covers lists, data extensions, groups, and filters.
+
+It works when the Email is send via Email Studio -> Email -> Content -> Send flow. However, when Email (or SMS) is being sent from Journey Builder, `_DataSourceName` shows "All Subscribers" instead of the name of the Entry Data Extension. This is true for both Multi-Step Journeys and Single Email Sends.
+
+`_DataSourceName` should show Entry Data Extension Name for Emails in Journey Builder, as it is very useful for debugging from Send Log and creating dynamic logic in emails based on Data Extension naming convention.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000001HkZRQA0">Vote on IdeaExchange</a>
+
+
+## Behavioral Triggers
+
+### Einstein User Attributes in Behavioral Trigger Content Block
+
+The [Behavioral Triggers Content Block](../docs/config/sfmc-config-behavioral-triggers#behavioral-trigger-content-block) for Emails is a great tool for easy drag-and-drop creation of Abandoned Engagement communication. But it is missing one powerful feature. Ability to personalize the email with customer data.
+
+It is already available:
+
+- In form of Einstein User Attributes that can be passed through `setUserInfo` data layer.
+- In the request that is used in the backend of the current Behavioral Triggers Content Block, by just adding "&user_attributes=attributeName" to the end of the trigger request.
+- In the [code](../docs/config/sfmc-config-behavioral-triggers#6-response-parsing) of the current Behavioral Triggers Content Block that is responsible for creating AMPScript variables based on the Einstein User Attributes data.
+
+However, as the Einstein User Attributes are neither added to the request by default nor can be configured in the User Integrace of the Content Block, to get this data in the email, one must create yet another, same call with the above query parameter added. Neither user friendly nor optimal due to expensive `HTTP.Get` function running twice in such scenario.
+
+It can easily be fixed. Below are my two possible solutions:
+
+1. __Minimum Valuable Solution__ is just adding the required query string ("&user_attributes=X,Y") with all possible Custom Einsteins User Attributes to the request URL that is built within the Content Block code.
+2. __Solution Deluxe__ would improve on the above with the UI-enabled selection of needed Profile Attributes, just as it is already done for Product Attributes.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000003lB7QAI">Vote on IdeaExchange</a>
+
+### Behavioral Trigger Abandoned Cart Custom Attributes
+
+The [Behavioral Triggers](../docs/config/sfmc-config-behavioral-triggers) are awesome solution for Abandoned Engagement. The [Abandoned Cart](../docs/config/sfmc-config-behavioral-triggers#track-cart) scenario already has multiple great features that make it easy to implement.
+
+There is, however, area for an easy improvement on that idea to make it much more flexible and ready for real-world scenarios. This can be done with two solutions:
+
+#### Custom Cart Attributes
+
+Just as there are Custom Attributes for the Product Catalog, it would be great to have a similar option on the Cart itself. Product Catalog ones are global - shared for all Customers interested in selected product. There is a need for something more unique and customer-specific.
+
+Just as it is already delivered with the optional `price` attribute of [`trackCart` Collect.js Data Layer](../docs/config/sfmc-config-behavioral-triggers#track-cart) (that contains individual price that does not impact the Product Catalog), it would be great to add the possibility to add few more, that would be available in [`trackCart` Collect.js](../docs/config/sfmc-config-behavioral-triggers#track-cart) and the [response](../docs/config/sfmc-config-behavioral-triggers#api-responses) from Einstein Backend (IgoDigital).
+
+Use case? Sure. Coupon Code Name, Coupon Code Discount (either integer or float for per cent value), added Personalisation, Voucher ID. All those tools are frequently used in e-commerce and would be perfect to have in a `trackCart` layer. Good for personalisation, perfect for passing data needed for rebuilding the cart.
+
+#### Cart Attributes Visibility in the Content Block
+
+This is actually just an extension of the above idea. We already have a nice way to decide on what Product Catalog Attributes are displayed in Behavioral Trigger Content Block. But in many cases, when Abandoned Cart is being used, I would rather display `trackCart` individual price (including applied coupons) instead of the global Catalog one. It could be also useful for some Custom Cart Attributes from the previous solution.
+
+Below are my three possible solution tiers:
+
+1. __Minimum Viable Solution__: Add `price` `trackCart` attribute (`amount` in the [response](../docs/config/sfmc-config-behavioral-triggers#api-responses) from the IgoDigital) available for selection when defining fields shown for products in [Behavioral Trigger Content Block](../docs/config/sfmc-config-behavioral-triggers#behavioral-trigger-content-block).
+2. __Nice Solution__: On top of the first point, add two additional (optional) attributes to `trackCart` Collect.js and IgoDigital [response](../docs/config/sfmc-config-behavioral-triggers#api-responses): `couponCodeName`, `couponCodeDiscount `- and make them also available for selection in [Behavioral Trigger Content Block](../docs/config/sfmc-config-behavioral-triggers#behavioral-trigger-content-block).
+3. __Solution Deluxe__: On top of the first point add the possibility to define Custom Cart Attributes in the UI and leverage them in `trackCart` Collect.js and IgoDigital [response](../docs/config/sfmc-config-behavioral-triggers#api-responses) (just as with Custom Profile Attributes / Custom Product Attributes) - and make them also available for selection in [Behavioral Trigger Content Block](../docs/config/sfmc-config-behavioral-triggers#behavioral-trigger-content-block).
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000003lCKQAY">Vote on IdeaExchange</a>
+
+## Mobile Studio
+
+### SMS Blackout to be based on Mobile Phone locale
+
+SMS Blackout allows blocking SMS sends in chosen timegrame. Currently SMS Blackout can be configured based on Account Timezone.
+
+For multi-country clients, however, it would be much better if they could configure the Blackout period based on the local timezone of the Contact by utilizing the MobilePhone locale.
+
+This way, it would be possible to create for example single SMS Blackout for night time and apply it for each contact regardless of where the contact live. Locale is already there for MobileConnect and can be easily used for determining timezone offset.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000sjSYQAY">Vote on IdeaExchange</a>
+
 
