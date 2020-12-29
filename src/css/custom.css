@@ -23,7 +23,8 @@ html[data-theme='dark'] {
 }
 
 .header-linkedin-link:hover ,
-.header-github-link:hover {
+.header-github-link:hover,
+.header-salesforce-link:hover {
   opacity: 0.6;
 }
 

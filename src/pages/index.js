@@ -11,7 +11,7 @@ import styles from './styles.module.css';
 
 const features = [
     {
-        title: <>Check the code</>,
+        title: <>Pick my brain</>,
         imageUrl: 'img/undraw_snippets_md.svg',
         description: (
             <>
@@ -23,12 +23,12 @@ const features = [
         cta: <>Docs & Snippets</>,
     },
     {
-        title: <>Pick my brain</>,
+        title: <>Change the Cloud</>,
         imageUrl: 'img/undraw_ideas_md.svg',
         description: (
             <>
-                Snippets and documentation are not enough. Here I'm sharing some ideas on how to leverage them to build
-                business-driven engaging experiences for the customers.
+                Salesforce Marketing Cloud is powerful. But it can always be more useful. Here you can find all my
+                Salesforce IdeaExchange contributions. Vote to make Marketing Cloud a better tool.
             </>
         ),
         url: '/ideas',

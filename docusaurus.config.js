@@ -219,16 +219,12 @@ module.exports = {
             {
                 redirects: [
                     {
-                        from: ['/docs/ideas'],
-                        to: '/ideas/',
+                        from: ['/docs/ideas/engage-with-countdown', '/ideas/engage-with-countdown'],
+                        to: '/docs/usecase/engage-with-countdown',
                     },
                     {
-                        from: ['/docs/ideas/engage-with-countdown'],
-                        to: '/ideas/engage-with-countdown',
-                    },
-                    {
-                        from: ['/docs/ideas/tailor-with-data'],
-                        to: '/ideas/tailor-with-data',
+                        from: ['/docs/ideas/tailor-with-data', '/ideas/tailor-with-data'],
+                        to: '/docs/usecase/tailor-with-data',
                     },
                 ],
             },
