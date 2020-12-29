@@ -26,6 +26,12 @@ SELECT
 
 `GETDATE()` gets server time. For Salesforce Marketing Cloud it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. It cannot be changed, even with timezone and culture settings in Setup.
 
+You can get the datetime with apprioriate offset information by using `SYSDATETIMEOFFSET()` function. It will return the same datetime as `GETDATE()` but in a format showcasing the timezone offset: `2020-12-28 15:08:01.7239173 -06:00`.
+
+Not only you can see the 24-hour clock format, but also miliseconds and UTC-6 offset at the end. This last information will be useful for timezone conversions with [`AT TIME ZONE`](#at-time-zone) function.
+
+You can also leverage [`TODATETIMEOFFSET'](#at-time-zone-vs-todatetimeoffset) to work with standard `GETDATE`.
+
 :::
 
 The `GETUTCDATE` function works the same as `GETDATE` but returns datetime in UTC timezone.
@@ -102,6 +108,60 @@ For 99% of SFMC needs, you will be just fine with `YEAR`, `MONTH`, `DAY`, `HOUR`
 Very similar date calculation is also available with `DATEADD()` AMPScript function. Depending on the use case, consider whether you want to manipulate the date in the Data Extension or only in the communication.
 
 :::
+
+## AT TIME ZONE
+
+The `AT TIME ZONE` function provides two awesome features:
+
+1. It can provide timezone offset information for any datetime missing this data
+2. It can convert datetime with offset across timezones
+
+It's must have for multi-country senders, but also beneficial for others that are planning to personalize or calculate using date data.
+
+### Adding offset with AT TIME ZONE
+
+When you work with timezones, you want to have offset for the datetime fields you are using. Unfortunately, in most cases, you will not have it. Neither Salesforce Marketing Cloud system timestamps, nor the most popular [`GETDATE`](#getdate--getutcdate) function does not provide offset information.
+
+This can be easily fixed with `AT TIME ZONE`. When you apply this function to a timezone-less datetime data, it will assume that you are defining it and return datetime with appropriate offset.
+
+```sql {2-5} title="Daylight Saving Time magic"
+SELECT
+    CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST,
+    -- Output: 2020-01-01 18:00:00 -06:00
+    CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT
+    -- Output: 2020-07-01 18:00:00 -05:00
+```
+
+In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function not only adds the offset - it also calculates the Daylight Saving Time offset change for you.
+
+### AT TIME ZONE vs TODATETIMEOFFSET
+
+As awesome as it might seem, taking Daylight Saving Time into consideration is actually a problem when working with Salesforce Marketing Cloud system dates (including the [`GETDATE`](#getdate--getutcdate)).
+
+I say this because Salesforce Marketing Cloud uses Central Standard Time (UTC-6) __without__ changes between standard and daylight savings time. This means that the excellent feature of `AT TIME ZONE` is actually working against us.
+
+There is however another function that might solve this issue - `TODATETIMEOFFSET`. It is simplified version of the `AT TIME ZONE` that adds arbitrary offset without doing any logic on Daylight Saving Time. Just as we would like for SFMC system dates.
+
+To use it, just provide a datetime and an offset (for example `'-06:00'` or `'+00:00'`):
+
+```sql {2-5} title="No Daylight Saving Time magic"
+    TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST,
+    -- Output: 2020-01-01 18:00:00 -06:00
+    TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST,
+    -- Output: 2020-07-01 18:00:00 -06:00
+```
+
+Of course, for any datetime values that include the Daylight Saving Time pushed from website or your data warehouse, [`AT TIME ZONE`](#adding-offset-with-at-time-zone) will be better solution.
+
+### Changing timezone with AT TIME ZONE
+
+`AT TIME ZONE` is useful also for changing the timezone of a datetime with offset.
+
+```sql {2-3} title="Change CST datetime with offset to CET"
+SELECT
+    CONVERT(DATETIMEOFFSET(0), '2018-01-01 18:00:00 -06:00') AT TIME ZONE 'Central European Standard Time' AS CSTtoCET
+    -- Output: 2020-01-01 01:00:00 +01:00
+```
 
 ## FORMAT with Dates
 
