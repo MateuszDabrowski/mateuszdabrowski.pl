@@ -54,7 +54,7 @@ Up to this point, `CAST` and `CONVERT` seem similar in the features.
 
 However, only `CONVERT` have an additional third optional argument - style. Thanks to it, you can convert even from non-standard (for the server) formats that would result in an error:
 
-```sql {4} title="Converting dd/MM/yyyy format throws 'Could not convert date and/or time from string data type '"
+```sql {4} title="Converting dd/MM/yyyy format throws 'Could not convert date and/or time from string data type'"
 SELECT
     SubscriberKey
 FROM _Subscribers
@@ -97,15 +97,16 @@ There are over 30 data types available for conversion, but there are only a few 
 | NVARCHAR | Variable-length string with Unicode support | Best option for most SFMC string use cases |
 | DECIMAL/NUMERIC | Decimal number with big precision | Best option if you need a decimal number |
 | INT | Integer number | Best option if your number is not decimal |
-| BIGINT | Big integer number | When your numer is bigger than 2,147,483,647, you need BIGINT |
+| BIGINT | Big integer number | When your number is bigger than 2,147,483,647, you need BIGINT |
 | DATETIME | Legacy date and time | More friendly default formatting |
 | DATETIME2 | Modern date and time | Best when you need both date and time |
+| DATETIMEOFFSET | Date with offset | When you need timezone offset |
 | DATE | Only date | Best when you need date only |
 | TIME | Only time | Best when you need time only |
 
 When converting values to the selected data type, you can have even more control by passing optional argument right after type to declare the length of the output.
 
-It is especially useful with `DECIMAL` as it allows you to provide expected precision (number of digits in a number) and scale (number of digits to the right of the decimal point in a number).
+It is instrumental with `DECIMAL` as it allows you to provide expected precision (number of digits in a number) and scale (number of digits to the right of the decimal point in a number).
 
 For example, you may have a string field containing a product price - `'123.99'`. If you convert it to `DECIMAL` without any arguments, it will round to `124`. However, you can provide precision and scale to keep the current format:
 
@@ -119,9 +120,9 @@ Be sure to add correct precision. If it is smaller then the values in your sourc
 
 As for scale - if your scale is smaller than in your source, the value is rounded.
 
-You can also use a single argument with string data types. In this case, it won't directly limit the number of characters, but rather the number of bytes (which might be equal or not to the number of characters depending on what characters you are using).
+You can also use the single argument with `DATETIME`, `DATETIME2`, `DATETIMEOFFSET` (to control precision of the output) and string data types. The latter won't directly limit the number of characters, but rather the number of bytes (which might be equal or not to the number of characters depending on what characters you are using).
 
-`CHAR` allows for 1-8000 bytes range, whereas `NCHAR` due to Unicode support allows for only 1-4000. `VARCHAR` and `NVARCHAR` support the same ranges respectively but also have an additional possible option - `max` that you can use if some values might exceed the range.
+`CHAR` allows for 1-8000 bytes range, whereas `NCHAR` due to Unicode support allows for only 1-4000. `VARCHAR` and `NVARCHAR` support the same ranges respectively and have an additional possible option - `max` that you can use if some values might exceed the range.
 
 :::note You Should Know
 
