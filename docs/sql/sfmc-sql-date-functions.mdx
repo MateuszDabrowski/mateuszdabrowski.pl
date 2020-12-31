@@ -26,9 +26,9 @@ SELECT
 
 `GETDATE()` gets server time. For Salesforce Marketing Cloud it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. It cannot be changed, even with timezone and culture settings in Setup.
 
-You can get the datetime with apprioriate offset information by using `SYSDATETIMEOFFSET()` function. It will return the same datetime as `GETDATE()` but in a format showcasing the timezone offset: `2020-12-28 15:08:01.7239173 -06:00`.
+You can get the datetime with appropriate offset information by using `SYSDATETIMEOFFSET()` function. It will return the same datetime as `GETDATE()` but in a format showcasing the timezone offset: `2020-12-28 15:08:01.7239173 -06:00`.
 
-Not only you can see the 24-hour clock format, but also miliseconds and UTC-6 offset at the end. This last information will be useful for timezone conversions with [`AT TIME ZONE`](#at-time-zone) function.
+You can see the 24-hour clock format and milliseconds and UTC-6 offset at the end. This last information will be useful for timezone conversions with [`AT TIME ZONE`](#at-time-zone) function.
 
 You can also leverage [`TODATETIMEOFFSET'](#at-time-zone-vs-todatetimeoffset) to work with standard `GETDATE`.
 
@@ -43,7 +43,7 @@ SELECT
 
 Both return a datetime object (for example `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
 
-You can, however, limit its output to either only date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) or [`FORMAT`](#format-with-dates) Functions.
+However, you can limit its output to either date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) or [`FORMAT`](#format-with-dates) Functions.
 
 ## DATEADD
 
@@ -109,20 +109,58 @@ Very similar date calculation is also available with `DATEADD()` AMPScript funct
 
 :::
 
+## DATEDIFF
+
+The `DATEDIFF` function calculates the difference between two dates.
+
+You need to provide the [date part](#date-parts) used for the calculation and two dates (start and end order).
+
+You may use it in the [`SELECT`](./sfmc-sql-select.mdx) statement:
+
+```sql {3} title="Check how long someone was a subscriber"
+SELECT
+    SubscriberKey,
+    DATEDIFF(DAY, DateJoined, GETDATE()) AS SubscriptionTime
+FROM ENT._Subscribers
+```
+
+You may use it in the [`WHERE`](./sfmc-sql-where.mdx) statement:
+
+```sql {4} title="Get everyone that hit one year on the subscription list"
+SELECT
+    SubscriberKey
+FROM ENT._Subscribers
+    WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
+```
+
+It takes into consideration the leap years. If you provide dates with [offset](#at-time-zone), it will even include the timezone differences and Daylight Saving Time.
+
+:::note You Should Know
+
+There is a limit of how big the difference can be. If you go down to `SECOND` [date part](#date-parts) the maximum time difference for the query is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. For most use cases, this shouldn't be an issue in Marketing Cloud use cases.
+
+:::
+
 ## AT TIME ZONE
 
-The `AT TIME ZONE` function provides two awesome features:
+The `AT TIME ZONE` function provides two incredible features:
 
-1. It can provide timezone offset information for any datetime missing this data
-2. It can convert datetime with offset across timezones
+1. It can give timezone offset information for any datetime missing this data
+2. It can convert datetime with offset to a different timezone
 
-It's must have for multi-country senders, but also beneficial for others that are planning to personalize or calculate using date data.
+It's must-have for multi-country senders and beneficial for others planning to personalize or calculate using date data.
 
-### Adding offset with AT TIME ZONE
+:::note You Should Know
 
-When you work with timezones, you want to have offset for the datetime fields you are using. Unfortunately, in most cases, you will not have it. Neither Salesforce Marketing Cloud system timestamps, nor the most popular [`GETDATE`](#getdate--getutcdate) function does not provide offset information.
+`AT TIME ZONE` always outputs `DATETIMEOFFSET` data type. If you need it in another type/format, use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) or [`FORMAT`](#format-with-dates).
 
-This can be easily fixed with `AT TIME ZONE`. When you apply this function to a timezone-less datetime data, it will assume that you are defining it and return datetime with appropriate offset.
+:::
+
+### Add offset with AT TIME ZONE
+
+When you work with timezones, you want to have offset for the datetime fields you are using. Unfortunately, in most cases, it is missing. Neither Salesforce Marketing Cloud system timestamps nor the popular [`GETDATE`](#getdate--getutcdate) function provides offset information.
+
+You can quickly fix it with `AT TIME ZONE`. When you apply this function to a timezone-less datetime, it will assume that you are defining it and return value with an appropriate offset.
 
 ```sql {2-5} title="Daylight Saving Time magic"
 SELECT
@@ -132,36 +170,69 @@ SELECT
     -- Output: 2020-07-01 18:00:00 -05:00
 ```
 
-In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function not only adds the offset - it also calculates the Daylight Saving Time offset change for you.
+In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function not only adds the offset - but it also calculates the Daylight Saving Time offset change for you.
 
 ### AT TIME ZONE vs TODATETIMEOFFSET
 
-As awesome as it might seem, taking Daylight Saving Time into consideration is actually a problem when working with Salesforce Marketing Cloud system dates (including the [`GETDATE`](#getdate--getutcdate)).
+As astonishing as it might seem, taking Daylight Saving Time into consideration is a problem when working with Salesforce Marketing Cloud system dates (including the [`GETDATE`](#getdate--getutcdate)).
 
-I say this because Salesforce Marketing Cloud uses Central Standard Time (UTC-6) __without__ changes between standard and daylight savings time. This means that the excellent feature of `AT TIME ZONE` is actually working against us.
+Salesforce Marketing Cloud uses Central Standard Time (UTC-6) __without__ changes between standard and daylight savings time. It means that the excellent feature of `AT TIME ZONE` is working against us.
 
-There is however another function that might solve this issue - `TODATETIMEOFFSET`. It is simplified version of the `AT TIME ZONE` that adds arbitrary offset without doing any logic on Daylight Saving Time. Just as we would like for SFMC system dates.
+There is, however, another function that might solve this issue - `TODATETIMEOFFSET`. It is a simplified version of the `AT TIME ZONE` that adds arbitrary offset without any logic on Daylight Saving Time. Just as we would like for the SFMC system dates.
 
-To use it, just provide a datetime and an offset (for example `'-06:00'` or `'+00:00'`):
+To use it, just provide a datetime and an offset (for example `'-06:00'` or `'+01:00'`):
 
-```sql {2-5} title="No Daylight Saving Time magic"
+```sql {2,4} title="No Daylight Saving Time magic"
+SELECT
     TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST,
     -- Output: 2020-01-01 18:00:00 -06:00
     TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST,
     -- Output: 2020-07-01 18:00:00 -06:00
 ```
 
-Of course, for any datetime values that include the Daylight Saving Time pushed from website or your data warehouse, [`AT TIME ZONE`](#adding-offset-with-at-time-zone) will be better solution.
+Of course, for any datetime values that include the Daylight Saving Time - pushed from website or your data warehouse - [`AT TIME ZONE`](#add-offset-with-at-time-zone) will be better solution.
 
-### Changing timezone with AT TIME ZONE
+### Change timezone with AT TIME ZONE
 
 `AT TIME ZONE` is useful also for changing the timezone of a datetime with offset.
 
-```sql {2-3} title="Change CST datetime with offset to CET"
+You use it as previously - by providing the original datetime and the target timezone. But because the first argument already contains the offset, the function will convert the time to a new timezone in this scenario.
+
+```sql {2} title="Change CST datetime with offset to CET"
 SELECT
     CONVERT(DATETIMEOFFSET(0), '2018-01-01 18:00:00 -06:00') AT TIME ZONE 'Central European Standard Time' AS CSTtoCET
     -- Output: 2020-01-01 01:00:00 +01:00
 ```
+
+It will also automatically consider any differences between Daylight Saving Time start and end times for each timezone.
+
+:::note You Should Know
+
+You can leverage both features of the `AT THE TIMEZONE` in one line to apply the timezone to offset-less datetime and convert it to another timezone by using the function twice:
+
+```sql {2} title="First, apply timezone. Then change the timezone"
+SELECT
+    CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET,
+    -- Output: 2020-01-01 01:00:00 +01:00
+```
+
+It works because the first execution of the function [adds the offset with `AT TIME ZONE`](#add-offset-with-at-time-zone). Second uses the output with an offset applied and [change the timezone](#change-timezone-with-at-time-zone).
+
+Of course, for Salesforce Marketing Cloud system dates, we still need the [workaround](#at-time-zone-vs-todatetimeoffset):
+
+```sql {2} title="No Daylight Saving Time magic but still changing the timezone"
+SELECT
+    TODATETIMEOFFSET(GETDATE(), '-06:00') AT TIME ZONE 'Central European Standard Time' AS SystemDateToCSTtoCET,
+```
+
+:::
+
+### Available timezones
+
+You can choose from 140 available timezones:
+`Dateline Standard Time`, `UTC-11`, `Aleutian Standard Time`, `Hawaiian Standard Time`, `Marquesas Standard Time`, `Alaskan Standard Time`, `UTC-09`, `Pacific Standard Time (Mexico)`, `UTC-08`, `Pacific Standard Time`, `US Mountain Standard Time`, `Mountain Standard Time (Mexico)`, `Mountain Standard Time`, `Central America Standard Time`, `Central Standard Time`, `Easter Island Standard Time`, `Central Standard Time (Mexico)`, `Canada Central Standard Time`, `SA Pacific Standard Time`, `Eastern Standard Time (Mexico)`, `Eastern Standard Time`, `Haiti Standard Time`, `Cuba Standard Time`, `US Eastern Standard Time`, `Paraguay Standard Time`, `Atlantic Standard Time`, `Venezuela Standard Time`, `Central Brazilian Standard Time`, `SA Western Standard Time`, `Pacific SA Standard Time`, `Turks And Caicos Standard Time`, `Newfoundland Standard Time`, `Tocantins Standard Time`, `E. South America Standard Time`, `SA Eastern Standard Time`, `Argentina Standard Time`, `Greenland Standard Time`, `Montevideo Standard Time`, `Magallanes Standard Time`, `Saint Pierre Standard Time`, `Bahia Standard Time`, `UTC-02`, `Mid-Atlantic Standard Time`, `Azores Standard Time`, `Cape Verde Standard Time`, `UTC`, `Morocco Standard Time`, `GMT Standard Time`, `Greenwich Standard Time`, `W. Europe Standard Time`, `Central Europe Standard Time`, `Romance Standard Time`, `Central European Standard Time`, `W. Central Africa Standard Time`, `Namibia Standard Time`, `Jordan Standard Time`, `GTB Standard Time`, `Middle East Standard Time`, `Egypt Standard Time`, `E. Europe Standard Time`, `Syria Standard Time`, `West Bank Standard Time`, `South Africa Standard Time`, `FLE Standard Time`, `Israel Standard Time`, `Kaliningrad Standard Time`, `Libya Standard Time`, `Arabic Standard Time`, `Turkey Standard Time`, `Arab Standard Time`, `Belarus Standard Time`, `Russian Standard Time`, `E. Africa Standard Time`, `Iran Standard Time`, `Arabian Standard Time`, `Astrakhan Standard Time`, `Azerbaijan Standard Time`, `Russia Time Zone 3`, `Mauritius Standard Time`, `Saratov Standard Time`, `Georgian Standard Time`, `Caucasus Standard Time`, `Afghanistan Standard Time`, `West Asia Standard Time`, `Ekaterinburg Standard Time`, `Pakistan Standard Time`, `India Standard Time`, `Sri Lanka Standard Time`, `Nepal Standard Time`, `Central Asia Standard Time`, `Bangladesh Standard Time`, `Omsk Standard Time`, `Myanmar Standard Time`, `SE Asia Standard Time`, `Altai Standard Time`, `W. Mongolia Standard Time`, `North Asia Standard Time`, `N. Central Asia Standard Time`, `Tomsk Standard Time`, `China Standard Time`, `North Asia East Standard Time`, `Singapore Standard Time`, `W. Australia Standard Time`, `Taipei Standard Time`, `Ulaanbaatar Standard Time`, `North Korea Standard Time`, `Aus Central W. Standard Time`, `Transbaikal Standard Time`, `Tokyo Standard Time`, `Korea Standard Time`, `Yakutsk Standard Time`, `Cen. Australia Standard Time`, `AUS Central Standard Time`, `E. Australia Standard Time`, `AUS Eastern Standard Time`, `West Pacific Standard Time`, `Tasmania Standard Time`, `Vladivostok Standard Time`, `Lord Howe Standard Time`, `Bougainville Standard Time`, `Russia Time Zone 10`, `Magadan Standard Time`, `Norfolk Standard Time`, `Sakhalin Standard Time`, `Central Pacific Standard Time`, `Russia Time Zone 11`, `New Zealand Standard Time`, `UTC+12`, `Fiji Standard Time`, `Kamchatka Standard Time`, `Chatham Islands Standard Time`, `UTC+13`, `Tonga Standard Time`, `Samoa Standard Time`, `Line Islands Standard Time`.
+
+Don't worry about Daylight Saving Time names - `AT TIME ZONE` use the Standard ones and will take care of DST.
 
 ## FORMAT with Dates
 
