@@ -1,0 +1,182 @@
+---
+id: sfmc-sql-snippet-debugging-value-length
+title: SFMC SQL Debugging Value Length
+sidebar_label: Debugging Value Length
+description: Work in progres.
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Work in progres.' />
+
+## Problem
+
+
+
+## Short Term Solution
+
+You can check it manually with a simple SQL query. Open your [Query Studio](./sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
+
+```sql
+SELECT
+    MAX(LEN(ap.Id)) AS [Application Id],
+    MAX(LEN(ap.hed__Applicant__c)) AS [Subscriber Key],
+    MAX(LEN(ap.hed__Applying_To__c)) AS [Course Id],
+    MAX(LEN(ac_program.Name)) AS [Course Name],
+    MAX(LEN(ac_program.ACC_CourseCode__c)) AS [Course Code],
+    MAX(LEN(ac_program.ACC_UCASCourseCode__c)) AS [UCAS Course Code],
+    MAX(LEN(ac_department.Name)) AS [Division Name],
+    MAX(LEN(ac_department.ACC_DepartmentCode__c)) AS [Division Code],
+    MAX(LEN(ac_institution.Name)) AS [School Name],
+    MAX(LEN(ac_institution.hed__School_Code__c)) AS [School Code],
+    MAX(LEN(ap.hed__Application_Date__c)) AS [Application Date],
+    MAX(LEN(ap.hed__Application_Status__c)) AS [Application Status],
+    MAX(LEN(ap.hed__Application_Type__c)) AS [Application Type],
+    MAX(LEN(ap.APP_ApplicationSource__c)) AS [Application Source],
+    MAX(LEN(ap.APP_DeferredApplication__c)) AS [Deferred Application],
+    MAX(LEN(ap.APP_ApplicationAgentCode__c)) AS [Application Agent],
+    MAX(LEN(ap.APP_ApplicationAgencyName__c)) AS [Application Agency Name],
+    MAX(LEN(pe.hed__Class_Standing__c)) AS [Class Standing],
+    MAX(LEN(pe.hed__Start_Date__c)) AS [Program Start Date],
+    MAX(LEN(pe.hed__End_Date__c)) AS [Program End Date],
+    MAX(LEN(ap.APP_ModeOfStudy__c)) AS [Mode of Study],
+    MAX(LEN(RIGHT(ap.APP_AcademicPeriod__c, 5))) AS [Academic Period],
+    MAX(LEN(pe.hed__Enrollment_Status__c)) AS [Enrollment Status],
+    MAX(LEN(SUBSTRING(ap.APP_DepositStatus__c, 9, 15))) AS [Deposit Status],
+    MAX(LEN(t.Name)) AS [Term],
+    MAX(LEN(ap.APP_PreviousInstituteName__c)) AS [Previous Institute Name],
+    MAX(LEN(ap.APP_GroupInstituteName__c)) AS [LSBU Group Institute Name],
+    MAX(LEN(ap.APP_VisaStatus__c)) AS [Visa Status],
+    MAX(LEN(ap.APP_VisaType__c)) AS [Visa Type],
+    MAX(LEN(ap.APP_CriminalConvictionSurvey__c)) AS [Criminal Convition Survey],
+    MAX(LEN(ap.APP_QualificationCheck__c)) AS [Qualification Check],
+    MAX(LEN(ap.APP_NominatedPerson__c)) AS [Nominated Person],
+    MAX(LEN(ap.APP_NominatedPersonRelati__c)) AS [Relationship with Nominated Person],
+    MAX(LEN(ap.APP_AttendanceType__c)) AS [Attendance Type],
+    MAX(LEN(ap.CreatedDate)) AS [Created Date],
+    MAX(LEN(ap.LastModifiedDate)) AS [Last Modified Date]
+FROM hed__Application__c_Salesforce_2 ap
+LEFT JOIN Contact_Salesforce_2 c ON c.Id = ap.hed__Applicant__c
+LEFT JOIN Account_Salesforce_2 ac_program ON ac_program.Id = ap.hed__Applying_To__c
+LEFT JOIN Account_Salesforce_2 ac_department ON ac_department.Id = ac_program.ParentId
+LEFT JOIN Account_Salesforce_2 ac_institution ON ac_institution.Id = ac_department.ParentId
+LEFT JOIN hed__Program_Enrollment__c_Salesforce_2 pe ON pe.PEN_Application__c = ap.Id
+LEFT JOIN hed__Term__c_Salesforce_2 t ON t.Id = ap.hed__Term__c
+```
+
+This query will show you the maximum length of the values that you have currently in your Synchronized Data Extension and let you compare it against the column lengths you set up in your Data Extension. If you see in Query Studio any value that is longer than the maximum you set up in Data Extension - you found a culprit.
+
+Now you can look in the source data and check whether it is ok. And if yes - update your maximum length in the Data Extension setup.
+
+PS. This approach is also good before creating the DE to assess maximum length, as one can change column length only to bigger ones.
+PS2.
+The limitation is just a limitation for the input of the length field, but you can circumvent this by leaving the length-field empty. If you do so Marketing Cloud uses VARCHAR(MAX) for the field in the database. (EDIT: This solution only works when creating a data extension in Email Studio. Unfortunately Contact Builder doesn't allow this workaround.)
+
+Important: Please note, that this is a workaround and should used with extreme caution and only if really necessary, as there is no way of knowing if this workaround will function in the future. So if possible in, try to use smaller columns. as found by Markus Slabina https://salesforce.stackexchange.com/questions/154402/data-extension-maximum-characters-of-text-field/154403
+
+## Long Term Solution
+
+But for the long term
+
+```sql
+SELECT
+    c.Id AS [Subscriber Key],
+    CASE
+        WHEN 40 - LEN(c.FirstName) < 0
+        THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
+    END AS [First Name],
+    CASE
+        WHEN 80 - LEN(c.LastName) < 0
+        THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
+    END AS [Last Name],
+    CASE
+        WHEN 20 - LEN(c.hed__Gender__c) < 0
+        THEN CONCAT(LEN(c.hed__Gender__c), '(', LEN(c.hed__Gender__c) - 20, ' over limit)')
+    END AS [Gender],
+    CASE
+        WHEN 80 - LEN(c.hed__Citizenship__c) < 0
+        THEN CONCAT(LEN(c.hed__Citizenship__c), '(', LEN(c.hed__Citizenship__c) - 80, ' over limit)')
+    END AS [Nationality],
+    CASE
+        WHEN 80 - LEN(c.hed__Country_of_Origin__c) < 0
+        THEN CONCAT(LEN(c.hed__Country_of_Origin__c), '(', LEN(c.hed__Country_of_Origin__c) - 80, ' over limit)')
+    END AS [Domicile],
+    CASE
+        WHEN 15 - LEN(c.CurrentRole__c) < 0
+        THEN CONCAT(LEN(c.CurrentRole__c), '(', LEN(c.CurrentRole__c) - 15, ' over limit)')
+    END AS [Current Role],
+    CASE
+        WHEN 255 - LEN(c.Disability__c) < 0
+        THEN CONCAT(LEN(c.Disability__c), '(', LEN(c.Disability__c) - 255, ' over limit)')
+    END AS [Disability],
+    CASE
+        WHEN 255 - LEN(c.Disability__c) < 0
+        THEN CONCAT(LEN(c.Disability__c), '(', LEN(c.Disability__c) - 255, ' over limit)')
+    END AS [Disability],
+    CASE
+        WHEN 80 - LEN(c.Email) < 0
+        THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 80, ' over limit)')
+    END AS [Personal Email],
+    CASE
+        WHEN 80 - LEN(c.hed__UniversityEmail__c) < 0
+        THEN CONCAT(LEN(c.hed__UniversityEmail__c), '(', LEN(c.hed__UniversityEmail__c) - 80, ' over limit)')
+    END AS [University Email],
+    CASE
+        WHEN 50 - LEN(c.hed__Preferred_email__c) < 0
+        THEN CONCAT(LEN(c.hed__Preferred_email__c), '(', LEN(c.hed__Preferred_email__c) - 50, ' over limit)')
+    END AS [Preferred Email],
+    CASE
+        WHEN 50 - LEN(c.hed__PreferredPhone__c) < 0
+        THEN CONCAT(LEN(c.hed__PreferredPhone__c), '(', LEN(c.hed__PreferredPhone__c) - 50, ' over limit)')
+    END AS [Preferred Phone],
+    CASE
+        WHEN 128 - LEN(c.Title) < 0
+        THEN CONCAT(LEN(c.Title), '(', LEN(c.Title) - 128, ' over limit)')
+    END AS [Title],
+    CASE
+        WHEN 20 - LEN(c.StudentStatus__c) < 0
+        THEN CONCAT(LEN(c.StudentStatus__c), '(', LEN(c.StudentStatus__c) - 20, ' over limit)')
+    END AS [Student Fee Basis],
+    CASE
+        WHEN 90 - LEN(c.ExternalID__c) < 0
+        THEN CONCAT(LEN(c.ExternalID__c), '(', LEN(c.ExternalID__c) - 90, ' over limit)')
+    END AS [Student Id],
+    CASE
+        WHEN 90 - LEN(c.UCASID__c) < 0
+        THEN CONCAT(LEN(c.UCASID__c), '(', LEN(c.UCASID__c) - 90, ' over limit)')
+    END AS [UCAS Id],
+    CASE
+        WHEN 10 - LEN(c.SyncTo__c) < 0
+        THEN CONCAT(LEN(c.SyncTo__c), '(', LEN(c.SyncTo__c) - 10, ' over limit)')
+    END AS [Sync To]
+FROM Contact_Salesforce c
+WHERE 40 - LEN(c.FirstName) < 0
+    OR 80 - LEN(c.LastName) < 0
+    OR 20 - LEN(c.hed__Gender__c) < 0
+    OR 80 - LEN(c.hed__Citizenship__c) < 0
+    OR 80 - LEN(c.hed__Country_of_Origin__c) < 0
+    OR 15 - LEN(c.CurrentRole__c) < 0
+    OR 255 - LEN(c.Disability__c) < 0
+    OR 255 - LEN(c.Disability__c) < 0
+    OR 80 - LEN(c.Email) < 0
+    OR 80 - LEN(c.hed__UniversityEmail__c) < 0
+    OR 50 - LEN(c.hed__Preferred_email__c) < 0
+    OR 50 - LEN(c.hed__PreferredPhone__c) < 0
+    OR 128 - LEN(c.Title) < 0
+    OR 20 - LEN(c.StudentStatus__c) < 0
+    OR 90 - LEN(c.ExternalID__c) < 0
+    OR 90 - LEN(c.UCASID__c) < 0
+    OR 10 - LEN(c.SyncTo__c) < 0
+```
+
+
+
+:::note You Should Know
+
+If you are running it from child Business Unit, add `ENT.` prefix to Synchronized Data Extension names, as those are stored on the parent level.
+
+:::
+
+## Options
+
+You can even adapt the above query to better suit your needs.
