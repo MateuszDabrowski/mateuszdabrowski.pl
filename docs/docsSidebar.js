@@ -42,7 +42,10 @@ module.exports = {
                 'sql/sfmc-sql-numeric-functions',
                 'sql/sfmc-sql-conversion-functions',
                 {
-                    'SQL Snippets': ['sql/sfmc-sql-snippet-debugging-email-sends'],
+                    'SQL Snippets': [
+                        'sql/sfmc-sql-snippet-debugging-email-sends',
+                        'sql/sfmc-sql-snippet-debugging-value-length',
+                    ],
                 },
             ],
         },

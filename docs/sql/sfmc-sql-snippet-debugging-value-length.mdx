@@ -11,76 +11,150 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## Problem
 
+Working with Marketing Cloud (or any other Marketing Automation Platform) is always the dance between optimisation and flexibility. This is easily visible when working with SFMC Data Extensions.
 
+On the one hand, limiting the maximum field length is a must-have best practice. Salesforce recommends keeping the total sum of maximum length of all fields under 4000 characters. For many use cases it is really small number. But if you want to have lean data sources that can be queries quickly, that is the only way. And in the Marketing Cloud, nearly everything is a query - even if you don't write a line of SQL.
+
+On the other hand, it might be really hard to limit your Data Extension so much with real life needs. Especially when you are bringing data from other systems. Example? Salesforce CRM integration through Marketing Cloud Connect. The evergreen Picklist fields from CRM are brought to Synchronized Data Extensions as 255 character text fields. Even, if the picklist has only one-digit values associated with it. Few such picklists brings you right to the total sum limit recommended by Salesforce.
+
+What to do with that? Limit the maximum length of those picklists in the Marketing Cloud Data Extension. You are sure that your Gender field will always have one character value (`F`/`M`/`O`/`U`)? Let's make maximum length equal to 1. It is great, but sometimes, you might be surprised - especially with less obvious picklists. Simillar issues might also come from standard text fields.
+
+Once you build your Data Extension and maybe also Profile Attributes with the optimisation in mind, you will need to pull the data (from Synchronized Data Extensions or FTP) to them.
+
+All good, until one of the values exceeds the maximum length you set for the field. The automation crashes with cryptic error that tells you nothing and can push you for long crudase to find the culprit.
+
+What can you do to solve this problem?
 
 ## Short Term Solution
 
-You can check it manually with a simple SQL query. Open your [Query Studio](./sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
+You can make quick manual check with a simple SQL query. Open your [Query Studio](./sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
 
-```sql
+```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
 SELECT
-    MAX(LEN(ap.Id)) AS [Application Id],
-    MAX(LEN(ap.hed__Applicant__c)) AS [Subscriber Key],
-    MAX(LEN(ap.hed__Applying_To__c)) AS [Course Id],
-    MAX(LEN(ac_program.Name)) AS [Course Name],
-    MAX(LEN(ac_program.ACC_CourseCode__c)) AS [Course Code],
-    MAX(LEN(ac_program.ACC_UCASCourseCode__c)) AS [UCAS Course Code],
-    MAX(LEN(ac_department.Name)) AS [Division Name],
-    MAX(LEN(ac_department.ACC_DepartmentCode__c)) AS [Division Code],
-    MAX(LEN(ac_institution.Name)) AS [School Name],
-    MAX(LEN(ac_institution.hed__School_Code__c)) AS [School Code],
-    MAX(LEN(ap.hed__Application_Date__c)) AS [Application Date],
-    MAX(LEN(ap.hed__Application_Status__c)) AS [Application Status],
-    MAX(LEN(ap.hed__Application_Type__c)) AS [Application Type],
-    MAX(LEN(ap.APP_ApplicationSource__c)) AS [Application Source],
-    MAX(LEN(ap.APP_DeferredApplication__c)) AS [Deferred Application],
-    MAX(LEN(ap.APP_ApplicationAgentCode__c)) AS [Application Agent],
-    MAX(LEN(ap.APP_ApplicationAgencyName__c)) AS [Application Agency Name],
-    MAX(LEN(pe.hed__Class_Standing__c)) AS [Class Standing],
-    MAX(LEN(pe.hed__Start_Date__c)) AS [Program Start Date],
-    MAX(LEN(pe.hed__End_Date__c)) AS [Program End Date],
-    MAX(LEN(ap.APP_ModeOfStudy__c)) AS [Mode of Study],
-    MAX(LEN(RIGHT(ap.APP_AcademicPeriod__c, 5))) AS [Academic Period],
-    MAX(LEN(pe.hed__Enrollment_Status__c)) AS [Enrollment Status],
-    MAX(LEN(SUBSTRING(ap.APP_DepositStatus__c, 9, 15))) AS [Deposit Status],
-    MAX(LEN(t.Name)) AS [Term],
-    MAX(LEN(ap.APP_PreviousInstituteName__c)) AS [Previous Institute Name],
-    MAX(LEN(ap.APP_GroupInstituteName__c)) AS [LSBU Group Institute Name],
-    MAX(LEN(ap.APP_VisaStatus__c)) AS [Visa Status],
-    MAX(LEN(ap.APP_VisaType__c)) AS [Visa Type],
-    MAX(LEN(ap.APP_CriminalConvictionSurvey__c)) AS [Criminal Convition Survey],
-    MAX(LEN(ap.APP_QualificationCheck__c)) AS [Qualification Check],
-    MAX(LEN(ap.APP_NominatedPerson__c)) AS [Nominated Person],
-    MAX(LEN(ap.APP_NominatedPersonRelati__c)) AS [Relationship with Nominated Person],
-    MAX(LEN(ap.APP_AttendanceType__c)) AS [Attendance Type],
-    MAX(LEN(ap.CreatedDate)) AS [Created Date],
-    MAX(LEN(ap.LastModifiedDate)) AS [Last Modified Date]
-FROM hed__Application__c_Salesforce_2 ap
-LEFT JOIN Contact_Salesforce_2 c ON c.Id = ap.hed__Applicant__c
-LEFT JOIN Account_Salesforce_2 ac_program ON ac_program.Id = ap.hed__Applying_To__c
-LEFT JOIN Account_Salesforce_2 ac_department ON ac_department.Id = ac_program.ParentId
-LEFT JOIN Account_Salesforce_2 ac_institution ON ac_institution.Id = ac_department.ParentId
-LEFT JOIN hed__Program_Enrollment__c_Salesforce_2 pe ON pe.PEN_Application__c = ap.Id
-LEFT JOIN hed__Term__c_Salesforce_2 t ON t.Id = ap.hed__Term__c
+    MAX(LEN(c.Id)) AS [Subscriber Key],
+    MAX(LEN(c.FirstName)) AS [First Name],
+    MAX(LEN(c.LastName)) AS [Last Name],
+    MAX(LEN(c.Email)) AS [Email Address],
+    MAX(LEN(c.JobTitle__c)) AS [Current Role],
+    MAX(LEN(c.Industry__c)) AS [Industry]
+FROM Contact_Salesforce c
 ```
 
-This query will show you the maximum length of the values that you have currently in your Synchronized Data Extension and let you compare it against the column lengths you set up in your Data Extension. If you see in Query Studio any value that is longer than the maximum you set up in Data Extension - you found a culprit.
+:::note You Should Know
 
-Now you can look in the source data and check whether it is ok. And if yes - update your maximum length in the Data Extension setup.
+If you are running those queries from the child Business Unit, add `ENT.` prefix to Synchronized Data Extension names, as those are stored on the parent level.
 
-PS. This approach is also good before creating the DE to assess maximum length, as one can change column length only to bigger ones.
-PS2.
-The limitation is just a limitation for the input of the length field, but you can circumvent this by leaving the length-field empty. If you do so Marketing Cloud uses VARCHAR(MAX) for the field in the database. (EDIT: This solution only works when creating a data extension in Email Studio. Unfortunately Contact Builder doesn't allow this workaround.)
+:::
 
-Important: Please note, that this is a workaround and should used with extreme caution and only if really necessary, as there is no way of knowing if this workaround will function in the future. So if possible in, try to use smaller columns. as found by Markus Slabina https://salesforce.stackexchange.com/questions/154402/data-extension-maximum-characters-of-text-field/154403
+This query will output one row of data with the current maximum length of the values that you have in your Synchronized Data Extension for the selected fields. It uses [`MAX`](./sfmc-sql-numeric-functions.mdx#min-and-max) function on the outcome of the [`LEN`](./sfmc-sql-string-functions.mdx#len) to find the single maximum length available across all records. It has two great uses:
+
+### Discovery with MAX LEN
+
+You can use it even before configuring the Data Extension and Profile Attributes to make a discovery of your real data.
+
+For example, if out of your whole database, the longest First Name is 33 characters, then you will probably be just fine with maximum length of 40 on this field. If a picklist field will return you 5 with this query - you won't need the default 255 characters.
+
+Of course, as mentioned above, the values might get longer in the future. But as Marketing Cloud allows you to change maximum field length up but not down, it might be good idea to try as low as reasonable and leave space for growth.
+
+### Debugging with MAX LEN
+
+Second use of the above snippet is quick debugging when an error occurs. Execute it in [Query Studio](./sfmc-sql-basics.mdx#query-studio) and compare against the column lengths you set up in your Data Extension. If you see in Query Studio any value that is longer than the maximum you set up in Data Extension - you found a culprit.
+
+Now you can look in the data source and check whether this longer-than-expected value is correct. If yes, it is time to update your maximum length in the Data Extension and Profile Attribute configuration.
+
+:::note You Should Know
+
+In most cases, field length of 255 should be more then enough. But if you need it, Marketing Cloud allows you to go up to 4000 characters per field.
+
+4000 characters length of course is instant way of getting over the recommended limit, but might be useful for logging Data Extensions that won't be queried. For example, if you want to save [`_Bounce` Data View](../config/sfmc-config-system-data-views.mdx#_bounce) to standard Data Extension, `SMTPBounceReason` might make use of such a long field.
+
+If you need even more, there is a trick reported by [Markus Slabina](https://salesforce.stackexchange.com/questions/154402/data-extension-maximum-characters-of-text-field/154403). Use Email Studio to add a new field and make the length empty. Save. It will create a [`nvarchar(max)`](./sfmc-sql-conversion-functions.mdx#data-types) field that allows absurdly long data to be stored.
+
+Remember that:
+
+1. It works only in Email Studio - Contact Builder won't work
+2. It is workaround and might disappear in any moment
+3. It shouldn't be used unless it is the only option
+
+:::
 
 ## Long Term Solution
 
-But for the long term
+The snippet above is nice, but good only for short term manual checks. And manual checks doesn't sound good for the long term. If you wonder whether there is a way to automate it nicely, you are here for a treat.
+
+Yes, you can automate such validation in a really nice way by using two additional Activities.
+
+In the Automation that takes care of moving the data from Synchronized Data Extension do Standard Data Extension and Profile Attributes, add a SQL Query Activity before the above. In it, paste the below code:
 
 ```sql
 SELECT
-    c.Id AS [Subscriber Key],
+    c.Id AS [Contact ID],
+    LEN(c.Id) AS [Subscriber Key],
+    LEN(c.FirstName) AS [First Name],
+    LEN(c.LastName) AS [Last Name],
+    LEN(c.Email) AS [Email Address],
+    LEN(c.JobTitle__c) AS [Job Title],
+    LEN(c.Industry__c) AS [Industry]
+FROM Contact_Salesforce c
+WHERE 18 - LEN(c.Id) < 0
+    OR 40 - LEN(c.FirstName) < 0
+    OR 80 - LEN(c.LastName) < 0
+    OR 254 - LEN(c.Email) < 0
+    OR 80 - LEN(c.JobTitle__c) < 0
+    OR 40 - LEN(c.Industry__c) < 0
+```
+
+This is simplified ver
+
+Of course, you will want to adapt it to your needs (field selection, field names, Synchronized Data Extension names, lengths). Let's dive in what this code does so that you can make it your own.
+
+The first two lines select the Id to store the Subscriber Key information. It will be useful to quickly know which record(s) should be checked to validate some lengthy value that exceeded your expectations.
+
+Next, you can see a group of [`CASE`](./sfmc-sql-select#conditional-values-with-case) statements. Each one is related to one field. For each record it checks each field value. If any is exceeding the expected limit - it outputs the current length. To adapt it to your needs change the configured maximum field length, field reference and alias.
+
+```sql
+CASE
+    WHEN MaximumFieldLength - LEN(FieldReference) < 0
+    THEN LEN(FieldReference)
+END AS [Alias]
+```
+
+Why not just the `LEN(FieldReference) AS [Alias]`? The approach proposed above is longer in code, but makes it much easier to debug the issue later, as it will show the length of only those fields, that exceeded the configured maximum.
+
+After that you can see the standard [`FROM`](./sfmc-sql-from.mdx) statement. If needed, you can of course [`JOIN`](./sfmc-sql-join.mdx) additional data sources.
+
+Finally, there is a [`WHERE`](./sfmc-sql-where.mdx) statement. TODO
+
+
+
+## Options
+
+You can even adapt the above query to better suit your needs.
+
+
+```sql
+    CASE
+        WHEN 18 - LEN(c.Id) < 0
+        THEN LEN(c.Id)
+    END AS [Subscriber Key],
+```
+
+```sql
+CASE
+    WHEN 18 - LEN(c.Id) < 0
+    THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
+END AS [Subscriber Key]
+```
+
+### Fully featured Long Term Snippet
+
+```sql
+SELECT
+    c.Id AS [Contact ID],
+    CASE
+        WHEN 18 - LEN(c.Id) < 0
+        THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
+    END AS [Subscriber Key],
     CASE
         WHEN 40 - LEN(c.FirstName) < 0
         THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
@@ -90,93 +164,22 @@ SELECT
         THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
     END AS [Last Name],
     CASE
-        WHEN 20 - LEN(c.hed__Gender__c) < 0
-        THEN CONCAT(LEN(c.hed__Gender__c), '(', LEN(c.hed__Gender__c) - 20, ' over limit)')
-    END AS [Gender],
+        WHEN 254 - LEN(c.Email) < 0
+        THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 254, ' over limit)')
+    END AS [Email Address],
     CASE
-        WHEN 80 - LEN(c.hed__Citizenship__c) < 0
-        THEN CONCAT(LEN(c.hed__Citizenship__c), '(', LEN(c.hed__Citizenship__c) - 80, ' over limit)')
-    END AS [Nationality],
+        WHEN 80 - LEN(c.JobTitle__c) < 0
+        THEN CONCAT(LEN(c.JobTitle__c), '(', LEN(c.JobTitle__c) - 80, ' over limit)')
+    END AS [Job Title],
     CASE
-        WHEN 80 - LEN(c.hed__Country_of_Origin__c) < 0
-        THEN CONCAT(LEN(c.hed__Country_of_Origin__c), '(', LEN(c.hed__Country_of_Origin__c) - 80, ' over limit)')
-    END AS [Domicile],
-    CASE
-        WHEN 15 - LEN(c.CurrentRole__c) < 0
-        THEN CONCAT(LEN(c.CurrentRole__c), '(', LEN(c.CurrentRole__c) - 15, ' over limit)')
-    END AS [Current Role],
-    CASE
-        WHEN 255 - LEN(c.Disability__c) < 0
-        THEN CONCAT(LEN(c.Disability__c), '(', LEN(c.Disability__c) - 255, ' over limit)')
-    END AS [Disability],
-    CASE
-        WHEN 255 - LEN(c.Disability__c) < 0
-        THEN CONCAT(LEN(c.Disability__c), '(', LEN(c.Disability__c) - 255, ' over limit)')
-    END AS [Disability],
-    CASE
-        WHEN 80 - LEN(c.Email) < 0
-        THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 80, ' over limit)')
-    END AS [Personal Email],
-    CASE
-        WHEN 80 - LEN(c.hed__UniversityEmail__c) < 0
-        THEN CONCAT(LEN(c.hed__UniversityEmail__c), '(', LEN(c.hed__UniversityEmail__c) - 80, ' over limit)')
-    END AS [University Email],
-    CASE
-        WHEN 50 - LEN(c.hed__Preferred_email__c) < 0
-        THEN CONCAT(LEN(c.hed__Preferred_email__c), '(', LEN(c.hed__Preferred_email__c) - 50, ' over limit)')
-    END AS [Preferred Email],
-    CASE
-        WHEN 50 - LEN(c.hed__PreferredPhone__c) < 0
-        THEN CONCAT(LEN(c.hed__PreferredPhone__c), '(', LEN(c.hed__PreferredPhone__c) - 50, ' over limit)')
-    END AS [Preferred Phone],
-    CASE
-        WHEN 128 - LEN(c.Title) < 0
-        THEN CONCAT(LEN(c.Title), '(', LEN(c.Title) - 128, ' over limit)')
-    END AS [Title],
-    CASE
-        WHEN 20 - LEN(c.StudentStatus__c) < 0
-        THEN CONCAT(LEN(c.StudentStatus__c), '(', LEN(c.StudentStatus__c) - 20, ' over limit)')
-    END AS [Student Fee Basis],
-    CASE
-        WHEN 90 - LEN(c.ExternalID__c) < 0
-        THEN CONCAT(LEN(c.ExternalID__c), '(', LEN(c.ExternalID__c) - 90, ' over limit)')
-    END AS [Student Id],
-    CASE
-        WHEN 90 - LEN(c.UCASID__c) < 0
-        THEN CONCAT(LEN(c.UCASID__c), '(', LEN(c.UCASID__c) - 90, ' over limit)')
-    END AS [UCAS Id],
-    CASE
-        WHEN 10 - LEN(c.SyncTo__c) < 0
-        THEN CONCAT(LEN(c.SyncTo__c), '(', LEN(c.SyncTo__c) - 10, ' over limit)')
-    END AS [Sync To]
+        WHEN 40 - LEN(c.Industry__c) < 0
+        THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
+    END AS [Industry]
 FROM Contact_Salesforce c
-WHERE 40 - LEN(c.FirstName) < 0
+WHERE 18 - LEN(c.Id) < 0
+    OR 40 - LEN(c.FirstName) < 0
     OR 80 - LEN(c.LastName) < 0
-    OR 20 - LEN(c.hed__Gender__c) < 0
-    OR 80 - LEN(c.hed__Citizenship__c) < 0
-    OR 80 - LEN(c.hed__Country_of_Origin__c) < 0
-    OR 15 - LEN(c.CurrentRole__c) < 0
-    OR 255 - LEN(c.Disability__c) < 0
-    OR 255 - LEN(c.Disability__c) < 0
-    OR 80 - LEN(c.Email) < 0
-    OR 80 - LEN(c.hed__UniversityEmail__c) < 0
-    OR 50 - LEN(c.hed__Preferred_email__c) < 0
-    OR 50 - LEN(c.hed__PreferredPhone__c) < 0
-    OR 128 - LEN(c.Title) < 0
-    OR 20 - LEN(c.StudentStatus__c) < 0
-    OR 90 - LEN(c.ExternalID__c) < 0
-    OR 90 - LEN(c.UCASID__c) < 0
-    OR 10 - LEN(c.SyncTo__c) < 0
+    OR 254 - LEN(c.Email) < 0
+    OR 80 - LEN(c.JobTitle__c) < 0
+    OR 40 - LEN(c.Industry__c) < 0
 ```
-
-
-
-:::note You Should Know
-
-If you are running it from child Business Unit, add `ENT.` prefix to Synchronized Data Extension names, as those are stored on the parent level.
-
-:::
-
-## Options
-
-You can even adapt the above query to better suit your needs.
