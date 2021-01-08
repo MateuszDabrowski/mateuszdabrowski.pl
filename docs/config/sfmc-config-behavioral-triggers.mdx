@@ -898,10 +898,10 @@ The above snippet is responsible for building the URL that is used for an `HTTP.
 To do so, just before the line highlighted in the snippet above add a new one with:
 
 ```js
-qs += "&user_attributes=CustomProfileAttribute1,CustomProfileAttribute2"
+qs += "&user_attributes=CustomProfileAttribute1|CustomProfileAttribute2"
 ```
 
-Just change the values after the equal sign to the exact names of your  that you want to have available in your code.
+Just change the values after the equal sign to the exact names of your [Einstein Custom Profile Attributes](#user-and-profile-attributes) that you want to have available in your code (separated by `|`).
 
 ### 6. Response parsing
 
