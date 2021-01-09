@@ -78,15 +78,15 @@ Remember that:
 
 :::
 
-## Long Term Solution
+## Basic Long Term Solution
 
 The snippet above is nice, but good only for short term manual checks. And manual checks doesn't sound good for the long term. If you wonder whether there is a way to automate it nicely, you are here for a treat.
 
-Yes, you can automate such validation in a really nice way by using two additional Activities.
+Yes, you can automate such validation by using two additional Activities.
 
-In the Automation that takes care of moving the data from Synchronized Data Extension do Standard Data Extension and Profile Attributes, add a SQL Query Activity before the above. In it, paste the below code:
+Go to the Automation that takes care of moving the data from Synchronized Data Extension do Standard Data Extension and Profile Attributes. Before the Activities that are transfering the data, add a SQL Query Activity. In it, paste the below code:
 
-```sql
+```sql title="Basic field length checking query"
 SELECT
     c.Id AS [Contact ID],
     LEN(c.Id) AS [Subscriber Key],
@@ -104,49 +104,74 @@ WHERE 18 - LEN(c.Id) < 0
     OR 40 - LEN(c.Industry__c) < 0
 ```
 
-This is simplified ver
+Of course, you will want to adapt it to your needs. Change the fields along with their names and lengths. Select the right Synchronized Data Extension. How? Let's dive in what this code does so that you can make it your own.
 
-Of course, you will want to adapt it to your needs (field selection, field names, Synchronized Data Extension names, lengths). Let's dive in what this code does so that you can make it your own.
-
-The first two lines select the Id to store the Subscriber Key information. It will be useful to quickly know which record(s) should be checked to validate some lengthy value that exceeded your expectations.
-
-Next, you can see a group of [`CASE`](./sfmc-sql-select#conditional-values-with-case) statements. Each one is related to one field. For each record it checks each field value. If any is exceeding the expected limit - it outputs the current length. To adapt it to your needs change the configured maximum field length, field reference and alias.
-
-```sql
-CASE
-    WHEN MaximumFieldLength - LEN(FieldReference) < 0
-    THEN LEN(FieldReference)
-END AS [Alias]
-```
-
-Why not just the `LEN(FieldReference) AS [Alias]`? The approach proposed above is longer in code, but makes it much easier to debug the issue later, as it will show the length of only those fields, that exceeded the configured maximum.
+First field we [`SELECT`](./sfmc-sql-select.mdx) is the Unqiue Identifier (Contact ID / Subscriber Key or other based on the specific object you are validating). It is useful to quickly know which record(s) should be checked if you encounter some values that exceed the expectations.
 
 After that you can see the standard [`FROM`](./sfmc-sql-from.mdx) statement. If needed, you can of course [`JOIN`](./sfmc-sql-join.mdx) additional data sources.
 
-Finally, there is a [`WHERE`](./sfmc-sql-where.mdx) statement. TODO
+Finally, there is a [`WHERE`](./sfmc-sql-where.mdx) statement. In it, we are checking whether at least one field on each record have a value longer then expected. So to adapt it - change the number on the left to the length of the field you set up in the target Data Extension / Profile Attribute.
 
+This SQL Query Activity should output the rows to a technical Value Length Data Extension that has all the same columns as the target Data Extension / Profile Attributes list. However, it can have much shorter max lengths for the columns, as all fields but the Unique Identifier one will output only the length of the field (up to 4 digits). Configure the SQL Activity to Overwrite the technical Data Extension, to always have there the data for the latest state.
 
+Right after this SQL Query Activity add Verification Activity and configure it to check the technical Data Extension mentioned above. If there is any row in it - it should stop the whole Automation and send an alert email to the Marketing Cloud Administrator.
+
+To sum up, the sample Automation could look like this:
+
+1. SQL Query Activity with the Debugging Value Length query
+2. Verification Activity that checks Value Length Data Extension
+3. SQL Query Activity that moves data from Synchronized Data Extension to target Data Extension
+4. Export Activity
+5. Transfer Activity
+6. Import Activity
+
+With the last three being the classic ETL for updating the All Subscribers view and Profile Attributes.
+
+Such setup won't silently crash your Automation whenever there is a single value longer then expected. It will stop the Automation before the crash and inform the Administrator that there is an issue and provide exact Unique Identifiers of records that are leading to that error for easy check. Neat, right? Well, it can be even better.
 
 ## Options
 
-You can even adapt the above query to better suit your needs.
+The basic version above is already nice, but we can make few improvements to it to make Administrators live easier.
 
+### Show which field has too long value
 
-```sql
+Previously shown query will show the problematic record, but it will display all field lengths for it. Administrator will still have to compare the lengths to find which one is the source of the issue.
+
+However, we already are coding the expected field length in the [`FROM`](./sfmc-sql-from.mdx) part of the query. Why not use it to make life easier?
+
+Let's change the `LEN(c.Id) AS [Subscriber Key],` in the [`SELECT`](./sfmc-sql-select.mdx) statement part to something a bit more interesting:
+
+```sql title="Use CASE to display only the problematic fields"
     CASE
         WHEN 18 - LEN(c.Id) < 0
         THEN LEN(c.Id)
     END AS [Subscriber Key],
 ```
 
-```sql
+As you can see, we changed simple line to a more complex [`CASE`](./sfmc-sql-select#conditional-values-with-case) statement. There is a good reason for it. Thanks to it, the query will evaluate each field against the expected length and in the Value Length Data Extension display information only for the problematic values.
+
+Administrator will no longer have to compare each field with configured maximum - he will see it directly in the Data Extension, which saves time and limits the errors.
+
+### Extended length information
+
+We can go even further with this approach and add a bit more data to the output for those problematic fields by making few calculations in `THEN` part of the [`CASE`](./sfmc-sql-select#conditional-values-with-case) statement.
+
+```sql {3} title="Let's make the code do the work"
 CASE
     WHEN 18 - LEN(c.Id) < 0
     THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
 END AS [Subscriber Key]
 ```
 
-### Fully featured Long Term Snippet
+Here, apart from the length of the problematic field, we are also showing by how much it exceeds the current configuration.
+
+For example, if we expect the First Name to be under 40 characters and one record comes with 46 characters one, the previous solution would just output `46`. This extended one will be a bit more verbose by showing `46 (6 over limit)`.
+
+Remember that if you implement this option, it will impact the output length in your technical Data Extension. 4 characters will be no longer enough. Instead, set it to 22.
+
+## Fully fledged Long Term Solution
+
+After applying both of the above options to the [Basic SQL Snippet](basic-long-term-solution), it looks like this:
 
 ```sql
 SELECT
