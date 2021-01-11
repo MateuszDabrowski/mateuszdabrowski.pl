@@ -2,30 +2,34 @@
 id: sfmc-sql-snippet-debugging-value-length
 title: SFMC SQL Debugging Value Length
 sidebar_label: Debugging Value Length
-description: Your Automations crash due to longer than expected values? Make your life easier with SQL.
+description: Your Automations crash due to longer than expected values coming from the external source? Make your life easier with SQL.
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Your Automations crash due to longer than expected values? Make your life easier with SQL.' />
+<LeadText content='Your Automations crash due to longer than expected values coming from the external source? Make your life easier with SQL.' />
 
-## Problem
+## Problem with recommended Data Extension total field length
 
 Working with Marketing Cloud (or any other Marketing Automation Platform) is always the dance between optimisation and flexibility. It is easily visible when working with SFMC Data Extensions.
 
-On the one hand, limiting the maximum field length is a must-have best practice. Salesforce recommends keeping the total sum of all fields length under 4000 characters. For many use cases, a tiny number. But if you want to have lean Data Extensions to query them quickly, it is the only way. And in the Marketing Cloud, nearly everything is a query - even if you don't write a line of SQL.
+On the one hand, limiting the maximum field length is a must-have best practice. Salesforce recommends keeping the total sum of all fields length under 4000 characters. For many use cases, a tiny number. But if you want to have lean Data Extensions to query them quickly, it is the way. And in the Marketing Cloud, nearly everything is a query - even if you don't write a line of SQL.
 
-On the other hand, it might be tough to limit your Data Extension so much with real-life needs. Especially when you are bringing data from other systems. Example? Salesforce CRM integration through Marketing Cloud Connect. The Picklist fields from CRM come to Synchronized Data Extensions as 255 character text fields 0 even if it has only one-digit values associated with it. Select a few such picklists, and you hit the Data Extension character length limit recommended by Salesforce.
+On the other hand, it might be tough to limit your Data Extension so much in real-life scenarios. Especially when you are bringing data from other systems. Example? Salesforce CRM integration through Marketing Cloud Connect. The picklist fields from CRM come to Synchronized Data Extensions as 255 character text fields - even if they have only one-digit values associated with it. Select a few such picklists to be available in Marketing Cloud, and you hit the Data Extension character length limit recommended by Salesforce.
 
 What to do with that?
 
-Limit the maximum length of those picklists in the Marketing Cloud Data Extension. You are sure that your Gender field will always have one character value (`F`/`M`/`O`/`U`)? Let's make maximum length equal to 1. It is excellent, but sometimes, you might be surprised - especially with less obvious picklists. Similar issues might also come from standard text fields.
+Limit the maximum length of those picklists in the Marketing Cloud Data Extension you use for campaigns. You are sure that your Gender field will always have one character value (`F`/`M`/`O`/`U`)? Make the maximum length equal to 1. It is an excellent way to trim unneeded length, but sometimes, you might be surprised, especially with less obvious picklists, like a job title. Similar issues might also come from standard text fields.
 
-Once you build your Data Extension with those optimisations in mind, it is time to pull the data from Synchronized Data Extensions.
+Once you build your standard Data Extension with those optimisations in mind, it is time to pull the data from Synchronized Data Extensions.
 
-All good, until one of the values, exceed the maximum length you set for the field. The Automation crashes with a cryptic error that tells you nothing and can push you for a long crusade to find the culprit.
+:::note You Should Know
 
-How can you solve this problem?
+I'm mentioning the Marketing Cloud Connect Synchronized Data Extensions, but you can also leverage it for FTP-based data uploads. The solution will require additional intermediate Data Extension with generous field lengths in place of Marketing Cloud Connect Synchronized Data Extension. Rest will be the same.
+
+:::
+
+All good, until one of the values, exceed the maximum length you set for its field. The Automation crashes with a cryptic error that tells you nothing and can push you for a long crusade to find the culprit. What now?
 
 ## Short Term Solution
 
@@ -114,7 +118,7 @@ After that, you can see the standard [`FROM`](./sfmc-sql-from.mdx) statement. Yo
 
 Finally, there is a [`WHERE`](./sfmc-sql-where.mdx) statement. In it, we are checking whether at least one field on each record has a value longer than expected. To adapt it - change the number on the left to the length of the field you set up in the target Data Extension / Profile Attribute.
 
-This SQL Query Activity should output the rows to a technical Value Length Data Extension with all the same columns as the target Data Extension / Profile Attributes list. However, it can have much shorter max lengths for the columns, as all fields but the Unique Identifier one will output only the field's length (up to 4 digits). Configure the SQL Activity to Overwrite the technical Data Extension and always have the data for the latest state.
+This SQL Query Activity should output the rows to a technical Value Length Data Extension with all the same columns as the target Data Extension / Profile Attributes list. However, it can have much shorter max lengths for the columns, as all fields but the Unique Identifier one will output only the field's length (up to 4 digits). Configure the SQL Activity to Overwrite the technical Data Extension and always have the latest state data.
 
 Right after this SQL Query Activity add Verification Activity and configure it to check the technical Data Extension mentioned above. If there is any row in it - it should stop the whole Automation and send an alert email to the Marketing Cloud administrator.
 
@@ -158,14 +162,14 @@ The administrator will no longer have to compare each field with configured maxi
 
 We can go even further with this approach and add a bit more data to the output for those problematic fields by making few calculations in `THEN` part of the [`CASE`](./sfmc-sql-select#conditional-values-with-case) statement.
 
-```sql {3} title="Let's make the code do the work"
+```sql {3} title="Let the code do the work"
 CASE
     WHEN 18 - LEN(c.Id) < 0
     THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
 END AS [Subscriber Key]
 ```
 
-Here, apart from the problematic field's length, we are also showing by how much it exceeds the current configuration.
+Here, apart from the problematic field's length, we are also showing how much it exceeds the current configuration.
 
 For example, if we expect the First Name to be under 40 characters and one record comes with 46 characters, the previous solution would output `46`. This extended one will be a bit more verbose by showing `46 (6 over limit)`.
 
