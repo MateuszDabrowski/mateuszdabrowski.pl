@@ -13,7 +13,7 @@ import { LeadText } from '../src/components/LeadText.js';
 
 ### DeliveryTime for Journey Builder emails
 
-`DeliveryTime` is [`_Job` Data View](../docs/config/sfmc-config-system-data-views#_job) field that stores timestamp for the email delivery (the moment when it successfully reached the target Email Service Provider). Currently, it is not possible to get delivery time for emails sent via Journey Builder.
+`DeliveryTime` is [`_Job` Data View](../docs/config/sfmc-config-system-data-views#_job) field that stores timestamp for the email delivery (the moment when it successfully reached the target Email Service Provider). It is currently impossible to get delivery time for emails sent via Journey Builder.
 
 All other engagement data points are available (`EventDate` field for [_Sent](../docs/config/sfmc-config-system-data-views#_sent), [_Open](../docs/config/sfmc-config-system-data-views#_open), [_Click](../docs/config/sfmc-config-system-data-views#_click), [_Bounce](../docs/config/sfmc-config-system-data-views#_bounce)) but `DeliveryTime` from [`_Job` Data View](../docs/config/sfmc-config-system-data-views#_job) returns `NULL` for Journey Builder emails.
 
@@ -25,7 +25,7 @@ I see it as a massive limitation for automations focused on keeping the database
 
 ### _DataSourceName for Entry Data Extension in Journey Builder
 
-`_DataSourceName` personalisation string, as per the [documentation](https://help.salesforce.com/articleView?id=mc_es_available_personalization_strings.htm&type=5), should show the communication audience's name. It covers lists, data extensions, groups, and filters.
+As per the [documentation](https://help.salesforce.com/articleView?id=mc_es_available_personalization_strings.htm&type=5), `_DataSourceName` personalisation string should show the communication audience's name. It covers lists, data extensions, groups, and filters.
 
 It works when the email is sent via Email Studio -> Email -> Content -> Send flow. However, when we send Email (or SMS) from Journey Builder, `_DataSourceName` shows "All Subscribers" instead of the Entry Data Extension name. It is true for both Multi-Step Journeys, and Single Email Sends.
 
@@ -56,6 +56,23 @@ Salesforce can fix it. Below are two solution tiers:
 
 <a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000003lB7QAI">Vote on IdeaExchange</a>
 
+### Link Tracking in Behavioral Trigger Content Block
+
+[Behavioral Triggers Content Block](../docs/config/sfmc-config-behavioral-triggers#behavioral-trigger-content-block) allows for easy out-of-the-box use of abandoned engagement data in our Emails. It neatly pulls the Catalog items that captivated the customer's attention and displays them for win-back purposes. Of course, each item links back to its e-commerce page.
+
+Its implementation is, however, leading to a problem with tracking. My favourite solution - Parameter Manager with Web Analytics Connector - is not working on the Behavioral Trigger Content Block. Neither can we add the tracking parameters manually, as there is no such option in the UI.
+
+Right now, there are only two ways to add the UTM's:
+1. Add them to the Catalog directly - this adds them for all scenarios connected to Einstein or Behavioral Triggers. Not useful, as in most cases, we want to differentiate various personalisation placements by using distinct UTM tracking.
+2. Create a Custom Behavioral Trigger Content Block - now we will be able to add them to the product's HTML template. Okay, but not easy.
+
+Salesforce can fix it. Below are two possible solutions:
+
+1. __Minimum Valuable Solution__: Add a text box to a Behavioral Trigger Content Block configuration menu to add our custom tracking. The Content Block should apply the provided tracking query to each link. AMPScript support included.
+2. __Solution Deluxe__: On top of the above solution, Marketing Cloud should consider the Parameter Management to allow for a mix of global UTM's from Web Analytics Connector and local from the new text box in Behavioral Trigger Content Block configuration.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000UKBJQA4">Vote on IdeaExchange</a>
+
 ### Behavioral Trigger Abandoned Cart Custom Attributes
 
 The [Behavioral Triggers](../docs/config/sfmc-config-behavioral-triggers) are a terrific solution for Abandoned Engagement. The [Abandoned Cart](../docs/config/sfmc-config-behavioral-triggers#track-cart) scenario already has multiple great features that make it easy to implement.
@@ -68,7 +85,7 @@ Just as there are Custom Attributes for the Product Catalog, it would be great t
 
 It is already available in the form of an optional `price` attribute of [`trackCart` Collect.js Data Layer](../docs/config/sfmc-config-behavioral-triggers#track-cart) that contains individual price that does not impact the Product Catalog.  It would be great to have the possibility to add a few more, available in [`trackCart` Collect.js](../docs/config/sfmc-config-behavioral-triggers#track-cart) and the [response](../docs/config/sfmc-config-behavioral-triggers#api-responses) from Einstein Backend (IgoDigital).
 
-Use case? Sure. Coupon Code Name, Coupon Code Discount (either integer or float for per cent value), added Personalisation, Voucher ID. All those tools are frequently used in e-commerce and would be perfect to have in a `trackCart` layer. Suitable for personalisation, perfect for passing data needed for rebuilding the cart.
+Use case? Sure. Coupon Code Name, Coupon Code Discount (either integer or float for per cent value), added Personalisation, Voucher ID. All those tools are frequently used in e-commerce and would be perfect for a `trackCart` layer. Suitable for personalisation, perfect for passing data needed for rebuilding the cart.
 
 #### Cart Attributes Visibility in the Content Block
 
@@ -90,7 +107,7 @@ Below are three solution tiers:
 
 SMS Blackout allows blocking SMS sends in the chosen timeframe. Currently, SMS Blackout can be configured based on Account Timezone.
 
-However, for multi-country clients, it would be much better to configure the Blackout period based on the recipient's local timezone. MobilePhone locale is perfect for implementing this.
+However, it would be much better for multi-country clients to configure the Blackout period based on the recipient's local timezone. MobilePhone locale is perfect for implementing this.
 
 This way, it would be possible to create, for example, single SMS Blackout for night time and apply it for each contact regardless of the timezone. The locale is already there for MobileConnect and can be leveraged for determining timezone offset.
 
