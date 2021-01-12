@@ -28,7 +28,9 @@ Below you can find selected Salesforce Marketing Cloud Data Views focused on Sub
 
 ---
 
-## _Subscribers
+## Subscribers Data Views
+
+### _Subscribers
 
 Stores information about your Subscribers. Great for high-level perspective or adding Email Address field to other more detailed Data Views.
 
@@ -55,7 +57,7 @@ When working with `_Subscribers` Data View:
 
 ---
 
-## _EnterpriseAttribute
+### _EnterpriseAttribute
 
 Stores information about your Profile Attributes from Email Studio.
 
@@ -72,7 +74,9 @@ When working with `_EnterpriseAttribute` Data View:
 
 ---
 
-## _Job
+## Email Studio Data Views
+
+### _Job
 
 Stores information about your Email Sends Jobs. Great for capturing detailed data about your communication, especially when paired with Send Log. Must-have for extending your engagement-based Email Data Views.
 
@@ -133,7 +137,7 @@ Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx
 
 ---
 
-## _Sent
+### _Sent
 
 Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication did not even leave your system.
 
@@ -159,7 +163,7 @@ When working with `_Sent` Data View:
 
 ---
 
-## _Open
+### _Open
 
 Stores information about your Email Opens. For when you need to know when someone opened your email. Kind of.
 
@@ -202,7 +206,7 @@ There might however be some cases, where the data is wrong the other way - when 
 
 ---
 
-## _Click
+### _Click
 
 Stores information about your Email Clicks. Detailed click reporting and behavioural logic are possible thanks to this one.
 
@@ -240,7 +244,7 @@ There might be some cases, where the click data is wrong - when you see that ema
 
 ---
 
-## _Bounce
+### _Bounce
 
 Stores information about your Email Bounces. Best place in Marketing Cloud to understand why your messages are not getting delivered.
 
@@ -284,7 +288,136 @@ When working with `_Bounce` Data View:
 
 ---
 
-## _JourneyActivity
+## Mobile Studio Data Views
+
+### _MobileAddress
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+_MobileID | | Number | X
+_ContactID | | Number |
+_MobileNumber | | Text |
+_Status | | Number | X
+_Source | | Number | X
+_SourceObjectId | | Text | X
+_Priority | | Number | X
+_Channel | | Text | X
+_CarrierID | | Number |
+_CountryCode | | Text |
+_CreatedDate | | Date |
+_CreatedBy | | Date |
+_ModifiedBy | | Text | X
+_City | | Text | X
+_State | | Text | X
+_ZipCode | | Text | X
+_FirstName | | Text | X
+_LastName | | Text | X
+_UTCOffset | Defaults to 0 | Number | X
+_IsHonorDST | Defaults to false | Boolean | X
+
+When working with `_MobileAddress` Data View:
+
+---
+
+### _MobileSubscription
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+_SubscriptionDefinitionID | | Text(200) |
+_MobileNumber | | Text(15) |
+_OptOutStatusID | | Text | X
+_OptOutMethodID | | Text | X
+_OptOutDate | | Date | X
+_OptInStatusID | | Text |
+_OptInMethodID | | Text | X
+_OptInDate | | Date | X
+_Source | | Text | X
+_CreatedDate | | Date |
+_CreatedBy | | Text | X
+_ModifiedDate | | Date |
+_ModifiedBy | | Text | X
+
+When working with `_MobileSubscription` Data View:
+
+---
+
+### _SMSSubscriptionLog
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+LogDate | The date the subscription is logged | Date | X
+SubscriberKey | The subscriber key for the affected subscriber | Text |
+MobileSubscriptionID | The unique ID of the subscription record | Number |
+SubscriptionDefinitionID | The unique keyword ID | Text |
+MobileNumber | Mobile number for the subscriber | Phone |
+OptOutStatusID | Whether the subscriber has opted out of SMS messages. See key for values. | Number | X
+OptOutMethodID | Method the subscriber used to opt out of SMS messages. See key for values. | Number | X
+OptOutDate | Date the subscriber opted out of SMS messages | date | Date | X
+OptInStatusID | Whether the subscriber has opted in to SMS message. See key for values. | Number |
+OptInMethodID | Method the subscriber used to opt in to SMS messages. See key for values. | Number | X
+OptInDate | Date the subscriber opted in to SMS messages | Date | X
+Source | The subscription source | Number | X
+CreatedDate | Date the message was created | Date |
+ModifiedDate | Date the message was modified | Date |
+
+When working with `_SMSSubscriptionLog` Data View:
+
+---
+
+### _SMSMessageTracking
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+MobileMessageTrackingID | Unique ID for tracking information related to the sent message | Number |
+EID | Enterprise ID number for the sender | Number | X |
+MID | Member ID | Number | X |
+Mobile | Mobile number for the subscriber | v Phone |
+MessageID | Mobile message ID | Number |
+KeywordID | Unique identifier for the keyword | Text | X |
+CodeID | Unique identifier for the SMS code | Text | X |
+ConversationID | Unique identifier for the SMS conversation | Text | X |
+CampaignID | The SMS campaign tied to the record | Number | X |
+Sent | If the message was sent (1 = true, 0 = false) | Number |
+Delivered | If the message was delivered (1 = true, 0 = false) | Number | X |
+Undelivered | Whether the message was delivered successfully or not (1 = true, 0 = false) | Number | X |
+Unsub | If the subscriber unsubscribed (1 = true, 0 = false) | Number X |
+OptIn | Whether the subscriber has opted in to SMS messages (1 = true, 0 = false) | Number | X |
+OptOut | Whether the subscriber has opted out of SMS messages (1 = true, 0 = false) | Number X |
+Outbound | If the message was outgoing (1 = true, 0 = false) | Number X |
+Inbound | If the message was incoming (1 = true, 0 = false) | Number X |
+CreateDateTime | The date and time the tracking record was created | Date |
+ModifiedDateTime | The date and CST time the tracking record was modified | Date |
+ActionDateTime | The actual date/time a deliver or non delivery event was received by the Marketing Cloud. Timestamps for delivery receipts are not indicative of when a message was received on a handset. The SMS industry does not support read receipts, and the data returned in this view are based of of when a delivery receipt is returned to our system. | Date |
+MessageText | The text of the message | nvarchar(160) | Text | X |
+IsTest | If the message was a test message | Number | X |
+MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. Can be used for troubleshooting send issues. | Number | X |
+ResponseToMobileMessageTrackingID | The tracking ID of the response to the message | Number | X |
+IsValid | If the message is valid | Number X |
+InvalidationCode | Invalidation code for the message | Number | X |
+SendID | The send ID number for the SMS send | Number | X |
+SendSplitID | If the message was split, the ID of the split | Number | X |
+SendSegmentID | The ID of the segment tied to the message | Number | X |
+SendJobID | The job ID for the SMS send | Number | X |
+SendGroupID | The group ID for the SMS send | Number | X |
+SendPersonID | The sendperson ID for the SMS send | Number | X |
+SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record | Number | X |
+SubscriberKey | The subscriber key for the affected subscriber | Text | X |
+SMSStandardStatusCodeId | SFMC delivery status code | Number | X |
+Description | Detailed description of the status code | Text | X |
+Name | The name of your message | Text | X |
+ShortCode | The short code or long code used to send your message | Text | X |
+SharedKeyword | The keyword used in your message | Text | X |
+Ordinal | Represents the parts in a multi-part message. Represented in ascending order starting at 0. | Number | X |
+FromName | From Name that an individual message was deployed with. Maximum length: 11 characters | Text | X |
+
+
+When working with `_SMSMessageTracking` Data View:
+
+---
+
+## Journey Builder Data Views
+
+### _JourneyActivity
 
 Stores information about Activities available in your Journeys. Must-have for joining Email data with Journey data.
 
@@ -303,7 +436,7 @@ When working with `_JourneyActivity` Data View:
 
 ---
 
-## _Journey
+### _Journey
 
 Stores information about your Journeys, for when context matters.
 
@@ -324,3 +457,4 @@ When working with `_Journey` Data View:
 3. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and based on the send volume or performance, stop them and notify you about that.
 
 ---
+
