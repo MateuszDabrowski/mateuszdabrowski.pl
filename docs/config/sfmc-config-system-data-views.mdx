@@ -178,7 +178,7 @@ SubscriberID | The subscriber ID for the affected subscriber. This number repres
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 EventDate | The date the open took place | Date |
 Domain | The domain at which the open occurred | Text |
-IsUnique | Whether the event is unique or repeated | bool | X
+IsUnique | Whether the event is unique or repeated | Boolean | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
@@ -323,8 +323,8 @@ When working with `_MobileAddress` Data View:
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-_SubscriptionDefinitionID | | Text(200) |
-_MobileNumber | | Text(15) |
+_SubscriptionDefinitionID | | Text |
+_MobileNumber | | Text |
 _OptOutStatusID | | Text | X
 _OptOutMethodID | | Text | X
 _OptOutDate | | Date | X
@@ -338,6 +338,39 @@ _ModifiedDate | | Date |
 _ModifiedBy | | Text | X
 
 When working with `_MobileSubscription` Data View:
+
+---
+
+### _UndeliverableSMS
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+MobileNumber | | Text |
+Undeliverable | | Boolean |
+BounceCount | | Number |
+FirstBounceDate | | Date |
+HoldDate | | Date | X
+
+When working with `_UndeliverableSMS` Data View:
+
+---
+
+### _SubscriberSMS
+
+`_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated and you won't have records there.
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+SubscriberID | | Number |
+SubscriberKey | | Text |
+MobileNumber | | Phone |
+TransactionalOptIn | | Boolean |
+TransactionalOptInDate | | Date |
+TransactionalOptOutDate | | Date | X
+MarketingOptIn | | Boolean |
+MarketingOptInDate | | Date |
+MarketingOptOutDate | | Date | X
+SMSCarrierName | | Text | X
 
 ---
 
@@ -377,18 +410,18 @@ KeywordID | Unique identifier for the keyword | Text | X |
 CodeID | Unique identifier for the SMS code | Text | X |
 ConversationID | Unique identifier for the SMS conversation | Text | X |
 CampaignID | The SMS campaign tied to the record | Number | X |
-Sent | If the message was sent (1 = true, 0 = false) | Number |
-Delivered | If the message was delivered (1 = true, 0 = false) | Number | X |
-Undelivered | Whether the message was delivered successfully or not (1 = true, 0 = false) | Number | X |
-Unsub | If the subscriber unsubscribed (1 = true, 0 = false) | Number X |
-OptIn | Whether the subscriber has opted in to SMS messages (1 = true, 0 = false) | Number | X |
-OptOut | Whether the subscriber has opted out of SMS messages (1 = true, 0 = false) | Number X |
-Outbound | If the message was outgoing (1 = true, 0 = false) | Number X |
-Inbound | If the message was incoming (1 = true, 0 = false) | Number X |
+Sent | If the message was sent | Boolean |
+Delivered | If the message was delivered | Boolean | X |
+Undelivered | Whether the message was delivered successfully or not | Boolean | X |
+Unsub | If the subscriber unsubscribed | Boolean | X |
+OptIn | Whether the subscriber has opted in to SMS messages | Boolean | X |
+OptOut | Whether the subscriber has opted out of SMS messages | Boolean | X |
+Outbound | If the message was outgoing | Boolean | X |
+Inbound | If the message was incoming | Boolean | X |
 CreateDateTime | The date and time the tracking record was created | Date |
 ModifiedDateTime | The date and CST time the tracking record was modified | Date |
 ActionDateTime | The actual date/time a deliver or non delivery event was received by the Marketing Cloud. Timestamps for delivery receipts are not indicative of when a message was received on a handset. The SMS industry does not support read receipts, and the data returned in this view are based of of when a delivery receipt is returned to our system. | Date |
-MessageText | The text of the message | nvarchar(160) | Text | X |
+MessageText | The text of the message | Text | X |
 IsTest | If the message was a test message | Number | X |
 MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. Can be used for troubleshooting send issues. | Number | X |
 ResponseToMobileMessageTrackingID | The tracking ID of the response to the message | Number | X |
