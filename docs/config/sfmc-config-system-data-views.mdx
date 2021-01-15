@@ -290,45 +290,61 @@ When working with `_Bounce` Data View:
 
 ## Mobile Connect Data Views
 
-MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But works. And in some cases - have awesome features, that are not available in any other way.
-
-:::note You Should Know
-
-Phone number format information #TODO
-
-:::
+MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But some still works.
 
 ### _MobileAddress
 
-`_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is still no replacement for it. So let's dive in.
+`_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is no replacement for it. Why? Because this Data View is still being used as a backend source of data for the MobileConnect Demographics Data.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-_MobileID | | Number | X
-_ContactID | | Number |
-_MobileNumber | | Text |
-_Status | | Number | X
-_Source | | Number | X
-_SourceObjectId | | Text | X
-_Priority | | Number | X
-_Channel | | Text | X
-_CarrierID | | Number |
-_CountryCode | | Text |
-_CreatedDate | | Date |
-_CreatedBy | | Date |
-_ModifiedBy | | Text | X
-_City | | Text | X
-_State | | Text | X
-_ZipCode | | Text | X
-_FirstName | | Text | X
-_LastName | | Text | X
-_UTCOffset | Defaults to 0 | Number | X
-_IsHonorDST | Defaults to false | Boolean | X
+_MobileID | MobileConnect Contact ID | MobileConnect | Number | X
+_ContactID | Global Contact ID (not Contact Key) | Number |
+_MobileNumber | Mobile number for the subscriber  | Text |
+_Status | Status of the Contact. Possible values listed below | Number | X
+_Source | Source of the Contact. Possible values listed below | Number | X
+_SourceObjectId | ID of the object if `_Source` = 10 | Text | X
+_Priority | In case the contact uses multiple mobile numbers, the value of the Priority field establishes the order in which to use those mobile numbers | Number | X
+_Channel | Communication channel. Used to be Mobile, now not in use | Text | X
+_CarrierID | Numeric code for the mobile carrier used by the contact | Number |
+_CountryCode | Two letter country code | Text |
+_CreatedDate | Date the subscription was created | Date |
+_CreatedBy | Person responsible for contact creation | Date |
+_ModifiedBy | Person responsible for contact modification | Text | X
+_City | Contact's City | Text | X
+_State | Contact's State | Text | X
+_ZipCode | Contact's Zip Code | Text | X
+_FirstName | Contact's First Name | Text | X
+_LastName | Contact's Last Name | Text | X
+_UTCOffset | The number of hours from which the user's time zone deviates from UTC. Defaults to 0 | Number | X
+_IsHonorDST | Whether the user's time zone observers Daylight Savings Time or not. Defaults to false | Boolean | X
+
+`_Status` possible values:
+- 1 = Active
+- 2 = Inactive
+- 3 = Deleted
+
+`_Source` possible values:
+- 0 = Unspecified
+- 1 = Webcollect
+- 2 = API
+- 3 = FTAF
+- 4 = Import
+- 5 = MoveCopy
+- 6 = Manual
+- 7 = SalesForce
+- 8 = Segmentation
+- 9 = GenericExtension
+- 10 = CustomObject
+- 11 = FacebookAPI
+- 12 = SmartCapture
+- 13 = MobileOptIn
 
 When working with `_MobileAddress` Data View:
-
 1. There is no guarantee how long it will work and how long the data in it will be correct. So be sure you are checking it periodically or - even better - have a validation in your code.
-2.
+2. Do not use User Interface editor in MobileConnect Demographics part of Contact view for editing data in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with SSJS - including ContactID and MobileNumber changes and limited merging.
+3. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
+4. Whenever creating a MobileConnect Contact via any channel, be sure to provide the `_MobileNumber` with the dialling code as a prefix (without the `+` or `00`). For example, Poland has +48 dialling code and 9 digit numbers, so the correct format is 48123456789. Double check whether `_CountryCode` is apropriate two-letter code (for example, `PL`).
 
 ---
 
@@ -338,60 +354,60 @@ When working with `_MobileAddress` Data View:
 
 Worry not, there is a nearly identical Data View available and supported - [`_SMSSubscriptionLog`](#_smssubscriptionlog).
 
-It contains nearly all the same fields (sans `_CreatedBy` and `_ModifiedBy`) and adds even three more (`LogDate`, `SubscriberKey` and `MovileSubscriptionID`). However, be aware that there is different logic for OptIn/OptOut fields in both Data Views. `_MobileSubscription` shows the data #TODO.
+The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_ModifiedBy`) and even adds three more (`LogDate`, `SubscriberKey` and `MovileSubscriptionID`).
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 _SubscriptionDefinitionID | The unique ID of the subscription record | Text |
 _MobileNumber | Mobile number for the subscriber | Text |
-_OptOutStatusID | Whether the subscriber has opted out of SMS messages. | Text | X
-_OptOutMethodID | Method the subscriber used to opt out of SMS messages. | Text | X
+_OptOutStatusID | Whether the subscriber has opted out of SMS messages | Text | X
+_OptOutMethodID | Method the subscriber used to opt out of SMS messages | Text | X
 _OptOutDate | Date the subscriber opted out of SMS messages | Date | X
-_OptInStatusID | Whether the subscriber has opted in to SMS message. | Text |
-_OptInMethodID | Method the subscriber used to opt in to SMS messages. | Text | X
+_OptInStatusID | Whether the subscriber has opted in to SMS messages| Text |
+_OptInMethodID | Method the subscriber used to opt in to SMS messages | Text | X
 _OptInDate | Date the subscriber opted in to SMS messages | Date | X
 _Source | The subscription source | Text | X
-_CreatedDate | Date the subscription was created  | Date |
+_CreatedDate | Date the subscription was created | Date |
 _CreatedBy | Person responsible for subscription creation | Text | X
 _ModifiedDate | Date the subscription was modified | Date |
 _ModifiedBy | Person responsible for the modification | Text | X
 
-You shouldn't be working with `_MobileSubscription` Data View.
+You shouldn't be working with `_MobileSubscription` Data View. Use [`_SMSSubscriptionLog`](#_smssubscriptionlog) instead.
 
 ---
 
 ### _UndeliverableSMS
 
-`_UndeliverableSMS` Data View is officially not supported by Salesforce. But it is still working and might provide additional information on top of what is available in the newer [`_SMSMessageTracking`].
+`_SubscriberSMS` Data View is a __legacy table__. It is neither supported but you might have some records there. However, it was used in pre-MobileConnect times, so it is not recommended for any projects.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-MobileNumber | | Text |
-Undeliverable | | Boolean |
-BounceCount | | Number |
-FirstBounceDate | | Date |
-HoldDate | | Date | X
+MobileNumber | Mobile number for the subscriber | Text |
+Undeliverable | Whether the subscriber is eligible for future deliveries| Boolean |
+BounceCount | Number of times messagse was not delivered | Number |
+FirstBounceDate | Date of the first unsuccessful delivery | Date |
+HoldDate | Date when subscriber can be used in sends again | Date | X
 
-When working with `_UndeliverableSMS` Data View:
+You shouldn't be working with `_SubscriberSMS` Data View.
 
 ---
 
 ### _SubscriberSMS
 
-`_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated and you won't have records there.
+`_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated and you won't have records there. It was used in pre-MobileConnect times, so it is not recommended for any projects.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-SubscriberID | | Number |
-SubscriberKey | | Text |
-MobileNumber | | Phone |
-TransactionalOptIn | | Boolean |
-TransactionalOptInDate | | Date |
-TransactionalOptOutDate | | Date | X
-MarketingOptIn | | Boolean |
-MarketingOptInDate | | Date |
-MarketingOptOutDate | | Date | X
-SMSCarrierName | | Text | X
+SubscriberID | The subscriber ID for the affected subscriber | Number |
+SubscriberKey | The subscriber key for the affected subscriber | Text |
+MobileNumber | Mobile number for the subscriber | Phone |
+TransactionalOptIn | Whether the subscriber has opted in to Transactional SMS messages | Boolean |
+TransactionalOptInDate | Date the subscriber opted in to Transactional SMS messages | Date |
+TransactionalOptOutDate | Date the subscriber opted out of Transactional SMS messages | Date | X
+MarketingOptIn | Whether the subscriber has opted in to Marketing SMS messages | Boolean |
+MarketingOptInDate | Date the subscriber opted in to Marketing SMS messages | Date |
+MarketingOptOutDate | Date the subscriber opted out of Marketing SMS messages | Date | X
+SMSCarrierName | Name of the SMS Carrier used for delivery | Text | X
 
 You shouldn't be working with `_SubscriberSMS` Data View.
 
@@ -406,19 +422,66 @@ Name | Description | Data Type | Nullable
 LogDate | The date the subscription is logged | Date | X
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 MobileSubscriptionID | The unique ID of the subscription record | Number |
-SubscriptionDefinitionID | The unique keyword ID | Text |
+SubscriptionDefinitionID | The unique Keyword ID (`GUID()`) | Text |
 MobileNumber | Mobile number for the subscriber | Phone |
-OptOutStatusID | Whether the subscriber has opted out of SMS messages. | Number | X
-OptOutMethodID | Method the subscriber used to opt out of SMS messages. | Number | X
+OptOutStatusID | Whether the subscriber has opted out of SMS messages. Possible values listed below | Number | X
+OptOutMethodID | Method the subscriber used to opt out of SMS messages. Possible values listed below | Number | X
 OptOutDate | Date the subscriber opted out of SMS messages | date | Date | X
-OptInStatusID | Whether the subscriber has opted in to SMS message. | Number |
-OptInMethodID | Method the subscriber used to opt in to SMS messages. | Number | X
+OptInStatusID | Whether the subscriber has opted in to SMS message. Possible values listed below | Number |
+OptInMethodID | Method the subscriber used to opt in to SMS messages. Possible values listed below | Number | X
 OptInDate | Date the subscriber opted in to SMS messages | Date | X
 Source | The subscription source | Number | X
 CreatedDate | Date the subscription was created | Date |
 ModifiedDate | Date the subscription was modified | Date |
 
+`OptOutStatusID` possible values:
+- 0 = NotOptedOut
+- 1 = OptedOut
+- 10 = DeletingNotOptedOut
+- 11 = DeletingOptedOut
+
+`OptOutMethodID` possible values (more can come in the future):
+- 4 = Import
+- 6 = Application
+- 14 = MobileOriginated
+- 15 = Suppression
+- NULL = Subscriber texted an Opt-Out Keyword
+
+`OptInStatusID` possible values:
+- 0 = NotOptedIn = 0
+- 1 = OptInPending = 1
+- 2 = OptedIn = 2
+- 10 = DeletingNotOptedIn = 10
+- 11 = DeletingOptInPending = 11
+- 12 = DeletingOptedIn = 12
+
+`OptInMethodID` possible values:
+- 0 = Unspecified
+- 1 = WebCollect
+- 2 = API
+- 3 = FTAF
+- 4 = Import
+- 5 = MoveCopy
+- 6 = Application
+- 7 = SalesForce
+- 8 = Segmentation
+- 9 = GenericExtension
+- 10 = CustomObject
+- 11 = RMM
+- 12 = Mobile Opt-In
+- 13 = DeviceRegistration
+
+`Source` possible values:
+- 2 = API
+- 4 = Import
+- 6 = Application
+- 10 = CustomObject
+- 12 = MobileOptIn
+
 When working with `_SMSSubscriptionLog` Data View:
+1. Subscription data is assigned to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
+2. SubscriberKey will be populated correctly only if there is one (and only one) Subscriber with the same Mobile Number. Else, it will have either have `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
+3. `SubscriptionDefinitionID` is a GUID and there is no clean connection to a specific Keyword. But there is a trick. Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click Attributes tab and scroll to MobileConnect Data. Click on the Carrier ID value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check Keyword column you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click Edit. Now you will see the same data, but with Keyword GUID. With those two values you can use SQL[`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) statement to convert this Data View to more readable format.
 
 ---
 
