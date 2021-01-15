@@ -74,7 +74,7 @@ When working with `_EnterpriseAttribute` Data View:
 
 ---
 
-## Email Studio Data Views
+## Email Data Views
 
 ### _Job
 
@@ -288,9 +288,19 @@ When working with `_Bounce` Data View:
 
 ---
 
-## Mobile Studio Data Views
+## Mobile Connect Data Views
+
+MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But works. And in some cases - have awesome features, that are not available in any other way.
+
+:::note You Should Know
+
+Phone number format information #TODO
+
+:::
 
 ### _MobileAddress
+
+`_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is still no replacement for it. So let's dive in.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -317,31 +327,42 @@ _IsHonorDST | Defaults to false | Boolean | X
 
 When working with `_MobileAddress` Data View:
 
+1. There is no guarantee how long it will work and how long the data in it will be correct. So be sure you are checking it periodically or - even better - have a validation in your code.
+2.
+
 ---
 
 ### _MobileSubscription
 
+`_MobileSubscription` Data View is officially unsupported by Salesforce. It is still being filled with data, but there is no guarantee on how long it will persist nor whether the data will be correct.
+
+Worry not, there is a nearly identical Data View available and supported - [`_SMSSubscriptionLog`](#_smssubscriptionlog).
+
+It contains nearly all the same fields (sans `_CreatedBy` and `_ModifiedBy`) and adds even three more (`LogDate`, `SubscriberKey` and `MovileSubscriptionID`). However, be aware that there is different logic for OptIn/OptOut fields in both Data Views. `_MobileSubscription` shows the data #TODO.
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-_SubscriptionDefinitionID | | Text |
-_MobileNumber | | Text |
-_OptOutStatusID | | Text | X
-_OptOutMethodID | | Text | X
-_OptOutDate | | Date | X
-_OptInStatusID | | Text |
-_OptInMethodID | | Text | X
-_OptInDate | | Date | X
-_Source | | Text | X
-_CreatedDate | | Date |
-_CreatedBy | | Text | X
-_ModifiedDate | | Date |
-_ModifiedBy | | Text | X
+_SubscriptionDefinitionID | The unique ID of the subscription record | Text |
+_MobileNumber | Mobile number for the subscriber | Text |
+_OptOutStatusID | Whether the subscriber has opted out of SMS messages. | Text | X
+_OptOutMethodID | Method the subscriber used to opt out of SMS messages. | Text | X
+_OptOutDate | Date the subscriber opted out of SMS messages | Date | X
+_OptInStatusID | Whether the subscriber has opted in to SMS message. | Text |
+_OptInMethodID | Method the subscriber used to opt in to SMS messages. | Text | X
+_OptInDate | Date the subscriber opted in to SMS messages | Date | X
+_Source | The subscription source | Text | X
+_CreatedDate | Date the subscription was created  | Date |
+_CreatedBy | Person responsible for subscription creation | Text | X
+_ModifiedDate | Date the subscription was modified | Date |
+_ModifiedBy | Person responsible for the modification | Text | X
 
-When working with `_MobileSubscription` Data View:
+You shouldn't be working with `_MobileSubscription` Data View.
 
 ---
 
 ### _UndeliverableSMS
+
+`_UndeliverableSMS` Data View is officially not supported by Salesforce. But it is still working and might provide additional information on top of what is available in the newer [`_SMSMessageTracking`].
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -372,9 +393,13 @@ MarketingOptInDate | | Date |
 MarketingOptOutDate | | Date | X
 SMSCarrierName | | Text | X
 
+You shouldn't be working with `_SubscriberSMS` Data View.
+
 ---
 
 ### _SMSSubscriptionLog
+
+`_SMSSubscriptionLog` Data View stores full information about subscription status for each Mobile Number. It replaced unsupported [`_MobileSubscription`](#_mobilesubscription) Data View.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -383,15 +408,15 @@ SubscriberKey | The subscriber key for the affected subscriber | Text |
 MobileSubscriptionID | The unique ID of the subscription record | Number |
 SubscriptionDefinitionID | The unique keyword ID | Text |
 MobileNumber | Mobile number for the subscriber | Phone |
-OptOutStatusID | Whether the subscriber has opted out of SMS messages. See key for values. | Number | X
-OptOutMethodID | Method the subscriber used to opt out of SMS messages. See key for values. | Number | X
+OptOutStatusID | Whether the subscriber has opted out of SMS messages. | Number | X
+OptOutMethodID | Method the subscriber used to opt out of SMS messages. | Number | X
 OptOutDate | Date the subscriber opted out of SMS messages | date | Date | X
-OptInStatusID | Whether the subscriber has opted in to SMS message. See key for values. | Number |
-OptInMethodID | Method the subscriber used to opt in to SMS messages. See key for values. | Number | X
+OptInStatusID | Whether the subscriber has opted in to SMS message. | Number |
+OptInMethodID | Method the subscriber used to opt in to SMS messages. | Number | X
 OptInDate | Date the subscriber opted in to SMS messages | Date | X
 Source | The subscription source | Number | X
-CreatedDate | Date the message was created | Date |
-ModifiedDate | Date the message was modified | Date |
+CreatedDate | Date the subscription was created | Date |
+ModifiedDate | Date the subscription was modified | Date |
 
 When working with `_SMSSubscriptionLog` Data View:
 
