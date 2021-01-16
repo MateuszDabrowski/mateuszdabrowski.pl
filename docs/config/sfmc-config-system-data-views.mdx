@@ -288,9 +288,21 @@ When working with `_Bounce` Data View:
 
 ---
 
-## Mobile Connect Data Views
+## MobileConnect Data Views
 
 MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But some still works.
+
+:::note You Shoud Knows
+
+Most of the MobileConnect data is assigned to Mobile Number, not Contact. It means that it might be shared by few contacts (if multiple have the same mobile number assigned) or migrate between them (if the mobile number gets reassigned).
+
+It shouldn't be a big problem in B2C environments, as most people will have their private mobile number and keep it long. However, remember that unused numbers might be recycled after few years by a telecom and go back to market to a new user.
+
+Mobile number recycling is much more present in B2B scenario, where not only there is bigger chance for shared mobile numbers, but also much faster recycling of the numbers. Many companies reuse the phone number of the empoloyers that left.
+
+Take this into consideration when working with Mobile Number history of engagement and subscripton.
+
+:::
 
 ### _MobileAddress
 
@@ -304,7 +316,7 @@ _MobileNumber | Mobile number for the subscriber  | Text |
 _Status | Status of the Contact. Possible values listed below | Number | X
 _Source | Source of the Contact. Possible values listed below | Number | X
 _SourceObjectId | ID of the object if `_Source` = 10 | Text | X
-_Priority | In case the contact uses multiple mobile numbers, the value of the Priority field establishes the order in which to use those mobile numbers | Number | X
+_Priority | In case the contact uses multiple mobile numbers, the value of the Priority field establishes the order in which to use those mobile numbers. `_Priority` = 1 is first in order| Number | X
 _Channel | Communication channel. Used to be Mobile, now not in use | Text | X
 _CarrierID | Numeric code for the mobile carrier used by the contact | Number |
 _CountryCode | Two letter country code | Text |
@@ -342,9 +354,13 @@ _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or no
 
 When working with `_MobileAddress` Data View:
 1. There is no guarantee how long it will work and how long the data in it will be correct. So be sure you are checking it periodically or - even better - have a validation in your code.
-2. Do not use User Interface editor in MobileConnect Demographics part of Contact view for editing data in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with SSJS - including ContactID and MobileNumber changes and limited merging.
-3. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
-4. Whenever creating a MobileConnect Contact via any channel, be sure to provide the `_MobileNumber` with the dialling code as a prefix (without the `+` or `00`). For example, Poland has +48 dialling code and 9 digit numbers, so the correct format is 48123456789. Double check whether `_CountryCode` is apropriate two-letter code (for example, `PL`).
+2. Rule of thumb when working with the MobileConnect is to use the official, supported solutions. Only when they cannot deliver - check whether `_MobileAddress` can help.
+3. Do not use User Interface editor in MobileConnect Demographics part of Contact view for editing data in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with SSJS - including ContactID and MobileNumber changes and limited merging. This is the biggest selling point of this Data View.
+4. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
+5. Whenever creating a MobileConnect Contact via any channel, be sure to provide the `_MobileNumber` with the dialling code as a prefix (without the `+` or `00`). For example, Poland has +48 dialling code and 9 digit numbers, so the correct format is 48123456789. Double check whether `_CountryCode` is apropriate two-letter code (for example, `PL`).
+6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with highest `_Priority`.
+7. Whenever you add a Mobile Number to a new Contact, for all other Contacts with this number it gets lower `_Priority` (SFMC assumes that it was transfered).
+8. `_ContactID` makes this Data View good for cross-channel applications. New Data Views ([`_SMSSubscriptionLog`](#_smssubscriptionlog) and [`_SMSMessageTracking`](#_smsmessagetracking)) have Subscriber Key information, but if the Mobile Number is shared, it won't provide the data.
 
 ---
 
@@ -530,7 +546,6 @@ ShortCode | The short code or long code used to send your message | Text | X |
 SharedKeyword | The keyword used in your message | Text | X |
 Ordinal | Represents the parts in a multi-part message. Represented in ascending order starting at 0. | Number | X |
 FromName | From Name that an individual message was deployed with. Maximum length: 11 characters | Text | X |
-
 
 When working with `_SMSMessageTracking` Data View:
 
