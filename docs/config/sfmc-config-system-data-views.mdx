@@ -28,7 +28,7 @@ Below you can find selected Salesforce Marketing Cloud Data Views focused on Sub
 
 ---
 
-## Subscribers Data Views
+## Subscriber Data Views
 
 ### _Subscribers
 
@@ -355,7 +355,7 @@ _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or no
 When working with `_MobileAddress` Data View:
 1. There is no guarantee how long it will work and how long the data in it will be correct. So be sure you are checking it periodically or - even better - have a validation in your code.
 2. Rule of thumb when working with the MobileConnect is to use the official, supported solutions. Only when they cannot deliver - check whether `_MobileAddress` can help.
-3. Do not use User Interface editor in MobileConnect Demographics part of Contact view for editing data in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with SSJS - including ContactID and MobileNumber changes and limited merging. This is the biggest selling point of this Data View.
+3. Do not use User Interface editor in MobileConnect Demographics part of Contact view for editing data in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/ssjs-snippet-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. This is the biggest selling point of this Data View.
 4. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
 5. Whenever creating a MobileConnect Contact via any channel, be sure to provide the `_MobileNumber` with the dialling code as a prefix (without the `+` or `00`). For example, Poland has +48 dialling code and 9 digit numbers, so the correct format is 48123456789. Double check whether `_CountryCode` is apropriate two-letter code (for example, `PL`).
 6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with highest `_Priority`.
@@ -497,7 +497,9 @@ ModifiedDate | Date the subscription was modified | Date |
 When working with `_SMSSubscriptionLog` Data View:
 1. Subscription data is assigned to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
 2. SubscriberKey will be populated correctly only if there is one (and only one) Subscriber with the same Mobile Number. Else, it will have either have `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
-3. `SubscriptionDefinitionID` is a GUID and there is no clean connection to a specific Keyword. But there is a trick. Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click Attributes tab and scroll to MobileConnect Data. Click on the Carrier ID value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check Keyword column you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click Edit. Now you will see the same data, but with Keyword GUID. With those two values you can use SQL[`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) statement to convert this Data View to more readable format.
+3. `SubscriptionDefinitionID` is a GUID and there is no clean connection to a specific Keyword. But there are two tricks.
+   - [`JOIN`](../sql/sfmc-sql-join.mdx) [`_SMSMessageTracking`](#_smsmessagetracking) Data View and use `KeywordID` and `SharedKeyword` columns to map the GUID to readable Keyword name. If you cannot find this information there, there is second option:
+   - Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click Attributes tab and scroll to MobileConnect Data. Click on the Carrier ID value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check Keyword column you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click Edit. Now you will see the same data, but with Keyword GUID. With those two values you can use SQL [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) statement to convert this Data View to more readable format.
 
 ---
 
@@ -505,13 +507,13 @@ When working with `_SMSSubscriptionLog` Data View:
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-MobileMessageTrackingID | Unique ID for tracking information related to the sent message | Number |
+MobileMessageTrackingID | Unique Tracking ID - one for each SMS sent | Number |
 EID | Enterprise ID number for the sender | Number | X |
-MID | Member ID | Number | X |
+MID | Member ID (Business Unit ID) | Number | X |
 Mobile | Mobile number for the subscriber | v Phone |
-MessageID | Mobile message ID | Number |
-KeywordID | Unique identifier for the keyword | Text | X |
-CodeID | Unique identifier for the SMS code | Text | X |
+MessageID | Unique Mobile Message ID | Number |
+KeywordID | Unique identifier for the keyword (GUID) | Text | X |
+CodeID | Unique identifier for the SMS code (GUID) | Text | X |
 ConversationID | Unique identifier for the SMS conversation | Text | X |
 CampaignID | The SMS campaign tied to the record | Number | X |
 Sent | If the message was sent | Boolean |
@@ -548,10 +550,38 @@ Ordinal | Represents the parts in a multi-part message. Represented in ascending
 FromName | From Name that an individual message was deployed with. Maximum length: 11 characters | Text | X |
 
 When working with `_SMSMessageTracking` Data View:
+1. If you send one SMS to multiple Subscribers, you will have multiple rows of data with different `MobileMessageTrackingID` but same `MessageID`. Apart from `MessageID` you may also use `Name` field that contains the asset name from MobileConnect.
+2. `KeywordID` and `CodeID` are GUIDs, but the same table has also the readable versions of those columns - `ShortCode` and `SharedKeyword`. `ShortCode`, despite the name, displays also Long Codes.
+3. The fields marked above as boolean (like `Sent`, `Delivered`, `IsTest`, `Outbound`) are stored as a number: `0` = false, `1` = true. Some might also be `null` - for example if messasge was outbound, `Outbound` will have value of `1`, whereas `Inbound` will be `null`.
+4. `MessageText` will not only show you the text you sent in your SMS - it will also show it after personalisation is applied. On one hand, it is great for debugging, as it allows you to check what was the final content the user received. On the other hand, you won't be able to easily assess personalisations used across your messaging.
+5. `ResponseToMobileMessageTrackingID` is great way to check whether the customer responded. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) to output response data in the same line.
+6. Despite the Data View being officially supported, a lot of columns seems to be hit or miss. `IsValid` isn't working for me at all. `SendID`, `SendSegmentID`, `SendJobID`, `SendGroupID`, `SendPersonID` are completly random in whether they will be filed in or not. It changes even for consecutive sends of the same SMS to the same person. Also `SubscriberID` and `SubscriberKey` are quite random, with some sends to the same contact showing neither, both, or just `SubscriberId` without the Key data - despite no changes to the Contact being applied in the meantime. For the time being, I do not recommend using those columns for production purposes.
+7. `SMSStandardStatusCodeId` and `Description` are great for understanding what is the current status of your SMS send.
+
+#### SMS Status Codes
+
+Code | Status | Definition
+-- | -- | --
+1000 | QueuedToSfmcSendService | Message queued to internal send service.
+1500 | QueueFailureToSfmcSendService | Message failed to queue to internal send service. Retry your send.
+1501 | ValidationError | Internal validation error. Retry your send.
+2000 | DeliveredToAggregator | Message delivered to aggregator. Status will be updated when delivery confirmation comes from carrier or mobile device. For shared codes, this is the final status.
+2500 | FailedToAggregator | Message not delivered to aggregator. Retry your send.
+2501 | UnknownToAggregator | Unknown aggregator error.
+2600 | ThrottledToAggregator | Message not accepted by aggregator due to capacity issues. Send will be retried automatically.
+3000 | Enroute | Message is en route to carrier. Waiting on carrier confirmation.
+3001 | SentToCarrier | Message sent to carrier. Waiting to be accepted by carrier.
+3002 | AcceptedByCarrier | Message accepted by carrier. Waiting for delivery confirmation.
+3400 | Unknown | Unknown error
+4000 | Delivered | Message delivered to mobile device.
+4500 | Undeliverable | Message not delivered to mobile device.
+4501 | Expired | Message expired. Message exhausted the carrier retry process. Mobile device may be out of carrier range.
+4502 | Deleted | Message deleted by the carrier.
+4503 | Rejected | Message rejected. Carrier may have detected a loop or assumed that message is spam. This status can indicate an administrative or financial problem between the operator and the end users.
 
 ---
 
-## Journey Builder Data Views
+## Journey Data Views
 
 ### _JourneyActivity
 
