@@ -38,8 +38,8 @@ Name | Description | Data Type | Nullable
 -- | -- | -- | --
 SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number |
 DateUndeliverable | The date an email for the subscriber was returned as undeliverable | Date | X
-DateJoined | The date the subscriber joined your list | Date | X
-DateUnsubscribed | The date the subscriber unsubscribed from your list | Date | X
+DateJoined | The Date, the subscriber, joined your list | Date | X
+DateUnsubscribed | The Date, the subscriber, unsubscribed from your list | Date | X
 Domain | The domain of the subscriber | Text | X
 EmailAddress | The subscriber's email address | Email |
 BounceCount | The total number of bounces accrued by the subscriber | Number |
@@ -51,9 +51,9 @@ Locale | The locale code for the subscriber | Locale | X
 When working with `_Subscribers` Data View:
 
 1. If you are using the query in child Business Unit, always check whether you are querying local or enterprise Data View ([`ENT.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix).
-2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example why subscriber bounced, where did he unsubscribe) you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) other Data Views.
+2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example, why subscriber bounced, where did he unsubscribe) you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) other Data Views.
 3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from different engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
-4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull selection of your subscribers with SQL Query, add a new status with [custom value](../sql/sfmc-sql-select.mdx#custom-values) (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.
+4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull the selection of your subscribers with SQL Query, add a new status with [custom value](../sql/sfmc-sql-select.mdx#custom-values) (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.
 
 ---
 
@@ -92,7 +92,7 @@ SchedTime | The time the job was scheduled | Date | X
 PickupTime | The time the Marketing Cloud application started the job | Date | X
 DeliveredTime | The time the email was delivered | Date | X
 EventID | The ID for the job event | Text | X
-IsMultipart | Whether the job was sent as multipart MIME or not | Boolean |
+IsMultipart | Whether the job was sent as multi-part MIME or not | Boolean |
 JobType | The type of job | Text | X
 JobStatus | The status of the job | Text | X
 ModifiedBy | If modified, the user who modified the job | Number | X
@@ -103,14 +103,14 @@ IsWrapped | Whether the links in the email were wrapped for tracking | Boolean |
 TestEmailAddr | The test email address used in the job | Email | X
 Category | The job category | Text |
 BccEmail | Any email address send in the BCC field | Email | X
-OriginalSchedTime | The original scheduled time for the job | Date | X
+OriginalSchedTime | The initially scheduled time for the job | Date | X
 CreatedDate | The date the job was created | Date |
 CharacterSet | The character set used in the job | Text | X
 IPAddress | This value will always be a null value. | Text | X
 SalesForceTotalSubscriberCount | The total number of Salesforce subscribers included in the job | Number |
 SalesForceErrorSubscriberCount | The total number of Salesforce subscribers included in the job that received errors | Number |
 SendType | The type of send used in the job | Text |
-DynamicEmailSubject | The dynamic email subject included in the job | ntext | Text | X
+DynamicEmailSubject | The dynamic email subject included in the job | Text | X
 SuppressTracking | If tracking information for this job was suppressed | Boolean |
 SendClassificationType | The send classification type for the job | Text | X
 SendClassification | The send classification for the job | Text | X
@@ -122,10 +122,10 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Job` Data View:
 1. `JobID` field will be your bread and butter to [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
-2. `EmailName`, `FromName`, `FromEmail` are handy data points that are missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and [`_Bounce`](#_bounce) Data Views and worth checking for reporting needs.
-3. If you are performing A/B tests or want to create an analysis of the subject impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) to create a great source of knowledge for your content team.
+2. `EmailName`, `FromName`, and `FromEmail` are handy data points missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and [`_Bounce`](#_bounce) Data Views and worth checking for reporting needs.
+3. If you are performing A/B tests or want to create an analysis of the subject impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) to create a great knowledge source for your content team.
 4. For debugging purposes be sure to check out `IsWrapped` and `SuppressTracking` - if you are missing tracking data, `CharacterSet` - if you have problems with formatting, `SendClassification` - if you have issues with unsubscribers or spam complaints.
-5. `AccountUserID` field is fantastic for `_Job`-based Audit Log creation. Unfortunately, there is no UI-based easy way to find out which user has which UserID. You can either use SOAP API or match based on these SQL results.
+5. `AccountUserID` field is fantastic for `_Job`-based Audit Log creation. Unfortunately, there is no UI-based easy way to determine which user has which UserID. You can either use SOAP API or match based on these SQL results.
 
 :::note You Should Know
 
@@ -139,7 +139,7 @@ Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx
 
 ### _Sent
 
-Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication did not even leave your system.
+Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication did not leave your system.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -192,7 +192,7 @@ When working with `_Open` Data View:
 
 There is **no official feedback loop** that informs Marketing Cloud (or any other Marketing Automation Platform) that your recipient opened the email.
 
-What all the Marketing Automation Platforms do is putting an **invisible 1px wide image in the email** body that is unique for every single email you send. When someone opens an email, its images are downloaded from the server. When that happens with that unique image, SFMC treats it as proof that the email was opened. And in most cases it is right. But...
+All Marketing Automation Platforms put an **invisible 1px wide image in the email** body that is unique for every email you send. When someone opens an email, its images are downloaded from the server. SFMC treats download of this 1px wide image as proof that the recipient opened the email. And in most cases it is right. But...
 
 The **images don't always render** (that's why you should always use alt-text). Some recipients opt-in on a per-email basis to download email graphics. Government audiences might not even have this option. It can be because of the admin policy, the privacy concerns over engagement tracking or limited internet bandwidth. In such a case, even if the user opens an email, you won't have information about it.
 
@@ -200,7 +200,7 @@ It might lead to weird data, like clicks visible for contacts that did not open.
 
 It can also lead to cases, where user have both click and open data, but click data is earlier than the open. Why? Your recipient clicked something in your email and only after that decided to allow his email program to load the images in it.
 
-There might however be some cases, where the data is wrong the other way - when you see that email as opened, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within few seconds. Something not possible for a real human.
+There might be some cases, where the data is wrong the other way - when you see that email as opened, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within few seconds. Something not possible for a real human.
 
 :::
 
@@ -258,7 +258,7 @@ BatchID | The batch ID number for any batches used in the send | Number |
 SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 EventDate | The date the bounce took place | Date |
-IsUnique | Whether the event is unique or repeated - 1 for the first occurance, 0 for subsequent | Boolean |
+IsUnique | Whether the event is unique or repeated - 1 for the first occurrence, 0 for subsequent | Boolean |
 Domain | The domain at which the bounce occurred | Text |
 BounceCategoryID | The ID number for the bounce category | Number |
 BounceCategory | The category of the bounce | Text | X
@@ -276,7 +276,7 @@ When working with `_Bounce` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. The `Domain` is useful for aggregating the bounce data to see whether there is any domain-specific problem with deliverability.
+3. The `Domain` is useful for aggregating the bounce data to see any domain-specific problem with deliverability.
 4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
 5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases, it means you are considered a spammer by the server or already blacklisted. I recommend you to create an Automation with Verification Activity to get an automated warning whenever there are more than a few occurrences. Triage immediately.
 
@@ -292,21 +292,21 @@ When working with `_Bounce` Data View:
 
 MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But some still works.
 
-:::note You Shoud Knows
+:::note You Should Know
 
-Most of the MobileConnect data is assigned to Mobile Number, not Contact. It means that it might be shared by few contacts (if multiple have the same mobile number assigned) or migrate between them (if the mobile number gets reassigned).
+Most of the MobileConnect data is assigned to Mobile Number, not Contact. It means that it might be shared by a few contacts (if multiple have the same mobile number set) or migrate between them (if the mobile number gets reassigned).
 
-It shouldn't be a big problem in B2C environments, as most people will have their private mobile number and keep it long. However, remember that unused numbers might be recycled after few years by a telecom and go back to market to a new user.
+It shouldn't be a big problem in B2C environments, as most people will have their mobile number and keep it long. However, remember that unused numbers might be recycled after a few years by telecom and go back to the market and given to a new user.
 
-Mobile number recycling is much more present in B2B scenario, where not only there is bigger chance for shared mobile numbers, but also much faster recycling of the numbers. Many companies reuse the phone number of the empoloyers that left.
+Mobile number recycling is much more present in B2B scenario, where there is a bigger chance for shared mobile numbers and much faster recycling of the numbers. Many companies reuse the phone number of the employees that left.
 
-Take this into consideration when working with Mobile Number history of engagement and subscripton.
+When working with Mobile Number history of engagement and subscription, take this into consideration.
 
 :::
 
 ### _MobileAddress
 
-`_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is no replacement for it. Why? Because this Data View is still being used as a backend source of data for the MobileConnect Demographics Data.
+`_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is no replacement for it. Why? Because Marketing Cloud still uses this Data View as a backend data source for the MobileConnect Demographics Data.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -316,7 +316,7 @@ _MobileNumber | Mobile number for the subscriber  | Text |
 _Status | Status of the Contact. Possible values listed below | Number | X
 _Source | Source of the Contact. Possible values listed below | Number | X
 _SourceObjectId | ID of the object if `_Source` = 10 | Text | X
-_Priority | In case the contact uses multiple mobile numbers, the value of the Priority field establishes the order in which to use those mobile numbers. `_Priority` = 1 is first in order| Number | X
+_Priority | In case the contact uses multiple mobile numbers, the Priority field's value establishes the order in which to use those mobile numbers. `_Priority` = 1 is first in order | Number | X
 _Channel | Communication channel. Used to be Mobile, now not in use | Text | X
 _CarrierID | Numeric code for the mobile carrier used by the contact | Number |
 _CountryCode | Two letter country code | Text |
@@ -353,20 +353,20 @@ _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or no
 - 13 = MobileOptIn
 
 When working with `_MobileAddress` Data View:
-1. There is no guarantee how long it will work and how long the data in it will be correct. So be sure you are checking it periodically or - even better - have a validation in your code.
+1. There is no guarantee of how long it will work and how long the data will be correct. Be sure you are checking it periodically or - even better - have validation in your code.
 2. Rule of thumb when working with the MobileConnect is to use the official, supported solutions. Only when they cannot deliver - check whether `_MobileAddress` can help.
-3. Do not use User Interface editor in MobileConnect Demographics part of Contact view for editing data in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/ssjs-snippet-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. This is the biggest selling point of this Data View.
+3. Do not use User Interface editor in MobileConnect Demographics part of the Contact to edit information in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/ssjs-snippet-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. It is the most significant selling point of this Data View.
 4. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
-5. Whenever creating a MobileConnect Contact via any channel, be sure to provide the `_MobileNumber` with the dialling code as a prefix (without the `+` or `00`). For example, Poland has +48 dialling code and 9 digit numbers, so the correct format is 48123456789. Double check whether `_CountryCode` is apropriate two-letter code (for example, `PL`).
+5. Whenever creating a MobileConnect Contact, be sure to provide the `_MobileNumber` with the dialling code prefix (without the `+` or `00`). For example, Poland has +48 dialling code and nine-digit numbers, so the correct format is 48123456789. Double-check whether `_CountryCode` is appropriate two-letter code (for example, `PL`).
 6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with highest `_Priority`.
-7. Whenever you add a Mobile Number to a new Contact, for all other Contacts with this number it gets lower `_Priority` (SFMC assumes that it was transfered).
-8. `_ContactID` makes this Data View good for cross-channel applications. New Data Views ([`_SMSSubscriptionLog`](#_smssubscriptionlog) and [`_SMSMessageTracking`](#_smsmessagetracking)) have Subscriber Key information, but if the Mobile Number is shared, it won't provide the data.
+7. Whenever you add a Mobile Number to a new Contact, for all other Contacts with this number it gets lower `_Priority` (SFMC assumes that it was transferred).
+8. `_ContactID` makes this Data View useful for cross-channel applications. New Data Views ([`_SMSSubscriptionLog`](#_smssubscriptionlog) and [`_SMSMessageTracking`](#_smsmessagetracking)) have Subscriber Key information, but if the Mobile Number is shared, it won't provide the data.
 
 ---
 
 ### _MobileSubscription
 
-`_MobileSubscription` Data View is officially unsupported by Salesforce. It is still being filled with data, but there is no guarantee on how long it will persist nor whether the data will be correct.
+`_MobileSubscription` Data View is officially unsupported by Salesforce. Marketing Cloud still fills it with data, but there is no guarantee of how long it will persist or whether it will be correct.
 
 Worry not, there is a nearly identical Data View available and supported - [`_SMSSubscriptionLog`](#_smssubscriptionlog).
 
@@ -377,11 +377,11 @@ Name | Description | Data Type | Nullable
 _SubscriptionDefinitionID | The unique ID of the subscription record | Text |
 _MobileNumber | Mobile number for the subscriber | Text |
 _OptOutStatusID | Whether the subscriber has opted out of SMS messages | Text | X
-_OptOutMethodID | Method the subscriber used to opt out of SMS messages | Text | X
-_OptOutDate | Date the subscriber opted out of SMS messages | Date | X
-_OptInStatusID | Whether the subscriber has opted in to SMS messages| Text |
-_OptInMethodID | Method the subscriber used to opt in to SMS messages | Text | X
-_OptInDate | Date the subscriber opted in to SMS messages | Date | X
+_OptOutMethodID | Method the subscriber used to opt-out of SMS messages | Text | X
+_OptOutDate | Date, the subscriber, opted out of SMS messages | Date | X
+_OptInStatusID | Whether the subscriber has opted-in to the SMS messages| Text |
+_OptInMethodID | Method the subscriber used to opt-in to the SMS messages | Text | X
+_OptInDate | Date, the subscriber, opted-in to the SMS messages | Date | X
 _Source | The subscription source | Text | X
 _CreatedDate | Date the subscription was created | Date |
 _CreatedBy | Person responsible for subscription creation | Text | X
@@ -394,15 +394,15 @@ You shouldn't be working with `_MobileSubscription` Data View. Use [`_SMSSubscri
 
 ### _UndeliverableSMS
 
-`_SubscriberSMS` Data View is a __legacy table__. It is neither supported but you might have some records there. However, it was used in pre-MobileConnect times, so it is not recommended for any projects.
+`_SubscriberSMS` Data View is a __legacy table__. It is not supported, but you might have some records there. However, Marketing Cloud used it in pre-MobileConnect times, so I do not recommend using it for any projects.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 MobileNumber | Mobile number for the subscriber | Text |
 Undeliverable | Whether the subscriber is eligible for future deliveries| Boolean |
-BounceCount | Number of times messagse was not delivered | Number |
+BounceCount | Number of times message was not delivered | Number |
 FirstBounceDate | Date of the first unsuccessful delivery | Date |
-HoldDate | Date when subscriber can be used in sends again | Date | X
+HoldDate | Date when the subscriber can be used in sends again | Date | X
 
 You shouldn't be working with `_SubscriberSMS` Data View.
 
@@ -410,19 +410,19 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 
 ### _SubscriberSMS
 
-`_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated and you won't have records there. It was used in pre-MobileConnect times, so it is not recommended for any projects.
+`_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated, and you won't have records there. Marketing Cloud used it in pre-MobileConnect times, so I do not recommend using it for any projects.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 MobileNumber | Mobile number for the subscriber | Phone |
-TransactionalOptIn | Whether the subscriber has opted in to Transactional SMS messages | Boolean |
-TransactionalOptInDate | Date the subscriber opted in to Transactional SMS messages | Date |
-TransactionalOptOutDate | Date the subscriber opted out of Transactional SMS messages | Date | X
-MarketingOptIn | Whether the subscriber has opted in to Marketing SMS messages | Boolean |
-MarketingOptInDate | Date the subscriber opted in to Marketing SMS messages | Date |
-MarketingOptOutDate | Date the subscriber opted out of Marketing SMS messages | Date | X
+TransactionalOptIn | Whether the subscriber has opted-in to Transactional SMS messages | Boolean |
+TransactionalOptInDate | Date, the subscriber, opted-in to Transactional SMS messages | Date |
+TransactionalOptOutDate | Date, the subscriber, opted out of Transactional SMS messages | Date | X
+MarketingOptIn | Whether the subscriber has opted-in to Marketing SMS messages | Boolean |
+MarketingOptInDate | Date, the subscriber, opted-in to Marketing SMS messages | Date |
+MarketingOptOutDate | Date, the subscriber, opted out of Marketing SMS messages | Date | X
 SMSCarrierName | Name of the SMS Carrier used for delivery | Text | X
 
 You shouldn't be working with `_SubscriberSMS` Data View.
@@ -441,11 +441,11 @@ MobileSubscriptionID | The unique ID of the subscription record | Number |
 SubscriptionDefinitionID | The unique Keyword ID (`GUID()`) | Text |
 MobileNumber | Mobile number for the subscriber | Phone |
 OptOutStatusID | Whether the subscriber has opted out of SMS messages. Possible values listed below | Number | X
-OptOutMethodID | Method the subscriber used to opt out of SMS messages. Possible values listed below | Number | X
-OptOutDate | Date the subscriber opted out of SMS messages | date | Date | X
-OptInStatusID | Whether the subscriber has opted in to SMS message. Possible values listed below | Number |
-OptInMethodID | Method the subscriber used to opt in to SMS messages. Possible values listed below | Number | X
-OptInDate | Date the subscriber opted in to SMS messages | Date | X
+OptOutMethodID | Method the subscriber used to opt-out of SMS messages. Possible values listed below | Number | X
+OptOutDate | Date, the subscriber, opted out of SMS messages | Date | X
+OptInStatusID | Whether the subscriber has opted-in to the SMS message. Possible values listed below | Number |
+OptInMethodID | Method the subscriber used to opt-in to the SMS messages. Possible values listed below | Number | X
+OptInDate | Date, the subscriber, opted-in to the SMS messages | Date | X
 Source | The subscription source | Number | X
 CreatedDate | Date the subscription was created | Date |
 ModifiedDate | Date the subscription was modified | Date |
@@ -495,11 +495,11 @@ ModifiedDate | Date the subscription was modified | Date |
 - 12 = MobileOptIn
 
 When working with `_SMSSubscriptionLog` Data View:
-1. Subscription data is assigned to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
-2. SubscriberKey will be populated correctly only if there is one (and only one) Subscriber with the same Mobile Number. Else, it will have either have `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
-3. `SubscriptionDefinitionID` is a GUID and there is no clean connection to a specific Keyword. But there are two tricks.
-   - [`JOIN`](../sql/sfmc-sql-join.mdx) [`_SMSMessageTracking`](#_smsmessagetracking) Data View and use `KeywordID` and `SharedKeyword` columns to map the GUID to readable Keyword name. If you cannot find this information there, there is second option:
-   - Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click Attributes tab and scroll to MobileConnect Data. Click on the Carrier ID value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check Keyword column you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click Edit. Now you will see the same data, but with Keyword GUID. With those two values you can use SQL [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) statement to convert this Data View to more readable format.
+1. SFMC assigns subscription data to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
+2. SubscriberKey will be correctly populated if there is one (and only one) Subscriber with the same Mobile Number. Else, it will have either have `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
+3. `SubscriptionDefinitionID` is a GUID, and there is no apparent connection to a specific Keyword. But there are two tricks.
+   - [`JOIN`](../sql/sfmc-sql-join.mdx) [`_SMSMessageTracking`](#_smsmessagetracking) Data View and use `KeywordID` and `SharedKeyword` columns to map the GUID to readable Keyword name. If you cannot find this information there, there is a second option:
+   - Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click the Attributes tab and scroll to MobileConnect Data. Click on the Carrier ID value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check the Keyword column, you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click Edit. Now you will see the same data, but with Keyword GUID. With those two values, you can use a SQL [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) statement to convert this Data View to a more readable format.
 
 ---
 
@@ -510,7 +510,7 @@ Name | Description | Data Type | Nullable
 MobileMessageTrackingID | Unique Tracking ID - one for each SMS sent | Number |
 EID | Enterprise ID number for the sender | Number | X |
 MID | Member ID (Business Unit ID) | Number | X |
-Mobile | Mobile number for the subscriber | v Phone |
+Mobile | Mobile number for the subscriber | Phone |
 MessageID | Unique Mobile Message ID | Number |
 KeywordID | Unique identifier for the keyword (GUID) | Text | X |
 CodeID | Unique identifier for the SMS code (GUID) | Text | X |
@@ -520,18 +520,18 @@ Sent | If the message was sent | Boolean |
 Delivered | If the message was delivered | Boolean | X |
 Undelivered | Whether the message was delivered successfully or not | Boolean | X |
 Unsub | If the subscriber unsubscribed | Boolean | X |
-OptIn | Whether the subscriber has opted in to SMS messages | Boolean | X |
+OptIn | Whether the subscriber has opted-in to the SMS messages | Boolean | X |
 OptOut | Whether the subscriber has opted out of SMS messages | Boolean | X |
 Outbound | If the message was outgoing | Boolean | X |
 Inbound | If the message was incoming | Boolean | X |
 CreateDateTime | The date and time the tracking record was created | Date |
 ModifiedDateTime | The date and CST time the tracking record was modified | Date |
-ActionDateTime | The actual date/time a deliver or non delivery event was received by the Marketing Cloud. Timestamps for delivery receipts are not indicative of when a message was received on a handset. The SMS industry does not support read receipts, and the data returned in this view are based of of when a delivery receipt is returned to our system. | Date |
+ActionDateTime | The actual date/time the Marketing Cloud received a delivery or non-delivery event. Timestamps for delivery receipts are not indicative of when a message was received on a handset. The SMS industry does not support read receipts, and the data returned in this view are based on when a delivery receipt is returned to our system. | Date |
 MessageText | The text of the message | Text | X |
 IsTest | If the message was a test message | Number | X |
 MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. Can be used for troubleshooting send issues. | Number | X |
 ResponseToMobileMessageTrackingID | The tracking ID of the response to the message | Number | X |
-IsValid | If the message is valid | Number X |
+IsValid | If the message is valid | Number | X |
 InvalidationCode | Invalidation code for the message | Number | X |
 SendID | The send ID number for the SMS send | Number | X |
 SendSplitID | If the message was split, the ID of the split | Number | X |
@@ -550,13 +550,13 @@ Ordinal | Represents the parts in a multi-part message. Represented in ascending
 FromName | From Name that an individual message was deployed with. Maximum length: 11 characters | Text | X |
 
 When working with `_SMSMessageTracking` Data View:
-1. If you send one SMS to multiple Subscribers, you will have multiple rows of data with different `MobileMessageTrackingID` but same `MessageID`. Apart from `MessageID` you may also use `Name` field that contains the asset name from MobileConnect.
-2. `KeywordID` and `CodeID` are GUIDs, but the same table has also the readable versions of those columns - `ShortCode` and `SharedKeyword`. `ShortCode`, despite the name, displays also Long Codes.
-3. The fields marked above as boolean (like `Sent`, `Delivered`, `IsTest`, `Outbound`) are stored as a number: `0` = false, `1` = true. Some might also be `null` - for example if messasge was outbound, `Outbound` will have value of `1`, whereas `Inbound` will be `null`.
-4. `MessageText` will not only show you the text you sent in your SMS - it will also show it after personalisation is applied. On one hand, it is great for debugging, as it allows you to check what was the final content the user received. On the other hand, you won't be able to easily assess personalisations used across your messaging.
-5. `ResponseToMobileMessageTrackingID` is great way to check whether the customer responded. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) to output response data in the same line.
-6. Despite the Data View being officially supported, a lot of columns seems to be hit or miss. `IsValid` isn't working for me at all. `SendID`, `SendSegmentID`, `SendJobID`, `SendGroupID`, `SendPersonID` are completly random in whether they will be filed in or not. It changes even for consecutive sends of the same SMS to the same person. Also `SubscriberID` and `SubscriberKey` are quite random, with some sends to the same contact showing neither, both, or just `SubscriberId` without the Key data - despite no changes to the Contact being applied in the meantime. For the time being, I do not recommend using those columns for production purposes.
-7. `SMSStandardStatusCodeId` and `Description` are great for understanding what is the current status of your SMS send.
+1. If you send one SMS to multiple Subscribers, you will have multiple rows of data with different `MobileMessageTrackingID` but same `MessageID`. Apart from `MessageID` you may also use the `Name` field that contains the asset name from MobileConnect.
+2. `KeywordID` and `CodeID` are GUIDs, but the same table also has the readable versions of those columns - `ShortCode` and `SharedKeyword`. `ShortCode`, despite the name, also displays Long Codes.
+3. The fields marked above as boolean (like `Sent`, `Delivered`, `IsTest`, `Outbound`) have the value in the form of a number: `0` = false, `1` = true. Some might also be `null` - for example, if a message was outbound, `Outbound` will have the value of `1`, whereas `Inbound` will be `null`.
+4. `MessageText` will not only show you the text you sent in your SMS - it will also display it after personalisation is applied. On the one hand, it is great for debugging, as it allows you to check the final content the user received. On the other hand, you won't be able to assess personalisations used across your messaging.
+5. `ResponseToMobileMessageTrackingID` is an excellent way to check whether the customer responded. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) to output response data in the same line.
+6. Despite Marketing Cloud officially supporting this Data View, many columns seem to be hit or miss. `IsValid` isn't working for me at all. `SendID`, `SendSegmentID`, `SendJobID`, `SendGroupID`, `SendPersonID` are entirely random in whether they will be filed in or not. It changes even for consecutive sends of the same SMS to the same person. Also, `SubscriberID` and `SubscriberKey` are random. Sends to the same, unmodified Contact may fill both, one or neither column. For the time being, I do not recommend using those columns for production purposes.
+7. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
 
 #### SMS Status Codes
 
@@ -565,8 +565,8 @@ Code | Status | Definition
 1000 | QueuedToSfmcSendService | Message queued to internal send service.
 1500 | QueueFailureToSfmcSendService | Message failed to queue to internal send service. Retry your send.
 1501 | ValidationError | Internal validation error. Retry your send.
-2000 | DeliveredToAggregator | Message delivered to aggregator. Status will be updated when delivery confirmation comes from carrier or mobile device. For shared codes, this is the final status.
-2500 | FailedToAggregator | Message not delivered to aggregator. Retry your send.
+2000 | DeliveredToAggregator | Message delivered to the aggregator. The status will be updated when the delivery confirmation comes from the carrier or mobile device. For shared codes, this is the final status.
+2500 | FailedToAggregator | Message not delivered to the aggregator. Retry your send.
 2501 | UnknownToAggregator | Unknown aggregator error.
 2600 | ThrottledToAggregator | Message not accepted by aggregator due to capacity issues. Send will be retried automatically.
 3000 | Enroute | Message is en route to carrier. Waiting on carrier confirmation.
@@ -577,7 +577,7 @@ Code | Status | Definition
 4500 | Undeliverable | Message not delivered to mobile device.
 4501 | Expired | Message expired. Message exhausted the carrier retry process. Mobile device may be out of carrier range.
 4502 | Deleted | Message deleted by the carrier.
-4503 | Rejected | Message rejected. Carrier may have detected a loop or assumed that message is spam. This status can indicate an administrative or financial problem between the operator and the end users.
+4503 | Rejected | Message rejected. Carrier may have detected a loop or assumed that message is spam. This status can indicate an administrative or financial problem between the operator and the end-users.
 
 ---
 
@@ -589,16 +589,16 @@ Stores information about Activities available in your Journeys. Must-have for jo
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-VersionID | The unique identifier for the version of the journey | Text |
-ActivityID | The unique identifier for the activity. There are one or more ActivityID’s associated to a VersionID. | Text |
+VersionID | The unique identifier for the version of the Journey | Text |
+ActivityID | The unique identifier for the activity. There are one or more ActivityID's associated to a VersionID. | Text |
 ActivityName | The name of the activity | Text | X
 ActivityExternalKey | The external key associated with the activity | Text |
-JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a journey email’s Triggered Send Definition. | Text | X
+JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a Journey email's Triggered Send Definition. | Text | X
 ActivityType | The type of activity | Text | X
 
 When working with `_JourneyActivity` Data View:
 1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Just use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
-2. With the help of [`_Journey`](#_journey) Data View, you can use `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you would instead need to use Script Activity with REST API, but for a glance on the multi-channel use, it is perfect.
+2. With the help of [`_Journey`](#_journey) Data View, you can use `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you would instead need to use Script Activity with REST API, but it is perfect for a glance on the multi-channel use.
 
 ---
 
@@ -608,18 +608,18 @@ Stores information about your Journeys, for when context matters.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-VersionID | The unique identifier for the version of the journey | Text |
-JourneyID | The unique identifier for the journey. There are one or more VersionID’s associated to a JourneyID. | Text |
-JourneyName | The name of the journey | Text |
-VersionNumber | The version number of the version of the journey | Number |
-CreatedDate | The date that the version of the journey was created | Date |
-LastPublishedDate | The date that the version of the journey was last published | Date | X
-ModifiedDate | The date that the version of the journey was last edited | Date |
-JourneyStatus | The current running mode of the journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
+VersionID | The unique identifier for the version of the Journey | Text |
+JourneyID | The unique identifier for the Journey. There are one or more VersionID's associated to a JourneyID. | Text |
+JourneyName | The name of the Journey | Text |
+VersionNumber | The version number of the version of the Journey | Number |
+CreatedDate | The date that the version of the Journey was created | Date |
+LastPublishedDate | The date that the version of the Journey was last published | Date | X
+ModifiedDate | The date that the version of the Journey was last edited | Date |
+JourneyStatus | The current running mode of the Journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
 
 When working with `_Journey` Data View:
 1. `VersionID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_JourneyActivity`](#_journeyactivity). It allows you to map multi-channel engagement to particular Journey (visible in `JourneyName`) and its specific version (as shown in `VersionNumber`).
-2. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both [`WHERE`](../sql/sfmc-sql-where.mdx) statement, as well as a datapoint for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which of them are in the Active Journeys. For all found it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
+2. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](../sql/sfmc-sql-where.mdx) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
 3. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and based on the send volume or performance, stop them and notify you about that.
 
 ---
