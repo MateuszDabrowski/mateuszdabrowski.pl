@@ -99,6 +99,24 @@ Below are three solution tiers:
 
 <a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000003lCKQAY">Vote on IdeaExchange</a>
 
+### Behavioral Trigger Content Block rendering on Yahoo, AOL, Windows Outlook
+
+The current version of Behavioral Trigger Content Block is not rendering correctly on Yahoo, AOL and Windows Outlook. On those Email Providers, the product text is not displayed, and the customer only sees the images.
+
+The reason for this is using `rem` units font-size for product descriptions - `font-size: 0.8125rem`:
+
+`<td class="mcbt_name" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 310px;">--name--</td>`
+
+`rem` units are currently not supported by Yahoo, AOL and Windows Outlook ([Can I Email](https://www.caniemail.com/features/css-unit-rem/)) which leads to those Email Providers ignoring this parameter. When this happens, the font-size value is inherited from the parent that have font-size configured.
+
+And for Behavioral Trigger Content block that parent is a `<td>` parameter within header [`markupFragment`](../docs/config/sfmc-config-behavioral-triggers#3-settings--markup-fragments). Unfortunately, it has `font-size: 0`:
+
+`<td class="multi-column" style="padding: 0; text-align: center; font-size: 0; padding-top: 10px; padding-bottom: 10px;">`
+
+There should be no `rem` units used in the Behavioral Trigger Content Block code and instead a standard `px` font-size assignment for the Block to render correctly.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000UKIKQA4">Vote on IdeaExchange</a>
+
 ---
 
 ## Mobile Studio
