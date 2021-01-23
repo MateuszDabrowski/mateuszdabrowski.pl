@@ -52,7 +52,7 @@ SELECT
 
 Up to this point, `CAST` and `CONVERT` seem similar in the features.
 
-However, only `CONVERT` have an additional third optional argument - style. Thanks to it, you can convert even from non-standard (for the server) formats that would result in an error:
+However, only `CONVERT` have an additional third optional argument - [style](#convert-style-codes). Thanks to it, you can convert even from non-standard (for the server) formats that would result in an error:
 
 ```sql {4} title="Converting dd/MM/yyyy format throws 'Could not convert date and/or time from string data type'"
 SELECT
@@ -61,7 +61,7 @@ FROM _Subscribers
 WHERE DateJoined > CONVERT(DATE, '30/10/2019') /* Error */
 ```
 
-With style codes, we can make it work with minimal change:
+With [style codes](#convert-style-codes), we can make it work with minimal change:
 
 ```sql {4} title="Converting dd/MM/yyyy format with appropriate style code"
 SELECT
@@ -74,7 +74,7 @@ It is not possible with `CAST`.
 
 :::note You Should Know
 
-You can also leverage style codes to format your dates during conversion to string, without the need to use [`FORMAT`](./sfmc-sql-date-functions.mdx#format-with-dates) function on top.
+You can also leverage [style codes](#convert-style-codes) to format your dates during conversion to string, without the need to use [`FORMAT`](./sfmc-sql-date-functions.mdx#format-with-dates) function on top.
 
 ```sql
 SELECT
@@ -120,7 +120,7 @@ Be sure to add correct precision. If it is smaller then the values in your sourc
 
 As for scale - if your scale is smaller than in your source, the value is rounded.
 
-You can also use the single argument with `DATETIME`, `DATETIME2`, `DATETIMEOFFSET` (to control precision of the output) and string data types. The latter won't directly limit the number of characters, but rather the number of bytes (which might be equal or not to the number of characters depending on what characters you are using).
+You can also use the single argument with `DATETIME`, `DATETIME2`, `DATETIMEOFFSET` (to control precision of the output) and string data types (`CHAR`, `NCHAR`, `VARCHAR`, `NVARCHAR`). The latter won't directly limit the number of characters, but rather the number of bytes (which might be equal or not to the number of characters depending on what characters you are using).
 
 `CHAR` allows for 1-8000 bytes range, whereas `NCHAR` due to Unicode support allows for only 1-4000. `VARCHAR` and `NVARCHAR` support the same ranges respectively and have an additional possible option - `max` that you can use if some values might exceed the range.
 
@@ -161,6 +161,14 @@ Just as with data types - there are many style codes available. Here I will cove
 | yyyy-MM-dd HH:mm:ss | 120 |
 | MM/dd/yy hh:mm:ss tt | 22 |
 | yyyy-mm-dd| 23 |
+
+Use it by adding the style code as the third argument of the [`CONVERT`](#convert) function:
+
+```sql {2-3}
+SELECT
+    CONVERT(NVARCHAR, GETDATE(), 101) AS DateAsString,
+    CONVERT(DATETIME2, '2020-12-31 19:00:00', 120) AS StringAsDate
+```
 
 You can find the full list of style codes on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver15#date-and-time-styles).
 
