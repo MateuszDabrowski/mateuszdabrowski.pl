@@ -2,9 +2,114 @@
 id: ssjs-snippet-mobileconnect-phone-change
 title: MobileConnect Phone Change
 sidebar_label: MobileConnect Phone Change
-description: Work in Progress
+description: Control your MobileConnect data with hidden _MobileAddress features.
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Work in Progress' />
+<LeadText content='Control your MobileConnect data with hidden _MobileAddress features.' />
+
+## Problem with changing MobileConnect Mobile Number
+
+There is a lot to like about the Salesforce Marketing Cloud Mobile Connect, but Contact management is not the one.
+
+One of the problems is managing the Mobile Phone Number. It is a crucial data point because we are using it to send the SMS and because it is the key value for many of the [MobileConnect Data Views](../config/sfmc-config-system-data-views.mdx#mobileconnect-data-views).
+
+There are many scenarios when we might want to update the user's Mobile Number. Be it wrong data in the initial load or client's request to change the number.
+
+The official approach is to import the contact with the new Mobile Number. It, however, won't overwrite the previous phone. It will merely add a new one to the record with higher [priority](../config/sfmc-config-system-data-views.mdx#_mobileaddress). Not perfect.
+
+So what you can do? Leverage the [`_MobileAddress` Data View](../config/sfmc-config-system-data-views.mdx#_mobileaddress) along with simple SSJS snippet and force Marketing Cloud to do what you want it to do.
+
+:::note You Should Know
+
+The solution shown below is working perfectly fine right now. However, remember that Salesforce considers [`_MobileAddress` Data View](../config/sfmc-config-system-data-views.mdx#_mobileaddress) as legacy and unsupported, so be sure to make the first run on test data to check whether it is still working correctly.
+
+Considering how intertwined this Data View still is with MobileConnect, I don't expect changes anytime soon.
+
+:::
+
+## Solution
+
+[`_MobileAddress` Data View](../config/sfmc-config-system-data-views.mdx#_mobileaddress) is unique, as it can be modified using SSJS - this is not the case with most other Data Views. We can make use of this by using [`Rows.Update`](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsUpdate.htm) function.
+
+We will need:
+- Contact ID - you can check it by going to MobileConnect » Manage Contacts » clicking a Contact Key » Attributes tab. It will be in the first table.
+- New Mobile Number - must be in the MobileConnect format with the dialling code prefix (without the `+` or `00`). For example, Poland has +48 dialling code and nine-digit numbers, so the correct form is 48123456789.
+
+With that two information, [`Init`](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionFunctions.htm) the Data View and update it. Remember to load the Core Library.
+
+```html {4-5} title="Change Mobile Number of a single Contact"
+<script runat="server">
+    Platform.Load('Core','1');
+    var contactId = 123456789;
+    var mobileAddressDataView = DataExtension.Init('_MobileAddress');
+    var result = mobileAddressDataView.Rows.Update({_MobileNumber: '48123456789'}, ['_ContactID'], [contactId]);
+</script>
+```
+
+That's it. Running this snippet - even in a Cloud Page or Code Resource - will change the Mobile Number assigned to the Contact.
+
+:::note You Should Know
+
+If the new Mobile Number has different dialling code, be sure to also update `_CountryCode` field with appropriate two-letter code (for example, `PL`)
+
+You can do it in one line:
+
+```js
+mobileAddressDataView.Rows.Update({_MobileNumber:'48123456789',_CountryCode:'PL'},['_ContactID'],[contactId]);
+```
+
+:::
+
+## Options
+
+You can adapt the above script to better suit your needs.
+
+### Change or Merge Contact ID
+
+You are not limited to Mobile Number change in MobileConnect with this solution. You can leverage [`_MobileAddress` Data View](../config/sfmc-config-system-data-views.mdx#_mobileaddress) to even merge MobileConnect contacts.
+
+Use cases?
+- You might have two contacts with different phone numbers that you have identified to be the same person (one tied to personal and second to work number). To optimize the contact count, you can make a merge.
+- Your client opted-in for Keyword using SMS. It created a Contact with the phone number as Contact Key. Later your CRM pushed this contact to Marketing Cloud with proper Contact Key. Merge it to have the engagement data adequately allocated.
+
+To do this, you search by Contact ID of the to-be-merged record and update it to the one you want to use after the merge.
+
+```html {5-6} title="Change Contact ID of a single Contact"
+<script runat="server">
+    Platform.Load('Core','1');
+    var contactId = 123456789;
+    var newContactId = 987654321;
+    var mobileAddressDataView = DataExtension.Init('_MobileAddress');
+    var result = mobileAddressDataView.Rows.Update({_ContactID: newContactId}, ['_ContactID'], [contactId]);
+</script>
+```
+
+:::note You Should Know
+
+You cannot merge two Contacts with the same Mobile Number. It is why it is crucial to leverage this snippet before you import new Contacts into MobileConnect.
+
+You can, however, change the Mobile Number before merging. For example, by adding 0 before the dialling code. The phone won't be correct, but you can lower priority. Engagement and Subscription history is assigned to Mobile Number, not specific Contact ID, so as long as the merged record will keep the original number, it will also have its history.
+
+:::
+
+### Add, Lookup, Remove
+
+You are not limited to updating. You can also leverage other SSJS functions to [add](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsAdd.htm), [lookup](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsLookup.htm) or [remove](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/ssjs_dataExtensionRowsRemove.htm) MobileConnect Contacts. Those might be great for enhancing your Preference Center or leveraging Automation Studio.
+
+### Self-serve it
+
+Above snippets are great for single cases you want to cover, but you might consider using them as a part of your Preference Center and allow your customer to change their phone number themselves.
+
+Be sure, however, to normalize the number provided manually by the client for it to be numbers only with appropriate dialling code and country code.
+
+### Automate it
+
+You can also leverage the snippet within an Automation Studio using Data Extension as a batch data source and Script Activity for processing. Pack the snippet within a [`for` loop](./ssjs-loops.mdx) and make a more significant change to your MobileConnect data.
+
+:::note You Should Know
+
+Technically you can use this solution to modify any field of [`_MobileAddress`](../config/sfmc-config-system-data-views.mdx#_mobileaddress). Due to the unsupported status of this Data View, I would recommend using Contact Builder whenever it is enough for your use case. It allows you to change everything but the Mobile Number and Contact ID.
+
+:::
