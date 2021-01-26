@@ -56,6 +56,7 @@ module.exports = {
             items: [
                 'config/sfmc-config-permissions',
                 'config/sfmc-config-system-data-views',
+                'config/sfmc-config-features-on-demand',
                 'config/sfmc-config-behavioral-triggers',
             ],
         },

@@ -1,0 +1,32 @@
+---
+id: sfmc-config-features-on-demand
+title: SFMC Features On Demand
+sidebar_label: Features On Demand
+description: Work in progress.
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Work in progress.' />
+
+## What are Marketing Cloud Features On Demand?
+
+## Free Features On Demand
+
+Feature Name | Description | Documentation
+-- | -- | --
+Basic Audit Trail | Captures information about SFMC access and security changes. | [Audit Trail](https://help.salesforce.com/articleView?id=sf.mc_overview_audit_trail.htm&type=5)
+Preserve Reply Attachments | Forwards attachments added to the reply email via RMM's auto-forwarding. | [Reply Mail Management](https://help.salesforce.com/articleView?id=sf.mc_es_reply_mail_management.htm&type=5)
+Data Extract Types | Adds various Data Extract Activity options in Automation Studio. Ask for enabling every available one, as not all are mentioned in the official documentation. | [Data Extract Activity](https://help.salesforce.com/articleView?id=sf.mc_as_use_a_data_extract_activity.htm&type=5)
+Multi-Org Account | Allows you to connect different Sales/Service Cloud Orgs for each Marketing Cloud Business Unit. It is not reversible. | [Multi-Org Account](https://help.salesforce.com/articleView?id=sf.mc_co_upgrade_to_multi-org.htm&type=5)
+Script Activity | Allows you to leverage SSJS in Automation Studio. | [Script Activity](https://help.salesforce.com/articleView?id=sf.mc_as_create_a_script_activity_1.htm&type=5)
+Email Send Log | Allows you to log send-time data about your emails. Requires two features: Send Log Data Extension Template and Business Rule on the backend of SFMC to populate Data Extension based on this template. If your Send Log doesn't work, you probably miss the Business Rule. Ask for both. | [Send Logging in Email Studio](https://help.salesforce.com/articleView?id=sf.mc_es_send_logging.htm&type=5)
+SMS Send Log | Same as with Email Send Log | [SMS Send Logging Data Extension](https://help.salesforce.com/articleView?id=sf.mc_es_create_sms_sendlogging_de.htm&type=5)
+Push Send Log | Same as with Email Send Log | [Push Notification Send Logging Data Extension](https://help.salesforce.com/articleView?id=sf.mc_es_create_push_sendlog.htm&type=5)
+
+## Paid Features On Demand
+
+Feature Name | Description | Documentation
+-- | -- | --
+Advanced Audit Trail | Captures Basic Audit Trail Events and key events around Emails, MobileConnect, Mobile Push, Cloud Pages, Automations, Journeys and Google Analytics Integration. | [Audit Trail](https://help.salesforce.com/articleView?id=sf.mc_overview_audit_trail.htm&type=5)
+Email Attachments | Allows you to send emails with attachments. | [Email Attachments](https://help.salesforce.com/articleView?id=sf.mc_es_email_attachments.htm&type=5)
