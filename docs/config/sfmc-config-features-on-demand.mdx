@@ -10,23 +10,71 @@ import { LeadText } from '../../src/components/LeadText.js';
 <LeadText content='Work in progress.' />
 
 ## What are Marketing Cloud Features On Demand?
+TODO
 
-## Free Features On Demand
+## Marketing Cloud Settings Features
 
-Feature Name | Description | Documentation
--- | -- | --
-Basic Audit Trail | Captures information about SFMC access and security changes. | [Audit Trail](https://help.salesforce.com/articleView?id=sf.mc_overview_audit_trail.htm&type=5)
-Preserve Reply Attachments | Forwards attachments added to the reply email via RMM's auto-forwarding. | [Reply Mail Management](https://help.salesforce.com/articleView?id=sf.mc_es_reply_mail_management.htm&type=5)
-Data Extract Types | Adds various Data Extract Activity options in Automation Studio. Ask for enabling every available one, as not all are mentioned in the official documentation. | [Data Extract Activity](https://help.salesforce.com/articleView?id=sf.mc_as_use_a_data_extract_activity.htm&type=5)
-Multi-Org Account | Allows you to connect different Sales/Service Cloud Orgs for each Marketing Cloud Business Unit. It is not reversible. | [Multi-Org Account](https://help.salesforce.com/articleView?id=sf.mc_co_upgrade_to_multi-org.htm&type=5)
-Script Activity | Allows you to leverage SSJS in Automation Studio. | [Script Activity](https://help.salesforce.com/articleView?id=sf.mc_as_create_a_script_activity_1.htm&type=5)
-Email Send Log | Allows you to log send-time data about your emails. Requires two features: Send Log Data Extension Template and Business Rule on the backend of SFMC to populate Data Extension based on this template. If your Send Log doesn't work, you probably miss the Business Rule. Ask for both. | [Send Logging in Email Studio](https://help.salesforce.com/articleView?id=sf.mc_es_send_logging.htm&type=5)
-SMS Send Log | Same as with Email Send Log | [SMS Send Logging Data Extension](https://help.salesforce.com/articleView?id=sf.mc_es_create_sms_sendlogging_de.htm&type=5)
-Push Send Log | Same as with Email Send Log | [Push Notification Send Logging Data Extension](https://help.salesforce.com/articleView?id=sf.mc_es_create_push_sendlog.htm&type=5)
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+Basic Audit Trail | Captures information about SFMC access and security changes. | [Audit Trail](https://help.salesforce.com/articleView?id=sf.mc_overview_audit_trail.htm&type=5) | Free
+Advanced Audit Trail | Captures Basic Audit Trail Events and key events around Emails, MobileConnect, Mobile Push, Cloud Pages, Automations, Journeys and Google Analytics Integration. | [Audit Trail](https://help.salesforce.com/articleView?id=sf.mc_overview_audit_trail.htm&type=5) | Paid
+Multi-Org Account | Allows you to connect different Sales/Service Cloud Orgs for each Marketing Cloud Business Unit. It is not reversible. | [Multi-Org Account](https://help.salesforce.com/articleView?id=sf.mc_co_upgrade_to_multi-org.htm&type=5) | Free
+Restore Encryption at Rest Key | If you use Bring Your Own Key for Encryption at Rest and revoked that key, this allows you to restore the key and retain the data if you act fast | [Restore SFMC Encryption Key](https://help.salesforce.com/articleView?id=sf.mc_overview_restore_byok.htm&type=5) | ?
 
-## Paid Features On Demand
+## Deliverability Features
 
-Feature Name | Description | Documentation
--- | -- | --
-Advanced Audit Trail | Captures Basic Audit Trail Events and key events around Emails, MobileConnect, Mobile Push, Cloud Pages, Automations, Journeys and Google Analytics Integration. | [Audit Trail](https://help.salesforce.com/articleView?id=sf.mc_overview_audit_trail.htm&type=5)
-Email Attachments | Allows you to send emails with attachments. | [Email Attachments](https://help.salesforce.com/articleView?id=sf.mc_es_email_attachments.htm&type=5)
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+Sender Authentication Package | SAP is a collection of products including Private Domain with link and image wrapping (unique for SAP), Dedicated IP, and Reply Mail Management. Must-have. | [SAP](https://help.salesforce.com/articleView?id=sf.mc_es_sap.htm&type=5) | Paid
+Additional Dedicated IP | You can purchase additional dedicated IPs to manage bigger volumes or split communication types. | [Dedicated IP](https://help.salesforce.com/articleView?id=sf.mc_es_dedicated_ip.htm&type=5) | Paid
+Additional Private Domain | You can purchase additional private domains to differentiate various types of your communication. Does not cover link and image branding. | [Private Domains](https://help.salesforce.com/articleView?id=000318538&type=1&mode=1) | Paid
+TODO: Default and custom way of managing multiple IPs + deliverability free suites
+
+## Email Studio Features
+
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+CAN-SPAM Compliance Check | Marketing Cloud by default requires you to be compliant with US CAN-SPAM regulation by enforcing Commercial / Transactional split of messages and requiring specific data to be available in the email footer. If you are sending to non-US recipients, you can ask to switch off that requirement | [CAN-SPAM Compliance](https://help.salesforce.com/articleView?id=sf.mc_es_can_spam_requirements.htm&type=5) | Free
+Email Send Log | Allows you to log send-time data about your emails. Requires two features: Send Log Data Extension Template and Business Rule on the backend of SFMC to populate Data Extension based on this template. If your Send Log doesn't work, you probably miss the Business Rule. Ask for both. | [Send Logging in Email Studio](https://help.salesforce.com/articleView?id=sf.mc_es_send_logging.htm&type=5) | Free
+Auto-Suppression List | Allows you to suppress Contacts from receiving any Emails from the whole instance or from specific classification and Business Unit. No need to attach to each send as with standard Supression Lists. | [Auto-Suppression Lists](https://help.salesforce.com/articleView?id=sf.mc_es_auto_suppresion_lists.htm&type=5) |
+Exclusion Scripts | Allows you to define custom exclusion logic evaluated at send time using AMPScript. If possible, use segmentation, suppression and auto-suppression lists due to performance reasons, but in some cases Exclusion Script might be the only way. There is also matching feature for Journey Builder Emails. Ask for both. | [Email Studio Exclusion Scripts](https://help.salesforce.com/articleView?id=000339899&type=1&mode=1) | Free
+Custom List Detective | Allows you to block sending and subscribing all contacts with specified Email Address username (for exmaple `admin@`) or domain (for example `@competitor.com`) | [Custom List Detective](https://help.salesforce.com/articleView?id=000316767&type=1&mode=1) | Free
+Custom List Detective Allowlist | On top of Custom List Detective you can also ask Support to add specific usernames or domains to Allowlist. Might be useful, as this setting will overwrite the standard List Detective. | [Custom List Detective](https://help.salesforce.com/articleView?id=000316767&type=1&mode=1) | Free
+Email Attachments | Allows you to send emails with attachments. | [Email Attachments](https://help.salesforce.com/articleView?id=sf.mc_es_email_attachments.htm&type=5) | Paid
+Preserve Reply Attachments | Forwards attachments added to the reply email via RMM's auto-forwarding. | [Reply Mail Management](https://help.salesforce.com/articleView?id=sf.mc_es_reply_mail_management.htm&type=5) | Free
+Subscriber-Specific From Name & Address | Allows you to personalize the From Name and From Address per each Subscriber. | [Personalized Sender Profile](https://help.salesforce.com/articleView?id=sf.mc_es_sender_profile.htm&type=5) | ?
+
+## Mobile Studio Features
+
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+SMS Send Log | Allows you to log send-time data about your sms. Requires two features: SMS Send Log Data Extension Template and Business Rule on the backend of SFMC to populate Data Extension based on this template. If your Send Log doesn't work, you probably miss the Business Rule. Ask for both. | [SMS Send Logging Data Extension](https://help.salesforce.com/articleView?id=sf.mc_es_create_sms_sendlogging_de.htm&type=5) | Free
+Push Send Log | Allows you to log send-time data about your push notifications. Requires two features: Push Send Log Data Extension Template and Business Rule on the backend of SFMC to populate Data Extension based on this template. If your Send Log doesn't work, you probably miss the Business Rule. Ask for both. | [Push Notification Send Logging Data Extension](https://help.salesforce.com/articleView?id=sf.mc_es_create_push_sendlog.htm&type=5) | Free
+
+## Analytics Builder
+
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+Send Time Attributes in a Discover Report | Allows you to add up to 15 Send Time Attributes to the Discover Reports (similar to Send log feature) | [Discover Sent Time Attributes](https://help.salesforce.com/articleView?id=sf.mc_di_send_time_attributes.htm&type=5) | ?
+
+## Journey Builder Features
+
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+Exclusion Scripts for Email Activity | Allows you to define custom exclusion logic evaluated at send time using AMPScript. If possible, use segmentation, suppression and auto-suppression lists due to performance reasons, but in some cases Exclusion Script might be the only way. There is also matching feature for Email Studio. Ask for both. | [Journey Builder Exclusion Scripts](https://help.salesforce.com/articleView?id=000320456&type=1&mode=1) | Free
+
+## Automation Studio Features
+
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+Data Extract Types | Adds various Data Extract Activity options in Automation Studio. Ask for enabling every available one, as not all are mentioned in the official documentation. | [Data Extract Activity](https://help.salesforce.com/articleView?id=sf.mc_as_extract_types_reference.htm&type=5) | Free
+Salesforce Objects & Reports Import | If you are using Marketing Cloud Connect, you can ask support to enable additional Import Activity Type to pull Objects and Reports to Salesforce Data Extensions folder. | [Import Activity](https://help.salesforce.com/articleView?id=sf.mc_es_create_an_import_activity.htm&type=5) | Free
+Additional Automation Activities | You can ask Support to enable few additional Automation Activities focused on Journey Builder and Salesforce integration. | [On Demand Activities](https://help.salesforce.com/articleView?id=sf.mc_as_automation_studio_activities_reference.htm&type=5) | ?
+
+## Developer Features
+
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+Custom Data Views | Allows you to request a creation of Custom Data View. Mindblowing option. | [Example Custom Data View](https://salesforce.stackexchange.com/a/293395/91679) | Paid
+SOAP Triggered Send Prioritization | Allows you to declare priority for your Triggered Sends created via API. | [Triggered Send Priority](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-apis.meta/mc-apis/creating_a_triggered_send_using_the_async_api.htm) | Free
+SOAP Disable Datetime Normalization | By default dates coming to Marketing Cloud via SOAP API will be normalized. You can ask to disable it. | [Datetime Normalization](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-apis.meta/mc-apis/incoming_date_normalization.htm)
