@@ -9,7 +9,6 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
 
-
 ## Data Views Basics
 
 System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [Query Studio](../sql/sfmc-sql-basics.mdx#query-studio) or outputting to the standard Data Extension. They are excellent fuel for SSJS logic.
@@ -519,9 +518,9 @@ CampaignID | The SMS campaign tied to the record | Number | X |
 Sent | If the message was sent | Boolean |
 Delivered | If the message was delivered | Boolean | X |
 Undelivered | Whether the message was delivered successfully or not | Boolean | X |
-Unsub | If the subscriber unsubscribed | Boolean | X |
-OptIn | Whether the subscriber has opted-in to the SMS messages | Boolean | X |
-OptOut | Whether the subscriber has opted out of SMS messages | Boolean | X |
+Unsub | If the subscriber unsubscribed. Currently always null. | Boolean | X |
+OptIn | Whether the subscriber has opted-in to the SMS messages. Currently always null. | Boolean | X |
+OptOut | Whether the subscriber has opted out of SMS messages. Currently always null. | Boolean | X |
 Outbound | If the message was outgoing | Boolean | X |
 Inbound | If the message was incoming | Boolean | X |
 CreateDateTime | The date and time the tracking record was created | Date |
@@ -531,8 +530,8 @@ MessageText | The text of the message | Text | X |
 IsTest | If the message was a test message | Number | X |
 MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. Can be used for troubleshooting send issues. | Number | X |
 ResponseToMobileMessageTrackingID | The tracking ID of the response to the message | Number | X |
-IsValid | If the message is valid | Number | X |
-InvalidationCode | Invalidation code for the message | Number | X |
+IsValid | Populates to 1 for inbound message and 0 for Outbound message | Number | X |
+InvalidationCode | Invalidation code for the message. Currently always null. | Number | X |
 SendID | The send ID number for the SMS send | Number | X |
 SendSplitID | If the message was split, the ID of the split | Number | X |
 SendSegmentID | The ID of the segment tied to the message | Number | X |
@@ -543,7 +542,7 @@ SubscriberID | The subscriber ID for the affected subscriber. This number repres
 SubscriberKey | The subscriber key for the affected subscriber | Text | X |
 SMSStandardStatusCodeId | SFMC delivery status code | Number | X |
 Description | Detailed description of the status code | Text | X |
-Name | The name of your message | Text | X |
+Name | The SMS Message or Journey Activity name | Text | X |
 ShortCode | The short code or long code used to send your message | Text | X |
 SharedKeyword | The keyword used in your message | Text | X |
 Ordinal | Represents the parts in a multi-part message. Represented in ascending order starting at 0. | Number | X |
@@ -554,9 +553,15 @@ When working with `_SMSMessageTracking` Data View:
 2. `KeywordID` and `CodeID` are GUIDs, but the same table also has the readable versions of those columns - `ShortCode` and `SharedKeyword`. `ShortCode`, despite the name, also displays Long Codes.
 3. The fields marked above as boolean (like `Sent`, `Delivered`, `IsTest`, `Outbound`) have the value in the form of a number: `0` = false, `1` = true. Some might also be `null` - for example, if a message was outbound, `Outbound` will have the value of `1`, whereas `Inbound` will be `null`.
 4. `MessageText` will not only show you the text you sent in your SMS - it will also display it after personalisation is applied. On the one hand, it is great for debugging, as it allows you to check the final content the user received. On the other hand, you won't be able to assess personalisations used across your messaging.
-5. `ResponseToMobileMessageTrackingID` is an excellent way to check whether the customer responded. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) to output response data in the same line.
-6. Despite Marketing Cloud officially supporting this Data View, many columns seem to be hit or miss. `IsValid` isn't working for me at all. `SendID`, `SendSegmentID`, `SendJobID`, `SendGroupID`, `SendPersonID` are entirely random in whether they will be filed in or not. It changes even for consecutive sends of the same SMS to the same person. Also, `SubscriberID` and `SubscriberKey` are random. Sends to the same, unmodified Contact may fill both, one or neither column. For the time being, I do not recommend using those columns for production purposes.
-7. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
+5. `ResponseToMobileMessageTrackingID` is an excellent way to check the customer response. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) between inbound `ResponseToMobileMessageTrackingID` and outbound `MobileMessageTrackingID` to output response data in the same line.
+6. Some fields in this Data View are filled in only under specific conditions:
+    - `CampaignID` is populated only when an SMS is sent to Data Extension as Audience or send type is Send to Data Extension. SMS must be connected to a Campaign for the field to be populated.
+    - `SendID`, `SendJobID` are populated only for SMS messages sent via Automation Studio's Send SMS Activity or when an SMS is sent to Data Extension as Audience.
+    - `SendSplitID`, `SendSegmentID`, `SendGroupID`, `SendPersonID` are populated only when SMS is sent to Data Extension as Audience.
+    - `ConversationID` is populated only when a conversation is created with a MO user using AMPScript [`CreateSMSConversation`](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/CreateSmsConversation.htm).
+7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. Data should be pulled from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
+8. `Name` field is perfect for connecting SMS data with [`_JourneyActivity`](#_journeyactivity) Data View to have full picture of your Journey ([`JOIN`](../sql/sfmc-sql-join.mdx) `ON _SMSMessageTracking.Name = _JourneyActivity.ActivityName`).
+9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
 
 #### SMS Status Codes
 
