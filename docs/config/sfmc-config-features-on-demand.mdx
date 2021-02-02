@@ -13,7 +13,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 Salesforce Marketing Cloud is full of features straight out of the box. You can spend hours going through various panels and menus, discovering more options to make the instance your own and align it to the business needs.
 
-There is, however, a group of features that you won't be able to find. Salesforce hid them until you ask the Support to unlock them. SFMC Features On Demand.
+There is, however, a group of features that you won't be able to find. Salesforce hid them until you ask the Support (Free) or Account Executive (Paid) to unlock them. SFMC Features On Demand.
 
 Why are they not available by default? There are various reasons:
 
@@ -21,7 +21,7 @@ Why are they not available by default? There are various reasons:
 2. Some are putting a strain on the backend, so it is better to keep them off by default and enable only when a client needs them.
 3. Some have an additional cost and require a purchase before enabling.
 4. Some are dependent on specific modules, so there is no need to have them by default.
-5. Some will probably be added as a standard in the future (just as it has been done with previously on-demand Profile Attributes, Script Activity and Shared Folders for Content Builder).
+5. Some will probably be added as a standard in the future (just as it has been done with previously on-demand Profile Attributes, Script Activity, Shared Folders and others - more on that in the bottom).
 6. Some are no longer provided even when you ask (sweet, sweet Code Activity for Journey Builder...)
 
 I always wanted to have a full list of those features but could never find it. So here it is.
@@ -43,6 +43,7 @@ Advanced Audit Trail | Captures Basic Audit Trail Events and critical events aro
 Smart Alerts for Marketing Cloud | Enables automatic notification for Marketing Cloud problems like slow Email Send speed, Journeys starting without contacts, Automation issues, etc. | [Proactive Services for Marketing Cloud](https://help.salesforce.com/articleView?id=000313872&type=1&mode=1) | Paid
 Multi-Org Account | Allows you to connect different Sales/Service Cloud Orgs for each Marketing Cloud Business Unit. It is not reversible. | [Multi-Org Account](https://help.salesforce.com/articleView?id=sf.mc_co_upgrade_to_multi-org.htm&type=5) | Free
 Restore Encryption at Rest Key | If you revoked (Bring Your Own) Key for Encryption at Rest, this allows you to restore the key and retain the data if you act fast | [Restore SFMC Encryption Key](https://help.salesforce.com/articleView?id=sf.mc_overview_restore_byok.htm&type=5) | ?
+SSO Metadata | Allows you to implement Single Sign-On for your Marketing Cloud instance.| [SSO Implementation](https://help.salesforce.com/articleView?id=000356286&type=1&language=en_US&mode=1) | Free
 
 ## Deliverability Features
 
@@ -51,6 +52,7 @@ Feature Name | Description | Documentation | Type
 Sender Authentication Package | SAP is a collection of products including Private Domain with link and image wrapping (unique for SAP), Dedicated IP, and Reply Mail Management. Must-have. | [SAP](https://help.salesforce.com/articleView?id=sf.mc_es_sap.htm&type=5) | Paid
 Additional Dedicated IP | You can purchase additional dedicated IPs to manage more significant volumes or split communication types. | [Dedicated IP](https://help.salesforce.com/articleView?id=sf.mc_es_dedicated_ip.htm&type=5) | Paid
 Additional Private Domain | You can purchase additional private domains to differentiate various communication types. This feature does not cover link and image branding. | [Private Domains](https://help.salesforce.com/articleView?id=000318538&type=1&mode=1) | Paid
+SSL | Secures your traffic and gives that sweet `HTTPS`, a must-have nowadays. | [SSL Certificate](https://help.salesforce.com/articleView?id=000339842&type=1&mode=1) | Paid
 Reputation Audit Test | Ad hoc request allows you to receive information about the current state of the blacklists, authentication, DNS and content reviews (spam assessment) for your dedicated IPs. | [Reputation Audit](https://docs.google.com/presentation/d/1TGDkSRWC-fB0vU7UjuP_18mgty6G_JHrDc2Anbmvi8Q/edit#slide=id.g863e745c9f_0_3842) | Free
 Reputation Audit Account | Allows you to receive a dedicated account to Reputation Audit tool so that you can check the state of your dedicated IPs without creating recurring Reputation Audit Test requests. | [Reputation Audit](https://docs.google.com/presentation/d/1TGDkSRWC-fB0vU7UjuP_18mgty6G_JHrDc2Anbmvi8Q/edit#slide=id.g863e745c9f_0_3842) | Free
 Bounce Detective | Sends email alerts when recent send has an elevated bounce rate at any domain with 25+ recipients and provides per-domain bounce-focused analysis. | N/A | Free
@@ -69,7 +71,12 @@ Custom List Detective | Allows you to block sending and subscribing all contacts
 Custom List Detective Allowlist | On top of Custom List Detective you can also ask Support to add specific usernames or domains to Allowlist. Might be useful, as this setting will overwrite the standard List Detective. | [Custom List Detective](https://help.salesforce.com/articleView?id=000316767&type=1&mode=1) | Free
 Email Attachments | Allows you to send emails with attachments. | [Email Attachments](https://help.salesforce.com/articleView?id=sf.mc_es_email_attachments.htm&type=5) | Paid
 Preserve Reply Attachments | Forwards attachments added to the reply email via RMM's auto-forwarding. | [Reply Mail Management](https://help.salesforce.com/articleView?id=sf.mc_es_reply_mail_management.htm&type=5) | Free
-Subscriber-Specific From Name & Address | Allows you to personalize the From Name and From Address per each Subscriber. | [Personalized Sender Profile](https://help.salesforce.com/articleView?id=sf.mc_es_sender_profile.htm&type=5) | ?
+Subscriber-Specific From Name & Address | Allows you to personalise the From Name and From Address per each Subscriber. | [Personalised Sender Profile](https://help.salesforce.com/articleView?id=sf.mc_es_sender_profile.htm&type=5) | ?
+Email Archiving | Allows you to save a copy of your Emails of particular Send Classification to Enhanced FTP | [Email Archiving](https://help.salesforce.com/articleView?id=sf.mc_es_email_archiving.htm&type=5) | Paid
+Email Send Throttle | Allows you to control both the maximum amount of messages pushed in a given timeframe, as well as the hours when the sends occur. | [Send Throttle](https://help.salesforce.com/articleView?id=sf.mc_es_send_throttle.htm&type=5) | Free
+CC and BCC for Email | Allows you to use CC and BCC in your Emails. You can even use personalisation strings for it (f.e. `%%AccountOwnerEmail%%`). Watch out for unsubscription rules! | [Select Audience](https://help.salesforce.com/articleView?id=sf.mc_es_select_audience.htm&type=5) | Free
+Additional Email Attributes | Allows you to use custom email attributes to use for personalisation. Perfect for tracking links. You can ask Support to enable more than default 5. | [Additional Email Attributes](https://help.salesforce.com/articleView?id=000353527&language=en_US&mode=1&type=1) | Free
+Microsites | Allows you to access a Classic view from the Email Studio - Content and create Microsites. As it is a legacy feature that is being sunset, you will need a strong business use case to get it. | N/A | Free
 
 ## Mobile Studio Features
 
@@ -83,6 +90,9 @@ Push Send Log | Allows you to log send-time data about your push notifications. 
 Feature Name | Description | Documentation | Type
 -- | -- | -- | --
 Send Time Attributes in a Discover Report | Allows you to add up to 15 Send Time Attributes to the Discover Reports (similar to Send log feature) | [Discover Sent Time Attributes](https://help.salesforce.com/articleView?id=sf.mc_di_send_time_attributes.htm&type=5) | ?
+Discover Reporting Tool | Allows you to create new complex reports using templates that leverage measures and attributes. Soon to be replaced by Datorama Reporting. | [Discover Reporting Tool](https://help.salesforce.com/articleView?id=sf.mc_di_discover.htm&type=5) | Paid
+Custom Reports | Allows you to request creating a new Report aligned with your needs. | N/A | Paid
+Account Utilisation Report | Ad hoc request to get the current utilisation status of Super Messages. | N/A | Free
 
 ## Journey Builder Features
 
@@ -94,14 +104,32 @@ Exclusion Scripts for Email Activity | Allows you to define custom exclusion log
 
 Feature Name | Description | Documentation | Type
 -- | -- | -- | --
-Data Extract Types | Adds various Data Extract Activity options in Automation Studio. Ask for enabling every available one, as not all are mentioned in the official documentation. | [Data Extract Activity](https://help.salesforce.com/articleView?id=sf.mc_as_extract_types_reference.htm&type=5) | Free
+Data Extract Types | Adds various Data Extract Activity options in Automation Studio. Don't feel limited by the list available in the documentation. There are multiple other available, for example: Delete File From ET FTP or Safehouse, Enhanced FTP File Move and Copy, Custom DE Extract With Zip, Data Extension Extract with File Encoding BOM and gzip. Just state what you need, and there is a big chance there is a ready solution that can be enabled. And if not - check next point. | [Data Extract Activity](https://help.salesforce.com/articleView?id=sf.mc_as_extract_types_reference.htm&type=5) | Free
+Custom Data Extract Types | If the Standard On-Demand Data Extract Types are not enough, you can request creating a custom one to suit your needs. | N/A | Paid
 Salesforce Objects & Reports Import | If you are using Marketing Cloud Connect, you can ask Support to enable additional Import Activity Type to pull Objects and Reports to Salesforce Data Extensions folder. | [Import Activity](https://help.salesforce.com/articleView?id=sf.mc_es_create_an_import_activity.htm&type=5) | Free
 Additional Automation Activities | You can ask Support to enable a few additional Automation Activities focused on Journey Builder and Salesforce integration. | [On-Demand Activities](https://help.salesforce.com/articleView?id=sf.mc_as_automation_studio_activities_reference.htm&type=5) | ?
+
+## Contact Builder Features
+
+Feature Name | Description | Documentation | Type
+-- | -- | -- | --
+Custom Data Extension Templates | Allows you to request the creation of a custom Data Extension template that users can later use to auto-populate DE configuration. | N/A | ?
+Custom Data Views | Allows you to request the creation of Custom Data View. Mindblowing option. | [Example Custom Data View](https://salesforce.stackexchange.com/a/293395/91679) | Paid
 
 ## Developer Features
 
 Feature Name | Description | Documentation | Type
 -- | -- | -- | --
-Custom Data Views | Allows you to request the creation of Custom Data View. Mindblowing option. | [Example Custom Data View](https://salesforce.stackexchange.com/a/293395/91679) | Paid
 SOAP Triggered Send Prioritization | Allows you to declare priority for your Triggered Sends created via API. | [Triggered Send Priority](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-apis.meta/mc-apis/creating_a_triggered_send_using_the_async_api.htm) | Free
-SOAP Disable Datetime Normalization | By default dates coming to Marketing Cloud via SOAP API will be normalized. You can ask to disable it. | [Datetime Normalization](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-apis.meta/mc-apis/incoming_date_normalization.htm) | Free
+SOAP Disable Datetime Normalisation | By default dates coming to Marketing Cloud via SOAP API will be normalised. You can ask to disable it. | [Datetime Normalisation](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-apis.meta/mc-apis/incoming_date_normalization.htm) | Free
+
+:::note You Should Know
+
+Some features are currently added Out of the Box for new Salesforce Marketing Cloud deployments but were not in the past. If you are rocking old instance, you might also be interested in features like:
+
+- Script Activity for Journey Builder: use SSJS in your Automations
+- Shared Folders for Content Builder: make your Content available across multiple Business Units
+- Profile Attributes for Email Studio: Subscriber attributes stored at All Subscribers level and available for personalisation
+- Brand Builder: allows you to style Salesforce Marketing Cloud a bit by using accent colours and adding your company logo.
+
+:::
