@@ -11,6 +11,18 @@ import styles from './styles.module.css';
 
 const features = [
     {
+        title: <>Let's connect</>,
+        imageUrl: 'img/undraw_connect_md.svg',
+        description: (
+            <>
+                Ahoj! My name is Mateusz Dąbrowski, and I find joy in telling the code to do my job. Got any questions
+                or suggestions? Or maybe just want to get in touch?
+            </>
+        ),
+        url: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
+        cta: <>Connect</>,
+    },
+    {
         title: <>Pick my brain</>,
         imageUrl: 'img/undraw_snippets_md.svg',
         description: (
@@ -33,18 +45,6 @@ const features = [
         ),
         url: '/ideas',
         cta: <>Ideas</>,
-    },
-    {
-        title: <>Let's connect</>,
-        imageUrl: 'img/undraw_connect_md.svg',
-        description: (
-            <>
-                Ahoj! My name is Mateusz Dąbrowski, and I find joy in telling the code to do my job. Got any questions
-                or suggestions? Or maybe just want to get in touch?
-            </>
-        ),
-        url: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
-        cta: <>Connect</>,
     },
 ];
 
