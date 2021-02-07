@@ -141,6 +141,27 @@ There is a limit of how big the difference can be. If you go down to `SECOND` [d
 
 :::
 
+## DATENAME
+
+The `DATENAME` functions return value of specified [datepart](#date-parts) from a given date.
+
+```sql {3} title="Capture full name of the day"
+SELECT
+    SubscriberKey,
+    DATENAME(WEEKDAY, DateJoined) AS DayJoined
+FROM ENT._Subscribers
+```
+
+It might be useful to quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the name of the day for a given date thanks to `WEEKDAY` [datepart](#date-parts).
+
+```sql {4} title="Create an automation that will capture weekend meetings for Friday reminder"
+SELECT
+    SubscriberKey,
+FROM SalesMeetings
+WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
+    AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
+```
+
 ## AT TIME ZONE
 
 The `AT TIME ZONE` function provides two incredible features:
