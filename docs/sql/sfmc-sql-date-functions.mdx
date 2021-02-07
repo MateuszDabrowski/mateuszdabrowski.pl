@@ -156,7 +156,7 @@ It might be useful to quickly cut the date to just an important part (like a yea
 
 ```sql {4} title="Create an automation that will capture weekend meetings for Friday reminder"
 SELECT
-    SubscriberKey,
+    SubscriberKey
 FROM SalesMeetings
 WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
     AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
