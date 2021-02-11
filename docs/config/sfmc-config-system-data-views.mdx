@@ -144,8 +144,8 @@ Stores information about your Email Sends. Great for understanding who had a cha
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-AccountID | Your account ID (MID) number | Number |
-OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
+AccountID | Your parent account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit that owns the data. If queried on parent Business Unit, it will be `Null` | Number | X
 JobID | The job ID number for the email send | Number |
 ListID | The list ID number for the list used in the send | Number |
 BatchID | The batch ID number for any batches used in the send | Number |
@@ -170,8 +170,8 @@ Stores information about your Email Opens. For when you need to know when someon
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-AccountID | Your account ID (MID) number | Number |
-OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
+AccountID | Your parent account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit that owns the data. If queried on parent Business Unit, it will be `Null` | Number | X
 JobID | The job ID number for the email send | Number |
 ListID | The list ID number for the list used in the send | Number |
 BatchID | The batch ID number for any batches used in the send | Number |
@@ -213,8 +213,8 @@ Stores information about your Email Clicks. Detailed click reporting and behavio
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-AccountID | Your account ID (MID) number | Number |
-OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
+AccountID | Your parent account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit that owns the data. If queried on parent Business Unit, it will be `Null` | Number | X
 JobID | The job ID number for the email send | Number |
 ListID | The list ID number for the list used in the send | Number |
 BatchID | The batch ID number for any batches used in the send | Number |
@@ -251,8 +251,8 @@ Stores information about your Email Bounces. Best place in Marketing Cloud to un
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-AccountID | Your account ID (MID) number | Number |
-OYBAccountID | The account ID (MID) number of the child Business Unit. Null on parent Business Unit | Number | X
+AccountID | Your parent account ID (MID) number | Number |
+OYBAccountID | The account ID (MID) number of the child Business Unit that owns the data. If queried on parent Business Unit, it will be `Null` | Number | X
 JobID | The job ID number for the email send | Number |
 ListID | The list ID number for the list used in the send | Number |
 BatchID | The batch ID number for any batches used in the send | Number |
