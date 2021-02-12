@@ -1,0 +1,94 @@
+---
+id: ssjs-snippet-ampscript-in-ssjs
+title: AMPScript in SSJS
+sidebar_label: AMPScript in SSJS
+description: Not all AMPScript functions are available in SSJS. Don't let it stop you.
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content="Not all AMPScript functions are available in SSJS. Don't let it stop you." />
+
+## Problem with missing SSJS functions
+
+
+
+## Solution
+
+The simple answer to this problem is `Platform.Function.TreatAsContent()` SSJS function. But the good answer is few lines longer:
+
+```js
+function ampScript(code) {
+    var ampBlock = '\%\%[' + code + ']\%\%';
+    Platform.Function.TreatAsContent(ampBlock);
+    return Variable.GetValue('@Response');
+}
+```
+
+Instead of writing it every time from scratch, here you have a ready-to-use function that you can copy-paste across your scripts that allows you to use ampscript and do it greacefully.
+
+Sure, it still uses the `Platform.Function.TreatAsContent()` at its heart, but there are two additional tricks:
+
+1. `var ampBlock = '\%\%[' + code + ']\%\%'`: allows you to write AMPScript without the block symbols and adds them in the last moment. This way your code will be executed only once it is passed to the `Platform.Function.TreatAsContent()` function. It is especially important when you want to [insert SSJS in your AMPScript](#dynamic-ampscript-code).
+2. `return Variable.GetValue('@Response');`: allows you to pull back data from your AMPScript to the SSJS. For it to work, you must set `@Response` variable in your AMPScript.
+
+How to use it? Easy, just pass the AMPScript code in the function and (if you want to do something with `@Response` value) assign it to a SSJS variable.
+
+```js title="As JavaScript lacks native ProperCase, we can use AMPScript for that"
+var properCaseFullName = ampScript("SET @Response = ProperCase(AttributeValue('fullName'))"); // TODO Check nesting
+```
+
+## Options
+
+You can adapt the above script to better suit your needs.
+
+### Long AMPScript Code
+
+```js title="Check whether there is a Campaign in Salesforce called 'WelcomeCampaign2021'"
+var response = ampScript("SET @Retrieve = RetrieveSalesforceObjects('Campaign', 'Id', 'Name', '=', 'WelcomeCampaign2021') "
+    + "IF RowCount(@Retrieve) > 0 THEN SET @Response = 'true' ELSE SET @Response = 'false' ENDIF"
+```
+
+### Dynamic AMPScript Code
+
+```js {3} title="Same check as above, but for multiple campaigns and output to an array"
+var availableCampaigns = []
+for (var campaignName in campaignList) {
+    var response = ampScript("SET @Retrieve = RetrieveSalesforceObjects('Campaign', 'Id', 'Name', '=', '" + campaignName + "')"
+        + "\nIF RowCount(@Retrieve) > 0 THEN SET @Response = 'true' ELSE SET @Response = 'false' ENDIF");
+    if (reponse) availableCampaigns.push(campaignName);
+}
+```
+
+This is even more useful when you have variability in what you want to create. For example, let's consider a use case where you want to create Campaigns in Salesforce from Marketing Cloud, but only some of your campaigns have a End Date known from the beginning.
+
+In `CreateSalesforceObject` AMPScript function you must pass all fields with their values and a number of fields that will be added to the object. With SSJS you can simply count with `length` method the fields provided for the Campaign in each run of the loop, and adapt the call parameters just as in the example above.
+
+### Working with AMPScript on Lists & Objects
+
+Unfortunately AMPScript doesn't support list or obejcts. Fortunately, SSJS do. To pull that off, we will need a bit of creativity, but once done, it makes life so much easier.
+
+```js {1-8}
+var response = ampScript("SET @Retrieve = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True') "
+ + "SET @RowCount = RowCount(@Retrieve) SET @Response = '' "
+ + "IF @RowCount > 0 THEN @Counter = 1 TO @RowCount DO "
+ + "SET @Row = ROW(@Retrieve, @Counter) "
+ + "SET @Name = FIELD(@Row, 'Name') SET @Id = FIELD(@Row, 'Id') SET @StartDate = FIELD(@Row, 'StartDate') SET @EndDate = FIELD(@Row, 'EndDate') "
+ + "SET @RowDate = CONCAT(@Name, ',', @Id, ',', @StartDate, ',', @EndDate) "
+ + "SET @Response = CONCAT(@Response, @RowData,';') "
+ + "NEXT ENDIF")
+response = response.split(';');
+var campaignData = [];
+for (var i = 0; i < response.length - 1; i++) {
+    var responseRowData = response[i].split(',');
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    })
+}
+```
+
+Ok, a lot to unpack. But trust me, it's worth. Let's go!
+
