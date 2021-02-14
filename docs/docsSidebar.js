@@ -14,7 +14,12 @@ module.exports = {
                 {
                     'SSJS Use Cases': ['usecase/engage-with-countdown', 'usecase/tailor-with-data'],
                 },
-                { 'SSJS Snippets': ['ssjs/ssjs-snippet-mobileconnect-phone-change'] },
+                {
+                    'SSJS Snippets': [
+                        'ssjs/ssjs-snippet-ampscript-in-ssjs',
+                        'ssjs/ssjs-snippet-mobileconnect-phone-change',
+                    ],
+                },
             ],
         },
         {
