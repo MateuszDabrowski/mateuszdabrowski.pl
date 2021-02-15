@@ -31,12 +31,20 @@ function ampScript(code) {
 }
 ```
 
+:::note You Should Know
+
+As we are using `Variable.GetValue` here, you will need to import Salesforce Marketing Cloud SSJS Core library at the top of your script.
+
+Just add `Platform.Load('core', '1')` right after `<script runat=server>` and you are good to go!
+
+:::
+
 Instead of writing your AMPScript execution wrapper every time from scratch, here is a ready-to-use function that you can copy-paste across your scripts that allows you to use ampscript and do it gracefully.
 
 Sure, it still uses the `Platform.Function.TreatAsContent()` at its heart, but there are two additional tricks:
 
 1. `var ampBlock = '\%\%[' + code + ']\%\%'`: allows you to write AMPScript without the block symbols and adds them in the last moment. This way, Marketing Cloud will execute your code once you pass it to the `Platform.Function.TreatAsContent()` function. It is essential when you want to [insert SSJS in your AMPScript](#dynamic-ampscript-code).
-2. `return Variable.GetValue('@Response');`: allows you to pull back data from your AMPScript to the SSJS. For it to work, you must set the `@Response` variable in your AMPScript.
+2. `return Variable.GetValue('@Response');`: allows you to pull back data from your AMPScript to the SSJS. For it to work, you must `SET` the `@Response` variable in your AMPScript. Whatever value you assign to the `@Response` in the AMPScript context, will be returned to your SSJS context.
 
 How to use it? Pass the AMPScript code in the function and, if you want to do something with `@Response` value, assign it to an SSJS variable.
 
@@ -48,6 +56,8 @@ var properCaseFullName = ampScript("SET @Response = ProperCase(AttributeValue('f
 
 Be sure only to use this approach if there is no equivalent SSJS solution, as mixing languages will impact performance. It is crucial for code in the messages that Marketing Cloud will execute on send time.
 
+For example, if you are only planning to use ProperCase, it might be better to go the RegEx path for significant volume messaging.
+
 :::
 
 ## Options
@@ -56,7 +66,7 @@ You can adapt the above script to suit your needs better.
 
 ### Long AMPScript Code
 
-Above example is a short and straightforward AMPScript. However, in many cases, you will need a bit more code to do the job. You can write it as a single line if you want, but I recommend you split it into separate lines for readability purposes.
+Above example is a short and straightforward AMPScript. However, you will need a bit more code to do the job in many cases. You can write it as a single line if you want, but I recommend you split it into separate lines for readability purposes.
 
 You can do it quickly, by just concatenating strings with `+`.
 
@@ -67,7 +77,13 @@ var response = ampScript("SET @Retrieve = RetrieveSalesforceObjects("
     + "ELSE SET @Response = 'false' ENDIF"
 ```
 
-Be sure to always check, whether you have a space either at the end of the previous line or beginning of the new line. Otherwise, after concatenation you might end up with incorrect code.
+:::note You Should Know
+
+To use any Salesforce Object functions, you will need to have Marketing Cloud Connect implemented to tie in your Marketing Cloud and Sales or Service Cloud.
+
+:::
+
+Be sure always to check, whether you have space either at the end of the previous line or beginning of the new line. Otherwise, after concatenation, you might end up with incorrect code.
 
 ### Dynamic AMPScript Code
 
@@ -90,7 +106,7 @@ In `CreateSalesforceObject` AMPScript function, you must pass all fields with th
 
 ### Working with AMPScript on Lists & Objects
 
-Unfortunately, AMPScript doesn't support list or objects. Fortunately, SSJS do. To pull that off, we will need a bit of creativity, but it makes life so much easier once done.
+Unfortunately, AMPScript doesn't support list or objects. Fortunately, SSJS do. We will need a bit of creativity to pull that off, but it makes life so much easier once done.
 
 The easy example is visible in the [previous section](#dynamic-ampscript-code) - the snippet creates an array of Campaigns available in Salesforce.
 
