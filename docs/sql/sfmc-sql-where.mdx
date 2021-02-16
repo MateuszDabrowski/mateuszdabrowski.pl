@@ -66,7 +66,7 @@ Another handy operator is `LIKE`. It allows you to leverage wildcards to search 
 
 In the marketing automation world, however, `LIKE` operator is especially useful for selecting contacts based on the multi picklist columns. Consider `ActiveSubscriptions` field that can have any combination of values `Phone`, `TV`, `Internet`.
 
-Suppose you would like to select all contacts with active phone subscription. In that case, you shouldn't use [equality operator](#equality) (`WHERE ActiveSubscription = 'Phone'`), as it would return only contacts that have just this one subscription. Some of your customers might, however, have multiple (phone and tv or phone and internet plans). For SQL, a field containing `'Phone'` is not equal with the one having a value of `'Phone', Internet'`. `LIKE` operator is here to save the day.
+Suppose you would like to select all contacts with active phone subscription. In that case, you shouldn't use [equality operator](#equality) (`WHERE ActiveSubscription = 'Phone'`), as it would return only contacts that have just this one subscription. However, some of your customers might have multiple (phone and tv or phone and internet plans). For SQL, a field containing `'Phone'` is not equal to having a value of `'Phone', Internet'`. `LIKE` operator is here to save the day.
 
 ```sql {5} title="All subscribers that have at least Phone subscription"
 SELECT
@@ -127,7 +127,7 @@ The `BETWEEN` is replacing only a range greater or equal to the first value and 
 
 For example: `WHERE Date BETWEEN "01/01/2020" AND "31/01/2020"` will work as if you wrote `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 00:00:00"`. It would result in a lack of data for the last day of the range. In most cases you would rather want `WHERE Date >= "01/01/2020 00:00:00" AND Date <= "31/01/2020 23:59:59"`.
 
-Due to the above, I recommended to not use `BETWEEN` statement, unless you are sure the range is correct.
+Due to the above, I recommended not use `BETWEEN` statement, unless you are sure the range is correct.
 
 ### IN shorthand
 
@@ -149,13 +149,13 @@ But the beauty of `IN` statement doesn't end there. It additionally optimizes th
 
 :::note You Should Know
 
-Unfortunately, you cannot use `IN` statement together with `LIKE` statement. For such use case, you need to use one or more `OR` operators.
+Unfortunately, you cannot use `IN` statement together with `LIKE` statement. You need to use one or more `OR` operators for such use case.
 
 :::
 
 ## NOT operator
 
-Sometimes you want to rather exclude some records instead of searching for them. In many cases, you can do it just adjusting the operators (for example `<>` instead of `=`). There are, however, some situations where the `NOT` operator is the best tool for the job.
+Sometimes you want to rather exclude some records instead of searching for them. In many cases, you can do it by just adjusting the operators (for example `<>` instead of `=`). There are, however, some situations where the `NOT` operator is the best tool for the job.
 
 It is especially apparent when working with `LIKE`, `BETWEEN`, `IN` and `EXISTS` operators.
 
@@ -179,7 +179,7 @@ WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
 
 The `CASE` statement is not only useful in a [`SELECT`](./sfmc-sql-select.mdx#conditions) part of the query. You can use it also within the `WHERE`. There are two approaches to do this.
 
-The first compare `1` to the outcome of the `CASE` statement that evaluates each of its conditions to either `1` or `0`. If the comparison evaluates to `WHERE 1 = 1` it will resolve to `TRUE` and therefore return the result.
+The first compare `1` to the outcome of the `CASE` statement that evaluates each of its conditions to either `1` or `0`. If the comparison evaluates to `WHERE 1 = 1` it will resolve to `TRUE` and return the result.
 
 ```sql {5-10} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
@@ -187,14 +187,34 @@ SELECT
     EmailAddress
 FROM _Subscribers
 WHERE 1 = CASE Status
-    WHEN 'active' THEN 1
-    WHEN 'held' THEN 0
-    WHEN 'unsubscribed' THEN 0
-    WHEN 'bounced' THEN 0
+        WHEN 'active' THEN 1
+        WHEN 'held' THEN 0
+        WHEN 'unsubscribed' THEN 0
+        WHEN 'bounced' THEN 0
     END
 ```
 
-It works, but in most cases, you can write it better with other means mentioned above. This query was previously coded with single-line `WHERE` utilizing `NOT IN` statement.
+It works, but you can write it better with other means mentioned above in most cases. This query was previously coded with single-line `WHERE` utilizing `NOT IN` statement.
+
+
+:::note You Should Know
+
+You can do better even with the [search version of `CASE`](./sfmc-sql-select.mdx#search-version-of-case), as it allows you to use `AND`/`OR` within the `CASE`:
+
+ ```sql {5-8} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM _Subscribers
+WHERE 1 = CASE
+        WHEN Status = 'active' THEN 1
+        WHEN Status = 'held' OR Status = 'unsubscribed' OR Status = 'bounced' THEN 0
+    END
+```
+
+Notice the lack of `Status` column name right after `CASE` keyword and its addition in each `WHEN`.
+
+:::
 
 The second approach compares a field to the `CASE` statement evaluation and is much more useful:
 
@@ -204,17 +224,17 @@ SELECT
     EmailAddress
 FROM MasterSubscriberDE
 WHERE EmailAddress <> CASE
-    WHEN PreferredEmail = 'Personal Email' THEN PersonalEmail
-    WHEN PreferredEmail = 'Work Email' THEN WorkEmail
+        WHEN PreferredEmail = 'Personal Email' THEN PersonalEmail
+        WHEN PreferredEmail = 'Work Email' THEN WorkEmail
     END
 ```
 
-It still can be written using multiple `AND` & `OR` statements, but thanks to the `CASE` statement, it is shorter and more readable.
+It can still be written using multiple `AND` & `OR` statements, but it is shorter and more readable thanks to the `CASE` statement.
 
 :::note You Should Know
 
 `CASE` statement returns `THEN` value of the first condition that evaluated to `TRUE`. It means that if in your query first condition is true, the rest will be ignored. Even if for the selected contact, all of them would be true.
 
-Always consider the order of the conditions in your `CASE` statement. It both might lead to errors if you don't expect behaviour mentioned above, as well as make your life much easier if you know it works that way.
+Always consider the order of the conditions in your `CASE` statement. It might lead to errors if you don't expect behaviour mentioned above, and make your life much easier if you know it works that way.
 
 :::
