@@ -9,7 +9,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Use WHERE to make your query lean and to the point. Less is more.' />
 
-With just [`SELECT`](./sfmc-sql-select.mdx) and [`FROM`](./sfmc-sql-from.mdx) statements, you can already start building your queries. With the addition of [`JOIN`](./sfmc-sql-join.mdx), you can do much more than in the Salesforce Marketing Cloud UI. `WHERE` grants you even more power by allowing you to filter the outcomes of your queries.
+With just [`SELECT`](./sfmc-sql-select.mdx) and [`FROM`](./sfmc-sql-from.mdx) statements, you can already start building your queries. With the addition of [`JOIN`](./sfmc-sql-join.mdx), you can do much more than in the Salesforce Marketing Cloud UI. `WHERE` grants you even more power by allowing you to filter your queries' outcomes.
 
 The concept behind it is straightforward. It takes all the results you obtained with the query above the `WHERE`, and for each, it applies one or more conditions. If they evaluate to `TRUE` - this particular result will be available in the output Data Extension. If evaluation ends with `FALSE`, `WHERE` will filter it out.
 
@@ -58,13 +58,13 @@ FROM _Subscribers
 WHERE CONVERT(DATE, DateJoined) >= DATEADD(MONTH, -1, CONVERT(DATE, GETUTCDATE()))
 ```
 
-With dates, you will frequently want to use a bit more complex structure for the comparison to work correctly. In this case, we are converting the `DateJoined` value to simple date (day, month, year without the time). We are also getting a current date in UTC format and convert it to a simple date too. Next, we subtract one month and compare it to the `DateJoined` transformed value. I cover more such examples in the [SFMC SQL Date Functions](./sfmc-sql-date-functions.mdx).
+With dates, you will frequently want to use a bit more complex structure for the comparison to work correctly. In this case, we are converting the `DateJoined` value to a simple date (day, month, year without the time). We are also getting a current date in UTC format and converting it to a simple date. Next, we subtract one month and compare it to the `DateJoined` transformed value. I cover more such examples in the [SFMC SQL Date Functions](./sfmc-sql-date-functions.mdx).
 
 ## LIKE operator
 
 Another handy operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. You may know it from the [`SELECT` statement](./sfmc-sql-select.mdx#like-in-case), but it is much more useful with `WHERE`. Think about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element within multi picklist (for instance finding one value within the comma-separated list of all purchased products).
 
-In the marketing automation world, however, `LIKE` operator is especially useful for selecting contacts based on the multi picklist columns. Consider `ActiveSubscriptions` field that can have any combination of values `Phone`, `TV`, `Internet`.
+However, in the marketing automation world, the `LIKE` operator is handy for selecting contacts based on the multi-picklist columns. Consider `ActiveSubscriptions` field with any combination of values `Phone`, `TV`, or `Internet`.
 
 Suppose you would like to select all contacts with active phone subscription. In that case, you shouldn't use [equality operator](#equality) (`WHERE ActiveSubscription = 'Phone'`), as it would return only contacts that have just this one subscription. However, some of your customers might have multiple (phone and tv or phone and internet plans). For SQL, a field containing `'Phone'` is not equal to having a value of `'Phone', Internet'`. `LIKE` operator is here to save the day.
 
@@ -94,7 +94,7 @@ WHERE ActiveSubscription LIKE '%Phone%'
     AND CONVERT(DATE, SubscriptionStart) < DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
 ```
 
-The standard order of execution is evaluating the pairs joined by `AND` first and then considering the ones with `OR`. But you can use parentheses `()` to enforce your order:
+The standard order of execution evaluates the pairs joined by `AND` first and then considers the ones with `OR`. But you can use parentheses `()` to enforce your order:
 
 ```sql {5} title="All subscribers that have at least either Phone OR Internet subscription AND are in its twelfth month"
 SELECT
