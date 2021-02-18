@@ -259,3 +259,107 @@ This approach might be better for our needs, as we would be sure that all contac
 How complex a `JOIN` can get? Very. You will encounter such monstrosities especially in the world of reporting queries that requires information from multiple System Data Views - for example when you want to [debug your email sends](./sfmc-sql-snippet-debugging-email-sends.mdx).
 
 One thing to remember - the more complex query you create, the more error-prone it is and the closer you are to the 30 minutes AutoKill limit for the query execution. Always minimize your query to only the data you truly need.
+
+## UNION
+
+Apart from the `JOIN` there is also an `UNION` operator that serves similar purpose. It concatenates outcomes of multiple `SELECT` statements.
+
+```sql {5} title="Group subscribers from two Data Extensions"
+SELECT
+    jan.SubscriberKey,
+    jan.EmailAddress,
+FROM [January-Event-Participants] jan
+UNION
+SELECT
+    feb.SubscriberKey,
+    feb.EmailAddress
+FROM [February-Event-Participants-Segment] feb
+```
+
+As you can see in the above example, `UNION` doesn't require any relationship between the two queries. There is no [`ON` element](#joining-on). On the other hand, `UNION` cannot add any new columns.
+
+`UNION` works only if:
+
+1. Both queries have the same number of columns.
+2. Both queries have the same order of columns.
+3. Columns in both queries have the same data types.
+
+The names does not have to be the same, however it is best practice to match the aliases for readability purposes.
+
+To simplify the difference between `JOIN` and `UNION`:
+
+- If you want to add columns - use `JOIN`.
+- If you want to add rows - use `UNION`.
+
+:::note You Should Know
+
+By default `UNION` will ignore duplicates. If you want to keep them, use `UNION ALL`.
+
+```sql {5} title="Group subscribers from two Data Extensions"
+SELECT
+    jan.SubscriberKey,
+    jan.EmailAddress,
+FROM [January-Event-Participants-Segment] jan
+UNION ALL
+SELECT
+    feb.SubscriberKey,
+    feb.EmailAddress
+FROM [February-Event-Participants-Segment] feb
+```
+
+:::
+
+The obvious use case for `UNION` is gathering subscribers from multiple Data Extensions to build a master segment.
+
+There is however another use case that I find perfect for `UNION` - attaching Seedlists.
+
+If you are using deliverability monitoring suite, you probably are using seedlist. If not - a seedlist is a list of bot email addresses that are used to estimate inbox placement of your communication.
+
+In most cases you will store your seedlist in a separate Data Extension and will have only Email Address and fake Subscriber Key columns filled in. How to push them easily into your segment? With `UNION`, of course:
+
+```sql {7} title="Append Seedlist to your Segment"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    de.FirstName,
+    de.Interest
+FROM [Welcome-Campaign-Segment] de
+UNION
+SELECT
+    sl.SubscriberKey,
+    sl.EmailAddress,
+    'Seed' AS FirstName,
+    'Estimating' AS Interest
+FROM [Seedlist] sl
+```
+
+In the example above not only we are adding the Seedlist to your main segment, but also we are providing static placeholders for columns that are used in personalisation.
+
+:::note You Should Know
+
+You can mix and match both `JOIN` and `UNION` to create your perfect segment. And you can union arbitrary data without a [`FROM`](./sfmc-sql-from.mdx).
+
+```sql {8,15} title="AutoKill is the limit of your imagination"
+SELECT
+    de.SubscriberKey,
+    de.EmailAddress,
+    de.FirstName,
+    i.Interest
+FROM [Welcome-Campaign-Segment] de
+LEFT JOIN [Interests-Data-Point] i
+UNION
+SELECT
+    sl.SubscriberKey,
+    sl.EmailAddress,
+    'Seed' AS FirstName,
+    'Estimating' AS Interest
+FROM [Seedlist] sl
+UNION
+SELECT
+    '123456789987654321' AS SubscriberKey,
+    'sales@company.com' AS EmailAddress,
+    'SalesDepartment' AS FirstName,
+    'Leads' AS Interest
+```
+
+:::
