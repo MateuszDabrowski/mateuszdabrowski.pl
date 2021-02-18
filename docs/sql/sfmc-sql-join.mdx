@@ -24,13 +24,13 @@ There are three things to unpack.
 
 ## JOIN Types
 
-In the example above, you can see `JOIN` word. There are many `JOIN` statement types available in SQL. The appropriate joining will allow you to segment your records precisely the way you want and without the need for extensive [`WHERE`](./sfmc-sql-where.mdx) clauses. Understanding differences between various types and using the correct one for the task at hand will make your code shorter, easier to read and optimized. Let's check what is in the quiver:
+In the example above, you can see `JOIN` word. There are many `JOIN` statement types available in SQL. The appropriate joining will allow you to segment your records precisely the way you want and without the need for extensive [`WHERE`](./sfmc-sql-where.mdx) clauses. Understanding differences between various types and using the correct one for the task at hand will make your code shorter, easier to read and optimised. Let's check what is in the quiver:
 
 ### Inner Join
 
 The most straightforward join is `INNER JOIN`. It takes records from the first table (`Welcome-Campaign-Segment` Data Extension in the above example) and second table (`_Open` System Data View in this case) to output records available in both of them (based on selected relation).
 
-In our query, it will be contacts that are in the Data Extension and in the same time have some email opens in `_Open` System Data View. It will ignore all contacts that are not visible in the `_Open` System Data View, and all the email opens that are not related to contacts in the `Welcome-Campaign-Segment` Data Extension.
+In our query, it will be contacts that are in the Data Extension and at the same time have some email opens in `_Open` System Data View. It will ignore all contacts that are not visible in the `_Open` System Data View and all the email opens that are not related to contacts in the `Welcome-Campaign-Segment` Data Extension.
 
 Of course, this query in its current state is not perfect and could output wrong results (like tracked opens for the contacts from our Data Extension, but coming from the entirely different campaign) as it doesn't limit the scope to just one campaign or Job.
 
@@ -47,11 +47,11 @@ When using `INNER JOIN`, you can write just the word `JOIN`, as in the first exa
 
 ### Left and Right Joins
 
-Next types of joins are `LEFT JOIN` (also known as `LEFT OUTER JOIN`) and `RIGHT JOIN` (also known as `RIGHT OUTER JOIN`). Instead of limiting the output to only those records that are available in both tables, they are taking full data from one table and append the additional information from the second one (if it is available).
+Next types of joins are `LEFT JOIN` (also known as `LEFT OUTER JOIN`) and `RIGHT JOIN` (also known as `RIGHT OUTER JOIN`). Instead of limiting the output to records available in both tables, they take full data from one table and append the additional information from the second one (if it is available).
 
 `LEFT JOIN` will take complete data of the first table (in our example, Data Extension selected by `FROM`) and extend it with information from the second one (`_Open` System Data View joined with `LEFT JOIN`).
 
-You can go the other way around with `RIGHT JOIN` (in our example it would output everything in `_Open` System Data View and append to it the data from the Data Extension - not that useful).
+You can go the other way around with `RIGHT JOIN` (in our example, it would output everything in `_Open` System Data View and append to it the data from the Data Extension - not that useful).
 
 ```sql {6} title="The same query, but this time joined with LEFT JOIN"
 SELECT
@@ -62,7 +62,7 @@ FROM [Welcome-Campaign-Segment] de
 LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 ```
 
-As you can see, the only thing we changed in the above query is the type of `JOIN`. This simple change will alter our outcomes to show a full list of all Subscriber Keys and Email Addresses from `Welcome-Campaign-Segment` Data Extension with the date of email open for those contacts who engaged with the communication. Unengaged ones would have `null` values in the `OpenDate` column. Again, it is not a proper way of building such a report. There will be the ready-to-use snippet in the bottom.
+As you can see, the only thing we changed in the above query is the type of `JOIN`. This simple change will alter our outcomes to show a full list of all Subscriber Keys and Email Addresses from `Welcome-Campaign-Segment` Data Extension with the email open date for those contacts who engaged with the communication. Unengaged ones would have `null` values in the `OpenDate` column. Again, it is not a proper way of building such a report. There will be the ready-to-use snippet at the bottom.
 
 Due to the similarity of `LEFT JOIN` and `RIGHT JOIN`, I highly recommend to choose one type and use it consistently to lower the risk of an error.
 
@@ -99,11 +99,11 @@ FROM [Welcome-Campaign-Segment] de
 FULL JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 ```
 
-`FULL JOIN` is an awesome tool when you, for example, want to create a master segment from multiple smaller ones. Another use case - checking multiple tracking data points with a clear view which are missing (for example, which users have a tracked email click without open and vice versa).
+`FULL JOIN` is an excellent tool when you, for example, want to create a master segment from multiple smaller ones. Another use case - checking multiple tracking data points with a clear view which are missing (for example, which users have a tracked email click without open and vice versa).
 
 ### Self-join
 
-Then there is Self-join. It is not a separate type of `JOIN` statement, but rather a specific use case for the above types. It joins the table to itself. Useful when you have columns in your data extension that point to other columns in the same extension.
+Then there is Self-join. It is not a separate type of `JOIN` statement but rather a specific use case for the above types. It joins the table to itself. Useful when you have columns in your data extension that point to other columns in the same extension.
 
 A use case I can think of in the world of Salesforce Marketing Cloud could be, for example, a Data Extension that stores product categories and subcategories.
 
@@ -115,7 +115,7 @@ Wristwatches | 1 |
 Diver Watches | 2 | 1
 Pilot Watches | 3 | 1
 
-In such a scenario, you can use Self-join to build a more readable table that might be useful for personalization:
+In such a scenario, you can use Self-join to build a more readable table that might be useful for personalisation:
 
 ```sql {5} title="Self-join using INNER JOIN will output only categories that have a parent category"
 SELECT
@@ -132,15 +132,15 @@ Category | ParentCategory
 Diver Watches | Wristwatches
 Pilot Watches | Wristwatches
 
-Another use case? You might have a product table for your e-commerce wherein one column store recommended products that are often purchased together. To personalize an email with such offers, self-join on that column would be perfect.
+Another use case? You might have a product table for your e-commerce wherein one column store recommended products that are often purchased together. To personalise an email with such offers, self-join on that column would be perfect.
 
 You won't be using Self-join a lot, but it might be a colossal timesaver when needed.
 
 :::note You Should Know
 
-Self-join might be the perfect tool when you are working with data coming from Salesforce through Marketing Cloud Connect to Synchronized Data Extensions.
+Self-join might be the perfect tool for working with data coming from Salesforce through Marketing Cloud Connect to Synchronized Data Extensions.
 
-Very often, you might encounter Accounts that are related to another Account. This hierarchical structure uses the ParentId field. With self-join, you can flatten this relationship for use in personalization and journeys.
+Very often, you might encounter Accounts that are related to another Account. This hierarchical structure uses the ParentId field. You can flatten this relationship for use in personalisation and journeys with self-join.
 
 ```sql {8-10} title="Flattening three levels of Salesforce Account hierarchy"
 SELECT
@@ -159,20 +159,20 @@ LEFT JOIN Account_Salesforce a3 ON a3.Id = a2.ParentId
 
 ## Joining ON
 
-I was writing a lot about the various `JOIN` statements, but there is also the `ON` element. We use it to define the relationship between the joined data sources. It tells the query which value should it should consider to decide whether the record is available in both columns.
+I was writing a lot about the various `JOIN` statements, but there is also the `ON` element. We use it to define the relationship between the joined data sources. It tells the query which value it should consider to decide whether the record is available in both columns.
 
 In our example, we used `ON de.SubscriberKey = o.SubscriberKey` that takes the SubscriberKey from the Data Extension and the System Data View and matches the rows based on it. You can use any other but always think about edge cases. Is the email address always unique? It is a very similar experience to what you do in the Salesforce Marketing Cloud Data Designer.
 
 This column does not have to be the Primary Key of the Data Extension or System Data View. You can select any as long as its values have a match in the second source.
 
-You can also add a bit of logic to it, by leveraging `AND`/`OR` statements. It is especially useful when either:
-1. You are not sure in which column you will have a match. For example, you have separate columns for 15 characters Salesforce ID and 18 characters one and want to match on either one.
-2. You want to match on multiple criteria. For example, not only the `EmailAddress` field but also `LastName` to cover shared email address.
-3. You want to join more than two data sources together using convoluted logic. You will find an example soon at the bottom of the [Multiple Various Joins](#multiple-various-joins) section.
+You can also add a bit of logic to it by leveraging `AND`/`OR` statements. It is ehandy when either:
+1. You are not sure which column will have a match. For example, you have separate columns for 15 characters Salesforce ID and 18 characters one and want to match on either one.
+2. You want to match multiple criteria. For example, not only the `EmailAddress` field but also `LastName` to cover shared email address.
+3. You want to join more than two data sources together using convoluted logic. You will find an example soon in the [Multiple Various Joins](#multiple-various-joins) section.
 
 ## Table Name Prefix
 
-When you are joining multiple data sources that have columns of the same name, you will have to tell the SQL from which source you select each column. You can do it by using the table name prefix before the column name:
+When you are joining multiple data sources with columns of the same name, you will have to tell the SQL from which source you select each column. You can do it by using the table name prefix before the column name:
 
 ```sql title="Example of SQL with full table name prefixes"
 SELECT
@@ -193,9 +193,9 @@ FROM [Welcome-Campaign-Segment] de
 INNER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
 ```
 
-All you need to do is to write your label after a data source name. Now you can leverage the shortened name to prefix the selected columns. It's especially useful when pulling data from Data Extensions.
+All you need to do is write your label after a data source name. Now you can leverage the shortened name to prefix the selected columns. It's instrumental when pulling data from multiple Data Extensions.
 
-Using table name prefixes is not always required (for example when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and error-deferring purposes.
+Using table name prefixes is not always required (for example, when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and error-deferring purposes.
 
 ## Multiple Joins
 
@@ -203,7 +203,7 @@ Joining two tables is just the beginning. Working with multiple columns can be m
 
 ### Multiple Inner Joins
 
-In many cases, you will want to get a segment of people that fulfil multiple requirements simultaneously. For example, contacts that were part of three different ToFu campaigns related to a particular product. Such data might make for a great audience for your next campaign further down in the marketing funnel. For such a scenario, you will use multiple `INNER JOIN` statements chained in one query:
+In many cases, you will want to get a segment of people who simultaneously fulfil multiple requirements. For example, contacts that were part of three different ToFu campaigns related to a particular product. Such data might make an ideal audience for your next campaign further down in the marketing funnel. For such a scenario, you will use multiple `INNER JOIN` statements chained in one query:
 
 ```sql {6-8} title="Contacts used for three different ToFu campaigns that are ready for a MoFu campaign"
 SELECT
@@ -216,13 +216,13 @@ INNER JOIN [Newsletter-Promo-Campaign-Segment] de2 ON de1.SubscriberKey = de2.Su
 INNER JOIN [Ebook-Download-Campaign-Segment] de3 ON de1.SubscriberKey = de3.SubscriberKey
 ```
 
-This SQL will give you only those contacts that were in all three Data Extensions.
+This SQL will only give you those contacts that were in all three Data Extensions.
 
 ### Multiple Left Joins
 
-Another huge group of cases you might encounter are queries with multiple `LEFT JOIN` statements. They are great when you want to extend the data for your main data source with multiple other data points without losing records that do not have a match. Awesome for building a segment for a campaign from Data Extensions with extensive personalization:
+Another huge group of cases you might encounter are queries with multiple `LEFT JOIN` statements. They are great when you want to extend the data for your main data source with multiple other data points without losing records that do not have a match. Awesome for building a segment for a campaign from Data Extensions with extensive personalisation:
 
-```sql {7-9} title="To the list of contacts add the product details we want to use in the email content along with special offer description"
+```sql {7-9} title="To the list of contacts, add the product details we want to use in the email content along with special offer description"
 SELECT
     de.SubscriberKey,
     de.EmailAddress,
@@ -234,7 +234,7 @@ LEFT JOIN [Product-Details-List] prod ON de.OfferedProduct = prod.ProductId
 LEFT JOIN [Custom-Offer-List] promo ON de.OfferedPromotion = promo.PromotionId
 ```
 
-Notice that in this case, we joined additional Data Extensions on different columns. What is more, we don't need to `SELECT` those columns to be able to filter on them. Thanks to using `LEFT JOIN` instead of `INNER JOIN` this query will return to us also contacts that do not have any custom offer applied (we can hide appropriate content block with personalization for them).
+Notice that we joined additional Data Extensions on different columns in this case. What is more, we don't need to `SELECT` those columns to filter on them. Thanks to using `LEFT JOIN`, instead of `INNER JOIN` this query will return to us also contacts that do not have any custom offer applied (we can hide appropriate content block with personalisation for them).
 
 ### Multiple Various Joins
 
@@ -256,13 +256,13 @@ In the example above, we took the same query as for the Multiple Left Joins, but
 
 This approach might be better for our needs, as we would be sure that all contacts have available data for Product Name and Product Price. A great way to make our content better and more comfortable to create.
 
-How complex a `JOIN` can get? Very. You will encounter such monstrosities especially in the world of reporting queries that requires information from multiple System Data Views - for example when you want to [debug your email sends](./sfmc-sql-snippet-debugging-email-sends.mdx).
+How complex can a `JOIN` can get? Very. You will encounter such monstrosities, especially in the world of reporting queries that require information from multiple System Data Views - for example, when you want to [debug your email sends](./sfmc-sql-snippet-debugging-email-sends.mdx).
 
-One thing to remember - the more complex query you create, the more error-prone it is and the closer you are to the 30 minutes AutoKill limit for the query execution. Always minimize your query to only the data you truly need.
+One thing to remember - the more complex query you create, the more error-prone it is and the closer you are to the 30 minutes AutoKill limit for the query execution. Always minimise your query to only the data you truly need.
 
 ## UNION
 
-Apart from the `JOIN` there is also an `UNION` operator that serves similar purpose. It concatenates outcomes of multiple `SELECT` statements.
+Apart from the `JOIN`, a `UNION` operator also serves a simillar purpose. It concatenates the outcomes of multiple [`SELECT`](./sfmc-sql-select.mdx) statements.
 
 ```sql {5} title="Group subscribers from two Data Extensions"
 SELECT
@@ -276,7 +276,7 @@ SELECT
 FROM [February-Event-Participants-Segment] feb
 ```
 
-As you can see in the above example, `UNION` doesn't require any relationship between the two queries. There is no [`ON` element](#joining-on). On the other hand, `UNION` cannot add any new columns.
+As you can see in the above example, the `UNION` doesn't require any relationship between the two queries. There is no [`ON` element](#joining-on). On the other hand, the `UNION` cannot add any new columns.
 
 `UNION` works only if:
 
@@ -284,16 +284,17 @@ As you can see in the above example, `UNION` doesn't require any relationship be
 2. Both queries have the same order of columns.
 3. Columns in both queries have the same data types.
 
-The names does not have to be the same, however it is best practice to match the aliases for readability purposes.
+The names do not have to be the same; however, it is best practice to match the aliases for readability purposes.
 
 To simplify the difference between `JOIN` and `UNION`:
 
 - If you want to add columns - use `JOIN`.
 - If you want to add rows - use `UNION`.
+- If you want to add both - use both (or [`FULL JOIN`](#full-join))
 
 :::note You Should Know
 
-By default `UNION` will ignore duplicates. If you want to keep them, use `UNION ALL`.
+By default, the `UNION` will ignore duplicates. If you want to keep them, use `UNION ALL`.
 
 ```sql {5} title="Group subscribers from two Data Extensions"
 SELECT
@@ -311,11 +312,11 @@ FROM [February-Event-Participants-Segment] feb
 
 The obvious use case for `UNION` is gathering subscribers from multiple Data Extensions to build a master segment.
 
-There is however another use case that I find perfect for `UNION` - attaching Seedlists.
+There is, however, another use case that I find perfect for `UNION` - attaching Seedlists.
 
-If you are using deliverability monitoring suite, you probably are using seedlist. If not - a seedlist is a list of bot email addresses that are used to estimate inbox placement of your communication.
+If you are using a deliverability monitoring suite, you probably are using seedlist. If not - a seedlist is a list of bot email addresses used to estimate your communication inbox placement.
 
-In most cases you will store your seedlist in a separate Data Extension and will have only Email Address and fake Subscriber Key columns filled in. How to push them easily into your segment? With `UNION`, of course:
+In most cases, you will store your seedlist in a separate Data Extension and will have only Email Address and fake Subscriber Key columns filled in. How to push them quickly into your segment? With `UNION`, of course:
 
 ```sql {7} title="Append Seedlist to your Segment"
 SELECT
@@ -333,11 +334,11 @@ SELECT
 FROM [Seedlist] sl
 ```
 
-In the example above not only we are adding the Seedlist to your main segment, but also we are providing static placeholders for columns that are used in personalisation.
+In the example above, we add the Seedlist to the master segment and provide static value placeholders for columns used in personalisation.
 
 :::note You Should Know
 
-You can mix and match both `JOIN` and `UNION` to create your perfect segment. And you can union arbitrary data without a [`FROM`](./sfmc-sql-from.mdx).
+You can mix and match `JOIN` and `UNION` to create your perfect segment. And even add arbitrary data without a [`FROM`](./sfmc-sql-from.mdx).
 
 ```sql {8,15} title="AutoKill is the limit of your imagination"
 SELECT
@@ -354,7 +355,7 @@ SELECT
     'Seed' AS FirstName,
     'Estimating' AS Interest
 FROM [Seedlist] sl
-UNION
+UNION ALL
 SELECT
     '123456789987654321' AS SubscriberKey,
     'sales@company.com' AS EmailAddress,
@@ -363,3 +364,51 @@ SELECT
 ```
 
 :::
+
+## INTERSECT
+
+The `INTERSECT` operator is very similar in usage to [`UNION`](#union), but instead of concatenating outcomes, it outputs only those that exist in both queries.
+
+```sql {4} title="Let's check who converted from out Black Friday promotion"
+SELECT
+    bf.SubscriberKey
+FROM [Black-Friday-Promo-Segment] bf
+INTERSECT
+SELECT
+    p.SubscriberKey
+FROM [Purchases-Data-Point]
+```
+
+As with [`UNION`](#union), `INTERSECT` works only if:
+
+1. Both queries have the same number of columns.
+2. Both queries have the same order of columns.
+3. Columns in both queries have the same data types.
+
+The check for rows existing in both queries is done considering data in all provided columns.
+
+You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](./sfmc-sql-join.mdx) and [`WHERE`](./sfmc-sql-where.mdx).
+
+## EXCEPT
+
+The `EXCEPT` operator is very similar in usage to [`UNION`](#union), but instead of concatenating outcomes, it outputs only those that exist in the first query.
+
+```sql {4} title="Let's check who did not convert from out Black Friday promotion"
+SELECT
+    bf.SubscriberKey
+FROM [Black-Friday-Promo-Segment] bf
+EXCEPT
+SELECT
+    p.SubscriberKey
+FROM [Purchases-Data-Point]
+```
+
+As with [`UNION`](#union), `EXCEPT` works only if:
+
+1. Both queries have the same number of columns.
+2. Both queries have the same order of columns.
+3. Columns in both queries have the same data types.
+
+The check for rows existing in both queries is done considering data in all provided columns.
+
+You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](./sfmc-sql-join.mdx) and [`WHERE`](./sfmc-sql-where.mdx).
