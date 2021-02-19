@@ -11,11 +11,11 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
-Here, I will cover only selected date functions, that I find most useful for Marketing Automation purposes. They will help you find the current date, calculate a new one or format it to match your needs.
+Here, I will cover only selected date functions that I find most useful for Marketing Automation purposes. They will help you find the current date, calculate a new one or format it to match your needs.
 
 ## GETDATE & GETUTCDATE
 
-The `GETDATE` function is the most straightforward way to get current timestamp within your query.
+The `GETDATE` function is the most straightforward way to get the current timestamp within your query.
 
 ```sql {2}
 SELECT
@@ -24,9 +24,9 @@ SELECT
 
 :::note You Should Know
 
-`GETDATE()` gets server time. For Salesforce Marketing Cloud it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. It cannot be changed, even with timezone and culture settings in Setup.
+`GETDATE()` gets server time. For Salesforce Marketing Cloud, it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. It cannot be changed, even with timezone and culture settings in Setup.
 
-You can get the datetime with appropriate offset information by using `SYSDATETIMEOFFSET()` function. It will return the same datetime as `GETDATE()` but in a format showcasing the timezone offset: `2020-12-28 15:08:01.7239173 -06:00`.
+You can get the datetime with appropriate offset information using the `SYSDATETIMEOFFSET()` function. It will return the same datetime as `GETDATE()` but in a format showcasing the timezone offset: `2020-12-28 15:08:01.7239173 -06:00`.
 
 You can see the 24-hour clock format and milliseconds and UTC-6 offset at the end. This last information will be useful for timezone conversions with [`AT TIME ZONE`](#at-time-zone) function.
 
@@ -34,14 +34,14 @@ You can also leverage [`TODATETIMEOFFSET'](#at-time-zone-vs-todatetimeoffset) to
 
 :::
 
-The `GETUTCDATE` function works the same as `GETDATE` but returns datetime in UTC timezone.
+The `GETUTCDATE` function works the same as `GETDATE` but returns datetime in the UTC timezone.
 
 ```sql {2}
 SELECT
     GETUTCDATE() as CurrentUTCDate
 ```
 
-Both return a datetime object (for example `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
+Both return a datetime object (for example, `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
 
 However, you can limit its output to either date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) or [`FORMAT`](#format-with-dates) Functions.
 
@@ -49,7 +49,7 @@ However, you can limit its output to either date or time part by using [`CONVERT
 
 The `DATEADD` functions give you the power to add and subtract from your date values.
 
-```sql {2-3} title="Add seven days to current UTC date"
+```sql {2-3} title="Add seven days to the current UTC date"
 SELECT
     GETUTCDATE() AS TrialStartDate,
     DATEADD(DAY, 7, GETUTCDATE()) as TrialEndDate
@@ -59,7 +59,15 @@ It requires three things:
 
 1. Date part - The date element that will be changed
 2. Number - The integer (or an expression evaluating to integer) for interval
-3. Date - The original date that will be changed by the `DATEADD` function. It can be in any date data type. The output will be of the same type.
+3. Date - The original date that the `DATEADD` function will change. It can be in any date data type. The output will be of the same type.
+
+:::note You Should Know
+
+`DATEADD` does not take into consideration timezone offset.
+
+However, if you are changing the date with the 31st day of the month by months and the outcome month is shorter, SQL will account for that and return the last day of a given month.
+
+:::
 
 `DATEADD` is especially useful when used with the [`WHERE`](./sfmc-sql-where.mdx) statement, as it allows to filter records dynamically:
 
@@ -73,15 +81,43 @@ WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 
 :::note You Should Know
 
-`DATEADD` does not take into consideration timezone offset.
+A very similar date calculation is also available with `DATEADD()` AMPScript function. Depending on the use case, consider whether you want to manipulate the date in the Data Extension or only in the communication.
 
-However, if you are changing the date with 31st day of the month by months and the outcome month is shorter, SQL will account for that and return the last day of a given month.
+:::
+
+## DATEPART
+
+The `DATEPART` function returns the chosen part of the provided date.
+
+```sql {5} title="Find all Subscribers that joined in 2020"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM ENT._Subscribers
+WHERE DATEPART(YEAR, DateJoined) = 2020
+```
+
+It outputs an integer, so be sure you are using a number when making comparisons.
+
+:::note You Should Know
+
+There are also three shortcuts for the most popular use cases: `YEAR()`, `MONTH()` and `DAY()`.
+
+```sql {5} title="Find all Subscribers that joined in 2020 - shorter approach"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM ENT._Subscribers
+WHERE YEAR(DateJoined) = 2020
+```
+
+In the backend, those functions are just wrappers around `DATEPART`, so you can use whatever you prefer.
 
 :::
 
 ### Date parts
 
-You can reference date parts both by its full name, as well as an abbreviation.
+You can reference date parts both by their full name, as well as an abbreviation.
 
 | Date part | Abbreviations |
 | -- | -- |
@@ -103,11 +139,7 @@ You can reference date parts both by its full name, as well as an abbreviation.
 
 For 99% of SFMC needs, you will be just fine with `YEAR`, `MONTH`, `DAY`, `HOUR` and `MINUTE`. Using only those with the full name will make your queries readable and straightforward for everyone.
 
-:::note You Should Know
 
-Very similar date calculation is also available with `DATEADD()` AMPScript function. Depending on the use case, consider whether you want to manipulate the date in the Data Extension or only in the communication.
-
-:::
 
 ## DATEDIFF
 
@@ -137,22 +169,22 @@ It takes into consideration the leap years. If you provide dates with [offset](#
 
 :::note You Should Know
 
-There is a limit of how big the difference can be. If you go down to `SECOND` [date part](#date-parts) the maximum time difference for the query is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. For most use cases, this shouldn't be an issue in Marketing Cloud use cases.
+There is a limit to how big the difference can be. If you go down to the `SECOND` [date part](#date-parts), the query's maximum time difference is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. For most use cases, this shouldn't be an issue in Marketing Cloud use cases.
 
 :::
 
 ## DATENAME
 
-The `DATENAME` functions return value of specified [datepart](#date-parts) from a given date.
+The `DATENAME` functions return the value of the specified [datepart](#date-parts) from a given date.
 
-```sql {3} title="Capture full name of the day"
+```sql {3} title="Capture the full day's name"
 SELECT
     SubscriberKey,
     DATENAME(WEEKDAY, DateJoined) AS DayJoined
 FROM ENT._Subscribers
 ```
 
-It might be useful to quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the name of the day for a given date thanks to `WEEKDAY` [datepart](#date-parts).
+It might be useful to quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the name of the day for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).
 
 ```sql {4} title="Create an automation that will capture weekend meetings for Friday reminder"
 SELECT
@@ -166,10 +198,10 @@ WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
 
 The `AT TIME ZONE` function provides two incredible features:
 
-1. It can give timezone offset information for any datetime missing this data
-2. It can convert datetime with offset to a different timezone
+1. It can give timezone offset information for any datetime missing this data.
+2. It can convert datetime with offset to a different timezone.
 
-It's must-have for multi-country senders and beneficial for others planning to personalize or calculate using date data.
+It's a must-have for multi-country senders and beneficial for others planning to personalize or calculate using date data.
 
 :::note You Should Know
 
@@ -191,17 +223,17 @@ SELECT
     -- Output: 2020-07-01 18:00:00 -05:00
 ```
 
-In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function not only adds the offset - but it also calculates the Daylight Saving Time offset change for you.
+In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function adds the offset and calculates the Daylight Saving Time offset change for you.
 
 ### AT TIME ZONE vs TODATETIMEOFFSET
 
 As astonishing as it might seem, taking Daylight Saving Time into consideration is a problem when working with Salesforce Marketing Cloud system dates (including the [`GETDATE`](#getdate--getutcdate)).
 
-Salesforce Marketing Cloud uses Central Standard Time (UTC-6) __without__ changes between standard and daylight savings time. It means that the excellent feature of `AT TIME ZONE` is working against us.
+Salesforce Marketing Cloud uses Central Standard Time (UTC-6) __without__ changes between standard and daylight savings time. It means that `AT TIME ZONE`'s excellent feature is working against us.
 
 There is, however, another function that might solve this issue - `TODATETIMEOFFSET`. It is a simplified version of the `AT TIME ZONE` that adds arbitrary offset without any logic on Daylight Saving Time. Just as we would like for the SFMC system dates.
 
-To use it, just provide a datetime and an offset (for example `'-06:00'` or `'+01:00'`):
+To use it, provide a datetime and an offset (for example, `'-06:00'` or `'+01:00'`):
 
 ```sql {2,4} title="No Daylight Saving Time magic"
 SELECT
@@ -211,7 +243,7 @@ SELECT
     -- Output: 2020-07-01 18:00:00 -06:00
 ```
 
-Of course, for any datetime values that include the Daylight Saving Time - pushed from website or your data warehouse - [`AT TIME ZONE`](#add-offset-with-at-time-zone) will be better solution.
+Of course, for any datetime values that include the Daylight Saving Time - pushed from a website or your data warehouse - [`AT TIME ZONE`](#add-offset-with-at-time-zone) will be the better solution.
 
 ### Change timezone with AT TIME ZONE
 
@@ -231,13 +263,13 @@ It will also automatically consider any differences between Daylight Saving Time
 
 You can leverage both features of the `AT THE TIMEZONE` in one line to apply the timezone to offset-less datetime and convert it to another timezone by using the function twice:
 
-```sql {2} title="First, apply timezone. Then change the timezone"
+```sql {2} title="First, apply the timezone. Then change the timezone"
 SELECT
     CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET,
     -- Output: 2020-01-01 01:00:00 +01:00
 ```
 
-It works because the first execution of the function [adds the offset with `AT TIME ZONE`](#add-offset-with-at-time-zone). Second uses the output with an offset applied and [change the timezone](#change-timezone-with-at-time-zone).
+It works because the function's first execution [adds the offset with `AT TIME ZONE`](#add-offset-with-at-time-zone). Second, uses the output with an offset applied and [change the timezone](#change-timezone-with-at-time-zone).
 
 Of course, for Salesforce Marketing Cloud system dates, we still need the [workaround](#at-time-zone-vs-todatetimeoffset):
 
@@ -295,13 +327,13 @@ Above, you have seen three different format specifiers used to manipulate the da
 | 'F' | Full long time | Friday, October 30, 2020 2:15:30 PM |
 | 'r'/'R' | RFC1123 | Fri, 30 Oct 2020 14:15:30 GMT |
 
-Just as highlighted in the table header - the examples are for the SFMC default US culture formating. If you add specific culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order and separator style.
+As highlighted in the table header - the examples are for the SFMC default US culture formating. If you add a specific culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order and separator style.
 
 You can find the full list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings).
 
 ### Custom date formats
 
-Of course, you are not limited to the formats shown above. Whenever you want something different, you can create custom format by just providing full pattern instead of short specifier by using those elements:
+Of course, you are not limited to the formats shown above. Whenever you want something different, you can create a custom format by just providing a full pattern instead of a short specifier by using those elements:
 
 | Format specifier | Description | Example (for US culture) |
 | -- | -- | -- |
@@ -327,7 +359,7 @@ Of course, you are not limited to the formats shown above. Whenever you want som
 | ':' | Time separator | ':' |
 | '/' | Date separator | '/' |
 
-Again, the examples are for the default US culture formatting and might look different for different cultures (for example, hour separator might be changed automatically to `.` for Italy).
+Again, the examples are for the default US culture formatting and might look different for different cultures (for example, the hour separator might be changed automatically to `.` for Italy).
 
 You can use the above format specifiers to obtain the exact format needed:
 
@@ -336,7 +368,7 @@ SELECT
     FORMAT(GETUTCDATE(), 'dddd (dd MMMM yyyy) - HH:mm', 'en-GB') AS FormattedDate
 ```
 
-Above query will return `Saturday (30 October 2020) - 02:15`.
+The above query will return `Saturday (30 October 2020) - 02:15`.
 
 You can find the full list of custom date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
 
