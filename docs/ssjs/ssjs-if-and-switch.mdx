@@ -117,6 +117,47 @@ if (isOptedIn) sendEmail(emailAddress, emailID);
 
 You could probably use simple `if` conditions for the whole logic of your code. But you shouldn't. There are some interesting and useful options worth checking out.
 
+### Ternary
+
+If a simple `if` statement has only two possible outcomes depending on a condition, ternary is more straightforward and readable alternative. Based on previous example, instead of:
+
+```js {2-7} title="Dirty if statement using basic 'if'"
+for (var customer in customers) {
+    var helloPersonalization;
+    if (customer.firstName) {
+        helloPersonalization = 'Hello' + customer.firstName;
+    } else if (!customer.firstName) {
+        helloPersonalization = 'Hello Valued Customer';
+    }
+}
+```
+
+we can use a clean ternary:
+
+```js {2} title="Same logic changed to a ternary"
+for (var customer in customers) {
+    var helloPersonalization = customer.firstName ? 'Hello' + customer.firstName : 'Hello Valued Customer';
+}
+```
+
+Instead of 6 lines of code, we have 1. Awesome! But how does it work? The ternary structure looks like this: `variable = condition ? valueIfTrue : valueIfFalse;`. So in the example above, if the `customer.firstName` is not empty (is truthy), it will be pushed as the value of `helloPersonalization`. If it is empty, the default value will be assigned instead.
+
+:::note You Should Know
+
+The ternary has more uses not than just the standard `if` statement. It is awesome text customization with pseudo-interpolation:
+
+```js title="Fill in the sentence with different words depending on boolean value of isOptedIn"
+Write('You are ' + (isOptedIn ? 'opted in' : 'not opted in'));
+```
+
+Ternaries are not limited to variables and strings. They can also run functions or [debugging](./debugging-ssjs#debugging-variable):
+
+```js title="If isLoggedIn is false, the redirectToLogInPage function will be executed"
+!isLoggedIn ? redirectToLogInPage() : null;
+```
+
+:::
+
 ----
 
 ## Shortcircuiting
@@ -152,41 +193,6 @@ if (isValidEmail(login) && isValidPassword(password) && isValidPair(email, passw
 ```
 
 In the above example, we are doing multiple tests ordered from the easiest to the hardest. Thanks to it, if the login is not in the correct format for an email address, we won't have even to check the password or query our encrypted database with a hashed version of the password.
-
-### Pseudo-Ternary
-
-Despite the JavaScript [ternary](../js/js-if-and-switch.mdx#ternary) operator is not supported in SSJS, you can leverage shortcircuiting to get the same outcome. If a simple `if` statement has only two possible outcomes depending on a condition, ternary is more straightforward and readable alternative. Based on previous example, instead of:
-
-```js {2-7} title="Dirty if statement using basic 'if'"
-for (var customer in customers) {
-    var helloPersonalization;
-    if (customer.firstName) {
-        helloPersonalization = 'Hello' + customer.firstName;
-    } else if (!customer.firstName) {
-        helloPersonalization = 'Hello Valued Customer';
-    }
-}
-```
-
-we can use a clean pseudo-ternary:
-
-```js {2} title="Same logic changed to a pseudo-ternary"
-for (var customer in customers) {
-    var helloPersonalization = customer.firstName && 'Hello' + customer.firstName || 'Hello Valued Customer';
-}
-```
-
-Instead of 6 lines of code, we have 1. Awesome! But how does it work? The pseudo-ternary structure looks like this: `variable = condition && valueIfTrue || valueIfFalse;`. So in the example above, if the `customer.firstName` is not empty (is truthy), it will be pushed as the value of `helloPersonalization`. If it is empty, the default value will be assigned instead.
-
-:::note You Should Know
-
-You can leverage similar logic to trigger functions or [debugging](./debugging-ssjs#debugging-variable):
-
-```js title="If isLoggedIn is false, the redirectToLogInPage function will be executed"
-!isLoggedIn && redirectToLogInPage();
-```
-
-:::
 
 ----
 

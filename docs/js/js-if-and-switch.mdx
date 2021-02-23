@@ -125,11 +125,11 @@ If a simple `if` statement has only two possible outcomes depending on a conditi
 
 ```js {2-7} title="Dirty if statement using basic 'if'"
 for (let customer of customers) {
-    let helloPersonalization;
+    let helloPersonalization = 'Hello ';
     if (customer.firstName) {
-        helloPersonalization = customer.firstName;
+        helloPersonalization += customer.firstName;
     } else if (!customer.firstName) {
-        helloPersonalization = 'Valued Customer';
+        helloPersonalization += 'Valued Customer';
     }
 }
 ```
@@ -138,7 +138,7 @@ we can use a clean ternary:
 
 ```js {2} title="Same logic changed to a clean ternary"
 for (let customer of customers) {
-    let helloPersonalization = customer.firstName ? customer.firstName : 'Valued Customer';
+    let helloPersonalization = customer.firstName ? 'Hello ' + customer.firstName : 'Hello Valued Customer';
 }
 ```
 
