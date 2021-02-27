@@ -11,6 +11,7 @@ module.exports = {
                 'ssjs/ssjs-if-and-switch',
                 'ssjs/ssjs-loops',
                 'ssjs/debugging-ssjs',
+                'ssjs/ssjs-vs-ampscript-performance',
                 {
                     'SSJS Use Cases': ['usecase/engage-with-countdown', 'usecase/tailor-with-data'],
                 },
