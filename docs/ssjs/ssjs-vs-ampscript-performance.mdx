@@ -30,9 +30,9 @@ Should you have any interesting idea for a test case - let me know!
 
 ## Conclusions
 
-Most of the differences are very small - too small to have an impact for most Cloud Page backends, Automation Studio Script Activities or Apps for internal use created within Marketing Cloud. For those use cases I definitely prefer SSJS.
+Execution time differences are very small - at a few or dozen milisecond here or there, too small to have an impact for most Cloud Page backends, Automation Studio Script Activities or Apps for internal use created within Marketing Cloud. For those use cases I definitely prefer SSJS.
 
-But for scripting in communication assets (Emails, SMS, Pushes, etc) that will be send to huge volumes or previously mentioned use cases where you apply the script to big data extensions, it might have significant impact and help you optimize your Marketing Cloud greatly.
+But for scripting in communication assets (Emails, SMS, Pushes, etc) that will be send to huge volumes or when the previously mentioned use cases apply the script to a big data extensions, it might have significant impact and help you optimize your Marketing Cloud greatly.
 
 
 
@@ -41,11 +41,88 @@ But for scripting in communication assets (Emails, SMS, Pushes, etc) that will b
 
 The methodology is very limited by the nature of SSJS and AMPScript. I'm using a Cloud Page and use `new Date().getTime();` to capture beginning and end of the execution. Within this scope, I run a loop with the code I want to test. Finally, I divide the time needed for whole execution by the number of loop iterations to get an average run time.
 
-This approach means that the milisecond values I provide are no way the exact times you can use to calculate the speed at scale. But in the same time should be standardized enough to allow for meaningful comparision between various scenarios. Focus less on exact milisecond count and more on how it is in relation to values for other options.
+This approach means that the milisecond values I provide are no way the exact times you can use to calculate the speed at scale. But in the same time should be standardized enough to allow for meaningful comparision between various scenarios. The exact times  also change a bit when the test is run multiple times, as the strain on Marketing Cloud servers at the very moment of execution also has an impact. Focus less on exact milisecond count and more on relations between values.
 
 In the below test case description you can find additional details on the methodology, like input used for test, number of iterations used for loops or exact code that was tested.
 
+:::note You Should Know
+
+For testing the execution speed of AMPScript block solutions, I'm using the SSJS to start and stop the count. I compared it with calculation using AMPScript `FormatDate(Now(), 'iso')` and there was no meaningful difference between the two.
+
+:::
+
 ## Performance Test Cases
+
+### SSJS & AMPScript Context Switching
+
+First thing I wanted to test was the cost of context switching between SSJS and AMPScript. Understanding the execution time impact of the context switch is not only necessary to make valid conclusions from future tests, but also can help decide on the best approach when coding a personalisation. To check it, I created four scenarios that time various levels of context switch.
+
+<Tabs
+    defaultValue='ssjs'
+    values={[
+        {label: 'SSJS', value: 'ssjs'},
+        {label: 'SSJS + HTML', value: 'html'},
+        {label: 'SSJS + AMPScript', value: 'ampinssjs'},
+        {label: 'AMPScript', value: 'ampscript'},
+    ]}
+>
+<TabItem value='ssjs'>
+
+In this scenario, there is no context switch. I timed pure SSJS loop to have a base for analysis.
+
+```
+for (var i = 0; i < 10000; i++) {
+    var a;
+}
+```
+
+</TabItem>
+<TabItem value='html'>
+
+Next scenario is simple breaking out of SSJS within a loop.
+
+```
+for (var i = 0; i < 10000; i++) {
+    var b;
+    </script>
+
+    <script runat="server">
+}
+```
+
+</TabItem>
+<TabItem value='ampinssjs'>
+
+Next level is making an AMPScript block within the break.
+
+```
+for (var i = 0; i < 10000; i++) {
+    </script>
+    %%[
+        VAR @c
+    ]%%
+    <script runat="server">
+}
+```
+
+</TabItem>
+<TabItem value='ampscript'>
+
+For final scenario I put the for loop in the AMPScript context. This makes the SSJS breaking impact count only once per 10 000 executions, making it irrelevant for the final average.
+
+```
+</script>
+%%[
+    FOR @current = 1 TO 10000 DO
+        VAR @d
+    NEXT @current
+]%%
+<script runat="server">
+
+```
+
+</TabItem>
+</Tabs>
 
 ### Proper Case
 
@@ -120,10 +197,6 @@ SET @Response = ProperCase(@Sentence)
 ]%%
 ```
 
-This solution was timed from SSJS Context and used `Variable.SetValue` for passing the testedString to AMPScript Context.
-
-This approach has impact on the exact number of miliseconds, but does not change the final conclusion.
-
 </TabItem>
 </Tabs>
 
@@ -142,14 +215,96 @@ Sentence | SSJS Split | SSJS Replace | AMPScript in SSJS | AMPScript
 
 Sum Up:
 
-1. This is huge: __SSJS gets slower which each additional word in the provided sentence. AMPScript execution time is constant.__
-2. For one-two word sentences (think First Name, Last Name, Title, etc.) SSJS Replace with Regex is the best solution. Pure AMPScript is very close. Use whichever language you are using for the rest of your code.
+1. When working with arrays or regex replace, SSJS execution time extends with each additional word. However, AMPScript execution time is constant.
+2. For one-two word sentences (think First Name, Last Name, Title, etc.) SSJS Replace with Regex and AMPScript are comparable. Use whichever language you are using for the rest of your code.
 3. For anything longer, AMPScript is much better - using it even in SSJS might be great way to optimize speed.
-4. Despite [AMPScript in SSJS](./ssjs-snippet-ampscript-in-ssjs.mdx) doing much worse then pure AMPScript, it beats pure SSJS at 9+ words. But as mentioned in the article - use that approach only when there is no other option.
+4. Despite [AMPScript in SSJS](./ssjs-snippet-ampscript-in-ssjs.mdx) doing much worse then pure AMPScript, it beats pure SSJS at long sentences (10+ words). As mentioned in the [article](./ssjs-snippet-ampscript-in-ssjs.mdx) - use that approach only when there is no other option.
+5. SSJS Replace might be the option to choose even despite performance, if you want more flexibility (for example, changing that `Nine-ten` to `Nine-Ten`).
 
+### LowerCase & UpperCase
 
+The test was performed using ten different strings varying in number of words and capitalization:
 
+```js
+var sentences = [
+    'one',                                      // 1
+    'one Two',                                  // 2
+    'one Two THREE',                            // 3
+    'one Two THREE fOUR',                       // 4
+    'one Two THREE fOUR FiVe',                  // 5
+    'one Two THREE fOUR FiVe siX',              // 6
+    'one Two THREE fOUR FiVe siX &',            // 7
+    'one Two THREE fOUR FiVe siX & 8',          // 8
+    'one Two THREE fOUR FiVe siX & 8 nine',     // 9
+    'one Two THREE fOUR FiVe siX & 8 nine-ten'  // 10
+];
+```
 
+All approaches output final sentence as: `one two three four five six & 8 nine-ten`
+
+<Tabs
+    defaultValue='method'
+    values={[
+        {label: 'SSJS Method', value: 'method'},
+        {label: 'SSJS Function', value: 'function'},
+        {label: 'AMPScript in SSJS', value: 'ampinssjs'},
+        {label: 'AMPScript', value: 'ampscript'},
+    ]}
+>
+<TabItem value='method'>
+
+```
+title = testedString.toLowerCase();
+```
+
+</TabItem>
+<TabItem value='function'>
+
+It doesn't make sense in this case, but gives idea on the impact of using function vs method approach.
+
+```
+function toLowerCase(string) {
+    var sentence = string.toLowerCase()
+    return sentence;
+}
+title = toLowerCase(sentences[a]);
+```
+
+</TabItem>
+<TabItem value='ampinssjs'>
+
+```
+title = ampScript("SET @Response = LowerCase('" + testedString + "')");
+```
+
+</TabItem>
+<TabItem value='ampscript'>
+
+```
+%%[
+SET @Response = LowerCase(@Sentence)
+]%%
+```
+
+This solution was timed from SSJS Context and used `Variable.SetValue` for passing the testedString to AMPScript Context.
+
+This approach has impact on the exact number of miliseconds, but does not change the final conclusion.
+
+</TabItem>
+</Tabs>
+
+Sentence | SSJS Method | SSJS Function | AMPScript in SSJS | AMPScript
+-- | -- | -- | -- | --
+1 | 0.0141 | 0.0203 | 0.3875 | 0.1297
+2 | 0.014 | 0.0188 | 0.3859 | 0.1297
+3 | 0.0125 | 0.0187 | 0.3922 | 0.1297
+4 | 0.0125 | 0.0203 | 0.3907 | 0.1297
+5 | 0.0125 | 0.0203 | 0.3907 | 0.1328
+6 | 0.0125 | 0.0203 | 0.3907 | 0.1297
+7 | 0.0125 | 0.0188 | 0.3953 | 0.1312
+8 | 0.0141 | 0.0188 | 0.389 | 0.1313
+9 | 0.014 | 0.0188 | 0.3875 | 0.1312
+10 | 0.0141 | 0.0187 | 0.3906 | 0.1313
 
 
 
