@@ -16,7 +16,7 @@ const features = [
         description: (
             <>
                 Ahoj! My name is Mateusz Dąbrowski, and I find joy in telling the code to do my job. Got any questions
-                or suggestions? Or maybe just want to get in touch?
+                or suggestions? Or maybe just want to get in touch? Let's meet.
             </>
         ),
         url: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
