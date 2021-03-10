@@ -5,9 +5,16 @@ sidebar_label: From
 description: Tell the SQL query FROM where you need the data
 ---
 
+import TOCInline from '@theme/TOCInline';
 import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Tell the SQL query FROM where you need the data' />
+
+:::tip Table of Contents
+
+<TOCInline toc={toc} />
+
+:::
 
 The [`SELECT`](./sfmc-sql-select.mdx) statement alone won't do much. In most cases, once you have selected data you want to work with, you also need to pick the table (Data Extension or System Data View) `FROM` which the query will take the right columns. The code for this is simple:
 

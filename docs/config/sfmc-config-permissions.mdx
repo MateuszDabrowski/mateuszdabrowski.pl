@@ -5,9 +5,16 @@ sidebar_label: Permissions
 description: Welcome to the jungle, we've got Roles and Permissions.
 ---
 
+import TOCInline from '@theme/TOCInline';
 import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="Welcome to the jungle, we've got Roles and Permissions." />
+
+:::tip Table of Contents
+
+<TOCInline toc={toc} />
+
+:::
 
 ## Permissions Best Practices
 
@@ -121,6 +128,12 @@ Two of the most important permissions here are:
 - Email > Subscribers > List > View
 
 They are used in multiple SFMC areas and are required for them to work.
+
+:::note You Should Know
+
+Some of the Shared Data Extension permissions are overwritten by local Data Extension permissions (for example Move, Rename). If you have problem with correctly limiting rights to Shared data, try playing with standard Data Extensions permissions.
+
+:::
 
 Contains also some permissions for __Legacy__ features like _Omniture TnT_ and _3sixty_.
 

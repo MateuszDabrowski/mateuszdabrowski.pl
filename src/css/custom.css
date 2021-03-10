@@ -86,6 +86,15 @@ html[data-theme='dark'] .header-salesforce-link:before {
 
 /* ---------------------------------- DOCS --------------------------------- */
 
+main {
+  margin: 0 auto;
+}
+
+article {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 article > header > h1 {
     color: var(--ifm-color-primary);
 }
@@ -110,6 +119,12 @@ html[data-theme='dark'] article > header > h1 {
   }
 }
 
+@media only screen and (min-width: 997px) {
+  .markdown>.admonition-tip {
+    display: none;
+  }
+}
+
 .markdown > h1,
 .markdown > h2,
 .markdown > h3,
@@ -123,12 +138,27 @@ html[data-theme='dark'] article > header > h1 {
   background-color: rgba(246, 179, 85, 0.2);
   font-weight: bold;
   display: block;
-  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  margin: 0 calc(-1 * var(--ifm-pre-padding)) 0 calc(-1.3 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
 }
 
 html[data-theme='dark'] .admonition-note a > code {
   color: var(--ifm-color-white);
+}
+
+.admonition-tip {
+  background-color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-secondary);
+  margin-top: 1rem;
+}
+
+html[data-theme='dark'] .admonition-tip {
+  background-color: var(--ifm-color-secondary);
+  border-color: var(--ifm-color-primary);
+}
+
+.admonition-tip ul {
+  padding-left: 1.1rem;
 }
 
 @media only screen and (min-width: 768px) {
