@@ -162,6 +162,7 @@ module.exports = {
         algolia: {
             apiKey: '3fbd31ec489532e5020df55b3410e6e6',
             indexName: 'mateuszdabrowski',
+            contextualSearch: true,
             placeholder: 'Search Docs & Snipptes',
         },
     },
