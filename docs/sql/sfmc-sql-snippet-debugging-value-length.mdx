@@ -43,14 +43,13 @@ All good, until one of the values, exceed the maximum length you set for its fie
 You can make quick manual check with a simple SQL query. Open your [Query Studio](./sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
 
 ```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
-SELECT
-    MAX(LEN(c.Id)) AS [Subscriber Key],
-    MAX(LEN(c.FirstName)) AS [First Name],
-    MAX(LEN(c.LastName)) AS [Last Name],
-    MAX(LEN(c.Email)) AS [Email Address],
-    MAX(LEN(c.JobTitle__c)) AS [Current Role],
-    MAX(LEN(c.Industry__c)) AS [Industry]
-FROM Contact_Salesforce c
+SELECT MAX(LEN(c.Id))          AS SubscriberKey,
+       MAX(LEN(c.FirstName))   AS FirstName,
+       MAX(LEN(c.LastName))    AS LastName,
+       MAX(LEN(c.Email))       AS EmailAddress,
+       MAX(LEN(c.JobTitle__c)) AS CurrentRole,
+       MAX(LEN(c.Industry__c)) AS Industry
+  FROM Contact_Salesforce c
 ```
 
 :::note You Should Know
@@ -100,16 +99,15 @@ Yes, you can automate such validation by using two additional Activities.
 Go to the Automation that takes care of moving the data from Synchronized Data Extension do Standard Data Extension and Profile Attributes. Before the Activities that are transfering the data, add a SQL Query Activity. In it, paste the below code:
 
 ```sql title="Basic field length checking query"
-SELECT
-    c.Id AS [Contact ID],
-    LEN(c.Id) AS [Subscriber Key],
-    LEN(c.FirstName) AS [First Name],
-    LEN(c.LastName) AS [Last Name],
-    LEN(c.Email) AS [Email Address],
-    LEN(c.JobTitle__c) AS [Job Title],
-    LEN(c.Industry__c) AS [Industry]
-FROM Contact_Salesforce c
-WHERE 18 - LEN(c.Id) < 0
+SELECT c.Id               AS ContactID,
+       LEN(c.Id)          AS SubscriberKey,
+       LEN(c.FirstName)   AS FirstName,
+       LEN(c.LastName)    AS LastName,
+       LEN(c.Email)       AS EmailAddress,
+       LEN(c.JobTitle__c) AS JobTitle,
+       LEN(c.Industry__c) AS Industry
+  FROM Contact_Salesforce c
+ WHERE 18 - LEN(c.Id) < 0
     OR 40 - LEN(c.FirstName) < 0
     OR 80 - LEN(c.LastName) < 0
     OR 254 - LEN(c.Email) < 0
@@ -158,7 +156,7 @@ Let's change the `LEN(c.Id) AS [Subscriber Key],` in the [`SELECT`](./sfmc-sql-s
     CASE
         WHEN 18 - LEN(c.Id) < 0
         THEN LEN(c.Id)
-    END AS [Subscriber Key],
+    END AS SubscriberKey,
 ```
 
 As you can see, we changed a simple line to a more complex [`CASE`](./sfmc-sql-select#conditional-values-with-case) statement. There is a good reason for it. Thanks to it, the query will evaluate each field against the expected length and in the Value Length Data Extension display information only for the problematic values.
@@ -173,7 +171,7 @@ We can go even further with this approach and add a bit more data to the output 
 CASE
     WHEN 18 - LEN(c.Id) < 0
     THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
-END AS [Subscriber Key]
+END AS SubscriberKey
 ```
 
 Here, apart from the problematic field's length, we are also showing how much it exceeds the current configuration.
@@ -187,34 +185,33 @@ Remember that if you implement this option, it will impact the output length in 
 After applying both of the above options to the [Basic SQL Snippet](#basic-long-term-solution), it looks like this:
 
 ```sql
-SELECT
-    c.Id AS [Contact ID],
-    CASE
-        WHEN 18 - LEN(c.Id) < 0
-        THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
-    END AS [Subscriber Key],
-    CASE
-        WHEN 40 - LEN(c.FirstName) < 0
-        THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
-    END AS [First Name],
-    CASE
-        WHEN 80 - LEN(c.LastName) < 0
-        THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
-    END AS [Last Name],
-    CASE
-        WHEN 254 - LEN(c.Email) < 0
-        THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 254, ' over limit)')
-    END AS [Email Address],
-    CASE
-        WHEN 80 - LEN(c.JobTitle__c) < 0
-        THEN CONCAT(LEN(c.JobTitle__c), '(', LEN(c.JobTitle__c) - 80, ' over limit)')
-    END AS [Job Title],
-    CASE
-        WHEN 40 - LEN(c.Industry__c) < 0
-        THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
-    END AS [Industry]
-FROM Contact_Salesforce c
-WHERE 18 - LEN(c.Id) < 0
+SELECT c.Id AS ContactID,
+       CASE
+           WHEN 18 - LEN(c.Id) < 0
+           THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
+       END AS SubscriberKey,
+       CASE
+           WHEN 40 - LEN(c.FirstName) < 0
+           THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
+       END AS FirstName,
+       CASE
+           WHEN 80 - LEN(c.LastName) < 0
+           THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
+       END AS LastName,
+       CASE
+           WHEN 254 - LEN(c.Email) < 0
+           THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 254, ' over limit)')
+       END AS EmailAddress,
+       CASE
+           WHEN 80 - LEN(c.JobTitle__c) < 0
+           THEN CONCAT(LEN(c.JobTitle__c), '(', LEN(c.JobTitle__c) - 80, ' over limit)')
+       END AS JobTitle,
+       CASE
+           WHEN 40 - LEN(c.Industry__c) < 0
+           THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
+       END AS Industry
+  FROM Contact_Salesforce c
+ WHERE 18 - LEN(c.Id) < 0
     OR 40 - LEN(c.FirstName) < 0
     OR 80 - LEN(c.LastName) < 0
     OR 254 - LEN(c.Email) < 0

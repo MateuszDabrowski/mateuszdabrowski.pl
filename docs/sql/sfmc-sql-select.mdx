@@ -23,62 +23,56 @@ The simplest version of this statement is `SELECT *`, which targets all availabl
 The prefered method is targeting columns explicitly by their names:
 
 ```sql title="Select ContactKey and EmailAddress columns"
-SELECT
-    ContactKey,
-    EmailAddres
+SELECT ContactKey,
+       EmailAddres
 ```
 
 If a column name contains a space, you need to capture it with squared brackets:
 
-```sql {4} title="Let's add another column with whitespace in its name"
-SELECT
-    ContactKey,
-    EmailAddres,
-    [External Contact Id]
+```sql {3} title="Let's add another column with whitespace in its name"
+SELECT ContactKey,
+       EmailAddres,
+       [External Contact Id]
 ```
 
 There are also some exceptional cases related to selected [System Data Views](../config/sfmc-config-system-data-views.mdx) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example when taking Subscriber ID from Enterprise Attributes):
 
-```sql {2} title="There are some special column names with an underscore prefix"
-SELECT
-    _SubscriberId
+```sql title="There are some special column names with an underscore prefix"
+SELECT _SubscriberId
 ```
 
 ## Labelling with AS
 
 You can also utilize `SELECT` as a tool to rename the source columns to match your needs in an outcome data extension. It is especially useful when you are pulling the data from Synchronized Data Extension with names coming from Salesforce custom fields.
 
-```sql {4-5} title="Improve readability and consistency with labelling"
-SELECT
-    ContactKey,
-    EmailAddress,
-    [External Contact Id] AS ExternalContactId,
-    Gender__c AS Gender
+```sql {3-4} title="Improve readability and consistency with labelling"
+SELECT ContactKey,
+       EmailAddress,
+       [External Contact Id] AS ExternalContactId,
+       Gender__c             AS Gender
 ```
 
 ### Custom values
 
 Use labels also for passing new values directly from your query. Need to add a custom string to outcome data extension? Or maybe synchronization timestamp for debugging purposes? You can leverage SQL for it.
 
-```sql {6} title="Add custom column labelled 'ImportDate' with a value equal to the UTC of the script execution for each record"
-SELECT
-    ContactKey,
-    EmailAddress,
-    [External Contact Id] AS ExternalContactId,
-    Gender__c AS Gender,
-    'Lead' AS RecordType,
-    GETUTCDATE() AS ImportDate
+```sql {5-6} title="Add custom column labelled 'ImportDate' with a value equal to the UTC of the script execution for each record"
+SELECT ContactKey,
+       EmailAddress,
+       [External Contact Id] AS ExternalContactId,
+       Gender__c             AS Gender,
+       'Lead'                AS RecordType,
+       GETUTCDATE()          AS ImportDate
 ```
 
 :::note You Should Know
 
 You can even go further by creating new values by leveraging existing data! For example, if you have a first name and last name, you can use SQL to create a FullName column from scratch:
 
-```sql {4} title="Let's create a concatenated column for easier personalization"
-SELECT
-    SubscriberKey,
-    EmailAddress,
-    FirstName + ' ' + LastName AS FullName
+```sql {3} title="Let's create a concatenated column for easier personalization"
+SELECT SubscriberKey,
+       EmailAddress,
+       FirstName + ' ' + LastName AS FullName
 ```
 
 It becomes mighty with the [SQL String functions](./sfmc-sql-string-functions.mdx).
@@ -89,42 +83,40 @@ It becomes mighty with the [SQL String functions](./sfmc-sql-string-functions.md
 
 `CASE` statement evaluates a list of conditions and returns one of the multiple possible result expressions. For Marketing Cloud purposes, it is especially useful when you not only want to select a column but also modify the values within it. Perfect for translating numeric codes to descriptive ones for personalization purposes. Excellent for standardizing data (change those `1`, `true` and `on` values of opt-in to a single format).
 
-```sql {8-14}
-SELECT
-    ContactKey,
-    EmailAddress,
-    [External Contact Id] AS ExternalContactId,
-    Gender__c AS Gender,
-    'Lead' AS RecordType,
-    GETUTCDATE() AS ImportDate,
-    CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
-        ELSE 'Unregistered'
-    END
+```sql {7-13}
+SELECT ContactKey,
+       EmailAddress,
+       [External Contact Id] AS ExternalContactId,
+       Gender__c             AS Gender,
+       'Lead'                AS RecordType,
+       GETUTCDATE()          AS ImportDate,
+       CASE MemberType__c
+           WHEN 1 THEN 'Bronze'
+           WHEN 2 THEN 'Silver'
+           WHEN 3 THEN 'Gold'
+           WHEN 4 THEN 'Platinum'
+           ELSE 'Unregistered'
+       END
 ```
 
 You can have as many `WHEN`/`THEN` conditions as you want. Also, the `ELSE` statement is optional, but a good idea to catch unexpected values.
 
 Feel free also to leverage [labels](#labels) to manipulate the column name at the same time:
 
-```sql {14}
-SELECT
-    ContactKey,
-    EmailAddress,
-    [External Contact Id] AS ExternalContactId,
-    Gender__c AS Gender,
-    'Lead' AS RecordType,
-    GETUTCDATE() AS ImportDate,
-    CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
-        ELSE 'Unregistered'
-    END AS MemberType
+```sql {13}
+SELECT ContactKey,
+       EmailAddress,
+       [External Contact Id] AS ExternalContactId,
+       Gender__c             AS Gender,
+       'Lead'                AS RecordType,
+       GETUTCDATE()          AS ImportDate,
+       CASE MemberType__c
+           WHEN 1 THEN 'Bronze'
+           WHEN 2 THEN 'Silver'
+           WHEN 3 THEN 'Gold'
+           WHEN 4 THEN 'Platinum'
+           ELSE 'Unregistered'
+       END                   AS MemberType
 ```
 
 ### Search version of CASE
@@ -133,33 +125,31 @@ Above examples are already useful in segmentation, but there is also one more wa
 
 The difference is that you are not passing the column name on which you will be building conditions. Instead, you create a boolean expression from scratch for each scenario.
 
-```sql {7-14} title="The same query as the previous one, but written with Search Case"
-SELECT
-    ContactKey,
-    EmailAddress,
-    [External Contact Id] AS ExternalContactId,
-    Gender__c AS Gender,
-    'Lead' AS RecordType,
-    GETUTCDATE() AS ImportDate,
-    CASE
-        WHEN MemberType__c = 1 THEN 'Bronze'
-        WHEN MemberType__c = 2 THEN 'Silver'
-        WHEN MemberType__c = 3 THEN 'Gold'
-        WHEN MemberType__c = 4 THEN 'Platinum'
-        ELSE 'Unregistered'
-    END AS MemberType
+```sql {7-13} title="The same query as the previous one, but written with Search Case"
+SELECT ContactKey,
+       EmailAddress,
+       [External Contact Id] AS ExternalContactId,
+       Gender__c             AS Gender,
+       'Lead'                AS RecordType,
+       GETUTCDATE()          AS ImportDate,
+       CASE
+           WHEN MemberType__c = 1 THEN 'Bronze'
+           WHEN MemberType__c = 2 THEN 'Silver'
+           WHEN MemberType__c = 3 THEN 'Gold'
+           WHEN MemberType__c = 4 THEN 'Platinum'
+           ELSE 'Unregistered'
+       END                   AS MemberType
 ```
 
 The example above doesn't show why it is worth to use the search `CASE`. It is a bit longer than the standard approach! But there is a reason to use this form of `CASE` statement that is visible once you want to create more elaborate conditions that are possible only with this version:
 
-```sql {3-7} title="Let's calculate what channel we should use in our campaign for a given user"
-SELECT
-    ContactKey,
-    CASE
-        WHEN IsAppInstalled = 1 THEN 'Push'
-        WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
-        WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
-    END AS PreferredChannel
+```sql {2-6} title="Let's calculate what channel we should use in our campaign for a given user"
+SELECT ContactKey,
+       CASE
+           WHEN IsAppInstalled = 1 THEN 'Push'
+           WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
+           WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
+       END AS PreferredChannel
 ```
 
 :::note You Should Know
@@ -176,23 +166,22 @@ As you can see, thanks to search `CASE` statement we were able to check conditio
 
 You can use `CASE` statements inside a `CASE` statement to have an even more dynamic query.
 
-```sql {3-16} title="Let's add another dimension of membership level to differentiate available channels"
-SELECT
-    ContactKey,
-    CASE
-        WHEN MemberType = 'Platinum' THEN 'Key Account Manager'
-        WHEN MemberType = 'Gold' OR MemberType = 'Silver' THEN
-            CASE
-                WHEN IsAppInstalled = 1 THEN 'Push'
-                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
-                WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
-            END
-        WHEN MemberType = 'Bronze' THEN
-            CASE
-                WHEN IsAppInstalled = 1 THEN 'Push'
-                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
-            END
-    END AS PreferredChannel
+```sql {2-15} title="Let's add another dimension of membership level to differentiate available channels"
+SELECT ContactKey,
+       CASE
+           WHEN MemberType = 'Platinum' THEN 'Key Account Manager'
+           WHEN MemberType = 'Gold' OR MemberType = 'Silver' THEN
+               CASE
+                   WHEN IsAppInstalled = 1 THEN 'Push'
+                   WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
+                   WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
+               END
+           WHEN MemberType = 'Bronze' THEN
+               CASE
+                   WHEN IsAppInstalled = 1 THEN 'Push'
+                   WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
+               END
+       END AS PreferredChannel
 ```
 
 :::
@@ -201,13 +190,12 @@ SELECT
 
 `LIKE` is not only useful in the [`WHERE` Statement](./sfmc-sql-where.mdx#like-operator). It is also an awesome tool empowering `CASE` statement. It allows you to build flexible conditions on free text values:
 
-```sql {4} title="Great way to split your database between Internal and External users for different communication"
-SELECT
-    ContactKey,
-    CASE
-        WHEN EmailAddress LIKE '%@mateuszdabrowski.%' THEN 'Internal'
-        ELSE 'External'
-    END AS ContactType
+```sql {3} title="Great way to split your database between Internal and External users for different communication"
+SELECT ContactKey,
+       CASE
+           WHEN EmailAddress LIKE '%@mateuszdabrowski.%' THEN 'Internal'
+           ELSE 'External'
+       END AS ContactType
 ```
 
 In the `SELECT` statement, the `LIKE` operator is especially useful for fixing data coming from the free text fields. To learn more about the possibilities, check out the [`LIKE` guide](./sfmc-sql-like.mdx).
@@ -216,10 +204,9 @@ In the `SELECT` statement, the `LIKE` operator is especially useful for fixing d
 
 Additional elements that you will be using in many of your queries are table prefixes for selecting columns from multiple joined Data Extensions.
 
-```sql {2-3}
-SELECT
-    _Subscriber.SubscriberKey
-    _EnterpriseAttribute.LastName
+```sql
+SELECT _Subscriber.SubscriberKey
+       _EnterpriseAttribute.LastName
 ```
 
 I'm covering this topic in-depth in [`JOIN` statement documentation](./sfmc-sql-join.mdx#table-name-prefix).

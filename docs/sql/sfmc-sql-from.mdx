@@ -18,20 +18,18 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 The [`SELECT`](./sfmc-sql-select.mdx) statement alone won't do much. In most cases, once you have selected data you want to work with, you also need to pick the table (Data Extension or System Data View) `FROM` which the query will take the right columns. The code for this is simple:
 
-```sql {4} title="Get ContactKey and EmailAddress from Data Extension named MasterSubscriberDE"
-SELECT
-    ContactKey,
-    EmailAddress,
-FROM MasterSubscriberDE
+```sql {3} title="Get ContactKey and EmailAddress from Data Extension named MasterSubscriberDE"
+SELECT ContactKey,
+       EmailAddress,
+  FROM MasterSubscriberDE
 ```
 
 Just as with column names, if the name of your Data Extension has spaces in it, be sure to enclose it in brackets.
 
-```sql {4}
-SELECT
-    ContactKey,
-    EmailAddress,
-FROM [Master Subscriber DE]
+```sql {3}
+SELECT ContactKey,
+       EmailAddress,
+  FROM [Master Subscriber DE]
 ```
 
 There are, however, two cases, specific to Salesforce Marketing Cloud, that adds a twist. System Data Views and Enterprise Data Extensions.
@@ -40,26 +38,24 @@ There are, however, two cases, specific to Salesforce Marketing Cloud, that adds
 
 Salesforce Marketing Cloud is partially hiding the [System Data Views](../config/sfmc-config-system-data-views.mdx) Data Extensions that store tracking data. Think about Email Sent history, Opens and Clicks, Bounces and Complaints. You can find there tracking data for SMS and Social channels. Also, more technical data points, like Jobs and Enterprise Attributes, are available in the System Data Views. You won't find them in the User Interface but can query them with the SQL. The difference related to those tables is in naming convention. When querying them, you must leverage `_` prefix:
 
-```sql {8}
-SELECT
-    JobID,
-    EmailID,
-    EmailName,
-    EmailSubject,
-    EmailSendDefinition,
-    DeliveredTime
-FROM _Job
+```sql {7}
+SELECT JobID,
+       EmailID,
+       EmailName,
+       EmailSubject,
+       EmailSendDefinition,
+       DeliveredTime
+  FROM _Job
 ```
 
 ## Enterprise Data Extension
 
 If you want to query Shared Data Extensions or Synchronized Data Extensions, you must use different unique prefix, `ENT.`:
 
-```sql {4}
-SELECT
-    ContactKey,
-    EmailAddress,
-FROM ENT.SharedSegment
+```sql {3}
+SELECT ContactKey,
+       EmailAddress,
+  FROM ENT.SharedSegment
 ```
 
 Remember that account permissions restrictions may apply.
@@ -68,13 +64,12 @@ Remember that account permissions restrictions may apply.
 
 In some scenarios, you might want to use both the above options at the same time. For example, if you query System Data View _Subscribers on child Business Unit, you will receive data only for the subscribers stored in this child. In case you want to query all your subscribers, you should point to Enterprise level System Data View:
 
-```sql {6}
-SELECT
-    SubscriberKey,
-    EmailAddress,
-    DateJoined,
-    DateUnsubscribed
-FROM ENT._Subscribers
+```sql {5}
+SELECT SubscriberKey,
+      EmailAddress,
+      DateJoined,
+      DateUnsubscribed
+  FROM ENT._Subscribers
 ```
 
 :::

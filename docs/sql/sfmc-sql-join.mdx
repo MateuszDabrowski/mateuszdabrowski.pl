@@ -18,13 +18,12 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 There will be some cases where all you need is to pull (and maybe transform) data [`FROM`](./sfmc-sql-from.mdx) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
 
-```sql {6} title="Check who opened the email and when by querying the _Open System Data View"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    o.EventDate as OpenDate
-FROM [Welcome-Campaign-Segment] de
-JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```sql {5} title="Check who opened the email and when by querying the _Open System Data View"
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WelcomeCampaignSegment AS wel
+       JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
 ```
 
 There are three things to unpack.
@@ -41,13 +40,12 @@ In our query, it will be contacts that are in the Data Extension and at the same
 
 Of course, this query in its current state is not perfect and could output wrong results (like tracked opens for the contacts from our Data Extension, but coming from the entirely different campaign) as it doesn't limit the scope to just one campaign or Job.
 
-```sql {6}
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    o.EventDate as OpenDate
-FROM [Welcome-Campaign-Segment] de
-INNER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```sql {5}
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WelcomeCampaignSegment AS wel
+       INNER JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
 ```
 
 When using `INNER JOIN`, you can write just the word `JOIN`, as in the first example, to have the same result. However, it is best practice to state this type explicitly by writing the full name. It makes it easier to differentiate from the following types of `JOIN`.
@@ -60,13 +58,12 @@ Next types of joins are `LEFT JOIN` (also known as `LEFT OUTER JOIN`) and `RIGHT
 
 You can go the other way around with `RIGHT JOIN` (in our example, it would output everything in `_Open` System Data View and append to it the data from the Data Extension - not that useful).
 
-```sql {6} title="The same query, but this time joined with LEFT JOIN"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    o.EventDate as OpenDate
-FROM [Welcome-Campaign-Segment] de
-LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```sql {5} title="The same query, but this time joined with LEFT JOIN"
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WelcomeCampaignSegment AS wel
+       LEFT JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
 ```
 
 As you can see, the only thing we changed in the above query is the type of `JOIN`. This simple change will alter our outcomes to show a full list of all Subscriber Keys and Email Addresses from `Welcome-Campaign-Segment` Data Extension with the email open date for those contacts who engaged with the communication. Unengaged ones would have `null` values in the `OpenDate` column. Again, it is not a proper way of building such a report. There will be the ready-to-use snippet at the bottom.
@@ -77,14 +74,13 @@ Due to the similarity of `LEFT JOIN` and `RIGHT JOIN`, I highly recommend to cho
 
 If you would want to see all contacts from our Data Extension that did not open the email, you could use `LEFT JOIN` with exclusion:
 
-```sql {7} title="Example of exclusion applied to LEFT JOIN"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    o.EventDate as OpenDate
-FROM [Welcome-Campaign-Segment] de
-LEFT JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
-WHERE o.SubscriberKey IS NULL
+```sql {5-6} title="Example of exclusion applied to LEFT JOIN"
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WelcomeCampaignSegment AS wel
+       LEFT JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
+ WHERE o.SubscriberKey IS NULL
 ```
 
 Find more about it in the [WHERE statement guide](./sfmc-sql-where.mdx).
@@ -97,13 +93,12 @@ The last classic SQL `JOIN` is the `FULL JOIN` (also known as `FULL OUTER JOIN`)
 
 In our example, it would mean all contacts from `Welcome-Campaign-Segment` Data Extension and all records from `_Open` System Data View, with `null` values in the columns without a match. Contacts that did not open and tracked opens nor related to contacts available in the Data Extension we selected.
 
-```sql {6} title="Not a best use case for the FULL JOIN"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    o.EventDate as OpenDate
-FROM [Welcome-Campaign-Segment] de
-FULL JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+```sql {5} title="Not a best use case for the FULL JOIN"
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WelcomeCampaignSegment AS wel
+       FULL JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
 ```
 
 `FULL JOIN` is an excellent tool when you, for example, want to create a master segment from multiple smaller ones. Another use case - checking multiple tracking data points with a clear view which are missing (for example, which users have a tracked email click without open and vice versa).
@@ -124,12 +119,11 @@ Pilot Watches | 3 | 1
 
 In such a scenario, you can use Self-join to build a more readable table that might be useful for personalisation:
 
-```sql {5} title="Self-join using INNER JOIN will output only categories that have a parent category"
-SELECT
-    c.CategoryName AS Category,
-    p.CategoryName AS ParentCategory
-FROM [Wristwatches-DE] c
-INNER JOIN [Wristwatches-DE] p ON p.ParentCategoryID = c.CategoryID
+```sql {4} title="Self-join using INNER JOIN will output only categories that have a parent category"
+SELECT c.CategoryName  AS Category,
+       pc.CategoryName AS ParentCategory
+  FROM WristwatchesDE AS c
+       INNER JOIN WristwatchesDE AS pc ON pc.ParentCategoryID = c.CategoryID
 ```
 
 Output Data Extension:
@@ -149,17 +143,16 @@ Self-join might be the perfect tool for working with data coming from Salesforce
 
 Very often, you might encounter Accounts that are related to another Account. This hierarchical structure uses the ParentId field. You can flatten this relationship for use in personalisation and journeys with self-join.
 
-```sql {8-10} title="Flattening three levels of Salesforce Account hierarchy"
-SELECT
-    a1.Id AS Level1AccountId,
-    a1.Name AS Level1AccountName,
-    a2.Id AS Level2AccountId,
-    a2.Name AS Level2AccountName,
-    a3.Id AS Level3AccountId,
-    a3.Name AS Level3AccountName
-FROM Account_Salesforce a1
-LEFT JOIN Account_Salesforce a2 ON a2.Id = a1.ParentId
-LEFT JOIN Account_Salesforce a3 ON a3.Id = a2.ParentId
+```sql {7-9} title="Flattening three levels of Salesforce Account hierarchy"
+SELECT a1.Id   AS Level1AccountId,
+       a1.Name AS Level1AccountName,
+       a2.Id   AS Level2AccountId,
+       a2.Name AS Level2AccountName,
+       a3.Id   AS Level3AccountId,
+       a3.Name AS Level3AccountName
+  FROM Account_Salesforce AS a1
+       LEFT JOIN Account_Salesforce AS a2 ON a2.Id = a1.ParentId
+       LEFT JOIN Account_Salesforce AS a3 ON a3.Id = a2.ParentId
 ```
 
 :::
@@ -182,25 +175,23 @@ You can also add a bit of logic to it by leveraging `AND`/`OR` statements. It is
 When you are joining multiple data sources with columns of the same name, you will have to tell the SQL from which source you select each column. You can do it by using the table name prefix before the column name:
 
 ```sql title="Example of SQL with full table name prefixes"
-SELECT
-    _Sent.SubscriberKey,
-    _Job.EmailName
-FROM _Sent
-LEFT JOIN _Job ON _Sent.JobID = _Job.JobID
+SELECT _Sent.SubscriberKey,
+       _Job.EmailName
+  FROM _Sent
+       LEFT JOIN _Job ON _Job.JobID = _Sent.JobID
 ```
 
 However, you probably saw in the previous examples that there is another way. You don't have to write the full name of the data source every time. You can leverage labels just as with columns to make it shorter:
 
 ```sql title="Example of SQL with labelled table name prefixes"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    o.EventDate as OpenDate
-FROM [Welcome-Campaign-Segment] de
-INNER JOIN _Open o ON de.SubscriberKey = o.SubscriberKey
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WelcomeCampaignSegment AS wel
+       INNER JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
 ```
 
-All you need to do is write your label after a data source name. Now you can leverage the shortened name to prefix the selected columns. It's instrumental when pulling data from multiple Data Extensions.
+All you need to do is write your label after a data source name. For the readability purposes, I recommend using the `AS` keyword between. Now you can leverage the shortened name to prefix the selected columns. It's instrumental when pulling data from multiple Data Extensions.
 
 Using table name prefixes is not always required (for example, when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and error-deferring purposes.
 
@@ -212,15 +203,14 @@ Joining two tables is just the beginning. Working with multiple columns can be m
 
 In many cases, you will want to get a segment of people who simultaneously fulfil multiple requirements. For example, contacts that were part of three different ToFu campaigns related to a particular product. Such data might make an ideal audience for your next campaign further down in the marketing funnel. For such a scenario, you will use multiple `INNER JOIN` statements chained in one query:
 
-```sql {6-8} title="Contacts used for three different ToFu campaigns that are ready for a MoFu campaign"
-SELECT
-    de1.SubscriberKey,
-    de1.EmailAddress,
-    de2.PhoneNumber,
-    de3.EbookName
-FROM [Welcome-Campaign-Segment] de1
-INNER JOIN [Newsletter-Promo-Campaign-Segment] de2 ON de1.SubscriberKey = de2.SubscriberKey
-INNER JOIN [Ebook-Download-Campaign-Segment] de3 ON de1.SubscriberKey = de3.SubscriberKey
+```sql {5-7} title="Contacts used for three different ToFu campaigns that are ready for a MoFu campaign"
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       nsl.PhoneNumber,
+       ebo.EbookName
+  FROM WelcomeCampaignSegment AS wel
+       INNER JOIN NewsletterPromoCampaignSegment AS nsl ON nsl.SubscriberKey = wel.SubscriberKey
+       INNER JOIN EbookDownloadCampaignSegment AS ebo ON ebo.SubscriberKey = wel.SubscriberKey
 ```
 
 This SQL will only give you those contacts that were in all three Data Extensions.
@@ -229,16 +219,15 @@ This SQL will only give you those contacts that were in all three Data Extension
 
 Another huge group of cases you might encounter are queries with multiple `LEFT JOIN` statements. They are great when you want to extend the data for your main data source with multiple other data points without losing records that do not have a match. Awesome for building a segment for a campaign from Data Extensions with extensive personalisation:
 
-```sql {7-9} title="To the list of contacts, add the product details we want to use in the email content along with special offer description"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    prod.ProductName
-    prod.ProductPrice
-    promo.Offer
-FROM [Up-Sell-Campaign-Segment] de
-LEFT JOIN [Product-Details-List] prod ON de.OfferedProduct = prod.ProductId
-LEFT JOIN [Custom-Offer-List] promo ON de.OfferedPromotion = promo.PromotionId
+```sql {6-8} title="To the list of contacts, add the product details we want to use in the email content along with special offer description"
+SELECT up.SubscriberKey,
+       up.EmailAddress,
+       prod.ProductName,
+       prod.ProductPrice,
+       promo.Offer
+  FROM UpSellCampaignSegment AS up
+       LEFT JOIN ProductDetailsList AS prod ON prod.ProductId = up.OfferedProduct
+       LEFT JOIN CustomOfferList AS promo ON promo.PromotionId = up.OfferedPromotion
 ```
 
 Notice that we joined additional Data Extensions on different columns in this case. What is more, we don't need to `SELECT` those columns to filter on them. Thanks to using `LEFT JOIN`, instead of `INNER JOIN` this query will return to us also contacts that do not have any custom offer applied (we can hide appropriate content block with personalisation for them).
@@ -247,16 +236,15 @@ Notice that we joined additional Data Extensions on different columns in this ca
 
 You are not limited to just one type of join when creating your query. You can mix and match different types of joins to extract precisely the data you need. However, the more complexity you add (either by the number of sources or by the number of various joins), the more recommended drawing the [Venn Diagrams](https://en.wikipedia.org/wiki/Venn_diagram) will be.
 
-```sql {7-9} title="Same query as above, but this time with a mix of INNER JOIN and LEFT JOIN"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    prod.ProductName
-    prod.ProductPrice
-    promo.Offer
-FROM [Up-Sell-Campaign-Segment] de
-INNER JOIN [Product-Details-List] prod ON de.OfferedProduct = prod.ProductId
-LEFT JOIN [Custom-Offer-List] promo ON de.OfferedPromotion = promo.PromotionId
+```sql {6-8} title="Same query as above, but this time with a mix of INNER JOIN and LEFT JOIN"
+SELECT up.SubscriberKey,
+       up.EmailAddress,
+       prod.ProductName,
+       prod.ProductPrice,
+       promo.Offer
+  FROM UpSellCampaignSegment AS up
+       INNER JOIN ProductDetailsList AS prod ON prod.ProductId = up.OfferedProduct
+       LEFT JOIN CustomOfferList AS promo ON promo.PromotionId = up.OfferedPromotion
 ```
 
 In the example above, we took the same query as for the Multiple Left Joins, but we changed first `JOIN` type to `INNER`. What is the impact? This time, we will get only those contacts from `Up-Sell-Campaign-Segment` that have a matching product in `Product-Details-List` and only then we would extend them with optional information about the custom offer.
@@ -272,15 +260,15 @@ One thing to remember - the more complex query you create, the more error-prone 
 Apart from the `JOIN`, a `UNION` operator also serves a simillar purpose. It concatenates the outcomes of multiple [`SELECT`](./sfmc-sql-select.mdx) statements.
 
 ```sql {5} title="Group subscribers from two Data Extensions"
-SELECT
-    jan.SubscriberKey,
-    jan.EmailAddress,
-FROM [January-Event-Participants] jan
-UNION
-SELECT
-    feb.SubscriberKey,
-    feb.EmailAddress
-FROM [February-Event-Participants-Segment] feb
+SELECT jan.SubscriberKey,
+       jan.EmailAddress,
+  FROM JanuaryEventParticipants AS jan
+
+ UNION
+
+SELECT feb.SubscriberKey,
+       feb.EmailAddress
+  FROM FebruaryEventParticipantsSegment AS feb
 ```
 
 As you can see in the above example, the `UNION` doesn't require any relationship between the two queries. There is no [`ON` element](#joining-on). On the other hand, the `UNION` cannot add any new columns.
@@ -304,15 +292,15 @@ To simplify the difference between `JOIN` and `UNION`:
 By default, the `UNION` will ignore duplicates. If you want to keep them, use `UNION ALL`.
 
 ```sql {5} title="Group subscribers from two Data Extensions"
-SELECT
-    jan.SubscriberKey,
-    jan.EmailAddress,
-FROM [January-Event-Participants-Segment] jan
-UNION ALL
-SELECT
-    feb.SubscriberKey,
-    feb.EmailAddress
-FROM [February-Event-Participants-Segment] feb
+SELECT jan.SubscriberKey,
+       jan.EmailAddress,
+  FROM JanuaryEventParticipantsSegment AS jan
+
+ UNION ALL
+
+SELECT feb.SubscriberKey,
+       feb.EmailAddress
+  FROM FebruaryEventParticipantsSegment AS feb
 ```
 
 :::
@@ -326,19 +314,19 @@ If you are using a deliverability monitoring suite, you probably are using seedl
 In most cases, you will store your seedlist in a separate Data Extension and will have only Email Address and fake Subscriber Key columns filled in. How to push them quickly into your segment? With `UNION`, of course:
 
 ```sql {7} title="Append Seedlist to your Segment"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    de.FirstName,
-    de.Interest
-FROM [Welcome-Campaign-Segment] de
-UNION
-SELECT
-    sl.SubscriberKey,
-    sl.EmailAddress,
-    'Seed' AS FirstName,
-    'Estimating' AS Interest
-FROM [Seedlist] sl
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       wel.FirstName,
+       wel.Interest
+  FROM WelcomeCampaignSegment AS wel
+
+ UNION
+
+SELECT sl.SubscriberKey,
+       sl.EmailAddress,
+       'Seed' AS FirstName,
+       'Estimating' AS Interest
+  FROM Seedlist AS sl
 ```
 
 In the example above, we add the Seedlist to the master segment and provide static value placeholders for columns used in personalisation.
@@ -347,27 +335,28 @@ In the example above, we add the Seedlist to the master segment and provide stat
 
 You can mix and match `JOIN` and `UNION` to create your perfect segment. And even add arbitrary data without a [`FROM`](./sfmc-sql-from.mdx).
 
-```sql {8,15} title="AutoKill is the limit of your imagination"
-SELECT
-    de.SubscriberKey,
-    de.EmailAddress,
-    de.FirstName,
-    i.Interest
-FROM [Welcome-Campaign-Segment] de
-LEFT JOIN [Interests-Data-Point] i
-UNION
-SELECT
-    sl.SubscriberKey,
-    sl.EmailAddress,
-    'Seed' AS FirstName,
-    'Estimating' AS Interest
-FROM [Seedlist] sl
-UNION ALL
-SELECT
-    '123456789987654321' AS SubscriberKey,
-    'sales@company.com' AS EmailAddress,
-    'SalesDepartment' AS FirstName,
-    'Leads' AS Interest
+```sql {8,16} title="AutoKill is the limit of your imagination"
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       wel.FirstName,
+       i.Interest
+  FROM WelcomeCampaignSegment AS wel
+       LEFT JOIN InterestsDataPoint AS i ON i.SubscriberKey = wel.SubscriberKey
+
+ UNION
+
+SELECT sl.SubscriberKey,
+       sl.EmailAddress,
+       'Seed'               AS FirstName,
+       'Estimating'         AS Interest
+  FROM Seedlist AS sl
+
+ UNION ALL
+
+SELECT '123456789987654321' AS SubscriberKey,
+       'sales@company.com'  AS EmailAddress,
+       'SalesDepartment'    AS FirstName,
+       'Leads'              AS Interest
 ```
 
 :::
@@ -377,13 +366,13 @@ SELECT
 The `INTERSECT` operator is very similar in usage to [`UNION`](#union), but instead of concatenating outcomes, it outputs only those that exist in both queries.
 
 ```sql {4} title="Let's check who converted from out Black Friday promotion"
-SELECT
-    bf.SubscriberKey
-FROM [Black-Friday-Promo-Segment] bf
+SELECT bf.SubscriberKey
+  FROM BlackFridayPromoSegment AS bf
+
 INTERSECT
-SELECT
-    p.SubscriberKey
-FROM [Purchases-Data-Point]
+
+SELECT p.SubscriberKey
+  FROM PurchasesDataPoint AS p
 ```
 
 As with [`UNION`](#union), `INTERSECT` works only if:
@@ -401,13 +390,13 @@ You can have the same outcome with more control over comparison logic with a mix
 The `EXCEPT` operator is very similar in usage to [`UNION`](#union), but instead of concatenating outcomes, it outputs only those that exist in the first query.
 
 ```sql {4} title="Let's check who did not convert from out Black Friday promotion"
-SELECT
-    bf.SubscriberKey
-FROM [Black-Friday-Promo-Segment] bf
+SELECT bf.SubscriberKey
+  FROM BlackFridayPromoSegment AS bf
+
 EXCEPT
-SELECT
-    p.SubscriberKey
-FROM [Purchases-Data-Point]
+
+SELECT p.SubscriberKey
+  FROM PurchasesDataPoint AS p
 ```
 
 As with [`UNION`](#union), `EXCEPT` works only if:

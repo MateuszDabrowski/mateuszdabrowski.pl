@@ -24,9 +24,8 @@ Here, I will cover only selected date functions that I find most useful for Mark
 
 The `GETDATE` function is the most straightforward way to get the current timestamp within your query.
 
-```sql {2}
-SELECT
-    GETDATE() as CurrentDate
+```sql
+SELECT GETDATE() AS CurrentDate
 ```
 
 :::note You Should Know
@@ -43,9 +42,8 @@ You can also leverage [`TODATETIMEOFFSET'](#at-time-zone-vs-todatetimeoffset) to
 
 The `GETUTCDATE` function works the same as `GETDATE` but returns datetime in the UTC timezone.
 
-```sql {2}
-SELECT
-    GETUTCDATE() as CurrentUTCDate
+```sql
+SELECT GETUTCDATE() AS CurrentUTCDate
 ```
 
 Both return a datetime object (for example, `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
@@ -57,9 +55,8 @@ However, you can limit its output to either date or time part by using [`CONVERT
 The `DATEADD` functions give you the power to add and subtract from your date values.
 
 ```sql {2-3} title="Add seven days to the current UTC date"
-SELECT
-    GETUTCDATE() AS TrialStartDate,
-    DATEADD(DAY, 7, GETUTCDATE()) as TrialEndDate
+SELECT GETUTCDATE()                  AS TrialStartDate,
+       DATEADD(DAY, 7, GETUTCDATE()) AS TrialEndDate
 ```
 
 It requires three things:
@@ -78,12 +75,11 @@ However, if you are changing the date with the 31st day of the month by months a
 
 `DATEADD` is especially useful when used with the [`WHERE`](./sfmc-sql-where.mdx) statement, as it allows to filter records dynamically:
 
-```sql {5} title="Find all Subscribers that joined within the last month"
-SELECT
-    SubscriberKey,
-    EmailAddress
-FROM ENT._Subscribers
-WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+```sql {4} title="Find all Subscribers that joined within the last month"
+SELECT SubscriberKey,
+       EmailAddress
+  FROM ENT._Subscribers
+ WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 ```
 
 :::note You Should Know
@@ -96,12 +92,11 @@ A very similar date calculation is also available with `DATEADD()` AMPScript fun
 
 The `DATEPART` function returns the chosen part of the provided date.
 
-```sql {5} title="Find all Subscribers that joined in 2020"
-SELECT
-    SubscriberKey,
-    EmailAddress
-FROM ENT._Subscribers
-WHERE DATEPART(YEAR, DateJoined) = 2020
+```sql {4} title="Find all Subscribers that joined in 2020"
+SELECT SubscriberKey,
+       EmailAddress
+  FROM ENT._Subscribers
+ WHERE DATEPART(YEAR, DateJoined) = 2020
 ```
 
 It outputs an integer, so be sure you are using a number when making comparisons.
@@ -110,12 +105,11 @@ It outputs an integer, so be sure you are using a number when making comparisons
 
 There are also three shortcuts for the most popular use cases: `YEAR()`, `MONTH()` and `DAY()`.
 
-```sql {5} title="Find all Subscribers that joined in 2020 - shorter approach"
-SELECT
-    SubscriberKey,
-    EmailAddress
-FROM ENT._Subscribers
-WHERE YEAR(DateJoined) = 2020
+```sql {4} title="Find all Subscribers that joined in 2020 - shorter approach"
+SELECT SubscriberKey,
+       EmailAddress
+  FROM ENT._Subscribers
+ WHERE YEAR(DateJoined) = 2020
 ```
 
 In the backend, those functions are just wrappers around `DATEPART`, so you can use whatever you prefer.
@@ -146,8 +140,6 @@ You can reference date parts both by their full name, as well as an abbreviation
 
 For 99% of SFMC needs, you will be just fine with `YEAR`, `MONTH`, `DAY`, `HOUR` and `MINUTE`. Using only those with the full name will make your queries readable and straightforward for everyone.
 
-
-
 ## DATEDIFF
 
 The `DATEDIFF` function calculates the difference between two dates.
@@ -156,20 +148,18 @@ You need to provide the [date part](#date-parts) used for the calculation and tw
 
 You may use it in the [`SELECT`](./sfmc-sql-select.mdx) statement:
 
-```sql {3} title="Check how long someone was a subscriber"
-SELECT
-    SubscriberKey,
-    DATEDIFF(DAY, DateJoined, GETDATE()) AS SubscriptionTime
-FROM ENT._Subscribers
+```sql {2} title="Check how long someone was a subscriber"
+SELECT SubscriberKey,
+       DATEDIFF(DAY, DateJoined, GETDATE()) AS SubscriptionTime
+  FROM ENT._Subscribers
 ```
 
 You may use it in the [`WHERE`](./sfmc-sql-where.mdx) statement:
 
-```sql {4} title="Get everyone that hit one year on the subscription list"
-SELECT
-    SubscriberKey
-FROM ENT._Subscribers
-    WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
+```sql {3} title="Get everyone that hit one year on the subscription list"
+SELECT SubscriberKey
+  FROM ENT._Subscribers
+ WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
 ```
 
 It takes into consideration the leap years. If you provide dates with [offset](#at-time-zone), it will even include the timezone differences and Daylight Saving Time.
@@ -184,21 +174,19 @@ There is a limit to how big the difference can be. If you go down to the `SECOND
 
 The `DATENAME` functions return the value of the specified [datepart](#date-parts) from a given date.
 
-```sql {3} title="Capture the full day's name"
-SELECT
-    SubscriberKey,
-    DATENAME(WEEKDAY, DateJoined) AS DayJoined
-FROM ENT._Subscribers
+```sql {2} title="Capture the full day's name"
+SELECT SubscriberKey,
+       DATENAME(WEEKDAY, DateJoined) AS DayJoined
+  FROM ENT._Subscribers
 ```
 
 It might be useful to quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the name of the day for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).
 
-```sql {4} title="Create an automation that will capture weekend meetings for Friday reminder"
-SELECT
-    SubscriberKey
-FROM SalesMeetings
-WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
-    AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
+```sql {3} title="Create an automation that will capture weekend meetings for Friday reminder"
+SELECT SubscriberKey
+  FROM SalesMeetings
+ WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
+   AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
 ```
 
 ## AT TIME ZONE
@@ -222,12 +210,9 @@ When you work with timezones, you want to have offset for the datetime fields yo
 
 You can quickly fix it with `AT TIME ZONE`. When you apply this function to a timezone-less datetime, it will assume that you are defining it and return value with an appropriate offset.
 
-```sql {2-5} title="Daylight Saving Time magic"
-SELECT
-    CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST,
-    -- Output: 2020-01-01 18:00:00 -06:00
-    CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT
-    -- Output: 2020-07-01 18:00:00 -05:00
+```sql title="Daylight Saving Time magic"
+SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST, /* Output: 2020-01-01 18:00:00 -06:00 */
+       CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT  /* Output: 2020-07-01 18:00:00 -05:00 */
 ```
 
 In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function adds the offset and calculates the Daylight Saving Time offset change for you.
@@ -242,12 +227,9 @@ There is, however, another function that might solve this issue - `TODATETIMEOFF
 
 To use it, provide a datetime and an offset (for example, `'-06:00'` or `'+01:00'`):
 
-```sql {2,4} title="No Daylight Saving Time magic"
-SELECT
-    TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST,
-    -- Output: 2020-01-01 18:00:00 -06:00
-    TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST,
-    -- Output: 2020-07-01 18:00:00 -06:00
+```sql title="No Daylight Saving Time magic"
+SELECT TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST,     /* Output: 2020-01-01 18:00:00 -06:00 */
+       TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
 ```
 
 Of course, for any datetime values that include the Daylight Saving Time - pushed from a website or your data warehouse - [`AT TIME ZONE`](#add-offset-with-at-time-zone) will be the better solution.
@@ -258,10 +240,8 @@ Of course, for any datetime values that include the Daylight Saving Time - pushe
 
 You use it as previously - by providing the original datetime and the target timezone. But because the first argument already contains the offset, the function will convert the time to a new timezone in this scenario.
 
-```sql {2} title="Change CST datetime with offset to CET"
-SELECT
-    CONVERT(DATETIMEOFFSET(0), '2018-01-01 18:00:00 -06:00') AT TIME ZONE 'Central European Standard Time' AS CSTtoCET
-    -- Output: 2020-01-01 01:00:00 +01:00
+```sql title="Change CST datetime with offset to CET"
+SELECT CONVERT(DATETIMEOFFSET(0), '2018-01-01 18:00:00 -06:00') AT TIME ZONE 'Central European Standard Time' AS CSTtoCET /* Output: 2020-01-01 01:00:00 +01:00 */
 ```
 
 It will also automatically consider any differences between Daylight Saving Time start and end times for each timezone.
@@ -270,19 +250,16 @@ It will also automatically consider any differences between Daylight Saving Time
 
 You can leverage both features of the `AT THE TIMEZONE` in one line to apply the timezone to offset-less datetime and convert it to another timezone by using the function twice:
 
-```sql {2} title="First, apply the timezone. Then change the timezone"
-SELECT
-    CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET,
-    -- Output: 2020-01-01 01:00:00 +01:00
+```sql title="First, apply the timezone. Then change the timezone"
+SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET, /* Output: 2020-01-01 01:00:00 +01:00 */
 ```
 
 It works because the function's first execution [adds the offset with `AT TIME ZONE`](#add-offset-with-at-time-zone). Second, uses the output with an offset applied and [change the timezone](#change-timezone-with-at-time-zone).
 
 Of course, for Salesforce Marketing Cloud system dates, we still need the [workaround](#at-time-zone-vs-todatetimeoffset):
 
-```sql {2} title="No Daylight Saving Time magic but still changing the timezone"
-SELECT
-    TODATETIMEOFFSET(GETDATE(), '-06:00') AT TIME ZONE 'Central European Standard Time' AS SystemDateToCSTtoCET,
+```sql title="No Daylight Saving Time magic but still changing the timezone"
+SELECT TODATETIMEOFFSET(GETDATE(), '-06:00') AT TIME ZONE 'Central European Standard Time' AS SystemDateToCSTtoCET,
 ```
 
 :::
@@ -304,12 +281,10 @@ The `FORMAT` works only with datetime and numeric values, outputs a string and r
 
 It is a perfect tool to manipulate any dates (or date-like strings with the help of [conversion](./sfmc-sql-conversion-functions.mdx)) available in your Data Extensions. For personalization. For comparison between system and imported dates outside of the query. For preparing data to export it to an external system with specific format requirements.
 
-```sql {2-4} title="Instead of creating complex AMPScript logic to adapt dates, format them"
-SELECT
-    FORMAT(CONVERT(DATE, '10/30/2020'), 'd', 'en-GB') AS DateOrderedProperly,
-    FORMAT(GETUTCDATE(), 'dd/MM/yyyy') AS TodayCustomFormat,
-    FORMAT(DateJoined, 'D', 'de-DE') AS DateExpandedIndian
-
+```sql title="Instead of creating complex AMPScript logic to adapt dates, format them"
+SELECT FORMAT(CONVERT(DATE, '10/30/2020'), 'd', 'en-GB') AS DateOrderedProperly,
+       FORMAT(GETUTCDATE(), 'dd/MM/yyyy')                AS TodayCustomFormat,
+       FORMAT(DateJoined, 'D', 'de-DE')                  AS DateExpandedIndian
 ```
 
 In the example above, the first two `FORMAT` functions return date in the same format - `30/10/2020` - one by using manually provided value, another by taking the current UTC date from the function.
@@ -370,9 +345,8 @@ Again, the examples are for the default US culture formatting and might look dif
 
 You can use the above format specifiers to obtain the exact format needed:
 
-```sql {2}
-SELECT
-    FORMAT(GETUTCDATE(), 'dddd (dd MMMM yyyy) - HH:mm', 'en-GB') AS FormattedDate
+```sql
+SELECT FORMAT(GETUTCDATE(), 'dddd (dd MMMM yyyy) - HH:mm', 'en-GB') AS FormattedDate
 ```
 
 The above query will return `Saturday (30 October 2020) - 02:15`.
