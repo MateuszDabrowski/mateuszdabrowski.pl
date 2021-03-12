@@ -147,18 +147,24 @@ html[data-theme='dark'] .admonition-note a > code {
 }
 
 .admonition-tip {
-  background-color: var(--ifm-color-primary);
-  border-color: var(--ifm-color-secondary);
+  background-color: var(--ifm-background-color);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
   margin-top: 1rem;
 }
 
-html[data-theme='dark'] .admonition-tip {
-  background-color: var(--ifm-color-secondary);
-  border-color: var(--ifm-color-primary);
+.admonition-tip svg {
+  fill: var(--ifm-color-primary);
+}
+
+.admonition-tip a {
+  color: var(--ifm-font-color-base);
+    text-decoration: none;
 }
 
 .admonition-tip ul {
   padding-left: 1.1rem;
+  padding-bottom: 0px;
 }
 
 @media only screen and (min-width: 768px) {
