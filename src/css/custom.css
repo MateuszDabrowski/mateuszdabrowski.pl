@@ -159,7 +159,7 @@ html[data-theme='dark'] .admonition-note a > code {
 
 .admonition-tip a {
   color: var(--ifm-font-color-base);
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .admonition-tip ul {
