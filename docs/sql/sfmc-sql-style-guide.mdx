@@ -1,0 +1,54 @@
+---
+id: sfmc-sql-style-guide
+title: SFMC SQL Style Guide
+sidebar_label: Style Guide
+description: Query with style. Readable, bug-free code is few spaces away.
+---
+
+import TOCInline from '@theme/TOCInline';
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='Query with style. Readable, bug-free code is few spaces away.' />
+
+:::tip Table of Contents
+
+<TOCInline toc={toc} />
+
+:::
+
+First things first: this SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it all together. There are only two rules that I believe are a must have:
+
+1. Be consitent across your code base.
+2. Strive for good readability.
+
+Everything else is preference. And you are just about to learn about mine (with arguments and options).
+
+:::note You Should Know
+
+In few places I deviate from the general SQL Best Practices or most popular conventions and the main reason for this heresy is that I see Marketing Cloud SQL use case different from standard Business Inteligence SQL use case.
+
+It of course depends a lot on the exact role, but to simplify things and leverage the evergreen Pareto Rule I believe that in SFMC the split between writing and reading SQL is 20%/80%. For Business Inteligence in most cases it is exactly the oposite with 80% time going into creating new queries.
+
+Based on this assumptions I follow a few style rules that require a bit more time during writing the query, but in return save a lot time with better readability. I will mention this within examples of this approach along with alternative focused on improving writing speed.
+
+:::
+
+## SQL Syntax Case
+
+Use uppercase for all things SQL. This approach makes it easy to visually differentiate the query langauge and the data extension / data view / field names.
+
+```sql
+/* ✅ Uppercase Syntax */
+SELECT SubscriberKey,
+       EmailAddress
+  FROM ENT._Subscribers
+ WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+
+/* ❌ Lowercase Syntax */
+select SubscriberKey,
+       EmailAddress
+  from ENT._Subscribers
+ where DateJoined >= dateadd(month, -1, getdate())
+```
+
+## Field Names Case
