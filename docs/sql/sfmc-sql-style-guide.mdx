@@ -2,13 +2,13 @@
 id: sfmc-sql-style-guide
 title: SFMC SQL Style Guide
 sidebar_label: Style Guide
-description: Query with style. Readable, bug-free code is few spaces away.
+description: Query with style. Readable, bug-free code is few shifts & spaces away.
 ---
 
 import TOCInline from '@theme/TOCInline';
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Query with style. Readable, bug-free code is few spaces away.' />
+<LeadText content='Query with style. Readable, bug-free code is few shifts & spaces away.' />
 
 :::tip Table of Contents
 
@@ -27,28 +27,76 @@ Everything else is preference. And you are just about to learn about mine (with 
 
 In few places I deviate from the general SQL Best Practices or most popular conventions and the main reason for this heresy is that I see Marketing Cloud SQL use case different from standard Business Inteligence SQL use case.
 
-It of course depends a lot on the exact role, but to simplify things and leverage the evergreen Pareto Rule I believe that in SFMC the split between writing and reading SQL is 20%/80%. For Business Inteligence in most cases it is exactly the oposite with 80% time going into creating new queries.
+A lot depends on the exact role, but to simplify things and leverage the evergreen Pareto Rule I believe that in SFMC the split between writing and reading/reusing SQL is 20%/80%. For Business Inteligence in most cases it is exactly the oposite with 80% time going into creating new queries.
 
-Based on this assumptions I follow a few style rules that require a bit more time during writing the query, but in return save a lot time with better readability. I will mention this within examples of this approach along with alternative focused on improving writing speed.
+Based on this assumption I follow a few style rules that require a bit more time during writing the query, but in return save a lot time with better readability. Whenever applicable, I will mention this within examples along with alternative focused on improving writing speed.
 
 :::
 
 ## SQL Syntax Case
 
-Use uppercase for all things SQL. This approach makes it easy to visually differentiate the query langauge and the data extension / data view / field names.
+__Use `UPPERCASE` for all elements of SQL syntax.__
+
+This approach helps visually differentiate query langauge from the names of data extensions, data views and fields and improve readability.
 
 ```sql
-/* ✅ Uppercase Syntax */
+/* ✅ Upper Case for SQL Syntax */
 SELECT SubscriberKey,
        EmailAddress
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
  WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 
-/* ❌ Lowercase Syntax */
+/* ❌ Pascal Case for SQL Syntax */
+Select SubscriberKey,
+       EmailAddress
+  From Ent._Subscribers
+ Where DateJoined >= DateAdd(Month, -1, GetDate())
+
+/* ❌ Lower Case for SQL Syntax */
 select SubscriberKey,
        EmailAddress
-  from ENT._Subscribers
+  from Ent._Subscribers
  where DateJoined >= dateadd(month, -1, getdate())
 ```
 
-## Field Names Case
+## Field & Source Name Case
+
+__Use `PascalCase` for all Source and Field names.__
+
+This is soft recommendation, as it is highly connected to other convention used by your organisation. If other connected systems are using different style, it might be best for you to keep it consistent in Marketing Cloud.
+
+This might be especially true for Sources, as you might be using mixed convention leveraging uppercase elements and underscores for Data Extension names. However, try not to use hyphens, as those will require you to use square brackets around the name and can interfere in query syntax highlighting that lower the readability.
+
+The most popular SQL convention for Source and Field names is `snake_case`. However, Marketing Cloud situation is unique, as Source nad Field names will have the case not only in your queries, but also in the User Interface. It is important to make them as readable and human friendly as possible. Additionally, in many cases you will also leverage those names in AMPScript and SSJS.
+
+For Marketing Cloud purposes I believe `PascalCase` - especially for Field names - is the best choice.
+
+```sql
+/* ✅ Pascal Case for Source and Field names */
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WelcomeCampaignSegment AS wel
+       INNER JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
+
+/* ✅ Pascal Case for Field names and custom consistent covention for Source names */
+SELECT wel.SubscriberKey,
+       wel.EmailAddress,
+       o.EventDate AS OpenDate
+  FROM WEL_WelcomeCampaignSegment_20201011_OTH AS wel
+       INNER JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
+
+/* ❌ Lower Case for Source and Field names */
+SELECT wel.subscriberkey,
+       wel.emailaddress,
+       o.eventdate AS opendate
+  FROM welcomecampaignsegment AS wel
+       INNER JOIN _open AS o ON o.subscriberkey = wel.subscriberkey
+
+/* ❌ Upper Case for Source and Field names */
+SELECT WEL.SUBSCRIBERKEY,
+       WEL.EMAILADDRESS,
+       O.EVENTDATE AS OPENDATE
+  FROM WELCOMECAMPAIGNSEGMENT AS WEL
+       INNER JOIN _OPEN AS O ON O.SUBSCRIBERKEY = WEL.SUBSCRIBERKEY
+```

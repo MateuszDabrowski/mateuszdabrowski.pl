@@ -30,7 +30,7 @@ The first one, `CAST`, is straightforward and available in all SQL dialects:
 
 ```sql {3} title="Find all subscribers that joined after the given date"
 SELECT SubscriberKey
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
  WHERE DateJoined > CAST('2020-10-30' AS DATE)
 ```
 
@@ -44,7 +44,7 @@ The basic form of `CONVERT` is nearly the same as the `CASE` with reversed order
 
 ```sql {3} title="Find all subscribers that joined after the given date"
 SELECT SubscriberKey
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
  WHERE DateJoined > CONVERT(DATE, '2020-10-30')
 ```
 

@@ -3,7 +3,6 @@ id: sfmc-sql-numeric-functions
 title: SFMC SQL Numeric Functions
 sidebar_label: Numeric Functions
 description: Take control over numbers with built-in SQL functions. Let the query do the job.
-draft: true
 ---
 
 import TOCInline from '@theme/TOCInline';
@@ -131,8 +130,8 @@ Standard formats use one required and one optional element.
 The required one is the format specifier - tells what the outcome should be. The optional is precision - allows you to change the value on the go (for example, round it to two decimal places). If you do not use precision, the value will stay with its current precision.
 
 ```sql title="Precision might lead to rounding. Note also the US thousands separator"
-SELECT FORMAT(1234.56, 'N')  AS WithoutCustomPrecision,   /* Output: 1,234.56 */
-       FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision      /* Output: 1,234.6 */
+SELECT FORMAT(1234.56, 'N')  AS WithoutCustomPrecision,    /* Output: 1,234.56 */
+       FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
 ```
 
 There are nine standard formats available, but only a few are useful on a day-to-day basis in Salesforce Marketing Cloud:
@@ -172,7 +171,7 @@ Let's say you want your customers to validate their phone numbers before you lev
 
 ```sql {2} title="From '48520935815' to '(48) 520 935 815' in one line"
 SELECT s.SubscriberKey,
-       FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone,   /* Output: (48) 520 935 815 */
+       FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone, /* Output: (48) 520 935 815 */
   FROM _Subscribers AS s
        JOIN EnterpriseAttribute AS ea ON ea._SubscriberID = s.SubscriberID
 ```
@@ -184,6 +183,6 @@ Another use case? Let's assume we have a VIPDiscount field. It contains a number
 However, showing the customer that he has `0.33` discount is not a good idea. `FORMAT` can help us once more:
 
 ```sql title="Depending on your needs you may use Standard format or a Custom one"
-SELECT FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount,      /* Output: 33.00 % */
-       FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount   /* Output: -33% */
+SELECT FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount, /* Output: 33.00 % */
+       FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount    /* Output: -33% */
 ```

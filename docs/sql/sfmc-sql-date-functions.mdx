@@ -78,7 +78,7 @@ However, if you are changing the date with the 31st day of the month by months a
 ```sql {4} title="Find all Subscribers that joined within the last month"
 SELECT SubscriberKey,
        EmailAddress
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
  WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 ```
 
@@ -95,7 +95,7 @@ The `DATEPART` function returns the chosen part of the provided date.
 ```sql {4} title="Find all Subscribers that joined in 2020"
 SELECT SubscriberKey,
        EmailAddress
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
  WHERE DATEPART(YEAR, DateJoined) = 2020
 ```
 
@@ -108,7 +108,7 @@ There are also three shortcuts for the most popular use cases: `YEAR()`, `MONTH(
 ```sql {4} title="Find all Subscribers that joined in 2020 - shorter approach"
 SELECT SubscriberKey,
        EmailAddress
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
  WHERE YEAR(DateJoined) = 2020
 ```
 
@@ -151,14 +151,14 @@ You may use it in the [`SELECT`](./sfmc-sql-select.mdx) statement:
 ```sql {2} title="Check how long someone was a subscriber"
 SELECT SubscriberKey,
        DATEDIFF(DAY, DateJoined, GETDATE()) AS SubscriptionTime
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
 ```
 
 You may use it in the [`WHERE`](./sfmc-sql-where.mdx) statement:
 
 ```sql {3} title="Get everyone that hit one year on the subscription list"
 SELECT SubscriberKey
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
  WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
 ```
 
@@ -177,7 +177,7 @@ The `DATENAME` functions return the value of the specified [datepart](#date-part
 ```sql {2} title="Capture the full day's name"
 SELECT SubscriberKey,
        DATENAME(WEEKDAY, DateJoined) AS DayJoined
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
 ```
 
 It might be useful to quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the name of the day for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).

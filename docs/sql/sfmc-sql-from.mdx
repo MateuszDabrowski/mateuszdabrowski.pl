@@ -50,12 +50,12 @@ SELECT JobID,
 
 ## Enterprise Data Extension
 
-If you want to query Shared Data Extensions or Synchronized Data Extensions, you must use different unique prefix, `ENT.`:
+If you want to query Shared Data Extensions or Synchronized Data Extensions, you must use different unique prefix, `Ent.`:
 
 ```sql {3}
 SELECT ContactKey,
        EmailAddress,
-  FROM ENT.SharedSegment
+  FROM Ent.SharedSegment
 ```
 
 Remember that account permissions restrictions may apply.
@@ -69,7 +69,7 @@ SELECT SubscriberKey,
       EmailAddress,
       DateJoined,
       DateUnsubscribed
-  FROM ENT._Subscribers
+  FROM Ent._Subscribers
 ```
 
 :::
