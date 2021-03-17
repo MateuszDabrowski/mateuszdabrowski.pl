@@ -1,7 +1,7 @@
 ---
 id: sfmc-sql-style-guide
 title: SFMC SQL Style Guide
-sidebar_label: Style Guide
+sidebar_label: SQL Style Guide
 description: Query with style. Readable, bug-free code is few shifts & spaces away.
 ---
 
@@ -23,16 +23,6 @@ First things first: this SQL style guide is highly subjective. You may use it as
 
 Everything else is preference. And you are just about to learn about mine (with arguments and options).
 
-:::note You Should Know
-
-In few places I deviate from the general SQL Best Practices or most popular conventions and the main reason for this heresy is that I see Marketing Cloud SQL use case different from standard Business Inteligence SQL use case.
-
-A lot depends on the exact role, but to simplify things and leverage the evergreen Pareto Rule I believe that in SFMC the split between writing and reading/reusing SQL is 20%/80%. For Business Inteligence in most cases it is exactly the oposite with 80% time going into creating new queries.
-
-Based on this assumption I follow a few style rules that require a bit more time during writing the query, but in return save a lot time with better readability. Whenever applicable, I will mention this within examples along with alternative focused on improving writing speed.
-
-:::
-
 ## SQL Syntax Case
 
 __Use `UPPERCASE` for all elements of SQL syntax.__
@@ -41,22 +31,25 @@ This approach helps visually differentiate query langauge from the names of data
 
 ```sql
 /* ✅ Upper Case for SQL Syntax */
-SELECT SubscriberKey,
-       EmailAddress
-  FROM Ent._Subscribers
- WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM Ent._Subscribers
+WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 
 /* ❌ Pascal Case for SQL Syntax */
-Select SubscriberKey,
-       EmailAddress
-  From Ent._Subscribers
- Where DateJoined >= DateAdd(Month, -1, GetDate())
+Select
+    SubscriberKey,
+    EmailAddress
+From Ent._Subscribers
+Where DateJoined >= DateAdd(Month, -1, GetDate())
 
 /* ❌ Lower Case for SQL Syntax */
-select SubscriberKey,
-       EmailAddress
-  from Ent._Subscribers
- where DateJoined >= dateadd(month, -1, getdate())
+select
+    SubscriberKey,
+    EmailAddress
+from Ent._Subscribers
+where DateJoined >= dateadd(month, -1, getdate())
 ```
 
 ## Field & Source Name Case
@@ -73,30 +66,93 @@ For Marketing Cloud purposes I believe `PascalCase` - especially for Field names
 
 ```sql
 /* ✅ Pascal Case for Source and Field names */
-SELECT wel.SubscriberKey,
-       wel.EmailAddress,
-       o.EventDate AS OpenDate
-  FROM WelcomeCampaignSegment AS wel
-       INNER JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
+SELECT
+    wel.SubscriberKey,
+    wel.EmailAddress,
+    o.EventDate AS OpenDate
+FROM WelcomeCampaignSegment AS wel
+    INNER JOIN _Open AS o
+        ON o.SubscriberKey = wel.SubscriberKey
 
 /* ✅ Pascal Case for Field names and custom consistent covention for Source names */
-SELECT wel.SubscriberKey,
-       wel.EmailAddress,
-       o.EventDate AS OpenDate
-  FROM WEL_WelcomeCampaignSegment_20201011_OTH AS wel
-       INNER JOIN _Open AS o ON o.SubscriberKey = wel.SubscriberKey
+SELECT
+    wel.SubscriberKey,
+    wel.EmailAddress,
+    o.EventDate AS OpenDate
+FROM WEL_WelcomeCampaignSegment_20201011_OTH AS wel
+    INNER JOIN _Open AS o
+        ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ Lower Case for Source and Field names */
-SELECT wel.subscriberkey,
-       wel.emailaddress,
-       o.eventdate AS opendate
-  FROM welcomecampaignsegment AS wel
-       INNER JOIN _open AS o ON o.subscriberkey = wel.subscriberkey
+SELECT
+    wel.subscriberkey,
+    wel.emailaddress,
+    o.eventdate AS opendate
+FROM welcomecampaignsegment AS wel
+    INNER JOIN _open AS o
+        ON o.subscriberkey = wel.subscriberkey
 
 /* ❌ Upper Case for Source and Field names */
-SELECT WEL.SUBSCRIBERKEY,
-       WEL.EMAILADDRESS,
-       O.EVENTDATE AS OPENDATE
-  FROM WELCOMECAMPAIGNSEGMENT AS WEL
-       INNER JOIN _OPEN AS O ON O.SUBSCRIBERKEY = WEL.SUBSCRIBERKEY
+SELECT
+    WEL.SUBSCRIBERKEY,
+    WEL.EMAILADDRESS,
+    O.EVENTDATE AS OPENDATE
+FROM WELCOMECAMPAIGNSEGMENT AS WEL
+    INNER JOIN _OPEN AS O
+        ON O.SUBSCRIBERKEY = WEL.SUBSCRIBERKEY
+```
+
+## Alignment and Indentation
+
+SQL is very flexible when it comes to alignment and indentation of the query. Writing everything in one line creates a valid code. But just because it is valid, it doesn't mean it is good. Generous use of new lines and indents has close to no impact on performance, but a massive impact on readability. Enter and Space keys are your friends.
+
+There are many styles out there, but I opted for one that allows for both good writing speed and excellent readability. It is based on two main rules:
+
+### Left Aligned Keywords
+
+This rule is focused more on writing speed. While I prefer the aesthetics of the Vertically Aligned Space approach, I don't see any significant gains for readability. On the hand writing in this style in Marketing Cloud is a pain, as there is no prettify in Query Studio and Query Activity. All those additional spaces needs to be added manually. It's just not worth it.
+
+```sql
+/* ✅ Left Aligned Keywords */
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM Ent._Subscribers
+WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+
+/* ❌ Post Keyword Space Aligned Vertically */
+SELECT SubscriberKey,
+       EmailAddress
+  FROM Ent._Subscribers
+ WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+```
+
+### Single Information per Line
+
+
+
+### Consistent Indentation
+
+This rule is focused more on readability and is build with multiple smaller subrules.
+
+####
+
+```sql
+/* ✅ Pascal Case for Source and Field names */
+SELECT
+    wel.SubscriberKey,
+    wel.EmailAddress,
+    o.EventDate AS OpenDate
+FROM WelcomeCampaignSegment AS wel
+    INNER JOIN _Open AS o
+        ON o.SubscriberKey = wel.SubscriberKey
+
+/* ❌ Lower Case for Source and Field names */
+SELECT
+wel.subscriberkey,
+wel.emailaddress,
+    o.eventdate AS opendate
+FROM welcomecampaignsegment AS wel
+    INNER JOIN _open AS o
+        ON o.subscriberkey = wel.subscriberkey
 ```

@@ -26,7 +26,7 @@ Here, I will cover only selected numeric functions, that I find most useful for 
 
 ```sql {1} title="Count all rows in the _Subscribers Data View"
 SELECT COUNT(*)
-  FROM _Subscribers
+FROM _Subscribers
 ```
 
 :::note You Should Know
@@ -39,11 +39,12 @@ Nice, but it does not give us any information that we couldn't find more comfort
 
 For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function parameter to the specific column to count only its values.
 
-```sql {2,5} title="This query will show you which Email Addresses exists on more than one contact"
-SELECT s.EmailAddress,
-       COUNT(s.EmailAddress) AS EmailCount
-  FROM _Subscribers AS s
- GROUP BY s.EmailAddress
+```sql {3,6} title="This query will show you which Email Addresses exists on more than one contact"
+SELECT
+    s.EmailAddress,
+    COUNT(s.EmailAddress) AS EmailCount
+FROM _Subscribers AS s
+GROUP BY s.EmailAddress
 HAVING COUNT(s.EmailAddress) > 1
 ```
 
@@ -53,18 +54,21 @@ With `GROUP BY` and `HAVING` we simplify the output to show only the duplicate v
 
 You can take it to the next level with the subquery approach:
 
-```sql {9-10} title="Returns Subscriber Key, Email Address and Duplicate Count of your database"
-SELECT s.SubscriberKey,
-       s.EmailAddress,
-       counted.EmailCount
-  FROM _Subscribers AS s
-       INNER JOIN (
-           SELECT s.EmailAddress        AS EmailAddress,
-                  COUNT(s.EmailAddress) AS EmailCount
-             FROM _Subscribers AS s
-            GROUP BY s.EmailAddress
-           HAVING COUNT(s.EmailAddress) > 1
-       ) AS counted ON counted.EmailAddress = s.EmailAddress
+```sql {11-12} title="Returns Subscriber Key, Email Address and Duplicate Count of your database"
+SELECT
+    s.SubscriberKey,
+    s.EmailAddress,
+    counted.EmailCount
+FROM _Subscribers AS s
+    INNER JOIN (
+        SELECT
+            s.EmailAddress        AS EmailAddress,
+            COUNT(s.EmailAddress) AS EmailCount
+        FROM _Subscribers AS s
+        GROUP BY s.EmailAddress
+        HAVING COUNT(s.EmailAddress) > 1
+    ) AS counted
+        ON counted.EmailAddress = s.EmailAddress
 ```
 
 This extended query will not only tell you that there are potential duplicates. It will also give you Subscriber Keys of duplicate contacts so that you can investigate the reason and clean up records after fixing the underlying issue.
@@ -79,21 +83,23 @@ Pack it into Automation with Verification Activity on top and keep your database
 
 ```sql {1} title="What is your highest subscriber bounce count?"
 SELECT MAX(s.BounceCount) AS HighestBounceCount
-  FROM _Subscribers AS s
+FROM _Subscribers AS s
 ```
 
 Will you use it frequently? Probably not. Is it useless? Oh no.
 
 Let's say you have a data extension storing information about a competition - including the number of points that participants gathered. Now it is time to send congratulations to the winner. `MAX` function will make it easy.
 
-```sql {5-6} title="Get a Subscriber Key and Points of all the customers that have the biggest amount of points"
-SELECT comp.SubscriberKey,
-       comp.CompetitionPoints
-  FROM CompetitionDataExtension AS comp
- WHERE comp.CompetitionPoints = (
-           SELECT MAX(comp2.CompetitionPoints)
-             FROM CompetitionDataExtension AS comp2
-       )
+```sql {7-8} title="Get a Subscriber Key and Points of all the customers that have the biggest amount of points"
+SELECT
+    comp.SubscriberKey,
+    comp.CompetitionPoints
+FROM CompetitionDataExtension AS comp
+WHERE
+    comp.CompetitionPoints = (
+        SELECT MAX(comp2.CompetitionPoints)
+        FROM CompetitionDataExtension AS comp2
+    )
 ```
 
 However, my favourite use case for `MAX` is debugging Data Extensions and its values. Especially useful when you are working with data imports from external systems — for example, pulling data from Sales Cloud via Marketing Cloud Connect.
@@ -102,11 +108,12 @@ You might frequently encounter a situation where your automations responsible fo
 
 How to find the culprit? With `MAX` and [`LEN`](./sfmc-sql-string-functions.mdx#len) functions:
 
-```sql {1-2} title="For Datetime values, it will output 19 characters"
-SELECT MAX(LEN(c.Id))    AS SubscriberKey,
-       MAX(LEN(c.Email)) AS EmailAddress,
-       /* Rest of the Contact fields you synchronized from Contact object */
-  FROM Contact_Salesforce AS c
+```sql {2-3} title="For Datetime values, it will output 19 characters"
+SELECT
+    MAX(LEN(c.Id))    AS SubscriberKey,
+    MAX(LEN(c.Email)) AS EmailAddress,
+    /* Rest of the Contact fields you synchronized from Contact object */
+FROM Contact_Salesforce AS c
 ```
 
 This query can be used _ad hoc_ in [Query Studio](./sfmc-sql-basics.mdx#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in destination data extension to see which column is crashing your automation.
@@ -130,8 +137,9 @@ Standard formats use one required and one optional element.
 The required one is the format specifier - tells what the outcome should be. The optional is precision - allows you to change the value on the go (for example, round it to two decimal places). If you do not use precision, the value will stay with its current precision.
 
 ```sql title="Precision might lead to rounding. Note also the US thousands separator"
-SELECT FORMAT(1234.56, 'N')  AS WithoutCustomPrecision,    /* Output: 1,234.56 */
-       FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
+SELECT
+    FORMAT(1234.56, 'N')  AS WithoutCustomPrecision,    /* Output: 1,234.56 */
+    FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
 ```
 
 There are nine standard formats available, but only a few are useful on a day-to-day basis in Salesforce Marketing Cloud:
@@ -169,11 +177,13 @@ The custom number formats can do wonders for your personalization needs. Example
 
 Let's say you want your customers to validate their phone numbers before you leverage the SMS channel. You have them in Mobile Connect compliant format (only numbers, no spaces, country code included). `48520935815` is not a very user-friendly format to validate. Let's fix it:
 
-```sql {2} title="From '48520935815' to '(48) 520 935 815' in one line"
-SELECT s.SubscriberKey,
-       FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone, /* Output: (48) 520 935 815 */
-  FROM _Subscribers AS s
-       JOIN EnterpriseAttribute AS ea ON ea._SubscriberID = s.SubscriberID
+```sql {3} title="From '48520935815' to '(48) 520 935 815' in one line"
+SELECT
+    s.SubscriberKey,
+    FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone, /* Output: (48) 520 935 815 */
+FROM _Subscribers AS s
+    INNER JOIN EnterpriseAttribute AS ea
+        ON ea._SubscriberID = s.SubscriberID
 ```
 
 As you can see we had to use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) function with BIGINT parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it easily. It could get even better with [`LIKE` in `CASE`](./sfmc-sql-like.mdx) used to create different formats depending on the country code.
@@ -183,6 +193,7 @@ Another use case? Let's assume we have a VIPDiscount field. It contains a number
 However, showing the customer that he has `0.33` discount is not a good idea. `FORMAT` can help us once more:
 
 ```sql title="Depending on your needs you may use Standard format or a Custom one"
-SELECT FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount, /* Output: 33.00 % */
-       FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount    /* Output: -33% */
+SELECT
+    FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount, /* Output: 33.00 % */
+    FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount    /* Output: -33% */
 ```
