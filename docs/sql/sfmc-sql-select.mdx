@@ -43,11 +43,11 @@ There are also some exceptional cases related to selected [System Data Views](..
 SELECT _SubscriberId
 ```
 
-## Labelling with AS
+## Aliasing with AS
 
 You can also utilize `SELECT` as a tool to rename the source columns to match your needs in an outcome data extension. It is especially useful when you are pulling the data from Synchronized Data Extension with names coming from Salesforce custom fields.
 
-```sql {4-5} title="Improve readability and consistency with labelling"
+```sql {4-5} title="Improve readability and consistency with aliasing"
 SELECT
     ContactKey,
     EmailAddress,
@@ -57,9 +57,9 @@ SELECT
 
 ### Custom values
 
-Use labels also for passing new values directly from your query. Need to add a custom string to outcome data extension? Or maybe synchronization timestamp for debugging purposes? You can leverage SQL for it.
+Use aliases also for passing new values directly from your query. Need to add a custom string to outcome data extension? Or maybe synchronization timestamp for debugging purposes? You can leverage SQL for it.
 
-```sql {6-7} title="Add custom column labelled 'ImportDate' with a value equal to the UTC of the script execution for each record"
+```sql {6-7} title="Add custom column aliased 'ImportDate' with a value equal to the UTC of the script execution for each record"
 SELECT
     ContactKey,
     EmailAddress,
@@ -107,7 +107,7 @@ SELECT
 
 You can have as many `WHEN`/`THEN` conditions as you want. Also, the `ELSE` statement is optional, but a good idea to catch unexpected values.
 
-Feel free also to leverage [labels](#labels) to manipulate the column name at the same time:
+Feel free also to leverage [aliases](#aliasing-with-as) to manipulate the column name at the same time:
 
 ```sql {14}
 SELECT

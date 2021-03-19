@@ -198,9 +198,9 @@ FROM _Sent
         ON _Job.JobID = _Sent.JobID
 ```
 
-However, you probably saw in the previous examples that there is another way. You don't have to write the full name of the data source every time. You can leverage labels just as with columns to make it shorter:
+However, you probably saw in the previous examples that there is another way. You don't have to write the full name of the data source every time. You can leverage aliases just as with columns to make it shorter:
 
-```sql title="Example of SQL with labelled table name prefixes"
+```sql title="Example of SQL with aliased table name prefixes"
 SELECT
     wel.SubscriberKey,
     wel.EmailAddress,
@@ -210,7 +210,7 @@ FROM WelcomeCampaignSegment AS wel
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
-All you need to do is write your label after a data source name. For the readability purposes, I recommend using the `AS` keyword between. Now you can leverage the shortened name to prefix the selected columns. It's instrumental when pulling data from multiple Data Extensions.
+All you need to do is write your alias after a data source name. For the readability purposes, I recommend using the `AS` keyword between. Now you can leverage the shortened name to prefix the selected columns. It's instrumental when pulling data from multiple Data Extensions.
 
 Using table name prefixes is not always required (for example, when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and error-deferring purposes.
 
