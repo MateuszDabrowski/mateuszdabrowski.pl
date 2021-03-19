@@ -23,7 +23,9 @@ First things first: this SQL style guide is highly subjective. You may use it as
 
 Everything else is preference. And you are just about to learn about mine (with arguments and options).
 
-## SQL Syntax Case
+## Query Letter Case
+
+### SQL Syntax Case
 
 __Use `UPPERCASE` for all elements of SQL syntax.__
 
@@ -52,15 +54,15 @@ from Ent._Subscribers
 where DateJoined >= dateadd(month, -1, getdate())
 ```
 
-## Field & Source Name Case
+### Field & Source Names Case
 
 __Use `PascalCase` for all Source and Field names.__
 
 This is soft recommendation, as it is highly connected to other convention used by your organisation. If other connected systems are using different style, it might be best for you to keep it consistent in Marketing Cloud.
 
-This might be especially true for Sources, as you might be using mixed convention leveraging uppercase elements and underscores for Data Extension names. However, try not to use hyphens, as those will require you to use square brackets around the name and can interfere in query syntax highlighting that lower the readability.
+This is especially true for Sources, as you might be using mixed convention leveraging uppercase elements and underscores for Data Extension names. However, try not to use hyphens, as those will require you to use square brackets around the name and can interfere in query syntax highlighting that lower the readability.
 
-The most popular SQL convention for Source and Field names is `snake_case`. However, Marketing Cloud situation is unique, as Source nad Field names will have the case not only in your queries, but also in the User Interface. It is important to make them as readable and human friendly as possible. Additionally, in many cases you will also leverage those names in AMPScript and SSJS.
+The most popular SQL convention for Source and Field names is `snake_case`. However, in Marketing Cloud the Source nad Field names will have the used case not only in your queries, but also in the User Interface. It is important to make them as readable and human friendly as possible. Additionally, in many cases you will also leverage those names in AMPScript and SSJS.
 
 For Marketing Cloud purposes I believe `PascalCase` - especially for Field names - is the best choice.
 
@@ -102,15 +104,95 @@ FROM WELCOMECAMPAIGNSEGMENT AS WEL
         ON O.SUBSCRIBERKEY = WEL.SUBSCRIBERKEY
 ```
 
+---
+
 ## Alignment and Indentation
 
-SQL is very flexible when it comes to alignment and indentation of the query. Writing everything in one line creates a valid code. But just because it is valid, it doesn't mean it is good. Generous use of new lines and indents has close to no impact on performance, but a massive impact on readability. Enter and Space keys are your friends.
+SQL is very flexible when it comes to alignment and indentation of the query. Writing everything in one line creates a valid code that will run. But just because it is valid, it doesn't mean it is good. Generous use of new lines and indents has close to no impact on performance, but a massive impact on readability. Enter and Space keys are your friends.
 
-There are many styles out there, but I opted for one that allows for both good writing speed and excellent readability. It is based on two main rules:
+There are many styles out there, but I opted for one that merges good writing speed with excellent readability. It it build with few rules:
+
+### Single Information per Line
+
+__Limit information per line to one.__
+
+I recommend keeping one information per line, as it allows for much easier scanning. The four most important examples of this approach are:
+
+1. Each [`SELECT`](./sfmc-sql-select.mdx) field in a separate line
+2. Each [`WHERE`](./sfmc-sql-where.mdx) condition in a separate line
+3. Each [`CASE`](./sfmc-sql-where.mdx#case-in-where) condition in a separate line
+4. Each [`JOIN`](./sfmc-sql-join.mdx) and [`ON`](./sfmc-sql-join.mdx#joining-on) relatonship in a separate line
+
+```sql
+/* ✅ Single information per line  */
+SELECT
+    s.SubscriberKey     AS SubscriberKey,
+    job.EmailName       AS EmailName,
+    s.EventDate         AS SentDate,
+    job.DeliveredTime   AS DeliveryDate,
+    o.EventDate         AS OpenDate
+FROM _Sent s
+    LEFT JOIN _Job AS job
+        ON job.JobID = s.JobID
+    LEFT JOIN _Open AS o
+        ON o.JobID = s.JobID
+        AND o.ListID = s.ListID
+        AND o.BatchID = s.BatchID
+        AND o.SubscriberID = s.SubscriberID
+        AND o.IsUnique = 1
+WHERE
+    1 = CASE
+        WHEN j.EmailName LIKE 'UPS_%' THEN 1
+        WHEN j.EmailName LIKE 'CRS_%' THEN 1
+        ELSE 0
+    END
+
+/* ❌ Multiple informations per line */
+SELECT s.SubscriberKey AS SubscriberKey, job.EmailName AS EmailName, s.EventDate AS SentDate, job.DeliveredTime AS DeliveryDate, o.EventDate AS OpenDate
+FROM _Sent s
+    LEFT JOIN _Job AS job ON job.JobID = s.JobID
+    LEFT JOIN _Open AS o ON o.JobID = s.JobID AND o.ListID = s.ListID AND o.BatchID = s.BatchID AND o.SubscriberID = s.SubscriberID AND o.IsUnique = 1
+WHERE 1 = CASE WHEN j.EmailName LIKE 'UPS_%' THEN 1 WHEN j.EmailName LIKE 'CRS_%' THEN 1 ELSE 0 END
+```
+
+As you can see, the [`SELECT`](./sfmc-sql-select.mdx) and [`WHERE`](./sfmc-sql-where.mdx) keywords have their separate line as well to mark respective block starting. For readability reasons, I make an exception if there is only one field or condition to be used:
+
+```sql
+/* ✅ Single Field in SELECT and single condition in WHERE lines */
+SELECT SubscriberKey
+FROM _Subscribers
+WHERE Domain = 'mateuszdabrowski.pl'
+
+/* ❌ Separate lines for single SELECT field and WHERE condition */
+SELECT
+    SubscriberKey
+FROM _Subscribers
+WHERE
+    Domain = 'mateuszdabrowski.pl'
+```
+
+:::note You Should Know
+
+If you are using `DISTINCT` or `TOP`, put it into the same line as [`SELECT`](./sfmc-sql-select.mdx). In such case, even if you work on a single field, move it to a separate row for better readability.
+
+```sql
+/* ✅ Single Field in SELECT and single condition in WHERE lines */
+SELECT DISTINCT TOP 10
+    SubscriberKey
+FROM ContenstSubmissions
+
+/* ❌ Separate lines for single SELECT field and WHERE condition */
+SELECT DISTINCT TOP 10 SubscriberKey
+FROM ContenstSubmissions
+```
+
+:::
 
 ### Left Aligned Keywords
 
-This rule is focused more on writing speed. While I prefer the aesthetics of the Vertically Aligned Space approach, I don't see any significant gains for readability. On the hand writing in this style in Marketing Cloud is a pain, as there is no prettify in Query Studio and Query Activity. All those additional spaces needs to be added manually. It's just not worth it.
+__Align main SQL keywords to the left.__
+
+This rule is focused on writing speed. While I prefer the aesthetics of the Vertically Aligned Space approach, I don't see any significant gains for readability. On the hand writing in this style in Marketing Cloud is a pain, as there is no prettify in Query Studio and Query Activity. All those additional spaces needs to be added manually. It's just not worth it.
 
 ```sql
 /* ✅ Left Aligned Keywords */
@@ -127,18 +209,126 @@ SELECT SubscriberKey,
  WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 ```
 
-### Single Information per Line
-
-
-
 ### Consistent Indentation
 
-This rule is focused more on readability and is build with multiple smaller subrules.
+__Use indentation to highlight keyword relationships.__
 
-####
+This rule is focused on readability. The logic in short is to indent whenever the line is dependent on a previous line (child line), for example:
+
+- Selected Field Names are children of [`SELECT`](./sfmc-sql-select.mdx)
+- [`JOIN`](./sfmc-sql-join.mdx) keywords are children of the initial Source defined in [`FROM`](./sfmc-sql-from.mdx)
+- Joining conditions ([`ON`](./sfmc-sql-join.mdx#joining-on)) are children of the [`JOIN`](./sfmc-sql-join.mdx)
+- Case conditions are children of the [`CASE`](./sfmc-sql-where.mdx#case-in-where)
+- Where conditions are children of the [`WHERE`](./sfmc-sql-where.mdx)
+- Sub-queries follow the same rules in respective indentation level.
+
+For simplicity I use 4-spaces indent, as it is both standard and can be added in Marketing Cloud Query with a single click of Tab key.
 
 ```sql
-/* ✅ Pascal Case for Source and Field names */
+/* ✅ Dependency based indentation */
+SELECT
+    s.SubscriberKey     AS SubscriberKey,
+    job.EmailName       AS EmailName,
+    s.EventDate         AS SentDate,
+    job.DeliveredTime   AS DeliveryDate,
+    o.EventDate         AS OpenDate
+FROM _Sent s
+    LEFT JOIN _Job AS job
+        ON job.JobID = s.JobID
+    LEFT JOIN _Open AS o
+        ON o.JobID = s.JobID
+        AND o.ListID = s.ListID
+        AND o.BatchID = s.BatchID
+        AND o.SubscriberID = s.SubscriberID
+        AND o.IsUnique = 1
+WHERE
+    1 = CASE
+        WHEN j.EmailName LIKE 'UPS_%' THEN 1
+        WHEN j.EmailName LIKE 'CRS_%' THEN 1
+        ELSE 0
+    END
+
+/* ❌ Lack of indentation */
+SELECT
+s.SubscriberKey     AS SubscriberKey,
+job.EmailName       AS EmailName,
+s.EventDate         AS SentDate,
+job.DeliveredTime   AS DeliveryDate,
+o.EventDate         AS OpenDate
+FROM _Sent s
+LEFT JOIN _Job AS job ON job.JobID = s.JobID
+LEFT JOIN _Open AS o ON o.JobID = s.JobID
+AND o.ListID = s.ListID
+AND o.BatchID = s.BatchID
+AND o.SubscriberID = s.SubscriberID
+AND o.IsUnique = 1
+WHERE 1 = CASE
+WHEN j.EmailName LIKE 'UPS_%' THEN 1
+WHEN j.EmailName LIKE 'CRS_%' THEN 1
+ELSE 0
+END
+```
+
+### Commas Placement
+
+__Use commas at the end of the line.__
+
+There are few approaches related to comma placement, but putting them at the end of the line is easier for both writing and reading, as it is aligned with natural language.
+
+```sql {3-5,10-12}
+/* ✅ Commas at the end */
+SELECT
+    SubscriberKey,
+    EmailAddress,
+    DateJoined
+FROM Ent._Subscribers
+
+/* ❌ Commas in the beginning */
+SELECT
+    SubscriberKey
+    , EmailAddress
+    , DateJoined
+FROM Ent._Subscribers
+```
+
+---
+
+## Explicit vs Implicit
+
+Many things in SQL can be done in multiple ways - using various functions, symbols or shortcuts. While all those options may work, not all are recommended. Whenever you have to choose the approach, go for the explicit and strightforward approach. Even if it means writing few characters more.
+
+### Date Parts
+
+__Use long version of [Date Parts](./sfmc-sql-date-functions.mdx#date-parts).__
+
+Yes, abbreviations let you save few characters, but they are killing the readability unless someone is fluent in those shortcuts. For Marketing Cloud purposes time saved writing is not worth the time lost when reading. Go with full version.
+
+```sql {6,13}
+/* ✅ Full Date Part */
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM Ent._Subscribers
+WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+
+/* ❌ Abbreviated Date Part */
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM Ent._Subscribers
+WHERE DateJoined >= DATEADD(M, -1, GETDATE())
+```
+
+### JOIN and ON
+
+__Use full [`JOIN`](./sfmc-sql-join.mdx) name and reference field from new Source first in [`ON`](./sfmc-sql-join.mdx#joining-on)__
+
+Instead of just [`JOIN`](./sfmc-sql-join.mdx) write [`INNER JOIN`](./sfmc-sql-join.mdx#inner-join). It's longer, but it's explicit and in line with the rest of [`JOIN`](./sfmc-sql-join.mdx) names. Makes it easier to scan queries with [multiple various `JOIN`](./sfmc-sql-join.mdx#multiple-various-joins) statements.
+
+Additionally, when defining [`JOIN`](./sfmc-sql-join.mdx) conditions after [`ON`](./sfmc-sql-join.mdx#joining-on), on the left side reference the field from the currently joined Source. The previous Source should be on the right side. It will improve consistency and reading speed.
+
+```sql {7-8,16-17}
+/* ✅ Explicit Inner Join and field from new Source on the left side of the ON condition */
 SELECT
     wel.SubscriberKey,
     wel.EmailAddress,
@@ -147,12 +337,29 @@ FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
-/* ❌ Lower Case for Source and Field names */
+/* ❌ Implicit Inner Join and field from new Source on the right side of the ON condition */
 SELECT
-wel.subscriberkey,
-wel.emailaddress,
-    o.eventdate AS opendate
-FROM welcomecampaignsegment AS wel
-    INNER JOIN _open AS o
-        ON o.subscriberkey = wel.subscriberkey
+    wel.SubscriberKey,
+    wel.EmailAddress,
+    o.EventDate AS OpenDate
+FROM WelcomeCampaignSegment AS wel
+    JOIN _Open AS o
+        ON wel.SubscriberKey = o.SubscriberKey
 ```
+
+### Not Equal To Symbol
+
+__Use `!=` instead of `<>`.__
+
+The `!=` symbol is much more popular and used in many languages. Using it makes query more readable to people not experienced in SQL.
+
+```sql {4,9}
+/* ✅ Use of != for negation */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE CONVERT(DATE, DateJoined) != CONVERT(DATE, GETDATE())
+
+/* ❌ Use of <> for negation */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE CONVERT(DATE, DateJoined) <> CONVERT(DATE, GETDATE())
