@@ -40,7 +40,7 @@ However, in Salesforce Marketing Cloud, it is much better to use `CONVERT` funct
 
 ### CONVERT
 
-The basic form of `CONVERT` is nearly the same as the `CASE` with reversed order of arguments:
+The basic form of `CONVERT` is nearly the same as the `CAST` with reversed order of arguments:
 
 ```sql {3} title="Find all subscribers that joined after the given date"
 SELECT SubscriberKey
@@ -105,6 +105,12 @@ There are over 30 data types available for conversion, but there are only a few 
 | DATETIMEOFFSET | Date with offset | When you need timezone offset |
 | DATE | Only date | Best when you need date only |
 | TIME | Only time | Best when you need time only |
+
+:::note You Should Know
+
+There are also two more data types: `FLOAT` and `REAL`. Don't use them. Both are __Approximate__ Numeric Data Types and can lead to unpredicted behaviour, especially when used for equality-based conditions in [`WHERE`](./sfmc-sql-where.mdx). `DECIMAL`/`NUMERIC` is the way to go.
+
+:::
 
 When converting values to the selected data type, you can have even more control by passing optional argument right after type to declare the length of the output.
 
