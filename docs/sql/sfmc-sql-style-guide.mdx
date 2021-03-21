@@ -514,7 +514,7 @@ Just as with a letter case, you might have your hands tied by cross-system depen
 2. When the Column is a boolean, prefix it with `Is` (or `Has`/`Does` depending on the underlying data).
 3. When the Column is a date, suffix it with `Date`.
 
-```sql
+```sql {3-8,17-22}
 /* ✅ Meaningful and consistent Column Names */
 SELECT
     s.SubscriberKey    AS SubscriberKey,
