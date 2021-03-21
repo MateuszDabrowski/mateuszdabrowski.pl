@@ -9,9 +9,9 @@
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.71",
-    "@docusaurus/plugin-client-redirects": "^2.0.0-alpha.71",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.71",
+    "@docusaurus/core": "^2.0.0-alpha.72",
+    "@docusaurus/plugin-client-redirects": "^2.0.0-alpha.72",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.72",
     "classnames": "^2.2.6",
     "prism-react-renderer": "^1.1.1",
     "react": "^16.8.4",
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.20.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-md": "^1.1.7",
     "eslint-config-prettier": "^6.11.0",
