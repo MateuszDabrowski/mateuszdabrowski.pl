@@ -34,7 +34,7 @@ SELECT GETDATE() AS CurrentDate
 
 You can get the datetime with appropriate offset information using the `SYSDATETIMEOFFSET()` function. It will return the same datetime as `GETDATE()` but in a format showcasing the timezone offset: `2020-12-28 15:08:01.7239173 -06:00`.
 
-You can see the 24-hour clock format and milliseconds and UTC-6 offset at the end. This last information will be useful for timezone conversions with [`AT TIME ZONE`](#at-time-zone) function.
+You can see the 24-hour clock format and milliseconds and UTC-6 offset at the end. This last information will be helpful for timezone conversions with [`AT TIME ZONE`](#at-time-zone) function.
 
 You can also leverage [`TODATETIMEOFFSET'](#at-time-zone-vs-todatetimeoffset) to work with standard `GETDATE`.
 
@@ -82,6 +82,16 @@ SELECT
     EmailAddress
 FROM Ent._Subscribers
 WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+```
+
+It's even better with ranges:
+
+```sql {5} title="Find all Subscribers registered to an event within the next month"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM EventRegistration
+WHERE EventDate BETWEEN GETDATE() AND DATEADD(MONTH, 1, GETDATE())
 ```
 
 :::note You Should Know
@@ -167,7 +177,43 @@ FROM Ent._Subscribers
 WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
 ```
 
+:::note You Should Know
+
+`DATEDIFF` can output both positive and negative numbers depending on provided values and their order.
+
+```sql
+SELECT
+    DATEDIFF(DAY, DATEADD(DAY, -1, GETDATE()), GETDATE()) AS YesterdayPostive, /* Output: 1 */
+    DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative /* Output: -1 */
+```
+
+It is crucial for creating correct comparisons within [`WHERE`](./sfmc-sql-where.mdx).
+
+:::
+
 It takes into consideration the leap years. If you provide dates with [offset](#at-time-zone), it will even include the timezone differences and Daylight Saving Time.
+
+You can also use `DATEDIFF` for capturing ranges.
+
+```sql {5} title="Find all Subscribers registered to an event within next 31 days"
+SELECT
+    SubscriberKey,
+    EmailAddress
+FROM EventRegistration
+WHERE DATEDIFF(DAY, GETDATE(), EventDate) <= 31
+```
+
+ It is shorter than [`DATEADD`](#dateadd) but with a different level of control. Because `DATEDIFF` operates on [Date Parts](#date-parts), it will take into consideration only the chosen part. For example:
+
+ ```sql {2-3} title="Different ranges, same outcome"
+SELECT
+    DATEDIFF(MONTH, 'Mar 31 2021', 'Apr 01 2021') AS ShortDiff, /* Output: 1 */
+    DATEDIFF(MONTH, 'Mar 01 2021', 'Apr 30 2021') AS LongDiff   /* Output: 1 */
+ ```
+
+Despite dates in the first `DATEDIFF` being just a day apart and in the second nearly two months apart, both return `1`. The reason is that `DATEDIFF` compares only the month date part - March to April is a single month of difference.
+
+It might be good or bad depending on the use case, so be sure to select the correct function for your needs.
 
 :::note You Should Know
 
@@ -179,14 +225,14 @@ There is a limit to how big the difference can be. If you go down to the `SECOND
 
 The `DATENAME` functions return the value of the specified [datepart](#date-parts) from a given date.
 
-```sql {3} title="Capture the full day's name"
+```sql {3} title="Capture the whole day's name"
 SELECT
     SubscriberKey,
     DATENAME(WEEKDAY, DateJoined) AS DayJoined
 FROM Ent._Subscribers
 ```
 
-It might be useful to quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the name of the day for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).
+It might help quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the day's name for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).
 
 ```sql {3} title="Create an automation that will capture weekend meetings for Friday reminder"
 SELECT SubscriberKey
@@ -320,7 +366,7 @@ Above, you have seen three different format specifiers used to manipulate the da
 
 As highlighted in the table header - the examples are for the SFMC default US culture formating. If you add a specific culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order and separator style.
 
-You can find the full list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings).
+You can find the complete list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings).
 
 ### Custom date formats
 
@@ -360,7 +406,7 @@ SELECT FORMAT(GETUTCDATE(), 'dddd (dd MMMM yyyy) - HH:mm', 'en-GB') AS Formatted
 
 The above query will return `Saturday (30 October 2020) - 02:15`.
 
-You can find the full list of custom date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
+You can find the complete list of custom date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings).
 
 :::note You Should Know
 
