@@ -106,6 +106,22 @@ FROM WELCOMECAMPAIGNSEGMENT AS WEL
         ON O.SUBSCRIBERKEY = WEL.SUBSCRIBERKEY
 ```
 
+:::note You Should Know
+
+If you want to make your Style Guide even safer, you can decide on writing all Columns and Table names in square brackets. As Marketing Cloud is not checking whether you use SQL's reserved keywords, this approach will protect you from potential silent issue. The cost, however, is much more characters and less readable queries.
+
+```sql title="You need to decide how hard you want to leverage the square brackets"
+SELECT
+      [wel].[SubscriberKey]
+    , [wel].[EmailAddress]
+    , [o].[EventDate] AS [OpenDate]
+FROM [WelcomeCampaignSegment] AS [wel]
+    INNER JOIN [_Open] AS [o]
+        ON [o].[SubscriberKey] = [wel].[SubscriberKey]
+```
+
+:::
+
 ---
 
 ## Alignment and Indentation
