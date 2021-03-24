@@ -52,8 +52,9 @@ You can change this filter to `%@mateuszdabrowski.%`. With the second wildcard a
 
 
 ```sql {4} title="All subscribers that have an email address ending with 'mateuszdabrowski.pl' domain"
-SELECT SubscriberKey,
-       EmailAddress
+SELECT
+      SubscriberKey
+    , EmailAddress
   FROM _Subscribers
  WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
 ```
@@ -66,8 +67,8 @@ Suppose you would like to select all contacts with active phone subscription. In
 
 ```sql {5} title="All subscribers that have at least Phone subscription"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM MasterSubscriberDE
 WHERE ActiveSubscription LIKE '%Phone%'
 ```
@@ -77,11 +78,11 @@ WHERE ActiveSubscription LIKE '%Phone%'
 
 ```sql {4} title="Categorize your database into either Internal or External records based on email domain"
 SELECT
-    SubscriberKey,
-    CASE
+      SubscriberKey
+    , CASE
         WHEN EmailAddress LIKE '%@%mateuszdabrowski.pl' THEN 'Internal'
         ELSE 'External'
-    END AS ContactType
+      END AS ContactType
 FROM _Subscribers
 ```
 
@@ -116,9 +117,9 @@ Let's consider a scenario, where you have a multi picklist field containing comm
 
 ```sql {6-10} title="All subscribers with at least one subscription product in their recommendations"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    RecommendedProducts
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
     RecommendedProducts  LIKE '_'
@@ -134,15 +135,15 @@ In the query above, we are filtering our database with `RecommendedProducts` fie
 
 ```sql {5-8} title="Create boolean field from a multipicklist one to split database on recommendation type"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    CASE
+      SubscriberKey
+    , EmailAddress
+    , CASE
         WHEN RecommendedProducts LIKE '_'     THEN 'True'
         WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
         WHEN RecommendedProducts LIKE '%,_,%' THEN 'True'
         WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
         ELSE 'False'
-    END AS IsSubscriptionRecommended
+      END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
 ```
 
@@ -186,9 +187,9 @@ If we would like to output only the Premium subscriptions, we would have to crea
 
 ```sql {6-15} title="This approach would require 16 lines to cover the use case"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    RecommendedProducts
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
     RecommendedProducts  LIKE '1'
@@ -206,9 +207,9 @@ With a group, we can optimize it — a lot.
 
 ```sql {6-10} title="Same outcome with just 4 lines"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    RecommendedProducts
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
     RecommendedProducts  LIKE '[1234]'
@@ -224,9 +225,9 @@ If we would like to categorize them using Wildcards, we would have to create a s
 
 ```sql {5-14} title="This approach would require 36 WHEN/THEN lines to cover the use case"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    CASE
+      SubscriberKey
+    , EmailAddress
+    , CASE
         WHEN RecommendedProducts LIKE '1'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,1,%' THEN 'Premium'
@@ -238,7 +239,7 @@ SELECT
         WHEN RecommendedProducts LIKE '5,%'   THEN 'Standard'
         ...
         ELSE 'No Subscription'
-    END AS RecommendedSubscriptionType
+      END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
 ```
 
@@ -246,9 +247,9 @@ With a group, we can optimize it  — a lot.
 
 ```sql {5-12} title="Same outcome with just 8 WHEN/THEN lines"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    CASE
+      SubscriberKey
+    , EmailAddress
+    , CASE
         WHEN RecommendedProducts LIKE '[1234]'      THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1234],%'  THEN 'Premium'
@@ -258,7 +259,7 @@ SELECT
         WHEN RecommendedProducts LIKE '%,[56789],%' THEN 'Standard'
         WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
         ELSE 'No Subscription'
-    END AS RecommendedSubscriptionType
+      END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
 ```
 
@@ -275,13 +276,13 @@ Writing `LIKE '10%'` is not a good idea, as it would return you all values start
 
 ```sql {4-5} title="If the client has a discount between 1 and 9%, let's bump it up to either 5% or 10%. If he or she has a higher one - leave it as it is. If no discount is available, make it 2%"
 SELECT
-    ContactKey,
-    CASE
+      ContactKey
+    , CASE
         WHEN Discount LIKE '[56789][%]' THEN '10%'
         WHEN Discount LIKE '[01234][%]' THEN '5%'
         WHEN Discount IS NOT NULL       THEN Discount
         ELSE '2%'
-    END AS NewDiscount
+      END AS NewDiscount
 ```
 
 By wrapping the `%` with the grouping sign `[]`, we are telling SQL to look for exactly the per cent sign. Thanks to it `'[1234][%]'` search will look for `1%`, `2%`, `3%` or `4%` values only.
@@ -305,9 +306,9 @@ We can simplify more with the use of range operator `-`. Instead of writing each
 
 ```sql {6-10} title="Now with range operator"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    RecommendedProducts
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
     RecommendedProducts  LIKE '[1-4]'
@@ -321,9 +322,9 @@ WHERE
 
 ```sql {5-12} title="Now with range operator"
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    CASE
+      SubscriberKey
+    , EmailAddress
+    , CASE
         WHEN RecommendedProducts LIKE '[1-4]'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1-4],%' THEN 'Premium'
@@ -333,7 +334,7 @@ SELECT
         WHEN RecommendedProducts LIKE '%,[5-9],%' THEN 'Standard'
         WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
         ELSE 'No Subscription'
-    END AS RecommendedSubscriptionType
+      END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
 ```
 
@@ -352,12 +353,12 @@ It is an excellent tool to create essential categorization solutions for uncontr
 
 ```sql title="Simplified Job Title categorization"
 SELECT
-    SubscriberKey,
-    CASE
+      SubscriberKey
+    , CASE
         WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'       THEN 'C-Suite'
         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'    THEN 'Management'
         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%' THEN 'Specialists'
-    END AS CorporateJobTitleGroup
+      END AS CorporateJobTitleGroup
 FROM _Subscriber
 ```
 
@@ -385,9 +386,9 @@ Finally, just as with other statements, you can add `NOT` statement before `LIKE
 
 ```sql {4} title="Same query as at the beginning of our CASE journey, but flipped"
 SELECT
-    ContactKey,
-    CASE
+      ContactKey
+    , CASE
         WHEN EmailAddress NOT LIKE '%@mateuszdabrowski.pl' THEN 'External'
         ELSE 'Internal'
-    END AS ContactType
+      END AS ContactType
 ```

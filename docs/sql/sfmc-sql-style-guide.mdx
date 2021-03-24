@@ -36,22 +36,22 @@ This approach helps visually differentiate query language from Tables (data exte
 ```sql
 /* ✅ Upper Case for SQL Syntax */
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 
 /* ❌ Pascal Case for SQL Syntax */
 Select
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 From Ent._Subscribers
 Where DateJoined >= DateAdd(Month, -1, GetDate())
 
 /* ❌ Lower Case for SQL Syntax */
 select
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 from Ent._Subscribers
 where DateJoined >= dateadd(month, -1, getdate())
 ```
@@ -71,36 +71,36 @@ Due to the above, I believe `PascalCase` - especially for Column names - is the 
 ```sql
 /* ✅ Pascal Case for Table and Column names */
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ✅ Pascal Case for Column names and custom consistent covention for Table names */
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WEL_WelcomeCampaignSegment_20201011_OTH AS wel
     INNER JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ Lower Case for Table and Column names */
 SELECT
-    wel.subscriberkey,
-    wel.emailaddress,
-    o.eventdate AS opendate
+      wel.subscriberkey
+    , wel.emailaddress
+    , o.eventdate AS opendate
 FROM welcomecampaignsegment AS wel
     INNER JOIN _open AS o
         ON o.subscriberkey = wel.subscriberkey
 
 /* ❌ Upper Case for Table and Column names */
 SELECT
-    WEL.SUBSCRIBERKEY,
-    WEL.EMAILADDRESS,
-    O.EVENTDATE AS OPENDATE
+      WEL.SUBSCRIBERKEY
+    , WEL.EMAILADDRESS
+    , O.EVENTDATE AS OPENDATE
 FROM WELCOMECAMPAIGNSEGMENT AS WEL
     INNER JOIN _OPEN AS O
         ON O.SUBSCRIBERKEY = WEL.SUBSCRIBERKEY
@@ -128,11 +128,11 @@ I recommend keeping one information per line, as it allows for much easier scann
 ```sql
 /* ✅ Single information per line  */
 SELECT
-    s.SubscriberKey     AS SubscriberKey,
-    j.EmailName         AS EmailName,
-    s.EventDate         AS SentDate,
-    j.DeliveredTime     AS DeliveryDate,
-    o.EventDate         AS OpenDate
+      s.SubscriberKey AS SubscriberKey
+    , j.EmailName     AS EmailName
+    , s.EventDate     AS SentDate
+    , j.DeliveredTime AS DeliveryDate
+    , o.EventDate     AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -167,7 +167,7 @@ WHERE Domain = 'mateuszdabrowski.pl'
 
 /* ❌ Separate lines with single SELECT Column and WHERE condition */
 SELECT
-    SubscriberKey
+      SubscriberKey
 FROM _Subscribers
 WHERE
     Domain = 'mateuszdabrowski.pl'
@@ -180,7 +180,7 @@ If you are using `DISTINCT` or `TOP`, put it into the same line as [`SELECT`](./
 ```sql
 /* ✅ Single Column in SELECT and single condition in WHERE lines */
 SELECT DISTINCT TOP 10
-    SubscriberKey
+      SubscriberKey
 FROM ContenstSubmissions
 
 /* ❌ Separate lines for single SELECT Column and WHERE condition */
@@ -199,8 +199,8 @@ This rule focuses on writing speed. While I prefer the Vertically Aligned Space 
 ```sql
 /* ✅ Left Aligned Keywords */
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 
@@ -229,11 +229,11 @@ For simplicity I use 4-spaces indent, as it is both standard and can be added in
 ```sql
 /* ✅ Dependency based indentation */
 SELECT
-    s.SubscriberKey     AS SubscriberKey,
-    j.EmailName         AS EmailName,
-    s.EventDate         AS SentDate,
-    j.DeliveredTime     AS DeliveryDate,
-    o.EventDate         AS OpenDate
+      s.SubscriberKey AS SubscriberKey
+    , j.EmailName     AS EmailName
+    , s.EventDate     AS SentDate
+    , j.DeliveredTime AS DeliveryDate
+    , o.EventDate     AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -284,11 +284,11 @@ I try to use it whenever possible, but when there is huge imbalance in length (f
 ```sql
 /* ✅ Spacing around operators plus equalizing aliases and THEN */
 SELECT
-    s.SubscriberKey   AS SubscriberKey,
-    j.EmailName       AS EmailName,
-    s.EventDate       AS SentDate,
-    j.DeliveredTime   AS DeliveryDate,
-    o.EventDate       AS OpenDate
+      s.SubscriberKey AS SubscriberKey
+    , j.EmailName     AS EmailName
+    , s.EventDate     AS SentDate
+    , j.DeliveredTime AS DeliveryDate
+    , o.EventDate     AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -308,12 +308,12 @@ WHERE
 
 /* ✅ Spacing around operators plus equalizing aliases with exceptions */
 SELECT
-    s.SubscriberKey   AS SubscriberKey,
-    j.EmailName       AS EmailName,
-    s.EventDate       AS SentDate,
-    j.DeliveredTime   AS DeliveryDate,
-    o.EventDate       AS OpenDate
-    DATEDIFF(HOUR, s.EventDate, o.EventDate) AS TimeToOpen
+      s.SubscriberKey AS SubscriberKey
+    , j.EmailName     AS EmailName
+    , s.EventDate     AS SentDate
+    , j.DeliveredTime AS DeliveryDate
+    , o.EventDate     AS OpenDate
+    , DATEDIFF(HOUR, s.EventDate, o.EventDate) AS TimeToOpen
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -332,12 +332,12 @@ WHERE
 
 /* ❌ Lack of spacing */
 SELECT
-    s.SubscriberKey AS SubscriberKey,
-    j.EmailName AS EmailName,
-    s.EventDate AS SentDate,
-    j.DeliveredTime AS DeliveryDate,
-    o.EventDate AS OpenDate
-    DATEDIFF(HOUR,s.EventDate,o.EventDate) AS TimeToOpen
+    s.SubscriberKey AS SubscriberKey
+    ,j.EmailName AS EmailName
+    ,s.EventDate AS SentDate
+    ,j.DeliveredTime AS DeliveryDate
+    ,o.EventDate AS OpenDate
+    ,DATEDIFF(HOUR,s.EventDate,o.EventDate) AS TimeToOpen
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID=s.JobID
@@ -358,23 +358,30 @@ WHERE
 
 ### Commas Placement
 
-__Use commas at the end of the line.__
+__Use commas at the beginning of the line.__
 
-There are few approaches related to comma placement, but putting them at the end of the line is easier for both writing and reading, as it follows natural language.
+There are few approaches related to comma placement. Initially, I favoured commas at the end of the line, as I found them more accessible to use due to their similarity to natural language. However, there are strong reasons to use the comma at the beginning of the line. Here is what convinced me to change my style:
+
+1. Adding or deleting a Column requires a change in only one line. It's easier, faster and minimises the risk of a crash due to the trailing comma.
+2. Above is also very beneficial during difference checking and when leverging git for query version control. Thanks to comma in the beginning, addition and deletion of a Column in both those places is displayed correctly as a single line change.
+3. Having a comma in the beginning makes it easier to quickly assess where is the beginning of a new Column definition. This is huge readability improvement when you are using more complex structures, like [`CASE` in `SELECT`](./sfmc-sql-select.mdx#conditional-values-with-case).
+4. It's also easier to quickly assess whether you have a comma for each Column. With lines of various length it is much harder with comma at the end.
+
+Notice, that for the sake of readability I also indent first Column by two spaces, so that it is in line with the following ones. Similarly, I indent `END` after [`CASE` in `SELECT`](./sfmc-sql-select.mdx#conditional-values-with-case) by two spaces for the same reason.
 
 ```sql {3-5,10-12}
 /* ✅ Commas at the end */
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    DateJoined
+      SubscriberKey
+    , EmailAddress
+    , DateJoined
 FROM Ent._Subscribers
 
 /* ❌ Commas in the beginning */
 SELECT
-    SubscriberKey
-    , EmailAddress
-    , DateJoined
+    SubscriberKey,
+    EmailAddress,
+    DateJoined
 FROM Ent._Subscribers
 ```
 
@@ -393,15 +400,15 @@ Yes, abbreviations let you save few characters, but they kill the readability un
 ```sql {6,13}
 /* ✅ Full Date Part */
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 
 /* ❌ Abbreviated Date Part */
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 WHERE DateJoined >= DATEADD(M, -1, GETDATE())
 ```
@@ -417,18 +424,18 @@ Additionally, when defining [`JOIN`](./sfmc-sql-join.mdx) relationships after [`
 ```sql {7-8,16-17}
 /* ✅ Explicit Inner Join and Column from new Table on the left side of the ON condition */
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ Implicit Inner Join and Column from new Table on the right side of the ON condition */
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     JOIN _Open AS o
         ON wel.SubscriberKey = o.SubscriberKey
@@ -448,39 +455,39 @@ There are a few points:
 ```sql
 /* ✅ No aliasing in single Table query */
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 
 /* ❌ Aliasing in single Table query */
 SELECT
-    s.SubscriberKey,
-    s.EmailAddress
+      s.SubscriberKey
+    , s.EmailAddress
 FROM Ent._Subscribers AS s
 
 /* ✅ Meaningful aliasing and prefixes in multi Table query */
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ No aliasing and no prefix in multi Table query */
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    EventDate AS OpenDate
+      SubscriberKey
+    , EmailAddress
+    , EventDate AS OpenDate
 FROM WelcomeCampaignSegment
     INNER JOIN _Open
         ON _Open.SubscriberKey = WelcomeCampaignSegment.SubscriberKey
 
 /* ❌ Not meaningful aliasing and no AS keyword in multi Table query */
 SELECT
-    a.SubscriberKey,
-    a.EmailAddress,
-    b.EventDate AS OpenDate
+      a.SubscriberKey
+    , a.EmailAddress,
+    , b.EventDate AS OpenDate
 FROM WelcomeCampaignSegment a
     INNER JOIN _Open b
         ON a.SubscriberKey = b.SubscriberKey
@@ -517,12 +524,12 @@ Just as with a letter case, you might have your hands tied by cross-system depen
 ```sql {3-8,17-22}
 /* ✅ Meaningful and consistent Column Names */
 SELECT
-    s.SubscriberKey    AS SubscriberKey,
-    j.EmailName        AS EmailName,
-    s.EventDate        AS SentDate,
-    j.DeliveredTime    AS DeliveryDate,
-    o.EventDate        AS OpenDate,
-    j.SuppressTracking AS IsTrackingSuppressed
+      s.SubscriberKey    AS SubscriberKey
+    , j.EmailName        AS EmailName
+    , s.EventDate        AS SentDate
+    , j.DeliveredTime    AS DeliveryDate
+    , o.EventDate        AS OpenDate
+    , j.SuppressTracking AS IsTrackingSuppressed
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -531,12 +538,12 @@ FROM _Sent AS s
 
 /* ❌ No consistency and type alignment in Column Names */
 SELECT
-    s.SubscriberKey    AS SubscriberKey,
-    j.EmailName        AS EmailName,
-    s.EventDate        AS SentDate,
-    j.DeliveredTime    AS DeliveryTime,
-    o.EventDate        AS OpenedAT,
-    j.SuppressTracking AS SuppressTracking
+      s.SubscriberKey    AS SubscriberKey
+    , j.EmailName        AS EmailName
+    , s.EventDate        AS SentDate
+    , j.DeliveredTime    AS DeliveryTime
+    , o.EventDate        AS OpenedAt
+    , j.SuppressTracking AS SuppressTracking
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -557,7 +564,7 @@ It is a long article, so let's gather all the recommendations in one place:
 7. Align main SQL keywords to the left [🔗](#left-aligned-keywords)
 8. Use indentation to highlight the relationship between SQL keywords [🔗](#consistent-indentation)
 9. Use spaces wherever it makes the query more readable [🔗](#intentional-spacing)
-10. Use commas at the end of the line [🔗](#commas-placement)
+10. Use commas at the beginning of the line [🔗](#commas-placement)
 11. Use full Date Parts names [🔗](#date-parts)
 12. Use `INNER JOIN` name over `JOIN` [🔗](#join-and-on)
 13. In `JOIN ON` reference Column from newly joined Table on the left [🔗](#join-and-on)

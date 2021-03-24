@@ -56,8 +56,8 @@ The `DATEADD` functions give you the power to add and subtract from your date va
 
 ```sql {2-3} title="Add seven days to the current UTC date"
 SELECT
-    GETUTCDATE()                  AS TrialStartDate,
-    DATEADD(DAY, 7, GETUTCDATE()) AS TrialEndDate
+      GETUTCDATE()                  AS TrialStartDate
+    , DATEADD(DAY, 7, GETUTCDATE()) AS TrialEndDate
 ```
 
 It requires three things:
@@ -78,8 +78,8 @@ However, if you are changing the date with the 31st day of the month by months a
 
 ```sql {5} title="Find all Subscribers that joined within the last month"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
 ```
@@ -88,8 +88,8 @@ It's even better with ranges:
 
 ```sql {5} title="Find all Subscribers registered to an event within the next month"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM EventRegistration
 WHERE EventDate BETWEEN GETDATE() AND DATEADD(MONTH, 1, GETDATE())
 ```
@@ -106,8 +106,8 @@ The `DATEPART` function returns the chosen part of the provided date.
 
 ```sql {5} title="Find all Subscribers that joined in 2020"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 WHERE DATEPART(YEAR, DateJoined) = 2020
 ```
@@ -120,8 +120,8 @@ There are also three shortcuts for the most popular use cases: `YEAR()`, `MONTH(
 
 ```sql {5} title="Find all Subscribers that joined in 2020 - shorter approach"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM Ent._Subscribers
 WHERE YEAR(DateJoined) = 2020
 ```
@@ -164,8 +164,8 @@ You may use it in the [`SELECT`](./sfmc-sql-select.mdx) statement:
 
 ```sql {3} title="Check how long someone was a subscriber"
 SELECT
-    SubscriberKey,
-    DATEDIFF(DAY, DateJoined, GETDATE()) AS SubscriptionTime
+      SubscriberKey
+    , DATEDIFF(DAY, DateJoined, GETDATE()) AS SubscriptionTime
 FROM Ent._Subscribers
 ```
 
@@ -183,8 +183,8 @@ WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
 
 ```sql
 SELECT
-    DATEDIFF(DAY, DATEADD(DAY, -1, GETDATE()), GETDATE()) AS YesterdayPostive, /* Output: 1 */
-    DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative /* Output: -1 */
+      DATEDIFF(DAY, DATEADD(DAY, -1, GETDATE()), GETDATE()) AS YesterdayPostive  /* Output: 1 */
+    , DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative /* Output: -1 */
 ```
 
 It is crucial for creating correct comparisons within [`WHERE`](./sfmc-sql-where.mdx).
@@ -197,8 +197,8 @@ You can also use `DATEDIFF` for capturing ranges.
 
 ```sql {5} title="Find all Subscribers registered to an event within next 31 days"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM EventRegistration
 WHERE DATEDIFF(DAY, GETDATE(), EventDate) <= 31
 ```
@@ -207,8 +207,8 @@ WHERE DATEDIFF(DAY, GETDATE(), EventDate) <= 31
 
  ```sql {2-3} title="Different ranges, same outcome"
 SELECT
-    DATEDIFF(MONTH, 'Mar 31 2021', 'Apr 01 2021') AS ShortDiff, /* Output: 1 */
-    DATEDIFF(MONTH, 'Mar 01 2021', 'Apr 30 2021') AS LongDiff   /* Output: 1 */
+      DATEDIFF(MONTH, 'Mar 31 2021', 'Apr 01 2021') AS ShortDiff /* Output: 1 */
+    , DATEDIFF(MONTH, 'Mar 01 2021', 'Apr 30 2021') AS LongDiff  /* Output: 1 */
  ```
 
 Despite dates in the first `DATEDIFF` being just a day apart and in the second nearly two months apart, both return `1`. The reason is that `DATEDIFF` compares only the month date part - March to April is a single month of difference.
@@ -227,8 +227,8 @@ The `DATENAME` functions return the value of the specified [datepart](#date-part
 
 ```sql {3} title="Capture the whole day's name"
 SELECT
-    SubscriberKey,
-    DATENAME(WEEKDAY, DateJoined) AS DayJoined
+      SubscriberKey
+    , DATENAME(WEEKDAY, DateJoined) AS DayJoined
 FROM Ent._Subscribers
 ```
 
@@ -264,8 +264,8 @@ You can quickly fix it with `AT TIME ZONE`. When you apply this function to a ti
 
 ```sql title="Daylight Saving Time magic"
 SELECT
-    CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST, /* Output: 2020-01-01 18:00:00 -06:00 */
-    CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT  /* Output: 2020-07-01 18:00:00 -05:00 */
+      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST /* Output: 2020-01-01 18:00:00 -06:00 */
+    , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT /* Output: 2020-07-01 18:00:00 -05:00 */
 ```
 
 In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function adds the offset and calculates the Daylight Saving Time offset change for you.
@@ -282,8 +282,8 @@ To use it, provide a datetime and an offset (for example, `'-06:00'` or `'+01:00
 
 ```sql title="No Daylight Saving Time magic"
 SELECT
-    TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST,     /* Output: 2020-01-01 18:00:00 -06:00 */
-    TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
+      TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST     /* Output: 2020-01-01 18:00:00 -06:00 */
+    , TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
 ```
 
 Of course, for any datetime values that include the Daylight Saving Time - pushed from a website or your data warehouse - [`AT TIME ZONE`](#add-offset-with-at-time-zone) will be the better solution.
@@ -337,9 +337,9 @@ It is a perfect tool to manipulate any dates (or date-like strings with the help
 
 ```sql title="Instead of creating complex AMPScript logic to adapt dates, format them"
 SELECT
-    FORMAT(CONVERT(DATE, '10/30/2020'), 'd', 'en-GB') AS DateOrderedProperly,
-    FORMAT(GETUTCDATE(), 'dd/MM/yyyy')                AS TodayCustomFormat,
-    FORMAT(DateJoined, 'D', 'de-DE')                  AS DateExpandedIndian
+      FORMAT(CONVERT(DATE, '10/30/2020'), 'd', 'en-GB') AS DateOrderedProperly
+    , FORMAT(GETUTCDATE(), 'dd/MM/yyyy')                AS TodayCustomFormat
+    , FORMAT(DateJoined, 'D', 'de-DE')                  AS DateExpandedIndian
 ```
 
 In the example above, the first two `FORMAT` functions return date in the same format - `30/10/2020` - one by using manually provided value, another by taking the current UTC date from the function.

@@ -30,21 +30,21 @@ My favourite way to debug email sends is by using a SQL Query. Open your [Query 
 
 ```sql
 SELECT
-    s.SubscriberKey     AS SubscriberKey,
-    sub.EmailAddress    AS EmailAddress,
-    sub.Status          AS SubscribtionStatus,
-    j.JourneyName       AS JourneyName,
-    j.VersionNumber     AS JourneyVersion,
-    job.EmailName       AS EmailName,
-    s.EventDate         AS SentDate,
-    job.DeliveredTime   AS DeliveryDate,
-    o.EventDate         AS OpenDate,
-    c.EventDate         AS ClickDate,
-    b.EventDate         AS BounceDate,
-    b.BounceCategory    AS BounceCategory,
-    b.BounceSubcategory AS BounceSubcategory
-    b.SMTPBounceReason  AS BounceReason,
-    u.EventDate         AS UnsubscribeDate
+      s.SubscriberKey     AS SubscriberKey
+    , sub.EmailAddress    AS EmailAddress
+    , sub.Status          AS SubscribtionStatus
+    , j.JourneyName       AS JourneyName
+    , j.VersionNumber     AS JourneyVersion
+    , job.EmailName       AS EmailName
+    , s.EventDate         AS SentDate
+    , job.DeliveredTime   AS DeliveryDate
+    , o.EventDate         AS OpenDate
+    , c.EventDate         AS ClickDate
+    , b.EventDate         AS BounceDate
+    , b.BounceCategory    AS BounceCategory
+    , b.BounceSubcategory AS BounceSubcategory
+    , b.SMTPBounceReason  AS BounceReason
+    , u.EventDate         AS UnsubscribeDate
 FROM _Sent s
     LEFT JOIN _Job AS job
         ON job.JobID = s.JobID

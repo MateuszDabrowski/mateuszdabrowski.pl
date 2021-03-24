@@ -20,9 +20,9 @@ There will be some cases where all you need is to pull (and maybe transform) dat
 
 ```sql {6-7} title="Check who opened the email and when by querying the _Open System Data View"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
@@ -44,9 +44,9 @@ Of course, this query in its current state is not perfect and could output wrong
 
 ```sql {6-7}
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
@@ -64,9 +64,9 @@ You can go the other way around with `RIGHT JOIN` (in our example, it would outp
 
 ```sql {6-7} title="The same query, but this time joined with LEFT JOIN"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     LEFT JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
@@ -82,9 +82,9 @@ If you would want to see all contacts from our Data Extension that did not open 
 
 ```sql {6-8} title="Example of exclusion applied to LEFT JOIN"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     LEFT JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
@@ -103,9 +103,9 @@ In our example, it would mean all contacts from `Welcome-Campaign-Segment` Data 
 
 ```sql {6-7} title="Not a best use case for the FULL JOIN"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     FULL JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
@@ -131,8 +131,8 @@ In such a scenario, you can use Self-join to build a more readable table that mi
 
 ```sql {5-6} title="Self-join using INNER JOIN will output only categories that have a parent category"
 SELECT
-    c.CategoryName  AS Category,
-    pc.CategoryName AS ParentCategory
+      c.CategoryName  AS Category
+    , pc.CategoryName AS ParentCategory
 FROM WristwatchesDE AS c
     INNER JOIN WristwatchesDE AS pc
         ON pc.ParentCategoryID = c.CategoryID
@@ -157,12 +157,12 @@ Very often, you might encounter Accounts that are related to another Account. Th
 
 ```sql {8-12} title="Flattening three levels of Salesforce Account hierarchy"
 SELECT
-    a1.Id   AS Level1AccountId,
-    a1.Name AS Level1AccountName,
-    a2.Id   AS Level2AccountId,
-    a2.Name AS Level2AccountName,
-    a3.Id   AS Level3AccountId,
-    a3.Name AS Level3AccountName
+      a1.Id   AS Level1AccountId
+    , a1.Name AS Level1AccountName
+    , a2.Id   AS Level2AccountId
+    , a2.Name AS Level2AccountName
+    , a3.Id   AS Level3AccountId
+    , a3.Name AS Level3AccountName
 FROM Account_Salesforce AS a1
     LEFT JOIN Account_Salesforce AS a2
         ON a2.Id = a1.ParentId
@@ -191,8 +191,8 @@ When you are joining multiple data sources with columns of the same name, you wi
 
 ```sql title="Example of SQL with full table name prefixes"
 SELECT
-    _Sent.SubscriberKey,
-    _Job.EmailName
+      _Sent.SubscriberKey
+    , _Job.EmailName
 FROM _Sent
     LEFT JOIN _Job
         ON _Job.JobID = _Sent.JobID
@@ -202,9 +202,9 @@ However, you probably saw in the previous examples that there is another way. Yo
 
 ```sql title="Example of SQL with aliased table name prefixes"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    o.EventDate AS OpenDate
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open AS o
         ON o.SubscriberKey = wel.SubscriberKey
@@ -224,10 +224,10 @@ In many cases, you will want to get a segment of people who simultaneously fulfi
 
 ```sql {6-10} title="Contacts used for three different ToFu campaigns that are ready for a MoFu campaign"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    nsl.PhoneNumber,
-    ebo.EbookName
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , nsl.PhoneNumber
+    , ebo.EbookName
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN NewsletterPromoCampaignSegment AS nsl
         ON nsl.SubscriberKey = wel.SubscriberKey
@@ -243,11 +243,11 @@ Another huge group of cases you might encounter are queries with multiple `LEFT 
 
 ```sql {7-11} title="To the list of contacts, add the product details we want to use in the email content along with special offer description"
 SELECT
-    up.SubscriberKey,
-    up.EmailAddress,
-    prod.ProductName,
-    prod.ProductPrice,
-    promo.Offer
+      up.SubscriberKey
+    , up.EmailAddress
+    , prod.ProductName
+    , prod.ProductPrice
+    , promo.Offer
 FROM UpSellCampaignSegment AS up
     LEFT JOIN ProductDetailsList AS prod
         ON prod.ProductId = up.OfferedProduct
@@ -263,11 +263,11 @@ You are not limited to just one type of join when creating your query. You can m
 
 ```sql {7-11} title="Same query as above, but this time with a mix of INNER JOIN and LEFT JOIN"
 SELECT
-    up.SubscriberKey,
-    up.EmailAddress,
-    prod.ProductName,
-    prod.ProductPrice,
-    promo.Offer
+      up.SubscriberKey
+    , up.EmailAddress
+    , prod.ProductName
+    , prod.ProductPrice
+    , promo.Offer
 FROM UpSellCampaignSegment AS up
     INNER JOIN ProductDetailsList AS prod
         ON prod.ProductId = up.OfferedProduct
@@ -289,15 +289,15 @@ Apart from the `JOIN`, a `UNION` operator also serves a simillar purpose. It con
 
 ```sql {6} title="Group subscribers from two Data Extensions"
 SELECT
-    jan.SubscriberKey,
-    jan.EmailAddress,
+      jan.SubscriberKey
+    , jan.EmailAddress
 FROM JanuaryEventParticipants AS jan
 
 UNION
 
 SELECT
-    feb.SubscriberKey,
-    feb.EmailAddress
+      feb.SubscriberKey
+    , feb.EmailAddress
 FROM FebruaryEventParticipantsSegment AS feb
 ```
 
@@ -323,15 +323,15 @@ By default, the `UNION` will ignore duplicates. If you want to keep them, use `U
 
 ```sql {6} title="Group subscribers from two Data Extensions"
 SELECT
-    jan.SubscriberKey,
-    jan.EmailAddress,
+      jan.SubscriberKey
+    , jan.EmailAddress
 FROM JanuaryEventParticipantsSegment AS jan
 
 UNION ALL
 
 SELECT
-    feb.SubscriberKey,
-    feb.EmailAddress
+      feb.SubscriberKey
+    , feb.EmailAddress
 FROM FebruaryEventParticipantsSegment AS feb
 ```
 
@@ -347,19 +347,19 @@ In most cases, you will store your seedlist in a separate Data Extension and wil
 
 ```sql {8} title="Append Seedlist to your Segment"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    wel.FirstName,
-    wel.Interest
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , wel.FirstName
+    , wel.Interest
 FROM WelcomeCampaignSegment AS wel
 
 UNION
 
 SELECT
-    sl.SubscriberKey,
-    sl.EmailAddress,
-    'Seed'               AS FirstName,
-    'Estimating'         AS Interest
+      sl.SubscriberKey
+    , sl.EmailAddress
+    , 'Seed'       AS FirstName
+    , 'Estimating' AS Interest
 FROM Seedlist AS sl
 ```
 
@@ -371,10 +371,10 @@ You can mix and match `JOIN` and `UNION` to create your perfect segment. And eve
 
 ```sql {10,19} title="AutoKill is the limit of your imagination"
 SELECT
-    wel.SubscriberKey,
-    wel.EmailAddress,
-    wel.FirstName,
-    i.Interest
+      wel.SubscriberKey
+    , wel.EmailAddress
+    , wel.FirstName
+    , i.Interest
 FROM WelcomeCampaignSegment AS wel
     LEFT JOIN InterestsDataPoint AS i
         ON i.SubscriberKey = wel.SubscriberKey
@@ -382,19 +382,19 @@ FROM WelcomeCampaignSegment AS wel
 UNION
 
 SELECT
-    sl.SubscriberKey,
-    sl.EmailAddress,
-    'Seed'               AS FirstName,
-    'Estimating'         AS Interest
+      sl.SubscriberKey
+    , sl.EmailAddress
+    , 'Seed'       AS FirstName
+    , 'Estimating' AS Interest
 FROM Seedlist AS sl
 
 UNION ALL
 
 SELECT
-    '123456789987654321' AS SubscriberKey,
-    'sales@company.com'  AS EmailAddress,
-    'SalesDepartment'    AS FirstName,
-    'Leads'              AS Interest
+      '123456789987654321' AS SubscriberKey
+    , 'sales@company.com'  AS EmailAddress
+    , 'SalesDepartment'    AS FirstName
+    , 'Leads'              AS Interest
 ```
 
 :::

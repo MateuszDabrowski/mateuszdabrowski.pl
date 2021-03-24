@@ -20,8 +20,8 @@ The [`SELECT`](./sfmc-sql-select.mdx) statement alone won't do much. In most cas
 
 ```sql {4} title="Get ContactKey and EmailAddress from Data Extension named MasterSubscriberDE"
 SELECT
-    ContactKey,
-    EmailAddress,
+      ContactKey
+    , EmailAddress
 FROM MasterSubscriberDE
 ```
 
@@ -29,8 +29,8 @@ Just as with column names, if the name of your Data Extension has spaces in it, 
 
 ```sql {4}
 SELECT
-    ContactKey,
-    EmailAddress,
+      ContactKey
+    , EmailAddress
 FROM [Master Subscriber DE]
 ```
 
@@ -42,12 +42,12 @@ Salesforce Marketing Cloud is partially hiding the [System Data Views](../config
 
 ```sql {8}
 SELECT
-    JobID,
-    EmailID,
-    EmailName,
-    EmailSubject,
-    EmailSendDefinition,
-    DeliveredTime
+      JobID
+    , EmailID
+    , EmailName
+    , EmailSubject
+    , EmailSendDefinition
+    , DeliveredTime
 FROM _Job
 ```
 
@@ -57,8 +57,8 @@ If you want to query Shared Data Extensions or Synchronized Data Extensions, you
 
 ```sql {4}
 SELECT
-    ContactKey,
-    EmailAddress,
+      ContactKey
+    , EmailAddress
 FROM Ent.SharedSegment
 ```
 
@@ -70,10 +70,10 @@ In some scenarios, you might want to use both the above options at the same time
 
 ```sql {6}
 SELECT
-    SubscriberKey,
-    EmailAddress,
-    DateJoined,
-    DateUnsubscribed
+      SubscriberKey
+    , EmailAddress
+    , DateJoined
+    , DateUnsubscribed
 FROM Ent._Subscribers
 ```
 

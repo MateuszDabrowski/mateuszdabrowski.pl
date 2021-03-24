@@ -22,8 +22,8 @@ The concept behind it is straightforward. It takes all the results you obtained 
 
 ```sql {5} title="All subscribers with domain equal to 'mateuszdabrowski.pl'"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE Domain = 'mateuszdabrowski.pl'
 ```
@@ -47,8 +47,8 @@ Equality operators (`=`, `!=`) are great when you have a controlled value. Think
 
 ```sql {5} title="All subscribers that do not have the unsubscribed status"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE Status != 'unsubscribed'
 ```
@@ -59,8 +59,8 @@ Comparison operators (`<`, `>`, `>=`, `<=`) are perfect when you are operating o
 
 ```sql {5} title="All subscribers that joined within the last month"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE CONVERT(DATE, DateJoined) >= DATEADD(MONTH, -1, CONVERT(DATE, GETUTCDATE()))
 ```
@@ -77,8 +77,8 @@ Suppose you would like to select all contacts with active phone subscription. In
 
 ```sql {5} title="All subscribers that have at least Phone subscription"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM MasterSubscriberDE
 WHERE ActiveSubscription LIKE '%Phone%'
 ```
@@ -93,8 +93,8 @@ They allow you to create more fine-tuned filters evaluating either multiple valu
 
 ```sql {5-8} title="All subscribers that have at least Phone subscription AND are in its twelfth month"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM MasterSubscriberDE
 WHERE
     ActiveSubscription LIKE '%Phone%'
@@ -106,8 +106,8 @@ The standard order of execution evaluates the pairs joined by `AND` first and th
 
 ```sql {6} title="All subscribers that have at least either Phone OR Internet subscription AND are in its twelfth month"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM MasterSubscriberDE
 WHERE
     (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%')
@@ -123,8 +123,8 @@ Whenever you want to work on ranges, instead of binding `>=` & `<=` scopes (clos
 
 ```sql {8}
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM MasterSubscriberDE
 WHERE
     (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%')
@@ -147,8 +147,8 @@ It allows you to simplify `WHERE` statement with multiple `OR` operators (like `
 
 ```sql {5} title="All subscribers with the unsubscribed, bounced or temporarily held status"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE Status IN ('held', 'unsubscribed', 'bounced')
 ```
@@ -171,16 +171,16 @@ It is especially apparent when working with `LIKE`, `BETWEEN`, `IN` and `EXISTS`
 
 ```sql {5} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE Status NOT IN ('held', 'unsubscribed', 'bounced')
 ```
 
 ```sql {5} title="All subscribers that have email address NOT ending with @mateuszdabrowski.pl"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
 ```
@@ -193,8 +193,8 @@ The first compare `1` to the outcome of the `CASE` statement that evaluates each
 
 ```sql {6-11} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE
     1 = CASE Status
@@ -213,8 +213,8 @@ You can do better even with the [search version of `CASE`](./sfmc-sql-select.mdx
 
  ```sql {6-9} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM _Subscribers
 WHERE
     1 = CASE
@@ -231,8 +231,8 @@ The second approach compares a field to the `CASE` statement evaluation and is m
 
 ```sql {6-9} title="All subscribers that have EmailAddress different from the Preferred Email"
 SELECT
-    SubscriberKey,
-    EmailAddress
+      SubscriberKey
+    , EmailAddress
 FROM MasterSubscriberDE
 WHERE
     EmailAddress != CASE

@@ -41,8 +41,8 @@ For example, in seeing whether you have potential duplicate contacts. Instead of
 
 ```sql {3,6} title="This query will show you which Email Addresses exists on more than one contact"
 SELECT
-    s.EmailAddress,
-    COUNT(s.EmailAddress) AS EmailCount
+      s.EmailAddress
+    , COUNT(s.EmailAddress) AS EmailCount
 FROM _Subscribers AS s
 GROUP BY s.EmailAddress
 HAVING COUNT(s.EmailAddress) > 1
@@ -56,14 +56,14 @@ You can take it to the next level with the subquery approach:
 
 ```sql {11-12} title="Returns Subscriber Key, Email Address and Duplicate Count of your database"
 SELECT
-    s.SubscriberKey,
-    s.EmailAddress,
-    counted.EmailCount
+      s.SubscriberKey
+    , s.EmailAddress
+    , counted.EmailCount
 FROM _Subscribers AS s
     INNER JOIN (
         SELECT
-            s.EmailAddress        AS EmailAddress,
-            COUNT(s.EmailAddress) AS EmailCount
+              s.EmailAddress        AS EmailAddress
+            , COUNT(s.EmailAddress) AS EmailCount
         FROM _Subscribers AS s
         GROUP BY s.EmailAddress
         HAVING COUNT(s.EmailAddress) > 1
@@ -92,8 +92,8 @@ Let's say you have a data extension storing information about a competition - in
 
 ```sql {7-8} title="Get a Subscriber Key and Points of all the customers that have the biggest amount of points"
 SELECT
-    comp.SubscriberKey,
-    comp.CompetitionPoints
+      comp.SubscriberKey
+    , comp.CompetitionPoints
 FROM CompetitionDataExtension AS comp
 WHERE
     comp.CompetitionPoints = (
@@ -110,8 +110,8 @@ How to find the culprit? With `MAX` and [`LEN`](./sfmc-sql-string-functions.mdx#
 
 ```sql {2-3} title="For Datetime values, it will output 19 characters"
 SELECT
-    MAX(LEN(c.Id))    AS SubscriberKey,
-    MAX(LEN(c.Email)) AS EmailAddress,
+      MAX(LEN(c.Id))    AS SubscriberKey
+    , MAX(LEN(c.Email)) AS EmailAddress
     /* Rest of the Contact fields you synchronized from Contact object */
 FROM Contact_Salesforce AS c
 ```
@@ -138,8 +138,8 @@ The required one is the format specifier - tells what the outcome should be. The
 
 ```sql title="Precision might lead to rounding. Note also the US thousands separator"
 SELECT
-    FORMAT(1234.56, 'N')  AS WithoutCustomPrecision,    /* Output: 1,234.56 */
-    FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
+      FORMAT(1234.56, 'N')  AS WithoutCustomPrecision     /* Output: 1,234.56 */
+    , FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
 ```
 
 There are nine standard formats available, but only a few are useful on a day-to-day basis in Salesforce Marketing Cloud:
@@ -179,8 +179,8 @@ Let's say you want your customers to validate their phone numbers before you lev
 
 ```sql {3} title="From '48520935815' to '(48) 520 935 815' in one line"
 SELECT
-    s.SubscriberKey,
-    FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone, /* Output: (48) 520 935 815 */
+      s.SubscriberKey
+    , FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone /* Output: (48) 520 935 815 */
 FROM _Subscribers AS s
     INNER JOIN EnterpriseAttribute AS ea
         ON ea._SubscriberID = s.SubscriberID
@@ -194,6 +194,6 @@ However, showing the customer that he has `0.33` discount is not a good idea. `F
 
 ```sql title="Depending on your needs you may use Standard format or a Custom one"
 SELECT
-    FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount, /* Output: 33.00 % */
-    FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount    /* Output: -33% */
+      FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount /* Output: 33.00 % */
+    , FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount   /* Output: -33% */
 ```
