@@ -363,11 +363,11 @@ __Use commas at the beginning of the line.__
 There are few approaches related to comma placement. Initially, I favoured commas at the end of the line, as I found them more accessible to use due to their similarity to natural language. However, there are strong reasons to use the comma at the beginning of the line. Here is what convinced me to change my style:
 
 1. Adding or deleting a Column requires a change in only one line. It's easier, faster and minimises the risk of a crash due to the trailing comma.
-2. Above is also very beneficial during difference checking and when leverging git for query version control. Thanks to comma in the beginning, addition and deletion of a Column in both those places is displayed correctly as a single line change.
-3. Having a comma in the beginning makes it easier to quickly assess where is the beginning of a new Column definition. This is huge readability improvement when you are using more complex structures, like [`CASE` in `SELECT`](./sfmc-sql-select.mdx#conditional-values-with-case).
-4. It's also easier to quickly assess whether you have a comma for each Column. With lines of various length it is much harder with comma at the end.
+2. Above is also very beneficial during difference checking and when leveraging git for query version control. With a comma at the beginning of the line, the Column addition or deletion is displayed correctly as a single line change.
+3. Having a comma in the beginning makes it easier to assess where a new Column definition starts quickly. It is a vast readability improvement when you are using more complex structures, like [`CASE` in `SELECT`](./sfmc-sql-select.mdx#conditional-values-with-case).
+4. It's also easier to quickly assess whether you have a comma for each Column. With lines of various length, it is much harder with the comma at the end.
 
-Notice, that for the sake of readability I also indent first Column by two spaces, so that it is in line with the following ones. Similarly, I indent `END` after [`CASE` in `SELECT`](./sfmc-sql-select.mdx#conditional-values-with-case) by two spaces for the same reason.
+For the sake of readability, I indent the first Column by two spaces so that it is in line with the following ones. Similarly, I indent `END` after [`CASE` in `SELECT`](./sfmc-sql-select.mdx#conditional-values-with-case) by two spaces for the same reason.
 
 ```sql {3-5,10-12}
 /* ✅ Commas at the end */
