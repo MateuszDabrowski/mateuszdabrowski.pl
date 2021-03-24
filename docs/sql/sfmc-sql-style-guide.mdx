@@ -486,7 +486,7 @@ FROM WelcomeCampaignSegment
 /* ❌ Not meaningful aliasing and no AS keyword in multi Table query */
 SELECT
       a.SubscriberKey
-    , a.EmailAddress,
+    , a.EmailAddress
     , b.EventDate AS OpenDate
 FROM WelcomeCampaignSegment a
     INNER JOIN _Open b

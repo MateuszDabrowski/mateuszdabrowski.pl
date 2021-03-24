@@ -159,7 +159,7 @@ Let's change the `LEN(c.Id) AS [Subscriber Key],` in the [`SELECT`](./sfmc-sql-s
 CASE
     WHEN 18 - LEN(c.Id) < 0
     THEN LEN(c.Id)
-END AS SubscriberKey,
+END AS SubscriberKey
 ```
 
 As you can see, we changed a simple line to a more complex [`CASE`](./sfmc-sql-select#conditional-values-with-case) statement. There is a good reason for it. Thanks to it, the query will evaluate each field against the expected length and in the Value Length Data Extension display information only for the problematic values.

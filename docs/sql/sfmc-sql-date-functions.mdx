@@ -313,7 +313,7 @@ It works because the function's first execution [adds the offset with `AT TIME Z
 Of course, for Salesforce Marketing Cloud system dates, we still need the [workaround](#at-time-zone-vs-todatetimeoffset):
 
 ```sql title="No Daylight Saving Time magic but still changing the timezone"
-SELECT TODATETIMEOFFSET(GETDATE(), '-06:00') AT TIME ZONE 'Central European Standard Time' AS SystemDateToCSTtoCET,
+SELECT TODATETIMEOFFSET(GETDATE(), '-06:00') AT TIME ZONE 'Central European Standard Time' AS SystemDateToCSTtoCET
 ```
 
 :::
