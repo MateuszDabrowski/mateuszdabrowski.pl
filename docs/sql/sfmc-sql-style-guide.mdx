@@ -386,14 +386,14 @@ There are few approaches related to comma placement. Initially, I favoured comma
 For the sake of readability, I indent the first Column by two spaces so that it is in line with the following ones. Similarly, I indent `END` after [`CASE` in `SELECT`](./sfmc-sql-select.mdx#conditional-values-with-case) by two spaces for the same reason.
 
 ```sql {3-5,10-12}
-/* ✅ Commas at the end */
+/* ✅ Commas at the beginning */
 SELECT
       SubscriberKey
     , EmailAddress
     , DateJoined
 FROM Ent._Subscribers
 
-/* ❌ Commas in the beginning */
+/* ❌ Commas in the end */
 SELECT
     SubscriberKey,
     EmailAddress,
