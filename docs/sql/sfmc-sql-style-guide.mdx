@@ -268,11 +268,11 @@ WHERE
 
 /* ❌ Lack of indentation */
 SELECT
-s.SubscriberKey     AS SubscriberKey,
-j.EmailName         AS EmailName,
-s.EventDate         AS SentDate,
-j.DeliveredTime     AS DeliveryDate,
-o.EventDate         AS OpenDate
+s.SubscriberKey   AS SubscriberKey
+, j.EmailName     AS EmailName
+, s.EventDate     AS SentDate
+, j.DeliveredTime AS DeliveryDate
+, o.EventDate     AS OpenDate
 FROM _Sent AS s
 LEFT JOIN _Job AS j ON j.JobID = s.JobID
 LEFT JOIN _Open AS o ON o.JobID = s.JobID
