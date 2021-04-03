@@ -1144,8 +1144,54 @@ Response structure is the same as for Abandoned Wishlist.
 
 ## Debugging Behavioral Triggers
 
-During Behavioral Trigger implementation there are at least three key phases when you might need to debug your solution. And as you will be merging multiple systems and working on time-bound data using still fresh feature, possibility to look behind the curtain will be crucial. Thankfully, there is few options that we can use.
+During Behavioral Trigger implementation there are at least three key phases when you might need to debug your solution. As you will be merging multiple systems and working on time-sensitive data using a fresh feature, possibility to look behind the curtain will be crucial. Thankfully, there are few options that we can use.
 
 ### Debugging Collect.js
 
-First thing to check is your Collect.js implementation.
+First thing to check is your front end Collect.js implementation. To quickly check, whether Collect.js is available on your website open Developer Tools in your Browser and go to Console tab. In there, write `_etmc`.
+
+If you see `ReferenceError: _etmc is not defined`, it means that the script is not available. Make sure that you are checking for it on a page that is supposed to have Einstein / Behavioral Triggers implemented and that the script is added correctly.
+
+If the script is implemented, you will see a huge Object containing over a dozen of keys - many of which are the functions that pass the data from your website to IgoDigital.
+
+Let's leverage its power by writing in the console `_etmc.debug = true` to enable debugging mode of Collect.js. Once completed, it will log every change to applied to the dataLayer. Make a tracked action - like adding a product to a cart - to see it work.
+
+```json title="Example data logged after enabling debug and adding product to the cart"
+{
+  "cart": [
+    {
+      "item": "2020572",
+      "unique_id": "2020572AEUAEL",
+      "name": "Women’s Red Box Pullover Hoodie",
+      "url": "https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572AEUAEL.html",
+      "price": 50,
+      "sale_price": 50,
+      "item_type": "product"
+    }
+  ],
+  "url": "https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572BHX.html?source=igodigital"
+}
+```
+
+:::note You Should Know
+
+You can check how Collect.js works and what are the other features of this script by reviewing its contents. To do this, go to the link contained in your base Collect code. It should be: `http://YOUR_MID.collect.igodigital.com/collect.js`.
+
+:::
+
+Another option to observe what Collect.js is sending to Einstein IgoDigital backend is to go to Developer Tools » Network and look for calls made to `igodigital.com` address. You will see mirror data in form of API requests. For example, above JSON will be displayed there as a payload:
+
+```
+https://stack7.collect.igodigital.com/c2/northerntrailoutfitters/track_cart?payload={"cart":[{"item":"2020572","unique_id":"2020572AEUAEL","name":"Women’s Red Box Pullover Hoodie","url":"https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572AEUAEL.html","price":50,"sale_price":50,"item_type":"product"}],"url":"https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572BHX.html?source=igodigital"}
+```
+
+Using either of those two tools will allow you to make sure that:
+
+1. You have correctly implemented the Collect.js script
+2. It is correctly assigned to the events happening on you website you want to track
+3. It captures necessary information, like price, name of the product, or id
+4. It passes the correctly structured JSON with this data to IgoDigital
+
+Once all of the above is validated, it means that the correct data should be available to Salesforce Marketing Cloud Einstein and Behavioral Triggers.
+
+### Debugging
