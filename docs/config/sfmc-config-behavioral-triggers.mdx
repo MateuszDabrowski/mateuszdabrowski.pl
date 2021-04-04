@@ -28,9 +28,9 @@ Currently, there are three scenarios available:
 2. Abandoned Browse
 3. Abandoned Wishlist
 
-What Behavioral Triggers does in each case is push relevant data (items left in the cart, browsed without conversion or added to wishlist) to the Einstein Backend and - after configured time - to Marketing Cloud Data Extension.
+In each case, what Behavioral Triggers does is push relevant data (items left in the cart, browsed without conversion or added to wishlist) to the Einstein Backend and - after configured time - to Marketing Cloud Data Extension.
 
-Then you can leverage this data extension as both Journey Entry, as well as a source of personalisation using built-in Behavioral Trigger Content Block. The latter allows you to use clean UI to configure dynamic content using the obtained engagement data.
+You can then leverage this data extension as both Journey Entry and a source of personalisation using built-in Behavioral Trigger Content Block. The latter allows you to use clean UI to configure dynamic content using the obtained engagement data.
 
 ### Behavioral Triggers Pre-Work
 
@@ -46,19 +46,19 @@ As you can see, if you already use Einstein Recommendations, most of the necessa
 
 ### How the Behavioral Triggers work
 
-Behavioral Triggers seems to be easy to implement, but a lot is going in the back end. It is good to understand the basics of it, as it might help a lot when triaging a problem or customising the solution.
+Behavioral Triggers seems to be easy to implement, but a lot is going in the back end. It is good to understand its basics, as it might help a lot when triaging a problem or customising the solution.
 
 1. A customer enters your e-commerce site - you trigger first [Collect.js](#collectjs) scripts to capture the Session and Page View.
-2. Customer clicks on a product page - you trigger [Page View data layer](#page-view-data-layer) with link to that product (Abandoned Browse scenario).
-3. Customer finds an exciting product and adds it to the wishlist - you trigger [Wishlist data layer](#wishlist-data-layer) (Abandoned Wishlist scenario).
-4. A customer decides on one of the products and adds it to the cart - you trigger [Cart data layer](#cart-data-layer) (Abandoned Cart scenario).
-5. Customer goes through the purchase process and buys the product - you trigger [Cart data layer](#cart-data-layer) with explicit parameter (This blocks Abandoned Cart from launching communication).
+2. Customer clicks on a product page - you trigger the [Page View data layer](#page-view-data-layer) with a link to that product (Abandoned Browse scenario).
+3. Customer finds an exciting product and adds it to the wishlist - you trigger the [Wishlist data layer](#wishlist-data-layer) (Abandoned Wishlist scenario).
+4. A customer decides on one of the products and adds it to the cart - you trigger the [Cart data layer](#cart-data-layer) (Abandoned Cart scenario).
+5. Customer goes through the purchase process and buys the product - you trigger the [Cart data layer](#cart-data-layer) with explicit parameter (This blocks Abandoned Cart from launching communication).
 6. Each of the above triggers is sent to Einstein Backend (IgoDigital) that stores the information.
 7. Marketing Cloud Behavioral Triggers query the Einstein Backend for any events that occurred some time ago - you can configure it in the range from 15 minutes to 3 hours (in 15 minutes increments).
 8. If there is a matching event, it checks whether there is any other event that overwrites it. For example, if your customer viewed a product page, and a few minutes later, added this product to the cart, the page view will be ignored. The Behavioral Trigger will wait for the abandoned cart.
-9. Once there is an event ripe for reengagement, Behavioral Trigger will put it into a system created Data Extension (one per scenario) with three data points: subscriber key, timestamp and the encrypted data.
+9. Once there is an event ripe for reengagement, Behavioral Trigger will put it into a system created Data Extension (one per scenario) with three data points: subscriber key, timestamp and encrypted data.
 10. Now you can use this to add the customer to a Customer Journey.
-11. In the Journey, you can use an Email with built-in Behavioral Trigger Content Block. This block, in the moment of send, makes a call to Einstein Backend (IgoDigital) and gets the real-time state of your customer interaction. It validates that he or she did not convert to purchase in the meantime and provides all the details required for creating personalised content in the email presenting the abandoned products.
+11. In the Journey, you can use an Email with a built-in Behavioral Trigger Content Block. At the moment of sending, this block makes a call to Einstein Backend (IgoDigital) and gets the real-time state of your customer interaction. It validates that he or she did not convert to purchase in the meantime and provides all the details required for creating personalised content in the email presenting the abandoned products.
 
 As you can see, a lot is happening, and it's time to dive deeper into each step to understand it better.
 
@@ -84,31 +84,31 @@ For the Behavioral Triggers, be sure to select Product Catalog implementation.
 
 #### Catalog and Product Attributes
 
-On the next screen, you will be able to select which Standard Product Attributes you want to use plus have the option to create Custom ones. It is a crucial step, as the data you choose and create here will be the basis for the Behavioral Trigger Content Block available in the win-back email.
+On the next screen, you will be able to select which Standard Product Attributes you want to use, plus have the option to create Custom ones. It is a crucial step, as the data you choose and create here will be the basis for the Behavioral Trigger Content Block available in the win-back email.
 
 Just remember that those attributes are global (linked to a product, not to a particular Subscriber), so don't add here parameters that are individual (like PersonalisationString).
 
 #### User and Profile Attributes
 
-Next step allows you to configure Custom Profile Attributes. It is beneficial for general Einstein purposes, but it is also crucial for Behavioral Triggers if you want to personalise your win-back email for unknown (to Marketing Cloud) customers.
+The next step allows you to configure Custom Profile Attributes. It is beneficial for general Einstein purposes, but it is also crucial for Behavioral Triggers if you want to personalise your win-back email for unknown (to Marketing Cloud) customers.
 
-If this is something that you want to do, enable Custom User Profile Attributes and add necessary ones.
+If this is something you want to do, enable Custom User Profile Attributes and add necessary ones.
 
-You can also enable localisation here, which will allow you to present the product name in the language of the user.
+You can also enable localisation here, which will allow you to present the product name in the user's language.
 
 #### Activity Tracking
 
-On this last step before Summary, you configure what you will be tracking. Category View and In-Site Search are nice to have for general Einstein features, but for Behavioral Triggers be sure to check Cart Activity and Purchase Activity. You will need it for [Collect.js](#collectjs).
+On this last step before Summary, you configure what you will be tracking. Category View and In-Site Search are nice to have for general Einstein features, but for Behavioral Triggers, be sure to check Cart Activity and Purchase Activity. You will need it for [Collect.js](#collectjs).
 
 #### Initial Catalog Upload
 
-Once you configure the Email Recommendations, it is time to make the first upload of the Catalog. Go to Einstein » Einstein Overview » Email Recommendations » Admin » Catalog and click Connect a New Catalog. Select the Product Catalog, import method and format. Pass the name of the column that contains Unique ID and tell SFMC whether it is full or partial Catalog import.
+Once you configure the Email Recommendations, it is time to make the first upload of the Catalog. Go to Einstein » Einstein Overview » Email Recommendations » Admin » Catalog and click Connect a New Catalog. Select the Product Catalog, import method and format. Pass the column's name that contains Unique ID and tell SFMC whether it is complete or partial Catalog import.
 
 Once Marketing Cloud completes the upload, be sure to map the fields from your source to the Standard and Custom Fields available in the Catalog.
 
 #### Einstein Data Extension
 
-Last step here is to enable Einstein Data Extensions. To do this:
+The last step here is to enable Einstein Data Extensions. To do this:
 
 1. Go to Einstein » Einstein Overview » Email Recommendations » Admin » Status.
 2. Click on the cog icon in the top right and select Data Extension Settings.
@@ -128,7 +128,7 @@ If the toggle is inactive, you need to:
 </script>
 ```
 
-Create a Cloud Page, paste above snippet in the HTML block  - update the both `MID` with the Business Unit you implement the Behavioral Triggers on - and publish it. After opening the website you can delete the Cloud Page - so that it doesn't affect your future Einstein data.
+Create a Cloud Page, paste the above snippet in the HTML block  - update both `MID`'s with the Business Unit you implement the Behavioral Triggers on - and publish it. After opening the website, you can delete the Cloud Page - so that it doesn't affect your future Einstein data.
 
 You will find details on what is happening in this script in the [Collect.js](#collectjs) section below. As for now, you have to wait for the initialisation to happen. It can take a day. To check whether it is ready, try to Enable the Einstein Data Extensions again. During the initialisation, the Status page won't be loading (you will see the circle spinning infinitely).
 
@@ -142,15 +142,15 @@ First, click New Trigger in the top right. You can select from the three availab
 2. Abandoned Browse
 3. Abandoned Wishlist
 
-Select the one you want to start with, and you will be able to set supression rules - one related to multiple triggers and the second to a recent purchase. For initial configuration, I recommend setting both to 0. It will make testing much more manageable. Once you go to production, change those appropriately as per your business requirements.
+Select the one you want to start with, and you will be able to set suppression rules - one related to multiple triggers and the second to a recent purchase. For initial configuration, I recommend setting both to 0. It will make testing much more manageable. Once you go to production, change those appropriately as per your business requirements.
 
-When you confirm the setup, Marketing Cloud creates the system Data Extension that will store Behavioral Trigger data (one per scenario).
+When you confirm the setup, Marketing Cloud creates the system Data Extension to store Behavioral Trigger data (one per scenario).
 
-The only left option is the Session Timeout Limit. You can access it by clicking the cog icon next to the New Trigger button. You can select from a range starting at 15 minutes and going in 15 minutes increments up to 3 hours. Again, for testing purposes make it the shortest possible and later update based on business needs.
+The only left option is the Session Timeout Limit. You can access it by clicking the cog icon next to the New Trigger button. You can select from a range starting at 15 minutes and going in 15 minutes increments up to 3 hours. Again, for testing purposes, make it the shortest possible and later update based on business needs.
 
 :::note You Should Know
 
-Currently, it is not working at all - it does not save the selected setting, and it always show s1 hour. Until fixed, you can manage this by going to Einstein » Einstein Overview » Email Recommendations » Admin » Implementation and clicking Advanced Settings on the left pane. There will be Session Length option with the same range. It is the same setting.
+Currently, it is not working at all - it does not save the selected setting, and it always shows 1 hour. Until fixed, you can manage this by going to Einstein » Einstein Overview » Email Recommendations » Admin » Implementation and clicking Advanced Settings on the left pane. There will be a Session Length option with the same range. It is the same setting.
 
 :::
 
@@ -174,7 +174,7 @@ Once you have it, you may start building the data layers that will move the info
 
 ### Set Org ID
 
-The first data layer you need to push contains, again, the MID of the Business Unit. Just as with the [Collect Code Script](#collect-code-script) - be sure to change the `MID` to the real ID of your SFMC BU.
+The first data layer you need to push contains, again, the MID of the Business Unit. Just as with the [Collect Code Script](#collect-code-script), be sure to change the `MID` to your SFMC BU's actual ID.
 
 ```html {2} title="Set Org ID Data Layer"
 <script type="text/javascript">
@@ -184,7 +184,7 @@ The first data layer you need to push contains, again, the MID of the Business U
 
 ### Set User Info
 
-The second data layer that will be a key for the sending Behavioral Triggered communication pushes the data about the customer itself. Remember that this layer must be added to your Collect.js before any tracking layer for proper attribution.
+The second data layer that will be key for sending Behavioral Triggered communication pushes the customer's data. Remember that this layer must be added to your Collect.js before any tracking layer for proper attribution.
 
 ```html {3} title="Set User Info Data Layer"
 <script type="text/javascript">
@@ -193,14 +193,14 @@ The second data layer that will be a key for the sending Behavioral Triggered co
 </script>
 ```
 
-The base function is pushing the unique identifier of your customer (don't be intimidated by the `email` in that code - you do not have to pass the email address there). Depending on your use case, it might be either:
+The base function is pushing your customer's unique identifier (don't be intimidated by the `email` in that code - you do not have to pass the email address there). Depending on your use case, it might be either:
 
 1. Subscriber Key (if you plan on sending only to contacts known to Marketing Cloud or have an option to generate Subscriber straight from your e-commerce) or
 2. Email Address (recommended if you want to push win-back emails to unknown users in your Marketing Cloud and you do not have an option to create them properly.)
 
 :::note You Should Know
 
-If you decide to push an Email Address to communicate with people not yet in the Marketing Cloud, be sure to make them Subscribers. You can do it easily by using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage SQL Activity to copy the needed data to another Data Extension using this query:
+If you decide to push an Email Address to communicate with people not yet in the Marketing Cloud, be sure to make them Subscribers. You can easily do it using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage SQL Activity to copy the needed data to another Data Extension using this query:
 
 ```sql title="Basic Subscriber data preparation"
 SELECT
@@ -211,7 +211,7 @@ FROM abandoned_cart_123456789
 
 Be sure to update the name of the Behavioral Trigger Data Extension.
 
-You can leverage the same automation also to be a trigger for the Journey Entry to be sure that all records in the Journey already exist as Subscribers.
+You can leverage the same automation to be a trigger for the Journey Entry to ensure that all records in the Journey already exist as Subscribers.
 
 :::
 
@@ -264,9 +264,9 @@ Manual uploads might be fine if you nearly never update items or their parameter
 
 :::note You Should Know
 
-Remember that the snippet I shared above is for fully-fledged Catalog with one sample Custom Attribute. You may use only some of those parameters or utilise multiple custom attributes.
+Remember that the snippet I shared above is for a fully-fledged Catalog with one sample Custom Attribute. You may use only some of those parameters or utilise multiple custom attributes.
 
-You can get the full list of the parameters that you need to use by going to Einstein » Email Recommendations » Admin » Implementation. If you have Streaming Updates enabled (and you should have to be able to use this data layer) below, you will see full snippet adapted to your configuration.
+You can get the complete list of the parameters you need to use by going to Einstein » Email Recommendations » Admin » Implementation. If you have Streaming Updates enabled (and you should have to use this data layer) below, you will see the entire snippet adapted to your configuration.
 
 Be sure to check also the Domain table visible above it - you should add all the domains connected to your Streaming Update, so:
 
@@ -274,7 +274,7 @@ Be sure to check also the Domain table visible above it - you should add all the
 2. The domain of the Product URL
 3. The domain of the Product Image URL
 
-In many cases, all those domains might be the same, but if you are using Content Delivery Network or different subdomain for backend, those might differ. If you cannot click `Register`, be sure you are passing just the domain - the bolded part of https://**domain.name**/folder/structure?query=string.
+In many cases, all those domains might be the same, but if you are using Content Delivery Network or a different subdomain for the backend, those might differ. If you cannot click `Register`, be sure you pass just the domain - the bolded part of https://**domain.name**/folder/structure?query=string.
 
 :::
 
@@ -291,9 +291,9 @@ The first approach is straightforward; the second is wise.
 
 :::note You Should Know that
 
-Remember that this data layer updates the Catalog. Even if you push it in the context of specific subscriber and along the [Track Cart](#track-cart) data layer, it will still update the global Catalog for everyone.
+Remember that this data layer updates the Catalog. Even if you push it in the context of a specific subscriber and along the [Track Cart](#track-cart) data layer, it will still update the global Catalog for everyone.
 
-If your customer has a unique product price (for example, via VIP status or coupon) use the [Track Cart](#track-cart) data layer to share this information.
+If your customer has a unique product price (for example, via VIP status or coupon), use the [Track Cart](#track-cart) data layer to share this information.
 
 :::
 
@@ -321,7 +321,7 @@ However, you can do much more with this data layer by providing additional param
 </script>
 ```
 
-Once you swap `ProductCode` for the real product code matching one of the items in Einstein Product Catalog, you will be able to leverage the first Behavioral Trigger scenario - Abandoned Browse. Once you push this event and the customer does not convert further, this will populate Abandoned Browse Data Extension and allow win-back communication.
+Once you swap `ProductCode` for the actual product code matching one of the items in Einstein Product Catalog, you will be able to leverage the first Behavioral Trigger scenario - Abandoned Browse. Once you push this event and the customer does not convert further, this will populate Abandoned Browse Data Extension and allow win-back communication.
 
 You can also add other parameters that are not used by the Behavioral Triggers but rather standard Einstein Recommendations - category and search:
 
@@ -374,9 +374,9 @@ The third Behavioral Trigger scenario - Abandoned Cart - also has its own data l
 Few things here are important to consider:
 
 1. As you can see, there are four possible parameters for each item - `item` and `unique_id` are required and must be available in your Einstein Product Catalog to work. The other two - `quantity` and `price` are optional.
-2. The `price` parameter here is different from `price` or `sales_price` available in [Catalog Update](#catalog-update-streaming). The Catalog ones are global - the same for all your customers. The `price` pushed within Track Cart is unique for this particular customer and might be different from the global ones (think VIP status or a coupon used). It won't update your Einstein Catalog.
-3. Always push the whole cart. If your customer has more then one item in it - put all of them in this data layer. If customer deletes item from the cart - push the data layer without the deleted one. The last version pushed is considered the final state of the cart for personalisation purposes.
-4. Always be sure to clear the Track Cart data whenever the cart data is no longer needed. If the customer purchased the products, be sure to use [Track Purchase](#track-purchase) data layer. If the customer deleted all the products from their cart, use the Clear Cart parameter:
+2. The `price` parameter here is different from `price` or `sales_price` available in [Catalog Update](#catalog-update-streaming). The Catalog ones are global - the same for all your customers. The `price` pushed within Track Cart is unique for this particular customer and might differ from the global ones (think VIP status or a coupon used). It won't update your Einstein Catalog.
+3. Always push the whole cart. If your customer has more than one item in it - put all of them in this data layer. If a customer deletes an item from the cart - push the data layer without the deleted one. The last version pushed is considered the final state of the cart for personalisation purposes.
+4. Always be sure to clear the Track Cart data whenever the cart data is no longer needed. If the customer purchased the products, be sure to use the [Track Purchase](#track-purchase) data layer. If the customer deleted all the products from their cart, use the Clear Cart parameter:
 
 ```html {4} title="Clear the Track Cart Data Layer"
 <script type="text/javascript">
@@ -386,7 +386,7 @@ Few things here are important to consider:
 </script>
 ```
 
-Otherwise your customers might receive win-back communication for products that they already bought.
+Otherwise, your customers might receive win-back communication for products that they already bought.
 
 ### Track Purchase
 
@@ -441,30 +441,30 @@ You may suppress all of the configured trackings by using a data layer based on 
 
 ## Behavioral Trigger Content Block
 
-Now you can go forward with Behavioral Triggers. [Collect.js](#collectjs) will push the required data to Einstein backend, and after Session Timeout Limit it will evaluate it against Suppression Rules as per your [configuration](#Behavioural-triggers-configuration). Then, the Behavioral Triggers adds Abandoned Engagement data to the respective [Data Extension](#Behavioural-triggers-configuration). Now it's time to use it.
+Now you can go forward with Behavioral Triggers. [Collect.js](#collectjs) will push the required data to Einstein backend, and after Session Timeout Limit, it will evaluate it against Suppression Rules as per your [configuration](#Behavioural-triggers-configuration). Then, the Behavioral Triggers adds Abandoned Engagement data to the respective [Data Extension](#Behavioural-triggers-configuration). Now it's time to use it.
 
-The standard way the leverage this information is to use those abandonnment Data Extensions as a Journey Entry Source. The real magic, however, will happen in the email you will be sending in this Journey. And that is thanks to the out-of-the-box Behavioral Trigger Content Block.
+The standard way the leverage this information is to use those abandonment Data Extensions as a Journey Entry Source. The real magic, however, will happen in the email you will be sending in this Journey. And that is thanks to the out-of-the-box Behavioral Trigger Content Block.
 
 To check it out, edit email, and on the bottom of the left pane containing all the Content Blocks, you will find the Behavioral Trigger one. Drag and drop it to the email so that you can start configuring it.
 
-When you click that block after adding it to the email you will be able to limit the maximum number of products shown, control the layout with columns, change order and decide which data points should be visible for products.
+When you click that block after adding it to the email, you will be able to limit the maximum number of products shown, control the layout with columns, change order and decide which data points should be visible for products.
 
 It's easy, it's quick, but there are multiple issues if you want anything a bit more customised for your needs. With the out-of-the-box solution:
 
 1. You don't have a straightforward way to control the style of this information. You can only go to the Styling tab of the editor and modify the CSS available there.
-2. You are limited only to the fields that you [configured for the Product Catalog](#catalog-and-product-attributes). You cannot, for example, use the individual price that you passed in the [Track Cart](#track-cart) data layer. You can vote for it on [IdeaExchange](https://trailblazer.salesforce.com/ideaView?id=0874V0000003lCKQAY).
-3. There is no information on how to get access to the data outside of the Content Block - but you can learn about it [later in this article](#6-response-parsing).
-4. You cannot leverage the full potential of the Einstein API, as the hard-coded request does not have parameter responsible for pulling the [Einstein Custom Profile Attributes](#user-and-profile-attributes). You can vote for it on [IdeaExchange](https://trailblazer.salesforce.com/ideaView?id=0874V0000003lB7QAI).
-5. You cannot use multiple Content Blocks pointing to various Behavioral Trigger scenarios (for example first focus on the cart, and then present the wishlist).
+2. You are limited only to the fields that you [configured for the Product Catalog](#catalog-and-product-attributes). For example, you cannot use the individual price that you passed in the [Track Cart](#track-cart) data layer. You can vote for it on [IdeaExchange](https://trailblazer.salesforce.com/ideaView?id=0874V0000003lCKQAY).
+3. There is no information on how to access the data outside of the Content Block - but you can learn about it [later in this article](#6-response-parsing).
+4. You cannot leverage Einstein API's full potential, as the hard-coded request does not have a parameter responsible for pulling the [Einstein Custom Profile Attributes](#user-and-profile-attributes). You can vote for it on [IdeaExchange](https://trailblazer.salesforce.com/ideaView?id=0874V0000003lB7QAI).
+5. You cannot use multiple Content Blocks pointing to various Behavioral Trigger scenarios (for example,first focus on the cart and then present the wishlist).
 
-As far as you can fix the first issue with good CSS knowledge, the rest of them require a bit more work.
+As far as you can fix the first issue with good CSS knowledge, the rest require a bit more work.
 
 So what can you do? Configure the Content Block to be as close as possible to what you want, go to Code View of your Email and look for `Concat('{"trigger_payload":"', data, '"}')`. It starts the code responsible for Behavioral Trigger Content Block.
 
 Below you can see two tabs.
 
-1. In **Original Code**, you will find full code of the built-in Behavioral Trigger Content Block. Shown configuration displays a product image with name and description plus regular/sale price. The number of items is limited to four in a two-column layout.
-2. In **Code Highlights** tab, I focus on some part of the code that I found exciting and deserve some attention.
+1. In t **Original Code**, you will find the complete code of the built-in Behavioral Trigger Content Block. Shown configuration displays a product image with name and description plus regular/sale price. The number of items is limited to four in a two-column layout.
+2. In the **Code Highlights** tab, I focus on some part of the code that I found exciting and deserve some attention.
 
 <Tabs
     groupId='BehaviouralTriggerContentBlock'
@@ -816,7 +816,7 @@ Below you can see two tabs.
 
 The first four lines of the Behavioral Trigger Content Block code are already interesting. They are using AMPScript, although the rest is in SSJS. It could easily be written in SSJS altogether for more optimised execution.
 
-You can also see that they are pulling the Behavioural data by using personalisation string on `data` - the Abandoned Engagement Data Extension column containing encrypted information. If you want to have more control over the source of this information, you can think about making a lookup here. It would allow you to even use multiple Content Blocks in one email (or mix browsed, wishlisted and added to cart items in one block).
+You can also see that they are pulling the Behavioural data by using a personalisation string on `data` - the Abandoned Engagement Data Extension column containing encrypted information. If you want to have more control over the source of this information, you can think about making a lookup here. It would allow you to even use multiple Content Blocks in one email (or mix browsed, wishlisted and added to cart items in one block).
 
 ### 2. Try/Catch block
 
@@ -1191,7 +1191,94 @@ Using either of those two tools will allow you to make sure that:
 2. It is correctly assigned to the events happening on you website you want to track
 3. It captures necessary information, like price, name of the product, or id
 4. It passes the correctly structured JSON with this data to IgoDigital
+5. You receive status 200 on the API call in Network tab
 
 Once all of the above is validated, it means that the correct data should be available to Salesforce Marketing Cloud Einstein and Behavioral Triggers.
 
-### Debugging
+### Debugging Data Flow
+
+Now it's time to check whether the data is coming through to your Salesforce Marketing Cloud.
+
+There are few things to check:
+
+1. Go to Journey Builder » Behavioral Triggers and check whether there is a required Trigger Type and its Status is Active.
+2. Go to Status tab and check whether Status next to Collect Tracking Code Type is Ok. Don't worry here about the numbers in Collected Today - those are frequently not aligned with reality.
+3. Go to Audience Builder » Contact Builder » Data Extensions and in the main local folder look for `IGO_PRODUCTS` and `IGO_PROFILES` Data Extensions. You should see the captured users and products details that can be used by Einstein solutions. It validates that the data is flowing through Collect.js.
+4. Finally it's time to check in the same main local folder the Data Extension related to the Behavioral Trigger Type you have activated. It should be named `abandoned_TYPE_01234` (with `TYPE` being wishlist, cart or browse depending on what you enabled).
+
+Remember that the Behavioral Trigger data will be delayed by the amount of time [configured](#behavioral-triggers-configuration) during the setup (between 15 minutes and 3 hours). For debugging purposes, the shorter, the better.
+
+If you do not see data in the above places - most probable cause is a problem with Collect.js script implementation. Go to previous debugging step and check whether everything is set up correctly. If you are certain that all is good and after waiting the required amount of time, contact Salesforce Support for help.
+
+### Debugging BT Content Block
+
+Once the above steps are done, it's time to play with [Behavioral Trigger Content Block](#behavioral-trigger-content-block).
+
+The easiest way to check whether everything works fine is adding the default one and checking whether the data makes sense. The hard part starts when there is an issue with the outcome (wrong data, missing data or just no preview).
+
+I use a simple script to find what might be the source of the issue:
+
+```js
+<script runat="server">
+
+    Platform.Load('Core', '1');
+
+    try {
+        var defaults = {
+            'link' : 'Link',
+            'image_link' : 'ImageLink',
+            'product_code' : 'ProductCode',
+            'name' : 'Name',
+            'regular_price' : 'RegularPrice',
+            'sale_price' : 'SalePrice',
+            'sku_id' : 'SkuID'
+        };
+
+        // Data from Marketing Cloud
+        var data = Platform.Variable.GetValue('@data');
+        var mid = Platform.Variable.GetValue('@mid');
+        var subKey = Attribute.GetValue('_subscriberkey');
+        var email = Attribute.GetValue('emailaddr');
+
+        // Data from block settings
+        var settings = {'fields':{'image_link':'ImageLink','name':'ProductName','regular_price':'RegularPrice','quantity':'quantity'},'maxItems':3,'sortBy':'item_order','sortDirection':'desc','desktopCols':1,'mobileCols':0,'useSalePricing':false};
+
+        // Build the url
+        var protocol = 'https';
+        var hostname = mid + '.recs.igodigital.com';
+        var qs = '?item_count=' + settings['maxItems'] + '&sort_by=' + settings['sortBy'] + '&sort_direction=' + settings['sortDirection'] + '&user_attributes=gender';
+        var includes = [];
+        for (var key in settings['fields']) {
+            if (defaults[key] == null) {
+                includes = includes.concat(settings['fields'][key]);
+            }
+        }
+        if (includes.length > 0) {
+            qs += '&include=' + includes.join('|')
+        }
+        var url = protocol + '://' + hostname + '/' + mid + '/trigger' + qs;
+
+        // Call IdoDigital Backend
+        var result = HTTP.Post(url, 'application/json', data, []);
+        if (result.StatusCode == 200) {
+            var response = Platform.Function.ParseJSON(result.Response[0]);
+        }
+        Write('Your Subscriber Key: ' + subKey + '<br>')
+        Write('Your Email: ' + email + '<br>')
+        Write('Your Data: ' + data + '<br>')
+        Write('Your Items: ' + Stringify(response) + '<br>');
+
+    } catch(e) {
+        Write(e);
+        Platform.Function.RaiseError('Quit send.', true, 'statusCode','3');
+    }
+</script>
+```
+
+This is very basic script, but helps with finding the source of an issue. As you can see, a lot of it is just a copy paste of the original [Behavioral Trigger Content Block](#behavioral-trigger-content-block). But instead of displaying beautiful abandoned cart message, it will show you Subscriber Key, Email Address, raw data that is being shot to IdoDigital Backend and the response from it.
+
+Using those information you can validate whether the raw data, email address and subscriber key all belong to the same Contact and whether the response is aligned with what you were pushing during your testing on the website.
+
+If there is anything wrong with those information - check again, whether you have a correct Collect.js implementation, whether it captures the correct product information and whether it assigns it to the correct Contact data.
+
+If the response is correct, but there is still some issues with what the Behavioral Trigger Content Block displays - welcome to the new adventure - a Custom Behavioral Trigger Content Block creation.
