@@ -43,7 +43,7 @@ const features = [
                 Salesforce IdeaExchange contributions. Vote to make Marketing Cloud a better tool.
             </>
         ),
-        url: '/ideas',
+        url: '/sites/ideas',
         cta: <>Ideas</>,
     },
 ];

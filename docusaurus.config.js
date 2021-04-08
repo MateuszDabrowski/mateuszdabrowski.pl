@@ -68,14 +68,12 @@ module.exports = {
                 },
                 {
                     label: 'Ideas',
-                    to: 'ideas',
-                    activeBasePath: 'ideas',
+                    to: 'sites/ideas',
                     position: 'left',
                 },
                 {
                     label: 'Toolset',
                     to: 'sites/my-toolset',
-                    activeBasePath: 'sites',
                     position: 'left',
                 },
                 {
@@ -136,7 +134,7 @@ module.exports = {
                         },
                         {
                             label: 'Ideas',
-                            to: 'ideas',
+                            to: 'sites/ideas',
                         },
                     ],
                 },
@@ -192,18 +190,6 @@ module.exports = {
         [
             '@docusaurus/plugin-content-docs',
             {
-                id: 'ideas',
-                path: 'ideas',
-                routeBasePath: 'ideas',
-                include: ['**/*.md', '**/*.mdx'],
-                showLastUpdateAuthor: true,
-                showLastUpdateTime: true,
-                editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
-            },
-        ],
-        [
-            '@docusaurus/plugin-content-docs',
-            {
                 id: 'sites',
                 path: 'sites',
                 routeBasePath: 'sites',
@@ -224,6 +210,10 @@ module.exports = {
                     {
                         from: ['/docs/ideas/tailor-with-data', '/ideas/tailor-with-data'],
                         to: '/docs/usecase/tailor-with-data',
+                    },
+                    {
+                        from: ['/ideas'],
+                        to: '/sites/ideas',
                     },
                 ],
             },
