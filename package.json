@@ -9,9 +9,9 @@
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.73",
-    "@docusaurus/plugin-client-redirects": "^2.0.0-alpha.73",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.73",
+    "@docusaurus/core": "^2.0.0-alpha.74",
+    "@docusaurus/plugin-client-redirects": "^2.0.0-alpha.74",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.74",
     "classnames": "^2.2.6",
     "prism-react-renderer": "^1.1.1",
     "react": "^16.8.4",
