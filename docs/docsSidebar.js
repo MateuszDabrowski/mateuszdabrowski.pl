@@ -6,6 +6,13 @@ module.exports = {
         },
         {
             type: 'category',
+            label: 'AMPScript',
+            items: [
+                'ssjs/ssjs-vs-ampscript-performance',
+            ],
+        },
+        {
+            type: 'category',
             label: 'SSJS',
             items: [
                 'ssjs/ssjs-if-and-switch',

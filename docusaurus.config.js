@@ -46,24 +46,6 @@ module.exports = {
                     to: 'docs',
                     activeBasePath: 'docs',
                     position: 'left',
-                    // items: [
-                    //     {
-                    //         label: 'SSJS',
-                    //         to: 'docs/ssjs/ssjs-if-and-switch',
-                    //     },
-                    //     {
-                    //         label: 'JavaScript',
-                    //         to: 'docs/js/js-if-and-switch',
-                    //     },
-                    //     {
-                    //         label: 'SFMC SQL',
-                    //         to: 'docs/sql/sfmc-sql-basics',
-                    //     },
-                    //     {
-                    //         label: 'SFMC Config',
-                    //         to: 'docs/config/sfmc-config-permissions',
-                    //     },
-                    // ],
                 },
                 {
                     label: 'Ideas',
