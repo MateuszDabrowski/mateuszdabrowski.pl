@@ -1,6 +1,6 @@
 ---
 id: sfmc-cloud-apps
-title: SFMC Cloud Apps
+title: Solve with Cloud Apps
 description: Work in Progress
 ---
 
@@ -14,7 +14,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 Salesforce Marketing Cloud offers a multitude of options. With all the Studios, Builders, and other Salesforce-ecosystem cross-sells, you can deliver nearly anything. Nearly.
 
-There will always be some business processes or requirements that are too niche or too unique to be covered out-of-the-box. Sometimes they can be delivered with what is available thanks to compromises. Sometimes only custom development can help.
+There will always be some business processes or requirements that are too niche or too unique to be covered out-of-the-box. Sometimes they can be delivered with what is available after some compromises. Sometimes only custom development can help.
 
 Depending on the use case and company resources, you can overcome such challenges in two ways. By shopping at AppExchange - Salesforce App Store with 3rd Party solutions - or by building a custom application connected to Marketing Cloud with APIs (for example, leveraging yet another Salesforce product - Heroku).
 
@@ -62,13 +62,13 @@ Thankfully, you can leverage the already created Installed Package to help us cl
 
 You don't need to select anything in the Scope to secure your micro application. But if you plan on using the API calls, feel free to choose the required areas now. If you only want to leverage built-in SSJS and AMPScript functions, keep them unchecked.
 
-Once you save the Component, you will see that your Installed Package API Component now lists: Client Id, Client Secret, and API Base URIs. Copy those, as you will need them in the next step.
+Once you save the Component, you will see that your Installed Package API Component now lists: `Client Id`, `Client Secret`, and `API Base URI`. Copy those, as you will need them in the next step.
 
-With the above pre-work completed, you can use SSJS or AMPScript on your Cloud Page to redirect to the v2/authorise endpoint of your Authentication Base URI before loading. It will require any visitor to log into your Marketing Cloud to load your micro application. What's even better, it will automatically load it for users already logged in (micro Single Sign-On).
+With the above pre-work completed, you can use SSJS or AMPScript on your Cloud Page to redirect to the `v2/authorise` endpoint of your Authentication Base URI before loading. It will require any visitor to log into your Marketing Cloud to load your micro application. What's even better, it will automatically load it for users already logged in (micro Single Sign-On).
 
-You will need to pass Client Id and Cloud Page URL (for redirect after successful login) as query parameters to your authorisation redirect. Another necessary thing is Response Type equal to code. Finally, you can pass a State. The value of this parameter will be available after the redirect. It is excellent for recognising whether someone opened your micro application in a pre- (no state) or post- (available state) login context.
+You will need to pass `Client Id` and `Cloud Page URL` (for redirect after successful login) as query parameters to your authorisation redirect. Another necessary thing is Response Type equal to code. Finally, you can pass a State. The value of this parameter will be available after the redirect. It is excellent for recognising whether someone opened your micro application in a pre- (no state) or post- (available state) login context.
 
-Once your micro application refreshes after authorisation, you can get the code query string parameter with SSJS or AMPScript function and use it to make a POST API call to Authentication Base URI - this time to v2/token endpoint. As the code from the authorisation endpoint is required in the payload, receiving the token in the response will validate that the visitor is eligible to access the micro application and use it.
+Once your micro application refreshes after authorisation, you can get the code query string parameter with SSJS or AMPScript function and use it to make a POST API call to Authentication Basą URI - this time to `v2/token` endpoint. As the code from the authorisation endpoint is required in the payload, receiving the token in the response will validate that the visitor is eligible to access the micro application and use it.
 
 This way, you just added a micro Single Sign-On feature that is as secure as your Marketing Cloud. And that's not all! As now only your Marketing Cloud users can access the application, you can leverage the Installed Package Access tab to control who will see your solution in the main menu.
 
