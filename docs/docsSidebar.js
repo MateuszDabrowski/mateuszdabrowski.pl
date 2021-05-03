@@ -9,6 +9,11 @@ module.exports = {
             label: 'AMPScript',
             items: [
                 'ssjs/ssjs-vs-ampscript-performance',
+                {
+                    'AMPScript Snippets': [
+                        'ssjs/ssjs-snippet-ampscript-in-ssjs',
+                    ],
+                },
             ],
         },
         {
