@@ -241,22 +241,24 @@ On the code side, two elements will be necessary - one for adding the data after
 <TabItem value='ssjs'>
 
 ```js title="Fill Cloud App Logging Data Extension"
-    Platform.Function.UpsertData(authDE, ['session'], [state], ['appName', 'token', 'tokenExpire'], [appName, accessToken, tokenExpire]);
+Platform.Function.UpsertData(authDE, ['session'], [state], ['appName', 'token', 'tokenExpire'], [appName, accessToken, tokenExpire]);
 ```
 
 </TabItem>
 <TabItem value='ampscript'>
 
 ```js itle="Fill Cloud App Logging Data Extension"
-UpsertData(@LogDE,1,'session',@State,'appName',@AppName,'token',@Token,'tokenExpire',DateAdd(Now(),18,'MI'))
+UpsertData(@AuthDE,1,'session',@State,'appName',@AppName,'token',@Token,'tokenExpire',DateAdd(Now(),18,'MI'))
 ```
 
 </TabItem>
 </Tabs>
 
+This approach will enable you to safely split your application into front end (Cloud Page) and back end (Code Resource) to improve user experience and optimise speed and cost.
+
 ## Secured Cloud App Template
 
-By merging above parts, we get powerful secured template for our Cloud Apps.
+By taking into consideration all above elements, we get powerful and secure template for our Cloud Apps.
 
 To implement it, copy and paste below code to the top of the Cloud Page used for the App. Next, change the values in the top of the code (the uppercase ones) to match your package installation and app details (all values should be passed as strings within `'value'`). That's all!
 
@@ -331,9 +333,9 @@ To implement it, copy and paste below code to the top of the Cloud Page used for
 
 :::note You Should Know
 
-Any reload done within the app (Reload/Redirect/Post via Form) should point back to Apps Cloud Page URL with `'s=' + state` appended to it as a query parameter (remember to use `?` if it will be first parameter or `&` in other case).
+Any reload done within the app (Reload/Redirect/Post via Form) should point back to Apps Cloud Page URL with `'state=' + state` appended to it as a query parameter (remember to use `?` if it will be first parameter or `&` in other case).
 
-You can also leverage the session to lookup the token for API calls: `%%=Lookup(@LogDE,'token','session',@Session)=%%`
+You can also leverage the session to lookup the token for API calls: `Platform.Function.Lookup(authDE, 'token', 'session', state)`
 
 :::
 
@@ -343,21 +345,20 @@ You can also leverage the session to lookup the token for API calls: `%%=Lookup(
 ```js title="Full Cloud App Template"
 <!-- Authorization START -->
 %%[
-    VAR @AppName, @ClientID, @ClientSecret, @ClientBase, @MID, @AppURL, @ErrorURL, @RequestURL, @Payload, @APIStatus, @Response, @Token, @Session, @Code, @LogDE
+    VAR @AppName, @ClientID, @ClientSecret, @ClientBase, @AppURL, @ErrorURL, @RequestURL, @Payload, @APIStatus, @Response, @Token, @Session, @Code, @AuthDE
 
-    /* Add clientID, Client Secret, Client Base (part of API Base URL) and MID for all further calls*/
+    /* Add clientID, Client Secret, Client Base (part of API Base URL) for all further calls*/
     SET @ClientID = 'CLIENT_ID'
     SET @ClientSecret = 'CLIENT_SECRET'
     SET @ClientBase = 'API_BASE_URI'
-    SET @MID = 'BUSINESS_UNIT_MID'
 
-    /* URLs and Scope (space separated) for the API */
+    /* App Nane and relevant URLs */
     SET @AppName = 'CLOUD_APP_NAME'
     SET @AppURL = 'APP_CLOUD_PAGE_URL'
     SET @ErrorURL = 'ERROR_CLOUD_PAGE_URL'
 
     /* Data Extension for Authorization Logging */
-    SET @LogDE = 'CloudAppLoggingDE'
+    SET @AuthDE = 'AUTHENTICATION_DATA_EXTENSION'
 
     /* Capture State, Error and Token for Authorization purposes */
     SET @State = RequestParameter('state')
@@ -366,7 +367,7 @@ You can also leverage the session to lookup the token for API calls: `%%=Lookup(
     /* If there is Session parameter, validate it with logging DE*/
     IF NOT Empty(@Session) THEN
         /* If user was authenticated for another app or if he is not authenticated, redirect to login page */
-        IF Lookup(@LogDE,'appName','session',@Session) != @AppName THEN
+        IF Lookup(@AuthDE,'appName','session',@Session) != @AppName THEN
             Redirect(@AppURL)
         ENDIF
         /* Authenticated users jumps to main code */
@@ -395,7 +396,7 @@ You can also leverage the session to lookup the token for API calls: `%%=Lookup(
         /* Token expires after an 18 minutes */
         SET @Token = Substring(@APIStatus,18,512)
         /* Add record to Logging DE to store the token and validate access with it */
-        UpsertData(@LogDE,1,'session',@State,'appName',@AppName,'token',@Token,'tokenExpire',DateAdd(Now(),18,'MI'))
+        UpsertData(@AuthDE,1,'session',@State,'appName',@AppName,'token',@Token,'tokenExpire',DateAdd(Now(),18,'MI'))
         Redirect(Concat(@AppURL,'?s=',@State))
 
     /* For any other scenario, redirect to Error Page  */
@@ -414,10 +415,43 @@ You can also leverage the session to lookup the token for API calls: `%%=Lookup(
 
 Any reload done within the app (Reload/Redirect/Post via Form) should point back to Apps Cloud Page URL with `s=%%=v(@Session)=%%` appended to it as a query parameter (remember to use `?` if it will be first parameter or `&` in other case).
 
-You can also leverage the session to lookup the token for API calls: `%%=Lookup(@LogDE,'token','session',@Session)=%%`
+You can also leverage the session to lookup the token for API calls: `%%=Lookup(@AuthDE,'token','session',@Session)=%%`
 
 :::
 
 </TabItem>
 </Tabs>
 
+## Implementation Sum Up
+
+There was a lot of information, so time for a step by step guide from zero to hero:
+1. __Logging Data Extensions__
+    1. In Content Builder or Email Studio create a [Cloud App Logging Data Extension](#capture-your-cloud-app-usage). One can be enough for multiple Cloud Apps. If stored in Shared Data Extensions folder, it can serve multiple Business Units.
+    2. In Content Builder or Email Studio create an [Error Logging Data Extension](./docs/ssjs/debugging-ssjs#logging-to-data-extension). One can be enough for multiple Cloud Apps. If stored in Shared Data Extensions folder, it can serve multiple Business Units.
+2. __Cloud Page__
+    1. Create a new Cloud Page
+    2. Copy the URL
+3. __Installed Package__
+    1. Go to System -> Platform Tools -> Apps -> Installed Packages
+    2. Click New in the top right corner
+    3. Add Unique Name and Description suggesting the App's purpose
+    4. Marketing Cloud App Component
+        1. Click Add Component in the bottom
+        2. Select Marketing Cloud App and click Next
+        3. Add Unique Name and Description suggesting the App's purpose
+        4. Add Cloud Page URL copied in step 2.ii as both Login and Logout Endpoint
+        5. Click Save
+    5. API Integration Component
+        1. Click Add Component on the right side of the page
+        2. Select API Integration and click Next
+        3. Select Web App and click Next
+        4. Add Cloud Page URL copied in step 2.ii as Redirect URI
+        5. Add Scope of the App (should be minimal, can be extended later) and click Save
+    6. Copy ClientID, ClientSecret and ClientBaseURI
+4. __Menu Unlock__
+    1. Refresh tab with Marketing Cloud
+    2. On main menu pane of Marketing Cloud hover over AppExchange to see your application
+5. __Secured Template__
+    1. Copy the [template](#secured-cloud-app-template) in prefered language to the Cloud Page from step 2.i
+    2. Update the unique values in top part of the template (written in CAPS_LOCK in the template)
+6. __Build your solution__
