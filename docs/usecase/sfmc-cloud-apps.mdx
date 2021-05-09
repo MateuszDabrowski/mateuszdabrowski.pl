@@ -1,7 +1,7 @@
 ---
 id: sfmc-cloud-apps
 title: Solve with Cloud Apps
-description: Create micro-applications tailored to your organisation needs using only Salesforce Marketing Cloud features.
+description: Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud features.
 ---
 
 import Tabs from '@theme/Tabs';
@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 import TOCInline from '@theme/TOCInline';
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content="Create micro-applications tailored to your organisation needs using only Salesforce Marketing Cloud features." />
+<LeadText content="Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud features." />
 
 :::tip Table of Contents
 
@@ -27,7 +27,7 @@ There will always be some business processes or requirements that are too niche 
 
 Depending on the use case and company resources, you can overcome such challenges in two ways. By shopping at AppExchange - Salesforce App Store with 3rd Party solutions - or by building a custom application connected to Marketing Cloud with APIs (for example, leveraging yet another Salesforce product - Heroku).
 
-AppExchange might be a great idea if you can find a product solving your problem, but it will add a recurring cost to your budget. On the other hand, a fully-fledged custom application might deliver precisely what you need but will create considerable up-front cost (in either money for external developers or time for an in-house team) and require maintenance.
+AppExchange might be a great idea if you can find a product solving your problem, but it will add a recurring cost to your budget. On the other hand, a fully-fledged custom application might deliver precisely what you need but create considerable up-front cost (in either money for external developers or time for an in-house team) and require maintenance.
 
 There is, however, the third path. One that can be perfect if you have a necessary but relatively small requirement for internally used power-up and would instead go lean on both budget and time — Marketing Cloud micro application.
 
@@ -54,24 +54,24 @@ Anything related to Marketing Cloud that you wish could be a bit more automated 
 
 ## Cloud Apps step by step
 
-### Create your first Marketing Cloud micro-application
+### Create your first Marketing Cloud micro application
 
 Implementation is very straightforward, and you can do it in few minutes:
 
 1. Create a simple Cloud Page (blank page with a "Hello World" will do the job for now).
 2. Publish it and copy the URL of the Cloud Page.
 3. Go to Marketing Cloud Setup -> Apps -> Installed Packages and create a New Package.
-4. Add a Marketing Cloud App Component to the Package, paste the Cloud Page URL in both Endpoint fields and Save.
+4. Add a Marketing Cloud App Component to the Package and paste the Cloud Page URL in both Endpoint fields and Save.
 
 That's all. You just created your first Marketing Cloud micro application. Refresh Marketing Cloud to see it available in the main menu under the AppExchange icon. Now it's time to build up your solution to solve the business need.
 
 ### A Good application is a secure application
 
-Your micro application is now available from the Marketing Cloud menu. But unfortunately, it can also be accessed from any other place, as it is still just a simple Cloud Page. It is, of course, not ideal. You don't want your API-fueled solution to be accessed by random people.
+Your micro application is now available from the Marketing Cloud menu. But unfortunately, it can also be accessed from any other place, as it is still just a simple Cloud Page. It is, of course, not ideal. You don't want random people to access your API-fueled solution.
 
 #### API Integration Component
 
-Thankfully, you can leverage the already created Installed Package to cleanly secure the micro application. To do so, add yet another Component to the Package - this time, you will need API Integration one. Select Web App integration type and paste your micro application Cloud Page URL to the Redirect URI field.
+Thankfully, you can leverage the already created Installed Package to secure the micro application cleanly. To do so, add yet another Component to the Package - this time, you will need API Integration one. Select Web App integration type and paste your micro application Cloud Page URL to the Redirect URI field.
 
 You don't need to select anything in the Scope to secure your micro application. But if you plan on using the API calls, feel free to choose the required areas now. If you only want to leverage built-in SSJS and AMPScript functions, keep them unchecked.
 
@@ -79,17 +79,17 @@ Once you save the Component, you will see that your Installed Package API Compon
 
 :::note You Should Know
 
-After you create your Installed Package, there will be three base URI's available - Authentication, REST and SOAP. All of them, after the `https://`, have a common alphanumeric string with hyphens that is unique to your SFMC. I copy only this part, as it can be used to build any endpoint necessary for the application.
+After you create your Installed Package, three base URI's are available - Authentication, REST and SOAP. After the `https://`, all of them have a common alphanumeric string with hyphens unique to your SFMC. I copy only this part to build any endpoint necessary for the application.
 
-For example for `https://abcdefghi-jklmnoprst-123456.auth.marketingcloudapis.com/` the `API Base URI` is `abcdefghi-jklmnoprst-123456`.
+For example, for `https://abcdefghi-jklmnoprst-123456.auth.marketingcloudapis.com/`, the `API Base URI` is `abcdefghi-jklmnoprst-123456`.
 
 :::
 
 #### API Authorisation
 
-With the above pre-work completed, you can use SSJS or AMPScript on your Cloud Page to redirect to the `v2/authorise` endpoint of your Authentication Base URI before loading. It will require any visitor to log into your Marketing Cloud to load your micro application. What's even better, it will automatically load it for users already logged in (micro Single Sign-On).
+With the above pre-work completed, you can use SSJS or AMPScript on your Cloud Page to redirect to the `v2/authorize` endpoint of your Authentication Base URI before loading. It will require any visitor to log into your Marketing Cloud to load your micro application. What's even better, it will automatically load it for users already logged in (micro Single Sign-On).
 
-You will need to pass `Client Id` and `Cloud Page URL` (for redirect after successful login) as query parameters to your authorisation redirect. Another necessary thing is Response Type equal to code. Finally, you can pass a State. The value of this parameter will be available after the redirect. It is excellent for recognising whether someone opened your micro application in a pre- (no state) or post- (available state) login context.
+You will need to pass `Client Id` and `Cloud Page URL` (for redirect after successful login) as query parameters to your authorisation redirect. Another necessary thing is Response Type equal to code. Finally, you can pass a State. The value of this parameter will be available after the redirect. It is excellent for recognising whether someone opened your micro application before (no state) or after (available state) logging in.
 
 <Tabs
     groupId='cloudAppCode'
@@ -135,7 +135,7 @@ Redirect(@RequestURL)
 
 #### API Authentication with Token
 
-Once your micro application refreshes after authorisation, you can get the code query string parameter with SSJS or AMPScript function and use it to make a POST API call to Authentication Basą URI - this time to `v2/token` endpoint. As the code from the authorisation endpoint is required in the payload, receiving the token in the response will validate that the visitor is eligible to access the micro application and use it.
+Once your micro application refreshes after authorisation, you can get the code query string parameter with SSJS or AMPScript function and use it to make a POST API call to Authentication Base URI - this time to `v2/token` endpoint. As the code from the authorisation endpoint is required in the payload, the fact of receiving the token in the response will validate that the visitor is eligible to access the micro application and use it.
 
 <Tabs
     groupId='cloudAppCode'
@@ -147,7 +147,7 @@ Once your micro application refreshes after authorisation, you can get the code 
 >
 <TabItem value='ssjs'>
 
-```js {15} title="API Token Authorization Flow"
+```js {15} title="API Token Authorisation Flow"
 var appURL = 'APP_CLOUD_PAGE_URL';
 var clientID = 'CLIENT_ID';
 var clientSecret = 'CLIENT_SECRET';
@@ -176,7 +176,7 @@ if (response.StatusCode == 200) {
 </TabItem>
 <TabItem value='ampscript'>
 
-```js {19} title="API Token Authorization Flow"
+```js {19} title="API Token Authorisation Flow"
 VAR @ClientID, @ClientSecret, @ClientBase, @AppURL, @Code, @RequestURL, @Token, @APIStatus, @Response
 
 SET @ClientID = 'CLIENT_ID';
@@ -204,19 +204,21 @@ SET @Token = Substring(@APIStatus,18,512)
 
 This way, you just added a micro Single Sign-On feature that is as secure as your Marketing Cloud. And that's not all! As now only your Marketing Cloud users can access the application, you can leverage the Installed Package Access tab to control who will see your solution in the main menu.
 
-Now you have a secure, SSO-enabled micro application deeply integrated with Marketing Cloud ready to solve your business needs and power-up your Marketing Team.
+Now you have a secure, SSO-enabled micro application deeply integrated with Marketing Cloud ready to solve your business needs and power up your Marketing Team.
 
 :::note You Should Know
 
-Adding this micro-SSO process blocks Web Studio from loading the Cloud Page in Preview. During development you either have to comment out the SSO or validate the changes only by publishing and checking in the Cloud App directly.
+Adding this micro SSO process blocks Web Studio from loading the Cloud Page in Preview. During development, you either have to comment out the SSO or validate the changes only by publishing and checking in the Cloud App directly.
+
+It also increases the cost of using the micro application from 1 Super Message per use to 2, due to Cloud Page refresh during authorization.
 
 :::
 
 #### Capture your Cloud App usage
 
-We can leverage the above method even further by adding a logging solution that will store session and log history. To do so, we will need a Data Extension and a bit more code around the above snippets.
+We can also add a logging solution that will store session and log app use history. We will need a Data Extension (one can serve multiple Cloud Apps) and a bit more code around the above snippets.
 
-You will need only one Logging Data Extension for any number of micro-applications. Create one with the following structure (`session` column being the Primary Key):
+Create Data Extension with the following structure (`session` column being the Primary Key):
 
 | Name | DataType | Default Value | Length | Nullable |
 |--|--|--|--|--|
@@ -226,9 +228,7 @@ You will need only one Logging Data Extension for any number of micro-applicatio
 | token | Text | | 520 | Yes |
 | tokenExpire | Date | | | Yes |
 
-As for data retention, 1 day for Individual Records is enough for authorization purposes. However, you can extend it for logging history purposes. Keep in mind that the more data there will be stored, the slower the Data Extension LookupRows speeds will be.
-
-On the code side, two elements will be necessary - one for adding the data after successfull authentication and one for checking whether the current session is valid.
+As for data retention, one day for Individual Records is enough for authorisation purposes. However, you can extend it for logging history purposes. Keep in mind that the more data stored, the slower the Data Extension operations speeds. Pushing data to this table is straightforward:
 
 <Tabs
     groupId='cloudAppCode'
@@ -254,13 +254,11 @@ UpsertData(@AuthDE,1,'session',@State,'appName',@AppName,'token',@Token,'tokenEx
 </TabItem>
 </Tabs>
 
-This approach will enable you to safely split your application into front end (Cloud Page) and back end (Code Resource) to improve user experience and optimise speed and cost.
+It will additionally allow you to safely split your application into the front end (Cloud Page) and back end (Code Resource) to improve user experience and optimise speed and cost.
 
-## Secured Cloud App Template
+### Secured Cloud App Template
 
-By taking into consideration all above elements, we get powerful and secure template for our Cloud Apps.
-
-To implement it, copy and paste below code to the top of the Cloud Page used for the App. Next, change the values in the top of the code (the uppercase ones) to match your package installation and app details (all values should be passed as strings within `'value'`). That's all!
+By considering all the above, we get a robust and secure template for our Cloud Apps:
 
 <Tabs
     groupId='cloudAppCode'
@@ -298,10 +296,12 @@ To implement it, copy and paste below code to the top of the Cloud Page used for
     }
 
     /* ----------------------- AUTHENTICATION FLOW --------------------- */
-    if (!state && !errorMessage) { /* 1. Start Authorization flow */
+    /* 1. Authorisation */
+    if (!state && !errorMessage) {
         state = GUID();
         Platform.Response.Redirect('https://' + clientBase + '.auth.marketingcloudapis.com/v2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + appURL + '&state=' + state)
-    } else if (state) { /* 2. Get the REST Token */
+    /* 2. Authentication with REST Token */
+    } else if (state) {
         var code = Platform.Request.GetQueryStringParameter('code');
         var payload = {
             grant_type: 'authorization_code',
@@ -323,17 +323,18 @@ To implement it, copy and paste below code to the top of the Cloud Page used for
         } else {
             handleError('Authentication Failed', 'Status: ' + response.StatusCode)
         }
-    } else { /* If there is an error, redirect to Error Page with details */
+    /* If there is an error, redirect to Error Page with details */
+    } else {
         handleError(errorMessage, errorDescription)
     }
 </script>
 
-<!-- Anything you create below will be secured by the Cloud App micro-SSO solution -->
+<!-- The Cloud App micro SSO solution will secure anything you create below -->
 ```
 
 :::note You Should Know
 
-Any reload done within the app (Reload/Redirect/Post via Form) should point back to Apps Cloud Page URL with `'state=' + state` appended to it as a query parameter (remember to use `?` if it will be first parameter or `&` in other case).
+Any reload done within the app (Reload/Redirect/Post via Form) should point back to Apps Cloud Page URL with `'state=' + state` appended to it as a query parameter (remember to use `?` if it will be the first parameter or `&` in another case).
 
 You can also leverage the session to lookup the token for API calls: `Platform.Function.Lookup(authDE, 'token', 'session', state)`
 
@@ -343,7 +344,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
 <TabItem value='ampscript'>
 
 ```js title="Full Cloud App Template"
-<!-- Authorization START -->
+<!-- Authorisation START -->
 %%[
     VAR @AppName, @ClientID, @ClientSecret, @ClientBase, @AppURL, @ErrorURL, @RequestURL, @Payload, @APIStatus, @Response, @Token, @Session, @Code, @AuthDE
 
@@ -357,10 +358,10 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
     SET @AppURL = 'APP_CLOUD_PAGE_URL'
     SET @ErrorURL = 'ERROR_CLOUD_PAGE_URL'
 
-    /* Data Extension for Authorization Logging */
+    /* Data Extension for Authorisation Logging */
     SET @AuthDE = 'AUTHENTICATION_DATA_EXTENSION'
 
-    /* Capture State, Error and Token for Authorization purposes */
+    /* Capture State, Error and Token for Authorisation purposes */
     SET @State = RequestParameter('state')
     SET @Session = RequestParameter('s')
 
@@ -372,7 +373,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
         ENDIF
         /* Authenticated users jumps to main code */
 
-    /* If there is no Session parameter, start Authorization flow */
+    /* If there is no Session parameter, start Authorisation flow */
     ELSEIF Empty(@State) AND Empty(@Session) THEN
         SET @Session = GUID()
         SET @RequestURL = Concat(
@@ -381,7 +382,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
             '&redirect_uri=',@AppURL,'&state=',@Session)
         Redirect(@RequestURL)
 
-    /* If there is state parameter after Authorization, get the REST Token */
+    /* If there is state parameter after Authorisation, get the REST Token */
     ELSEIF NOT Empty(@State) THEN
         SET @Code = RequestParameter('code')
         SET @RequestURL = Concat('https://',@ClientBase,'.auth.marketingcloudapis.com/v2/token')
@@ -406,14 +407,14 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
     ENDIF
     /* Remember to pass ?s=%%=v(@Session)=%% on each page reload for access validation*/
 ]%%
-<!-- Authorization END -->
+<!-- Authorisation END -->
 
-<!-- Anything you create below will be secured by the Cloud App micro-SSO solution -->
+<!-- The Cloud App micro SSO solution will secure anything you create below -->
 ```
 
 :::note You Should Know
 
-Any reload done within the app (Reload/Redirect/Post via Form) should point back to Apps Cloud Page URL with `s=%%=v(@Session)=%%` appended to it as a query parameter (remember to use `?` if it will be first parameter or `&` in other case).
+Any reload done within the app (Reload/Redirect/Post via Form) should point back to Apps Cloud Page URL with `s=%%=v(@Session)=%%` appended to it as a query parameter (remember to use `?` if it will be the first parameter or `&` in another case).
 
 You can also leverage the session to lookup the token for API calls: `%%=Lookup(@AuthDE,'token','session',@Session)=%%`
 
@@ -422,36 +423,40 @@ You can also leverage the session to lookup the token for API calls: `%%=Lookup(
 </TabItem>
 </Tabs>
 
+To implement it, copy and paste the above code to the top of the Cloud Page used for the App. Next, change the values at the top of the code (the uppercase ones) to match your package installation and app details. That's all!
+
 ## Implementation Sum Up
 
-There was a lot of information, so time for a step by step guide from zero to hero:
+There was much information to digest, so it's time for a streamlined step by step guide from zero to hero:
+
 1. __Logging Data Extensions__
-    1. In Content Builder or Email Studio create a [Cloud App Logging Data Extension](#capture-your-cloud-app-usage). One can be enough for multiple Cloud Apps. If stored in Shared Data Extensions folder, it can serve multiple Business Units.
-    2. In Content Builder or Email Studio create an [Error Logging Data Extension](./docs/ssjs/debugging-ssjs#logging-to-data-extension). One can be enough for multiple Cloud Apps. If stored in Shared Data Extensions folder, it can serve multiple Business Units.
+    1. In Content Builder or Email Studio create a [Cloud App Logging Data Extension](#capture-your-cloud-app-usage).
+    2. In Content Builder or Email Studio create an [Error Logging Data Extension](../ssjs/debugging-ssjs#logging-to-data-extension).
+    3. In both cases, one is enough for multiple Cloud Apps. If stored in the Shared Data Extensions folder, both can serve multiple Business Units.
 2. __Cloud Page__
-    1. Create a new Cloud Page
-    2. Copy the URL
+    1. Create a new Cloud Page.
+    2. Copy the URL.
 3. __Installed Package__
-    1. Go to System -> Platform Tools -> Apps -> Installed Packages
-    2. Click New in the top right corner
-    3. Add Unique Name and Description suggesting the App's purpose
-    4. Marketing Cloud App Component
-        1. Click Add Component in the bottom
-        2. Select Marketing Cloud App and click Next
-        3. Add Unique Name and Description suggesting the App's purpose
-        4. Add Cloud Page URL copied in step 2.ii as both Login and Logout Endpoint
-        5. Click Save
-    5. API Integration Component
-        1. Click Add Component on the right side of the page
-        2. Select API Integration and click Next
-        3. Select Web App and click Next
-        4. Add Cloud Page URL copied in step 2.ii as Redirect URI
-        5. Add Scope of the App (should be minimal, can be extended later) and click Save
-    6. Copy ClientID, ClientSecret and ClientBaseURI
+    1. Go to System -> Platform Tools -> Apps -> Installed Packages.
+    2. Click `New` in the top right corner.
+    3. Add Unique Name and Description suggesting the App's purpose.
+    4. Marketing Cloud App Component.
+        1. Click `Add Component` at the bottom.
+        2. Select `Marketing Cloud App` and click Next.
+        3. Add Unique Name and Description suggesting the App's purpose.
+        4. Add Cloud Page URL copied in step 2.ii as both Login and Logout Endpoint.
+        5. Click `Save`.
+    5. API Integration Component.
+        1. Click `Add Component` on the right side of the page.
+        2. Select `API Integration` and click Next.
+        3. Select `Web App` and click Next.
+        4. Add Cloud Page URL copied in step 2.ii as Redirect URI.
+        5. Add Scope of the App (should be minimal, can be extended later) and click `Save`.
+    6. Copy `Client Id`, `Client Secret` and `Client Base URI`.
 4. __Menu Unlock__
-    1. Refresh tab with Marketing Cloud
-    2. On main menu pane of Marketing Cloud hover over AppExchange to see your application
+    1. Refresh tab with Marketing Cloud.
+    2. On the main menu pane of Marketing Cloud, hover over AppExchange to see your application.
 5. __Secured Template__
-    1. Copy the [template](#secured-cloud-app-template) in prefered language to the Cloud Page from step 2.i
-    2. Update the unique values in top part of the template (written in CAPS_LOCK in the template)
+    1. Copy the [template](#secured-cloud-app-template) in the prefered language to the Cloud Page from step 2.i.
+    2. Update the unique values in the variables at the top part of the template (CAPS_LOCK placeholders).
 6. __Build your solution__
