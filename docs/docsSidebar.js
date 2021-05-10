@@ -10,10 +10,16 @@ module.exports = {
             items: [
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
+                    'AMPScript Use Cases': [
+                        'usecase/sfmc-cloud-apps',
+                    ],
+                },
+                {
                     'AMPScript Snippets': [
                         'ssjs/ssjs-snippet-ampscript-in-ssjs',
                     ],
                 },
+
             ],
         },
         {
@@ -25,7 +31,7 @@ module.exports = {
                 'ssjs/debugging-ssjs',
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
-                    'SSJS Use Cases': ['usecase/engage-with-countdown', 'usecase/tailor-with-data'],
+                    'SSJS Use Cases': ['usecase/sfmc-cloud-apps', 'usecase/engage-with-countdown', 'usecase/tailor-with-data'],
                 },
                 {
                     'SSJS Snippets': [
