@@ -1,0 +1,169 @@
+---
+id: ssjs-style-guide
+title: SSJS Style Guide
+sidebar_label: SSJS Style Guide
+description: Write SSJS with style. Readable, bug-free code is a few rules away.
+---
+
+import TOCInline from '@theme/TOCInline';
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content='WIP' />
+
+:::tip Table of Contents
+
+<TOCInline toc={toc} />
+
+:::
+
+First things first: this Salesforce Marketing Cloud SSJS style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
+
+1. Be consistent across your codebase.
+2. Strive for good readability.
+
+Everything else is preference. And you are just about to learn about mine.
+
+### SSJS Expanded Syntax
+
+__Expand SSJS syntax.__
+
+Sparse is better than dense. Readability counts. Having less lines is not worth mental gymnastics required to read condensed code.
+
+```js
+/* ✅ Expanded Variable Syntax */
+var debugging = {
+    request: true,
+    response: true,
+    error: true
+}
+
+/* ❌ Condensed Variable  Syntax */
+var debugging = { request: true, response: true, error: true }
+
+/* ✅ Expanded Function Syntax */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+}
+
+/* ❌ Condensed Function  Syntax */
+function debugValue(description, value) { Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>'); }
+
+/* ✅ Expanded Try/Catch Syntax */
+try {
+    var response = HTTP.Get('http://www.example.c');
+} catch (error) {
+    handleError(error);
+}
+
+/* ❌ Condensed Try/Catch Syntax */
+try { var response = HTTP.Get('http://www.example.c'); } catch (error) { handleError(error); }
+```
+
+:::note You Should Know
+
+I use one exception from this rule - for straightforward one-line `if` statements.
+
+However, whenever there is either any complexity (be it `else` statement or just longer case body), I always go with the expanded syntax.
+
+```js
+/* ✅ Condensed Shorthand If Syntax */
+if (debugging) debugValue(error);
+
+/* ✅ Expanded Standard If Syntax */
+if (debugging) {
+    debugValue(error);
+} else {
+    Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
+}
+
+/* ❌ Condensed Complex If Syntax */
+if (response.StatusCode == 200) { var parsedResponse = Platform.Function.ParseJSON(String(response.Response)); if (!parsedResponse.success) throw 'Wrong reCAPTCHA'; }
+```
+
+It's up to you to decide how complex is too complex. Whenever in doubt - use expanded syntax.
+
+:::
+
+### Consistent Indentation
+
+__Use indentation to highlight code relationships.__
+
+This rule extends the expanded syntax guide. Don't stop at expanding. Indent. It will help quickly understand what are the relationships betwen the code lines.
+
+```js
+/* ✅ Indented Syntax */
+for (var i = 0; i < response.length - 1; i++) {
+    var responseRowData = response[i].split(',');
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    });
+}
+
+/* ❌ Flat Syntax */
+for (var i = 0; i < response.length - 1; i++) {
+var responseRowData = response[i].split(',');
+campaignData.push({
+name: responseRowData[0],
+id: responseRowData[1],
+startDate: responseRowData[2],
+endDate: responseRowData[3]
+});
+}
+```
+
+### Intentional Spacing
+
+__Use spaces wherever it makes the code more readable.__
+
+Use spaces between operators and around curly brackets. It helps separate elements.
+Don't add them around round brackets or inside square brackets. It helps with understanding context.
+
+```js
+/* ✅ Intentional spacing */
+if (response.StatusCode != 200) {
+    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'}
+}
+
+/* ❌ Lack of spacing */
+if(response.StatusCode!=200) {
+    throw{'message':'HTTP.Get Error','description':'Could not connect to example.com'}
+}
+```
+
+### Consistent Quotes
+
+__Choose quote style and be consistent.__
+
+With SSJS you can use either single quotes (`'`) or double quotes (`"`). Don't follow Salesforce SSJS documentation - choose one and be consistent.
+
+I prefere single quotes for SSJS due to few reasons:
+
+1. There are many cases, where I will use HTML with double quotes as a string variable, and using single quotes means no need to escape them.
+2. On most keyboard (including mine) it doesn't require pressing Shift each time.
+
+However there are also arguments for double quotes:
+
+1. There are many english words using apostrophes, and using double quotes means no need to escape them
+2. JSON supports only double quotes.
+
+In the end, pick one, align with your team, and stay consistent. Yes, this means updating quotes after copy-pasting from Stack Overflow. RegEx is your friend ;)
+
+```js
+/* ✅ Single Quotes */
+if (response.StatusCode != 200) {
+    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'}
+}
+
+/* ✅ Double Quotes */
+if (response.StatusCode != 200) {
+    throw {"message": "HTTP.Get Error", "description": "Could not connect to example.com"}
+}
+
+/* ❌ Mixed Quotes */
+if (response.StatusCode != 200) {
+    throw {'message': "HTTP.Get Error", 'description': "Could not connect to example.com"}
+}
+```

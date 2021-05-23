@@ -30,6 +30,7 @@ module.exports = {
                 'ssjs/ssjs-loops',
                 'ssjs/debugging-ssjs',
                 'ssjs/ssjs-vs-ampscript-performance',
+                'ssjs/ssjs-style-guide',
                 {
                     'SSJS Use Cases': ['usecase/sfmc-cloud-apps', 'usecase/engage-with-countdown', 'usecase/tailor-with-data'],
                 },
