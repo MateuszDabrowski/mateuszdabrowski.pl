@@ -23,11 +23,22 @@ First things first: this Salesforce Marketing Cloud SSJS style guide is highly s
 
 Everything else is preference. And you are just about to learn about mine.
 
-### SSJS Expanded Syntax
+## Letter Case
 
-__Expand SSJS syntax.__
+### Variable Case
 
-Sparse is better than dense. Readability counts. Having less lines is not worth mental gymnastics required to read condensed code.
+
+### SSJS Functions Case
+
+
+## Alignment and Indentation
+
+
+### Expanded Syntax
+
+__Sparse is better than dense.__
+
+Readability counts. Having less lines is not worth mental gymnastics required to read condensed code.
 
 ```js
 /* ✅ Expanded Variable Syntax */
@@ -61,9 +72,28 @@ try { var response = HTTP.Get('http://www.example.c'); } catch (error) { handleE
 
 :::note You Should Know
 
-I use one exception from this rule - for straightforward one-line `if` statements.
+I have two exceptions tp this rule - both related to `if` statement shorthands.
 
-However, whenever there is either any complexity (be it `else` statement or just longer case body), I always go with the expanded syntax.
+1. Ternary operator
+
+Ternary is focused on simplifying basic `if`/`else` statements and when used correctly, it should be readable in single line. If you fear it might be hard to understand, you probably shouldn't use ternary operator in the first place.
+
+```js
+/* ✅ Condensed Ternary Syntax */
+typeof value == 'object' ? Stringify(value) : value;
+
+/* ❌ Expanded Ternary Syntax */
+typeof value == 'object'
+    ? Stringify(value)
+    : value;
+
+/* ❌ Too Complex for Ternary Syntax */
+debugging ? debugValue(error) : Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
+```
+
+2. Single line `if` statements.
+
+Similarly to ternary, single-line if statements also should be used only for basic `if` statements. Whenever there is any complexity (be it `else` statement or just longer case body), I always go with the expanded syntax.
 
 ```js
 /* ✅ Condensed Shorthand If Syntax */
@@ -76,7 +106,7 @@ if (debugging) {
     Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
 }
 
-/* ❌ Condensed Complex If Syntax */
+/* ❌ Too Complex for Shorthand If Syntax */
 if (response.StatusCode == 200) { var parsedResponse = Platform.Function.ParseJSON(String(response.Response)); if (!parsedResponse.success) throw 'Wrong reCAPTCHA'; }
 ```
 
@@ -89,6 +119,8 @@ It's up to you to decide how complex is too complex. Whenever in doubt - use exp
 __Use indentation to highlight code relationships.__
 
 This rule extends the expanded syntax guide. Don't stop at expanding. Indent. It will help quickly understand what are the relationships betwen the code lines.
+
+The easy way to implement correct identation is to add a level whenever you open curly bracket and remove one when you close it.
 
 ```js
 /* ✅ Indented Syntax */
@@ -118,8 +150,8 @@ endDate: responseRowData[3]
 
 __Use spaces wherever it makes the code more readable.__
 
-Use spaces between operators and around curly brackets. It helps separate elements.
-Don't add them around round brackets or inside square brackets. It helps with understanding context.
+Use spaces between operators, around curly brackets and after keywords (`if`, `while`, `function`). It helps separate elements.
+Don't add them inside non-curly brackets or between function name and arguments. It helps with understanding context.
 
 ```js
 /* ✅ Intentional spacing */
@@ -128,8 +160,18 @@ if (response.StatusCode != 200) {
 }
 
 /* ❌ Lack of spacing */
-if(response.StatusCode!=200) {
+if(response.StatusCode!=200){
     throw{'message':'HTTP.Get Error','description':'Could not connect to example.com'}
+}
+
+/* ✅ Intentional spacing */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+}
+
+/* ❌ Wrong spacing */
+function debugValue ( description, value ) {
+    Write ( description + ': ' + ( typeof value == 'object' ? Stringify( value ) : value ) + '<br><br>' );
 }
 ```
 
@@ -167,3 +209,11 @@ if (response.StatusCode != 200) {
     throw {'message': "HTTP.Get Error", 'description': "Could not connect to example.com"}
 }
 ```
+
+## Sum Up
+
+It is a long article, so let's gather all the recommendations in one place:
+
+1.
+
+If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).
