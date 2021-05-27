@@ -173,6 +173,12 @@ if (response.StatusCode == 200) {
 
 ```
 
+:::note You Should Know
+
+If you want to use the token for API in the context of a specific Business Unit, add `account_id: businessUnitMID,` to the `payload` to get the right token. Otherwise you will get autorization errors on API calls.
+
+:::
+
 </TabItem>
 <TabItem value='ampscript'>
 
@@ -198,6 +204,12 @@ SET @Payload = Concat(
 HTTPPost2(@RequestURL,'application/json',@Payload,false,@APIStatus,@Response)
 SET @Token = Substring(@APIStatus,18,512)
 ```
+
+:::note You Should Know
+
+If you want to use the token for API in the context of a specific Business Unit, add `'"account_id": "',@BusinessUnitMID,'",',` to the `@Payload` to get the right token. Otherwise you will get autorization errors on API calls.
+
+:::
 
 </TabItem>
 </Tabs>
