@@ -137,7 +137,7 @@ Of course, keeping the `Writes` as above is a no-go. You don't want your custome
 
     if (debugging) {
         Write('Response from example.com: ' + response + '<br><br>');
-    }
+    };
 </script>
 ```
 
@@ -152,10 +152,10 @@ Make your life easier with a nice clean function that will save you a lot of tim
 ```js {1-3,6}
 function debugValue(description, value) {
     Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
-}
+};
 
 var response = HTTP.Get('http://www.example.com?q=1234');
-if (debugging) debugValue('Response from example.com', response)
+if (debugging) debugValue('Response from example.com', response);
 ```
 
 With this approach, once you copy-paste the function, you have cleaner debugging lines, less code to write, no worry whether you need to `Stringify` or not and automatic new line addition for easier reading. Just pass debug description and the value you want to check and see the magic happen.
@@ -206,14 +206,14 @@ Using `Write` is a great and simple solution, but it will work only if the code 
 
     function debugValue(description, value) {
         Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
-    }
+    };
 
     // Try/Catch Block with error Write
     try {
         var response = HTTP.Get('http://www.example.c');
     } catch (error) {
         if (debugging) debugValue('1. Error caught', error);
-    }
+    };
 
     // Standard Write
     if (debugging) debugValue('2. Response from example.com', response);
@@ -247,7 +247,7 @@ try {
     // Code that will be executed if the risky code crashes
 } finally {
     // Code that will be executed always
-}
+};
 ```
 
 Out of the three, SSJS requires only Try. You can use it with Catch, Finally or both, depending on your use case.
@@ -267,7 +267,7 @@ There is a way to overcome this limitation. Declare the variables you want to us
         response = HTTP.Get('http://www.example.com');
     } catch (error) {
         // Error handling logic
-    }
+    };
 </script>
 ```
 
@@ -290,11 +290,11 @@ try {
             if (!parsedResponse.success) throw 'Wrong reCAPTCHA';
         } else {
             throw 'reCAPTCHA API error';
-        }
-    }
+        };
+    };
 } catch (error) {
     debugValue('reCaptcha Error', error);
-}
+};
 ```
 
 In the above example, you can see that we are checking whether the response from our reCaptcha validation to know whether we reached the Google server (else we throw `reCAPTCHA API error`) and if yes - was the Captcha solved.
@@ -307,8 +307,8 @@ You are not limited to strings with the `throw`. You can also pass objects to mi
 
 ```js {2}
 if (response.StatusCode != 200) {
-    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'}
-}
+    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'};
+};
 ```
 
 :::
@@ -368,22 +368,26 @@ You can solve it by creating a single Error Handler function and just calling it
 
     function debugValue(description, value) {
         Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
-    }
+    };
 
     function handleError(error) {
         if (debugging) {
             debugValue(error);
         } else {
             // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
-            Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
-        }
-    }
+            Platform.Function.InsertData(
+                'Data_Extension_Name',
+                ['id', 'errorSource', 'errorMessage', 'errorDescription'],
+                [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]
+            );
+        };
+    };
 
     try {
         var response = HTTP.Get('http://www.example.c');
     } catch (error) {
         handleError(error);
-    }
+    };
 </script>
 ```
 

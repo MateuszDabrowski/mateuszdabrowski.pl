@@ -24,8 +24,8 @@ The most popular way of handling conditional logic is with the `if` statement. I
 for (var customer in customers) {
     if (customer.purchases > 2) {
         marketingSegment.push(customer.email);
-    }
-}
+    };
+};
 ```
 
 Basic `if` can be extended by adding optional `else if` for an additional condition with the different outcome or optional `else` for all scenarios not caught by above conditions.
@@ -38,8 +38,8 @@ for (var customer in customers) {
         silverCustomerSegment.push(customer.email);
     } else {
         bronzeCustomerSegment.push(customer.email);
-    }
-}
+    };
+};
 ```
 
 ### And, Or, Brackets
@@ -52,8 +52,8 @@ for (var customer in customers) {
         reengagementCampaignSegment.push(customer);
     } else if (customer.purchases > 2 && customer.lastPurchaseDate > new Date('2019-12-31')) {
         upsellCampaignSegment.push(customer);
-    }
-}
+    };
+};
 ```
 
 ### Boolean evaluation
@@ -65,8 +65,8 @@ for (var customer in customers) {
     var competitionUser = customer.email.includes('@competition.com');
     if (competitionUser) {  // if comptetitionUser is true, block will be exectuted
         blocklist.push(customer);
-    }
-}
+    };
+};
 ```
 
 ### Flip Booleans with Bang
@@ -78,8 +78,8 @@ for (var customer in customers) {
     var competitionUser = customer.email.toLowerCase().indexOf('@competition.com') >= 0;
     if (!competitionUser) {  // if not competition user, execute content
         campaignSegment.push(customer);
-    }
-}
+    };
+};
 ```
 
 Bang not only functions as a NOT operator but also changes truthy and falsy values into an (opposite) boolean.
@@ -96,8 +96,8 @@ for (var customer in customers) {
         helloPersonalization = customer.firstName;
     } else if (!customer.firstName) { // if it does not have any characterrs, it will be falsy
         helloPersonalization = 'Valued Customer';
-    }
-}
+    };
+};
 ```
 
 To make it clear - above code is very "dirty" and can be written much better (for example without `else if` by applying default value on variable initialization). You will find an example of how to write it better later.
@@ -133,8 +133,8 @@ for (var customer in customers) {
         helloPersonalization = 'Hello' + customer.firstName;
     } else if (!customer.firstName) {
         helloPersonalization = 'Hello Valued Customer';
-    }
-}
+    };
+};
 ```
 
 we can use a clean ternary:
@@ -142,7 +142,7 @@ we can use a clean ternary:
 ```js {2} title="Same logic changed to a ternary"
 for (var customer in customers) {
     var helloPersonalization = customer.firstName ? 'Hello' + customer.firstName : 'Hello Valued Customer';
-}
+};
 ```
 
 Instead of 6 lines of code, we have 1. Awesome! But how does it work? The ternary structure looks like this: `variable = condition ? valueIfTrue : valueIfFalse;`. So in the example above, if the `customer.firstName` is not empty (is truthy), it will be pushed as the value of `helloPersonalization`. If it is empty, the default value will be assigned instead.
@@ -180,9 +180,9 @@ Thanks to it, if we want to use an OR statement and we suspect that one side is 
 ```js {2} title="If last purchase was before 2020 or a very complex check requiring calls to eCommerce API evaluates to false, filter out the customer from the campaign"
 for (var customer in customers) {
     if (customer.lastPurchaseDate < new Date('2019-12-31') || complexRequestToEcommerceAPI() === false) {
-        exclusionSegment.push(customer)
-    }
-}
+        exclusionSegment.push(customer);
+    };
+};
 ```
 
 Left side in the above example is a straightforward and quick check, as all parts of the condition are already within the script. The right side, however, might take seconds to get the data from other system and calculate the value. If the `lastPurchaseDate` is before our threshold, we don't have to waste time and API calls. A win for us, and a win for the customer waiting for the script to finish.
@@ -194,7 +194,7 @@ Similar logic can be applied to AND operator. `&&` evaluates to `true` only if _
 ```js {1} title="If the email provided for login is in correct format, check if password has required length. Once validated, check if this login and password are matching pair for a user. Only then consider the login to be valid"
 if (isValidEmail(login) && isValidPassword(password) && isValidPair(email, password)) {
     var isLoggedIn = true;
-}
+};
 ```
 
 In the above example, we are doing multiple tests ordered from the easiest to the hardest. Thanks to it, if the login is not in the correct format for an email address, we won't have even to check the password or query our encrypted database with a hashed version of the password.
@@ -218,8 +218,8 @@ function errorDescription(error) {
             return 'Not Found'
         default:
             return 'Unknown Error';
-    }
-}
+    };
+};
 ```
 
 Some things to remember when working with a `switch`:
@@ -239,7 +239,7 @@ switch (a, operation, b) {
     case 'minus':
         outcome = a - b;
         break;
-}
+};
 ```
 
 - Use either `break` statement to end each case or use the `return` statement if in function. Otherwise, the switch will also execute all below cases until it encounters one of the above keywords (or hits the last scenario). Of course, there might be some edge scenarios where you want this exact behaviour to happen.

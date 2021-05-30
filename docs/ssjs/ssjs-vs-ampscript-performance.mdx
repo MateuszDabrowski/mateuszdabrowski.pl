@@ -92,7 +92,7 @@ In this scenario, there is no context switch. I timed a pure SSJS loop to have a
 ```
 for (var i = 0; i < 10000; i++) {
     var a;
-}
+};
 ```
 
 </TabItem>
@@ -105,8 +105,8 @@ for (var i = 0; i < 10000; i++) {
     var b;
     </script>
 
-    <script runat="server">
-}
+    <script runat='server'>
+};
 ```
 
 </TabItem>
@@ -120,8 +120,8 @@ for (var i = 0; i < 10000; i++) {
     %%[
         VAR @c
     ]%%
-    <script runat="server">
-}
+    <script runat='server'>
+};
 ```
 
 </TabItem>
@@ -136,7 +136,7 @@ Then I put the for loop in the AMPScript context. As a result, the SSJS code blo
         VAR @d
     NEXT @current
 ]%%
-<script runat="server">
+<script runat='server'>
 
 ```
 
@@ -155,7 +155,7 @@ For the final scenario I decided to break out of AMPScript context within an AMP
         %%[
     NEXT @current
     ]%%
-<script runat="server">
+<script runat='server'>
 ```
 
 </TabItem>
@@ -213,10 +213,10 @@ function toTitleCase(string) {
     var sentence = string.toLowerCase().split(" ");
     for (var i = 0; i < sentence.length; i++) {
         sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
-    }
+    };
     sentence = sentence.join(" ");
     return sentence;
-}
+};
 
 title = toTitleCase(testedString);
 ```
@@ -226,7 +226,8 @@ title = toTitleCase(testedString);
 
 ```
 title = testedString.replace(
-    /[a-zA-Z]\S*/g, function(string) {
+    /[a-zA-Z]\S*/g,
+    function(string) {
         return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase()
     }
 );
@@ -240,7 +241,7 @@ function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
     return Variable.GetValue('@Response');
-}
+};
 
 title = ampScript("SET @Response = ProperCase('" + testedString + "')");
 ```
@@ -328,9 +329,9 @@ This approach doesn't make sense but gives an idea of the impact of using functi
 
 ```
 function toLowerCase(string) {
-    var sentence = string.toLowerCase()
+    var sentence = string.toLowerCase();
     return sentence;
-}
+};
 title = toLowerCase(sentences[a]);
 ```
 
@@ -342,7 +343,7 @@ function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
     return Variable.GetValue('@Response');
-}
+};
 
 title = ampScript("SET @Response = LowerCase('" + testedString + "')");
 ```

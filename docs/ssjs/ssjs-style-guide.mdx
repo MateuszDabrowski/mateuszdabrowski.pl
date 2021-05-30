@@ -2,13 +2,13 @@
 id: ssjs-style-guide
 title: SSJS Style Guide
 sidebar_label: SSJS Style Guide
-description: Script with style. Readable, bug-free code is a few rules & best practices away
+description: Script with style. Readable code is a few rules & best practices away
 ---
 
 import TOCInline from '@theme/TOCInline';
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Script with style. Readable, bug-free code is a few rules & conventions away.' />
+<LeadText content='Script with style. Readable code is a few rules & conventions away.' />
 
 :::tip Table of Contents
 
@@ -25,28 +25,50 @@ Everything else is preference. And you are just about to learn about mine.
 
 ## Letter Case
 
-SSJS gives you a lot freedom when it comes to letter case. But instead of going freestyle with that flexibility, you should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
+SSJS gives you a lot of freedom when it comes to letter case. But instead of going freestyle with that flexibility, you should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
 
 ### JS Variables, Functions & Methods Case
 
-First category of the elements of your code will be JavaScript (ECMAScript 3 in case of SSJS) native elements. Variables (`var` only), functions (no array goodies), and methods.
+__Use `camelCase` for all elements of JS syntax.__
+
+The first category of the elements of your code will be JavaScript (ECMAScript 3 in case of SSJS) native elements. Variables (`var` only), functions (no array goodies), and methods.
 
 For all of those I'm using `camelCase`. It's the most popular convetion, so it will make it easier to work with other programmers, leverage code snippets and onboard new-to-SSJS people to SFMC development.
 
 ```js
+/* ✅ camelCase for JS syntax */
 var variableName = 'Hello World';
 function functionName(variableName) {
     return variableName.toLowerCase();
-}
+};
+
+/* ❌ Random case */
+var VARIABLENAME = 'Hello World';
+function FunctionName(variableName) {
+    return variableName.tolowercase();
+};
 ```
 
 ### SSJS Functions Case
 
-I take different approach when working with SSJS Functions from both Platform and Core libaries. For any element coming from those, I use `PascalCase`. Not only it allows to differentiate between JavaScript native and SFMC custom elements, but it also is aligned with the official SSJS documentation (and therefore most of the snippets you might find).
+__Use `PascalCase` for all elements of SSJS syntax.__
+
+I take a different approach when working with SSJS Functions from both Platform and Core libraries. For any element coming from those, I use `PascalCase`.
+
+Not only it allows to differentiate between JavaScript native and SFMC custom elements, but it also is aligned with the official SSJS documentation (and therefore most of the snippets you might find).
 
 ```js
-Platform.Load('core', '1');
+/* ✅ PamelCase for JS syntax */
+Platform.Load('Core', '1');
 var dataExtension = DataExtension.Retrieve({
+    Property: 'CustomerKey',
+    SimpleOperator: 'equals',
+    Value: 'dataExtensionExternalKey'
+});
+
+/* ❌ Random case */
+PLATFORM.LOAD('Core', '1');
+var dataExtension = dataextensions.retrieve({
     Property: 'CustomerKey',
     SimpleOperator: 'equals',
     Value: 'dataExtensionExternalKey'
@@ -55,13 +77,13 @@ var dataExtension = DataExtension.Retrieve({
 
 ## Alignment and Indentation
 
-
+Letter case is just one element of syntax convention that helps with readability. Another huge one is alignment and indentation. JavaScript requires neither, but both can help you write better code.
 
 ### Expanded Syntax
 
 __Sparse is better than dense.__
 
-Readability counts. Having less lines is not worth mental gymnastics required to read condensed code.
+Readability counts. Having less lines is not worth mental gymnastics required to read a condensed code.
 
 ```js
 /* ✅ Expanded Variable Syntax */
@@ -69,37 +91,37 @@ var debugging = {
     request: true,
     response: true,
     error: true
-}
+};
 
-/* ❌ Condensed Variable  Syntax */
-var debugging = { request: true, response: true, error: true }
+/* ❌ Condensed Variable Syntax */
+var debugging = { request: true, response: true, error: true };
 
 /* ✅ Expanded Function Syntax */
 function debugValue(description, value) {
     Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
-}
+};
 
-/* ❌ Condensed Function  Syntax */
-function debugValue(description, value) { Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>'); }
+/* ❌ Condensed Function Syntax */
+function debugValue(description, value) { Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>'); };
 
 /* ✅ Expanded Try/Catch Syntax */
 try {
     var response = HTTP.Get('http://www.example.c');
 } catch (error) {
     handleError(error);
-}
+};
 
 /* ❌ Condensed Try/Catch Syntax */
-try { var response = HTTP.Get('http://www.example.c'); } catch (error) { handleError(error); }
+try { var response = HTTP.Get('http://www.example.c'); } catch (error) { handleError(error); };
 ```
 
 :::note You Should Know
 
-I have two exceptions tp this rule - both related to `if` statement shorthands.
+I have two exceptions to this rule - both related to `if` statement shorthands.
 
 1. Ternary operator
 
-Ternary is focused on simplifying basic `if`/`else` statements and when used correctly, it should be readable in single line. If you fear it might be hard to understand, you probably shouldn't use ternary operator in the first place.
+Ternary simplifies basic `if`/`else` statements, and when used correctly, it should be readable in a single line. If you fear it might be hard to understand, you probably shouldn't use the ternary operator in the first place.
 
 ```js
 /* ✅ Condensed Ternary Syntax */
@@ -116,7 +138,7 @@ debugging ? debugValue(error) : Platform.Function.InsertData('Data_Extension_Nam
 
 2. Single line `if` statements.
 
-Similarly to ternary, single-line if statements also should be used only for basic `if` statements. Whenever there is any complexity (be it `else` statement or just longer case body), I always go with the expanded syntax.
+Similarly to ternary, single-line if statements also should be used only for basic `if` statements. Whenever there is any complexity (be it `else` statement or just a longer case body), I always go with the expanded syntax.
 
 ```js
 /* ✅ Condensed Shorthand If Syntax */
@@ -127,10 +149,10 @@ if (debugging) {
     debugValue(error);
 } else {
     Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
-}
+};
 
 /* ❌ Too Complex for Shorthand If Syntax */
-if (response.StatusCode == 200) { var parsedResponse = Platform.Function.ParseJSON(String(response.Response)); if (!parsedResponse.success) throw 'Wrong reCAPTCHA'; }
+if (response.StatusCode == 200) { var parsedResponse = Platform.Function.ParseJSON(String(response.Response)); if (!parsedResponse.success) throw 'Wrong reCAPTCHA'; };
 ```
 
 It's up to you to decide how complex is too complex. Whenever in doubt - use expanded syntax.
@@ -141,7 +163,7 @@ It's up to you to decide how complex is too complex. Whenever in doubt - use exp
 
 __Use indentation to highlight code relationships.__
 
-This rule extends the expanded syntax guide. Don't stop at expanding. Indent. It will help quickly understand what are the relationships betwen the code lines.
+This rule extends the expanded syntax guide. Don't stop at expanding. Indent. It will help quickly understand what the relationships between the code lines are.
 
 The easy way to implement correct identation is to add a level whenever you open curly bracket and remove one when you close it.
 
@@ -155,7 +177,7 @@ for (var i = 0; i < response.length - 1; i++) {
         startDate: responseRowData[2],
         endDate: responseRowData[3]
     });
-}
+};
 
 /* ❌ Flat Syntax */
 for (var i = 0; i < response.length - 1; i++) {
@@ -166,35 +188,95 @@ id: responseRowData[1],
 startDate: responseRowData[2],
 endDate: responseRowData[3]
 });
-}
+};
 ```
+
+:::note You Should Know
+
+It's safer to use spaces instead of tabs for indentation. And it's more readable to use 4 spaces instead of 2.
+
+How to do it without killing your space bar? Configure your code editor to output 4 spaces on each Tab button click.
+
+:::
 
 ### Intentional Spacing
 
 __Use spaces wherever it makes the code more readable.__
 
-Use spaces between operators, around curly brackets and after keywords (`if`, `while`, `function`). It helps separate elements.
-Don't add them inside non-curly brackets or between function name and arguments. It helps with understanding context.
+To visually separate elements, use spaces:
+
+- Around operators and curly brackets.
+- After commas and keywords (`if`, `while`, `function`).
+
+To provide important context, don't add spaces:
+
+- Inside non-curly brackets.
+- Between function name and arguments.
 
 ```js
 /* ✅ Intentional spacing */
 if (response.StatusCode != 200) {
     throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'}
-}
+};
 
 /* ❌ Lack of spacing */
 if(response.StatusCode!=200){
     throw{'message':'HTTP.Get Error','description':'Could not connect to example.com'}
-}
+};
 
 /* ✅ Intentional spacing */
 function debugValue(description, value) {
     Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
-}
+};
 
 /* ❌ Wrong spacing */
 function debugValue ( description, value ) {
     Write ( description + ': ' + ( typeof value == 'object' ? Stringify( value ) : value ) + '<br><br>' );
+};
+```
+
+## Debatable Styles
+
+Apart from letter case and indentation, some additional style rules are important to consider. Multiple arguments favour various approaches, so feel free not to follow my recommendation as long as you stay consistent across your code.
+
+### Semicolons
+
+__Add a semicolon after each statement.__
+
+The semicolons in JavaScript are optional. You can do without them entirely. But I prefer to use them. Why?
+
+If you do not use semicolons, JS will add them for you using Automatic Semicolon Injection (ASI). In most cases, it's doing this work perfectly, but there might be some situations where it doesn't do what you expected it to do. And that will lead to a very long and frustrating debugging session. If you want to think about ASI when writing, you may ignore semicolons.
+
+If you don't want to worry about ASI, per JS language specification, you should:
+
+- Mark the end of your simple statements with a semicolon `;`. Think variable declarations and operations.
+- Don't end complex statements with a semicolon. Think [`if`](./ssjs-if-and-switch#if-statements) statements, [loops](./ssjs-loops.mdx), `functions`, `try/catch` blocks. But... you need a semicolon after the [`do/while` loop](./ssjs-loops.mdx#do-while). Because JavaScript (and yeah, it is different from [`while` loop](.ssjs-loops#while) when considering the statement blocks). Oh, and you will need to add them in your [`for` loop](./ssjs-loops.mdx#for) iteration rules.
+
+That's also a bit to digest and worry about when writing the code. Let's simplify it.
+
+While you don't __need__ a semicolon after complex statements, it won't hurt. It can even help you if you plan to minify the code. So, I recommend adding it after each statement.
+
+```js title="Keep calm and spam semicolons"
+/* ✅ Semicolons everywhere */
+for (var i = 0; i < response.length - 1; i++) {
+    var responseRowData = response[i].split(',');
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    });
+};
+
+/* ❌ No semicolons - this will crash due to no semicolons between for iteration rules */
+for (var i = 0 i < response.length - 1  i++) {
+    var responseRowData = response[i].split(',')
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    })
 }
 ```
 
@@ -202,41 +284,50 @@ function debugValue ( description, value ) {
 
 __Choose quote style and be consistent.__
 
-With SSJS you can use either single quotes (`'`) or double quotes (`"`). Don't follow Salesforce SSJS documentation - choose one and be consistent.
+With SSJS, you can use either single quotes (`'`) or double quotes (`"`). Don't follow Salesforce SSJS documentation - choose one and be consistent.
 
-I prefere single quotes for SSJS due to few reasons:
+I prefer single quotes for SSJS due to few reasons:
 
-1. There are many cases, where I will use HTML with double quotes as a string variable, and using single quotes means no need to escape them.
-2. On most keyboard (including mine) it doesn't require pressing Shift each time.
+1. There are many cases where I will use HTML with double quotes as a string variable, and using single quotes means no need to escape them.
+2. On most keyboard (including mine), it doesn't require pressing Shift each time.
 
-However there are also arguments for double quotes:
+However, there are also arguments for double quotes:
 
-1. There are many english words using apostrophes, and using double quotes means no need to escape them
-2. JSON supports only double quotes.
+1. There are many English words using apostrophes, and using double quotes means no need to escape them
+2. JSON supports only double-quotes.
 
 In the end, pick one, align with your team, and stay consistent. Yes, this means updating quotes after copy-pasting from Stack Overflow. RegEx is your friend ;)
 
 ```js
 /* ✅ Single Quotes */
 if (response.StatusCode != 200) {
-    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'}
-}
+    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'};
+};
 
 /* ✅ Double Quotes */
 if (response.StatusCode != 200) {
-    throw {"message": "HTTP.Get Error", "description": "Could not connect to example.com"}
-}
+    throw {"message": "HTTP.Get Error", "description": "Could not connect to example.com"};
+};
 
 /* ❌ Mixed Quotes */
 if (response.StatusCode != 200) {
-    throw {'message': "HTTP.Get Error", 'description': "Could not connect to example.com"}
-}
+    throw {'message': "HTTP.Get Error", 'description': "Could not connect to example.com"};
+};
 ```
 
 ## Sum Up
 
 It is a long article, so let's gather all the recommendations in one place:
 
-1.
+1. Be consistent
+2. Strive for readability
+3. Use comments to provide required context to your script
+4. Use `camelCase` for all elements of JS syntax [🔗](#js-variables-functions--methods-case)
+5. Use `PascalCase` for all elements of SSJS syntax [🔗](#ssjs-functions-case)
+6. Sparse is better than dense [🔗](#expanded-syntax)
+7. Use indentation to highlight code relationships [🔗](#consistent-indentation)
+8. Use spaces wherever it makes the code more readable [🔗](#intentional-spacing)
+9. Add a semicolon after each statement [🔗](#semicolons)
+10. Choose quote style and be consistent [🔗](#consistent-quotes)
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).

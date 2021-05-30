@@ -35,7 +35,7 @@ function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
     return Variable.GetValue('@Response');
-}
+};
 ```
 
 :::note You Should Know
@@ -81,7 +81,7 @@ You can do it quickly, by just concatenating strings with `+`.
 var response = ampScript("SET @Retrieve = RetrieveSalesforceObjects("
     + "'Campaign', 'Id', 'Name', '=', 'WelcomeCampaign2021') "
     + "IF RowCount(@Retrieve) > 0 THEN SET @Response = 'true' "
-    + "ELSE SET @Response = 'false' ENDIF"
+    + "ELSE SET @Response = 'false' ENDIF");
 ```
 
 :::note You Should Know
@@ -97,14 +97,14 @@ Be sure always to check, whether you have space either at the end of the previou
 Using AMPScript via SSJS not only enables additional features for Server-Side JavaScript. It also allows you to make your AMPScript more dynamic by leveraging variables in the loops:
 
 ```js {4} title="Same check as above, but for multiple campaigns and output to an array"
-var availableCampaigns = []
+var availableCampaigns = [];
 for (var campaignName in campaignList) {
     var response = ampScript("SET @Retrieve = RetrieveSalesforceObjects("
         + "'Campaign', 'Id', 'Name', '=', '" + campaignName + "') "
         + "IF RowCount(@Retrieve) > 0 THEN SET @Response = 'true' "
         + "ELSE SET @Response = 'false' ENDIF");
     if (reponse) availableCampaigns.push(campaignName);
-}
+};
 ```
 
 It is even more useful when you have variability in what you want to create. For example, let's consider a use case where you want to create Campaigns in Salesforce from Marketing Cloud, but only some of your campaigns have an End Date known from the beginning.
@@ -129,7 +129,7 @@ var response = ampScript("SET @Retrieve = RetrieveSalesforceObjects("
     + "SET @StartDate = FIELD(@Row, 'StartDate') SET @EndDate = FIELD(@Row, 'EndDate') "
     + "SET @RowDate = CONCAT(@Name, ',', @Id, ',', @StartDate, ',', @EndDate) "
     + "SET @Response = CONCAT(@Response, @RowData,';') "
-    + "NEXT ENDIF")
+    + "NEXT ENDIF");
 response = response.split(';');
 var campaignData = [];
 for (var i = 0; i < response.length - 1; i++) {
@@ -140,7 +140,7 @@ for (var i = 0; i < response.length - 1; i++) {
         startDate: responseRowData[2],
         endDate: responseRowData[3]
     });
-}
+};
 ```
 
 Ok, a lot to unpack. But trust me, it's worth it. Let's go!
