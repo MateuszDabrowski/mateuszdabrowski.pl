@@ -2,13 +2,13 @@
 id: ssjs-style-guide
 title: SSJS Style Guide
 sidebar_label: SSJS Style Guide
-description: Write SSJS with style. Readable, bug-free code is a few rules away.
+description: Script with style. Readable, bug-free code is a few rules & best practices away
 ---
 
 import TOCInline from '@theme/TOCInline';
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='WIP' />
+<LeadText content='Script with style. Readable, bug-free code is a few rules & conventions away.' />
 
 :::tip Table of Contents
 
@@ -25,13 +25,36 @@ Everything else is preference. And you are just about to learn about mine.
 
 ## Letter Case
 
-### Variable Case
+SSJS gives you a lot freedom when it comes to letter case. But instead of going freestyle with that flexibility, you should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
 
+### JS Variables, Functions & Methods Case
+
+First category of the elements of your code will be JavaScript (ECMAScript 3 in case of SSJS) native elements. Variables (`var` only), functions (no array goodies), and methods.
+
+For all of those I'm using `camelCase`. It's the most popular convetion, so it will make it easier to work with other programmers, leverage code snippets and onboard new-to-SSJS people to SFMC development.
+
+```js
+var variableName = 'Hello World';
+function functionName(variableName) {
+    return variableName.toLowerCase();
+}
+```
 
 ### SSJS Functions Case
 
+I take different approach when working with SSJS Functions from both Platform and Core libaries. For any element coming from those, I use `PascalCase`. Not only it allows to differentiate between JavaScript native and SFMC custom elements, but it also is aligned with the official SSJS documentation (and therefore most of the snippets you might find).
+
+```js
+Platform.Load('core', '1');
+var dataExtension = DataExtension.Retrieve({
+    Property: 'CustomerKey',
+    SimpleOperator: 'equals',
+    Value: 'dataExtensionExternalKey'
+});
+```
 
 ## Alignment and Indentation
+
 
 
 ### Expanded Syntax
