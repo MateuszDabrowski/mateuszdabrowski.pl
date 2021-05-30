@@ -108,7 +108,7 @@ var clientSecret = 'CLIENT_SECRET';
 var clientBase = 'API_BASE_URI';
 var state = GUID();
 
-Platform.Response.Redirect('https://' + clientBase + '.auth.marketingcloudapis.com/v2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + appURL + '&state=' + state)
+Platform.Response.Redirect('https://' + clientBase + '.auth.marketingcloudapis.com/v2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + appURL + '&state=' + state);
 ```
 
 </TabItem>
@@ -160,16 +160,16 @@ var payload = {
     client_id: clientID,
     client_secret: clientSecret,
     redirect_uri: appURL
-}
+};
 
-var response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload))
+var response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload));
 
 if (response.StatusCode == 200) {
-    var parsedResponse = Platform.Function.ParseJSON(response.Response[0])
+    var parsedResponse = Platform.Function.ParseJSON(response.Response[0]);
     var accessToken = parsedResponse.access_token;
-    var tokenExpire = Platform.Function.SystemDateToLocalDate(Platform.Function.Now())
+    var tokenExpire = Platform.Function.SystemDateToLocalDate(Platform.Function.Now());
     tokenExpire.setMinutes(tokenExpire.getMinutes() + 18);
-}
+};
 
 ```
 
@@ -188,10 +188,10 @@ VAR @ClientID, @ClientSecret, @ClientBase, @AppURL, @Code, @RequestURL, @Token, 
 SET @ClientID = 'CLIENT_ID';
 SET @ClientSecret = 'CLIENT_SECRET';
 SET @ClientBase = 'API_BASE_URI';
-SET @AppURL = 'APP_CLOUD_PAGE_URL'
-SET @Code = RequestParameter('code')
+SET @AppURL = 'APP_CLOUD_PAGE_URL';
+SET @Code = RequestParameter('code');
 
-SET @RequestURL = Concat('https://',@ClientBase,'.auth.marketingcloudapis.com/v2/token')
+SET @RequestURL = Concat('https://',@ClientBase,'.auth.marketingcloudapis.com/v2/token');
 
 SET @Payload = Concat(
     '{"grant_type": "authorization_code",',
@@ -259,7 +259,7 @@ Platform.Function.UpsertData(authDE, ['session'], [state], ['appName', 'token', 
 </TabItem>
 <TabItem value='ampscript'>
 
-```js itle="Fill Cloud App Logging Data Extension"
+```js title="Fill Cloud App Logging Data Extension"
 UpsertData(@AuthDE,1,'session',@State,'appName',@AppName,'token',@Token,'tokenExpire',DateAdd(Now(),18,'MI'))
 ```
 
@@ -284,7 +284,7 @@ By considering all the above, we get a robust and secure template for our Cloud 
 
 ```js title="Full Cloud App Template"
 <script runat='server'>
-    Platform.Load('core', '1')
+    Platform.Load('core', '1');
     /* ---------------------------- GLOBAL VARIABLES ------------------------- */
     var appName = 'CLOUD_APP_NAME';
     var appURL = 'APP_CLOUD_PAGE_URL';
@@ -304,14 +304,14 @@ By considering all the above, we get a robust and secure template for our Cloud 
     /* Function for logging and managing error */
     function handleError(message, description) {
         Platform.Function.InsertData(errorDE, ['id', 'appName', 'errorMessage', 'errorDescription'], [GUID(), appName, message, description]);
-        Platform.Response.Redirect(errorURL + '?error=' + message + '&error_description=' + description)
-    }
+        Platform.Response.Redirect(errorURL + '?error=' + message + '&error_description=' + description);
+    };
 
     /* ----------------------- AUTHENTICATION FLOW --------------------- */
     /* 1. Authorisation */
     if (!state && !errorMessage) {
         state = GUID();
-        Platform.Response.Redirect('https://' + clientBase + '.auth.marketingcloudapis.com/v2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + appURL + '&state=' + state)
+        Platform.Response.Redirect('https://' + clientBase + '.auth.marketingcloudapis.com/v2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + appURL + '&state=' + state);
     /* 2. Authentication with REST Token */
     } else if (state) {
         var code = Platform.Request.GetQueryStringParameter('code');
@@ -321,24 +321,24 @@ By considering all the above, we get a robust and secure template for our Cloud 
             client_id: clientID,
             client_secret: clientSecret,
             redirect_uri: appURL
-        }
-        var response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload))
+        };
+        var response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload));
         if (response.StatusCode == 200) {
-            var parsedResponse = Platform.Function.ParseJSON(response.Response[0])
+            var parsedResponse = Platform.Function.ParseJSON(response.Response[0]);
             var accessToken = parsedResponse.access_token;
             var appScope = parsedResponse.scope;
-            var tokenExpire = Platform.Function.SystemDateToLocalDate(Platform.Function.Now())
+            var tokenExpire = Platform.Function.SystemDateToLocalDate(Platform.Function.Now());
             tokenExpire.setMinutes(tokenExpire.getMinutes() + 18);
 
             /* Update Authentication Logging Data Extension */
             Platform.Function.UpsertData(authDE, ['session'], [state], ['appName', 'token', 'tokenExpire'], [appName, accessToken, tokenExpire]);
         } else {
             handleError('Authentication Failed', 'Status: ' + response.StatusCode)
-        }
+        };
     /* If there is an error, redirect to Error Page with details */
     } else {
-        handleError(errorMessage, errorDescription)
-    }
+        handleError(errorMessage, errorDescription);
+    };
 </script>
 
 <!-- The Cloud App micro SSO solution will secure anything you create below -->
