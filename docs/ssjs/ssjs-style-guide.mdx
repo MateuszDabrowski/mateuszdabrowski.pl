@@ -25,13 +25,13 @@ Everything else is preference. And you are just about to learn about mine.
 
 ## Letter Case
 
-SSJS gives you a lot of freedom when it comes to letter case. But instead of going freestyle with that flexibility, you should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
+SSJS gives you a lot of freedom when it comes to letter case. But instead of going freestyle with that flexibility, we should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
 
 ### JS Variables, Functions & Methods Case
 
 __Use `camelCase` for all elements of JS syntax.__
 
-The first category of the elements of your code will be JavaScript (ECMAScript 3 in case of SSJS) native elements. Variables (`var` only), functions (no array goodies), and methods.
+The first category of the building blocks in your code will be JavaScript (ECMAScript 3 in case of SSJS) native elements. Variables (`var` only), functions (no array goodies), and methods.
 
 For all of those I'm using `camelCase`. It's the most popular convetion, so it will make it easier to work with other programmers, leverage code snippets and onboard new-to-SSJS people to SFMC development.
 
@@ -55,7 +55,7 @@ __Use `PascalCase` for all elements of SSJS syntax.__
 
 I take a different approach when working with SSJS Functions from both Platform and Core libraries. For any element coming from those, I use `PascalCase`.
 
-Not only it allows to differentiate between JavaScript native and SFMC custom elements, but it also is aligned with the official SSJS documentation (and therefore most of the snippets you might find).
+Not only it allows to differentiate JavaScript native and SFMC custom elements, but it also follows the official SSJS documentation (and therefore most of the snippets you might find).
 
 ```js
 /* ✅ PamelCase for JS syntax */
@@ -83,7 +83,7 @@ Letter case is just one element of syntax convention that helps with readability
 
 __Sparse is better than dense.__
 
-Readability counts. Having less lines is not worth mental gymnastics required to read a condensed code.
+Readability counts. Having less lines is not worth mental gymnastics required to read a condensed code. It is also much easier to find unclosed brackets.
 
 ```js
 /* ✅ Expanded Variable Syntax */
@@ -163,9 +163,9 @@ It's up to you to decide how complex is too complex. Whenever in doubt - use exp
 
 __Use indentation to highlight code relationships.__
 
-This rule extends the expanded syntax guide. Don't stop at expanding. Indent. It will help quickly understand what the relationships between the code lines are.
+This rule extends the expanded syntax guide. Don't stop at expanding. Indent. It will help you quickly understand the relationships between the code lines.
 
-The easy way to implement correct identation is to add a level whenever you open curly bracket and remove one when you close it.
+The easy way to implement correct identation is to add a level whenever you open curly bracket and remove one whenever you close it. However, sometimes readability can be improved with even more identation, for example within expanded array.
 
 ```js
 /* ✅ Indented Syntax */
@@ -193,9 +193,7 @@ endDate: responseRowData[3]
 
 :::note You Should Know
 
-It's safer to use spaces instead of tabs for indentation. And it's more readable to use 4 spaces instead of 2.
-
-How to do it without killing your space bar? Configure your code editor to output 4 spaces on each Tab button click.
+It's safer to use spaces instead of tabs for indentation. And it's more readable to use four spaces instead of two. You can configure your code editor to output four spaces on each Tab click.
 
 :::
 
@@ -205,12 +203,14 @@ __Use spaces wherever it makes the code more readable.__
 
 To visually separate elements, use spaces:
 
-- Around operators and curly brackets.
-- After commas and keywords (`if`, `while`, `function`).
+- Around operators.
+- Before opening curly bracket and after closing curly brakcet.
+- After commas.
+- After keywords (`if`, `while`, `function`, etc.).
 
 To provide important context, don't add spaces:
 
-- Inside non-curly brackets.
+- After opening and before closing non-curly brackets.
 - Between function name and arguments.
 
 ```js
@@ -237,7 +237,7 @@ function debugValue ( description, value ) {
 
 ## Debatable Styles
 
-Apart from letter case and indentation, some additional style rules are important to consider. Multiple arguments favour various approaches, so feel free not to follow my recommendation as long as you stay consistent across your code.
+Apart from letter case and indentation, some additional style rules are important to consider. Multiple arguments favour various conventions, so feel free not to follow my recommendation as long as you stay consistent across your code.
 
 ### Semicolons
 
@@ -245,16 +245,17 @@ __Add a semicolon after each statement.__
 
 The semicolons in JavaScript are optional. You can do without them entirely. But I prefer to use them. Why?
 
-If you do not use semicolons, JS will add them for you using Automatic Semicolon Injection (ASI). In most cases, it's doing this work perfectly, but there might be some situations where it doesn't do what you expected it to do. And that will lead to a very long and frustrating debugging session. If you want to think about ASI when writing, you may ignore semicolons.
+If you do not use semicolons, JS will add them for you using Automatic Semicolon Injection (ASI). In most cases, it works perfectly, but there might be some situations where the outcome is not what you expected. And that will lead to a very long and frustrating debugging session. If you want to think about ASI when writing, you may ignore semicolons.
 
 If you don't want to worry about ASI, per JS language specification, you should:
 
 - Mark the end of your simple statements with a semicolon `;`. Think variable declarations and operations.
-- Don't end complex statements with a semicolon. Think [`if`](./ssjs-if-and-switch#if-statements) statements, [loops](./ssjs-loops.mdx), `functions`, `try/catch` blocks. But... you need a semicolon after the [`do/while` loop](./ssjs-loops.mdx#do-while). Because JavaScript (and yeah, it is different from [`while` loop](.ssjs-loops#while) when considering the statement blocks). Oh, and you will need to add them in your [`for` loop](./ssjs-loops.mdx#for) iteration rules.
+- Don't end complex statements with a semicolon. Think [`if`](./ssjs-if-and-switch.mdx#if-statements) statements, [loops](./ssjs-loops.mdx), `functions`, `try/catch` blocks.
+- But... you need a semicolon after the [`do/while` loop](./ssjs-loops.mdx#do-while). Because JavaScript (and yeah, it is different from [`while` loop](./ssjs-loops.mdx#while) when considering the statement blocks). Oh, and you will need to add them in your [`for` loop](./ssjs-loops.mdx#for) iteration rules.
 
 That's also a bit to digest and worry about when writing the code. Let's simplify it.
 
-While you don't __need__ a semicolon after complex statements, it won't hurt. It can even help you if you plan to minify the code. So, I recommend adding it after each statement.
+While you don't __need__ a semicolon after complex statements, it won't hurt. It can even help you if you plan to minify the code. So, to make it straightforward and fail-safe, I recommend adding it after each statement.
 
 ```js title="Keep calm and spam semicolons"
 /* ✅ Semicolons everywhere */
@@ -282,19 +283,19 @@ for (var i = 0 i < response.length - 1  i++) {
 
 ### Consistent Quotes
 
-__Choose quote style and be consistent.__
+__Use single quote style.__
 
-With SSJS, you can use either single quotes (`'`) or double quotes (`"`). Don't follow Salesforce SSJS documentation - choose one and be consistent.
+With SSJS, you can use either single quotes (`'`) or double quotes (`"`). Don't follow random approach of Salesforce SSJS documentation - choose one and be consistent.
 
-I prefer single quotes for SSJS due to few reasons:
+I prefer single quotes for SSJS:
 
-1. There are many cases where I will use HTML with double quotes as a string variable, and using single quotes means no need to escape them.
-2. On most keyboard (including mine), it doesn't require pressing Shift each time.
+1. I frequently use string variables with HTML that uses double quotes. Using single quotes in SSJS means no need to escape the ones in HTML.
+2. On most keyboard (including mine), it doesn't require pressing Shift each time. Clicking one button is faster.
 
 However, there are also arguments for double quotes:
 
 1. There are many English words using apostrophes, and using double quotes means no need to escape them
-2. JSON supports only double-quotes.
+2. JSON requires double-quotes.
 
 In the end, pick one, align with your team, and stay consistent. Yes, this means updating quotes after copy-pasting from Stack Overflow. RegEx is your friend ;)
 
@@ -328,6 +329,8 @@ It is a long article, so let's gather all the recommendations in one place:
 7. Use indentation to highlight code relationships [🔗](#consistent-indentation)
 8. Use spaces wherever it makes the code more readable [🔗](#intentional-spacing)
 9. Add a semicolon after each statement [🔗](#semicolons)
-10. Choose quote style and be consistent [🔗](#consistent-quotes)
+10. Use single quote style [🔗](#consistent-quotes)
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).
+
+Looking for even more Marketing Cloud style? Check out my [SFMC SQL Style Guide](../sql/sfmc-sql-style-guide.mdx).
