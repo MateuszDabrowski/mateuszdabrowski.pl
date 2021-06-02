@@ -29,35 +29,50 @@ SSJS gives you a lot of freedom when it comes to naming and letter case. But ins
 
 ### Meaningful Names
 
-__Use names that suggest the purpose.__
+__Use names that provide context.__
+
+As [John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. Meaningful and consistent names are great starting point to live long (coding) life with limited amount of frustration and regret when someone asks you about your year-old code to adapt it for a new project.
+
+Applying rules listed below is really easy when you write the code and remember its logic, but can be a challenge after you reset your memory writing few other scripts. Make your SSJS better with meaningful variable and function names.
 
 #### Variable Names
 
 1. Use descriptive variable names. It is better to have a long explicit one (`isTrackingSuppressed`) than a short mysterious abbreviation (`trk`).
 2. When the variable is a boolean, prefix it with `is` (or `has`/`does`/`are` depending on the underlying data).
 3. When the variable is a date, suffix it with `Date`.
-4. When the variable is
+4. When the variable is an array, use plural name (`optIns`, `favouriteProductCategories`).
 
 ```js
-/* ✅ descriptive and suggesting boolean data type */
+/* ✅ Descriptive and suggesting boolean data type */
 var isTrackingSuppressed = false;
 
-/* ❌ name neither describes the variable purpose nor suggest its data type*/
+/* ❌ Name neither describes the variable purpose nor suggest its data type*/
 var value = false;
 
-/* ✅ descriptive and suggesting boolean data type */
+/* ✅ Descriptive and suggesting date data type */
 var trackingSupressionStartDate = new Date();
 
-/* ❌ name neither describes the variable purpose nor suggest its data type*/
+/* ❌ Name neither describes the variable purpose nor suggest its data type*/
 var supressed = new Date();
 ```
 
 #### Function Names
 
-1. Use descriptive function names. It is better to have a long explicit one (`getEmailAddress`) than a short mysterious abbreviation (`geteml`).
-2. Always use a verb (`get`, `post`, `update`, `send`) as a first part of the name to tell what the function is doing.
+1. Use descriptive function names. It is better to have a long explicit one (`getEmailAddress`) than a short mysterious abbreviation (`geteml`). Think how you can add as much information as possible, without adding unnecessary bits (`lookupContactBySubscriberKey` vs `lookupAvailableContactBySubscriberKeyFromDataExtension`).
+2. Use a verb (`get`, `post`, `update`, `send`) as a first part of the name to tell what the function is doing.
+3. Apply [variable naming rules](#variable-names) to the parameters - leave single-letter names for minifiers.
 
-TODO
+```js
+/* ✅ Both function name and parameters are descriptive */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+
+/* ❌ Neither function name nor parameters are descriptive */
+function write(d, v) {
+    Write(d + ': ' + (typeof v == 'object' ? Stringify(v) : v) + '<br><br>');
+};
+```
 
 ### JS Variables, Functions & Methods Leter Case
 
