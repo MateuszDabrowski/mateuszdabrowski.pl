@@ -29,18 +29,18 @@ SSJS gives you a lot of freedom when it comes to naming and letter case. But ins
 
 ### Meaningful Names
 
-__Use names that provide context.__
+__Use descriptive names to provide context.__
 
-As [John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. Meaningful and consistent names are great starting point to live long (coding) life with limited amount of frustration and regret when someone asks you about your year-old code to adapt it for a new project.
+As [John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. Meaningful and consistent names are an excellent starting point for living a long (coding) life with a limited amount of frustration and regret when someone asks you about your year-old code to adapt to a new project.
 
-Applying rules listed below is really easy when you write the code and remember its logic, but can be a challenge after you reset your memory writing few other scripts. Make your SSJS better with meaningful variable and function names.
+Applying the rules listed below is easy when you write the code and remember its logic but can be a challenge after resetting your memory by writing few other scripts. Make your SSJS better with meaningful variable and function names.
 
 #### Variable Names
 
 1. Use descriptive variable names. It is better to have a long explicit one (`isTrackingSuppressed`) than a short mysterious abbreviation (`trk`).
 2. When the variable is a boolean, prefix it with `is` (or `has`/`does`/`are` depending on the underlying data).
 3. When the variable is a date, suffix it with `Date`.
-4. When the variable is an array, use plural name (`optIns`, `favouriteProductCategories`).
+4. When the variable is an array, use a plural name (`optIns`, `favouriteProductCategories`).
 
 ```js
 /* ✅ Descriptive and suggesting boolean data type */
@@ -59,7 +59,7 @@ var supressed = new Date();
 #### Function Names
 
 1. Use descriptive function names. It is better to have a long explicit one (`getEmailAddress`) than a short mysterious abbreviation (`geteml`). Think how you can add as much information as possible, without adding unnecessary bits (`lookupContactBySubscriberKey` vs `lookupAvailableContactBySubscriberKeyFromDataExtension`).
-2. Use a verb (`get`, `post`, `update`, `send`) as a first part of the name to tell what the function is doing.
+2. Use a verb (`get`, `post`, `update`, `send`) as the first part of the name to tell what the function is doing.
 3. Apply [variable naming rules](#variable-names) to the parameters - leave single-letter names for minifiers.
 
 ```js
@@ -136,7 +136,7 @@ Letter case is just one element of syntax convention that helps with readability
 
 __Sparse is better than dense.__
 
-Readability counts. Having less lines is not worth mental gymnastics required to read a condensed code. It is also much easier to find unclosed brackets.
+Readability counts. Having fewer lines is not worth the mental gymnastics required to read a condensed code. It is also much easier to find unclosed brackets.
 
 ```js
 /* ✅ Expanded Variable Syntax */
@@ -257,7 +257,7 @@ __Use spaces wherever it makes the code more readable.__
 To visually separate elements, use spaces:
 
 - Around operators.
-- Before opening curly bracket and after closing curly brakcet.
+- Before opening curly bracket and after closing curly bracket.
 - After commas.
 - After keywords (`if`, `while`, `function`, etc.).
 
@@ -338,7 +338,7 @@ for (var i = 0 i < response.length - 1  i++) {
 
 __Use single quote style.__
 
-With SSJS, you can use either single quotes (`'`) or double quotes (`"`). Don't follow random approach of Salesforce SSJS documentation - choose one and be consistent.
+With SSJS, you can use either single quotes (`'`) or double quotes (`"`). Don't follow the random approach of Salesforce SSJS documentation - choose one and be consistent.
 
 I prefer single quotes for SSJS:
 
@@ -347,8 +347,8 @@ I prefer single quotes for SSJS:
 
 However, there are also arguments for double quotes:
 
-1. There are many English words using apostrophes, and using double quotes means no need to escape them
-2. JSON requires double-quotes.
+1. There are many English words using apostrophes, and using double quotes means no need to escape them.
+2. JSON requires double quotes.
 
 In the end, pick one, align with your team, and stay consistent. Yes, this means updating quotes after copy-pasting from Stack Overflow. RegEx is your friend ;)
 
@@ -375,7 +375,7 @@ It is a long article, so let's gather all the recommendations in one place:
 
 1. Be consistent
 2. Strive for readability
-3. Use comments to provide required context to your script
+3. Use descriptive names to provide context [🔗](#meaningful-names)
 4. Use `camelCase` for all elements of JS syntax [🔗](#js-variables-functions--methods-case)
 5. Use `PascalCase` for all elements of SSJS syntax [🔗](#ssjs-functions-case)
 6. Sparse is better than dense [🔗](#expanded-syntax)
@@ -383,7 +383,8 @@ It is a long article, so let's gather all the recommendations in one place:
 8. Use spaces wherever it makes the code more readable [🔗](#intentional-spacing)
 9. Add a semicolon after each statement [🔗](#semicolons)
 10. Use single quote style [🔗](#consistent-quotes)
+11. Use comments to provide required context to your script
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).
 
-Looking for even more Marketing Cloud style? Check out my [SFMC SQL Style Guide](../sql/sfmc-sql-style-guide.mdx).
+Looking for more Marketing Cloud style? Check out my [SFMC SQL Style Guide](../sql/sfmc-sql-style-guide.mdx).
