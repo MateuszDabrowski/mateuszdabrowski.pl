@@ -369,6 +369,67 @@ if (response.StatusCode != 200) {
 };
 ```
 
+## Comments
+
+__Code tells you how. Comments tell you why.__ - [Jeff Atwood](https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/)
+
+To make your code better, don't stop at just the code. Leverage comments to its full potential. Context, logic and caveats description will improve the experience for everyone - including you after few weeks.
+
+Whenever you are building longer SSJS code, I recommend using at least three types of comments - pseudo-code, section and documentation. For short scripts, the last one will be enough.
+
+### 1. Table of Contents Comment
+
+The first type of comment should be used in the very top of your longer scripts is table of contents comment. This one will be your best friend during whole lifecycle of your script.
+
+Before even starting to write SSJS, describe the desired outcome and steps you plan to code to get there. It can be high level, it can be a draft. But it will help you focus on the best way to write your script and consider potential roadblocks or opportunities for optimisation.
+
+As you are building your script - update the comment to reflect the approach you took. It will help you assess the impact of potential changes and find missing pieces.
+
+
+```js
+/* ---------------------------------------------------------------------
+
+Authenticates each visitor to limit access only to SFMC logged-in users.
+
+1. Global Variables - should be updated for each implementation
+2. Helper Functions
+2.1. Error handling
+3. Authentication Flow
+3.1. Authorization
+3.2. Authentication with REST Token
+3.2.1. Upsert Logging Data Extension
+
+--------------------------------------------------------------------- */
+```
+
+### 2. Section Comments
+
+To fully leverage the pseudo-code table of contents, add section comments to mark where each part of your code starts.
+
+For complex scripts it might be good idea to create few different levels of such comments. I use upper case with dashes for first level, title case with dashes for second level and just title case for third level of comments
+
+```js
+/* ----------------------- 1. GLOBAL VARIABLES -----------------------*/
+
+/* ----------------------- 2. HELPER FUNCTIONS -----------------------*/
+
+/* ----------------------- 2.1. Error handling -----------------------*/
+
+/* --------------------- 3. AUTHENTICATION FLOW ----------------------*/
+
+/* ----------------------- 3.1. Authorization ------------------------*/
+
+/* ----------------------- 3.2. Authentication -----------------------*/
+
+/* 3.2.1. Upsert Logging Data Extensions */
+```
+
+### 3. Documenation Comments
+
+```js
+
+```
+
 ## Sum Up
 
 It is a long article, so let's gather all the recommendations in one place:
@@ -383,7 +444,7 @@ It is a long article, so let's gather all the recommendations in one place:
 8. Use spaces wherever it makes the code more readable [🔗](#intentional-spacing)
 9. Add a semicolon after each statement [🔗](#semicolons)
 10. Use single quote style [🔗](#consistent-quotes)
-11. Use comments to provide required context to your script
+11. Use comments to provide required context to your script [🔗](#comments)
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).
 
