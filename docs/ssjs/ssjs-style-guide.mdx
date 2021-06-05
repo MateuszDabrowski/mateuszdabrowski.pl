@@ -373,15 +373,15 @@ if (response.StatusCode != 200) {
 
 __Code tells you how. Comments tell you why.__ - [Jeff Atwood](https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/)
 
-To make your code better, don't stop at just the code. Leverage comments to its full potential. Context, logic and caveats description will improve the experience for everyone - including you after few weeks.
+To make your code better, don't stop at just the code. Leverage comments to their full potential. Context, logic and caveats description will improve the experience for everyone - including you after few weeks.
 
-Whenever you are building longer SSJS code, I recommend using at least three types of comments - pseudo-code, section and documentation. For short scripts, the last one will be enough.
+Whenever you build more complex SSJS code, I recommend using at least three types of comments: table of contents, section and documentation. For short scripts, the last type will be enough.
 
 ### 1. Table of Contents Comment
 
-The first type of comment should be used in the very top of your longer scripts is table of contents comment. This one will be your best friend during whole lifecycle of your script.
+The first type of comment you should use at the top of your longer scripts is the table of contents comment. This one will be your best friend during the whole lifecycle of your script.
 
-Before even starting to write SSJS, describe the desired outcome and steps you plan to code to get there. It can be high level, it can be a draft. But it will help you focus on the best way to write your script and consider potential roadblocks or opportunities for optimisation.
+Before even starting to write SSJS, describe the desired outcome and steps you plan to code to get there. It can be high level; it can be a draft. But it will help you focus on the best way to write your script and consider potential roadblocks or opportunities for optimisation.
 
 As you are building your script - update the comment to reflect the approach you took. It will help you assess the impact of potential changes and find missing pieces.
 
@@ -395,7 +395,7 @@ Authenticates each visitor to limit access only to SFMC logged-in users.
 2. Helper Functions
 2.1. Error handling
 3. Authentication Flow
-3.1. Authorization
+3.1. Authorisation
 3.2. Authentication with REST Token
 3.2.1. Upsert Logging Data Extension
 
@@ -406,29 +406,66 @@ Authenticates each visitor to limit access only to SFMC logged-in users.
 
 To fully leverage the pseudo-code table of contents, add section comments to mark where each part of your code starts.
 
-For complex scripts it might be good idea to create few different levels of such comments. I use upper case with dashes for first level, title case with dashes for second level and just title case for third level of comments
+For complex scripts, it might be a good idea to create few different levels of such comments. I use upper case with dashes for the first level, title case with dashes for the second level and only title case for the third level of comments
 
 ```js
-/* ----------------------- 1. GLOBAL VARIABLES -----------------------*/
+/* ---------------------- 1. GLOBAL VARIABLES ----------------------- */
 
-/* ----------------------- 2. HELPER FUNCTIONS -----------------------*/
+/* ---------------------- 2. HELPER FUNCTIONS ----------------------- */
 
-/* ----------------------- 2.1. Error handling -----------------------*/
+/* ---------------------- 2.1. Error handling ----------------------- */
 
-/* --------------------- 3. AUTHENTICATION FLOW ----------------------*/
+/* ---------------------- 3. AUTHENTICATION FLOW -------------------- */
 
-/* ----------------------- 3.1. Authorization ------------------------*/
+/* ---------------------- 3.1. Authorization ------------------------ */
 
-/* ----------------------- 3.2. Authentication -----------------------*/
+/* ---------------------- 3.2. Authentication ----------------------- */
 
 /* 3.2.1. Upsert Logging Data Extensions */
 ```
 
 ### 3. Documenation Comments
 
-```js
+Two previous comment types are suitable for high-level view and organisation of your more complex scripts. But the essential type of comment is the one that goes into detail about the implementation - the documentation comments.
 
+You should use one for every custom function you create, but it might also benefit variables (especially those that have values coming from an API response). Rule of thumb - add them whenever someone else reading your code for the first time would ask a question about context or purpose.
+
+I recommend using [JSDoc](https://jsdoc.app/index.html) for few reasons:
+
+1. It's a popular standard.
+2. It provides recommendations on what to add to the comment.
+3. Many code editors will help you write it and highlight its syntax.
+4. Marketing Cloud ecosystem already leverages it in Interaction Studio.
+
+```js
+/**
+ * @function debugValue
+ * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+ * @param {string} description - Describes meaning of the second parameter in the output
+ * @param {*} value - The value that needs to be debugged
+ */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+
+/**
+ * ClientID of SFMC Installed Package required for API calls
+ * @type {string}
+ * @const
+ */
+var clientID = 'CLIENT_ID';
+
+/**
+ * Authentication GUID passed as a query string through SSO redirect
+ * @type {string}
+ */
+var state = Platform.Request.GetQueryStringParameter('state');
 ```
+
+If you find it too complex, feel free to make it simpler, as long as your approach:
+
+1. describes context and purpose and
+2. is consistent across the codebase.
 
 ## Sum Up
 
