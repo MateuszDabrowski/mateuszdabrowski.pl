@@ -86,10 +86,10 @@ To do this, you search by Contact ID of the to-be-merged record and update it to
 ```html {5-6} title="Change Contact ID of a single Contact"
 <script runat="server">
     Platform.Load('Core','1');
-    var contactId = 123456789;
-    var newContactId = 987654321;
+    var currentContactId = 123456789;
+    var targetContactId = 987654321;
     var mobileAddressDataView = DataExtension.Init('_MobileAddress');
-    var result = mobileAddressDataView.Rows.Update({_ContactID: newContactId}, ['_ContactID'], [contactId]);
+    var result = mobileAddressDataView.Rows.Update({_ContactID: targetContactId}, ['_ContactID'], [currentContactId]);
 </script>
 ```
 

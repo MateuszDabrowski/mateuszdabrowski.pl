@@ -284,8 +284,31 @@ By considering all the above, we get a robust and secure template for our Cloud 
 
 ```js title="Full Cloud App Template"
 <script runat='server'>
+    /* -------------------------------------------------------------------------
+
+    Authenticates each visitor to limit access only to SFMC logged-in users.
+
+    1. Global Variables
+    2. Helper Functions
+    2.1. Debugging
+    2.2. Error handling
+    3. Authentication Flow
+    3.1. Authorisation
+    3.2. Authentication with REST Token
+    3.2.1. Build token request payload
+    3.2.2. Request the token
+    3.2.3. Destructure the response
+    3.2.4. Upsert Logging Data Extension
+    3.2.5. Handle authentication error
+    3.3. Authorisation Error
+
+    -------------------------------------------------------------------------- */
+
     Platform.Load('core', '1');
-    /* ---------------------------- GLOBAL VARIABLES ------------------------- */
+
+    /* ---------------------- 1. GLOBAL VARIABLES ---------------------------- */
+
+    var debugging = false;
     var appName = 'CLOUD_APP_NAME';
     var appURL = 'APP_CLOUD_PAGE_URL';
 
@@ -301,19 +324,51 @@ By considering all the above, we get a robust and secure template for our Cloud 
     var errorDE = 'ERROR_DATA_EXTENSION';
     var errorURL = 'ERROR_CLOUD_PAGE_URL';
 
-    /* Function for logging and managing error */
-    function handleError(message, description) {
-        Platform.Function.InsertData(errorDE, ['id', 'appName', 'errorMessage', 'errorDescription'], [GUID(), appName, message, description]);
-        Platform.Response.Redirect(errorURL + '?error=' + message + '&error_description=' + description);
+    /* ---------------------- 2. HELPER FUNCTIONS ---------------------------- */
+
+    /* ---------------------- 2.1. Debugging --------------------------------- */
+
+    /**
+    * @function debugValue
+    * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+    * @param {string} description - Describes meaning of the second parameter in the output
+    * @param {*} value - The value that needs to be debugged
+    */
+    function debugValue(description, value) {
+        Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
     };
 
-    /* ----------------------- AUTHENTICATION FLOW --------------------- */
-    /* 1. Authorisation */
+    /* ---------------------- 2.2. Error handling ---------------------------- */
+
+    /**
+    * @function handleError
+    * @description Adds the error with context to error logging Data Extension and redirects to error page.
+    * @param {Object} error - The caught error object. Can come from the try/catch block or be manually created.
+    * @param {string} error.message - First error key stores short error message describing the issue.
+    * @param {string} error.description - Second error key stores detailed error path helping with root cause analysis
+    */
+    function handleError(error) {
+        if (debugging) {
+            debugValue('Found error', error);
+        } else {
+            // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
+            Platform.Function.InsertData(errorDE, ['id', 'appName', 'errorMessage', 'errorDescription'], [GUID(), appName, error.message, error.description]);
+            Platform.Response.Redirect(errorURL + '?error=' + error.message + '&error_description=' + error.description);
+        };
+    };
+
+    /* ---------------------- 3. AUTHENTICATION FLOW ------------------------- */
+
+    /* ---------------------- 3.1. Authorization ----------------------------- */
+
     if (!state && !errorMessage) {
         state = GUID();
         Platform.Response.Redirect('https://' + clientBase + '.auth.marketingcloudapis.com/v2/authorize?response_type=code&client_id=' + clientID + '&redirect_uri=' + appURL + '&state=' + state);
-    /* 2. Authentication with REST Token */
+
+    /* ---------------------- 3.2. Authentication ---------------------------- */
+
     } else if (state) {
+        /* 3.2.1. Build token request payload */
         var code = Platform.Request.GetQueryStringParameter('code');
         var payload = {
             grant_type: 'authorization_code',
@@ -322,7 +377,9 @@ By considering all the above, we get a robust and secure template for our Cloud 
             client_secret: clientSecret,
             redirect_uri: appURL
         };
+        /* 3.2.2. Request the token */
         var response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload));
+        /* 3.2.3. Destructure the response */
         if (response.StatusCode == 200) {
             var parsedResponse = Platform.Function.ParseJSON(response.Response[0]);
             var accessToken = parsedResponse.access_token;
@@ -330,14 +387,17 @@ By considering all the above, we get a robust and secure template for our Cloud 
             var tokenExpire = Platform.Function.SystemDateToLocalDate(Platform.Function.Now());
             tokenExpire.setMinutes(tokenExpire.getMinutes() + 18);
 
-            /* Update Authentication Logging Data Extension */
+            /* 3.2.4. Upsert Logging Data Extensions */
             Platform.Function.UpsertData(authDE, ['session'], [state], ['appName', 'token', 'tokenExpire'], [appName, accessToken, tokenExpire]);
+        /* 3.2.5. Handle authentication error */
         } else {
-            handleError('Authentication Failed', 'Status: ' + response.StatusCode)
+            handleError({message: 'Authentication Failed', description: 'Status: ' + response.StatusCode})
         };
-    /* If there is an error, redirect to Error Page with details */
+
+    /* ---------------------- 3.3. Authorization Error ----------------------- */
+
     } else {
-        handleError(errorMessage, errorDescription);
+        handleError({message: errorMessage, description: errorDescription});
     };
 </script>
 

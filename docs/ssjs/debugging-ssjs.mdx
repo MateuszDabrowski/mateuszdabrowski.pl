@@ -149,7 +149,13 @@ I added two things:
 
 Make your life easier with a nice clean function that will save you a lot of time in the long run:
 
-```js {1-3,6}
+```js {7-9,12}
+/**
+* @function debugValue
+* @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+* @param {string} description - Describes meaning of the second parameter in the output
+* @param {*} value - The value that needs to be debugged
+*/
 function debugValue(description, value) {
     Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
 };
@@ -199,11 +205,17 @@ Using `Write` is a great and simple solution, but it will work only if the code 
 >
 <TabItem value='request'>
 
-```html {10,12} title="GET request to invalid URL within Try/Catch block"
+```html {16,18} title="GET request to invalid URL within Try/Catch block"
 <script runat="server">
     Platform.Load('Core','1');
     var debugging = true;
 
+    /**
+    * @function debugValue
+    * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+    * @param {string} description - Describes meaning of the second parameter in the output
+    * @param {*} value - The value that needs to be debugged
+    */
     function debugValue(description, value) {
         Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
     };
@@ -361,24 +373,37 @@ Once you start implementing the solutions mentioned above, it might get quite re
 
 You can solve it by creating a single Error Handler function and just calling it wherever it is needed:
 
-```html {9-16,21}
+```html {22-33,38}
 <script runat="server">
     Platform.Load('Core','1');
     var debugging = true;
 
+    /**
+    * @function debugValue
+    * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+    * @param {string} description - Describes meaning of the second parameter in the output
+    * @param {*} value - The value that needs to be debugged
+    */
     function debugValue(description, value) {
         Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
     };
 
+    /**
+    * @function handleError
+    * @description If debuging is enabled, outputs the error value. Else, adds the error with context to error logging Data Extension.
+    * @param {Object} error - The caught error object. Can come from the try/catch block or be manually created.
+    * @param {string} error.message - First error key stores short error message describing the issue.
+    * @param {string} error.description - Second error key stores detailed error path helping with root cause analysis
+    */
     function handleError(error) {
         if (debugging) {
-            debugValue(error);
+            debugValue('Found error', error);
         } else {
             // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
             Platform.Function.InsertData(
                 'Data_Extension_Name',
                 ['id', 'errorSource', 'errorMessage', 'errorDescription'],
-                [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]
+                [GUID(), 'Name of the asset where the script runs', Stringify(error.message), Stringify(error.description)]
             );
         };
     };

@@ -31,6 +31,12 @@ You guessed it - yes, there is a better way. You can run AMPScript code with you
 But the good answer is few lines longer:
 
 ```js
+/**
+ * @function ampScript
+ * @description Executes provided AMPScript code and returns value assigned to @Response variable
+ * @param {string} code - String of AMPScript code without start/end delimiters. Final outcome should be assigned to @Response to enable passing back to SSJS
+ * @return {?string} - Returns value from AMPScript execution if any was assigned to @Response variable
+ */
 function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
