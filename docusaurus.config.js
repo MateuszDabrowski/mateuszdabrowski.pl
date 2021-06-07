@@ -18,6 +18,8 @@ module.exports = {
             'Marketing Cloud',
             'Salesforce Marketing Cloud',
             'SFMC',
+            'Configuration',
+            'AMPScript',
             'SSJS',
             'SQL',
             'JS',
@@ -97,12 +99,16 @@ module.exports = {
                             to: 'docs/js/js-if-and-switch',
                         },
                         {
+                            label: 'AMPScript',
+                            to: 'docs/ampscript/ampscript-style-guide',
+                        },
+                        {
                             label: 'SFMC SQL',
                             to: 'docs/sql/sfmc-sql-basics',
                         },
                         {
                             label: 'SFMC Config',
-                            to: 'docs/config/sfmc-config-permissions',
+                            to: 'docs/config/sfmc-features-on-demand',
                         },
                     ],
                 },

@@ -6,24 +6,6 @@ module.exports = {
         },
         {
             type: 'category',
-            label: 'AMPScript',
-            items: [
-                'ssjs/ssjs-vs-ampscript-performance',
-                {
-                    'AMPScript Use Cases': [
-                        'usecase/sfmc-cloud-apps',
-                    ],
-                },
-                {
-                    'AMPScript Snippets': [
-                        'ssjs/ssjs-snippet-ampscript-in-ssjs',
-                    ],
-                },
-
-            ],
-        },
-        {
-            type: 'category',
             label: 'SSJS',
             items: [
                 'ssjs/ssjs-if-and-switch',
@@ -51,6 +33,25 @@ module.exports = {
                 {
                     'JS Use Cases': ['usecase/engage-with-countdown', 'usecase/tailor-with-data'],
                 },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'AMPScript',
+            items: [
+                'ampscript/ampscript-style-guide',
+                'ssjs/ssjs-vs-ampscript-performance',
+                {
+                    'AMPScript Use Cases': [
+                        'usecase/sfmc-cloud-apps',
+                    ],
+                },
+                {
+                    'AMPScript Snippets': [
+                        'ssjs/ssjs-snippet-ampscript-in-ssjs',
+                    ],
+                },
+
             ],
         },
         {
