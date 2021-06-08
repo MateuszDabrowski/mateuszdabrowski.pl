@@ -15,3 +15,40 @@ import { LeadText } from '../../src/components/LeadText.js';
 <TOCInline toc={toc} />
 
 :::
+
+First things first: this Salesforce Marketing Cloud AMPScript style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
+
+1. Be consistent across your codebase.
+2. Strive for good readability.
+
+Everything else is preference. And you are just about to learn about mine.
+
+## Naming Convention
+
+AMPScript gives you a lot of freedom when it comes to naming and letter case. But instead of going freestyle with that flexibility, we should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
+
+### Meaningful Names
+
+__Use descriptive names to provide context.__
+
+As [John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. Meaningful and consistent names are an excellent starting point for living a long (coding) life with a limited amount of frustration and regret when someone asks you about your year-old code to adapt to a new project.
+
+Applying the rules listed below is easy when you write the code and remember its logic but can be a challenge after resetting your memory by writing few other scripts. Make your AMPScript better with meaningful variable names:
+
+1. Use descriptive variable names. It is better to have a long explicit one (`isTrackingSuppressed`) than a short mysterious abbreviation (`trk`).
+2. When the variable is a boolean, prefix it with `is` (or `has`/`does`/`are` depending on the underlying data).
+3. When the variable is a date, suffix it with `Date`.
+
+```js
+/* ✅ Descriptive and suggesting boolean data type */
+var isTrackingSuppressed = false;
+
+/* ❌ Name neither describes the variable purpose nor suggest its data type*/
+var value = false;
+
+/* ✅ Descriptive and suggesting date data type */
+var trackingSupressionStartDate = new Date();
+
+/* ❌ Name neither describes the variable purpose nor suggest its data type*/
+var supressed = new Date();
+```
