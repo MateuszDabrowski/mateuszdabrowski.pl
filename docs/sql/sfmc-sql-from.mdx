@@ -25,13 +25,13 @@ SELECT
 FROM MasterSubscriberDE
 ```
 
-Just as with column names, if the name of your Data Extension has spaces in it, be sure to enclose it in brackets.
+Just as with column names, if the name of your Data Extension has spaces or hyphens in it, be sure to enclose it in brackets.
 
 ```sql {4}
 SELECT
       ContactKey
     , EmailAddress
-FROM [Master Subscriber DE]
+FROM [Master-Subscriber DE]
 ```
 
 There are, however, two cases, specific to Salesforce Marketing Cloud, that adds a twist. System Data Views and Enterprise Data Extensions.
