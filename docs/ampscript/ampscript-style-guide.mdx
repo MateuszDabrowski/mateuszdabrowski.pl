@@ -35,20 +35,47 @@ As [John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oIT
 
 Applying the rules listed below is easy when you write the code and remember its logic but can be a challenge after resetting your memory by writing few other scripts. Make your AMPScript better with meaningful variable names:
 
-1. Use descriptive variable names. It is better to have a long explicit one (`isTrackingSuppressed`) than a short mysterious abbreviation (`trk`).
-2. When the variable is a boolean, prefix it with `is` (or `has`/`does`/`are` depending on the underlying data).
+1. Use descriptive variable names. It is better to have a long explicit one (`IsTrackingSuppressed`) than a short mysterious abbreviation (`Trk`).
+2. When the variable is a boolean, prefix it with `Is` (or `Has`/`Does`/`Are` depending on the underlying data).
 3. When the variable is a date, suffix it with `Date`.
 
 ```js
 /* ✅ Descriptive and suggesting boolean data type */
-var isTrackingSuppressed = false;
+SET @isTrackingSuppressed = false;
 
-/* ❌ Name neither describes the variable purpose nor suggest its data type*/
-var value = false;
+/* ❌ Name neither describes the variable purpose nor suggest its data type */
+SET @value = false;
 
 /* ✅ Descriptive and suggesting date data type */
-var trackingSupressionStartDate = new Date();
+SET @trackingSupressionStartDate = Now();
 
-/* ❌ Name neither describes the variable purpose nor suggest its data type*/
-var supressed = new Date();
+/* ❌ Name neither describes the variable purpose nor suggest its data type */
+SET @supressed = Now();
 ```
+
+### AMPScript Letter Case
+
+AMPScript letter case is a minefield. I have seen all possible combinations of letter case used for variables and AMPScript functions. Both in shared snippets, as well as official documentation.
+
+I even created a [survey](https://www.linkedin.com/feed/update/urn:li:activity:6807595457716518912/) to check which approach is the most popular. Outcomes from 168 votes?
+
+- 45%: Mix of `ProperCase` and `UPPERCASE` for various elements.
+- 30%: `ProperCase` for everything.
+- 15%: `UPPERCASE` for everything.
+- 10%: Other conventions (including `lowercase` with some `camelCase` for functions and `snake_case` for variables by [Adam Spriggs](https://www.linkedin.com/feed/update/urn:li:ugcPost:6807595457297084416?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807673667259125762%29&replyUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807687826575110145%29), co-author of the AMPScript bible - [ampscript.guide](https://ampscript.guide)).
+
+So the best recommendation is to just decide on one style - whichever it will be - across the whole team and stay consistent.
+
+I decided to use mixed approach for the sake of readability. It might not be as simple as focusing on just one letter case format for the whole code, but it improves experience of working with longer and more complex scripts a lot.
+
+#### AMPScript Variable Names
+
+__Use `camelCase` for variable names.__
+
+#### AMPScript Functions
+
+__Use `ProperCase` for function names.__
+
+#### AMPScript Loops, Ifs and Variable Declarations
+
+__Use `UPPERCASE` for loops, if blocks and variable decalarations.__
