@@ -43,6 +43,12 @@ It has, however, two flaws that, in some scenarios, might guide you to a differe
 1. **Cost**. Each view of the Cloud Page costs one Super Message. During debugging, you might hit quite a lot of those. And those tests - across your team and over time - stack up.
 2. **Speed and context**. Each time you want to republish the updated Cloud Page, you have to go through the Preview window (that load the whole code in POST method context), confirm it and go to the page via URL to see the GET method context.
 
+:::note You Should Know
+
+Whenever you are writing an SSJS script on the Cloud Page, be sure to check your code on the published page, not the Web Studio Preview. Many SSJS functions do not work correctly in the Preview, so you might see errors that won't happen on the Cloud Page.
+
+:::
+
 ### JSON Code Resource
 
 When I want to go around those issues, I work in JSON Code Resource (also available in Web Studio). It generates a link you can use to check whether everything works, just like a Cloud Page. However, page views are free. There is also no preview allowing for a faster save-reload cycle.
