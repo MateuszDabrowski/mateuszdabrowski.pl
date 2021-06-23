@@ -181,6 +181,7 @@ module.exports = {
                 path: 'sites',
                 routeBasePath: 'sites',
                 include: ['**/*.md', '**/*.mdx'],
+                sidebarPath: require.resolve('./sidebars.json'),
                 showLastUpdateAuthor: true,
                 showLastUpdateTime: true,
                 editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
