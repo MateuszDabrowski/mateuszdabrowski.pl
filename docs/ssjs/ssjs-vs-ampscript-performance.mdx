@@ -148,8 +148,8 @@ For the final scenario I decided to break out of AMPScript context within an AMP
 ```
 </script>
     %%[
-    FOR @current = 1 TO @Counter DO
-        VAR @d
+    FOR @current = 1 TO 10000 DO
+        VAR @e
         ]%%
 
         %%[
@@ -240,10 +240,10 @@ title = testedString.replace(
 function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
-    return Variable.GetValue('@Response');
+    return Variable.GetValue('@response');
 };
 
-title = ampScript("SET @Response = ProperCase('" + testedString + "')");
+title = ampScript("SET @response = ProperCase('" + testedString + "')");
 ```
 
 </TabItem>
@@ -251,7 +251,7 @@ title = ampScript("SET @Response = ProperCase('" + testedString + "')");
 
 ```
 %%[
-SET @Response = ProperCase(@Sentence)
+SET @response = ProperCase(@sentence)
 ]%%
 ```
 
@@ -342,10 +342,10 @@ title = toLowerCase(sentences[a]);
 function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
-    return Variable.GetValue('@Response');
+    return Variable.GetValue('@response');
 };
 
-title = ampScript("SET @Response = LowerCase('" + testedString + "')");
+title = ampScript("SET @response = LowerCase('" + testedString + "')");
 ```
 
 </TabItem>
@@ -353,7 +353,7 @@ title = ampScript("SET @Response = LowerCase('" + testedString + "')");
 
 ```
 %%[
-SET @Response = LowerCase(@Sentence)
+SET @response = LowerCase(@sentence)
 ]%%
 ```
 

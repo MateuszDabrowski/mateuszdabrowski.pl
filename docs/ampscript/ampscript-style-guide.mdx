@@ -64,18 +64,62 @@ I even created a [survey](https://www.linkedin.com/feed/update/urn:li:activity:6
 - 15%: `UPPERCASE` for everything.
 - 10%: Other conventions (including `lowercase` with some `camelCase` for functions and `snake_case` for variables by [Adam Spriggs](https://www.linkedin.com/feed/update/urn:li:ugcPost:6807595457297084416?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807673667259125762%29&replyUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807687826575110145%29), co-author of the AMPScript bible - [ampscript.guide](https://ampscript.guide)).
 
-So the best recommendation is to just decide on one style - whichever it will be - across the whole team and stay consistent.
+So the best recommendation for you (and your team) to decide on one style - whichever it will be - and stay consistent.
 
-I decided to use mixed approach for the sake of readability. It might not be as simple as focusing on just one letter case format for the whole code, but it improves experience of working with longer and more complex scripts a lot.
+I decided to use mixed approach for the sake of readability. It might not be as simple as focusing on just one letter case format for the whole code, but it improves experience of working with longer and more complex AMPScript a lot.
 
 #### AMPScript Variable Names
 
 __Use `camelCase` for variable names.__
 
+I use `camelCase` for AMPScript variables beacause:
+
+1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
+2. It is easier to differentiate variable name (`@` prefix and `camelCase`) from function name (`PascalCase`), even if they use the same word (frequent for technical variables like counters).
+3. It is in line with the [SSJS styling for variables](../ssjs/ssjs-style-guide.mdx#js-variables-functions--methods-letter-case) so it's easier to switch between languages.
+
+```js
+SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = RowCount(@salesforceCampaigns)
+SET @response = ''
+```
+
 #### AMPScript Functions
 
 __Use `ProperCase` for function names.__
 
+I use `camelCase` for AMPScript variables beacause:
+
+1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
+2. It is easier to differentiate function name (`PascalCase`) from variable name (`@` prefix and `camelCase`), even if they use the same word (frequent for technical variables like counters).
+3. It is in line with the [SSJS styling for built-in functions](../ssjs/ssjs-style-guide.mdx#ssjs-functions-letter-case) so it's easier to switch between languages.
+
+```js {1-2}
+SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = RowCount(@salesforceCampaigns)
+SET @response = ''
+```
+
 #### AMPScript Loops, Ifs and Variable Declarations
 
 __Use `UPPERCASE` for loops, if blocks and variable decalarations.__
+
+
+
+```js
+SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = RowCount(@salesforceCampaigns)
+SET @response = ''
+
+IF @rowCount > 0 THEN
+    FOR @counter = 1 TO @rowCount DO
+        SET @row = Row(@retrieve, @counter)
+        SET @name = Field(@row, 'Name')
+        SET @id = Field(@row, 'Id')
+        SET @startDate = Field(@row, 'StartDate')
+        SET @endDate = Field(@row, 'EndDate')
+        SET @rowDate = Concat(@name, ',', @id, ',', @startDate, ',', @endDate)
+        SET @response = Concat(@response, @rowData,';')
+    NEXT @counter
+ENDIF
+```
