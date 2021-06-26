@@ -124,9 +124,9 @@ SET @appURL = 'APP_CLOUD_PAGE_URL'
 SET @session = GUID()
 
 SET @requestURL = Concat(
-    'https://',@clientBase,'.auth.marketingcloudapis.com/v2/authorize',
-    '?response_type=code&client_id=',@clientID,
-    '&redirect_uri=',@appURL,'&state=',@session)
+    'https://', @clientBase, '.auth.marketingcloudapis.com/v2/authorize',
+    '?response_type=code&client_id=', @clientID,
+    '&redirect_uri=', @appURL, '&state=', @session)
 Redirect(@requestURL)
 ```
 
@@ -191,23 +191,23 @@ SET @clientBase = 'API_BASE_URI';
 SET @appURL = 'APP_CLOUD_PAGE_URL';
 SET @code = RequestParameter('code');
 
-SET @requestURL = Concat('https://',@clientBase,'.auth.marketingcloudapis.com/v2/token');
+SET @requestURL = Concat('https://', @clientBase, '.auth.marketingcloudapis.com/v2/token');
 
 SET @payload = Concat(
-    '{"grant_type": "authorization_code",',
-    '"code": "',@code,'",',
-    '"client_id": "',@clientID,'",',
-    '"client_secret": "',@clientSecret,'",',
-    '"redirect_uri": "',@appURL,'"}'
+    '{"grant_type": "authorization_code", ',
+    '"code": "', @code, '",',
+    '"client_id": "', @clientID, '",',
+    '"client_secret": "', @clientSecret, '",',
+    '"redirect_uri": "', @appURL, '"}'
 )
 
-HTTPPost2(@requestURL,'application/json',@payload,false,@APIStatus,@response)
-SET @token = Substring(@APIStatus,18,512)
+HTTPPost2(@requestURL, 'application/json', @payload, false, @APIStatus, @response)
+SET @token = Substring(@APIStatus, 18, 512)
 ```
 
 :::note You Should Know
 
-If you want to use the token for API in the context of a specific Business Unit, add `'"account_id": "',@businessUnitMID,'",',` to the `@payload` to get the right token. Otherwise you will get autorization errors on API calls.
+If you want to use the token for API in the context of a specific Business Unit, add `'"account_id": "', @businessUnitMID, '",',` to the `@payload` to get the right token. Otherwise you will get autorization errors on API calls.
 
 :::
 
@@ -418,6 +418,23 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
 ```js title="Full Cloud App Template"
 <!-- Authorisation START -->
 %%[
+    /* ---------------------------------------------------------------------
+
+    Authenticates each visitor to limit access only to SFMC logged-in users.
+
+    1. Global Variables - should be updated for each implementation
+    2. Authentication Flow
+    2.1. Session Validation
+    2.2. Authorisation
+    2.3. Authentication with REST Token
+    2.3.1. Build token request payload
+    2.3.2. Make the token Request
+    2.3.3. Upsert Logging Data Extension
+
+    --------------------------------------------------------------------- */
+
+    /* ---------------------- 1. GLOBAL VARIABLES ----------------------- */
+
     VAR @appName, @clientID, @clientSecret, @clientBase, @appURL, @errorURL, @requestURL, @payload, @APIStatus, @response, @token, @session, @code, @authDE
 
     /* Add clientID, Client Secret, Client Base (part of API Base URL) for all further calls*/
@@ -433,44 +450,58 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
     /* Data Extension for Authorisation Logging */
     SET @authDE = 'AUTHENTICATION_DATA_EXTENSION'
 
-    /* Capture State, Error and Token for Authorisation purposes */
+    /* Capture State and Session for Authorisation purposes */
     SET @state = RequestParameter('state')
     SET @session = RequestParameter('s')
+
+    /* ---------------------- 2. AUTHENTICATION FLOW -------------------- */
+
+    /* ---------------------- 2.1. Session Validation ------------------------ */
 
     /* If there is Session parameter, validate it with logging DE*/
     IF NOT Empty(@session) THEN
         /* If user was authenticated for another app or if he is not authenticated, redirect to login page */
-        IF Lookup(@authDE,'appName','session',@session) != @appName THEN
+        IF Lookup(@authDE, 'appName', 'session', @session) != @appName THEN
             Redirect(@appURL)
         ENDIF
         /* Authenticated users jumps to main code */
+
+    /* ---------------------- 2.2. Authorization ------------------------ */
 
     /* If there is no Session parameter, start Authorisation flow */
     ELSEIF Empty(@state) AND Empty(@session) THEN
         SET @session = GUID()
         SET @requestURL = Concat(
-            'https://',@clientBase,'.auth.marketingcloudapis.com/v2/authorize',
-            '?response_type=code&client_id=',@clientID,
-            '&redirect_uri=',@appURL,'&state=',@session)
+            'https://', @clientBase, '.auth.marketingcloudapis.com/v2/authorize',
+            '?response_type=code&client_id=', @clientID,
+            '&redirect_uri=', @appURL, '&state=', @session)
         Redirect(@requestURL)
+
+    /* ---------------------- 2.3. Authentication ----------------------- */
 
     /* If there is state parameter after Authorisation, get the REST Token */
     ELSEIF NOT Empty(@state) THEN
         SET @code = RequestParameter('code')
-        SET @requestURL = Concat('https://',@clientBase,'.auth.marketingcloudapis.com/v2/token')
+        SET @requestURL = Concat('https://', @clientBase, '.auth.marketingcloudapis.com/v2/token')
+
+        /* 2.3.1. Build token request payload */
         SET @payload = Concat(
             '{"grant_type": "authorization_code",',
-            '"code": "',@code,'",',
-            '"client_id": "',@clientID,'",',
-            '"client_secret": "',@clientSecret,'",',
-            '"redirect_uri": "',@appURL,'"}'
+            '"code": "' ,@code, '",',
+            '"client_id": "', @clientID, '",',
+            '"client_secret": "', @clientSecret, '",',
+            '"redirect_uri": "', @appURL, '"}'
         )
-        HTTPPost2(@requestURL,'application/json',@payload,false,@APIStatus,@response)
+
+        /* 2.3.2. Make the token Request */
+        HTTPPost2(@requestURL, 'application/json', @payload, false, @APIStatus, @response)
         /* Token expires after an 18 minutes */
-        SET @token = Substring(@APIStatus,18,512)
+        SET @token = Substring(@APIStatus, 18, 512)
+
+        /* 2.3.2. Upsert Logging Data Extension */
         /* Add record to Logging DE to store the token and validate access with it */
-        UpsertData(@authDE,1,'session',@state,'appName',@appName,'token',@token,'tokenExpire',DateAdd(Now(),18,'MI'))
-        Redirect(Concat(@appURL,'?s=',@state))
+        UpsertData(@authDE,1, 'session' ,@state, 'appName', @appName, 'token', @token, 'tokenExpire', DateAdd(Now(), 18, 'MI'))
+        Redirect(Concat(@appURL, '?s=', @state))
 
     /* For any other scenario, redirect to Error Page  */
     ELSE

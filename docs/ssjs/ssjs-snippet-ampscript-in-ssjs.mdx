@@ -133,8 +133,8 @@ var response = ampScript("SET @retrieve = RetrieveSalesforceObjects("
     + "SET @row = Row(@retrieve, @counter) "
     + "SET @name = Field(@row, 'Name') SET @id = Field(@row, 'Id') "
     + "SET @startDate = Field(@row, 'StartDate') SET @endDate = Field(@row, 'EndDate') "
-    + "SET @rowDate = Concat(@name, ',', @id, ',', @startDate, ',', @endDate) "
-    + "SET @response = Concat(@response, @rowData,';') "
+    + "SET @rowData = Concat(@name, ',', @id, ',', @startDate, ',', @endDate) "
+    + "SET @response = Concat(@response, @rowData, ';') "
     + "NEXT @counter ENDIF");
 response = response.split(';');
 var campaignData = [];
