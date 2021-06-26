@@ -72,44 +72,51 @@ I decided to use mixed approach for the sake of readability. It might not be as 
 
 __Use `camelCase` for variable names.__
 
-I use `camelCase` for AMPScript variables beacause:
+I use `camelCase` for AMPScript variables because:
 
 1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
 2. It is easier to differentiate variable name (`@` prefix and `camelCase`) from function name (`PascalCase`), even if they use the same word (frequent for technical variables like counters).
 3. It is in line with the [SSJS styling for variables](../ssjs/ssjs-style-guide.mdx#js-variables-functions--methods-letter-case) so it's easier to switch between languages.
 
 ```js
+VAR @response, @salesforceCampaigns, @rowCount
 SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
 SET @rowCount = RowCount(@salesforceCampaigns)
-SET @response = ''
 ```
 
 #### AMPScript Functions
 
-__Use `ProperCase` for function names.__
+__Use `PascalCase` for function names.__
 
-I use `camelCase` for AMPScript variables beacause:
+I use `PascalCase` for AMPScript functions because:
 
 1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
 2. It is easier to differentiate function name (`PascalCase`) from variable name (`@` prefix and `camelCase`), even if they use the same word (frequent for technical variables like counters).
 3. It is in line with the [SSJS styling for built-in functions](../ssjs/ssjs-style-guide.mdx#ssjs-functions-letter-case) so it's easier to switch between languages.
 
-```js {1-2}
+```js
 SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
 SET @rowCount = RowCount(@salesforceCampaigns)
-SET @response = ''
 ```
 
 #### AMPScript Loops, Ifs and Variable Declarations
 
 __Use `UPPERCASE` for loops, if blocks and variable decalarations.__
 
+Despite I recommend `PascalCase` for most of the AMPScript syntax, I believe that limited usage of `UPPERCASE` can have huge benefit to readability.
 
+I use `UPPERCASE` for three groups of elements:
+
+1. Variable declaration and setting syntax (`VAR` & `SET`).
+2. If statement syntax (`IF`, `THEN` `ELSE`, `ENDIF` but also `IIF`).
+3. Loop syntax (`FOR`, `TO`/`DOWNTO`, `DO`, `NEXT`).
+
+Those three groups are either key datapoints within your AMPScript code (variables) or the only source of real complexity (if statements and for loops). That's why I recommend to improve readability and increase attention around those parts of the script.
 
 ```js
+VAR @response, @salesforceCampaigns, @rowCount, @counter, @row, @name, @id, @startDate, @endDate, @rowDate, @response
 SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
 SET @rowCount = RowCount(@salesforceCampaigns)
-SET @response = ''
 
 IF @rowCount > 0 THEN
     FOR @counter = 1 TO @rowCount DO
