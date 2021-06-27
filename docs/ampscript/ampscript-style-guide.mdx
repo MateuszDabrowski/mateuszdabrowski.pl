@@ -55,7 +55,7 @@ SET @supressed = Now();
 
 ### AMPScript Letter Case
 
-AMPScript letter case is a minefield. I have seen all possible combinations of letter case used for variables and AMPScript functions. Both in shared snippets, as well as official documentation.
+AMPScript letter case is a minefield. I have seen all possible combinations of letter case used for variables and AMPScript functions - both in shared snippets and official documentation.
 
 I even created a [survey](https://www.linkedin.com/feed/update/urn:li:activity:6807595457716518912/) to check which approach is the most popular. Outcomes from 168 votes?
 
@@ -66,7 +66,7 @@ I even created a [survey](https://www.linkedin.com/feed/update/urn:li:activity:6
 
 So the best recommendation for you (and your team) to decide on one style - whichever it will be - and stay consistent.
 
-I decided to use mixed approach for the sake of readability. It might not be as simple as focusing on just one letter case format for the whole code, but it improves experience of working with longer and more complex AMPScript a lot.
+I decided to use a mixed approach for the sake of readability. It might not be as simple as focusing on just one letter case format for the whole code, but it improves the experience of working with longer and more complex AMPScript a lot.
 
 #### AMPScript Variable Names
 
@@ -75,8 +75,8 @@ __Use `camelCase` for variable names.__
 I use `camelCase` for AMPScript variables because:
 
 1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
-2. It is easier to differentiate variable name (`@` prefix and `camelCase`) from function name (`PascalCase`), even if they use the same word (frequent for technical variables like counters).
-3. It is in line with the [SSJS styling for variables](../ssjs/ssjs-style-guide.mdx#js-variables-functions--methods-letter-case) so it's easier to switch between languages.
+2. It is easier to differentiate variable name (`@` prefix and `camelCase`) from the function name (`PascalCase`), even if they use the same word (frequent for technical variables like counters).
+3. It is in line with the [SSJS styling for variables](../ssjs/ssjs-style-guide.mdx#js-variables-functions--methods-letter-case), so it's easier to switch between languages.
 
 ```js
 /* ✅ camelCase variable names */
@@ -102,8 +102,8 @@ __Use `PascalCase` for function names.__
 I use `PascalCase` for AMPScript functions because:
 
 1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
-2. It is easier to differentiate function name (`PascalCase`) from variable name (`@` prefix and `camelCase`), even if they use the same word (frequent for technical variables like counters).
-3. It is in line with the [SSJS styling for built-in functions](../ssjs/ssjs-style-guide.mdx#ssjs-functions-letter-case) so it's easier to switch between languages.
+2. It is easier to differentiate function name (`PascalCase`) from the variable name (`@` prefix and `camelCase`), even if they use the same word (frequent for technical variables like counters).
+3. It is in line with the [SSJS styling for built-in functions](../ssjs/ssjs-style-guide.mdx#ssjs-functions-letter-case), so it's easier to switch between languages.
 
 ```js
 /* ✅ PascalCase variable names */
@@ -121,9 +121,9 @@ SET @rowCount = ROWCOUNT(@salesforceCampaigns)
 
 #### AMPScript Loops, Ifs and Variable Declarations
 
-__Use `UPPERCASE` for loops, if blocks and variable decalarations.__
+__Use `UPPERCASE` for loops, if blocks and variable declarations.__
 
-Despite I recommend `PascalCase` for most of the AMPScript syntax, I believe that limited usage of `UPPERCASE` can have huge benefit to readability.
+Although I recommend `PascalCase` for most of the AMPScript syntax, I believe that limited usage of `UPPERCASE` can have tremendous benefit to readability.
 
 I use `UPPERCASE` for three groups of elements:
 
@@ -131,7 +131,7 @@ I use `UPPERCASE` for three groups of elements:
 2. If statement syntax (`IF`, `NOT`, `THEN` `ELSEIF`, `ENDIF` and also `IIF`).
 3. Loop syntax (`FOR`, `TO`/`DOWNTO`, `DO`, `NEXT`).
 
-Those three groups are either key datapoints within your AMPScript code (variables) or the only source of real complexity (`IF` statements and `FOR` loops). That's why I recommend to improve readability and increase attention around those parts of the script.
+Those three groups are either fundamental data points within your AMPScript code (variables) or the only source of real complexity (`IF` statements and `FOR` loops). That's why I recommend improving readability and increasing attention around those parts of the script.
 
 ```js
 /* ✅ UPPERCASE for variable desclarations, IF and FOR syntax */
@@ -192,15 +192,15 @@ SET @salesforceCampaigns = RetrieveSalesforceObjects("Campaign", 'Name,Id,StartD
 
 ## Indentation and Spacing
 
-Letter case is just one element of syntax convention that helps with readability. Another important ones are indentation and spacing. AMPScript requires neither, but both can help you write better code.
+Letter case is just one element of syntax convention that helps with readability. Other important ones are indentation and spacing. AMPScript requires neither, but both can help you write better code.
 
 ### Consistent Indentation
 
 __Use indentation to highlight code relationships.__
 
-Indentation in AMPScript is even more important than in SSJS. Without curly brackets, it is the last hope for readability. Indetation will help you quickly understand the relationships between the code lines.
+Indentation in AMPScript is even more critical than in SSJS. Without curly brackets, it is the last hope for readability. The indentation will help you quickly understand the relationships between the code lines.
 
-It is straightforward to apply the correct indentation to simplicity of AMPScript. There are just two elements that require it. `IF` statements and `FOR` loops - add indentation level inside of those and get readable code.
+It is straightforward to apply the correct indentation to the simplicity of AMPScript. There are just two elements that require it. `IF` statements and `FOR` loops - add indentation level inside of those and get readable code.
 
 ```js
 /* ✅ Indented Syntax */
@@ -269,13 +269,13 @@ __Code tells you how. Comments tell you why.__ - [Jeff Atwood](https://blog.codi
 
 To make your code better, don't stop at just the code. Leverage comments to their full potential. Context, logic and caveats description will improve the experience for everyone - including you after few weeks.
 
-Whenever you build more complex AMPScript code, I recommend using three types of comments: table of contents, section and documentation. For short scripts, the last type will be enough.
+Whenever you build complex AMPScript code, I recommend using three types of comments: table of contents, section and documentation. For short scripts, the last type will be enough.
 
 ### 1. Table of Contents Comment
 
 The first type of comment you should use at the top of your longer scripts is the table of contents comment. This one will be your best friend during the whole lifecycle of your script.
 
-Before even starting to write AMPScript, describe the desired outcome and steps you plan to code to get there. It can be high level; it can be a draft. But it will help you focus on the best way to write your script and consider potential roadblocks or opportunities for optimisation.
+Before writing the AMPScript, describe the desired outcome and all steps you plan to code to get there. It can be high level; it can be a draft. But it will help you focus on the best way to write your script and consider potential roadblocks or opportunities for optimisation.
 
 As you are building your script - update the comment to reflect the approach you took. It will help you assess the impact of potential changes and find missing pieces.
 
@@ -305,14 +305,14 @@ For complex scripts, it might be a good idea to create few different levels of s
 
 /* ---------------------- 2. AUTHENTICATION FLOW -------------------- */
 
-/* ---------------------- 2.1. Authorization ------------------------ */
+/* ---------------------- 2.1. Authorisation ------------------------ */
 
 /* ---------------------- 2.2. Authentication ----------------------- */
 
 /* 2.2.1. Build token request payload */
 ```
 
-### 3. Documenation Comments
+### 3. Documentation Comments
 
 Two previous comment types are suitable for high-level view and organisation of your more complex scripts. But the essential type of comment is the one that goes into detail about the implementation - the documentation comments.
 
@@ -344,7 +344,7 @@ It is a long article, so let's gather all the recommendations in one place:
 3. Use descriptive names to provide context [🔗](#meaningful-names)
 4. Use `camelCase` for variable names [🔗](#ampscript-variable-names)
 5. Use `PascalCase` for function names [🔗](#ampscript-functions)
-6. Use `UPPERCASE` for loops, if blocks and variable decalarations [🔗](#ampscript-loops-ifs-and-variable-declarations)
+6. Use `UPPERCASE` for loops, if blocks and variable declarations [🔗](#ampscript-loops-ifs-and-variable-declarations)
 7. Use single quote style [🔗](#consistent-quotes)
 8. Use indentation to highlight code relationships [🔗](#consistent-indentation)
 9. Use spaces wherever it makes the code more readable [🔗](#intentional-spacing)
@@ -354,5 +354,5 @@ If you want to share something I'm missing or have arguments for a different rec
 
 Looking for more Marketing Cloud style? Check out my:
 
-- [SFMC SSJS Style Guide](../ssjs/ssjs-style-guide.mdx).
-- [SFMC SQL Style Guide](../sql/sfmc-sql-style-guide.mdx).
+- [SFMC SSJS Style Guide](../ssjs/ssjs-style-guide.mdx)
+- [SFMC SQL Style Guide](../sql/sfmc-sql-style-guide.mdx)

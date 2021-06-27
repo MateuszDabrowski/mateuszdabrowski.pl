@@ -260,7 +260,7 @@ Platform.Function.UpsertData(authDE, ['session'], [state], ['appName', 'token', 
 <TabItem value='ampscript'>
 
 ```js title="Fill Cloud App Logging Data Extension"
-UpsertData(@authDE,1,'session',@state,'appName',@appName,'token',@token,'tokenExpire',DateAdd(Now(),18,'MI'))
+UpsertData(@authDE, 1, 'session', @state, 'appName', @appName, 'token', @token, 'tokenExpire', DateAdd(Now(), 18, 'MI'))
 ```
 
 </TabItem>
@@ -428,7 +428,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
     2.2. Authorisation
     2.3. Authentication with REST Token
     2.3.1. Build token request payload
-    2.3.2. Make the token Request
+    2.3.2. Get the token
     2.3.3. Upsert Logging Data Extension
 
     --------------------------------------------------------------------- */
@@ -493,10 +493,10 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
             '"redirect_uri": "', @appURL, '"}'
         )
 
-        /* 2.3.2. Make the token Request */
+        /* 2.3.2. Get the token */
         HTTPPost2(@requestURL, 'application/json', @payload, false, @APIStatus, @response)
-        /* Token expires after an 18 minutes */
         SET @token = Substring(@APIStatus, 18, 512)
+        /* Token expires after an 18 minutes */
 
         /* 2.3.2. Upsert Logging Data Extension */
         /* Add record to Logging DE to store the token and validate access with it */
@@ -508,7 +508,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
         Redirect(@errorURL)
 
     ENDIF
-    /* Remember to pass ?s=%%=v(@session)=%% on each page reload for access validation*/
+    /* Remember to pass ?s=%%=v(@session)=%% on each page reload for leverage session validation */
 ]%%
 <!-- Authorisation END -->
 
