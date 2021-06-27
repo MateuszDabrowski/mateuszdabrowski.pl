@@ -108,7 +108,7 @@ module.exports = {
                         },
                         {
                             label: 'SFMC Config',
-                            to: 'docs/config/sfmc-features-on-demand',
+                            to: 'docs/config/sfmc-config-features-on-demand',
                         },
                     ],
                 },
