@@ -4,6 +4,7 @@ module.exports = {
     tagline: 'Automate Marketing Automation',
     url: 'https://mateuszdabrowski.pl',
     baseUrl: '/',
+    trailingSlash: true,
     favicon: 'img/favicon.ico',
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
