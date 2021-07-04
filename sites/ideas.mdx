@@ -155,6 +155,20 @@ This way, it would be possible to create, for example, a single SMS Blackout for
 
 ### Content Builder Shared Folders Permissions
 
+Content Builder is great for creating and neatly organising assets in Marketing Cloud, but it has one huge issue. Folder access management.
 
+There are already great [Ideas on expanding the folder rights](https://trailblazer.salesforce.com/ideaView?id=0873A000000PZ6oQAG), so in this Idea, I want to focus on something different - and much easier to fix for Salesforce.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="">Vote on IdeaExchange</a>
+When settings permissions for a Marketing Cloud User or Role, there are options that control the rights to Shared Folders of Content Builder. As with Shared Data Extensions Folder permissions, you can decide what the user or role can do with Shared Content Folders.
+
+However, there is one huge difference:
+1. With Shared Data Extension Folders, when you remove all permissions, the user or role can no longer see Shared space and effectively loses access to all Shared Data Extensions.
+2. With Shared Content Folders, when you remove all permissions, the user or role will not see the folders, but they will still see the Shared Folder tab and - what's much worse - `All Shared Content` section displaying all the Content assets stored within Shared Folders.
+
+As SFMC applies the permissions to read and edit content to both local and shared assets, every person with edit rights can change assets in a Shared Content Folder - event if they do not have permission to that folder.
+
+This behaviour breaks a prevalent use case of having local folders available to all creators while limiting shared folders only to administrative roles. It is possible (and very useful) for Data Extensions. But not for Content Builder, as everyone can access all administrative-level assets (like master templates or crucial content blocks).
+
+The fix is straightforward - if the current user does not have any permissions to Shared Content Builder Folders, it shouldn't see either the `All Shared Content` section or even the Shared Folders tab. That's it. It would then mirror the Shared Data Extension folder permissions and enable the local/administrative access split use case.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000019OQtQAM">Vote on IdeaExchange</a>
