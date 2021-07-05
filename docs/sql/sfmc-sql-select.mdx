@@ -211,6 +211,224 @@ SELECT
 
 In the `SELECT` statement, the `LIKE` operator is especially useful for fixing data coming from the free text fields. To learn more about the possibilities, check out the [`LIKE` guide](./sfmc-sql-like.mdx).
 
+### IIF Shorthand
+
+`CASE` statement is an awesome tool, but can be overkill for simple conditions. This is where `IIF` comes to the rescue.
+
+It takes three arguments:
+
+1. Condition
+2. Value returned if the condition evaluates to true
+3. Value returned if the condition evaluates to false
+
+With it, instead of multiline `CASE`:
+
+```sql {3-6}
+SELECT
+      _Subscriber.SubscriberKey
+    , CASE
+        WHEN _Subscriber.Status = 'active' THEN 'TRUE'
+        ELSE 'FALSE'
+    END AS Sendable
+```
+
+You can have the same outcome in a single, more readable `IIF` line:
+
+```sql {3}
+SELECT
+      _Subscriber,SubscriberKey,
+    , IIF(_Subscriber.Status = 'active', 'TRUE', 'FALSE') AS Sendable
+```
+
+Whenever you have a single condition - go with `IIF`.
+
+:::note You Should Know
+
+Both `CASE` and `IIF` can be taken to the next level with dynamic values. You don't have to use a string, integer or boolean. You can pass a column name.
+
+Use case? Think of a Master Data Extension that stores huge amount of contact information, including preferred channel (Email or Mobile). With dynamic values and `IIF` in just few lines we can create optimised Data Extension with crucial information:
+
+```sql {4}
+SELECT
+      SubscriberKey
+    , PreferredChannel
+    , IIF(PreferredChannel = 'Email', EmailAddress, MobileNumber) AS PointOfContact
+```
+
+Now, even with just three columns in your Entry Point, you can create Journey that adapts the channel to customer preferences.
+
+:::
+
+## TOP
+
+`TOP` clause can be added to your `SELECT` statement to limit the number of rows returned by your query.
+
+```sql {1} title="Returns 10 rows"
+SELECT TOP 10
+      SubscriberKey
+    , PreferredChannel
+    , IIF(PreferredChannel = 'Email', EmailAddress, MobileNumber) AS PointOfContact
+```
+
+### TOP PERCENT
+
+`TOP` clause is not limited to an integer, you can also ask for specific percent of rows with `PERCENT` modifier:
+
+```sql {1}
+SELECT TOP 10 PERCENT
+      SubscriberKey
+    , PreferredChannel
+    , IIF(PreferredChannel = 'Email', EmailAddress, MobileNumber) AS PointOfContact
+```
+
+The number of rows will be rounded up to the nearest integer (so `TOP 50 PERCENT` from Data Extension with 101 rows will return 51 rows).
+
+:::note You Should Know
+
+`PERCENT` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity.
+
+:::
+
+### TOP with ORDER BY
+
+`TOP` clause best practice is to always use it with `ORDER BY`. Only with sorted data you will know what is the logic behind selecting rows.
+
+To sort outcomes of your query, add `ORDER BY` at the end along with column(s) that should be used for sorting.
+
+```sql {4} title="Top 10% with the lowest Quiz Score"
+SELECT TOP 10 PERCENT
+      SubscriberKey
+    , QuizScore
+ORDER BY QuizScore
+```
+
+You can control the sort order by applying `ASC` (default) and `DESC` after the column.
+
+```sql {4} title="Top 10% with highest Quiz Score"
+SELECT TOP 10 PERCENT
+      SubscriberKey
+    , QuizScore
+ORDER BY QuizScore DESC
+```
+
+:::note You Should Know
+
+`ORDER BY` sorts Text fields alphabetically. This might surprise you if you store some numbers in such field type, as it will order `10` before `2`.
+
+The best solution is to use appropriate field type for numbers. However, if for whatever reason you cannot do it, leverage [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert):
+
+```sql {4} title="Top 10% with highest Quiz Score if QuizScore is Text field"
+SELECT TOP 10 PERCENT
+      SubscriberKey
+    , QuizScore
+ORDER BY CONVERT(INT, QuizScore) DESC
+```
+
+:::
+
+`ORDER BY` can operate not only on selected column. You already saw above that you can use expression (even [`CASE`](#conditional-values-with-case)!) to calculate the sorting value, but it's much more flexible.
+
+You can sort using a column that was not selected:
+
+```sql {3} title="Top 10% with highest Quiz Score, without returning the score"
+SELECT TOP 10 PERCENT
+      SubscriberKey
+ORDER BY QuizScore DESC
+```
+
+You can sort using an [alias](#aliasing-with-as) defined in the `SELECT` statement:
+
+```sql {3-4} title="Top 10% with highest Quiz Score, using an alias"
+SELECT TOP 10 PERCENT
+      SubscriberKey
+    , QuizScore AS Points
+ORDER BY Points DESC
+```
+
+And you can even sort using multiple values - each can have different sorting order.
+
+SQL will sort using first provided column and then, while mantaining the order of the previous column, will sort again using the next value. This may sound complicated, so let's jump to an example:
+
+```sql {4} title="Top 10% with highest Quiz Score, first to solve"
+SELECT TOP 10 PERCENT
+      SubscriberKey
+    , QuizScore
+ORDER BY QuizScore DESC, QuizFilledDate ASC
+```
+
+Query will first sort using QuizScore to find people with the most points. Next, it will apply second sort on the date of quiz completion. As an outcome, we will have the highest scorers sorted from first to last within each high score.
+
+### TOP WITH TIES
+
+Sometimes even such complex sorting might not be enough.
+
+For example, let's capture three top scorers of our quiz:
+
+```sql title="Three top scorers"
+SELECT TOP 3
+    SubscriberKey
+    , QuizScore
+ORDER BY QuizScore DESC
+```
+
+As an outcome, we got:
+
+SubscriberKey | QuizScore
+-- | --
+XYZ | 97
+ACE | 97
+PIL | 96
+
+However, if we check our Data Extension, we could see more people with the same score:
+
+SubscriberKey | QuizScore
+-- | --
+XYZ | 97
+ACE | 97
+PIL | 96
+UDO | 96
+SDJ | 96
+
+What can we do to capture everyone with the score good enough for the Top 3 status? `WITH TIES` will help:
+
+```sql title="Despite asking for TOP 3 it will return 5 rows due to ties"
+SELECT TOP 3 WITH TIES
+    SubscriberKey
+    , QuizScore
+ORDER BY QuizScore DESC
+```
+
+With those two words added after the `TOP` clause, our query will return all rows that match the sorted value in the last row. This, however, means that the number of outcomes is not set in stone, so be sure to prepare your next steps for that uncertainity.
+
+:::note You Should Know
+
+`WITH TIES` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity.
+
+:::
+
+## DISTINCT
+
+`DISTINCT` clause is the simplect deduplication tool.
+
+When added to the `SELECT` statement, it will check all available values and leave only unique ones.
+
+```sql {1} title="Unique domains in your database sorted alphabetically"
+SELECT DISTINCT
+      Domain
+ORDER BY Domain
+```
+
+It's perfect for single column deduplication, however, when you apply it to a select with multiple columns it will leverage all of them for deduplication.
+
+```sql {1} title="One row for each SubscriberKey - Domain pair, sorted alphabetically by domain"
+SELECT DISTINCT
+      SubscriberKey
+    , Domain
+ORDER BY Domain
+```
+
+In the above case you will get separate row for each Subscriber Key - Domain pair. It means that you might receive multiple rows with the same Subscriber Key (but each with different Domain). And you will certainly see multiple rows with the same domain (but each with different Subscriber key).
+
 ## Table Prefixes
 
 Additional elements that you will be using in many of your queries are table prefixes for selecting columns from multiple joined Data Extensions.
