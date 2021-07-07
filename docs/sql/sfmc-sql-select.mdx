@@ -427,7 +427,25 @@ SELECT DISTINCT
 ORDER BY Domain
 ```
 
-In the above case,you will get a separate row for each Subscriber Key - Domain pair. It means that you might receive multiple rows with the same Subscriber Key (but each with a different Domain). And you will undoubtedly see numerous rows with the same domain (but each with a different Subscriber key).
+In the above case, you will get a separate row for each Subscriber Key - Domain pair. It means that you might receive multiple rows with the same Subscriber Key (but each with a different Domain). And you will undoubtedly see numerous rows with the same domain (but each with a different Subscriber key).
+
+### DISTINCT with TOP
+
+You can use both `DISTINCT` and `TOP` in the same query.
+
+```sql {1}
+SELECT DISTINCT TOP 10 PERCENT
+      Domain
+ORDER BY Domain
+```
+
+SQL will first deduplicate the results using `DISTINCT` and then limit output with `TOP`.
+
+:::note You Should Know
+
+There is an important exception from stadard rules if you are using `DISTINCT` and `ORDER BY` in the same query. You have to add all columns used for sorting to the `SELECT`, which might have painful impact on your deduplication rules.
+
+:::
 
 ## Table Prefixes
 
