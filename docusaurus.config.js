@@ -145,11 +145,11 @@ module.exports = {
             trackingID: 'GTM-N46LB5K',
             anonymizeIP: true,
         },
-        algolia: {
-            apiKey: '3fbd31ec489532e5020df55b3410e6e6',
-            indexName: 'mateuszdabrowski',
-            placeholder: 'Search Docs & Snipptes',
-        },
+        // algolia: {
+        //     apiKey: '3fbd31ec489532e5020df55b3410e6e6',
+        //     indexName: 'mateuszdabrowski',
+        //     placeholder: 'Search Docs & Snipptes',
+        // },
     },
     presets: [
         [
