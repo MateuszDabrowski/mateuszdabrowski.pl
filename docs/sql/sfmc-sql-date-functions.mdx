@@ -305,7 +305,7 @@ It will also automatically consider any differences between Daylight Saving Time
 You can leverage both features of the `AT THE TIMEZONE` in one line to apply the timezone to offset-less datetime and convert it to another timezone by using the function twice:
 
 ```sql title="First, apply the timezone. Then change the timezone"
-SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET, /* Output: 2020-01-01 01:00:00 +01:00 */
+SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET, /* Output: 2020-01-02 01:00:00 +01:00 */
 ```
 
 It works because the function's first execution [adds the offset with `AT TIME ZONE`](#add-offset-with-at-time-zone). Second, uses the output with an offset applied and [change the timezone](#change-timezone-with-at-time-zone).
