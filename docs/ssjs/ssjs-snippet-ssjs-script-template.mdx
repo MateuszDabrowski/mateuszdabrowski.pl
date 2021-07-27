@@ -16,6 +16,13 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 :::
 
+Some like to start with blank slate. Some - from a well crafted template. I'm in team template and here you can see my SSJS one.
+
+## SSJS Template Elements
+
+
+
+## SSJS Template Code
 
 ```html
 <script runat='server'>
@@ -35,9 +42,12 @@ import { LeadText } from '../../src/components/LeadText.js';
     -------------------------------------------------------------------------- */
 
     Platform.Load('core', '1');
+    // Uncomment below if you will be using SOAP API via WSProxy in the script
+    // var soap = new Script.Util.WSProxy();
 
     /* ---------------------- 1. GLOBAL VARIABLES ---------------------------- */
 
+    var endpoint, headerNames, headerValues, payload, response, parsedResponse;
     var debugging = false;
 
     /* ---------------------- 1.1. API Endpoint------------------------------- */

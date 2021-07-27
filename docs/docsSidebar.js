@@ -20,6 +20,7 @@ module.exports = {
                     'SSJS Snippets': [
                         'ssjs/ssjs-snippet-ampscript-in-ssjs',
                         'ssjs/ssjs-snippet-mobileconnect-phone-change',
+                        'ssjs/ssjs-snippet-ssjs-script-template'
                     ],
                 },
             ],
