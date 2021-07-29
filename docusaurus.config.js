@@ -30,13 +30,13 @@ module.exports = {
     },
     themeConfig: {
         image: 'img/logotyp-og.png', // Default image for meta tag
-        // announcementBar: {
-        //     id: 'announcementBar',
-        //     content:
-        //         '🚧 Search currently doesn\'t work - check full list of docs & articles <a href="https://mateuszdabrowski.pl/docs/">here</a> 🚧',
-        //     backgroundColor: '#F6B355',
-        //     textColor: '#00001F',
-        // },
+        announcementBar: {
+            id: 'announcementBar',
+            content:
+                '🚧 Search currently doesn\'t work - check full list of docs & articles <a href="https://mateuszdabrowski.pl/docs/">here</a> 🚧',
+            backgroundColor: '#F6B355',
+            textColor: '#00001F',
+        },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
@@ -145,11 +145,11 @@ module.exports = {
             trackingID: 'GTM-N46LB5K',
             anonymizeIP: true,
         },
-        // algolia: {
-        //     apiKey: '3fbd31ec489532e5020df55b3410e6e6',
-        //     indexName: 'mateuszdabrowski',
-        //     placeholder: 'Search Docs & Snipptes',
-        // },
+        algolia: {
+            apiKey: 'f22602915deedadeaab48112c6e2d1b7',
+            indexName: 'mateuszdabrowski',
+            placeholder: 'Search Docs & Snipptes',
+        },
     },
     presets: [
         [
