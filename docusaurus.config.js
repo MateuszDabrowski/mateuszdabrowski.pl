@@ -30,13 +30,13 @@ module.exports = {
     },
     themeConfig: {
         image: 'img/logotyp-og.png', // Default image for meta tag
-        announcementBar: {
-            id: 'announcementBar',
-            content:
-                '🚧 Search currently doesn\'t work - check full list of docs & articles <a href="https://mateuszdabrowski.pl/docs/">here</a> 🚧',
-            backgroundColor: '#F6B355',
-            textColor: '#00001F',
-        },
+        // announcementBar: {
+        //     id: 'announcementBar',
+        //     content:
+        //         '🚧 Search currently doesn\'t work - check full list of docs & articles <a href="https://mateuszdabrowski.pl/docs/">here</a> 🚧',
+        //     backgroundColor: '#F6B355',
+        //     textColor: '#00001F',
+        // },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
