@@ -144,34 +144,13 @@ html[data-theme='dark'] article header > h1 {
   padding: 0 var(--ifm-pre-padding);
 }
 
-html[data-theme='dark'] .admonition-note code {
-  color: var(--ifm-color-white);
-}
-
-.admonition-tip {
-  background-color: var(--ifm-background-color);
-  border-color: var(--ifm-color-primary);
-  color: var(--ifm-color-primary);
-  margin-top: 1rem;
-}
-
-.admonition-tip svg {
-  fill: var(--ifm-color-primary);
-}
-
-.admonition-tip a {
-  color: var(--ifm-font-color-base);
-  text-decoration: none;
-}
-
-.admonition-tip ul {
-  padding-left: 1.1rem;
-  padding-bottom: 0px;
-}
-
 @media only screen and (min-width: 768px) {
   div[role='tabpanel'] p {
     font-size: 20px;
+  }
+
+  div[role="tabpanel"] .admonition p {
+    font-size: 16px;
   }
 }
 
