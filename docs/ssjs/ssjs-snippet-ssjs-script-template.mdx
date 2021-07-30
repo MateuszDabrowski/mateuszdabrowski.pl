@@ -93,6 +93,8 @@ Some like to start with a blank slate. Some - from a well-crafted template. I'm 
     * Always try to make each section coherent with code logic to make the split meaningful.
     */
 
+    // if (debugging) debugValue('{{API Call Name}} Response', response);
+
     } catch (error) {
         handleError(error);
     }
@@ -230,6 +232,10 @@ In this section, I keep all the helper functions used multiple times in the scri
 In the template, you can find my two favourite ones that I use in every single script.
 
 To learn more about them, check out detailed descriptions of [`debugValue`](../ssjs/debugging-ssjs.mdx#debugging-variable) and [`handleError`](../ssjs/debugging-ssjs.mdx#error-handler-function) functions.
+
+In many cross-cloud scenarios I also use [AMPScript runner](../ssjs/ssjs-snippet-ampscript-in-ssjs.mdx), but as it is more use case specific solution, I don't keep it in base template.
+
+I prefix all functions with [documentation comments](../ssjs/ssjs-style-guide.mdx#3-documentation-comments).
 
 ### Script Body
 
