@@ -14,8 +14,6 @@ module.exports = {
             'Mateusz',
             'Dąbrowski',
             'mateuszdabrowski',
-            'Eloqua',
-            'Oracle Eloqua',
             'Marketing Cloud',
             'Salesforce Marketing Cloud',
             'SFMC',
