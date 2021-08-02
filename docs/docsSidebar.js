@@ -69,6 +69,7 @@ module.exports = {
                 'sql/sfmc-sql-date-functions',
                 'sql/sfmc-sql-numeric-functions',
                 'sql/sfmc-sql-conversion-functions',
+                'sql/sfmc-sql-aggregate-functions.mdx',
                 'sql/sfmc-sql-style-guide',
                 {
                     'SQL Snippets': [
