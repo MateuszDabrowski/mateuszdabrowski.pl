@@ -46,8 +46,6 @@ Some like to start with a blank slate. Some - from a well-crafted template. I'm 
 
     /* -------------------- 1.2. Error Handling------------------------------- */
     var scriptName = 'SCRIPT_NAME';
-    var errorMessage = Platform.Request.GetQueryStringParameter('error');
-    var errorDescription = Platform.Request.GetQueryStringParameter('error_description');
     var errorDE = 'ERROR_DATA_EXTENSION';
     var errorURL = 'ERROR_CLOUD_PAGE_URL';
 
@@ -79,7 +77,7 @@ Some like to start with a blank slate. Some - from a well-crafted template. I'm 
             debugValue('Found error', error);
         } else {
             // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
-            Platform.Function.InsertData(errorDE, ['id', 'scriptName', 'errorMessage', 'errorDescription'], [GUID(), scriptName, error.message, error.description]);
+            Platform.Function.InsertData(errorDE, ['ID', 'ScriptName', 'ErrorMessage', 'ErrorDescription'], [GUID(), scriptName, error.message, error.description]);
             Platform.Response.Redirect(errorURL + '?error=' + error.message + '&error_description=' + error.description);
         };
     };
@@ -145,8 +143,6 @@ Read more on that approach in my [SSJS Style Guide](../ssjs/ssjs-style-guide.mdx
 
     /* -------------------- 1.2. Error Handling------------------------------- */
     var scriptName = 'SCRIPT_NAME';
-    var errorMessage = Platform.Request.GetQueryStringParameter('error');
-    var errorDescription = Platform.Request.GetQueryStringParameter('error_description');
     var errorDE = 'ERROR_DATA_EXTENSION';
     var errorURL = 'ERROR_CLOUD_PAGE_URL';
 ```
@@ -177,8 +173,6 @@ There is also a second reason - defining them before the try/catch block, even w
 
     /* -------------------- 1.2. Error Handling------------------------------- */
     var scriptName = 'SCRIPT_NAME';
-    var errorMessage = Platform.Request.GetQueryStringParameter('error');
-    var errorDescription = Platform.Request.GetQueryStringParameter('error_description');
     var errorDE = 'ERROR_DATA_EXTENSION';
     var errorURL = 'ERROR_CLOUD_PAGE_URL';
 ```
@@ -221,7 +215,7 @@ The template contains the API Endpoint section that I frequently use, but if you
             debugValue('Found error', error);
         } else {
             // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
-            Platform.Function.InsertData(errorDE, ['id', 'scriptName', 'errorMessage', 'errorDescription'], [GUID(), scriptName, error.message, error.description]);
+            Platform.Function.InsertData(errorDE, ['ID', 'ScriptName', 'ErrorMessage', 'ErrorDescription'], [GUID(), scriptName, error.message, error.description]);
             Platform.Response.Redirect(errorURL + '?error=' + error.message + '&error_description=' + error.description);
         };
     };
@@ -232,6 +226,16 @@ In this section, I keep all the helper functions used multiple times in the scri
 In the template, you can find my two favourite ones that I use in every single script.
 
 To learn more about them, check out detailed descriptions of [`debugValue`](../ssjs/debugging-ssjs.mdx#debugging-variable) and [`handleError`](../ssjs/debugging-ssjs.mdx#error-handler-function) functions.
+
+:::note You Should Know
+
+If the script will be used in JSON Code Resource backend I modify those two functions a bit by:
+
+1. Changing the `debugValue` Write to: `Write(' --- ' + description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + ' --- ');` as break line tag will not work.
+
+2. Removing the `Platform.Response.Redirect` from `handleError` as we don't want backend redirects. The `errorURL` variable follows suit.
+
+:::
 
 In many cross-cloud scenarios I also use [AMPScript runner](../ssjs/ssjs-snippet-ampscript-in-ssjs.mdx), but as it is more use case specific solution, I don't keep it in base template.
 
