@@ -11,17 +11,97 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## GROUP BY
 
+`GROUP BY` clause allows you to group the query results using provided logic.
+
+To use it, add `GROUP BY` with the column used for the grouping. In the [`SELECT`](./sfmc-sql-select.mdx) statement you must use only either columns used later in `GROUP BY` or aggregate functions.
+
+Simplest example? Let's say you want to check which email domains are most popular in your database.
+
+```sql
+SELECT
+      Domain
+    , COUNT(*) AS Records
+FROM _Subscribers
+GROUP BY Domain
+```
+
+With this simple query you have each domain listed with the number of matching records thanks to [`COUNT`] function.
+
+You can easily improve this query by limiting the records with [`TOP`](./sfmc-sql-select.mdx#top) and sorting [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by) to leverage Pareto's principle and pick 20% of the records responsible for 80% of the results.
+
+```sql
+SELECT 20 PERCENT
+      Domain
+    , COUNT(*) AS Records
+FROM _Subscribers
+GROUP BY Domain
+ORDER BY COUNT(*) DESC
+```
+
+With such data you can assess your database structure and decide, for example, whether using AMP for Email will be worth the effort for your business.
+
+This is, however, just the beginning of what you can do with `GROUP BY`. The real magic happens with multiple columns used for the grouping.
+
+Let's check how the domain numbers are changing in years with the help of [`DATEPART`](./sfmc-sql-date-functions.mdx#datepart) and [`DateJoined` field](../config/sfmc-config-system-data-views.mdx#_subscribers).
+
+## COUNT
+
+`COUNT` function allows you to count the number of rows that matches a query. It is excellent for both _ad hoc_ data exploration as well as creating administrative queries that help maintain your instance.
+
+```sql {1} title="Count all rows in the _Subscribers Data View"
+SELECT COUNT(*)
+FROM _Subscribers
+```
+
+Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So where is the value?
+
+For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function parameter to the specific column to count only its values.
+
+```sql {3,6} title="This query will show you which Email Addresses exists on more than one contact"
+SELECT
+      subscribers.EmailAddress
+    , COUNT(subscribers.EmailAddress) AS EmailCount
+FROM _Subscribers AS subscribers
+GROUP BY subscribers.EmailAddress
+HAVING COUNT(subscribers.EmailAddress) > 1
+```
+
+With [`GROUP BY`](#group-by) and [`HAVING`](#having) we simplify the output to show only the duplicate values with corresponding counts.
+
+:::note You Should Know
+
+You can take it to the next level with the subquery approach:
+
+```sql {11-12} title="Returns Subscriber Key, Email Address and Duplicate Count of your database"
+SELECT
+      subscribers.SubscriberKey
+    , subscribers.EmailAddress
+    , counted.EmailCount
+FROM _Subscribers AS subscribers
+    INNER JOIN (
+        SELECT
+              subscribers.EmailAddress        AS EmailAddress
+            , COUNT(subscribers.EmailAddress) AS EmailCount
+        FROM _Subscribers AS subscribers
+        GROUP BY subscribers.EmailAddress
+        HAVING COUNT(subscribers.EmailAddress) > 1
+    ) AS counted
+        ON counted.EmailAddress = subscribers.EmailAddress
+```
+
+This extended query will not only tell you that there are potential duplicates. It will also give you Subscriber Keys of duplicate contacts so that you can investigate the reason and clean up records after fixing the underlying issue.
+
+Pack it into Automation with Verification Activity on top and keep your database clean with ease.
+
+:::
+
 ## HAVING
 
 ### HAVING vs WHERE
 
-## COUNT
-
-<!-- Pull from numeric functions -->
-
 ## AVG
 
-## MAX & MIN
+## MAX and MIN
 
 <!-- Refer to numeric functions -->
 

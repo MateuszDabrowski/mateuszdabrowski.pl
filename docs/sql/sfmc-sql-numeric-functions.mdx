@@ -22,12 +22,6 @@ SELECT COUNT(*)
 FROM _Subscribers
 ```
 
-:::note You Should Know
-
-If you are counting huge dataset (more than 2,147,483,647 records) use `COUNT_BIG` instead of `COUNT`.
-
-:::
-
 Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So where is the value?
 
 For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function parameter to the specific column to count only its values.
@@ -41,7 +35,7 @@ GROUP BY s.EmailAddress
 HAVING COUNT(s.EmailAddress) > 1
 ```
 
-With `GROUP BY` and `HAVING` we simplify the output to show only the duplicate values with corresponding counts.
+With [`GROUP BY`](./sfmc-sql-aggregate-functions.mdx#group-by) and [`HAVING`](./sfmc-sql-aggregate-functions.mdx#having) we simplify the output to show only the duplicate values with corresponding counts.
 
 :::note You Should Know
 
