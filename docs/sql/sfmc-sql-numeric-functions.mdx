@@ -13,57 +13,6 @@ Salesforce Marketing Cloud SQL implementation does not support user-defined func
 
 Here, I will cover only selected numeric functions, that I find most useful for Marketing Automation purposes. They will help you do the necessary calculations or format the numbers to match your needs.
 
-## COUNT
-
-`COUNT` function allows you to count the number of rows that matches a query. It is excellent for both _ad hoc_ data exploration as well as creating administrative queries that help maintain your instance.
-
-```sql {1} title="Count all rows in the _Subscribers Data View"
-SELECT COUNT(*)
-FROM _Subscribers
-```
-
-Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So where is the value?
-
-For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function parameter to the specific column to count only its values.
-
-```sql {3,6} title="This query will show you which Email Addresses exists on more than one contact"
-SELECT
-      s.EmailAddress
-    , COUNT(s.EmailAddress) AS EmailCount
-FROM _Subscribers AS s
-GROUP BY s.EmailAddress
-HAVING COUNT(s.EmailAddress) > 1
-```
-
-With [`GROUP BY`](./sfmc-sql-aggregate-functions.mdx#group-by) and [`HAVING`](./sfmc-sql-aggregate-functions.mdx#having) we simplify the output to show only the duplicate values with corresponding counts.
-
-:::note You Should Know
-
-You can take it to the next level with the subquery approach:
-
-```sql {11-12} title="Returns Subscriber Key, Email Address and Duplicate Count of your database"
-SELECT
-      s.SubscriberKey
-    , s.EmailAddress
-    , counted.EmailCount
-FROM _Subscribers AS s
-    INNER JOIN (
-        SELECT
-              s.EmailAddress        AS EmailAddress
-            , COUNT(s.EmailAddress) AS EmailCount
-        FROM _Subscribers AS s
-        GROUP BY s.EmailAddress
-        HAVING COUNT(s.EmailAddress) > 1
-    ) AS counted
-        ON counted.EmailAddress = s.EmailAddress
-```
-
-This extended query will not only tell you that there are potential duplicates. It will also give you Subscriber Keys of duplicate contacts so that you can investigate the reason and clean up records after fixing the underlying issue.
-
-Pack it into Automation with Verification Activity on top and keep your database clean with ease.
-
-:::
-
 ## MIN and MAX
 
 `MIN` and `MAX` functions allow you to find the minimum and maximum values of column(s) in the selected data extension.

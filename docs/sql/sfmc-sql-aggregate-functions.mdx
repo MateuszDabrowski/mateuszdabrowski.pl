@@ -5,6 +5,8 @@ sidebar_label: Aggregate Functions
 description: WIP.
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='WIP.' />
@@ -17,26 +19,71 @@ To use it, add `GROUP BY` with the column used for the grouping. In the [`SELECT
 
 Simplest example? Let's say you want to check which email domains are most popular in your database.
 
+
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
+
 ```sql
 SELECT
       Domain
-    , COUNT(*) AS Records
+    , COUNT(*) AS SubscriberCount
 FROM _Subscribers
 GROUP BY Domain
 ```
 
-With this simple query you have each domain listed with the number of matching records thanks to [`COUNT`] function.
+</TabItem>
+<TabItem value='outcome'>
+
+| Domain | SubscriberCount |
+| -- | -- |
+| mateuszdabrowski.pl | 1 |
+| gmail.com | 1234 |
+| yahoo.com | 987 |
+| outlook.com | 1111 |
+| ... | ... |
+
+</TabItem>
+</Tabs>
+
+With this simple query you have each domain listed with the number of matching records thanks to [`COUNT`](#count) function.
 
 You can easily improve this query by limiting the records with [`TOP`](./sfmc-sql-select.mdx#top) and sorting [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by) to leverage Pareto's principle and pick 20% of the records responsible for 80% of the results.
 
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
+
 ```sql
-SELECT 20 PERCENT
+SELECT TOP 20 PERCENT
       Domain
-    , COUNT(*) AS Records
+    , COUNT(*) AS SubscriberCount
 FROM _Subscribers
 GROUP BY Domain
 ORDER BY COUNT(*) DESC
 ```
+
+</TabItem>
+<TabItem value='outcome'>
+
+| Domain | SubscriberCount |
+| -- | -- |
+| gmail.com | 1234 |
+| outlook.com | 1111 |
+| yahoo.com | 987 |
+
+</TabItem>
+</Tabs>
 
 With such data you can assess your database structure and decide, for example, whether using AMP for Email will be worth the effort for your business.
 
@@ -44,9 +91,150 @@ This is, however, just the beginning of what you can do with `GROUP BY`. The rea
 
 Let's check how the domain numbers are changing in years with the help of [`DATEPART`](./sfmc-sql-date-functions.mdx#datepart) and [`DateJoined` field](../config/sfmc-config-system-data-views.mdx#_subscribers).
 
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
+
+```sql
+SELECT TOP 20 PERCENT
+      Domain
+    , DATEPART(YEAR, DateJoined) AS YearJoined
+    , COUNT(*) AS SubscriberCount
+FROM _Subscribers
+GROUP BY
+      Domain
+    , DATEPART(YEAR, DateJoined)
+ORDER BY COUNT(*) DESC
+```
+
+</TabItem>
+<TabItem value='outcome'>
+
+| Domain | YearJoined | SubscriberCount |
+| -- | -- | -- |
+| gmail.com | 2021 | 642 |
+| outlook.com | 2021 | 578 |
+| gmail.com | 2020 | 567 |
+| outlook.com | 2020 | 456 |
+| yahoo.com | 2021 | 432 |
+| yahoo.com | 2020 | 345 |
+
+</TabItem>
+</Tabs>
+
+As you can see, by just adding more columns after comma, we can make even more interesting groupings - in this case we will have separate row for each domain and year. Nice to see how many Subscribers using free Gmail joined your database in 2021 vs 2020.
+
+### GROUP BY ROLLUP
+
+`ROLLUP` takes the multi-column grouping to the next level by showing subtotals and grand totals in the outcomes. Not really useful for standard segmentation, but awesome for quick analysis and reporting.
+
+To use it - just add `ROLLUP` keyword and wrap grouping columns in parentheses.
+
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
+
+```sql
+SELECT TOP 20 PERCENT
+      Domain
+    , DATEPART(YEAR, DateJoined) AS YearJoined
+    , COUNT(*) AS SubscriberCount
+FROM _Subscribers
+GROUP BY ROLLUP (
+          Domain
+        , DATEPART(YEAR, DateJoined)
+    )
+ORDER BY COUNT(*) DESC
+```
+
+</TabItem>
+<TabItem value='outcome'>
+
+| Domain | YearJoined | SubscriberCount |
+| -- | -- | -- |
+| null | null | 12304 |
+| gmail.com | null | 1234 |
+| outlook.com | null | 1111 |
+| yahoo.com | null | 987 |
+| gmail.com | 2021 | 642 |
+| outlook.com | 2021 | 578 |
+| gmail.com | 2020 | 567 |
+| outlook.com | 2020 | 456 |
+| yahoo.com | 2021 | 432 |
+| yahoo.com | 2020 | 345 |
+
+</TabItem>
+</Tabs>
+
+In the outcomes you will see some rows with `null` is columns - those are subtotal and total rows.
+
+Notice that the nulls are only in `YearJoined` column (subtotals) or in all columns (total). There are no rows with `null` only in `Domain`. This is because the `ROLLUP` rolls columns provided in parentheses from right to left when calculating subtotals.
+
+Order of columns will have huge impact on outcomes.
+
+:::note You Should Know
+
+You can also perform partial roll up by keeping some columns outside of `ROLLUP` operator. In the example below I excluded `Domain` from `ROLLUP` and as a result don't have the grand total in the outcomes.
+
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
+
+```sql
+SELECT TOP 20 PERCENT
+      Domain
+    , DATEPART(YEAR, DateJoined) AS YearJoined
+    , COUNT(*) AS SubscriberCount
+FROM _Subscribers
+GROUP BY
+      Domain
+    , ROLLUP(DATEPART(YEAR, DateJoined))
+ORDER BY COUNT(*) DESC
+ORDER BY COUNT(*) DESC
+```
+
+</TabItem>
+<TabItem value='outcome'>
+
+| Domain | YearJoined | SubscriberCount |
+| -- | -- | -- |
+| gmail.com | null | 1234 |
+| outlook.com | null | 1111 |
+| yahoo.com | null | 987 |
+| gmail.com | 2021 | 642 |
+| outlook.com | 2021 | 578 |
+| gmail.com | 2020 | 567 |
+| outlook.com | 2020 | 456 |
+| yahoo.com | 2021 | 432 |
+| yahoo.com | 2020 | 345 |
+
+</TabItem>
+</Tabs>
+
+:::
+
+### GROUP BY CUBE
+
+TODO
+
 ## COUNT
 
-`COUNT` function allows you to count the number of rows that matches a query. It is excellent for both _ad hoc_ data exploration as well as creating administrative queries that help maintain your instance.
+`COUNT` function allows you to count the number of rows that matches a query. It is excellent for both _ad hoc_ data exploration as well as creating administrative queries that help maintain your instance. It's also must have for [`GROUP BY`](#group-by).
 
 ```sql {1} title="Count all rows in the _Subscribers Data View"
 SELECT COUNT(*)
