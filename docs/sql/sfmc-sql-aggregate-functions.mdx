@@ -2,20 +2,20 @@
 id: sfmc-sql-aggregate-functions
 title: SFMC SQL Aggregate Functions
 sidebar_label: Aggregate Functions
-description: WIP.
+description: Group rows and apply aggregate functions to see the big picture in your data extensions.
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='WIP.' />
+<LeadText content='Group rows and apply aggregate functions to see the big picture in your data.' />
 
 ## GROUP BY
 
-To group results with `GROUP BY` you need to provide the grouping column(s). Order here is irrelevant.
+`GROUP BY` allows you to create aggregation by grouping the input data on selected column(s).
 
-Remember, that using it limits the data you can use in the [`SELECT`](./sfmc-sql-select.mdx) statement to either columns used later in `GROUP BY` or aggregate functions.
+It limits the data you can [`SELECT`](./sfmc-sql-select.mdx) to either `GROUP BY` column(s) or aggregate functions.
 
 Let's say you want to check which email domains are most popular in your database.
 
@@ -50,9 +50,9 @@ GROUP BY Domain
 </TabItem>
 </Tabs>
 
-With this simple query you have each domain listed with the number of matching records thanks to [`COUNT`](#count) function.
+With this simple query, you have all subscribers grouped by their domain with the number of matching rows thanks to the [`COUNT`](#count) function.
 
-You can easily improve this query by limiting the records with [`TOP`](./sfmc-sql-select.mdx#top) and sorting [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by) to leverage Pareto's principle and pick 20% of the records responsible for 80% of the results.
+You can quickly improve this query by limiting the records with [`TOP`](./sfmc-sql-select.mdx#top) and sorting [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by) to leverage Pareto's principle and pick 20% of the records responsible for 80% of the results. In this case - 20% domains covering approximately 80% subscribers.
 
 <Tabs
     defaultValue='query'
@@ -84,11 +84,11 @@ ORDER BY COUNT(*) DESC
 </TabItem>
 </Tabs>
 
-With such data you can assess your database structure and decide, for example, whether using AMP for Email will be worth the effort for your business.
+With such data, you can assess your mailing list and decide, for example, whether using AMP for Email will be worth the effort for your business.
 
-This is, however, just the beginning of what you can do with `GROUP BY`. The real magic happens with multiple columns used for the grouping.
+It is, however, just the beginning of what you can do with `GROUP BY`. The real magic happens with multiple columns used for the grouping.
 
-Let's check how the domain numbers are changing in years with the help of [`DATEPART`](./sfmc-sql-date-functions.mdx#datepart) and [`DateJoined` field](../config/sfmc-config-system-data-views.mdx#_subscribers).
+Let's check how the domain numbers are changing in years with the help of the [`DATEPART` function](./sfmc-sql-date-functions.mdx#datepart) and [`DateJoined` field](../config/sfmc-config-system-data-views.mdx#_subscribers).
 
 <Tabs
     defaultValue='query'
@@ -126,13 +126,13 @@ ORDER BY COUNT(*) DESC
 </TabItem>
 </Tabs>
 
-As you can see, by just adding more columns after comma, we can make even more interesting groupings - in this case we will have separate row for each domain and year. Nice to see how many Subscribers using free Gmail joined your database in 2021 vs 2020.
+As you can see, by just adding more columns after a comma (order is irrelevant), we can make even more exciting groupings. In this case, we will have a separate row for each domain and year. Easy to see how many Subscribers using Gmail joined your database in 2021 vs 2020.
 
 ### GROUP BY ROLLUP
 
-`ROLLUP` takes the multi-column grouping to the next level by showing subtotals and grand totals in the outcomes. Not really useful for campaign segmentation, but awesome for quick analysis and reporting.
+`ROLLUP` takes the multi-column grouping to the next level by showing totals and subtotals in the outcomes. Not useful for campaign segmentation, but excellent for quick analysis and reporting.
 
-To use it - just add `ROLLUP` keyword and wrap grouping columns in parentheses.
+To use it - add the `ROLLUP` keyword and wrap grouping columns in parentheses.
 
 <Tabs
     defaultValue='query'
@@ -175,15 +175,15 @@ ORDER BY COUNT(*) DESC
 </TabItem>
 </Tabs>
 
-In the outcomes you will see some rows with `null` is columns - those are rows for grand total and subtotals.
+In the outcomes, you will see some rows with `NULL` as columns - those are rows for total and subtotals.
 
-Notice that the nulls are either in all columns (grand total) or in `YearJoined` column (subtotals). There are no rows with `null` only in `Domain`. This is because the `ROLLUP` rolls columns provided in parentheses from right to left when calculating subtotals.
+Notice that the `NULL`s are either in all columns (total) or the `YearJoined` column (subtotals). There are no rows with `NULL` only in `Domain`. It is because the `ROLLUP` rolls columns provided in parentheses from right to left when calculating subtotals.
 
-Order of columns will have huge impact on outcomes!
+Order of columns will have a massive impact on outcomes!
 
 :::note You Should Know
 
-You can also perform partial roll up by keeping some columns outside of `ROLLUP` operator. In the example below I excluded `Domain` from the `ROLLUP` and as a result don't have the grand total in the outcomes.
+You can also perform partial rollup by keeping some columns outside of the `ROLLUP` operator. In the example below, I excluded `Domain` from the `ROLLUP` resulting in the lack of total in the outcomes.
 
 <Tabs
     defaultValue='query'
@@ -229,7 +229,7 @@ ORDER BY COUNT(*) DESC
 
 ### GROUP BY CUBE
 
-If you thought that right-to-left execution of the `ROLLUP` is not helping your use case and instead you would rather have all possible groupings - `CUBE` is here to help. It is used the same way as `ROLLUP` but it created all possible groupings.
+If you thought that right-to-left execution of the `ROLLUP` is not helping your use case and instead you would rather have all possible groupings - `CUBE` is here to help.
 
 <Tabs
     defaultValue='query'
@@ -271,23 +271,23 @@ ORDER BY COUNT(*) DESC
 | yahoo.com | 2021 | 432 |
 | yahoo.com | 2020 | 345 |
 
-Notice the second and third rows with nulls in first column and count for the whole year.
-
 </TabItem>
 </Tabs>
 
+It rolls data like [`ROLLUP`](#group-by-rollup), but for all combinations of columns. Notice in the outcomes the second and third rows with `NULL`s in first column and count for the whole year.
+
 ## COUNT
 
-`COUNT` function allows you to count the number of rows that matches a query. It is excellent for both _ad hoc_ data exploration as well as creating administrative queries that help maintain your instance. It's also must have for [`GROUP BY`](#group-by).
+`COUNT` function allows you to count the number of rows that matches a query. It is excellent for both _ad hoc_ data exploration and creating administrative queries that help maintain your instance. It's also a must-have for [`GROUP BY`](#group-by).
 
-Let's get count of our Subscribers.
+Let's get the count of our Subscribers.
 
 ```sql {1} title="Count all rows in the _Subscribers Data View"
 SELECT COUNT(*)
 FROM _Subscribers
 ```
 
-Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So where is the value?
+Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So, where is the added value?
 
 For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function parameter to the specific column to count only its values.
 
@@ -300,7 +300,7 @@ GROUP BY EmailAddress
 HAVING COUNT(EmailAddress) > 1
 ```
 
-With [`GROUP BY`](#group-by) and [`HAVING`](#having) we simplify the output to show only the duplicate values with corresponding counts.
+With [`GROUP BY`](#group-by) and [`HAVING`](#having) above, we can simplify the output by showing only the duplicate values with corresponding counts.
 
 :::note You Should Know
 
@@ -329,9 +329,17 @@ Pack it into Automation with Verification Activity on top and keep your database
 
 :::
 
+### COUNT *, ALL and DISTINCT
+
+There are three approaches to using `COUNT` that differ slightly from each other.
+
+- `COUNT(*)` will return the number of items, including `NULL` values and duplicates.
+- `COUNT(FieldName)` / `COUNT(ALL FieldName)` will return the number on non-`NULL` values including duplicates.
+- `COUNT(DISTINCT FieldName)` will return the number of non-`NULL` and non-duplicate values.
+
 ## HAVING
 
-`HAVING` works nearly exactly the same as [`WHERE`](./sfmc-sql-where.mdx) and allows you to filter outcomes of your [`GROUP BY`](#group-by).
+`HAVING` works nearly the same as [`WHERE`](./sfmc-sql-where.mdx) and allows you to filter outcomes of your [`GROUP BY`](#group-by).
 
 ```sql {6} title="This query will show you which Email Addresses exists on more than one subscriber"
 SELECT
@@ -342,11 +350,11 @@ GROUP BY EmailAddress
 HAVING COUNT(EmailAddress) > 1
 ```
 
-You can leverage all filtering tricks from [`WHERE`](./sfmc-sql-where.mdx), but in practice it's mostly used along with one of the aggregate functions like [`COUNT`](#count) or [`MAX`/`MIN`](#max-and-min).
+You can leverage all filtering tricks from [`WHERE`](./sfmc-sql-where.mdx). In practice, I mostly use it along with aggregate functions like [`COUNT`](#count).
 
 ### HAVING vs WHERE
 
-I just wrote that `HAVING` and [`WHERE`](./sfmc-sql-where.mdx) work nearly exactly the same and both are used for filtering the outcomes. So what is the difference?
+I just wrote that `HAVING` and [`WHERE`](./sfmc-sql-where.mdx) work similarly, and both filter the outcomes. What is the difference?
 
 1. `WHERE` filters individual data (rows before [`GROUP BY`](#group-by) is applied)
 2. `HAVING` filters aggregated data (rows after [`GROUP BY`](#group-by) is applied)
@@ -361,7 +369,7 @@ GROUP BY EmailAddress
 HAVING COUNT(EmailAddress) > 1
 ```
 
-Here thanks to using both `WHERE` and `HAVING` we will look only for dupliate active Subscribers. If we have two subscribers with the same email but one is inactive, this query won't output it.
+Thanks to using both `WHERE` and `HAVING` in this query, we will look only for duplicate active Subscribers. If we have two subscribers with the same email, but one is inactive, this query won't output it.
 
 :::note You Should Know
 
@@ -371,20 +379,126 @@ However, when building such layered filters, keep in mind the SQL's order of exe
 
 [`FROM`](./sfmc-sql-from.mdx) > [`WHERE`](./sfmc-sql-where.mdx) > [`GROUP BY`](#group-by) > [`HAVING`](#having) > [`DISTINCT`](./sfmc-sql-select.mdx#distinct) > [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by)
 
-This means, that rows filtered with `WHERE` will not be taken into consideration for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
+It means that rows filtered with `WHERE` will not be taken into consideration for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
 
 :::
 
+## MIN and MAX
+
+`MIN` and `MAX` functions can help you find the minimum and maximum values within a group.
+
+As they are aggregate functions, we can use them in both the [`SELECT`](./sfmc-sql-select.mdx) part of the query and for filtering with [`WHERE`](./sfmc-sql-where.mdx) or [`HAVING`](#having).
+
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
+
+```sql {3-4,7} title="Let's find domains that are no longer getting new subscribers"
+SELECT TOP 10
+      Domain
+    , MIN(DATEDIFF(DAY, DateJoined, GETDATE())) AS YoungestSubscriberDaysOfService
+    , MAX(DATEDIFF(DAY, DateJoined, GETDATE())) AS OldestSubscriberDaysOfService
+FROM _Subscribers
+GROUP BY Domain
+ORDER BY MIN(DATEDIFF(DAY, DateJoined, GETDATE())) DESC
+```
+
+</TabItem>
+<TabItem value='outcome'>
+
+| Domain | YoungestSubscriberDaysOfService | OldestSubscriberDaysOfService |
+| -- | -- | -- |
+| mateuszdabrowski.pl | 784 | 784 |
+| test.com | 530 | 743 |
+| yahoo.com | 253 | 723 |
+| ... | ... | ... |
+
+</TabItem>
+</Tabs>
+
+Learn more about `MIN` and `MAX` in [Numeric Functions documentation](./sfmc-sql-numeric-functions.mdx#min-and-max).
+
 ## AVG
 
-`AVG` function retunrs the average of the grouped values.
+`AVG` function allows you to find the average of values within the group.
 
-TODO: AVG(DISTINCT)
+It ignores `NULL` values for the calculation and we can use it in [`SELECT`](./sfmc-sql-select.mdx), [`WHERE`](./sfmc-sql-where.mdx) or [`HAVING`](#having) part of the query.
 
-## MAX and MIN
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
 
-<!-- Refer to numeric functions -->
+```sql {3,6,7} title="Let's find domain that are bouncing for most users"
+SELECT TOP 10
+      Domain
+    , AVG(BounceCount) AS AverageBounceCount
+FROM _Subscribers
+GROUP BY Domain
+HAVING AVG(BounceCount) > 0
+ORDER BY AVG(BounceCount) DESC
+```
+
+</TabItem>
+<TabItem value='outcome'>
+
+| Domain | AverageBounceCount |
+| -- | -- |
+| test.com | 164 |
+| yahoo.com | 2 |
+| outlook.com | 1 |
+| gmail.com | 1 |
+| ... | ... |
+
+</TabItem>
+</Tabs>
+
+Learn more about `AVG` in [Numeric Functions documentation](./sfmc-sql-numeric-functions.mdx#avg).
 
 ## SUM
 
-## STDEV / STDEVP (?)
+`SUM` function allows you to find the sum of values within the group.
+
+It ignores `NULL` values for the calculation and we can use it in [`SELECT`](./sfmc-sql-select.mdx), [`WHERE`](./sfmc-sql-where.mdx) or [`HAVING`](#having) part of the query.
+
+<Tabs
+    defaultValue='query'
+    values={[
+        {label: 'Query', value: 'query'},
+        {label: 'Outcome', value: 'outcome'},
+    ]}
+>
+<TabItem value='query'>
+
+```sql {4,8-9} title="Let's find product categories responsible for the highest income"
+SELECT TOP 3
+      ProductCategory
+    , COUNT(Orders) AS TotalOrders
+    , SUM(Price) AS TotalIncome
+FROM Purchases
+WHERE Status = 'Complete'
+GROUP BY ProductCategory
+HAVING SUM(Price) > 1000
+ORDER BY SUM(Price) DESC
+```
+
+</TabItem>
+<TabItem value='outcome'>
+
+| ProductCategory | TotalOrders | TotalIncome |
+| -- | -- | -- |
+| Course | 12 | 5500 |
+| Webinar | 76 | 5120 |
+| Ebook | 136 | 3450 |
+
+</TabItem>
+</Tabs>
