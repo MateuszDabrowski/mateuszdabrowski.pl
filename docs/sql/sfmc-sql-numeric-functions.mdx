@@ -60,7 +60,7 @@ You can also extend it with [`WHERE`](./sfmc-sql-where.mdx) containing current l
 
 ## AVG
 
-The `AVG` function returns the average value in a given column (excluding null values).
+The `AVG` function returns the average value in a given column (excluding `NULL` values).
 
 ```sql {1} title="What is your average subscriber bounce count?"
 SELECT AVG(s.BounceCount) AS AverageBounceCount
