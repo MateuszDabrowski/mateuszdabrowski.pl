@@ -28,6 +28,12 @@ module.exports = {
     },
     themeConfig: {
         image: 'img/logotyp-og.png', // Default image for meta tag
+        defaultMode: 'dark',
+        respectPrefersColorScheme: true,
+        metadatas: [
+            { name: 'theme-color', content: '#1D6CC7' },
+            { name: 'msapplication-TileColor', content: '#F6B355' },
+        ],
         // announcementBar: {
         //     id: 'announcementBar',
         //     content:

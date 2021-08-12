@@ -103,7 +103,7 @@ function Home() {
                 <link rel="manifest" href="/img/site.webmanifest" />
                 <link rel="mask-icon" href="/img/safari-pinned-tab.svg" color="#DA4E55" />
 
-                <meta name="msapplication-TileColor" content="#f5b458" />
+                <meta name="msapplication-TileColor" content="#F6B355" />
                 <meta name="msapplication-square70x70logo" content="/img/favicon-128.png" />
                 <meta name="msapplication-square150x150logo" content="/img/favicon-270.png" />
                 <meta name="msapplication-TileImage" content="/img/favicon-270.png" />
