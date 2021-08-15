@@ -109,7 +109,7 @@ function Home() {
                 <meta name="msapplication-TileImage" content="/img/favicon-270.png" />
                 <meta name="msapplication-config" content="none" />
 
-                <meta name="theme-color" content="#1D6CC7" />
+                <meta name="theme-color" content="#212121" />
             </Head>
 
             <Layout title="Ahoj" description={customFields.description} keywords={customFields.keywords}>

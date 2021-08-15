@@ -31,7 +31,7 @@ module.exports = {
         defaultMode: 'dark',
         respectPrefersColorScheme: true,
         metadatas: [
-            { name: 'theme-color', content: '#1D6CC7' },
+            { name: 'theme-color', content: '#212121' },
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
         // announcementBar: {
