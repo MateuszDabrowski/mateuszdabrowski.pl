@@ -75,6 +75,7 @@ module.exports = {
                     'SQL Snippets': [
                         'sql/sfmc-sql-snippet-debugging-email-sends',
                         'sql/sfmc-sql-snippet-debugging-value-length',
+                        'sql/sfmc-sql-snippet-enhanced-send-log'
                     ],
                 },
             ],
