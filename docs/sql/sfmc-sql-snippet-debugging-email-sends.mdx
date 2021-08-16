@@ -38,7 +38,7 @@ SELECT
     , b.BounceSubcategory AS BounceSubcategory
     , b.SMTPBounceReason  AS BounceReason
     , u.EventDate         AS UnsubscribeDate
-FROM _Sent s
+FROM _Sent AS s
     LEFT JOIN _Job AS job
         ON job.JobID = s.JobID
     LEFT JOIN _Open AS o

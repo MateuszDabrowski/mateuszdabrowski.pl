@@ -222,7 +222,7 @@ SELECT
     , CASE
         WHEN _Subscriber.Status = 'active' THEN 'TRUE'
         ELSE 'FALSE'
-    END AS Sendable
+      END AS Sendable
 ```
 
 You can have the same outcome in a single, more readable `IIF` line:

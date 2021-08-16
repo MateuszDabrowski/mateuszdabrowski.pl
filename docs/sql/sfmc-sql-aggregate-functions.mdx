@@ -337,6 +337,13 @@ There are three approaches to using `COUNT` that differ slightly from each other
 - `COUNT(FieldName)` / `COUNT(ALL FieldName)` will return the number on non-`NULL` values including duplicates.
 - `COUNT(DISTINCT FieldName)` will return the number of non-`NULL` and non-duplicate values.
 
+```sql {2-4} title="Let's find out whether we have multiple Subscribers with the same Email Address"
+SELECT
+      COUNT(EmailAddress) AS EmailCount
+    , COUNT(DISTINCT EmailAddress) AS UniqueEmailCount
+FROM _Subscribers
+```
+
 ## HAVING
 
 `HAVING` works nearly the same as [`WHERE`](./sfmc-sql-where.mdx) and allows you to filter outcomes of your [`GROUP BY`](#group-by).
@@ -359,7 +366,7 @@ I just wrote that `HAVING` and [`WHERE`](./sfmc-sql-where.mdx) work similarly, a
 1. `WHERE` filters individual data (rows before [`GROUP BY`](#group-by) is applied)
 2. `HAVING` filters aggregated data (rows after [`GROUP BY`](#group-by) is applied)
 
-```sql {6} title="This query will show you which Email Addresses exists on more than one active subscriber"
+```sql {5,7} title="This query will show you which Email Addresses exists on more than one active subscriber"
 SELECT
       EmailAddress
     , COUNT(EmailAddress) AS EmailCount

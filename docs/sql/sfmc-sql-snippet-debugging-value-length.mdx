@@ -43,7 +43,7 @@ SELECT
     , MAX(LEN(c.Email))       AS EmailAddress
     , MAX(LEN(c.JobTitle__c)) AS CurrentRole
     , MAX(LEN(c.Industry__c)) AS Industry
-FROM Contact_Salesforce c
+FROM Contact_Salesforce AS c
 ```
 
 :::note You Should Know
@@ -101,7 +101,7 @@ SELECT
     , LEN(c.Email)       AS EmailAddress
     , LEN(c.JobTitle__c) AS JobTitle
     , LEN(c.Industry__c) AS Industry
-FROM Contact_Salesforce c
+FROM Contact_Salesforce AS c
 WHERE
     18 - LEN(c.Id) < 0
     OR 40 - LEN(c.FirstName) < 0
@@ -207,7 +207,7 @@ SELECT
         WHEN 40 - LEN(c.Industry__c) < 0
         THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
       END AS Industry
-FROM Contact_Salesforce c
+FROM Contact_Salesforce AS c
 WHERE
     18 - LEN(c.Id) < 0
     OR 40 - LEN(c.FirstName) < 0
