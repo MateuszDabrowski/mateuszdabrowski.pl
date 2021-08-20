@@ -43,56 +43,6 @@ Both return a datetime object (for example, `Oct 30 2020 1:15AM`), so no convers
 
 However, you can limit its output to either date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) or [`FORMAT`](#format-with-dates) Functions.
 
-## DATEADD
-
-The `DATEADD` functions give you the power to add and subtract from your date values.
-
-```sql {2-3} title="Add seven days to the current UTC date"
-SELECT
-      GETUTCDATE()                  AS TrialStartDate
-    , DATEADD(DAY, 7, GETUTCDATE()) AS TrialEndDate
-```
-
-It requires three things:
-
-1. Date part - The date element that will be changed
-2. Number - The integer (or an expression evaluating to integer) for interval
-3. Date - The original date that the `DATEADD` function will change. It can be in any date data type. The output will be of the same type.
-
-:::note You Should Know
-
-`DATEADD` does not take into consideration timezone offset.
-
-However, if you are changing the date with the 31st day of the month by months and the outcome month is shorter, SQL will account for that and return the last day of a given month.
-
-:::
-
-`DATEADD` is especially useful when used with the [`WHERE`](./sfmc-sql-where.mdx) statement, as it allows to filter records dynamically:
-
-```sql {5} title="Find all Subscribers that joined within the last month"
-SELECT
-      SubscriberKey
-    , EmailAddress
-FROM Ent._Subscribers
-WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
-```
-
-It's even better with ranges:
-
-```sql {5} title="Find all Subscribers registered to an event within the next month"
-SELECT
-      SubscriberKey
-    , EmailAddress
-FROM EventRegistration
-WHERE EventDate BETWEEN GETDATE() AND DATEADD(MONTH, 1, GETDATE())
-```
-
-:::note You Should Know
-
-A very similar date calculation is also available with `DATEADD()` AMPScript function. Depending on the use case, consider whether you want to manipulate the date in the Data Extension or only in the communication.
-
-:::
-
 ## DATEPART
 
 The `DATEPART` function returns the chosen part of the provided date.
@@ -146,6 +96,56 @@ You can reference date parts both by their full name, as well as an abbreviation
 `DAYOFYEAR`, `DAY`, and `WEEKDAY` are considered the same date part and return the equal value.
 
 For 99% of SFMC needs, you will be just fine with `YEAR`, `MONTH`, `DAY`, `HOUR` and `MINUTE`. Using only those with the full name will make your queries readable and straightforward for everyone.
+
+## DATEADD
+
+The `DATEADD` functions give you the power to add and subtract from your date values.
+
+```sql {2-3} title="Add seven days to the current UTC date"
+SELECT
+      GETUTCDATE()                  AS TrialStartDate
+    , DATEADD(DAY, 7, GETUTCDATE()) AS TrialEndDate
+```
+
+It requires three things:
+
+1. Date part - The date element that will be changed
+2. Number - The integer (or an expression evaluating to integer) for interval
+3. Date - The original date that the `DATEADD` function will change. It can be in any date data type. The output will be of the same type.
+
+:::note You Should Know
+
+`DATEADD` does not take into consideration timezone offset.
+
+However, if you are changing the date with the 31st day of the month by months and the outcome month is shorter, SQL will account for that and return the last day of a given month.
+
+:::
+
+`DATEADD` is especially useful when used with the [`WHERE`](./sfmc-sql-where.mdx) statement, as it allows to filter records dynamically:
+
+```sql {5} title="Find all Subscribers that joined within the last month"
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM Ent._Subscribers
+WHERE DateJoined >= DATEADD(MONTH, -1, GETDATE())
+```
+
+It's even better with ranges:
+
+```sql {5} title="Find all Subscribers registered to an event within the next month"
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM EventRegistration
+WHERE EventDate BETWEEN GETDATE() AND DATEADD(MONTH, 1, GETDATE())
+```
+
+:::note You Should Know
+
+A very similar date calculation is also available with `DATEADD()` AMPScript function. Depending on the use case, consider whether you want to manipulate the date in the Data Extension or only in the communication.
+
+:::
 
 ## DATEDIFF
 
