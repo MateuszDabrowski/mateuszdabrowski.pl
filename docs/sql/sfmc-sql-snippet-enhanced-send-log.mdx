@@ -11,7 +11,15 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## What is Send Log
 
+Send Log is a table that captures relevant data about sends happening in the platform. In case of Salesforce Marketing Cloud, it is a special Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
+
+SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, in the first field - `Creation Method` - select `Create From Template`. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](../config/sfmc-config-features-on-demand.mdx).
+
+Once it is created, it will automatically populate with each attempted send originating from Business Unit where it was created.
+
 ### Send Log Data Extension Template
+
+The Send Log template comes with six default fields:
 
 | Name | Type | Length | Primary Key | Nullable |
 | -- | -- | -- | -- | -- |
@@ -21,6 +29,20 @@ import { LeadText } from '../../src/components/LeadText.js';
 | SubID | Numeric | | | Yes |
 | TriggeredSendID | String | 36 | | Yes |
 | ErrorCode | Numeric | | | Yes |
+
+You might wonder - why use email Send Log, when [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent) captures the same data out of the box? There are two reasons.
+
+1. Captured data is not exactly the same.
+
+It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log and multiple additional fields in the [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent). It's also about when the data is captured.
+
+Send Log is populated when SFMC prepares the send. That's why it can log [ErrorCode](#send-log-errorcode-values) if the send fails. The Data View is populated later, when SFMC pushes a correctly constructed email out to the Email Service Providers.
+
+It means that Send Log is an awesome tool to check why some emails did not go out of SFMC.
+
+2. You can customize the Send Log
+
+Data Views are set in stone (unless you purchase a [custom one](../config/sfmc-config-features-on-demand.mdx#custom-data-views)), but you can add fields to the Send Log to align it better with your business needs.
 
 ## Custom Send Log
 
@@ -121,3 +143,44 @@ WHERE
     sl.SubscriberKey IS NOT NULL
     AND CONVERT(DATE, s.EventDate) >= DATEADD(MONTH, -1, CONVERT(DATE, GETDATE()))
 ```
+
+## Send Log ErrorCode Values
+
+List of email Send Log errorCode values from the [official SFMC Documentation](https://help.salesforce.com/s/articleView?language=en_US&type=5&id=sf.mc_es_email_send_error_codes.htm):
+
+| Error Code | Name | Description |
+| -- | -- | -- |
+| 1 | Unsubscribed | The subscriber status is unsubscribed. |
+| 2 | Held | The subscriber status is held. |
+| 3 | Partner Unsubscribed | The subscriber partner system status is unsubscribed. |
+| 4 | Missing Email Address | The subscriber record or the API call that initiated the send doesn’t contain an email address for the subscriber. |
+| 5 | Invalid Email Address | The subscriber email address is invalid. |
+| 6 | Duplicate Email | The subscriber email is identical to another subscriber email in this send. |
+| 7 | Invalid SubscriberID Provided | The subscriber ID is invalid. |
+| 8 | Missing Subscriber ID | The subscriber key and subscriber ID values are empty or null. |
+| 9 | Missing Owner ID | The business unit ID for the child client account is missing for this enterprise account. |
+| 10 | Missing Required Attributes | The subscriber is missing required attribute values. |
+| 11 | No All Subscribers List Entry | The subscriber isn’t on the AllSubscribers list for the account. |
+| 12 | Invalid Owner ID Provided | The child client account isn’t a member of the enterprise account. |
+| 13 | Subscriber Key Mismatch | The subscriber key in the system doesn’t match the subscriber key provided. |
+| 14 | Email Address Mismatch | The email address in the system doesn’t match the email address provided for this subscriber. |
+| 15 | Unspecified Error | The subscriber didn’t pass validation. Contact your Marketing Cloud account representative for more information. |
+| 16 | Invalid Attribute Value | The value specified for a subscriber attribute doesn’t match the attribute's data type. |
+| 17 | Attribute Value Max Length Err | The value specified for a subscriber attribute is over the maximum length allowed for the attribute. |
+| 18 | Invalid Attribute Value Count | The number of subscriber attribute values doesn’t match the expected count. |
+| 19 | Missing Required Fields | Required data extension field values are missing for the subscriber. |
+| 20 | Invalid Field Value | The value specified for a data extension field doesn’t match the field type. |
+| 21 | Duplicate Data Extension Row | A row in the data extension was identified as a duplicate. The triggered send data extension doesn’t allow duplicate rows. |
+| 22 | Data Extension Insert Failed | The send failed to insert a row into the triggered send data extension. |
+| 23 | Domain Exclusion | A domain exclusion list excluded the subscriber. |
+| 24 | List Detective Exclusion | List Detective excluded the subscriber. |
+| 25 | Subscriber Blacked Out | The subscriber is ineligible to receive the email. Marketing Cloud reschedules the triggered send. |
+| 26 | Build Email Error | An error occurred when attempting to build an email for the subscriber. |
+| 27 | Suppression List Exclusion | The subscriber is on a suppression list and is ineligible to receive the email.  |
+| 28 | Opt Out List Exclusion | The subscriber is on an opt-out list and ineligible to receive the email. |
+| 29 | Missing Subscriber Key Value | The subscriber key value is null or empty. |
+| 30 | Subscriber Key Too Long | The subscriber key value exceeds the character limit. |
+| 37 | Queued Transaction Deleted | The queued email subscriber was deleted from the Triggered Send Queue using Clear Queue |
+| 39 | Subscriber Queue Cleared | The queued SMS subscriber was deleted from the Triggered Send Queue. |
+| 40 | Subscriber Deleted | Subscriber or contact is deleted and can’t be added to Marketing Cloud. |
+| 138 | Exceeded Expiration Policy | Paused triggered sends that were later resumed without clearing the queue sent old messages that were no longer relevant. |
