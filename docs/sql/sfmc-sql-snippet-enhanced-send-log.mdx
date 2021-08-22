@@ -2,20 +2,20 @@
 id: sfmc-sql-snippet-enhanced-send-log
 title: SFMC Enhanced Send Log
 sidebar_label: Enhanced Send Log
-description: WIP
+description: Create, customise and enhance SFMC Send Log for debugging and reporting
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='WIP' />
+<LeadText content='Create, customise and enhance SFMC Send Log for debugging and reporting.' />
 
 ## What is Send Log
 
-Send Log is a table that captures relevant data about sends happening in the platform. In case of Salesforce Marketing Cloud, it is a special Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
+Send Log is a table that captures relevant data about sends happening in the platform. In the case of Salesforce Marketing Cloud, it is a unique Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
 
-SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, in the first field - `Creation Method` - select `Create From Template`. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](../config/sfmc-config-features-on-demand.mdx).
+SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](../config/sfmc-config-features-on-demand.mdx).
 
-Once it is created, it will automatically populate with each attempted send originating from Business Unit where it was created.
+Once you create it, it will automatically populate with each attempted send originating from its Business Unit.
 
 ### Send Log Data Extension Template
 
@@ -30,23 +30,49 @@ The Send Log template comes with six default fields:
 | TriggeredSendID | String | 36 | | Yes |
 | ErrorCode | Numeric | | | Yes |
 
-You might wonder - why use email Send Log, when [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent) captures the same data out of the box? There are two reasons.
+`JobID` and `BatchID` allow you to differentiate the send if you push the same email on multiple days or campaigns.
 
-1. Captured data is not exactly the same.
+`ListID` contains the ID of the list used for the send (for example, All Subscribers list).
 
-It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log and multiple additional fields in the [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent). It's also about when the data is captured.
+`SubID` contains Subscriber ID - a unique Subscriber identifier, different from Subscriber Key. Subscriber ID is a backend system number that we cannot change.
 
-Send Log is populated when SFMC prepares the send. That's why it can log [ErrorCode](#send-log-errorcode-values) if the send fails. The Data View is populated later, when SFMC pushes a correctly constructed email out to the Email Service Providers.
+`TriggeredSendID` stores the ID of a Triggered Send Definition if it was used for the specific send.
 
-It means that Send Log is an awesome tool to check why some emails did not go out of SFMC.
+`ErrorCode` captures an error that stopped a specific send. I have added the list of all possible codes with an explanation [at the bottom](#send-log-errorcode-values).
 
-2. You can customize the Send Log
+### Send Log vs _Sent System Data View
 
-Data Views are set in stone (unless you purchase a [custom one](../config/sfmc-config-features-on-demand.mdx#custom-data-views)), but you can add fields to the Send Log to align it better with your business needs.
+You might wonder - why use email Send Log when [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent) captures the same data out of the box? There are two reasons.
+
+#### 1. Captured data is not precisely the same.
+
+It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log, and multiple additional fields in the [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent). It's also about when the data is captured.
+
+Send Log is populated when SFMC prepares the send. That's why it can log [ErrorCode](#send-log-errorcode-values) if the send fails. The Data View is populated later when SFMC pushes a correctly constructed email out to the Email Service Providers.
+
+It means that Send Log is an incredible tool to check why some emails did not go out of SFMC.
+
+#### 2. You can customise the Send Log
+
+Data Views are set in stone (unless you purchase a [custom one](../config/sfmc-config-system-data-views.mdx#custom-data-views)), but you can add fields to the Send Log to align it better with your business needs. Let's dive into how it works and why you should use it.
 
 ## Custom Send Log
 
-### Customized Send Log Example
+The true power of Send Log lies in the possibility to customise it. The default six columns are just beginning - you can add additional ones per your business needs. With performance in mind, I would recommend adding up to 5 custom fields.
+
+Columns added to Send Log are unique because you can make them fill in automatically. How does it work?
+
+When Marketing Cloud prepares the email for sending, Send Log evaluates all available [personalisation strings](https://help.salesforce.com/s/articleView?language=en_US&type=5&id=sf.mc_es_available_personalization_strings.htm), Sendable Data Extension fields and AMPScript variables. Each value that shares a name with Send Log column is automatically filled. Examples?
+
+1. If you want to capture the recipient's Email Address in the SendLog, you can add the `EmailAddr` field, and it will be automatically filled thanks to `%%emailaddr%%` personalisation string.
+
+2. Capturing Subscriber Key is a bit tricky, as the personalisation string is `%%_subscriberKey%%` - you cannot add a field starting with the underscore to Data Extension. There are two ways to capture this information. In most cases, you will have the `SubscriberKey` field in the Data Extension used for sending - you can use the same column name in the Send Log. Alternatively, you can create an AMPScript variable using the personalisation string: `SET @SubscriberKey = AttributeValue('_subscriberkey')`. Send Log will pick up your AMPScript variable and fill the column.
+
+3. You can also use AMPScript variables for other interesting things, like capturing information from Additional Email Attributes or custom values manually configured within the email body.
+
+### Customised Send Log Example
+
+Here you can see sample Customised Send Log that I like to use:
 
 | Name | Type | Length | Primary Key | Nullable |
 | -- | -- | -- | -- | -- |
@@ -59,16 +85,42 @@ Data Views are set in stone (unless you purchase a [custom one](../config/sfmc-c
 | SubscriberKey | String | 18 | | Yes |
 | EmailAddr | Email | 254 | | Yes |
 | EmailName | String | 100 | | Yes |
+| BusinessSpecificField1 | | | | Yes |
+| BusinessSpecificField2 | | | | Yes |
 
-## Enahnced Send Log
+I always add the `SubscriberKey` field (filled from a column of the same name in the Data Extension used for send) along with `EmailAddr` and `EmailName` fields filled in from personalisation strings.
+
+As Send Log will show the data as it is at the moment of email preparation, I frequently extend it with customer-specific fields that are crucial for send-time data checks. For example - VIP status, Contact vs Lead status, assigned Account Executive.
+
+All those data points can be beneficial during debugging. VIP offer sent to the standard customer? Send Log will tell you whether the Subscriber was VIP at the moment of send or it is a bug in your Journey criteria.
+
+:::note You Should Know
+
+Another handy field that I would love to capture in the Send Log would be the name of the Data Extension used for the send. It should be possible, as there is a dedicated personalisation string: `%%_DataSourceName%%`. But...
+
+You can add the `DataSourceName` field to Send Log and `SET @DataSourceName = AttributeValue('_datasourcename')` snippet to the email. However, it will work correctly only for the Send Flow.
+
+Unfortunately, it currently does not support Journey Builder Sends. Learn more and vote for a fix [here](../../../sites/ideas#_datasourcename-for-entry-data-extension-in-journey-builder).
+
+:::
+
+## Enhanced Send Log
+
+Custom Send Log is already a fantastic tool, but it's more suited for administrators with its technical field names and lack of post-send data. However, you can easily leverage it to create something perfect for your more business-oriented SFMC users.
+
+To do it, you will need additional Data Extension and simple Automation with single Query Activity.
 
 ### Enhanced Send Log Example
+
+Create standard Data Extension with more user-friendly names and extend it with journey and engagement data points:
 
 | Name | Type | Length | Primary Key | Nullable |
 | -- | -- | -- | -- | -- |
 | SubscriberKey | String | 18 | Yes | No |
 | SubscriberID | Numeric | | | Yes |
 | EmailAddress | Email | 254 | | Yes |
+| BusinessSpecificField1 | | | | Yes |
+| BusinessSpecificField2 | | | | Yes |
 | EmailName | String | 100 | | Yes |
 | JourneyName | String | 100 | | Yes |
 | JourneyVersion | String | 100 | | Yes |
@@ -83,11 +135,13 @@ Data Views are set in stone (unless you purchase a [custom one](../config/sfmc-c
 | TriggeredSendID | String | 36 | | Yes |
 | ErrorCode | Numeric | | | Yes |
 
-### Enhanced Send Log Query Activity
+### Enhanced Send Log SQL Query Activity
+
+Create Automation with Query Activity that will take data from your technical Send Log and [System Data Views](../config/sfmc-config-system-data-views.mdx) to populate your Enhanced Send Log DE with actionable data.
 
 ```sql
 SELECT
-       sl.SubscriberKey     AS SubscriberKey
+      sl.SubscriberKey     AS SubscriberKey
     , sl.SubID              AS SubscriberID
     , sl.EmailAddr          AS EmailAddress
     , sl.EmailName          AS EmailName
@@ -101,7 +155,10 @@ SELECT
         WHEN  s.EventDate > DATEADD(MINUTE, -15, GETDATE()) THEN 'Pending'
         ELSE 'True'
       END                   AS Delivered
-    , o.EventDate           AS FirstOpenDate
+    , CASE
+        WHEN o.EventDate IS NOT NULL THEN o.EventDate
+        WHEN c.EventDate IS NOT NULL THEN c.EventDate
+      END                   AS FirstOpenDate
     , c.EventDate           AS FirstClickDate
     , b.EventDate           AS BounceDate
     , sl.JobID              AS JobID
@@ -144,6 +201,12 @@ WHERE
     AND CONVERT(DATE, s.EventDate) >= DATEADD(MONTH, -1, CONVERT(DATE, GETDATE()))
 ```
 
+In the above query, we are pulling Journey Builder information and Sent, Delivered, Open, Click, Bounce information. We are also adding a custom logic that will provide more real Delivery and Open data using the fundamental assumption that if the recipient clicked something - the email had to be delivered and opened.
+
+In the [`WHERE`](./sfmc-sql-where.mdx) section, we filter the data to pull only updates for sends from the last month to optimise the query performance.
+
+Schedule that Automation nightly and share the Enhanced Send Log with your users.
+
 ## Send Log ErrorCode Values
 
 List of email Send Log errorCode values from the [official SFMC Documentation](https://help.salesforce.com/s/articleView?language=en_US&type=5&id=sf.mc_es_email_send_error_codes.htm):
@@ -153,24 +216,24 @@ List of email Send Log errorCode values from the [official SFMC Documentation](h
 | 1 | Unsubscribed | The subscriber status is unsubscribed. |
 | 2 | Held | The subscriber status is held. |
 | 3 | Partner Unsubscribed | The subscriber partner system status is unsubscribed. |
-| 4 | Missing Email Address | The subscriber record or the API call that initiated the send doesn’t contain an email address for the subscriber. |
+| 4 | Missing Email Address | The subscriber record or the API call that initiated the send doesn't contain an email address for the subscriber. |
 | 5 | Invalid Email Address | The subscriber email address is invalid. |
 | 6 | Duplicate Email | The subscriber email is identical to another subscriber email in this send. |
 | 7 | Invalid SubscriberID Provided | The subscriber ID is invalid. |
 | 8 | Missing Subscriber ID | The subscriber key and subscriber ID values are empty or null. |
 | 9 | Missing Owner ID | The business unit ID for the child client account is missing for this enterprise account. |
 | 10 | Missing Required Attributes | The subscriber is missing required attribute values. |
-| 11 | No All Subscribers List Entry | The subscriber isn’t on the AllSubscribers list for the account. |
-| 12 | Invalid Owner ID Provided | The child client account isn’t a member of the enterprise account. |
-| 13 | Subscriber Key Mismatch | The subscriber key in the system doesn’t match the subscriber key provided. |
-| 14 | Email Address Mismatch | The email address in the system doesn’t match the email address provided for this subscriber. |
-| 15 | Unspecified Error | The subscriber didn’t pass validation. Contact your Marketing Cloud account representative for more information. |
-| 16 | Invalid Attribute Value | The value specified for a subscriber attribute doesn’t match the attribute's data type. |
+| 11 | No All Subscribers List Entry | The subscriber isn't on the AllSubscribers list for the account. |
+| 12 | Invalid Owner ID Provided | The child client account isn't a member of the enterprise account. |
+| 13 | Subscriber Key Mismatch | The subscriber key in the system doesn't match the subscriber key provided. |
+| 14 | Email Address Mismatch | The email address in the system doesn't match the email address provided for this subscriber. |
+| 15 | Unspecified Error | The subscriber didn't pass validation. Contact your Marketing Cloud account representative for more information. |
+| 16 | Invalid Attribute Value | The value specified for a subscriber attribute doesn't match the attribute's data type. |
 | 17 | Attribute Value Max Length Err | The value specified for a subscriber attribute is over the maximum length allowed for the attribute. |
-| 18 | Invalid Attribute Value Count | The number of subscriber attribute values doesn’t match the expected count. |
+| 18 | Invalid Attribute Value Count | The number of subscriber attribute values doesn't match the expected count. |
 | 19 | Missing Required Fields | Required data extension field values are missing for the subscriber. |
-| 20 | Invalid Field Value | The value specified for a data extension field doesn’t match the field type. |
-| 21 | Duplicate Data Extension Row | A row in the data extension was identified as a duplicate. The triggered send data extension doesn’t allow duplicate rows. |
+| 20 | Invalid Field Value | The value specified for a data extension field doesn't match the field type. |
+| 21 | Duplicate Data Extension Row | A row in the data extension was identified as a duplicate. The triggered send data extension doesn't allow duplicate rows. |
 | 22 | Data Extension Insert Failed | The send failed to insert a row into the triggered send data extension. |
 | 23 | Domain Exclusion | A domain exclusion list excluded the subscriber. |
 | 24 | List Detective Exclusion | List Detective excluded the subscriber. |
@@ -182,5 +245,5 @@ List of email Send Log errorCode values from the [official SFMC Documentation](h
 | 30 | Subscriber Key Too Long | The subscriber key value exceeds the character limit. |
 | 37 | Queued Transaction Deleted | The queued email subscriber was deleted from the Triggered Send Queue using Clear Queue |
 | 39 | Subscriber Queue Cleared | The queued SMS subscriber was deleted from the Triggered Send Queue. |
-| 40 | Subscriber Deleted | Subscriber or contact is deleted and can’t be added to Marketing Cloud. |
+| 40 | Subscriber Deleted | Subscriber or contact is deleted and can't be added to Marketing Cloud. |
 | 138 | Exceeded Expiration Policy | Paused triggered sends that were later resumed without clearing the queue sent old messages that were no longer relevant. |
