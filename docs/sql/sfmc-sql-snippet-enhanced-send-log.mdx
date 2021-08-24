@@ -66,9 +66,15 @@ When Marketing Cloud prepares the email for sending, Send Log evaluates all avai
 
 1. If you want to capture the recipient's Email Address in the SendLog, you can add the `EmailAddr` field, and it will be automatically filled thanks to `%%emailaddr%%` personalisation string.
 
-2. Capturing Subscriber Key is a bit tricky, as the personalisation string is `%%_subscriberKey%%` - you cannot add a field starting with the underscore to Data Extension. There are two ways to capture this information. In most cases, you will have the `SubscriberKey` field in the Data Extension used for sending - you can use the same column name in the Send Log. Alternatively, you can create an AMPScript variable using the personalisation string: `SET @SubscriberKey = AttributeValue('_subscriberkey')`. Send Log will pick up your AMPScript variable and fill the column.
+2. Capturing Subscriber Key is a bit tricky, as the personalisation string is `%%_subscriberkey%%` - you cannot add a field starting with the underscore to Data Extension. There are two ways to capture this information. In most cases, you will have the `SubscriberKey` field in the Data Extension used for sending - you can use the same column name in the Send Log. Alternatively, you can create an AMPScript variable using the personalisation string: `SET @SubscriberKey = AttributeValue('_subscriberkey')`. Send Log will pick up your AMPScript variable and fill the column.
 
 3. You can also use AMPScript variables for other interesting things, like capturing information from Additional Email Attributes or custom values manually configured within the email body.
+
+:::note You Should Know
+
+In most cases, you can dry-test automatic filling by adding `%%[Output(Concat('SendLogColumnName: ', @SendLogColumnName))]%%` to the bottom of the email (where `SendLogColumnName` is equal to the Send Log field you want to test). This AMPScript one-liner should output `SendLogColumnName: ` along with the value that SFMC would add to the Send Log. If it doesn't - there might not be an appropriate variable, or it is not assigned a value.
+
+:::
 
 ### Customised Send Log Example
 
@@ -84,11 +90,11 @@ Here you can see sample Customised Send Log that I like to use:
 | ErrorCode | Numeric | | | Yes |
 | SubscriberKey | String | 18 | | Yes |
 | EmailAddr | Email | 254 | | Yes |
-| EmailName | String | 100 | | Yes |
+| EmailName_ | String | 100 | | Yes |
 | BusinessSpecificField1 | | | | Yes |
 | BusinessSpecificField2 | | | | Yes |
 
-I always add the `SubscriberKey` field (filled from a column of the same name in the Data Extension used for send) along with `EmailAddr` and `EmailName` fields filled in from personalisation strings.
+I always add the `SubscriberKey` field (filled from a column of the same name in the Data Extension used for send) along with `EmailAddr` and `EmailName_` fields filled in from personalisation strings.
 
 As Send Log will show the data as it is at the moment of email preparation, I frequently extend it with customer-specific fields that are crucial for send-time data checks. For example - VIP status, Contact vs Lead status, assigned Account Executive.
 
@@ -141,31 +147,33 @@ Create Automation with Query Activity that will take data from your technical Se
 
 ```sql
 SELECT
-      sl.SubscriberKey     AS SubscriberKey
-    , sl.SubID              AS SubscriberID
-    , sl.EmailAddr          AS EmailAddress
-    , sl.EmailName          AS EmailName
-    , j.JourneyName         AS JourneyName
-    , j.VersionNumber       AS JourneyVersion
-    , s.EventDate           AS SentDate
+      sl.SubscriberKey          AS SubscriberKey
+    , sl.SubID                  AS SubscriberID
+    , sl.EmailAddr              AS EmailAddress
+    , sl.BusinessSpecificField1 AS BusinessSpecificField1
+    , sl.BusinessSpecificField2 AS BusinessSpecificField2
+    , sl.EmailName_              AS EmailName
+    , j.JourneyName             AS JourneyName
+    , j.VersionNumber           AS JourneyVersion
+    , s.EventDate               AS SentDate
     , CASE
         WHEN job.DeliveredTime IS NOT NULL THEN CONVERT(NVARCHAR, job.DeliveredTime)
         WHEN  b.EventDate IS NOT NULL THEN 'False'
         WHEN  o.EventDate IS NOT NULL OR  c.EventDate IS NOT NULL THEN 'True'
         WHEN  s.EventDate > DATEADD(MINUTE, -15, GETDATE()) THEN 'Pending'
         ELSE 'True'
-      END                   AS Delivered
+      END                       AS Delivered
     , CASE
         WHEN o.EventDate IS NOT NULL THEN o.EventDate
         WHEN c.EventDate IS NOT NULL THEN c.EventDate
-      END                   AS FirstOpenDate
-    , c.EventDate           AS FirstClickDate
-    , b.EventDate           AS BounceDate
-    , sl.JobID              AS JobID
-    , sl.ListID             AS ListID
-    , sl.BatchID            AS BatchID
-    , sl.TriggeredSendID    AS TriggeredSendID
-    , sl.ErrorCode          AS ErrorCode
+      END                       AS FirstOpenDate
+    , c.EventDate               AS FirstClickDate
+    , b.EventDate               AS BounceDate
+    , sl.JobID                  AS JobID
+    , sl.ListID                 AS ListID
+    , sl.BatchID                AS BatchID
+    , sl.TriggeredSendID        AS TriggeredSendID
+    , sl.ErrorCode              AS ErrorCode
 FROM _Sent AS s
     LEFT JOIN _Job job
         ON s.JobID = job.JobID
@@ -201,7 +209,7 @@ WHERE
     AND CONVERT(DATE, s.EventDate) >= DATEADD(MONTH, -1, CONVERT(DATE, GETDATE()))
 ```
 
-In the above query, we are pulling Journey Builder information and Sent, Delivered, Open, Click, Bounce information. We are also adding a custom logic that will provide more real Delivery and Open data using the fundamental assumption that if the recipient clicked something - the email had to be delivered and opened.
+In the above query, we pull Journey Builder information and Sent, Delivered, Open, Click, Bounce information. We are also adding a custom logic that will provide more real Delivery and Open data using the fundamental assumption that if the recipient clicked something - the email had to be delivered and opened.
 
 In the [`WHERE`](./sfmc-sql-where.mdx) section, we filter the data to pull only updates for sends from the last month to optimise the query performance.
 
