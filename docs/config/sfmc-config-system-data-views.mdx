@@ -17,7 +17,7 @@ Data Views have **data retention settings set to 6 months**. If you want to stor
 
 Be careful, however, as some of the System Data Views can get absurdly big quick, and making copies within your Marketing Cloud Instance may lead to performance issues. In such cases, a much better idea might be to export that data on a scheduled basis to an external Data Warehouse.
 
-Another important point related to Data Views to always be aware of which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](#_subscribers) Data View, which means you will need to use the [`ENT.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix in your query.
+Another important point related to Data Views to always be aware of which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](#_subscribers) Data View, which means you will need to use the [`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix in your query.
 
 :::note You Should Know
 
@@ -51,7 +51,7 @@ Locale | The locale code for the subscriber | Locale | X
 
 When working with `_Subscribers` Data View:
 
-1. If you are using the query in child Business Unit, always check whether you are querying local or enterprise Data View ([`ENT.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix).
+1. If you are using the query in child Business Unit, always check whether you are querying local or enterprise Data View ([`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix).
 2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example, why subscriber bounced, where did he unsubscribe) you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) other Data Views.
 3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from different engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
 4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull the selection of your subscribers with SQL Query, add a new status with [custom value](../sql/sfmc-sql-select.mdx#custom-values) (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.

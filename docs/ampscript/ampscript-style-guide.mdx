@@ -274,7 +274,7 @@ As you are building your script - update the comment to reflect the approach you
 
 
 ```js
-/* ---------------------------------------------------------------------
+/* --------------------------------------------------------------------------
 
 Authenticates each visitor to limit access only to SFMC logged-in users.
 
@@ -284,7 +284,7 @@ Authenticates each visitor to limit access only to SFMC logged-in users.
 2.2. Authentication with REST Token
 2.2.1. Upsert Logging Data Extension
 
---------------------------------------------------------------------- */
+-------------------------------------------------------------------------- */
 ```
 
 ### 2. Section Comments
@@ -294,13 +294,17 @@ To fully leverage the pseudo-code table of contents, add section comments to mar
 For complex scripts, it might be a good idea to create few different levels of such comments. I use upper case with dashes for the first level, title case with dashes for the second level and only title case for the third level of comments
 
 ```js
-/* ---------------------- 1. GLOBAL VARIABLES ----------------------- */
+/* ----------------------------------------------------------------------- */
+/* ------------------------- 1. GLOBAL VARIABLES ------------------------- */
+/* ----------------------------------------------------------------------- */
 
-/* ---------------------- 2. AUTHENTICATION FLOW -------------------- */
+/* ----------------------------------------------------------------------- */
+/* ----------------------- 2. AUTHENTICATION FLOW ------------------------ */
+/* ----------------------------------------------------------------------- */
 
-/* ---------------------- 2.1. Authorisation ------------------------ */
+/* ------------------------- 2.1. Authorisation -------------------------- */
 
-/* ---------------------- 2.2. Authentication ----------------------- */
+/* ------------------------- 2.2. Authentication ------------------------- */
 
 /* 2.2.1. Build token request payload */
 ```
@@ -315,7 +319,9 @@ When to write a comment? My rule of thumb is to add them whenever someone else r
     /* Capture Session for Authorisation purposes */
     SET @session = RequestParameter('s')
 
-    /* ---------------------- 2. AUTHENTICATION FLOW -------------------- */
+    /* ----------------------------------------------------------------------- */
+    /* ----------------------- 2. AUTHENTICATION FLOW ------------------------ */
+    /* ----------------------------------------------------------------------- */
 
     /* ---------------------- 2.1. Session Validation ------------------------ */
 

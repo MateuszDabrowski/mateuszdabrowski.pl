@@ -299,7 +299,9 @@ By considering all the above, we get a robust and secure template for our Cloud 
 
     Platform.Load('core', '1');
 
+    /* ----------------------------------------------------------------------- */
     /* ---------------------- 1. GLOBAL VARIABLES ---------------------------- */
+    /* ----------------------------------------------------------------------- */
 
     var debugging = false;
     var appName = 'CLOUD_APP_NAME';
@@ -317,7 +319,9 @@ By considering all the above, we get a robust and secure template for our Cloud 
     var errorDE = 'ERROR_DATA_EXTENSION';
     var errorURL = 'ERROR_CLOUD_PAGE_URL';
 
+    /* ----------------------------------------------------------------------- */
     /* ---------------------- 2. HELPER FUNCTIONS ---------------------------- */
+    /* ----------------------------------------------------------------------- */
 
     /* ---------------------- 2.1. Debugging --------------------------------- */
 
@@ -350,7 +354,9 @@ By considering all the above, we get a robust and secure template for our Cloud 
         };
     };
 
+    /* ----------------------------------------------------------------------- */
     /* ---------------------- 3. AUTHENTICATION FLOW ------------------------- */
+    /* ----------------------------------------------------------------------- */
 
     /* ---------------------- 3.1. Authorization ----------------------------- */
 
@@ -411,7 +417,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
 ```js title="Full Cloud App Template"
 <!-- Authorisation START -->
 %%[
-    /* ---------------------------------------------------------------------
+    /* -------------------------------------------------------------------------
 
     Authenticates each visitor to limit access only to SFMC logged-in users.
 
@@ -424,9 +430,11 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
     2.3.2. Get the token
     2.3.3. Upsert Logging Data Extension
 
-    --------------------------------------------------------------------- */
+    -------------------------------------------------------------------------- */
 
-    /* ---------------------- 1. GLOBAL VARIABLES ----------------------- */
+    /* ----------------------------------------------------------------------- */
+    /* ------------------------- 1. GLOBAL VARIABLES ------------------------- */
+    /* ----------------------------------------------------------------------- */
 
     VAR @appName, @clientID, @clientSecret, @clientBase, @appURL, @errorURL, @requestURL, @payload, @APIStatus, @response, @token, @session, @code, @authDE
 
@@ -447,7 +455,9 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
     SET @state = RequestParameter('state')
     SET @session = RequestParameter('s')
 
-    /* ---------------------- 2. AUTHENTICATION FLOW -------------------- */
+    /* ----------------------------------------------------------------------- */
+    /* ------------------------- 2. AUTHENTICATION FLOW ---------------------- */
+    /* ----------------------------------------------------------------------- */
 
     /* ---------------------- 2.1. Session Validation ------------------------ */
 
@@ -459,7 +469,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
         ENDIF
         /* Authenticated users jumps to main code */
 
-    /* ---------------------- 2.2. Authorization ------------------------ */
+    /* ------------------------- 2.2. Authorization -------------------------- */
 
     /* If there is no Session parameter, start Authorisation flow */
     ELSEIF Empty(@state) AND Empty(@session) THEN
@@ -470,7 +480,7 @@ You can also leverage the session to lookup the token for API calls: `Platform.F
             '&redirect_uri=', @appURL, '&state=', @session)
         Redirect(@requestURL)
 
-    /* ---------------------- 2.3. Authentication ----------------------- */
+    /* ------------------------- 2.3. Authentication ------------------------- */
 
     /* If there is state parameter after Authorisation, get the REST Token */
     ELSEIF NOT Empty(@state) THEN
