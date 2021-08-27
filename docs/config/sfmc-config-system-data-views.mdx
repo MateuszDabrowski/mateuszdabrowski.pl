@@ -17,13 +17,13 @@ Data Views have **data retention settings set to 6 months**. If you want to stor
 
 Be careful, however, as some of the System Data Views can get absurdly big quick, and making copies within your Marketing Cloud Instance may lead to performance issues. In such cases, a much better idea might be to export that data on a scheduled basis to an external Data Warehouse.
 
-Another important point related to Data Views to always be aware of which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](#_subscribers) Data View, which means you will need to use the [`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix in your query.
+Another important point related to Data Views is always knowing which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](#_subscribers) Data View, which means you will need to use the [`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix in your query.
 
 :::note You Should Know
 
 Below you can find selected Salesforce Marketing Cloud Data Views focused on Subscribers and Email Channel. I plan to cover the rest of them in the future.
 
-Be sure to check the awesome [Data Views relationship diagram](https://sfmarketingcloudhome.files.wordpress.com/2021/02/dataviews_2021_v2.png) created by [Zuzanna Jarczyńska](https://sfmarketing.cloud). It will for sure help you with multi-view [`JOIN`s](../sql/sfmc-sql-join.mdx).
+Be sure to check the excellent [Data Views relationship diagram](https://sfmarketingcloudhome.files.wordpress.com/2021/02/dataviews_2021_v2.png) created by [Zuzanna Jarczyńska](https://sfmarketing.cloud). It will for sure help you with multi-view [`JOIN`s](../sql/sfmc-sql-join.mdx).
 
 :::
 
@@ -51,11 +51,11 @@ Locale | The locale code for the subscriber | Locale | X
 
 When working with `_Subscribers` Data View:
 
-1. If you are using the query in child Business Unit, always check whether you are querying local or enterprise Data View ([`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix).
-2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example, why subscriber bounced, where did he unsubscribe) you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) other Data Views.
+1. If you are using the query in the child Business Unit, always check whether you are querying local or enterprise Data View ([`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix).
+2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example, why a subscriber bounced, where did he unsubscribe), you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) other Data Views.
 3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from different engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
-4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull the selection of your subscribers with SQL Query, add a new status with [custom value](../sql/sfmc-sql-select.mdx#custom-values) (for example `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.
-5. This Data View along with [`_EnterpriseAttribute`](#_enterpriseattribute), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers) does not have data retention.
+4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull the selection of your subscribers with SQL Query, add a new status with [custom value](../sql/sfmc-sql-select.mdx#custom-values) (for example, `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.
+5. This Data View, along with [`_EnterpriseAttribute`](#_enterpriseattribute), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers), does not have six-month data retention.
 
 ---
 
@@ -69,11 +69,11 @@ _SubscriberID | The subscriber ID for the affected subscriber. This number repre
 
 When working with `_EnterpriseAttribute` Data View:
 
-1. If you are using the query in child Business Unit always use `ENT.` prefix as it is enterprise-level only Data View.
-2. When querying or joining `_EnterpriseAttribute` always be sure to include the underscore before SubscriberID - this is the only Data View that requires it.
-3. Despite `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get an Email Address of your Subscriber, query the `_Subscribers` Data View.
+1. If you are using the query in the child Business Unit, always use `ENT.` prefix as it is enterprise-level only Data View.
+2. When querying or joining `_EnterpriseAttribute`, always include the underscore before SubscriberID - this is the only Data View that requires it.
+3. Despite the `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get the Email Address of your Subscriber, query the `_Subscribers` Data View.
 4. `_EnterpriseAttribute` Data View is unique, as it might contain spaces in field names. You build it by creating the Profile Attributes in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
-5. This Data View along with [`_Subscribers`](#_subscribers), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers)  does not have data retention.
+5. This Data View, along with [`_Subscribers`](#_subscribers), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers) , does not have six-month data retention.
 
 ---
 
@@ -125,9 +125,9 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 When working with `_Job` Data View:
 1. `JobID` field will be your bread and butter to [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
-2. `EmailName`, `FromName`, and `FromEmail` are handy data points missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and [`_Bounce`](#_bounce) Data Views and worth checking for reporting needs.
-3. If you are performing A/B tests or want to create an analysis of the subject impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) to create a great knowledge source for your content team.
-4. For debugging purposes be sure to check out `IsWrapped` and `SuppressTracking` - if you are missing tracking data, `CharacterSet` - if you have problems with formatting, `SendClassification` - if you have issues with unsubscribers or spam complaints.
+2. `EmailName`, `FromName`, and `FromEmail` are handy data points missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) Data Views and are worth checking for reporting needs.
+3. If you are performing A/B tests or want to analyse the subject line's impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) to create a great knowledge source for your content team.
+4. For debugging purposes, be sure to check out `IsWrapped` and `SuppressTracking` - if you are missing tracking data, `CharacterSet` - if you have problems with formatting, `SendClassification` - if you have issues with unsubscribers or spam complaints.
 5. `AccountUserID` field is fantastic for `_Job`-based Audit Log creation. Unfortunately, there is no UI-based easy way to determine which user has which UserID. You can either use SOAP API or match based on these SQL results.
 
 :::note You Should Know
@@ -161,8 +161,8 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 When working with `_Sent` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. The most useful data here is the `EventDate` field that lets you know when the email was sent (and whether that happened at all).
-3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases it means that the send was blocked and never left Marketing Cloud. Check personalisation, data source, `RaiseError` scripts.
+2. The most valuable data here is the `EventDate` field that lets you know when the email was sent (and whether that happened at all).
+3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left Marketing Cloud. Check personalisation, data source, `RaiseError` scripts.
 
 ---
 
@@ -188,22 +188,22 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 When working with `_Open` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. The most useful data here is the `EventDate` field that lets you know when the email was opened (and whether that happened at all). But with email opens it's not that easy. In many cases, lack of open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some instances tracked open might not mean he did.
+2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The most valuable data here is the `EventDate` field that lets you know when the email was opened (and whether that happened at all). But with email opens, it's not that easy. In many cases, the lack of open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some instances, tracked open might not mean he did.
 
 :::note You Should Know
 
-There is **no official feedback loop** that informs Marketing Cloud (or any other Marketing Automation Platform) that your recipient opened the email.
+There is **no official engagement feedback loop** that informs Marketing Cloud (or any other Marketing Automation Platform) that your recipient opened the email.
 
-All Marketing Automation Platforms put an **invisible 1px wide image in the email** body that is unique for every email you send. When someone opens an email, its images are downloaded from the server. SFMC treats download of this 1px wide image as proof that the recipient opened the email. And in most cases it is right. But...
+All Marketing Automation Platforms put an **invisible 1px wide image in the email** body that is unique for every email you send. When someone opens an email, its images are downloaded from the server. SFMC treats the download of this 1px wide image as proof that the recipient opened the email. And in most cases, it is correct. But...
 
-The **images don't always render** (that's why you should always use alt-text). Some recipients opt-in on a per-email basis to download email graphics. Government audiences might not even have this option. It can be because of the admin policy, the privacy concerns over engagement tracking or limited internet bandwidth. In such a case, even if the user opens an email, you won't have information about it.
+The **images don't always render** (that's why you should always use alt-text). Some recipients opt-in on a per-email basis to download email graphics. Government audiences might not even have this option. Because of the admin policy, the privacy concerns over engagement tracking or limited internet bandwidth. In such a case, even if the user opens an email, you won't have information about it.
 
 It might lead to weird data, like clicks visible for contacts that did not open. Marketing Automation Platforms track Clicks via a different, more confident approach.
 
-It can also lead to cases, where user have both click and open data, but click data is earlier than the open. Why? Your recipient clicked something in your email and only after that decided to allow his email program to load the images in it.
+It can also lead to cases where a user has both click and open data, but click data is earlier than the open. Why? Your recipient clicked something in your email and only after that decided to allow his email program to load the images in it.
 
-There might be some cases, where the data is wrong the other way - when you see that email as opened, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within few seconds. Something not possible for a real human.
+There might be cases where the data is wrong the other way - when you see that email as opened, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within a second. Something not possible for an actual human.
 
 :::
 
@@ -211,7 +211,7 @@ There might be some cases, where the data is wrong the other way - when you see 
 
 ### _Click
 
-Stores information about your Email Clicks. Detailed click reporting and behavioural logic are possible thanks to this one.
+Stores information about your Email Clicks. Detailed click reporting and behavioural logic are possible, thanks to this one.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -234,14 +234,14 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 When working with `_Click` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. The most useful data here is the `EventDate` field that lets you know when the email was clicked (and whether that happened at all).
+2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The most valuable data here is the `EventDate` field that lets you know when the email was clicked (and whether that happened at all).
 4. You can significantly improve the value of that information by checking the `LinkName` and `LinkContent` fields to understand which links proved interesting for your customers.
-5. If you want to create a big report on link clicks you might want to use `URL` field instead of `LinkContent` as due to not showing final personalisation values it will be much easier to group clicks or even cleanly delete all AMPScript from them.
+5. Suppose you want to create an extensive report on link clicks. In that case, you might want to use the `URL` field instead of `LinkContent` due to the former not showing final personalisation values. It will be much easier to group clicks or even cleanly delete all AMPScript from them.
 
 :::note You Should Know
 
-There might be some cases, where the click data is wrong - when you see that email as clicked, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within few seconds. Something not possible for a real human.
+There might be cases where the click data is wrong - when you see that email as clicked, but in reality, the user didn't engage with it. It sometimes happens for B2B sends when your recipient's administrator uses bots that automatically check the emails for malicious or spammy content. You can recognise such things by checking the EventDate on `_Open` and `_Click` Data Views, as those bots will open the email and click all its links within a second. Something not possible for a actual human.
 
 :::
 
@@ -250,6 +250,8 @@ There might be some cases, where the click data is wrong - when you see that ema
 ### _Bounce
 
 Stores information about your Email Bounces. Best place in Marketing Cloud to understand why your messages are not getting delivered.
+
+This Data View, along with [`_Complaint`](#_complaint), should be monitored regularly to assess the health of your email marketing.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -278,26 +280,26 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 When working with `_Bounce` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-3. The `Domain` is useful for aggregating the bounce data to see any domain-specific problem with deliverability.
+2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+3. The `Domain` helps aggregate the bounce data to see any domain-specific problem with deliverability.
 4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
-5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases, it means you are considered a spammer by the server or already blacklisted. I recommend you to create an Automation with Verification Activity to get an automated warning whenever there are more than a few occurrences. Triage immediately.
+5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases, it means you are considered a spammer by the server or already blocklisted. I recommend you to create an Automation with Verification Activity to get an automated warning whenever there are more than a few occurrences. Triage immediately.
 
 :::note You Should Know
 
-`SMTPBounceReason` field is `nvarchar(max)` SQL type and due to that might be longer than the 4000 characters limit for the Data Extension string length in Salesforce Marketing Cloud. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](../sql/sfmc-sql-string-functions.mdx#left--right).
+`SMTPBounceReason` field is `nvarchar(max)` SQL type, and due to that might be longer than the 4000 characters limit for the Data Extension string length in Salesforce Marketing Cloud. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](../sql/sfmc-sql-string-functions.mdx#left--right).
 
 :::
 
 ### _Complaint
 
-`_Complaint` Data View stores Email Service Providers Feedback Loop (FBL) data. It means that if someone clicks Report Spam button on yout email and there is FBL in place, this information will be added to the Data View. This will also result in an unsubscribe event and be visible in the [`_Unsubscribe`](_unsubscribe).
+`_Complaint` Data View stores Email Service Providers Feedback Loop (FBL) data. It means that if someone clicks the `Report Spam` button for your email and there is FBL in place, this information will be added to the Data View. It will also result in an unsubscribe event and be visible in the [`_Unsubscribe`](_unsubscribe).
 
-Currently Salesforce Marketing Cloud [supports Feedback Loops](https://help.salesforce.com/s/articleView?id=000353531&type=1) for: Bluetie (Excite), Comcast, Cox, Fastmail, Microsoft Hotmail, Italia Online, La Poste, Liberty Global, Locaweb, Mail.ru, OpenSRS (Tucows), Rackspace (Mailtrust), Seznam, Synacor, Telenor, Telstra, Terra, UOL (Brazil), USA.net, XS4ALL and Yandex.
+Currently, Salesforce Marketing Cloud [supports Feedback Loops](https://help.salesforce.com/s/articleView?id=000353531&type=1) for Bluetie (Excite), Comcast, Cox, Fastmail, Microsoft Hotmail, Italia Online, La Poste, Liberty Global, Locaweb, Mail.ru, OpenSRS (Tucows), Rackspace (Mailtrust), Seznam, Synacor, Telenor, Telstra, Terra, UOL (Brazil), USA.net, XS4ALL and Yandex.
 
-You can additionally [register for the Yahoo Feedback Loop](https://help.salesforce.com/s/articleView?id=000312472&type=1). Gmail also has their [Feedback Loop system](https://help.salesforce.com/s/articleView?id=000353530&type=1) but it works differently and cannot be added to `_Complaint` Data View.
+You can additionally [register for the Yahoo Feedback Loop](https://help.salesforce.com/s/articleView?id=000312472&type=1). Gmail also has a [Feedback Loop system](https://help.salesforce.com/s/articleView?id=000353530&type=1), but it works differently and won't be in `_Complaint` Data View.
 
-This Data View along with [`_Bounce`](#_bounce) should be monitored on regular basis to assess health of your email marketing.
+This Data View, along with [`_Bounce`](#_bounce), should be monitored regularly to assess the health of your email marketing.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -315,8 +317,8 @@ Domain | The domain at which the send occurred | Text |
 When working with `_Complaint` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber.
-2. Use `_Complaint.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event.
-3. The `Domain` is useful for aggregating the Complaint data to see any domain-specific problem with targeting your communication.
+2. Use `_complaint.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event.
+3. The `Domain` helps aggregate the Complaint data to see any domain-specific problem with targeting your communication.
 
 ---
 
@@ -324,30 +326,30 @@ When working with `_Complaint` Data View:
 
 Subscription management in Salesforce Marketing Cloud is complex. Very complex.
 
-It starts with 4 levels of unsubscriptions:
+It starts with four levels of unsubscriptions:
 
-1. List unsubscribe = no more sends from a particular list / publication list.
+1. List unsubscribe = no more sends from a particular list or publication list.
 2. Business Unit unsubscribe = no more sends from a particular business unit.
 3. Master unsubscribe = no more sends from your Marketing Cloud.
 4. Global unsubscribe = no more sends from Marketing Cloud. Any, globally.
 
-And it gets even more interesting when you consider that triggering specific unsubscripction level depends on email configuration, Email Studio configuration, preference center configuration and subscriber's behaviour.
+And it gets even more interesting when you consider that triggering specific unsubscription level depends on email configuration, Email Studio configuration, preference center configuration and subscriber's behaviour.
 
 Oh, and there is no out-of-the-box unsubscription from Data Extensions, which are currently the most popular segmentation and targeting tool.
 
-To give us at least a chance to make sense of that mess, Salesforce created multiple System Data Views related to (un)subscription.
+To give us at least a chance to make sense of that mess, Salesforce created multiple System Data Views related to (un)subscriptions.
 
 ### _Unsubscribe
 
-`_Unsubscribe` Data View stores data about unsubscribe events. The wording here is crucial, as it explains the difference from [`_Subscribers`](#_subscribers) Data View unsubsciption counts.
+`_Unsubscribe` Data View stores data about unsubscribe events. The wording here is crucial, as it explains the difference from [`_Subscribers`](#_subscribers) Data View unsubsrciption counts.
 
-In `_Subscribers` you can check what is the __current subscription status__ for All Subscribers list. In `_Unsubscribe` you see the __unsubscription events__ happening from List-Unsubscribe Header, `LogUnsubEvent` API call, Reply Mail Management responses, Complaints and out-of-the-box Preference Center - all linked to a specific [`_Job`](#_job). It is also not limited to All Subscribers, but also covers unsubscribes from other types of lists.
+In `_Subscribers`, you can check what is the __current subscription status__ for the All Subscribers list. In `_Unsubscribe`, you see the __unsubscription events__ happening from List-Unsubscribe Header, `LogUnsubEvent` API call, Reply Mail Management responses, Complaints and out-of-the-box Preference Center - all linked to a specific [`_Job`](#_job). It is also not limited to All Subscribers but also covers unsubscribes from other types of lists.
 
-This means that any non-job related status changes like Import Activity, direct API change, manual change in the Email Studio will be reflected in the `_Subscribers` Data View, but not in the `_Unsubscribe`. On the other hand, `UnsubEvents` does not necessarily change the Status in the `_Subscribers`. For example, taking care of List-Unsubscribe Header clicks requires dedicated automation that will get this data from `_Unsubscribe` Data View and push to other parts of your consent data model.
+It means that status changes like Import Activity, direct API change, manual change in the Email Studio (not Job-specific) will be reflected in the `_Subscribers` Data View, but not in the `_Unsubscribe`. On the other hand, `UnsubEvents` does not necessarily change the Status in the `_Subscribers`. For example, taking care of List-Unsubscribe Header clicks require dedicated Automation to get this data from `_Unsubscribe` Data View and push it to other parts of your consent data model.
 
-This Data View stores data only for six months, so retention-less `_Subscribers` Data View might show more unsubscribed records if you are not cleaning them from SFMC on regular basis.
+This Data View stores data only for six-months, so retention-less `_Subscribers` Data View might show more unsubscribed records if you are not cleaning them from SFMC regularly.
 
-All of this makes `_Unsubscribe` much better source of knowledge about unsubscription.
+All of this makes `_Unsubscribe` a much better source of knowledge about unsubscription.
 
 Name | Description | Data Type | Nullable |
 -- | -- | -- | --
@@ -365,15 +367,15 @@ Domain | The domain at which the unsubscribe occurred | Text |
 When working with `_Unsubscribe` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Job`](#_job) and [`_Subscribers](#_subscribers) to check unsubscription context.
-2. Use `_unsubscribe.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on first occurrences of each event.
-3. If you query this Data View on child Business Unit, it will return only unsubscribe events from that specific BU.
-4. The most useful data here are:
-  - `EventDate` field that lets you know when the unsubscription happened
-  - `ListID` field that tells you which list is impacted by the unsubscription
+2. Use `_unsubscribe.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event.
+3. If you query this Data View on the child Business Unit, it will return only unsubscribe events from that specific BU.
+4. The most valuable data here are:
+    - `EventDate` field that lets you know when the unsubscription happened
+    - `ListID` field that tells you which list is impacted by the unsubscription
 
 :::note You Should Know
 
-If the subscriber clicks "Unsubscribe from All" on out-of-the-box unsubscription center, it will perform Master Unsubscribe from all Lists. As it is single event, it will be stored as a single record in the `_Unsubscribe` Data View with random ListID assigned to it. For a full picture you will need to check [`_ListSubscribers`](#_listsubscribers) Data View.
+If the subscriber clicks "Unsubscribe from All" on the out-of-the-box unsubscription center, it will perform Master Unsubscribe from all Lists. As it is a single event, it will be stored as a single record in the `_Unsubscribe` Data View with random ListID assigned to it. For a complete picture, you will need to check [`_ListSubscribers`](#_listsubscribers) Data View.
 
 :::
 
@@ -381,11 +383,11 @@ If the subscriber clicks "Unsubscribe from All" on out-of-the-box unsubscription
 
 ### _BusinessUnitUnsubscribes
 
-[`_Subscribers`](#_subscribers) Data View might give you information about current state of subscriptions on All Subscribers list. But if in Email Studio you configure Business Unit Level unsubscribes, this information will not be useful at all, as the data stored there will not reflect the subscription status in a specific Business Unit.
+[`_Subscribers`](#_subscribers) Data View might give you information about the current state of subscriptions on the All Subscribers list. But if in Email Studio you configure Business Unit Level unsubscribes, this information will not be helpful, as the data stored there will not reflect the subscription status in a specific Business Unit.
 
 Here comes the fresh `_BusinessUnitUnsubscribes` Data View. It shows you the only unsubscribed contacts for each Business Unit. If the contact resubscribes - it will disappear from this Data View.
 
-Dspite `_BusinessUnitUnsubscribes` Data View being focused on Business Units, it can be queried only from Enterprise level (so on Parent BU or using [`Ent.` prefix](../sql/sfmc-sql-from.mdx#enterprise-system-data-views)).
+Despite `_BusinessUnitUnsubscribes` Data View focus on Business Units, you can query it only from the Enterprise level (on Parent BU or using [`Ent.` prefix](../sql/sfmc-sql-from.mdx#enterprise-system-data-views)).
 
 Name | Description | Data Type | Nullable |
 -- | -- | -- | --
@@ -405,34 +407,25 @@ UnsubReason | The reason listed is a custom value configured by your administrat
 
 When working with `_BusinessUnitUnsubscribes` Data View:
 
-1. Remember that it stores only currently unsubscribed contacts. Not unsubscribe event data (that's in [`_Unsubscribe`](_unsubscribe)) and not other statuses (like bounced, held). It will also not show unsubscribed users that were deleted or resubscribed.
+1. Remember that it stores only currently unsubscribed contacts. Not unsubscribe event data (that's in [`_Unsubscribe`](_unsubscribe)) and not other statuses (like bounced, held). It will also not show unsubscribed users after they resubscribed or got deleted.
 2. `SubscriberID` or `SubscriberKey` along with `UnsubDateUTC` might fuzzy match the data in this data view with [`_Unsubscribe`](_unsubscribe).
-3. The real treat in this data view (apart from finally having easy option to see Business Unit unsubscribes) is `UnsubReason` field that can tell you a bit more about the unsubscribe.
-4. This Data View along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_ListSubscribers`](#_listsubscribers) does not have data retention.
+3. The real treat in this data view (apart from finally having an easy option to see Business Unit unsubscribes) is the `UnsubReason` field that can tell you more about the unsubscribe.
+4. This Data View, along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_ListSubscribers`](#_listsubscribers), does not have six-month data retention.
 
 ---
 
 ### _ListSubscribers
 
-TODO
+`_ListSubscribers` Data View stores data about the current status of the subscription. It might sound similar to [`_Subscribers`](#_subscribers) and [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes), but there are significant differences:
 
-list status is the current status of the subscriber specific to the list.
-
-Query this data view in Automation Studio to find subscribers on lists in your Marketing Cloud account. This view includes subscribers found on the Triggered Send Managed List.
-
-View subscribers on lists in your account by querying the _ListSubscribers data view.
-
-:::note You Should Know
-
-All Subscribers List ID is shared across whole account. If you selected "Unsubscribe from this Business Unit Only" option in Email Studio,
-
-:::
+- `_Subscribers` has data about All Subscribers list only. `_ListSubscribers` shows status for all Lists available in Salesforce Marketing Cloud.
+- `_BusinessUnitUnsubscribes` has data about contacts unsubscribed from All Subscribers on every Business Unit. `_ListSubscribers` doesn't show Business Unit information, but it covers all Lists and all Statuses.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 AddedBy | The ID of the user who ran the process that added the subscriber (might also be `0` or `-1000`) | Number |
 AddMethod | The method by which the subscriber was added | Text |
-CreatedDate | The date the subscriber was added to the list | Date | X
+CreatedDate | The date the subscriber was added to the specific list | Date | X
 DateUnsubscribed | The date the subscriber unsubscribed | Date | X
 EmailAddress | The subscriber's email address | Text | X
 ListID | The list ID number for the list used in the send | Number | X
@@ -460,8 +453,8 @@ SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
 
 When working with `_ListSubscribers` Data View:
 
-1. TODO
-2. This Data View along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) does not have data retention.
+1. Thanks to having `ListID`, `ListName` and `ListType` fields, it allows you to make sense of the `ListID` field available in all other engagement-based System Data Views.
+2. This Data View, along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes), does not have six-month data retention.
 
 ---
 
@@ -475,7 +468,7 @@ Most of the MobileConnect data is assigned to Mobile Number, not Contact. It mea
 
 It shouldn't be a big problem in B2C environments, as most people will have their mobile number and keep it long. However, remember that unused numbers might be recycled after a few years by telecom and go back to the market and given to a new user.
 
-Mobile number recycling is much more present in B2B scenario, where there is a bigger chance for shared mobile numbers and much faster recycling of the numbers. Many companies reuse the phone number of the employees that left.
+Mobile number recycling is much more present in the B2B scenario, where there is a bigger chance for shared mobile numbers and much faster recycling of the numbers. Many companies reuse the phone number of the employees that left.
 
 When working with Mobile Number history of engagement and subscription, take this into consideration.
 
@@ -532,12 +525,12 @@ _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or no
 When working with `_MobileAddress` Data View:
 
 1. There is no guarantee of how long it will work and how long the data will be correct. Be sure you are checking it periodically or - even better - have validation in your code.
-2. Rule of thumb when working with the MobileConnect is to use the official, supported solutions. Only when they cannot deliver - check whether `_MobileAddress` can help.
-3. Do not use User Interface editor in MobileConnect Demographics part of the Contact to edit information in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/ssjs-snippet-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. It is the most significant selling point of this Data View.
+2. The rule of thumb when working with MobileConnect is to use the official, supported solutions. Only when they cannot deliver - check whether `_MobileAddress` can help.
+3. Do not use the User Interface editor in MobileConnect Demographics part of the Contact to edit information in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/ssjs-snippet-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. It is the most significant selling point of this Data View.
 4. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
-5. Whenever creating a MobileConnect Contact, be sure to provide the `_MobileNumber` with the dialling code prefix (without the `+` or `00`). For example, Poland has +48 dialling code and nine-digit numbers, so the correct format is 48123456789. Double-check whether `_CountryCode` is appropriate two-letter code (for example, `PL`).
-6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with highest `_Priority`.
-7. Whenever you add a Mobile Number to a new Contact, for all other Contacts with this number it gets lower `_Priority` (SFMC assumes that it was transferred).
+5. Whenever creating a MobileConnect Contact, be sure to provide the `_MobileNumber` with the dialling code prefix (without the `+` or `00`). For example, Poland has a `+48` dialling code and nine-digit numbers, so the correct format is 48123456789. Double-check whether `_CountryCode` is an appropriate two-letter code (for example, `PL`).
+6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with the highest `_Priority`.
+7. Whenever you add a Mobile Number to a new Contact, for all other Contacts with this number, it gets lower `_Priority` (SFMC assumes that it was transferred).
 8. `_ContactID` makes this Data View useful for cross-channel applications. New Data Views ([`_SMSSubscriptionLog`](#_smssubscriptionlog) and [`_SMSMessageTracking`](#_smsmessagetracking)) have Subscriber Key information, but if the Mobile Number is shared, it won't provide the data.
 
 ---
@@ -593,7 +586,7 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 
 ### _SMSSubscriptionLog
 
-`_SMSSubscriptionLog` Data View stores full information about subscription status for each Mobile Number. It replaced unsupported [`_MobileSubscription`](#_mobilesubscription) Data View.
+`_SMSSubscriptionLog` Data View stores complete information about subscription status for each Mobile Number. It replaced the unsupported [`_MobileSubscription`](#_mobilesubscription) Data View.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -659,10 +652,10 @@ ModifiedDate | Date the subscription was modified | Date |
 When working with `_SMSSubscriptionLog` Data View:
 
 1. SFMC assigns subscription data to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
-2. SubscriberKey will be correctly populated if there is one (and only one) Subscriber with the same Mobile Number. Else, it will have either have `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
+2. SubscriberKey will be correctly populated if there is one (and only one) Subscriber with the same Mobile Number. Otherwise, it will have either have a `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
 3. `SubscriptionDefinitionID` is a GUID, and there is no apparent connection to a specific Keyword. But there are two tricks.
    - [`JOIN`](../sql/sfmc-sql-join.mdx) [`_SMSMessageTracking`](#_smsmessagetracking) Data View and use `KeywordID` and `SharedKeyword` columns to map the GUID to readable Keyword name. If you cannot find this information there, there is a second option:
-   - Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click the Attributes tab and scroll to MobileConnect Data. Click on the Carrier ID value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check the Keyword column, you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click Edit. Now you will see the same data, but with Keyword GUID. With those two values, you can use a SQL [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) statement to convert this Data View to a more readable format.
+   - Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click the Attributes tab and scroll to MobileConnect Data. Click on the `Carrier ID` value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check the Keyword column, you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click `Edit`. Now you will see the same data, but with Keyword GUID. With those two values, you can use a SQL [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) statement to convert this Data View to a more readable format.
 
 ---
 
@@ -714,18 +707,18 @@ FromName | From Name that an individual message was deployed with. Maximum lengt
 
 When working with `_SMSMessageTracking` Data View:
 
-1. If you send one SMS to multiple Subscribers, you will have multiple rows of data with different `MobileMessageTrackingID` but same `MessageID`. Apart from `MessageID` you may also use the `Name` field that contains the asset name from MobileConnect.
+1. If you send one SMS to multiple Subscribers, you will have multiple rows of data with different `MobileMessageTrackingID` but the same `MessageID`. Apart from `MessageID` you may also use the `Name` field that contains the asset name from MobileConnect.
 2. `KeywordID` and `CodeID` are GUIDs, but the same table also has the readable versions of those columns - `ShortCode` and `SharedKeyword`. `ShortCode`, despite the name, also displays Long Codes.
 3. The fields marked above as boolean (like `Sent`, `Delivered`, `IsTest`, `Outbound`) have the value in the form of a number: `0` = false, `1` = true. Some might also be `null` - for example, if a message was outbound, `Outbound` will have the value of `1`, whereas `Inbound` will be `null`.
 4. `MessageText` will not only show you the text you sent in your SMS - it will also display it after personalisation is applied. On the one hand, it is great for debugging, as it allows you to check the final content the user received. On the other hand, you won't be able to assess personalisations used across your messaging.
-5. `ResponseToMobileMessageTrackingID` is an excellent way to check the customer response. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) between inbound `ResponseToMobileMessageTrackingID` and outbound `MobileMessageTrackingID` to output response data in the same line.
-6. Some fields in this Data View are filled in only under specific conditions:
+5. `ResponseToMobileMessageTrackingID` is an excellent way to check customer response. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) between inbound `ResponseToMobileMessageTrackingID` and outbound `MobileMessageTrackingID` to output response data in the same line.
+6. Some fields in this Data View are filled only under specific conditions:
     - `CampaignID` is populated only when an SMS is sent to Data Extension as Audience or send type is Send to Data Extension. SMS must be connected to a Campaign for the field to be populated.
     - `SendID`, `SendJobID` are populated only for SMS messages sent via Automation Studio's Send SMS Activity or when an SMS is sent to Data Extension as Audience.
     - `SendSplitID`, `SendSegmentID`, `SendGroupID`, `SendPersonID` are populated only when SMS is sent to Data Extension as Audience.
     - `ConversationID` is populated only when a conversation is created with a MO user using AMPScript [`CreateSMSConversation`](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/CreateSmsConversation.htm).
-7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. Data should be pulled from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
-8. `Name` field is perfect for connecting SMS data with [`_JourneyActivity`](#_journeyactivity) Data View to have full picture of your Journey ([`JOIN`](../sql/sfmc-sql-join.mdx) `ON _SMSMessageTracking.Name = _JourneyActivity.ActivityName`).
+7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. You should pull that data from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
+8. `Name` field is perfect for connecting SMS data with [`_JourneyActivity`](#_journeyactivity) Data View to have a complete picture of your Journey ([`JOIN`](../sql/sfmc-sql-join.mdx) `ON _SMSMessageTracking.Name = _JourneyActivity.ActivityName`).
 9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
 
 #### SMS Status Codes
@@ -757,9 +750,9 @@ Stores information about failed message deliveries from MobileConnect.
 
 There might be multiple reasons for the SMS to be undelivered, for example:
 
-- Mobile device is powered off
-- User is out of range of cellular networks
-- Number is for a landline
+- The mobile device is powered off.
+- The user is out of range of cellular networks
+- The number is for a landline
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -772,8 +765,8 @@ HoldDate | Date when the subscriber can be used in sends again | Date | X
 When working with `_JourneyActivity` Data View:
 
 1. If `Undeliverable` is `TRUE`, check `HoldDate` to know when the number will be reachable again.
-2. Monitor this data view and blocklist numbers with big `BounceCount` values to clean up your database, save money and protect from spamming potential future owners of the recycled phone number.
-3. It's not possible to know real delivery status for SMS sends - Marketing Cloud reports only whether SMS carrier accepted the message. It has no knowledge of what happens with it after carrier takes over. However, most of the SMS messages accepted by carrier are delivered.
+2. Monitor this data view and blocklist numbers with significant `BounceCount` values to clean up your database, save money and protect from spamming potential future owners of the recycled phone number.
+3. It's impossible to know the actual delivery status for SMS sends - Marketing Cloud reports only whether the SMS carrier accepted the message. It does not know what happens with it after the carrier takes over. However, most of the SMS messages accepted by carriers are delivered.
 
 ---
 
@@ -794,14 +787,14 @@ ActivityType | The type of activity | Text | X
 
 When working with `_JourneyActivity` Data View:
 
-1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Just use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
-2. With the help of [`_Journey`](#_journey) Data View, you can use `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you would instead need to use Script Activity with REST API, but it is perfect for a glance on the multi-channel use.
+1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use the `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
+2. With the help of [`_Journey`](#_journey) Data View, you can use the `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you need to use Script Activity with REST API instead, but SQL is perfect for glancing at the multi-channel use.
 
 ---
 
 ### _Journey
 
-Stores information about your Journeys, for when context matters.
+Stores information about your Journeys for when context matters.
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -816,15 +809,15 @@ JourneyStatus | The current running mode of the Journey. Possible values are Dra
 
 When working with `_Journey` Data View:
 
-1. `VersionID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_JourneyActivity`](#_journeyactivity). It allows you to map multi-channel engagement to particular Journey (visible in `JourneyName`) and its specific version (as shown in `VersionNumber`).
-2. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](../sql/sfmc-sql-where.mdx) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
-3. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and based on the send volume or performance, stop them and notify you about that.
+1. `VersionID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_JourneyActivity`](#_journeyactivity). It lets you map multi-channel engagement to a particular Journey (visible in `JourneyName`) and its specific version (as shown in `VersionNumber`).
+2. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](../sql/sfmc-sql-where.mdx) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found, it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
+3. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and, based on the send volume or performance, stop them and notify you about that.
 
 ---
 
 ## Custom Data Views
 
-On top of all built-in Data Views mentioned above there is also a paid option for a custom Data Views. As for the possibilities, the sky is the limit. Example? [Lukas Lunow](https://linkedin.com/in/lunow) [highlighted](https://salesforce.stackexchange.com/a/293395/91679) a fascinating one that solves a problem of knowing what is the current status of a Contact in a given Journey:
+On top of all the built-in Data Views mentioned above, there is also a paid option for custom Data Views. As for the possibilities, the sky is the limit. Example? [Lukas Lunow](https://linkedin.com/in/lunow) [highlighted](https://salesforce.stackexchange.com/a/293395/91679) a fascinating one that solves the problem of knowing what is the current status of a Contact in a given Journey:
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -837,7 +830,7 @@ ContactStatus | Tell you whether the contact is still in the Journey (`Active`, 
 EntryDate | Date of Journey Entry | Date |
 ExitDate | Date of Journey Exit - including Goal / Exit Criteria. Null if still in Journey. | Date | x
 
-Yes, you can create a workaround to know whether the Contact is in a given Journey using standard Data Extension and Update Contact Journey Activities on the beginning and end of every Journey. Not only it requires you to remember always to add those additional steps; it also blocks you from using Goals and Exit Criteria.
+Yes, you can create a workaround to know whether the Contact is in a given Journey using standard Data Extension and Update Contact Journey Activities at the beginning and end of every Journey. Not only it requires you to remember always to add those additional steps. It also blocks you from using Goals and Exit Criteria.
 
 Custom Data View allow you to eat a cookie and have a cookie.
 
