@@ -27,7 +27,7 @@ module.exports = {
         ],
     },
     themeConfig: {
-        image: 'img/logotyp-og.png', // Default image for meta tag
+        image: 'img/og/og-image-base.png', // Default image for meta tag
         defaultMode: 'dark',
         respectPrefersColorScheme: true,
         metadatas: [
@@ -52,6 +52,11 @@ module.exports = {
                     label: 'Docs & Snippets',
                     to: 'docs',
                     activeBasePath: 'docs',
+                    position: 'left',
+                },
+                {
+                    label: 'Tags',
+                    to: 'docs/tags',
                     position: 'left',
                 },
                 {

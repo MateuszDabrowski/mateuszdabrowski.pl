@@ -3,6 +3,8 @@ id: sfmc-config-system-data-views
 title: SFMC System Data Views
 sidebar_label: System Data Views
 description: Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.
+image: img/og/og-image-sfmc-system-data-views.png
+tags: [Configuration, SQL, Analytics, Data Extensions]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
@@ -293,7 +295,7 @@ When working with `_Bounce` Data View:
 
 ### _Complaint
 
-`_Complaint` Data View stores Email Service Providers Feedback Loop (FBL) data. It means that if someone clicks the `Report Spam` button for your email and there is FBL in place, this information will be added to the Data View. It will also result in an unsubscribe event and be visible in the [`_Unsubscribe`](_unsubscribe).
+`_Complaint` Data View stores Email Service Providers Feedback Loop (FBL) data. It means that if someone clicks the `Report Spam` button for your email and there is FBL in place, this information will be added to the Data View. It will also result in an unsubscribe event and be visible in the [`_Unsubscribe`](#_unsubscribe).
 
 Currently, Salesforce Marketing Cloud [supports Feedback Loops](https://help.salesforce.com/s/articleView?id=000353531&type=1) for Bluetie (Excite), Comcast, Cox, Fastmail, Microsoft Hotmail, Italia Online, La Poste, Liberty Global, Locaweb, Mail.ru, OpenSRS (Tucows), Rackspace (Mailtrust), Seznam, Synacor, Telenor, Telstra, Terra, UOL (Brazil), USA.net, XS4ALL and Yandex.
 
@@ -407,8 +409,8 @@ UnsubReason | The reason listed is a custom value configured by your administrat
 
 When working with `_BusinessUnitUnsubscribes` Data View:
 
-1. Remember that it stores only currently unsubscribed contacts. Not unsubscribe event data (that's in [`_Unsubscribe`](_unsubscribe)) and not other statuses (like bounced, held). It will also not show unsubscribed users after they resubscribed or got deleted.
-2. `SubscriberID` or `SubscriberKey` along with `UnsubDateUTC` might fuzzy match the data in this data view with [`_Unsubscribe`](_unsubscribe).
+1. Remember that it stores only currently unsubscribed contacts. Not unsubscribe event data (that's in [`_Unsubscribe`](#_unsubscribe)) and not other statuses (like bounced, held). It will also not show unsubscribed users after they resubscribed or got deleted.
+2. `SubscriberID` or `SubscriberKey` along with `UnsubDateUTC` might fuzzy match the data in this data view with [`_Unsubscribe`](#_unsubscribe).
 3. The real treat in this data view (apart from finally having an easy option to see Business Unit unsubscribes) is the `UnsubReason` field that can tell you more about the unsubscribe.
 4. This Data View, along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_ListSubscribers`](#_listsubscribers), does not have six-month data retention.
 
