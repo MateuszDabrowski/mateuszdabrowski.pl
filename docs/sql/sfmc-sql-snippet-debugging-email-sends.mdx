@@ -73,7 +73,7 @@ FROM _Sent AS s
         ON j.VersionID = ja.VersionID
     LEFT JOIN _Subscribers AS sub
         ON sub.SubscriberKey = s.SubscriberKey
-WHERE CONVERT(DATE, s.EventDate) >= DATEADD(DAY, -1, CONVERT(DATE, GETDATE()))
+WHERE s.EventDate >= DATEADD(DAY, -1, GETDATE())
 ```
 
 Within a few seconds you will see information about sends from the last day. With all the details that might be useful for debugging, like STMP Bounce Reason, Subscriber Status, Unsubscribe Date, etc.

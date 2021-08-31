@@ -341,6 +341,16 @@ Oh, and there is no out-of-the-box unsubscription from Data Extensions, which ar
 
 To give us at least a chance to make sense of that mess, Salesforce created multiple System Data Views related to (un)subscriptions.
 
+:::note You Should Know
+
+Spam Complaint and List-Unsubscribe Header are pretty particular unsubscription use cases. They are added to [`_Unsubscribe`](#_unsubscribe) and [`_BusinessUnitUnsubscribe`](#_businessunitunsubscribe) as unsubscriptions from a list used in send (for example, ID of Publication List selected for the send). In reality, Marketing Cloud will perform automatic unsubscribe from the All Subscriber list (depending on Email Studio settings - Child BU's or Enterprise one), not the list mentioned in `ListID`.
+
+As a result, when querying, you will see the list-specific unsubscribe that doesn't result in unsubscription from the list but instead blocks all commercial communication as a Business Unit or Master unsubscribe.
+
+Custom solution (Automation with Query and Script Activities) will be necessary to perform the list-specific unsubscribe.
+
+:::
+
 ### _Unsubscribe
 
 `_Unsubscribe` Data View stores data about unsubscribe events. The wording here is crucial, as it explains the difference from [`_Subscribers`](#_subscribers) Data View unsubsrciption counts.
@@ -411,8 +421,21 @@ When working with `_BusinessUnitUnsubscribes` Data View:
 
 1. Remember that it stores only currently unsubscribed contacts. Not unsubscribe event data (that's in [`_Unsubscribe`](#_unsubscribe)) and not other statuses (like bounced, held). It will also not show unsubscribed users after they resubscribed or got deleted.
 2. `SubscriberID` or `SubscriberKey` along with `UnsubDateUTC` might fuzzy match the data in this data view with [`_Unsubscribe`](#_unsubscribe).
-3. The real treat in this data view (apart from finally having an easy option to see Business Unit unsubscribes) is the `UnsubReason` field that can tell you more about the unsubscribe.
-4. This Data View, along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_ListSubscribers`](#_listsubscribers), does not have six-month data retention.
+3. `UnsubDateUTC`, as name suggests, is in UTC instead of the SFMC-standard UTC-6. Remember to use [`DATEADD`](../sql/sfmc-sql-date-functions.mdx#dateadd) to normalize it before comparing to other system dates.
+4. The real treat in this data view (apart from finally having an easy option to see Business Unit unsubscribes) is the `UnsubReason` field that can tell you more about the unsubscribe.
+5. This Data View, along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_ListSubscribers`](#_listsubscribers), does not have six-month data retention.
+
+:::note You Should Know
+
+`UnsubDateUTC` not only uses a different timezone from the rest of the system dates. It differs by a few milliseconds from [`_Unsubscribe`](#_unsubscribe) `EventDate`. When querying (SFMC doesn't show seconds for date fields), you won't see it, but the comparison is using the full datetime value.
+
+Because of it, you cannot match it out-of-the-box. [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) is here to save the day:
+
+```sql title="DATEDIFF will allow you to compare despite the difference"
+DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscribes.UnsubDateUTC) < 1
+```
+
+:::
 
 ---
 
@@ -457,6 +480,7 @@ When working with `_ListSubscribers` Data View:
 
 1. Thanks to having `ListID`, `ListName` and `ListType` fields, it allows you to make sense of the `ListID` field available in all other engagement-based System Data Views.
 2. This Data View, along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes), does not have six-month data retention.
+3. You can only query Lists available on the current Business Unit. It's not possible to check Child's List subscription status from the Parent BU. The exception is the All Subscribers list that is shared across all Business Units.
 
 ---
 
