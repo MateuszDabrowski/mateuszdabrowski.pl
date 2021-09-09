@@ -120,6 +120,10 @@ module.exports = {
                             label: 'SFMC Config',
                             to: 'docs/config/sfmc-config-features-on-demand',
                         },
+                        {
+                            label: 'SFMC Use Cases',
+                            to: 'docs/usecase/sfmc-cloud-apps',
+                        },
                     ],
                 },
                 {

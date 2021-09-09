@@ -14,10 +14,7 @@ module.exports = {
                 'ssjs/ssjs-style-guide',
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
-                    'SSJS Use Cases': ['usecase/sfmc-cloud-apps', 'usecase/engage-with-countdown', 'usecase/tailor-with-data'],
-                },
-                {
-                    'SSJS Snippets': [
+                    '» SSJS Snippets': [
                         'ssjs/ssjs-snippet-ampscript-in-ssjs',
                         'ssjs/ssjs-snippet-mobileconnect-phone-change',
                         'ssjs/ssjs-snippet-ssjs-script-template'
@@ -31,9 +28,6 @@ module.exports = {
             items: [
                 'js/js-if-and-switch',
                 'js/js-loops',
-                {
-                    'JS Use Cases': ['usecase/engage-with-countdown', 'usecase/tailor-with-data'],
-                },
             ],
         },
         {
@@ -43,12 +37,7 @@ module.exports = {
                 'ampscript/ampscript-style-guide',
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
-                    'AMPScript Use Cases': [
-                        'usecase/sfmc-cloud-apps',
-                    ],
-                },
-                {
-                    'AMPScript Snippets': [
+                    '» AMPScript Snippets': [
                         'ssjs/ssjs-snippet-ampscript-in-ssjs',
                     ],
                 },
@@ -72,7 +61,7 @@ module.exports = {
                 'sql/sfmc-sql-aggregate-functions',
                 'sql/sfmc-sql-style-guide',
                 {
-                    'SQL Snippets': [
+                    '» SQL Snippets': [
                         'sql/sfmc-sql-snippet-debugging-email-sends',
                         'sql/sfmc-sql-snippet-debugging-value-length',
                         'sql/sfmc-sql-snippet-enhanced-send-log'
@@ -88,6 +77,15 @@ module.exports = {
                 'config/sfmc-config-system-data-views',
                 'config/sfmc-config-features-on-demand',
                 'config/sfmc-config-behavioral-triggers',
+            ],
+        },
+        {
+            type: 'category',
+            label: 'SFMC Use Cases',
+            items: [
+                'usecase/tailor-with-data',
+                'usecase/engage-with-countdown',
+                'usecase/sfmc-cloud-apps',
             ],
         },
     ],
