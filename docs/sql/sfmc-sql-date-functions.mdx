@@ -95,9 +95,31 @@ You can reference date parts both by their full name, as well as an abbreviation
 | MICROSECOND | mcs |
 | NANOSECOND | ns |
 
-`DAYOFYEAR`, `DAY`, and `WEEKDAY` are considered the same date part and return the equal value.
+`DAYOFYEAR`, `DAY`, and `WEEKDAY` sounds similar to each other, but they return a bit different value. `DAYOFYEAR` will tell you which day of the year it is (f.e. `257`). `DAT` returns number of the day within the month (f.e. `14`). `WEEKDAY` returns number of the day within a week (f.e. `2` for Monday).
 
 For 99% of SFMC needs, you will be just fine with `YEAR`, `MONTH`, `DAY`, `HOUR` and `MINUTE`. Using only those with the full name will make your queries readable and straightforward for everyone.
+
+## DATENAME
+
+The `DATENAME` functions return the value of the specified [datepart](#date-parts) from a given date.
+
+```sql {3} title="Capture the whole day's name"
+SELECT
+      SubscriberKey
+    , DATENAME(WEEKDAY, DateJoined) AS DayJoined
+FROM Ent._Subscribers
+```
+
+It might help quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the day's name for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).
+
+```sql {3} title="Create an automation that will capture weekend meetings for Friday reminder"
+SELECT SubscriberKey
+FROM SalesMeetings
+WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
+    AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
+```
+
+It works for months as well: `DATENAME(MONTH, GETDATE())`.
 
 ## DATEADD
 
@@ -215,26 +237,6 @@ It might be good or bad depending on the use case, so be sure to select the corr
 There is a limit to how big the difference can be. If you go down to the `SECOND` [date part](#date-parts), the query's maximum time difference is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. For most use cases, this shouldn't be an issue in Marketing Cloud use cases.
 
 :::
-
-## DATENAME
-
-The `DATENAME` functions return the value of the specified [datepart](#date-parts) from a given date.
-
-```sql {3} title="Capture the whole day's name"
-SELECT
-      SubscriberKey
-    , DATENAME(WEEKDAY, DateJoined) AS DayJoined
-FROM Ent._Subscribers
-```
-
-It might help quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the day's name for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).
-
-```sql {3} title="Create an automation that will capture weekend meetings for Friday reminder"
-SELECT SubscriberKey
-FROM SalesMeetings
-WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
-    AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
-```
 
 ## AT TIME ZONE
 
