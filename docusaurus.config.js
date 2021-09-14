@@ -223,6 +223,10 @@ module.exports = {
                         to: '/docs/usecase/tailor-with-data',
                     },
                     {
+                        from: ['/docs/usecase/sfmc-cloud-apps'],
+                        to: '/docs/usecase/sfmc-cloud-page-apps',
+                    },
+                    {
                         from: ['/ideas'],
                         to: '/sites/ideas',
                     },
