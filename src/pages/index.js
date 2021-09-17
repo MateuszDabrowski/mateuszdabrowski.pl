@@ -112,7 +112,7 @@ function Home() {
                 <meta name="theme-color" content="#212121" />
             </Head>
 
-            <Layout title="Ahoj" description={customFields.description} keywords={customFields.keywords}>
+            <Layout title="Automate Marketing Automation" description={customFields.description} keywords={customFields.keywords}>
                 <main>
                     <div className={styles.hero}>
                         <div className={styles.heroInner}>
