@@ -88,5 +88,9 @@ module.exports = {
                 'usecase/sfmc-cloud-page-apps',
             ],
         },
+        {
+            type: 'doc',
+            id: 'zen-of-sfmc',
+        },
     ],
 };
