@@ -44,9 +44,43 @@ Remember that those recommendations are just that - recommendations. Not strict 
 
 ### Beautiful is better than ugly.
 
+Beauty might not be the thing that immediately come to mind, when talking about software development and implementation. It might also not be a focus in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud Solutions.
 
+#### Code
+
+When you are writing code in Salesforce Marketing Cloud - be it [AMPScript](../#ampscript), [SSJS](../#ssjs), [SQL](../#sql), or other - you have a lot of flexibility when it comes to the structure and style. Random indentation, no new line, cryptic variables? All are possible.
+
+But you should strive to not only write the code that works, but also make that code beautiful. It might take a bit longer to write, but it will make your code more readable, easier to debug and understandable to others.
+
+```sql title="Both queries work - which one would you rather read?"
+/* Beauty */
+SELECT
+      wel.SubscriberKey     AS SubscriberKey
+    , wel.EmailAddress      AS EmailAddress
+    , o.EventDate           AS OpenDate
+FROM WelcomeCampaignSegment AS wel
+    INNER JOIN _Open        AS o
+        ON o.SubscriberKey = wel.SubscriberKey
+
+/* and the Beast */
+select a.subscriberkey, a.emailaddress, b.eventdate
+from welcomecampaignsegment a join _open b on a.subscriberkey = b.subscriberkey
+
+```
+
+Looking for specific examples on how to make your code beautiful? Check my Style Guides for [AMPScript](../ampscript/ampscript-style-guide/), [SSJS](../ssjs/ssjs-style-guide/), [SQL](../sql/sfmc-sql-style-guide/),
+
+#### Platform
+
+The choice betweem beauty and ugly is not limited to writing the code. The same is true for working with Salesforce Marketing Cloud no-code tools.
+
+Creating a Email Template using Blocks in Content Builder? Sure, you can just drag and drop the empty blocks in proper order and call it a day. But you can also put a bit more work and add sample content with predefined styles to each block, provide palceholder images with stated dimensions and save such elements as separate blocks that can be easily added in case more then one is needed.
+
+Both approaches deliver the Email Template, but the second one does it in a beautiful way that makes using it easier and greatly improves value of the solution.
 
 ### Explicit is better than implicit.
+
+
 
 ### Simple is better than complex.
 
