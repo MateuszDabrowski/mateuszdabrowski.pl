@@ -130,6 +130,10 @@ module.exports = {
                     title: 'About',
                     items: [
                         {
+                            label: 'Zen of SFMC',
+                            to: 'docs/zen-of-sfmc',
+                        },
+                        {
                             label: 'Toolset',
                             to: 'sites/my-toolset',
                         },
