@@ -80,9 +80,65 @@ Both approaches deliver the Email Template, but the second one does it in a beau
 
 ### Explicit is better than implicit
 
-
+Salesforce Marketing Cloud enables you to decide, whether you want to create things in an explicit or implicit way. Implicit is faster and easier, while explicit is sturdier and better. As Marketing Automation Platform is something that will be used for a while and by many people, it's always worth to spend a bit more effort and go for explicit whenever possibke.
 
 #### Code
+
+There are multiple areas for this rule to be used when developing in Marketing Cloud.
+
+##### 1. Explicit naming conventions
+
+The first one - common for all programming languages of SFMC - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters when writing the code is not worth the time lost later for deciphering the meaning.
+
+```js
+/* You may know now what it means */
+if (ts && !tsd) tsd = new Date();
+
+/* But everyone else and even you after a week will be thankful for explicit names */
+if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
+```
+
+Read more on good naming in [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention), [SQL](../sql/sfmc-sql-style-guide/#meaningful-column-names).
+
+:::note You Should Know
+
+This can (and should) be taken to the next level with smart use of asset Keys. They are frequently used in your code - especially the Data Extension and Content Block ones. While the default pseudo-random ID does the work, I would recommend going for custom explicit Keys.
+
+If you keep Data Extension Name and Key in sync (it might not be possible with longer names due to Key length limit) you won't have to worry about whether the Data Extension lookup is using the key or name.
+
+But even bigger value is with using smart asset Key values for Content Blocks. It's popular to use those Blocks for AMPScript snippets shared across multiple emails or brand-wide dynamic footers. Frequently they are added to the Email Templates with the help of AMPScript `ContentBlockByID` function. However, as asset collection grows, it will be harder to remember which Content Block has been imported that way.
+
+Here is where explicit Content Block Key and `ContentBlockByKey` functions are helpful:
+
+```js
+%%=ContentBlockByID("123456")=%%
+/* Which one would you rather see in your email template? */
+%%=ContentBlockByKey("SharedFooterEMEA")=%%
+```
+
+:::
+
+##### 2. Explicit functions
+
+Marketing Cloud programmatic languages offer vast selection of functions and most things can be achieved in multiple ways. There are also a lot of shorthands and simplified notations that you can leverage to make your code shorter.
+
+Many of those are great, but always consider whether it is worth in the specific scenario. It's especially important when writing loosly-typed and flexible SSJS.
+
+```sql title="Not all shorthands are bad"
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE())    THEN 1
+        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE())     THEN 0
+      END AS IsNewJoiner
+FROM Ent.Subscribers
+/* Above query can be written with IIF shorthand and still be explicit */
+SELECT
+      SubscriberKey
+    , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
+FROM Ent.Subscribers
+```
+
 
 #### Platform
 
@@ -107,6 +163,20 @@ Both approaches deliver the Email Template, but the second one does it in a beau
 ### Sparse is better than dense
 
 #### Code
+
+```js title="But sometime they create more problems than they solved"
+var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'US' ? 'AMER' : 'APAC';
+/* Chained ternary operator above might be shorter, but its definitely not readable */
+var region;
+if (country == 'UK' || country == 'PL') {
+    region = 'EMEA';
+} else if (country == 'US') {
+    region = 'AMER';
+} else {
+    region = 'APAC';
+};
+```
+
 
 #### Platform
 
