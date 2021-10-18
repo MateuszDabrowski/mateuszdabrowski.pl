@@ -40,7 +40,7 @@ Documentation is one honking great idea - let's do more of it!
 
 ## Thoughts on Zen
 
-Remember that those recommendations are just that - recommendations. Not strict rules, but rather a set of general principles that might help you in your day-to-day work with Salesforce Marketing Cloud.
+Remember that those recommendations are just that - recommendations. Not strict rules, but rather a set of general - sometimes contradictory - principles, that might help you in your day-to-day work with Salesforce Marketing Cloud.
 
 ### Beautiful is better than ugly
 
@@ -80,25 +80,23 @@ Both approaches deliver the Email Template, but the second one does it in a beau
 
 ### Explicit is better than implicit
 
-Salesforce Marketing Cloud enables you to decide, whether you want to create things in an explicit or implicit way. Implicit is faster and easier, while explicit is sturdier and better. As Marketing Automation Platform is something that will be used for a while and by many people, it's always worth to spend a bit more effort and go for explicit whenever possibke.
+Salesforce Marketing Cloud enables you to decide, whether you want to create things in an explicit or implicit way. Implicit is faster and easier, while explicit is sturdier and better. As Marketing Automation Platform is something that will be used for a while and by many people, it's always worth to spend a bit more effort and go for explicit whenever possible.
 
 #### Code
 
-There are multiple areas for this rule to be used when developing in Marketing Cloud.
+There are few areas for this rule to be used when developing in Marketing Cloud.
 
-##### 1. Explicit naming conventions
-
-The first one - common for all programming languages of SFMC - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters when writing the code is not worth the time lost later for deciphering the meaning.
+The first one - common for all programming languages of SFMC - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters when writing the code is not worth the time lost for deciphering the meaning later.
 
 ```js
-/* You may know now what it means */
+/* You may know what it means when you write the code */
 if (ts && !tsd) tsd = new Date();
 
-/* But everyone else and even you after a week will be thankful for explicit names */
+/* But everyone else, and even you after a week, will be thankful for explicit names */
 if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
 ```
 
-Read more on good naming in [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention), [SQL](../sql/sfmc-sql-style-guide/#meaningful-column-names).
+Read more on good naming in [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention), [SQL](../sql/sfmc-sql-style-guide/#explicit-vs-implicit).
 
 :::note You Should Know
 
@@ -110,19 +108,43 @@ But even bigger value is with using smart asset Key values for Content Blocks. I
 
 Here is where explicit Content Block Key and `ContentBlockByKey` functions are helpful:
 
-```js
+```js title="Which one would you rather see in your email template?"
 %%=ContentBlockByID("123456")=%%
-/* Which one would you rather see in your email template? */
+// vs
 %%=ContentBlockByKey("SharedFooterEMEA")=%%
 ```
 
 :::
 
-##### 2. Explicit functions
+Another area where you can focus on the explicit in your SFMC development is comments. Yes, explicit naming convention and smart selection of used functions are already great for creating understandable code, but you can make it so much better with adding a bit of context.
 
-Marketing Cloud programmatic languages offer vast selection of functions and most things can be achieved in multiple ways. There are also a lot of shorthands and simplified notations that you can leverage to make your code shorter.
+It is especially useful for longer scripts that might contain multiple sections responsible for various tasks. Especially with SSJS - with it's functions and JSDoc support - you should strive for explicit comments.
 
-Many of those are great, but always consider whether it is worth in the specific scenario. It's especially important when writing loosly-typed and flexible SSJS.
+```js title="Even with explicit names, the comments bring clarity"
+/**
+ * @function debugValue
+ * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+ * @param {string} description - Describes meaning of the second parameter in the output
+ * @param {*} value - The value that needs to be debugged
+ */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+```
+
+Read more on using comments in [SSJS](../ssjs/ssjs-style-guide/#comments) and [AMPScript](../ampscript/ampscript-style-guide/#comments).
+
+#### Platform
+
+Being explicit is not limited to the code. When working with the platform features, you will have a lot of places to improve your solution with a bit of added context.
+
+A lot of assets offer one or more places to add descriptions. Data Extensions, Installed Packages, Automations - or even particular steps of the Automations. Neither of those places require a description, but each and single one will benefit from explicitly stating it's purpose and business or technical context.
+
+There is a lot of small places where Salesforce Marketing Cloud let's you add such details. Path names in Journey Builder Decision Splits. Additional Email Attribute Names in Content Builder. Collection and Cloud Page names in Web Studio. Whenever possible - spend that extra time to create an obvious solution.
+
+### Simple is better than complex
+
+#### Code
 
 ```sql title="Not all shorthands are bad"
 SELECT
@@ -139,13 +161,6 @@ SELECT
 FROM Ent.Subscribers
 ```
 
-
-#### Platform
-
-### Simple is better than complex
-
-#### Code
-
 #### Platform
 
 ### Complex is better than complicated
@@ -158,15 +173,18 @@ FROM Ent.Subscribers
 
 #### Code
 
+loop throw columns of rows example?
+
 #### Platform
 
 ### Sparse is better than dense
 
 #### Code
 
-```js title="But sometime they create more problems than they solved"
+```js title="Just because it works, doesn't mean it's worth it"
 var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'US' ? 'AMER' : 'APAC';
-/* Chained ternary operator above might be shorter, but its definitely not readable */
+/* Chained ternary operator above might be shorter, but its definitely not readable.
+Making it more sparse is not only easier for the readars but also futureproof */
 var region;
 if (country == 'UK' || country == 'PL') {
     region = 'EMEA';
