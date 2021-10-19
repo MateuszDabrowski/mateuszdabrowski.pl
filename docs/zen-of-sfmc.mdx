@@ -144,21 +144,25 @@ There is a lot of small places where Salesforce Marketing Cloud let's you add su
 
 ### Simple is better than complex
 
+Salesforce Marketing Cloud is a complex tool within complex solution ecosystem to solve complex business needs. But the things that you create in it and how you operate should be as simple as possible. It will make your solution more robust, agile and understandable.
+
 #### Code
 
-```sql title="Not all shorthands are bad"
+//TODO SSJS vs AMPScript
+
+```sql title="Simplify when possible
 SELECT
       SubscriberKey
     , CASE
         WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE())    THEN 1
         WHEN DateJoined < DATEADD(MONTH, -1, GETDATE())     THEN 0
       END AS IsNewJoiner
-FROM Ent.Subscribers
-/* Above query can be written with IIF shorthand and still be explicit */
+FROM Ent._Subscribers
+/* Above query can be written with simple and readable IIF shorthand */
 SELECT
       SubscriberKey
     , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
-FROM Ent.Subscribers
+FROM Ent._Subscribers
 ```
 
 #### Platform
