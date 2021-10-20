@@ -42,7 +42,9 @@ Documentation is one honking great idea - let's do more of it!
 
 Remember that those recommendations are just that - recommendations. Not strict rules, but rather a set of general - sometimes contradictory - principles, that might help you in your day-to-day work with Salesforce Marketing Cloud.
 
-### Beautiful is better than ugly
+---
+
+### 1. Beautiful is better than ugly
 
 Beauty might not be the thing that immediately come to mind, when talking about software development and implementation. It might also not be a focus in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud Solutions.
 
@@ -78,15 +80,17 @@ Creating a Email Template using Blocks in Content Builder? Sure, you can just dr
 
 Both approaches deliver the Email Template, but the second one does it in a beautiful way that makes using it easier and greatly improves value of the solution.
 
-### Explicit is better than implicit
+---
+
+### 2. Explicit is better than implicit
 
 Salesforce Marketing Cloud enables you to decide, whether you want to create things in an explicit or implicit way. Implicit is faster and easier, while explicit is sturdier and better. As Marketing Automation Platform is something that will be used for a while and by many people, it's always worth to spend a bit more effort and go for explicit whenever possible.
 
 #### Code
 
-There are few areas for this rule to be used when developing in Marketing Cloud.
+There are few areas to apply this approach when developing in Marketing Cloud.
 
-The first one - common for all programming languages of SFMC - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters when writing the code is not worth the time lost for deciphering the meaning later.
+The first one - common for all SFMC programming languages - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters when writing the code is not worth the time lost for deciphering the meaning later.
 
 ```js
 /* You may know what it means when you write the code */
@@ -142,15 +146,25 @@ A lot of assets offer one or more places to add descriptions. Data Extensions, I
 
 There is a lot of small places where Salesforce Marketing Cloud let's you add such details. Path names in Journey Builder Decision Splits. Additional Email Attribute Names in Content Builder. Collection and Cloud Page names in Web Studio. Whenever possible - spend that extra time to create an obvious solution.
 
-### Simple is better than complex
+---
 
-Salesforce Marketing Cloud is a complex tool within complex solution ecosystem to solve complex business needs. But the things that you create in it and how you operate should be as simple as possible. It will make your solution more robust, agile and understandable.
+### 3. Simple is better than complex
+
+Salesforce Marketing Cloud is a complex tool within complex solution ecosystem to solve complex business needs. But the things that you create in it and how you operate should be straightforward. It will make your solution robust, agile and easily understandable.
+
+This recommendation is also known under a popylar acronym: __KISS__ (Keep It Simple ~~Stupid~~ Salesforce). In short, it suggest to create solutions as simple as possible without sacrificing other values (like readability or performance).
+
+There is also yet another acronym connected to that principle: __YAGNI__ (You Aren't Gonna Need It). This Extreme Programming mantra adds another perspective to approaching simplicity, by stating that when creating the solution, you should create only solutions that are necessary. Everything else is just a bloat, that makes solution more convoluted and error-prone.
 
 #### Code
 
-//TODO SSJS vs AMPScript
+This simplicity based focus is useful already when you are yet to select the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS). Read more on selecting SSJS vs AMPScript [here](../ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs).
 
-```sql title="Simplify when possible
+Once you selected the best language for the job, you will have to decide on how to deliver the required solution. And here again both simplicity will be useful guideline helping you write better code. Yes, you can create universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](../ssjs/ssjs-snippet-ampscript-in-ssjs/) will be enough (YAGNI) and much simpler (KISS).
+
+Think about those two acronyms whenever you are coding anything and it will help you drive simpler and better solutions.
+
+```sql title="Simplify whenever possible"
 SELECT
       SubscriberKey
     , CASE
@@ -158,7 +172,7 @@ SELECT
         WHEN DateJoined < DATEADD(MONTH, -1, GETDATE())     THEN 0
       END AS IsNewJoiner
 FROM Ent._Subscribers
-/* Above query can be written with simple and readable IIF shorthand */
+/* When you only need two opposite CASE rules, simple IIF shorthand is better */
 SELECT
       SubscriberKey
     , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
@@ -167,13 +181,27 @@ FROM Ent._Subscribers
 
 #### Platform
 
-### Complex is better than complicated
+This two step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well.
+
+When creating an email, ask yourself whether you have a specific need requiring custom HTML. If not, go for a simple Drag & Drop Blocks Template.
+
+When creating a segment, ask yourself whether you need multiple data sources or calculated data. If not, go for a simple filtered data extension.
+
+When creating an automation, ask yourself whether you need all those activities in a single process. If not, split it into multiple single-purpose oriented Automations.
+
+---
+
+### 4. Complex is better than complicated
 
 #### Code
 
+DRY (Don't Repeat Yourself).
+
 #### Platform
 
-### Flat is better than nested
+---
+
+### 5. Flat is better than nested
 
 #### Code
 
@@ -181,7 +209,9 @@ loop throw columns of rows example?
 
 #### Platform
 
-### Sparse is better than dense
+---
+
+### 6. Sparse is better than dense
 
 #### Code
 
@@ -202,82 +232,110 @@ if (country == 'UK' || country == 'PL') {
 
 #### Platform
 
-### Readability counts
+---
+
+### 7. Readability counts
 
 #### Code
 
 #### Platform
 
-### Naming conventions counts twice
+---
+
+### 8. Naming conventions counts twice
 
 #### Code
 
 #### Platform
 
-### Special cases aren't special enough to break the rules
+---
+
+### 9. Special cases aren't special enough to break the rules
 
 #### Code
 
 #### Platform
 
-### Although practicality beats purity
+---
+
+### 10. Although practicality beats purity
 
 #### Code
 
 #### Platform
 
-### Errors should never pass silently
+---
+
+### 11. Errors should never pass silently
 
 #### Code
 
 #### Platform
 
-### Unless explicitly silenced
+---
+
+### 12. Unless explicitly silenced
 
 #### Code
 
 #### Platform
 
-### In the face of ambiguity, refuse the temptation to guess
+---
+
+### 13. In the face of ambiguity, refuse the temptation to guess
 
 #### Code
 
 #### Platform
 
-### Even when certain, test
+---
+
+### 14. Even when certain, test
 
 #### Code
 
 #### Platform
 
-### Now is better than never
+---
+
+### 15. Now is better than never
 
 #### Code
 
 #### Platform
 
-### Although never is often better than right now
+---
+
+### 16. Although never is often better than right now
 
 #### Code
 
 #### Platform
 
-### If the implementation is hard to explain, it's a bad idea
+---
+
+### 17. If the implementation is hard to explain, it's a bad idea
 
 #### Code
 
 #### Platform
 
-### If the implementation is easy to explain, it may be a good idea
+---
+
+### 18. If the implementation is easy to explain, it may be a good idea
 
 #### Code
 
 #### Platform
 
-### Documentation is one honking great idea - let's do more of it!
+---
+
+### 19. Documentation is one honking great idea - let's do more of it!
 
 #### Code
 
 #### Platform
+
+---
 
 ## Sum Up
