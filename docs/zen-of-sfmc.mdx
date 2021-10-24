@@ -152,7 +152,7 @@ There is a lot of small places where Salesforce Marketing Cloud let's you add su
 
 Salesforce Marketing Cloud is a complex tool within complex solution ecosystem to solve complex business needs. But the things that you create in it and how you operate should be straightforward. It will make your solution robust, agile and easily understandable.
 
-This recommendation is also known under a popylar acronym: __KISS__ (Keep It Simple ~~Stupid~~ Salesforce). In short, it suggest to create solutions as simple as possible without sacrificing other values (like readability or performance).
+This recommendation is also known under a popular acronym: __KISS__ (Keep It Simple ~~Stupid~~ Salesforce). In short, it suggest to create solutions as simple as possible without sacrificing other values (like readability or performance).
 
 There is also yet another acronym connected to that principle: __YAGNI__ (You Aren't Gonna Need It). This Extreme Programming mantra adds another perspective to approaching simplicity, by stating that when creating the solution, you should create only solutions that are necessary. Everything else is just a bloat, that makes solution more convoluted and error-prone.
 
@@ -181,23 +181,29 @@ FROM Ent._Subscribers
 
 #### Platform
 
-This two step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well.
+This two step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well:
 
-When creating an email, ask yourself whether you have a specific need requiring custom HTML. If not, go for a simple Drag & Drop Blocks Template.
+- When creating an email, ask yourself whether you have a specific need requiring custom HTML. If not, go for a simple Drag & Drop Blocks Template.
 
-When creating a segment, ask yourself whether you need multiple data sources or calculated data. If not, go for a simple filtered data extension.
+- When creating a segment, ask yourself whether you need multiple data sources or calculated data. If not, go for a simple filtered data extension.
 
-When creating an automation, ask yourself whether you need all those activities in a single process. If not, split it into multiple single-purpose oriented Automations.
+- When creating an automation, ask yourself whether you need all those activities in a single process. If not, split it into multiple single-purpose Automations.
+
+There are countless places in Salesforce Marketing Cloud where this approachc an be applied to the benefit of the final solution.
 
 ---
 
 ### 4. Complex is better than complicated
 
+It might sound contradictory to what the [Simple is better than complex](#3-simple-is-better-than-complex) recommendation just covered, but there is method in this madness. There is a limit to what can be simplified and once you get past, it starts getting complicated. Sometimes complex is the lesser evil.
+
 #### Code
 
-DRY (Don't Repeat Yourself).
+We can leverage yet another popular acronym to showcase real-life application: __DRY__ (Don't Repeat Yourself).
 
 #### Platform
+
+sql vs multiple filtered data extensions
 
 ---
 
@@ -208,6 +214,8 @@ DRY (Don't Repeat Yourself).
 loop throw columns of rows example?
 
 #### Platform
+
+journey builder multiple decision splits
 
 ---
 
