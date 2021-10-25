@@ -1,14 +1,17 @@
 ---
 id: zen-of-sfmc
 title: Zen of SFMC
-description: Salesforce Marketing Cloud implementation, development and operations Best Practices.
+description: Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and in detail.
 image: img/og/og-image-solve-with-cloud--page-apps.png
 tags: [Marketing Cloud, Best Practice]
+toc_max_heading_level: 4
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import { LeadText } from '../src/components/LeadText.js';
 
-<LeadText content="Salesforce Marketing Cloud implementation, development and operations Best Practices." />
+<LeadText content="Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and in detail." />
 
 I'm a huge fan of Tim Petter's [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language and I see it as a very universal guide on software engineering.
 
@@ -46,13 +49,22 @@ Remember that those recommendations are just that - recommendations. Not strict 
 
 ### 1. Beautiful is better than ugly
 
-Beauty might not be the thing that immediately come to mind, when talking about software development and implementation. It might also not be a focus in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud Solutions.
+Beauty might not immediately come to the mind in the context of software development and implementation. Neither might it be in the focus in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud solutions.
 
-#### Code
+It not only makes working on the tool more motivating and pleasant, but also supports a lot of other recommendations listed here - with readability in the first place. Below you can see examples of how the beauty principle can be implemented into Salesforce Marketing Cloud world.
 
-When you are writing code in Salesforce Marketing Cloud - be it [AMPScript](../#ampscript), [SSJS](../#ssjs), [SQL](../#sql), or other - you have a lot of flexibility when it comes to the structure and style. Random indentation, no new line, cryptic variables? All are possible.
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-But you should strive to not only write the code that works, but also make that code beautiful. It might take a bit longer to write, but it will make your code more readable, easier to debug and understandable to others.
+When you are writing code in Salesforce Marketing Cloud - be it AMPScript, SSJS, SQL, or other - you have a lot of flexibility when it comes to the structure and style. Random indentation, lack of new lines, cryptic variables? Everything is possible and might work.
+
+But you should strive to write code that not only works. Apply beauty-focused mindset and while writing might take a bit longer, the outcome will be more readable, easier to debug and understandable to others.
 
 ```sql title="Both queries work - which one would you rather read?"
 /* Beauty */
@@ -70,49 +82,62 @@ from welcomecampaignsegment a join _open b on a.subscriberkey = b.subscriberkey
 
 ```
 
-Looking for specific examples on how to make your code beautiful? Check my Style Guides for [AMPScript](../ampscript/ampscript-style-guide/), [SSJS](../ssjs/ssjs-style-guide/), [SQL](../sql/sfmc-sql-style-guide/),
+Check my Style Guides for [AMPScript](../ampscript/ampscript-style-guide/), [SSJS](../ssjs/ssjs-style-guide/), [SQL](../sql/sfmc-sql-style-guide/) to see more specific examples on how to make your code beautiful.
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
 
 The choice betweem beauty and ugly is not limited to writing the code. The same is true for working with Salesforce Marketing Cloud no-code tools.
 
-Creating a Email Template using Blocks in Content Builder? Sure, you can just drag and drop the empty blocks in proper order and call it a day. But you can also put a bit more work and add sample content with predefined styles to each block, provide palceholder images with stated dimensions and save such elements as separate blocks that can be easily added in case more then one is needed.
+Creating a Email Template using Blocks in Content Builder? Sure, you can just drag and drop the empty blocks in proper order and call it a day. But you can also put a bit more work and add sample content with predefined styles to each block, provide palceholder images with visible dimensions and save such elements as separate blocks ready for reuse.
 
-Both approaches deliver the Email Template, but the second one does it in a beautiful way that makes using it easier and greatly improves value of the solution.
+Both approaches deliver the Email Template, but the second one does it in a more beautiful way improving the usefulness and value of the final solution.
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 2. Explicit is better than implicit
 
-Salesforce Marketing Cloud enables you to decide, whether you want to create things in an explicit or implicit way. Implicit is faster and easier, while explicit is sturdier and better. As Marketing Automation Platform is something that will be used for a while and by many people, it's always worth to spend a bit more effort and go for explicit whenever possible.
+Salesforce Marketing Cloud enables you to decide, whether you want to create things in an implicit or explicit way. Implicit is faster and easier. Explicit is sturdier and better.
 
-#### Code
+As the SFMC is long term commitmentused by many people, it's always worth to spend a bit more effort and go for explicit whenever possible. It will save you and your organisation a lot of time in the long run, so consider it an investment.
 
-There are few areas to apply this approach when developing in Marketing Cloud.
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-The first one - common for all SFMC programming languages - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters when writing the code is not worth the time lost for deciphering the meaning later.
+There are multiple areas to apply this approach when developing in Marketing Cloud.
+
+One - common for all SFMC programming languages - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters for a shorter name is not worth the time lost for deciphering the meaning later.
 
 ```js
-/* You may know what it means when you write the code */
+/* You may know what it means when you write the code... */
 if (ts && !tsd) tsd = new Date();
 
-/* But everyone else, and even you after a week, will be thankful for explicit names */
+/* ... but everyone else, and even you after a week, will be thankful for explicit names */
 if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
 ```
 
-Read more on good naming in [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention), [SQL](../sql/sfmc-sql-style-guide/#explicit-vs-implicit).
+Looking for more examples of good naming? Read Style Guide recommendations for [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention) and [SQL](../sql/sfmc-sql-style-guide/#explicit-vs-implicit).
 
 :::note You Should Know
 
-This can (and should) be taken to the next level with smart use of asset Keys. They are frequently used in your code - especially the Data Extension and Content Block ones. While the default pseudo-random ID does the work, I would recommend going for custom explicit Keys.
+Explicit approach can (and should) be taken to the next level with smart use of asset Keys. They are frequently used in code - especially the Data Extension and Content Block keys. While the default pseudo-random ID does the work, I recommend going for the custom explicit Keys.
 
 If you keep Data Extension Name and Key in sync (it might not be possible with longer names due to Key length limit) you won't have to worry about whether the Data Extension lookup is using the key or name.
 
-But even bigger value is with using smart asset Key values for Content Blocks. It's popular to use those Blocks for AMPScript snippets shared across multiple emails or brand-wide dynamic footers. Frequently they are added to the Email Templates with the help of AMPScript `ContentBlockByID` function. However, as asset collection grows, it will be harder to remember which Content Block has been imported that way.
+But even bigger value to this approach is with Content Blocks. It's popular to use those Blocks for AMPScript snippets shared across multiple emails or brand-wide dynamic footers. Frequently they are added to the Email Templates with the help of AMPScript `ContentBlockByID` function. However, as an asset collection grows, it will be harder to remember which Content Block has been imported that way (IDs aren't helpful with that).
 
-Here is where explicit Content Block Key and `ContentBlockByKey` functions are helpful:
+Explicit Content Block Key and `ContentBlockByKey` function can help with that:
 
-```js title="Which one would you rather see in your email template?"
+```js title="Which one would you rather see in the email template?"
 %%=ContentBlockByID("123456")=%%
 // vs
 %%=ContentBlockByKey("SharedFooterEMEA")=%%
@@ -120,9 +145,7 @@ Here is where explicit Content Block Key and `ContentBlockByKey` functions are h
 
 :::
 
-Another area where you can focus on the explicit in your SFMC development is comments. Yes, explicit naming convention and smart selection of used functions are already great for creating understandable code, but you can make it so much better with adding a bit of context.
-
-It is especially useful for longer scripts that might contain multiple sections responsible for various tasks. Especially with SSJS - with it's functions and JSDoc support - you should strive for explicit comments.
+Yet another area where you can make your SFMC development more explicit is comments. Yes, good naming convention and purposeful choice of functions are already great for creating understandable code, but you can make it so much better with adding a bit of context.
 
 ```js title="Even with explicit names, the comments bring clarity"
 /**
@@ -138,33 +161,48 @@ function debugValue(description, value) {
 
 Read more on using comments in [SSJS](../ssjs/ssjs-style-guide/#comments) and [AMPScript](../ampscript/ampscript-style-guide/#comments).
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
 
-Being explicit is not limited to the code. When working with the platform features, you will have a lot of places to improve your solution with a bit of added context.
+Being explicit is not limited to the code. When working with the SFMC no-code features, you will also have a lot of places to improve your solution with a bit of added information.
 
-A lot of assets offer one or more places to add descriptions. Data Extensions, Installed Packages, Automations - or even particular steps of the Automations. Neither of those places require a description, but each and single one will benefit from explicitly stating it's purpose and business or technical context.
+A lot of assets offer one or more places to add descriptions. Data Extensions, Installed Packages, Automations - or even specific steps grouping Activities. Neither of those places _require_ a description, but each and single one will benefit from explicitly stating it's purpose and business/technical context.
 
-There is a lot of small places where Salesforce Marketing Cloud let's you add such details. Path names in Journey Builder Decision Splits. Additional Email Attribute Names in Content Builder. Collection and Cloud Page names in Web Studio. Whenever possible - spend that extra time to create an obvious solution.
+There are also places where Salesforce Marketing Cloud let's you add smaller pieces of information. Not full descriptions, but rather optional micro data points that explain the purpose. Path names in Journey Builder Decision Splits. Additional Email Attribute Names in Content Builder. Collection and Cloud Page names in Web Studio. Whenever possible - spend that extra time needed to come up with explicit value.
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 3. Simple is better than complex
 
-Salesforce Marketing Cloud is a complex tool within complex solution ecosystem to solve complex business needs. But the things that you create in it and how you operate should be straightforward. It will make your solution robust, agile and easily understandable.
+Marketing Cloud is a complex tool within a complex Salesforce ecosystem focused on solving complex business needs. But how you operate and develop SFMC should be as straightforward as possible. It will make your solution robust, agile and easily understandable.
 
-This recommendation is also known under a popular acronym: __KISS__ (Keep It Simple ~~Stupid~~ Salesforce). In short, it suggest to create solutions as simple as possible without sacrificing other values (like readability or performance).
+#### KISS
 
-There is also yet another acronym connected to that principle: __YAGNI__ (You Aren't Gonna Need It). This Extreme Programming mantra adds another perspective to approaching simplicity, by stating that when creating the solution, you should create only solutions that are necessary. Everything else is just a bloat, that makes solution more convoluted and error-prone.
+This recommendation is also known in the software development community under a popular acronym: __KISS__ (Keep It Simple ~~Stupid~~ Salesforce). In short, it advocates creating solutions as simple as they can be without sacrificing other values (like readability or performance).
 
-#### Code
+#### YAGNI
 
-This simplicity based focus is useful already when you are yet to select the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS). Read more on selecting SSJS vs AMPScript [here](../ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs).
+There is also yet another popular acronym connected to the simplicity principle: __YAGNI__ (You Aren't Gonna Need It). This Extreme Programming methodology mantra adds another perspective, by stating that when creating the solution, you should build the necessary elements. Everything else is just a bloat, that makes final outcome more convoluted and error-prone.
 
-Once you selected the best language for the job, you will have to decide on how to deliver the required solution. And here again both simplicity will be useful guideline helping you write better code. Yes, you can create universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](../ssjs/ssjs-snippet-ampscript-in-ssjs/) will be enough (YAGNI) and much simpler (KISS).
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-Think about those two acronyms whenever you are coding anything and it will help you drive simpler and better solutions.
+THe simplicity focus is useful from the very start - when you are selecting the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](../ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs)).
 
-```sql title="Simplify whenever possible"
+Once you selected the best language for the job, you will have to decide on how to code the solution. And here again simplicity will be useful guideline. For example, yes, you can create universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](../ssjs/ssjs-snippet-ampscript-in-ssjs/) will be enough (YAGNI) and much simpler (KISS).
+
+Think about KISS and YAGNI whenever you are coding and it will help you deliver simpler and better solutions.
+
+```sql
 SELECT
       SubscriberKey
     , CASE
@@ -179,17 +217,21 @@ SELECT
 FROM Ent._Subscribers
 ```
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
 
-This two step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well:
+The two step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well:
 
 - When creating an email, ask yourself whether you have a specific need requiring custom HTML. If not, go for a simple Drag & Drop Blocks Template.
 
 - When creating a segment, ask yourself whether you need multiple data sources or calculated data. If not, go for a simple filtered data extension.
 
-- When creating an automation, ask yourself whether you need all those activities in a single process. If not, split it into multiple single-purpose Automations.
+- When creating a complex automation, ask yourself whether you need all those activities in a single process. If not, split it into multiple single-purpose Automations.
 
 There are countless places in Salesforce Marketing Cloud where this approachc an be applied to the benefit of the final solution.
+
+</TabItem>
+</Tabs>
 
 ---
 
@@ -197,31 +239,60 @@ There are countless places in Salesforce Marketing Cloud where this approachc an
 
 It might sound contradictory to what the [Simple is better than complex](#3-simple-is-better-than-complex) recommendation just covered, but there is method in this madness. There is a limit to what can be simplified and once you get past, it starts getting complicated. Sometimes complex is the lesser evil.
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
 We can leverage yet another popular acronym to showcase real-life application: __DRY__ (Don't Repeat Yourself).
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
 
 sql vs multiple filtered data extensions
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 5. Flat is better than nested
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
 loop throw columns of rows example?
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
 
 journey builder multiple decision splits
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 6. Sparse is better than dense
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
 ```js title="Just because it works, doesn't mean it's worth it"
 var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'US' ? 'AMER' : 'APAC';
@@ -237,112 +308,258 @@ if (country == 'UK' || country == 'PL') {
 };
 ```
 
+</TabItem>
+<TabItem value='ui'>
 
-#### Platform
+</TabItem>
+</Tabs>
 
 ---
 
 ### 7. Readability counts
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 8. Naming conventions counts twice
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 9. Special cases aren't special enough to break the rules
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 10. Although practicality beats purity
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 11. Errors should never pass silently
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 12. Unless explicitly silenced
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 13. In the face of ambiguity, refuse the temptation to guess
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 14. Even when certain, test
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 15. Now is better than never
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 16. Although never is often better than right now
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 17. If the implementation is hard to explain, it's a bad idea
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 18. If the implementation is easy to explain, it may be a good idea
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
 ### 19. Documentation is one honking great idea - let's do more of it!
 
-#### Code
+<Tabs
+    defaultValue={null}
+    values={[
+        {label: 'SFMC Code Example', value: 'code'},
+        {label: 'SFMC UI Example', value: 'ui'},
+    ]}
+>
+<TabItem value='code'>
 
-#### Platform
+</TabItem>
+<TabItem value='ui'>
+
+</TabItem>
+</Tabs>
 
 ---
 
