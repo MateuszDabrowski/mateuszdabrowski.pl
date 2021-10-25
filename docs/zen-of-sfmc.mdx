@@ -237,7 +237,17 @@ There are countless places in Salesforce Marketing Cloud where this approachc an
 
 ### 4. Complex is better than complicated
 
-It might sound contradictory to what the [Simple is better than complex](#3-simple-is-better-than-complex) recommendation just covered, but there is method in this madness. There is a limit to what can be simplified and once you get past, it starts getting complicated. Sometimes complex is the lesser evil.
+It might sound contradictory to what the [Simple is better than complex](#3-simple-is-better-than-complex) recommendation just covered, but only on the surface. There is a limit to what can be simplified before it starts getting complicated. In such case, complex is the lesser evil.
+
+#### SOC
+
+When you are laser-focused on simplicity, you will feel temptation to create whole solution as one element (one script, one Automation, one Email). __SOC__ (Separation of Concerns) rule tells us that it might be wrong if said solution is build from multiple parts each with different purpose. In such case, multiple concerns stacked within a single asset will make it complicated rather then simple. The recommended solution? Split it into separate purpose-oriented elements. It will get more complex, but less complicated.
+
+#### DRY
+
+Another important acronym is __DRY__ (Don't Repeat Yourself). It shows a different perspective on the same problem - the simple solution that needs to be replicated multiple times, leads to a complicated outcome. Updating is huge hassle, performance is impacted, readability is poor. DRY suggests finding such repetitive spots in the solution and refactoring them.
+
+There is also second application of the DRY principle - not solution, but work related. If you find you are doing the same thing again and again, Don't Repeat Yourself. Automate it.
 
 <Tabs
     defaultValue={null}
@@ -248,10 +258,19 @@ It might sound contradictory to what the [Simple is better than complex](#3-simp
 >
 <TabItem value='code'>
 
-We can leverage yet another popular acronym to showcase real-life application: __DRY__ (Don't Repeat Yourself).
+I have seen many (too many) Subscription Preference Centers in SFMC built with AMPScript. Yes, it's simple language and capable enough to deliver such solution. But because of it's simplicity, for this use case it quickly gets full of repeating script lines (DRY violation), mixes multiple purposes (SOC violation) and gets long (readability suffers).
+
+My recommedation for most of the Preference Centers is to go with SSJS. Yes, it's more complex language than AMPScript, but with a set of tools dedicated to solving complexity. Implement SOC and make it DRY with functions & [loops](../ssjs/ssjs-loops). Bring it to the next level with splitting Front-End (Cloud Page) and Back-End (Code Resource). Versus single Cloud Page with AMPScript this solution will be more complex but much less complicated. Thus easier to debug and maintain.
+
+```
+
+
+```
 
 </TabItem>
 <TabItem value='ui'>
+
+
 
 sql vs multiple filtered data extensions
 
