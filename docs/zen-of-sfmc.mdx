@@ -262,11 +262,6 @@ I have seen many (too many) Subscription Preference Centers in SFMC built with A
 
 My recommedation for most of the Preference Centers is to go with SSJS. Yes, it's more complex language than AMPScript, but with a set of tools dedicated to solving complexity. Implement SOC and make it DRY with functions & [loops](../ssjs/ssjs-loops). Bring it to the next level with splitting Front-End (Cloud Page) and Back-End (Code Resource). Versus single Cloud Page with AMPScript this solution will be more complex but much less complicated. Thus easier to debug and maintain.
 
-```
-
-
-```
-
 </TabItem>
 <TabItem value='ui'>
 
@@ -280,6 +275,13 @@ sql vs multiple filtered data extensions
 ---
 
 ### 5. Flat is better than nested
+
+When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](../ssjs/js-if-and-switch) in the code, or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? 4-column layout is here!
+
+This approach is natural during development, but it quickly leads to a complicated outcome. And [complicated solution should be avoided](#4-complex-is-better-than-complicated). There are two ways to do it:
+
+1. __Plan__ - As Abraham Lincoln once said, 'Give me six hours to chop down a tree, and I will spend the first four sharpening the axe'. The same approach will benefit your Marketing Cloud instance.
+2. __Refactor__ - Planning is awesome, but it's nearly impossible to prepare bulletproof plan. That's fine, as long as you refactor your solution after the bump in the road.
 
 <Tabs
     defaultValue={null}
