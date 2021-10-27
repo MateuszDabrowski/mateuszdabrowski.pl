@@ -47,7 +47,7 @@ Remember that those recommendations are just that - recommendations. Not strict 
 
 ---
 
-### 1. Beautiful is better than ugly
+### Beautiful is better than ugly
 
 Beauty might not immediately come to the mind in the context of software development and implementation. Neither might it be in the focus in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud solutions.
 
@@ -98,7 +98,7 @@ Both approaches deliver the Email Template, but the second one does it in a more
 
 ---
 
-### 2. Explicit is better than implicit
+### Explicit is better than implicit
 
 Salesforce Marketing Cloud enables you to decide, whether you want to create things in an implicit or explicit way. Implicit is faster and easier. Explicit is sturdier and better.
 
@@ -113,19 +113,25 @@ As the SFMC is long term commitmentused by many people, it's always worth to spe
 >
 <TabItem value='code'>
 
-There are multiple areas to apply this approach when developing in Marketing Cloud.
+There are a lot of tricks we can use when coding for Salesforce Marketing Cloud - implicit data type conversions, undocumented endpoints and function behaviours or just language specific synctatic sugar. As helpful as they are, they obscure readability, introduce error risk to the code and won't be known by everyone.
 
-One - common for all SFMC programming languages - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters for a shorter name is not worth the time lost for deciphering the meaning later.
+This is why, unless such tricks are necessary, it's good idea to go for the explicit, clear and obvious version. Even if it is slightly longer or not as sexy.
 
-```js
-/* You may know what it means when you write the code... */
-if (ts && !tsd) tsd = new Date();
+Of course, not always it will be possible - some things are only possible by coding on the edge of the documentation. Not all is lost, however, as you can make such cases more explicit with good comments. And don't limit those for just the tricky parts. Describing even the cleanest functions and scripts will help you and your team work more effectively.
 
-/* ... but everyone else, and even you after a week, will be thankful for explicit names */
-if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
+```js title="'Code tells you how. Comments tell you why.' - Jeff Atwood"
+/**
+ * @function debugValue
+ * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+ * @param {string} description - Describes meaning of the second parameter in the output
+ * @param {*} value - The value that needs to be debugged
+ */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
 ```
 
-Looking for more examples of good naming? Read Style Guide recommendations for [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention) and [SQL](../sql/sfmc-sql-style-guide/#explicit-vs-implicit).
+Read more on using comments in [SSJS](../ssjs/ssjs-style-guide/#comments) and [AMPScript](../ampscript/ampscript-style-guide/#comments).
 
 :::note You Should Know
 
@@ -145,22 +151,6 @@ Explicit Content Block Key and `ContentBlockByKey` function can help with that:
 
 :::
 
-Yet another area where you can make your SFMC development more explicit is comments. Yes, good naming convention and purposeful choice of functions are already great for creating understandable code, but you can make it so much better with adding a bit of context.
-
-```js title="Even with explicit names, the comments bring clarity"
-/**
- * @function debugValue
- * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
- * @param {string} description - Describes meaning of the second parameter in the output
- * @param {*} value - The value that needs to be debugged
- */
-function debugValue(description, value) {
-    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
-};
-```
-
-Read more on using comments in [SSJS](../ssjs/ssjs-style-guide/#comments) and [AMPScript](../ampscript/ampscript-style-guide/#comments).
-
 </TabItem>
 <TabItem value='ui'>
 
@@ -175,7 +165,7 @@ There are also places where Salesforce Marketing Cloud let's you add smaller pie
 
 ---
 
-### 3. Simple is better than complex
+### Simple is better than complex
 
 Marketing Cloud is a complex tool within a complex Salesforce ecosystem focused on solving complex business needs. But how you operate and develop SFMC should be as straightforward as possible. It will make your solution robust, agile and easily understandable.
 
@@ -196,7 +186,7 @@ There is also yet another popular acronym connected to the simplicity principle:
 >
 <TabItem value='code'>
 
-THe simplicity focus is useful from the very start - when you are selecting the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](../ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs)).
+The simplicity focus is useful from the very start - when you are selecting the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](../ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs)).
 
 Once you selected the best language for the job, you will have to decide on how to code the solution. And here again simplicity will be useful guideline. For example, yes, you can create universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](../ssjs/ssjs-snippet-ampscript-in-ssjs/) will be enough (YAGNI) and much simpler (KISS).
 
@@ -235,9 +225,9 @@ There are countless places in Salesforce Marketing Cloud where this approachc an
 
 ---
 
-### 4. Complex is better than complicated
+### Complex is better than complicated
 
-It might sound contradictory to what the [Simple is better than complex](#3-simple-is-better-than-complex) recommendation just covered, but only on the surface. There is a limit to what can be simplified before it starts getting complicated. In such case, complex is the lesser evil.
+It might sound contradictory to previous recommendation, but only on the surface. There is a limit to what can be simplified before it starts getting complicated. In such case, complex is the lesser evil.
 
 #### SOC
 
@@ -265,23 +255,25 @@ My recommedation for most of the Preference Centers is to go with SSJS. Yes, it'
 </TabItem>
 <TabItem value='ui'>
 
+The same rules apply to Marketing Cloud no-code solutions. Filtered Data Extensions with Data Relationships are nice for simple segmentation, but when the segment requirements get more complicated, it's better to move to more complex SQL Queries in Automation Studio.
 
-
-sql vs multiple filtered data extensions
+Similarly, you can leverage Marketing Cloud Connect and Journey Builder to update data in Salesforce CRM without any code, but when you get to the point of creating journeys with only such updates in mind - its perhaps better to go for more complex, but less complicated [AMPScript SalesforceObject](../ssjs/ssjs-snippet-ampscript-in-ssjs/#long-ampscript-code) functions.
 
 </TabItem>
 </Tabs>
 
 ---
 
-### 5. Flat is better than nested
+### Flat is better than nested
 
 When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](../ssjs/js-if-and-switch) in the code, or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? 4-column layout is here!
 
-This approach is natural during development, but it quickly leads to a complicated outcome. And [complicated solution should be avoided](#4-complex-is-better-than-complicated). There are two ways to do it:
+This approach is natural during development, but it quickly leads to a complicated outcome. And [complicated solution should be avoided](#complex-is-better-than-complicated). There are two ways to do it:
 
 1. __Plan__ - As Abraham Lincoln once said, 'Give me six hours to chop down a tree, and I will spend the first four sharpening the axe'. The same approach will benefit your Marketing Cloud instance.
 2. __Refactor__ - Planning is awesome, but it's nearly impossible to prepare bulletproof plan. That's fine, as long as you refactor your solution after the bump in the road.
+
+The good part? The more refactors you do, the better in planning you will become.
 
 <Tabs
     defaultValue={null}
@@ -292,19 +284,25 @@ This approach is natural during development, but it quickly leads to a complicat
 >
 <TabItem value='code'>
 
-loop throw columns of rows example?
+loop through columns of rows example?
 
 </TabItem>
 <TabItem value='ui'>
 
-journey builder multiple decision splits
+When building in Journey Builder, it is easy to nest Decision Splits to send different communication based on some criteria, but this approach will quickly become [complicated](#complex-is-better-than-complicated) and (with how SFMC renders multiple splits) [ugly](#beautiful-is-better-than-ugly).
+
+If the splits are added to cover more appropriate personalisation - make your Journey flat by leveraging Dynamic Content instead.
+
+If the splits are added to cover different campaign goals - make your Journey flat by splitting each goal into separate Journey ([SOC principle](#SOC)).
 
 </TabItem>
 </Tabs>
 
 ---
 
-### 6. Sparse is better than dense
+### Sparse is better than dense
+
+
 
 <Tabs
     defaultValue={null}
@@ -337,7 +335,7 @@ if (country == 'UK' || country == 'PL') {
 
 ---
 
-### 7. Readability counts
+### Readability counts. Naming conventions counts twice
 
 <Tabs
     defaultValue={null}
@@ -347,6 +345,18 @@ if (country == 'UK' || country == 'PL') {
     ]}
 >
 <TabItem value='code'>
+
+One - common for all SFMC programming languages - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters for a shorter name is not worth the time lost for deciphering the meaning later.
+
+```js
+/* You may know what it means when you write the code... */
+if (ts && !tsd) tsd = new Date();
+
+/* ... but everyone else, and even you after a week, will be thankful for explicit names */
+if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
+```
+
+Looking for more examples of good naming? Read Style Guide recommendations for [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention) and [SQL](../sql/sfmc-sql-style-guide/#explicit-vs-implicit).
 
 </TabItem>
 <TabItem value='ui'>
@@ -356,231 +366,33 @@ if (country == 'UK' || country == 'PL') {
 
 ---
 
-### 8. Naming conventions counts twice
+### Special cases aren't special enough to break the rules. Although practicality beats purity
 
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
 
 ---
 
-### 9. Special cases aren't special enough to break the rules
+### Errors should never pass silently. Unless explicitly silenced
 
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
 
 ---
 
-### 10. Although practicality beats purity
+### In the face of ambiguity, refuse the temptation to guess. Even when certain, test
 
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
 
 ---
 
-### 11. Errors should never pass silently
+### Now is better than never. Although never is often better than right now
 
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
 
 ---
 
-### 12. Unless explicitly silenced
+### If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea
 
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
 
 ---
 
-### 13. In the face of ambiguity, refuse the temptation to guess
+### Documentation is one honking great idea - let's do more of it!
 
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
-
----
-
-### 14. Even when certain, test
-
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
-
----
-
-### 15. Now is better than never
-
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
-
----
-
-### 16. Although never is often better than right now
-
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
-
----
-
-### 17. If the implementation is hard to explain, it's a bad idea
-
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
-
----
-
-### 18. If the implementation is easy to explain, it may be a good idea
-
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
-
----
-
-### 19. Documentation is one honking great idea - let's do more of it!
-
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-</TabItem>
-<TabItem value='ui'>
-
-</TabItem>
-</Tabs>
 
 ---
 
