@@ -47,7 +47,7 @@ Remember that those recommendations are just that - recommendations. Not strict 
 
 ---
 
-### Beautiful is better than ugly
+### Beautiful is better than ugly.
 
 Beauty might not immediately come to the mind in the context of software development and implementation. Neither might it be in the focus in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud solutions.
 
@@ -98,7 +98,7 @@ Both approaches deliver the Email Template, but the second one does it in a more
 
 ---
 
-### Explicit is better than implicit
+### Explicit is better than implicit.
 
 Salesforce Marketing Cloud enables you to decide, whether you want to create things in an implicit or explicit way. Implicit is faster and easier. Explicit is sturdier and better.
 
@@ -165,7 +165,7 @@ There are also places where Salesforce Marketing Cloud let's you add smaller pie
 
 ---
 
-### Simple is better than complex
+### Simple is better than complex.
 
 Marketing Cloud is a complex tool within a complex Salesforce ecosystem focused on solving complex business needs. But how you operate and develop SFMC should be as straightforward as possible. It will make your solution robust, agile and easily understandable.
 
@@ -225,7 +225,7 @@ There are countless places in Salesforce Marketing Cloud where this approachc an
 
 ---
 
-### Complex is better than complicated
+### Complex is better than complicated.
 
 It might sound contradictory to previous recommendation, but only on the surface. There is a limit to what can be simplified before it starts getting complicated. In such case, complex is the lesser evil.
 
@@ -264,16 +264,16 @@ Similarly, you can leverage Marketing Cloud Connect and Journey Builder to updat
 
 ---
 
-### Flat is better than nested
+### Flat is better than nested. Sparse is better than dense.
 
-When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](../ssjs/js-if-and-switch) in the code, or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? 4-column layout is here!
+When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](../ssjs/js-if-and-switch) in the code, or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? 4-column layout is here! KPIs for leads, sales, loyalty and brand are not yet met? Let's hit them with a welcome Journey.
 
-This approach is natural during development, but it quickly leads to a complicated outcome. And [complicated solution should be avoided](#complex-is-better-than-complicated). There are two ways to do it:
+This turn of events is natural during development, but it quickly leads to a complicated outcome. And [complicated solution should be avoided](#complex-is-better-than-complicated), because they work worse then single purpose focused ones. There are two ways to do it:
 
 1. __Plan__ - As Abraham Lincoln once said, 'Give me six hours to chop down a tree, and I will spend the first four sharpening the axe'. The same approach will benefit your Marketing Cloud instance.
-2. __Refactor__ - Planning is awesome, but it's nearly impossible to prepare bulletproof plan. That's fine, as long as you refactor your solution after the bump in the road.
+2. __Refactor__ - Planning is awesome, but it's nearly impossible to prepare a bulletproof plan. That's fine, as long as you refactor your solution after the bump in the road.
 
-The good part? The more refactors you do, the better in planning you will become.
+Following those steps will help you create simpler, lighter and better solutions. And the more refactors you do, the better in planning you will become.
 
 <Tabs
     defaultValue={null}
@@ -284,7 +284,22 @@ The good part? The more refactors you do, the better in planning you will become
 >
 <TabItem value='code'>
 
-loop through columns of rows example?
+It's easy to write deeply nested code. It's even easier to write dense code, full of synctatic sugar that is short and looks 'professional'. Especially when copy pasting a magical solution found on the Stack Overlow (been there, done that).
+
+However, the good code doesn't have to be short or prove that you know all quirks of the language. The good code must be [readable](#readability-counts-naming-conventions-counts-twice), [simple](#simple-is-better-than-complex) and [explicit](#explicit-is-better-than-implicit). And in many cases it will be a bit longer and from simpler building blocks.
+
+```js title="Just because it works, doesn't mean it's worth it"
+var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'US' ? 'AMER' : 'APAC';
+/* Chained ternary operator above might take less lines of code, but its definitely not readable.
+Making it more sparse and flat is not only easier for the readars but also futureproof */
+if (country == 'UK' || country == 'PL') {
+    var region = 'EMEA';
+} else if (country == 'US') {
+    var region = 'AMER';
+} else {
+    var region = 'APAC';
+};
+```
 
 </TabItem>
 <TabItem value='ui'>
@@ -295,47 +310,16 @@ If the splits are added to cover more appropriate personalisation - make your Jo
 
 If the splits are added to cover different campaign goals - make your Journey flat by splitting each goal into separate Journey ([SOC principle](#SOC)).
 
-</TabItem>
-</Tabs>
-
----
-
-### Sparse is better than dense
-
-
-
-<Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
->
-<TabItem value='code'>
-
-```js title="Just because it works, doesn't mean it's worth it"
-var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'US' ? 'AMER' : 'APAC';
-/* Chained ternary operator above might be shorter, but its definitely not readable.
-Making it more sparse is not only easier for the readars but also futureproof */
-var region;
-if (country == 'UK' || country == 'PL') {
-    region = 'EMEA';
-} else if (country == 'US') {
-    region = 'AMER';
-} else {
-    region = 'APAC';
-};
-```
-
-</TabItem>
-<TabItem value='ui'>
+The same is true for Emails that frequently like to grow due to multiple KPIs being applied to them. Sure, you can cram a lot if you go for 4-column layout with multiple sections, but the layout bugs will emerge, deliverability will suffer, readability will tank and the reader will get lost in the number of call to actions. Instead, focus on one concrete and targeted action that is crucial for your business.
 
 </TabItem>
 </Tabs>
 
 ---
 
-### Readability counts. Naming conventions counts twice
+### Readability counts. Naming conventions counts twice.
+
+Readability is key. In code, it limits bugs, simplifies debugging, improves future development and saves tons of time. In content, it's key to drive the message to the recipient. In short, without readability, there is no value.
 
 <Tabs
     defaultValue={null}
@@ -361,39 +345,37 @@ Looking for more examples of good naming? Read Style Guide recommendations for [
 </TabItem>
 <TabItem value='ui'>
 
+
+
 </TabItem>
 </Tabs>
 
 ---
 
-### Special cases aren't special enough to break the rules. Although practicality beats purity
+### Special cases aren't special enough to break the rules. Although practicality beats purity.
 
 
 ---
 
-### Errors should never pass silently. Unless explicitly silenced
+### Errors should never pass silently. Unless explicitly silenced.
 
 
 ---
 
-### In the face of ambiguity, refuse the temptation to guess. Even when certain, test
+### In the face of ambiguity, refuse the temptation to guess. Even when certain, test.
 
 
 ---
 
-### Now is better than never. Although never is often better than right now
+### Now is better than never. Although never is often better than right now.
 
 
 ---
 
-### If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea
+### If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea.
 
 
 ---
 
 ### Documentation is one honking great idea - let's do more of it!
 
-
----
-
-## Sum Up
