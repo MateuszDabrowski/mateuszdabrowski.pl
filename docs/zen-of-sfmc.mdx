@@ -317,9 +317,27 @@ The same is true for Emails that frequently like to grow due to multiple KPIs be
 
 ---
 
-### Readability counts. Naming conventions counts twice.
+### Readability counts.
 
 Readability is key. In code, it limits bugs, simplifies debugging, improves future development and saves tons of time. In content, it's key to drive the message to the recipient. In short, without readability, there is no value.
+
+I have already written a lot about readability of Marketing Cloud programmatic langauges: [AMPScript](../ampscript/ampscript-style-guide/), [SSJS](../ssjs/ssjs-style-guide/), [SQL](../sql/sfmc-sql-style-guide/).
+
+As for the readability of content:
+
+1. Write short sentences (15 words is nice; stay under 30).
+2. Use simple language (instead of `due to the fact that` use `because`).
+3. Prove with hard data (instead of `significant amount of customers recommends` use `93% of customer recommends`).
+4. Cut marketing fluff (every part of the content should have an asnwer to `so what?` question).
+5. Proof-read. Proof-read again.
+
+---
+
+### Naming conventions counts twice.
+
+I love naming conventions and believe they are crucial to long term success of marketing automation solutions. They improve readability and maintainability, they bring clarity and unlock even more automation possibilities.
+
+What is special about them is that they provide most value when implemented from the very start and enforced everywhere. But if you are thinking long term (and with Marketing Automation tools - you should), it's better to implement one late then never. The bigger and older the solution, the stronger you will feel that good naming convention is more of a must-have then nice-to-have.
 
 <Tabs
     defaultValue={null}
@@ -330,7 +348,7 @@ Readability is key. In code, it limits bugs, simplifies debugging, improves futu
 >
 <TabItem value='code'>
 
-One - common for all SFMC programming languages - is to follow explicit naming convention for variables, functions and columns. Strive for names that are obvious even for someone who sees the code for the first time. Saving few characters for a shorter name is not worth the time lost for deciphering the meaning later.
+You can benefit from implementing a naming convention in all SFMC programming languages. Strive for variable, function, column names that are obvious even for someone who sees the code for the first time. Saving few characters for a shorter name is not worth the time lost for deciphering the meaning later.
 
 ```js
 /* You may know what it means when you write the code... */
@@ -345,7 +363,43 @@ Looking for more examples of good naming? Read Style Guide recommendations for [
 </TabItem>
 <TabItem value='ui'>
 
+Naming convention is huge when working with the Salesforce Marketing Cloud. Leveraging a proper one not only makes it much easier to differentiate assets and make searching for them easier. It's also an awesome tool to enable some smart personalisations and checks in email communication (with the help of the `%%emailname_%%` personalisation string). That's not all - good naming convention improves greatly value coming from System Data Views and reporting.
 
+With all this praise - what is a good naming convention for the markating automation assets? This of course depends on the specifics of your business, but my recommendation is to mix shortcuts for data filled elements and clear separators.
+
+My favourite approach is to:
+
+1. Define set of business-oriented data points that bring value.
+2. Create readable shortcuts for them to limit the final length of the naming convention.
+3. Create a dedicated space for each separate element in the naming convention.
+4. Split the elements with underscore (`_`).
+5. Split parts of single element with hyphen (`-`).
+
+That's theory, but what are good business-oriented data points? Some examples I frequently use are:
+
+- Country (if you are operating in multiple markets)
+- Business Unit (if you have complex internal structure of the company)
+- Segment (if you have set of predefined master-segments / personas)
+- Campaign Type (it's always useful)
+- Free-text Asset Name (the human-readable part that helps easily understand the purpose)
+- Asset Type (can help in Content Builder to differentiate various partial assets)
+- Date (useful especially if you are creating a lot of simillar assets for recurring goals)
+- Campaign Code (or whatever you are using for closed-loop reporting and 360 analytics)
+
+How does it translate for the final name? Let's check example: `UK_DEV_C_WEL_brand-welcome-1_EML_21-10_01234`
+
+It's elements would be:
+
+1. Country: `UK` = United Kingdom
+2. Business Unit: `DEV` = Development
+3. Segment: `C` = Customers
+4. Campaign Type: `WEL` = Welcome
+5. Asset Name: `brand-welcome-1`
+6. Asset Type: `EML` = Email
+7. Date: `21-10` = October 2021
+8. Campaign Code: `01234`
+
+As you can see, with under 50 characters we captured 8 different data points and quite good picture of the purpose of the asset. What is more, Business Intelligence team will be able to do a simple split by underscore to capture each element as separte category to enable filtering and grouping in reporting.
 
 </TabItem>
 </Tabs>
@@ -379,3 +433,6 @@ Looking for more examples of good naming? Read Style Guide recommendations for [
 
 ### Documentation is one honking great idea - let's do more of it!
 
+---
+
+## Sum Up
