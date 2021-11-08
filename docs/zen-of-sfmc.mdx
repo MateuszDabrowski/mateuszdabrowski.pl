@@ -1,7 +1,7 @@
 ---
 id: zen-of-sfmc
 title: Zen of SFMC
-description: Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and in detail.
+description: Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and detail.
 image: img/og/og-image-solve-with-cloud--page-apps.png
 tags: [Marketing Cloud, Best Practice]
 toc_max_heading_level: 4
@@ -11,9 +11,9 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '../src/components/LeadText.js';
 
-<LeadText content="Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and in detail." />
+<LeadText content="Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and detail." />
 
-I'm a huge fan of Tim Petter's [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language and I see it as a very universal guide on software engineering.
+I'm a massive fan of Tim Petter's [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
 
 In this article I share my Salesforce Marting Cloud adaptation and interpretation of this pearl. Expect some modifications to the original text (minimal, as most of the recommendations are perfectly valid for our Marketing Automation world), followed by my comments on how particular lines can be beneficial for SFMC practice.
 
@@ -416,33 +416,73 @@ Those contradictory lines are following the ancient greek golden middle way phil
 
 Sure, it might be easier to ignore it when the deadline is near or you have too much to do. It's easy to say "I will align it later". But there is always more work to be done "later", and in the end you end up with a messy solution that doesn't provide the value promised by following the rules. However, following the rules to the book in every single case might be an overkill that stops you from delivering a working solution at all.
 
-That's why you must not only learn how to follow the rules, but also when to break them.
+That's why we must not only learn how to follow the rules, but also when to break them.
 
 ---
 
 ### Errors should never pass silently. Unless explicitly silenced.
 
+Every solution can encounter some problems or edge cases. It can even be something over which we don't have any control, like server issues. This is why capturing and analysing the errors is so important.
 
+In terms of code it means proper [debugging and error handling](../ssjs/debugging-ssjs) - especially [error logging](../ssjs/debugging-ssjs#error-logging) is good idea to keep up with the potential issues in matured Marketing Cloud solution. You can also protect your solution by creating last resort checks in messaging with `RaiseError` function.
+
+But there is also a lot of platform-based features that can help you capture issues. Journey pre-launch validation, Verification Activity for Automation Studio along with the built-in error logging, Send Logs and Audit Trail. Salesforce Marketing Cloud offer a lot of tools to make sure you are up to speed with the state of your tool, so make sure you use all of them.
+
+However, just because you have all those tools, it doesn't mean you always have to throw an error. There are some cases, where silencing them is the right thing to do. Example?
+
+When sending personalised email you might encounter some contacts with missing data that would error out the send. Ask yourself whether you truly want an error in such cases or maybe a dynamic content with not personalised default will work better.
+
+Such workarounds are even more important for errors on client-facing assets like Cloud Pages. When coding the user experience, check what are the possible errors and consider which of those should be visible to the end-user. And - considering the quality of out-of-the-box SFMC errors - always provide custom error messages.
 
 ---
 
 ### In the face of ambiguity, refuse the temptation to guess. Even when certain, test.
 
+With the complexity of Marketing Cloud, cross-cloud integrations, constant platform updates and solution development, there is a lot of room for ambiguity. It's even bigger when you consider how the SFMC is growing - by 3rd party acquisitions and building new features on top of legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With multi-year updates, even when doing something that you have already done multiple times in the past - don't assume it will work the same. Don't guess. Check.
+
+There are multiple examples of this risk. SSJS being not-fully-supported ES3 limited by the .NET backend. SQL being limited SQL Server 2016 (add to that different behaviour in Script Activity vs Query Studio). Inconsistent approaches within the same solution (for example [shared folder permissions](../../sites/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](../../sites/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary bugs that change the SSJS function responses for few days.
+
+With all this ambiguity in the system, be sure to always check during development and always check before go-live.
 
 ---
 
 ### Now is better than never. Although never is often better than right now.
 
+When you see an opportunity for an improvement or encoutner a helpful recommendation, it's good idea to take a note and implement it to improve the value of your solution. However, fight temptation to do it instantanously. Even the enhancement, most needed in your solution, might break everything if it is implemented hastily.
+
+Using previous examples:
+
+1. If you are not yet using proper [debugging and error handling](../ssjs/debugging-ssjs), you definitely should implement it. Should you do it *right* now? Well, there are some quirks that you should test beforehand, otherwise your script might error out and break the process.
+
+2. If you want to implement the asset [naming convention](#naming-conventions-counts-twice), definitely start with discovery and cross-department alignment to have a full picture of needs before creating the naming template. I do believe that everyone should use the naming convention, but it will be counter productive if you start using it too fast and later have to make updates to it.
 
 ---
 
 ### If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea.
 
+Of course, one cannot expect that Marketing Cloud implementation will be easy to explain to a five-year-old. However, if you find it hard to explain it to your colleague or client, it means that the solution is either too complex, too ambiguous, or you yourself lack full understanding of it. Each of hose cases is dangerous. In the best case it may lead to a non-optimised outcome, in the worst - to a business-breaking crash.
 
 ---
 
 ### Documentation is one honking great idea - let's do more of it!
 
+Writing and maintaining documentation is pain. I agree. But you know what is even bigger pain? Not having that documentation in the long run. Marketing Automation projects are long term investment. There are change requests. There are new team memebers. There are mistakes and there are bugs.
+
+Good documentation saves much more time then it takes to create it. And with the complexity of the solutiona and size of the team, that value grows exponentially.
+
+[John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) once said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. THe same is true for the whole marketing automation solution - and documentation is your best bet at surviving ;)
+
+
 ---
 
 ## Sum Up
+
+There is a lot of contradictory recommendations above. It's intentional. Zen of SFMC is not list of hard rules - it would be impossible with the amount of differences between Marketing Cloud customers. Instead, it's a set of guidelines that can be argued for or against, depending on a specific use case. Treat them as friendly best practices, not absolute rules and use those that improve your work.
+
+Across all those recommendations you can see some key recurring ideas:
+
+1. Make it simple
+2. Make it readable
+3. Make it understandable
+4. Make it maintainable
+5. Make it practical
