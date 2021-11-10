@@ -2,7 +2,7 @@
 id: zen-of-sfmc
 title: Zen of SFMC
 description: Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and detail.
-image: img/og/og-image-solve-with-cloud--page-apps.png
+image: img/og/og-image-zen-of-sfmc.png
 tags: [Marketing Cloud, Best Practice]
 toc_max_heading_level: 4
 ---
@@ -15,7 +15,7 @@ import { LeadText } from '../src/components/LeadText.js';
 
 I'm a massive fan of Tim Petter's [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
 
-In this article I share my Salesforce Marting Cloud adaptation and interpretation of this pearl. Expect some modifications to the original text (minimal, as most of the recommendations are perfectly valid for our Marketing Automation world), followed by my comments on how particular lines can be beneficial for SFMC practice.
+In this article, I share my Salesforce Marting Cloud adaptation and interpretation of this pearl. Expect some modifications to the original text (minimal, as most of the recommendations are perfectly valid for our Marketing Automation world), followed by my comments on how particular lines can benefit SFMC practice.
 
 ## Zen of SFMC
 
@@ -27,7 +27,7 @@ Complex is better than complicated.
 Flat is better than nested.
 Sparse is better than dense.
 Readability counts.
-Naming conventions counts twice.
+Naming conventions count twice.
 Special cases aren't special enough to break the rules.
 Although practicality beats purity.
 Errors should never pass silently.
@@ -43,55 +43,55 @@ Documentation is one honking great idea - let's do more of it!
 
 ## Thoughts on Zen
 
-Remember that those recommendations are just that - recommendations. Not strict rules, but rather a set of general - sometimes contradictory - principles, that might help you in your day-to-day work with Salesforce Marketing Cloud.
+Remember that those recommendations are just that - recommendations. Not strict rules, but rather a set of (sometimes contradictory) guidelines that might help you in your day-to-day work with Salesforce Marketing Cloud.
 
 ---
 
 ### Beautiful is better than ugly.
 
-Beauty might not immediately come to the mind in the context of software development and implementation. Neither might it be in the focus in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud solutions.
+Beauty might not immediately come to mind in the context of software development and implementation, especially in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud solutions.
 
-It not only makes working on the tool more motivating and pleasant, but also supports a lot of other recommendations listed here - with readability in the first place. Below you can see examples of how the beauty principle can be implemented into Salesforce Marketing Cloud world.
+It makes working on the tool more motivating and pleasant and supports many other recommendations listed here - with readability in the first place. Below you can see examples of implementing the beauty principle in the Salesforce Marketing Cloud.
 
 <Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
+ defaultValue={null}
+ values={[
+ {label: 'SFMC Code Example', value: 'code'},
+ {label: 'SFMC UI Example', value: 'ui'},
+ ]}
 >
 <TabItem value='code'>
 
-When you are writing code in Salesforce Marketing Cloud - be it AMPScript, SSJS, SQL, or other - you have a lot of flexibility when it comes to the structure and style. Random indentation, lack of new lines, cryptic variables? Everything is possible and might work.
+When you are writing code in Salesforce Marketing Cloud - be it AMPScript, SSJS, SQL, or other - you have a lot of flexibility regarding structure and style. Random indentation, lack of new lines, cryptic variables? Everything is possible and might work.
 
-But you should strive to write code that not only works. Apply beauty-focused mindset and while writing might take a bit longer, the outcome will be more readable, easier to debug and understandable to others.
+But you shouldn't stop at writing code that just works. Apply a beauty-focused mindset, and while writing might take a bit longer, the outcome will be more readable, understandable to others and easier to debug.
 
 ```sql title="Both queries work - which one would you rather read?"
 /* Beauty */
 SELECT
-      wel.SubscriberKey     AS SubscriberKey
-    , wel.EmailAddress      AS EmailAddress
-    , o.EventDate           AS OpenDate
+ wel.SubscriberKey AS SubscriberKey
+ , wel.EmailAddress AS EmailAddress
+ , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open        AS o
-        ON o.SubscriberKey = wel.SubscriberKey
+ INNER JOIN _Open AS o
+ ON o.SubscriberKey = wel.SubscriberKey
 
 /* and the Beast */
-select a.subscriberkey, a.emailaddress, b.eventdate
-from welcomecampaignsegment a join _open b on a.subscriberkey = b.subscriberkey
+Select a.subscriberkey, a.emailaddress, b.eventdate
+From welcomecampaignsegment a join _open b on a.subscriberkey = b.subscriberkey
 
 ```
 
-Check my Style Guides for [AMPScript](../ampscript/ampscript-style-guide/), [SSJS](../ssjs/ssjs-style-guide/), [SQL](../sql/sfmc-sql-style-guide/) to see more specific examples on how to make your code beautiful.
+Check my Style Guides for [AMPScript](../ampscript/ampscript-style-guide/), [SSJS](../ssjs/ssjs-style-guide/), [SQL](../sql/sfmc-sql-style-guide/) to see more guides on making your code beautiful.
 
 </TabItem>
 <TabItem value='ui'>
 
-The choice betweem beauty and ugly is not limited to writing the code. The same is true for working with Salesforce Marketing Cloud no-code tools.
+The choice between beauty and ugliness is not limited to writing the code. The same is valid for working with Salesforce Marketing Cloud no-code tools.
 
-Creating a Email Template using Blocks in Content Builder? Sure, you can just drag and drop the empty blocks in proper order and call it a day. But you can also put a bit more work and add sample content with predefined styles to each block, provide palceholder images with visible dimensions and save such elements as separate blocks ready for reuse.
+Are you creating an Email Template using Blocks in Content Builder? You can drag and drop the empty blocks in proper order and call it a day. But you can also put a bit more work and add sample content with predefined styles to each block, provide placeholder images with visible dimensions and save those elements as separate blocks ready for reuse.
 
-Both approaches deliver the Email Template, but the second one does it in a more beautiful way improving the usefulness and value of the final solution.
+Both approaches deliver the Email Template, but the second one keeps beauty in mind resulting in improved usefulness and value of the final solution.
 
 </TabItem>
 </Tabs>
@@ -100,24 +100,24 @@ Both approaches deliver the Email Template, but the second one does it in a more
 
 ### Explicit is better than implicit.
 
-Salesforce Marketing Cloud enables you to decide, whether you want to create things in an implicit or explicit way. Implicit is faster and easier. Explicit is sturdier and better.
+Salesforce Marketing Cloud enables you to decide whether you want to create things implicitly or explicitly. Implicit is faster and easier. Explicit is sturdier and better.
 
-As the SFMC is long term commitmentused by many people, it's always worth to spend a bit more effort and go for explicit whenever possible. It will save you and your organisation a lot of time in the long run, so consider it an investment.
+As the SFMC is long term commitment used by many people, it's always worth spending a bit more effort and going for the explicit whenever possible. It will save you and your organisation much time in the long run, so consider it an investment.
 
 <Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
+ defaultValue={null}
+ values={[
+ {label: 'SFMC Code Example', value: 'code'},
+ {label: 'SFMC UI Example', value: 'ui'},
+ ]}
 >
 <TabItem value='code'>
 
-There are a lot of tricks we can use when coding for Salesforce Marketing Cloud - implicit data type conversions, undocumented endpoints and function behaviours or just language specific synctatic sugar. As helpful as they are, they obscure readability, introduce error risk to the code and won't be known by everyone.
+We can leverage many tricks when coding for Salesforce Marketing Cloud - implicit data type conversions, undocumented endpoints and function behaviours, or just language-specific syntactic sugar. As helpful as they are, those tricks obscure readability, introduce error risk to the code, and many won't know/understand them.
 
-This is why, unless such tricks are necessary, it's good idea to go for the explicit, clear and obvious version. Even if it is slightly longer or not as sexy.
+This is why, unless such tricks are necessary, I recommend going for the explicit, clear and obvious version. Even if it is slightly longer or not as sexy.
 
-Of course, not always it will be possible - some things are only possible by coding on the edge of the documentation. Not all is lost, however, as you can make such cases more explicit with good comments. And don't limit those for just the tricky parts. Describing even the cleanest functions and scripts will help you and your team work more effectively.
+Of course, it is not always possible - some things are possible only by coding on the edge of the documentation. Even then, you can make it more explicit with good comments. And don't limit those to just the tricky parts. Describing the cleanest functions and scripts will help you (and your team) work more effectively.
 
 ```js title="'Code tells you how. Comments tell you why.' - Jeff Atwood"
 /**
@@ -127,7 +127,7 @@ Of course, not always it will be possible - some things are only possible by cod
  * @param {*} value - The value that needs to be debugged
  */
 function debugValue(description, value) {
-    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+ Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
 };
 ```
 
@@ -135,13 +135,13 @@ Read more on using comments in [SSJS](../ssjs/ssjs-style-guide/#comments) and [A
 
 :::note You Should Know
 
-Explicit approach can (and should) be taken to the next level with smart use of asset Keys. They are frequently used in code - especially the Data Extension and Content Block keys. While the default pseudo-random ID does the work, I recommend going for the custom explicit Keys.
+An explicit approach can (and should) be taken to the next level with smart use of asset Keys. They are frequently used in code - especially the Data Extension and Content Block keys. While the default pseudo-random ID does the work, I recommend going for the custom explicit Keys.
 
-If you keep Data Extension Name and Key in sync (it might not be possible with longer names due to Key length limit) you won't have to worry about whether the Data Extension lookup is using the key or name.
+If you keep Data Extension Name and Key in sync (it might not be possible with longer names due to the Key length limit), you won't have to worry about whether the Data Extension lookup uses the key or the name.
 
-But even bigger value to this approach is with Content Blocks. It's popular to use those Blocks for AMPScript snippets shared across multiple emails or brand-wide dynamic footers. Frequently they are added to the Email Templates with the help of AMPScript `ContentBlockByID` function. However, as an asset collection grows, it will be harder to remember which Content Block has been imported that way (IDs aren't helpful with that).
+You can get even more value from this approach with Content Blocks. It's popular to use them for AMPScript snippets shared across multiple emails or brand-wide dynamic footers. Frequently they are added to the Email Templates with the help of the AMPScript `ContentBlockByID` function. However, as an asset collection grows, it will be harder to remember which Content Block you imported that way (IDs aren't helpful with that).
 
-Explicit Content Block Key and `ContentBlockByKey` function can help with that:
+Explicit Content Block Key and `ContentBlockByKey` function can help:
 
 ```js title="Which one would you rather see in the email template?"
 %%=ContentBlockByID("123456")=%%
@@ -154,11 +154,11 @@ Explicit Content Block Key and `ContentBlockByKey` function can help with that:
 </TabItem>
 <TabItem value='ui'>
 
-Being explicit is not limited to the code. When working with the SFMC no-code features, you will also have a lot of places to improve your solution with a bit of added information.
+Being explicit is not limited to the code. When working with the SFMC no-code features, you will have many places to improve your solution by adding information.
 
-A lot of assets offer one or more places to add descriptions. Data Extensions, Installed Packages, Automations - or even specific steps grouping Activities. Neither of those places _require_ a description, but each and single one will benefit from explicitly stating it's purpose and business/technical context.
+Many assets offer one or more places to add details: Data Extensions, Installed Packages, Automations - or even Activity-grouping steps. Neither of those places _requires_ a description, but each and single one will benefit from explicitly stating its purpose and business/technical context.
 
-There are also places where Salesforce Marketing Cloud let's you add smaller pieces of information. Not full descriptions, but rather optional micro data points that explain the purpose. Path names in Journey Builder Decision Splits. Additional Email Attribute Names in Content Builder. Collection and Cloud Page names in Web Studio. Whenever possible - spend that extra time needed to come up with explicit value.
+There are also places where Salesforce Marketing Cloud lets you add smaller pieces of information. Not full descriptions, but rather optional micro data points that explain the purpose. Path names in Journey Builder Decision Splits. Additional Email Attribute Names in Content Builder. Collection and Cloud Page names in Web Studio. Whenever possible - spend that extra time needed to come up with explicit value.
 
 </TabItem>
 </Tabs>
@@ -175,50 +175,48 @@ This recommendation is also known in the software development community under a 
 
 #### YAGNI
 
-There is also yet another popular acronym connected to the simplicity principle: __YAGNI__ (You Aren't Gonna Need It). This Extreme Programming methodology mantra adds another perspective, by stating that when creating the solution, you should build the necessary elements. Everything else is just a bloat, that makes final outcome more convoluted and error-prone.
+Another popular acronym connected to the simplicity principle is __YAGNI__ (You Aren't Gonna Need It). This Extreme Programming methodology mantra adds another perspective by stating that you should build only the necessary elements when creating the solution. Everything else is just bloat that makes the outcome more convoluted and error-prone.
 
 <Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
+ defaultValue={null}
+ values={[
+ {label: 'SFMC Code Example', value: 'code'},
+ {label: 'SFMC UI Example', value: 'ui'},
+ ]}
 >
 <TabItem value='code'>
 
-The simplicity focus is useful from the very start - when you are selecting the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](../ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs)).
+The simplicity focus is useful already when you select the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](../ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs)).
 
-Once you selected the best language for the job, you will have to decide on how to code the solution. And here again simplicity will be useful guideline. For example, yes, you can create universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](../ssjs/ssjs-snippet-ampscript-in-ssjs/) will be enough (YAGNI) and much simpler (KISS).
+Once you select the best language for the job, you will have to code the solution. And here again, simplicity will be a helpful guideline. For example, yes, you can create a universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](../ssjs/ssjs-snippet-ampscript-in-ssjs/) will be enough (YAGNI) and much simpler (KISS).
 
-Think about KISS and YAGNI whenever you are coding and it will help you deliver simpler and better solutions.
+Think about KISS and YAGNI whenever you are coding, and it will help you deliver more straightforward and better solutions.
 
 ```sql
 SELECT
-      SubscriberKey
-    , CASE
-        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE())    THEN 1
-        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE())     THEN 0
-      END AS IsNewJoiner
+ SubscriberKey
+ , CASE
+ WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE()) THEN 1
+ WHEN DateJoined < DATEADD(MONTH, -1, GETDATE()) THEN 0
+ END AS IsNewJoiner
 FROM Ent._Subscribers
 /* When you only need two opposite CASE rules, simple IIF shorthand is better */
 SELECT
-      SubscriberKey
-    , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
+ SubscriberKey
+ , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
 FROM Ent._Subscribers
 ```
 
 </TabItem>
 <TabItem value='ui'>
 
-The two step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well:
+The two-step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well:
 
 - When creating an email, ask yourself whether you have a specific need requiring custom HTML. If not, go for a simple Drag & Drop Blocks Template.
+- When creating a segment, ask yourself whether you need multiple data sources or calculated data. If not, simple filtered data extension might be enough.
+- When creating complex automation, ask yourself whether you need all those activities in a single process. If not, split into multiple single-purpose Automations.
 
-- When creating a segment, ask yourself whether you need multiple data sources or calculated data. If not, go for a simple filtered data extension.
-
-- When creating a complex automation, ask yourself whether you need all those activities in a single process. If not, split it into multiple single-purpose Automations.
-
-There are countless places in Salesforce Marketing Cloud where this approachc an be applied to the benefit of the final solution.
+There are countless places in Salesforce Marketing Cloud to apply this approach to benefit the final solution.
 
 </TabItem>
 </Tabs>
@@ -227,37 +225,37 @@ There are countless places in Salesforce Marketing Cloud where this approachc an
 
 ### Complex is better than complicated.
 
-It might sound contradictory to previous recommendation, but only on the surface. There is a limit to what can be simplified before it starts getting complicated. In such case, complex is the lesser evil.
+It might sound contradictory to the previous recommendation, but only on the surface. There is a limit to what can be simplified before it starts getting complicated. In such a case, the complex is the lesser evil.
 
 #### SOC
 
-When you are laser-focused on simplicity, you will feel temptation to create whole solution as one element (one script, one Automation, one Email). __SOC__ (Separation of Concerns) rule tells us that it might be wrong if said solution is build from multiple parts each with different purpose. In such case, multiple concerns stacked within a single asset will make it complicated rather then simple. The recommended solution? Split it into separate purpose-oriented elements. It will get more complex, but less complicated.
+When laser-focused on simplicity, you will feel tempted to create the whole solution as one element (one script, one Automation, one email). __SOC__ (Separation of Concerns) rule tells us that it might be a bad idea to build one solution from multiple parts, each with a different purpose. Numerous concerns stacked within a single asset will make it complicated rather than simple. The recommendation? Split it into separate purpose-oriented elements. It will get more complex but less complicated.
 
 #### DRY
 
-Another important acronym is __DRY__ (Don't Repeat Yourself). It shows a different perspective on the same problem - the simple solution that needs to be replicated multiple times, leads to a complicated outcome. Updating is huge hassle, performance is impacted, readability is poor. DRY suggests finding such repetitive spots in the solution and refactoring them.
+Another essential acronym is __DRY__ (Don't Repeat Yourself). It shows a different perspective on the same problem - the simple solution that needs to be replicated multiple times leads to a complicated outcome. Updating is a hassle; performance drops; readability is poor. DRY suggests finding such repetitive spots and refactoring them.
 
-There is also second application of the DRY principle - not solution, but work related. If you find you are doing the same thing again and again, Don't Repeat Yourself. Automate it.
+Another application of the DRY principle is related not to a specific solution but to work in general. If you find you are doing the same thing again and again, Don't Repeat Yourself. Automate it.
 
 <Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
+ defaultValue={null}
+ values={[
+ {label: 'SFMC Code Example', value: 'code'},
+ {label: 'SFMC UI Example', value: 'ui'},
+ ]}
 >
 <TabItem value='code'>
 
-I have seen many (too many) Subscription Preference Centers in SFMC built with AMPScript. Yes, it's simple language and capable enough to deliver such solution. But because of it's simplicity, for this use case it quickly gets full of repeating script lines (DRY violation), mixes multiple purposes (SOC violation) and gets long (readability suffers).
+I have seen many (too many) Subscription Preference Centers in SFMC built with AMPScript. Yes, it's a simple language and capable enough to deliver such a solution. But because of its simplicity, for this use case, it quickly gets full of repeating script lines (DRY violation), multiple purposes (SOC violation) and endless lines of code (readability suffers).
 
-My recommedation for most of the Preference Centers is to go with SSJS. Yes, it's more complex language than AMPScript, but with a set of tools dedicated to solving complexity. Implement SOC and make it DRY with functions & [loops](../ssjs/ssjs-loops). Bring it to the next level with splitting Front-End (Cloud Page) and Back-End (Code Resource). Versus single Cloud Page with AMPScript this solution will be more complex but much less complicated. Thus easier to debug and maintain.
+My recommendation for most of the Preference Centers is to go with SSJS. Yes, it's a more complex language than AMPScript, but with a set of tools dedicated to delivering complex use cases. Implement SOC and make it DRY with functions & [loops](../ssjs/ssjs-loops). Bring it to the next level by splitting Front-End (Cloud Page) and Back-End (Code Resource). Compared to a single Cloud Page with AMPScript, this solution will be more complex but much less complicated. Thus easier to debug and maintain.
 
 </TabItem>
 <TabItem value='ui'>
 
-The same rules apply to Marketing Cloud no-code solutions. Filtered Data Extensions with Data Relationships are nice for simple segmentation, but when the segment requirements get more complicated, it's better to move to more complex SQL Queries in Automation Studio.
+The same rules apply to Marketing Cloud no-code solutions. Filtered Data Extensions with Data Relationships are excellent for simple segmentation. Still, when the segment requirements get more complicated, it's better to move to more complex SQL Queries in Automation Studio.
 
-Similarly, you can leverage Marketing Cloud Connect and Journey Builder to update data in Salesforce CRM without any code, but when you get to the point of creating journeys with only such updates in mind - its perhaps better to go for more complex, but less complicated [AMPScript SalesforceObject](../ssjs/ssjs-snippet-ampscript-in-ssjs/#long-ampscript-code) functions.
+Similarly, you can leverage Marketing Cloud Connect and Journey Builder to update data in Salesforce CRM without any code. Still, when you get to the point of creating journeys with only such updates in mind - its better to go for more complex but less complicated [AMPScript SalesforceObject](../ssjs/ssjs-snippet-ampscript-in-ssjs/#long-ampscript-code) functions.
 
 </TabItem>
 </Tabs>
@@ -266,51 +264,50 @@ Similarly, you can leverage Marketing Cloud Connect and Journey Builder to updat
 
 ### Flat is better than nested. Sparse is better than dense.
 
-When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](../ssjs/js-if-and-switch) in the code, or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? 4-column layout is here! KPIs for leads, sales, loyalty and brand are not yet met? Let's hit them with a welcome Journey.
+When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](../ssjs/ssjs-if-and-switch) in the code or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? The 4-column layout is here! KPIs for leads, sales, loyalty and brand are not yet met? Let's pack them in a just-being-built welcome Journey.
 
-This turn of events is natural during development, but it quickly leads to a complicated outcome. And [complicated solution should be avoided](#complex-is-better-than-complicated), because they work worse then single purpose focused ones. There are two ways to do it:
+This turn of events is natural during development, but it quickly leads to a complicated outcome. There are two ways to solve it:
 
-1. __Plan__ - As Abraham Lincoln once said, 'Give me six hours to chop down a tree, and I will spend the first four sharpening the axe'. The same approach will benefit your Marketing Cloud instance.
-2. __Refactor__ - Planning is awesome, but it's nearly impossible to prepare a bulletproof plan. That's fine, as long as you refactor your solution after the bump in the road.
+1. __Plan__ - As Abraham Lincoln once said, "Give me six hours to chop down a tree, and I will spend the first four sharpening the axe". The same approach will benefit your Marketing Cloud instance.
+2. __Refactor__ - Planning is incredible, but it's nearly impossible to prepare a bulletproof plan. That's fine, as long as you refactor your solution after hitting the bump on the road.
 
 Following those steps will help you create simpler, lighter and better solutions. And the more refactors you do, the better in planning you will become.
 
 <Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
+ defaultValue={null}
+ values={[
+ {label: 'SFMC Code Example', value: 'code'},
+ {label: 'SFMC UI Example', value: 'ui'},
+ ]}
 >
 <TabItem value='code'>
 
-It's easy to write deeply nested code. It's even easier to write dense code, full of synctatic sugar that is short and looks 'professional'. Especially when copy pasting a magical solution found on the Stack Overlow (been there, done that).
+It's easy to write deeply nested code. It's even easier to write dense code, full of syntactic sugar that is short and looks 'professional'—especially when copy-pasting a magical solution found on the Stack Overlow (been there, done that).
 
-However, the good code doesn't have to be short or prove that you know all quirks of the language. The good code must be [readable](#readability-counts-naming-conventions-counts-twice), [simple](#simple-is-better-than-complex) and [explicit](#explicit-is-better-than-implicit). And in many cases it will be a bit longer and from simpler building blocks.
+However, the good code doesn't have to be short or prove that you know all quirks of the language. The good code must be [readable](#readability-counts), [simple](#simple-is-better-than-complex) and [explicit](#explicit-is-better-than-implicit). And in many cases, it will be a bit longer and created from simpler building blocks.
 
 ```js title="Just because it works, doesn't mean it's worth it"
 var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'US' ? 'AMER' : 'APAC';
-/* Chained ternary operator above might take less lines of code, but its definitely not readable.
-Making it more sparse and flat is not only easier for the readars but also futureproof */
+/* Chained ternary operator above might take less lines of code, but it's definitely not readable.
+Making it more sparse and flat is not only easier for the readars but also for future modifications */
 if (country == 'UK' || country == 'PL') {
-    var region = 'EMEA';
+ var region = 'EMEA';
 } else if (country == 'US') {
-    var region = 'AMER';
+ var region = 'AMER';
 } else {
-    var region = 'APAC';
+ var region = 'APAC';
 };
 ```
 
 </TabItem>
 <TabItem value='ui'>
 
-When building in Journey Builder, it is easy to nest Decision Splits to send different communication based on some criteria, but this approach will quickly become [complicated](#complex-is-better-than-complicated) and (with how SFMC renders multiple splits) [ugly](#beautiful-is-better-than-ugly).
+When building in Journey Builder, it is easy to nest Decision Splits to send various communication based on some criteria, but this approach will quickly become [complicated](#complex-is-better-than-complicated) and (with how SFMC renders multiple splits) [ugly](#beautiful-is-better-than-ugly).
 
-If the splits are added to cover more appropriate personalisation - make your Journey flat by leveraging Dynamic Content instead.
+- If you want to add the splits to cover more appropriate personalisation - make your Journey flat by leveraging Dynamic Content instead.
+- If you want to add the splits to cover different campaign goals - make your Journey flat by splitting each goal into separate Journey ([SOC principle](#SOC)).
 
-If the splits are added to cover different campaign goals - make your Journey flat by splitting each goal into separate Journey ([SOC principle](#SOC)).
-
-The same is true for Emails that frequently like to grow due to multiple KPIs being applied to them. Sure, you can cram a lot if you go for 4-column layout with multiple sections, but the layout bugs will emerge, deliverability will suffer, readability will tank and the reader will get lost in the number of call to actions. Instead, focus on one concrete and targeted action that is crucial for your business.
+The same is true for Emails that frequently grow due to applying multiple KPIs. Sure, you can cram a lot if you go for a 4-column layout with numerous sections. But the layout bugs will emerge, deliverability will suffer, readability will tank, and the reader will get lost in the number of calls to action. Instead, focus on one concrete and targeted action that is crucial for your business.
 
 </TabItem>
 </Tabs>
@@ -325,30 +322,30 @@ I have already written a lot about readability of Marketing Cloud programmatic l
 
 As for the readability of content:
 
-1. Write short sentences (15 words is nice; stay under 30).
-2. Use simple language (instead of `due to the fact that` use `because`).
-3. Prove with hard data (instead of `significant amount of customers recommends` use `93% of customer recommends`).
-4. Cut marketing fluff (every part of the content should have an asnwer to `so what?` question).
-5. Proof-read. Proof-read again.
+1. Write short sentences (15 words are nice; stay under 30).
+2. Use simple language (instead of "due to the fact that" use "because").
+3. Prove with hard data (instead of "significant amount of customers recommends" use "93% of customer recommends").
+4. Cut marketing fluff (every part of the content should have an answer to the "so what?" question).
+5. Proofread. Proofread again.
 
 ---
 
-### Naming conventions counts twice.
+### Naming conventions count twice.
 
-I love naming conventions and believe they are crucial to long term success of marketing automation solutions. They improve readability and maintainability, they bring clarity and unlock even more automation possibilities.
+I love naming conventions and believe they are crucial to the long term success of marketing automation solutions. They improve readability and maintainability, bring clarity and unlock even more automation possibilities.
 
-What is special about them is that they provide most value when implemented from the very start and enforced everywhere. But if you are thinking long term (and with Marketing Automation tools - you should), it's better to implement one late then never. The bigger and older the solution, the stronger you will feel that good naming convention is more of a must-have then nice-to-have.
+What is unique about them is that they provide the most value when implemented from the very start and enforced everywhere. But if you are thinking long term (and with Marketing Automation tools - you should), it's better to implement one late than never. The bigger and older the solution, the more you will feel that a good naming convention is not nice-to-have but rather a must-have.
 
 <Tabs
-    defaultValue={null}
-    values={[
-        {label: 'SFMC Code Example', value: 'code'},
-        {label: 'SFMC UI Example', value: 'ui'},
-    ]}
+ defaultValue={null}
+ values={[
+ {label: 'SFMC Code Example', value: 'code'},
+ {label: 'SFMC UI Example', value: 'ui'},
+ ]}
 >
 <TabItem value='code'>
 
-You can benefit from implementing a naming convention in all SFMC programming languages. Strive for variable, function, column names that are obvious even for someone who sees the code for the first time. Saving few characters for a shorter name is not worth the time lost for deciphering the meaning later.
+You can benefit from implementing a naming convention in all SFMC programming languages. Strive for variable, function, column names that are obvious even for someone who sees the code for the first time. Saving a few characters for a shorter name is not worth the time lost for deciphering the meaning later.
 
 ```js
 /* You may know what it means when you write the code... */
@@ -358,35 +355,35 @@ if (ts && !tsd) tsd = new Date();
 if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
 ```
 
-Looking for more examples of good naming? Read Style Guide recommendations for [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention) and [SQL](../sql/sfmc-sql-style-guide/#explicit-vs-implicit).
+Looking for more examples of good naming? Check Style Guide recommendations for [AMPScript](../ampscript/ampscript-style-guide/#naming-convention), [SSJS](../ssjs/ssjs-style-guide/#naming-convention) and [SQL](../sql/sfmc-sql-style-guide/#explicit-vs-implicit).
 
 </TabItem>
 <TabItem value='ui'>
 
-Naming convention is huge when working with the Salesforce Marketing Cloud. Leveraging a proper one not only makes it much easier to differentiate assets and make searching for them easier. It's also an awesome tool to enable some smart personalisations and checks in email communication (with the help of the `%%emailname_%%` personalisation string). That's not all - good naming convention improves greatly value coming from System Data Views and reporting.
+The naming convention is huge when working with the Salesforce Marketing Cloud. Leveraging a proper one makes it much easier to search and differentiate the assets. It's also an excellent tool to enable some smart personalisations and checks in email communication (with the help of the `%%emailname_%%` personalisation string). And that's not all - a good naming convention will increase value coming from System Data Views and reporting.
 
-With all this praise - what is a good naming convention for the markating automation assets? This of course depends on the specifics of your business, but my recommendation is to mix shortcuts for data filled elements and clear separators.
+With all this praise - what is a good naming convention for the marketing automation assets? It, of course, depends on the specifics of your business, but my recommendation is to mix data-filled shortcuts with separators.
 
 My favourite approach is to:
 
-1. Define set of business-oriented data points that bring value.
+1. Define a set of business-oriented data points that bring value.
 2. Create readable shortcuts for them to limit the final length of the naming convention.
-3. Create a dedicated space for each separate element in the naming convention.
-4. Split the elements with underscore (`_`).
-5. Split parts of single element with hyphen (`-`).
+3. Create a dedicated place for each separate element in the naming convention.
+4. Split the elements with an underscore (`_`).
+5. Split parts of a single element with a hyphen (`-`).
 
-That's theory, but what are good business-oriented data points? Some examples I frequently use are:
+That's the theory, but what are good business-oriented data points? Some examples I frequently use are:
 
 - Country (if you are operating in multiple markets)
-- Business Unit (if you have complex internal structure of the company)
-- Segment (if you have set of predefined master-segments / personas)
-- Campaign Type (it's always useful)
+- Business Unit (if you have a complex internal structure of the company)
+- Segment (if you have a set of predefined master-segments / personas)
+- Campaign Type (it's always helpful)
 - Free-text Asset Name (the human-readable part that helps easily understand the purpose)
 - Asset Type (can help in Content Builder to differentiate various partial assets)
-- Date (useful especially if you are creating a lot of simillar assets for recurring goals)
+- Date (beneficial, especially if you are creating a lot of similar assets for recurring goals)
 - Campaign Code (or whatever you are using for closed-loop reporting and 360 analytics)
 
-How does it translate for the final name? Let's check example:
+How does it look when implemented? Let's check an example:
 
 `UK_DEV_C_WEL_brand-welcome-1_EML_21-10_01234`
 
@@ -401,9 +398,9 @@ It's elements would be:
 7. Date: `21-10` = October 2021
 8. Campaign Code: `01234`
 
-As you can see, with under 50 characters we captured 8 different data points and quite good picture of the purpose of the asset.
+As you can see, in under 50 characters, we captured eight different data points and a pretty good picture of the purpose of the asset.
 
-What is more, Business Intelligence team will be able to do a simple split by underscore to capture each element as separte category to enable filtering and grouping in reporting.
+What is more, the Business Intelligence team will be able to use a simple split by an underscore to capture each element as a separate category to enable filtering and grouping in reporting.
 
 </TabItem>
 </Tabs>
@@ -412,77 +409,85 @@ What is more, Business Intelligence team will be able to do a simple split by un
 
 ### Special cases aren't special enough to break the rules. Although practicality beats purity.
 
-Those contradictory lines are following the ancient greek golden middle way philosophy. The thought behind them is quite straightforward. Whenever you decide to stick to some recommendation or rule (be it from this article or else) - fight the temptation to create exceptions to it when you encounter first bump on the road.
+Those contradictory lines follow the ancient greek golden middle way philosophy. The thought behind them is pretty straightforward. Whenever you decide to stick to some recommendation or rule (be it from this article or else) - fight the temptation to create exceptions when you encounter the first bump on the road.
 
-Sure, it might be easier to ignore it when the deadline is near or you have too much to do. It's easy to say "I will align it later". But there is always more work to be done "later", and in the end you end up with a messy solution that doesn't provide the value promised by following the rules. However, following the rules to the book in every single case might be an overkill that stops you from delivering a working solution at all.
+Sure, it might be easier to ignore the rule when the deadline is near or you have too much to do. It's easy to say, "I will align it later". But there is always more work to be done "later", and in the end, you finish with a messy solution that doesn't provide the promised value.
 
-That's why we must not only learn how to follow the rules, but also when to break them.
+On the other hand, following the rules by the book in every single case might stop you from delivering a working solution at all.
+
+That's why we must learn how to follow the rules __and__ when to break them.
+
+So follow the rules as a default, break them only when there is no other option, and refactor them whenever possible.
 
 ---
 
 ### Errors should never pass silently. Unless explicitly silenced.
 
-Every solution can encounter some problems or edge cases. It can even be something over which we don't have any control, like server issues. This is why capturing and analysing the errors is so important.
+Every solution can encounter some problems or edge cases. You can even be hit with something outside of your control, like server issues. It is why capturing and analysing the errors is so essential.
 
-In terms of code it means proper [debugging and error handling](../ssjs/debugging-ssjs) - especially [error logging](../ssjs/debugging-ssjs#error-logging) is good idea to keep up with the potential issues in matured Marketing Cloud solution. You can also protect your solution by creating last resort checks in messaging with `RaiseError` function.
+In terms of code it means proper [debugging and error handling](../ssjs/debugging-ssjs). Especially [error logging](../ssjs/debugging-ssjs#error-logging) is good idea to keep up with the potential issues in matured Marketing Cloud solution. You can also protect your solution by creating last resort checks in messaging with the `RaiseError` function.
 
-But there is also a lot of platform-based features that can help you capture issues. Journey pre-launch validation, Verification Activity for Automation Studio along with the built-in error logging, Send Logs and Audit Trail. Salesforce Marketing Cloud offer a lot of tools to make sure you are up to speed with the state of your tool, so make sure you use all of them.
+But there are also platform-based features that capture issues. Journey pre-launch validation, Verification Activity for Automation Studio and its built-in error logging, Send Logs, and Audit Trail. Salesforce Marketing Cloud offers many tools to make sure you are up to speed with the state of your platform, so make sure you use all of them.
 
-However, just because you have all those tools, it doesn't mean you always have to throw an error. There are some cases, where silencing them is the right thing to do. Example?
+However, just because you can, it doesn't mean you always need to throw an error. There are some cases where silencing them is the right thing to do. Example?
 
-When sending personalised email you might encounter some contacts with missing data that would error out the send. Ask yourself whether you truly want an error in such cases or maybe a dynamic content with not personalised default will work better.
+When sending a personalised email, you might find some contacts with missing data that would error out the send. Ask yourself whether you genuinely want an error in such cases, or rather a dynamic content with non-personalised default will work better.
 
-Such workarounds are even more important for errors on client-facing assets like Cloud Pages. When coding the user experience, check what are the possible errors and consider which of those should be visible to the end-user. And - considering the quality of out-of-the-box SFMC errors - always provide custom error messages.
+Such workarounds are even more critical for errors on client-facing assets like Cloud Pages. When coding the user experience, check the possible errors and consider which should be visible to the end-user.
+
+And - considering the quality of out-of-the-box SFMC errors - always provide custom error messages.
 
 ---
 
 ### In the face of ambiguity, refuse the temptation to guess. Even when certain, test.
 
-With the complexity of Marketing Cloud, cross-cloud integrations, constant platform updates and solution development, there is a lot of room for ambiguity. It's even bigger when you consider how the SFMC is growing - by 3rd party acquisitions and building new features on top of legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With multi-year updates, even when doing something that you have already done multiple times in the past - don't assume it will work the same. Don't guess. Check.
+With the complexity of Marketing Cloud, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the SFMC is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
 
-There are multiple examples of this risk. SSJS being not-fully-supported ES3 limited by the .NET backend. SQL being limited SQL Server 2016 (add to that different behaviour in Script Activity vs Query Studio). Inconsistent approaches within the same solution (for example [shared folder permissions](../../sites/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](../../sites/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary bugs that change the SSJS function responses for few days.
+There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2016 with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](../../sites/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](../../sites/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
 
-With all this ambiguity in the system, be sure to always check during development and always check before go-live.
+With all this ambiguity in the system, always check during development and always check again before go-live.
 
 ---
 
 ### Now is better than never. Although never is often better than right now.
 
-When you see an opportunity for an improvement or encoutner a helpful recommendation, it's good idea to take a note and implement it to improve the value of your solution. However, fight temptation to do it instantanously. Even the enhancement, most needed in your solution, might break everything if it is implemented hastily.
+When you see an opportunity for improvement or encounter a helpful recommendation, it's a good idea to take a note and implement it to improve the value of your solution. However, fight the temptation to do it instantaneously. Even the enhancement most needed in your solution might break everything if you implement it hastily.
 
 Using previous examples:
 
-1. If you are not yet using proper [debugging and error handling](../ssjs/debugging-ssjs), you definitely should implement it. Should you do it *right* now? Well, there are some quirks that you should test beforehand, otherwise your script might error out and break the process.
+1. If you are not yet using proper [debugging and error handling](../ssjs/debugging-ssjs), you definitely should implement it. Should you do it *right* now? Well, there are some quirks that you should test beforehand; otherwise, your script might error out and break the existing process.
 
-2. If you want to implement the asset [naming convention](#naming-conventions-counts-twice), definitely start with discovery and cross-department alignment to have a full picture of needs before creating the naming template. I do believe that everyone should use the naming convention, but it will be counter productive if you start using it too fast and later have to make updates to it.
+2. If you want to implement the asset [naming convention](#naming-conventions-counts-twice), definitely start with discovery and cross-department alignment to have a complete picture of needs before creating the naming template. I believe everyone should use the naming convention, but it will be counterproductive if you start using it too fast and later have to update it based on late feedback.
 
 ---
 
 ### If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea.
 
-Of course, one cannot expect that Marketing Cloud implementation will be easy to explain to a five-year-old. However, if you find it hard to explain it to your colleague or client, it means that the solution is either too complex, too ambiguous, or you yourself lack full understanding of it. Each of hose cases is dangerous. In the best case it may lead to a non-optimised outcome, in the worst - to a business-breaking crash.
+Marketing Cloud implementation is not something that one can easily explain to a five-year-old. However, if you find it hard to explain it to your colleague or client, it means that the solution is either too complex, too ambiguous, or not understood enough. Each of those cases is dangerous. In the best scenario, it may lead to a non-optimised outcome, in the worst - to a business-breaking crash.
 
 ---
 
 ### Documentation is one honking great idea - let's do more of it!
 
-Writing and maintaining documentation is pain. I agree. But you know what is even bigger pain? Not having that documentation in the long run. Marketing Automation projects are long term investment. There are change requests. There are new team memebers. There are mistakes and there are bugs.
+Writing and maintaining documentation is a pain. I agree. But you know what is even bigger pain? Not having that documentation in the long run. Marketing Automation projects are long term investments. There are change requests, new team members, mistakes and bugs.
 
-Good documentation saves much more time then it takes to create it. And with the complexity of the solutiona and size of the team, that value grows exponentially.
+In the long run, good documentation saves much more time than it takes to create it. With the complexity of the solution and the size of the team operating on it, that value grows exponentially.
 
-[John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) once said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. THe same is true for the whole marketing automation solution - and documentation is your best bet at surviving ;)
+[John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) once said, "always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live". The same is true for the whole marketing automation solution - and documentation is your best bet at surviving ;)
 
 
 ---
 
 ## Sum Up
 
-There is a lot of contradictory recommendations above. It's intentional. Zen of SFMC is not list of hard rules - it would be impossible with the amount of differences between Marketing Cloud customers. Instead, it's a set of guidelines that can be argued for or against, depending on a specific use case. Treat them as friendly best practices, not absolute rules and use those that improve your work.
+There is a lot of contradictory recommendations above. It's intentional. Zen of SFMC is not a list of rigid rules - it would be impossible with the number of differences between Marketing Cloud customers. Instead, it's a set of flexible guidelines. Treat them as friendly best practices, not absolute rules and adapt them to improve your work.
 
-Across all those recommendations you can see some key recurring ideas:
+Across all those recommendations, you can see some key recurring ideas:
 
 1. Make it simple
 2. Make it readable
 3. Make it understandable
 4. Make it maintainable
 5. Make it practical
+
+However, I still love to check the full text of the [zen of SFMC](#zen-of-sfmc) to see how well I aligned my solution with it.
