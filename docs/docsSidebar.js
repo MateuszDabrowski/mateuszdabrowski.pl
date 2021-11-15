@@ -86,6 +86,7 @@ module.exports = {
                 'usecase/tailor-with-data',
                 'usecase/engage-with-countdown',
                 'usecase/sfmc-cloud-page-apps',
+                'usecase/sfmc-code-resources',
             ],
         },
         {
