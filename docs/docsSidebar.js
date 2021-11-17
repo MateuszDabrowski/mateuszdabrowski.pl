@@ -5,6 +5,10 @@ module.exports = {
             id: 'docs-and-snippets',
         },
         {
+            type: 'doc',
+            id: 'zen-of-sfmc',
+        },
+        {
             type: 'category',
             label: 'SSJS',
             items: [
@@ -88,10 +92,6 @@ module.exports = {
                 'usecase/sfmc-cloud-page-apps',
                 'usecase/sfmc-code-resources',
             ],
-        },
-        {
-            type: 'doc',
-            id: 'zen-of-sfmc',
         },
     ],
 };
