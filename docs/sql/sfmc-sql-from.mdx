@@ -50,7 +50,16 @@ FROM _Job
 
 ## Enterprise Data Extension
 
-If you want to query Shared Data Extensions or Synchronized Data Extensions, you must use a different unique prefix, `Ent.`:
+Here the approach changes depending on where you run your Query. Shared Data Extensions and Synchronized Data Extensions are considered Enterprise and located on the Parent Business Unit level. It means that when you want to query them from the Parent, you need to write it the same way as for [standard Data Extensions](#Basic-from).
+
+```sql {4}
+SELECT
+      ContactKey
+    , EmailAddress
+FROM SharedSegment
+```
+
+However, if you want to query them from the child Business Unit level, you will have to use a unique prefix - `Ent.`:
 
 ```sql {4}
 SELECT
@@ -63,7 +72,7 @@ Remember that account permissions restrictions may apply.
 
 :::note You Should Know
 
-In the past, the opposite was also available. You could query Data Extension on child Business Unit from the Parent. To do this, you had to use the MID of the child BU (visible next to BU name on the Business Unit selection drop down) as a prefix:
+In the past, the opposite was also available. You could query Data Extension located on child Business Unit from the Parent. To do this, you had to use the MID of the child BU (visible next to BU name on the Business Unit selection drop down) as a prefix:
 
 ```sql {4} title="On Parent BU query DataExtensionOnChildBU from Child BU with MID 5123456"
 SELECT

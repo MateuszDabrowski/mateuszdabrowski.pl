@@ -164,7 +164,7 @@ When working with `_Sent` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. The most valuable data here is the `EventDate` field that lets you know when the email was sent (and whether that happened at all).
-3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left Marketing Cloud. Check personalisation, data source, `RaiseError` scripts.
+3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left Marketing Cloud. Check [enhanced Send Log](../sql/sfmc-sql-snippet-enhanced-send-log.mdx), applied personalisation, data source, `RaiseError` scripts.
 
 ---
 
