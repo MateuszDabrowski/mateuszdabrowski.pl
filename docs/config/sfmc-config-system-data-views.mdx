@@ -432,7 +432,7 @@ When working with `_BusinessUnitUnsubscribes` Data View:
 Because of it, you cannot match it out-of-the-box. [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) is here to save the day:
 
 ```sql title="DATEDIFF will allow you to compare despite the difference"
-DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscribes.UnsubDateUTC) < 1
+DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscribes.UnsubDateUTC)) < 1
 ```
 
 :::
