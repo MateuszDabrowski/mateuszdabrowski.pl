@@ -7,6 +7,8 @@ image: img/og/og-image-sfmc-system-data-views.png
 tags: [Marketing Cloud, Configuration, SQL, Analytics, Data Extensions]
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
@@ -37,6 +39,15 @@ Be sure to check the excellent [Data Views relationship diagram](https://sfmarke
 
 Stores information about your Subscribers. Great for high-level perspective or adding Email Address field to other more detailed Data Views.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Subscribers Fields', value: 'fields'},
+        {label: '_Subscribers SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number |
@@ -50,6 +61,28 @@ SubscriberKey | A potential alternate identifier for subscribers. | Text |
 SubscriberType | The subscriber type for the affected subscriber | Text |
 Status | The status of the subscriber: active, held, unsubscribed, or bounced. | Text | X
 Locale | The locale code for the subscriber | Locale | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      SubscriberID
+    , DateUndeliverable
+    , DateJoined
+    , DateUnsubscribed
+    , Domain
+    , EmailAddress
+    , BounceCount
+    , SubscriberKey
+    , SubscriberType
+    , Status
+    , Locale
+FROM _Subscribers
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_Subscribers` Data View:
 
@@ -65,9 +98,34 @@ When working with `_Subscribers` Data View:
 
 Stores information about your Profile Attributes from Email Studio.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_EnterpriseAttribute Fields', value: 'fields'},
+        {label: '_EnterpriseAttribute SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 _SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record stored. | Number
+
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      _SubscriberID                     AS SubscriberID
+    , ProfileAttributeWithoutSpaces
+    , [Profile Attribute With Spaces]   AS ProfileAttributeWithSpace
+FROM _EnterpriseAttribute
+```
+
+</TabItem>
+</Tabs>
+
 
 When working with `_EnterpriseAttribute` Data View:
 
@@ -84,6 +142,15 @@ When working with `_EnterpriseAttribute` Data View:
 ### _Job
 
 Stores information about your Email Sends Jobs. Great for capturing detailed data about your communication, especially when paired with Send Log. Must-have for extending your engagement-based Email Data Views.
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Job Fields', value: 'fields'},
+        {label: '_Job SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -125,6 +192,54 @@ DeduplicateByEmail | Whether the email addresses in the job are used to deduplic
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Number | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      JobID
+    , EmailID
+    , AccountID
+    , AccountUserID
+    , FromName
+    , FromEmail
+    , SchedTime
+    , PickupTime
+    , DeliveredTime
+    , EventID
+    , IsMultipart
+    , JobType
+    , JobStatus
+    , ModifiedBy
+    , ModifiedDate
+    , EmailName
+    , EmailSubject
+    , IsWrapped
+    , TestEmailAddr
+    , Category
+    , BccEmail
+    , OriginalSchedTime
+    , CreatedDate
+    , CharacterSet
+    , IPAddress
+    , SalesForceTotalSubscriberCount
+    , SalesForceErrorSubscriberCount
+    , SendType
+    , DynamicEmailSubject
+    , SuppressTracking
+    , SendClassificationType
+    , SendClassification
+    , ResolveLinksWithCurrentData
+    , EmailSendDefinition
+    , DeduplicateByEmail
+    , TriggererSendDefinitionObjectID
+    , TriggeredSendCustomerKey
+FROM _Job
+```
+
+</TabItem>
+</Tabs>
+
 When working with `_Job` Data View:
 1. `JobID` field will be your bread and butter to [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
 2. `EmailName`, `FromName`, and `FromEmail` are handy data points missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) Data Views and are worth checking for reporting needs.
@@ -146,6 +261,15 @@ Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx
 
 Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication did not leave your system.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Sent Fields', value: 'fields'},
+        {label: '_Sent SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 AccountID | Your parent account ID (MID) number | Number |
@@ -160,6 +284,28 @@ Domain | The domain at which the send occurred | Text |
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      AccountID
+    , OYBAccountID
+    , JobID
+    , ListID
+    , BatchID
+    , SubscriberID
+    , SubscriberKey
+    , EventDate
+    , Domain
+    , TriggererSendDefinitionObjectID
+    , TriggeredSendCustomerKey
+FROM _Sent
+```
+
+</TabItem>
+</Tabs>
+
 When working with `_Sent` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
@@ -171,6 +317,15 @@ When working with `_Sent` Data View:
 ### _Open
 
 Stores information about your Email Opens. For when you need to know when someone opened your email. Kind of.
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Open Fields', value: 'fields'},
+        {label: '_Open SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -186,6 +341,29 @@ Domain | The domain at which the open occurred | Text |
 IsUnique | Whether the event is unique or repeated | Boolean | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      AccountID
+    , OYBAccountID
+    , JobID
+    , ListID
+    , BatchID
+    , SubscriberID
+    , SubscriberKey
+    , EventDate
+    , Domain
+    , IsUnique
+    , TriggererSendDefinitionObjectID
+    , TriggeredSendCustomerKey
+FROM _Open
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_Open` Data View:
 
@@ -213,6 +391,15 @@ There might be cases where the data is wrong the other way - when you see that e
 
 ### _Click
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Click Fields', value: 'fields'},
+        {label: '_Click SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Stores information about your Email Clicks. Detailed click reporting and behavioural logic are possible, thanks to this one.
 
 Name | Description | Data Type | Nullable
@@ -233,6 +420,32 @@ IsUnique | Whether the event is unique or repeated |
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      AccountID
+    , OYBAccountID
+    , JobID
+    , ListID
+    , BatchID
+    , SubscriberID
+    , SubscriberKey
+    , EventDate
+    , Domain
+    , URL
+    , LinkName
+    , LinkContent
+    , IsUnique
+    , TriggererSendDefinitionObjectID
+    , TriggeredSendCustomerKey
+FROM _Click
+```
+
+</TabItem>
+</Tabs>
+
 When working with `_Click` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
@@ -250,6 +463,15 @@ There might be cases where the click data is wrong - when you see that email as 
 ---
 
 ### _Bounce
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Bounce Fields', value: 'fields'},
+        {label: '_Bounce SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
 
 Stores information about your Email Bounces. Best place in Marketing Cloud to understand why your messages are not getting delivered.
 
@@ -279,6 +501,38 @@ SMTPCode | The error code for the bounce from the mail system | Number | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Number | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      AccountID
+    , OYBAccountID
+    , JobID
+    , ListID
+    , BatchID
+    , SubscriberID
+    , SubscriberKey
+    , EventDate
+    , IsUnique
+    , Domain
+    , BounceCategoryID
+    , BounceCategory
+    , BounceSubcategoryID
+    , BounceSubcategory
+    , BounceTypeID
+    , BounceType
+    , SMTPBounceReason
+    , SMTPMessage
+    , SMTPCode
+    , TriggererSendDefinitionObjectID
+    , TriggeredSendCustomerKey
+FROM _Bounce
+```
+
+</TabItem>
+</Tabs>
+
 When working with `_Bounce` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
@@ -303,6 +557,15 @@ You can additionally [register for the Yahoo Feedback Loop](https://help.salesfo
 
 This Data View, along with [`_Bounce`](#_bounce), should be monitored regularly to assess the health of your email marketing.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Complaint Fields', value: 'fields'},
+        {label: '_Complaint SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 AccountID | Your parent account ID (MID) number | Number |
@@ -315,6 +578,27 @@ SubscriberKey | The subscriber key for the affected subscriber | Text |
 EventDate | The date the send took place | Date |
 IsUnique | Whether the event is unique or repeated - 1 for the first occurrence, 0 for subsequent | Boolean |
 Domain | The domain at which the send occurred | Text |
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      AccountID
+    , OYBAccountID
+    , JobID
+    , ListID
+    , BatchID
+    , SubscriberID
+    , SubscriberKey
+    , EventDate
+    , IsUnique
+    , Domain
+FROM _Complaint
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_Complaint` Data View:
 
@@ -363,6 +647,15 @@ This Data View stores data only for six-months, so retention-less `_Subscribers`
 
 All of this makes `_Unsubscribe` a much better source of knowledge about unsubscription.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Unsubscribe Fields', value: 'fields'},
+        {label: '_Unsubscribe SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable |
 -- | -- | -- | --
 AccountID | Your account ID number | Number |
@@ -375,6 +668,27 @@ SubscriberKey | The subscriber key for the affected subscriber | Text |
 EventDate | The date the unsubscribe took place | Date |
 IsUnique | Whether the event is unique or repeated - 1 for the first occurrence, 0 for subsequent | Boolean |
 Domain | The domain at which the unsubscribe occurred | Text |
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      AccountID
+    , OYBAccountID
+    , JobID
+    , ListID
+    , BatchID
+    , SubscriberID
+    , SubscriberKey
+    , EventDate
+    , IsUnique
+    , Domain
+FROM _Unsubscribe
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_Unsubscribe` Data View:
 
@@ -401,6 +715,15 @@ Here comes the fresh `_BusinessUnitUnsubscribes` Data View. It shows you the onl
 
 Despite `_BusinessUnitUnsubscribes` Data View focus on Business Units, you can query it only from the Enterprise level (on Parent BU or using [`Ent.` prefix](../sql/sfmc-sql-from.mdx#enterprise-system-data-views)).
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_BusinessUnitUnsubscribes Fields', value: 'fields'},
+        {label: '_BusinessUnitUnsubscribes SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable |
 -- | -- | -- | --
 BusinessUnitID | The Account ID for the Business Unit | Number |
@@ -408,6 +731,22 @@ SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 UnsubDateUTC | The date the subscriber unsubscribed on the BU. | Date | X
 UnsubReason | The reason listed is a custom value configured by your administrator. | Text | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      BusinessUnitID
+    , SubscriberID
+    , SubscriberKey
+    , UnsubDateUTC
+    , UnsubReason
+FROM _BusinessUnitUnsubscribes
+```
+
+</TabItem>
+</Tabs>
 
 `UnsubReason` possible values:
 - Spam Complaint
@@ -446,6 +785,15 @@ DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscr
 - `_Subscribers` has data about All Subscribers list only. `_ListSubscribers` shows status for all Lists available in Salesforce Marketing Cloud.
 - `_BusinessUnitUnsubscribes` has data about contacts unsubscribed from All Subscribers on every Business Unit. `_ListSubscribers` doesn't show Business Unit information, but it covers all Lists and all Statuses.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_ListSubscribers Fields', value: 'fields'},
+        {label: '_ListSubscribers SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 AddedBy | The ID of the user who ran the process that added the subscriber (might also be `0` or `-1000`) | Number |
@@ -460,6 +808,29 @@ Status | The status of the subscriber: active, held, unsubscribed, or bounced | 
 SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      AddedBy
+    , AddMethod
+    , CreatedDate
+    , DateUnsubscribed
+    , EmailAddress
+    , ListID
+    , ListName
+    , ListType
+    , Status
+    , SubscriberID
+    , SubscriberKey
+    , SubscriberType
+FROM _ListSubscribers
+```
+
+</TabItem>
+</Tabs>
 
 `AddMethod` possible values:
 - API
@@ -504,6 +875,15 @@ When working with Mobile Number history of engagement and subscription, take thi
 
 `_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is no replacement for it. Why? Because Marketing Cloud still uses this Data View as a backend data source for the MobileConnect Demographics Data.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_MobileAddress Fields', value: 'fields'},
+        {label: '_MobileAddress SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 _MobileID | MobileConnect Contact ID | Number | X
@@ -526,6 +906,37 @@ _FirstName | Contact's First Name | Text | X
 _LastName | Contact's Last Name | Text | X
 _UTCOffset | The number of hours from which the user's time zone deviates from UTC. Defaults to 0 | Number | X
 _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or not. Defaults to false | Boolean | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      _MobileID         AS MobileID
+    , _ContactID        AS ContactID
+    , _MobileNumber     AS MobileNumber
+    , _Status           AS Status
+    , _Source           AS Source
+    , _SourceObjectId   AS SourceObjectId
+    , _Priority         AS Priority
+    , _Channel          AS Channel
+    , _CarrierID        AS CarrierID
+    , _CountryCode      AS CountryCode
+    , _CreatedDate      AS CreatedDate
+    , _CreatedBy        AS CreatedBy
+    , _ModifiedBy       AS ModifiedBy
+    , _City             AS City
+    , _State            AS State
+    , _ZipCode          AS ZipCode
+    , _FirstName        AS FirstName
+    , _LastName         AS LastName
+    , _UTCOffset        AS UTCOffset
+    , _IsHonorDST       AS IsHonorDST
+FROM _MobileAddress
+```
+
+</TabItem>
+</Tabs>
 
 `_Status` possible values:
 - 1 = Active
@@ -569,6 +980,15 @@ Worry not, there is a nearly identical Data View available and supported - [`_SM
 
 The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_ModifiedBy`) and even adds three more (`LogDate`, `SubscriberKey` and `MovileSubscriptionID`).
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_MobileSubscription Fields', value: 'fields'},
+        {label: '_MobileSubscription SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 _SubscriptionDefinitionID | The unique ID of the subscription record | Text |
@@ -585,6 +1005,30 @@ _CreatedBy | Person responsible for subscription creation | Text | X
 _ModifiedDate | Date the subscription was modified | Date |
 _ModifiedBy | Person responsible for the modification | Text | X
 
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      _SubscriptionDefinitionID AS SubscriptionDefinitionID
+    , _MobileNumber             AS MobileNumber
+    , _OptOutStatusID           AS OptOutStatusID
+    , _OptOutMethodID           AS OptOutMethodID
+    , _OptOutDate               AS OptOutDate
+    , _OptInStatusID            AS OptInStatusID
+    , _OptInMethodID            AS OptInMethodID
+    , _OptInDate                AS OptInDate
+    , _Source                   AS Source
+    , _CreatedDate              AS CreatedDate
+    , _CreatedBy                AS CreatedBy
+    , _ModifiedDate             AS ModifiedDate
+    , _ModifiedBy               AS ModifiedBy
+FROM _MobileSubscription
+```
+
+</TabItem>
+</Tabs>
+
 You shouldn't be working with `_MobileSubscription` Data View. Use [`_SMSSubscriptionLog`](#_smssubscriptionlog) instead.
 
 ---
@@ -592,6 +1036,15 @@ You shouldn't be working with `_MobileSubscription` Data View. Use [`_SMSSubscri
 ### _SubscriberSMS
 
 `_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated, and you won't have records there. Marketing Cloud used it in pre-MobileConnect times, so I do not recommend using it for any projects.
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_SubscriberSMS Fields', value: 'fields'},
+        {label: '_SubscriberSMS SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -606,6 +1059,27 @@ MarketingOptInDate | Date, the subscriber, opted-in to Marketing SMS messages | 
 MarketingOptOutDate | Date, the subscriber, opted out of Marketing SMS messages | Date | X
 SMSCarrierName | Name of the SMS Carrier used for delivery | Text | X
 
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      SubscriberID
+    , SubscriberKey
+    , MobileNumber
+    , TransactionalOptIn
+    , TransactionalOptInDate
+    , TransactionalOptOutDate
+    , MarketingOptIn
+    , MarketingOptInDate
+    , MarketingOptOutDate
+    , SMSCarrierName
+FROM _SubscriberSMS
+```
+
+</TabItem>
+</Tabs>
+
 You shouldn't be working with `_SubscriberSMS` Data View.
 
 ---
@@ -613,6 +1087,15 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 ### _SMSSubscriptionLog
 
 `_SMSSubscriptionLog` Data View stores complete information about subscription status for each Mobile Number. It replaced the unsupported [`_MobileSubscription`](#_mobilesubscription) Data View.
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_SMSSubscriptionLog Fields', value: 'fields'},
+        {label: '_SMSSubscriptionLog SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -630,6 +1113,31 @@ OptInDate | Date, the subscriber, opted-in to the SMS messages | Date | X
 Source | The subscription source | Number | X
 CreatedDate | Date the subscription was created | Date |
 ModifiedDate | Date the subscription was modified | Date |
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      LogDate
+    , SubscriberKey
+    , MobileSubscriptionID
+    , SubscriptionDefinitionID
+    , MobileNumber
+    , OptOutStatusID
+    , OptOutMethodID
+    , OptOutDate
+    , OptInStatusID
+    , OptInMethodID
+    , OptInDate
+    , Source
+    , CreatedDate
+    , ModifiedDate
+FROM _SMSSubscriptionLog
+```
+
+</TabItem>
+</Tabs>
 
 `OptOutStatusID` possible values:
 - 0 = NotOptedOut
@@ -687,6 +1195,15 @@ When working with `_SMSSubscriptionLog` Data View:
 
 ### _SMSMessageTracking
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_SMSMessageTracking Fields', value: 'fields'},
+        {label: '_SMSMessageTracking SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 MobileMessageTrackingID | Unique Tracking ID - one for each SMS sent | Number |
@@ -730,6 +1247,58 @@ ShortCode | The short code or long code used to send your message | Text | X |
 SharedKeyword | The keyword used in your message | Text | X |
 Ordinal | Represents the parts in a multi-part message. Represented in ascending order starting at 0. | Number | X |
 FromName | From Name that an individual message was deployed with. Maximum length: 11 characters | Text | X |
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      MobileMessageTrackingID
+    , EID
+    , MID
+    , Mobile
+    , MessageID
+    , KeywordID
+    , CodeID
+    , ConversationID
+    , CampaignID
+    , Sent
+    , Delivered
+    , Undelivered
+    , Unsub
+    , OptIn
+    , OptOut
+    , Outbound
+    , Inbound
+    , CreateDateTime
+    , ModifiedDateTime
+    , ActionDateTime
+    , MessageText
+    , IsTest
+    , MobileMessageRecurrenceID
+    , ResponseToMobileMessageTrackingID
+    , IsValid
+    , InvalidationCode
+    , SendID
+    , SendSplitID
+    , SendSegmentID
+    , SendJobID
+    , SendGroupID
+    , SendPersonID
+    , SubscriberID
+    , SubscriberKey
+    , SMSStandardStatusCodeId
+    , Description
+    , Name
+    , ShortCode
+    , SharedKeyword
+    , Ordinal
+    , FromName
+FROM _SMSMessageTracking
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_SMSMessageTracking` Data View:
 
@@ -780,6 +1349,15 @@ There might be multiple reasons for the SMS to be undelivered, for example:
 - The user is out of range of cellular networks
 - The number is for a landline
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_UndeliverableSMS Fields', value: 'fields'},
+        {label: '_UndeliverableSMS SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 MobileNumber | Mobile number for the subscriber | Text |
@@ -787,6 +1365,22 @@ Undeliverable | Whether the subscriber is eligible for future deliveries | Boole
 BounceCount | Number of times message was not delivered | Number |
 FirstBounceDate | Date of the first unsuccessful delivery | Date |
 HoldDate | Date when the subscriber can be used in sends again | Date | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      MobileNumber
+    , Undeliverable
+    , BounceCount
+    , FirstBounceDate
+    , HoldDate
+FROM _UndeliverableSMS
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_JourneyActivity` Data View:
 
@@ -802,6 +1396,15 @@ When working with `_JourneyActivity` Data View:
 
 Stores information about Activities available in your Journeys. Must-have for joining Email data with Journey data.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_JourneyActivity Fields', value: 'fields'},
+        {label: '_JourneyActivity SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 VersionID | The unique identifier for the version of the Journey | Text |
@@ -810,6 +1413,23 @@ ActivityName | The name of the activity | Text | X
 ActivityExternalKey | The external key associated with the activity | Text |
 JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a Journey email's Triggered Send Definition. | Text | X
 ActivityType | The type of activity | Text | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      VersionID
+    , ActivityID
+    , ActivityName
+    , ActivityExternalKey
+    , JourneyActivityObjectID
+    , ActivityType
+FROM _JourneyActivity
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_JourneyActivity` Data View:
 
@@ -822,6 +1442,15 @@ When working with `_JourneyActivity` Data View:
 
 Stores information about your Journeys for when context matters.
 
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_Journey Fields', value: 'fields'},
+        {label: '_Journey SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 VersionID | The unique identifier for the version of the Journey | Text |
@@ -832,6 +1461,25 @@ CreatedDate | The date that the version of the Journey was created | Date |
 LastPublishedDate | The date that the version of the Journey was last published | Date | X
 ModifiedDate | The date that the version of the Journey was last edited | Date |
 JourneyStatus | The current running mode of the Journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      VersionID
+    , JourneyID
+    , JourneyName
+    , VersionNumber
+    , CreatedDate
+    , LastPublishedDate
+    , ModifiedDate
+    , JourneyStatus
+FROM _Journey
+```
+
+</TabItem>
+</Tabs>
 
 When working with `_Journey` Data View:
 
