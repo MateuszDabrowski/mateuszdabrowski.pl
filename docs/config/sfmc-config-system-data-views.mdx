@@ -67,18 +67,18 @@ Locale | The locale code for the subscriber | Locale | X
 
 ```sql
 SELECT
-      SubscriberID
-    , DateUndeliverable
-    , DateJoined
-    , DateUnsubscribed
-    , Domain
-    , EmailAddress
-    , BounceCount
-    , SubscriberKey
-    , SubscriberType
-    , Status
-    , Locale
-FROM _Subscribers
+      sub.SubscriberID
+    , sub.DateUndeliverable
+    , sub.DateJoined
+    , sub.DateUnsubscribed
+    , sub.Domain
+    , sub.EmailAddress
+    , sub.BounceCount
+    , sub.SubscriberKey
+    , sub.SubscriberType
+    , sub.Status
+    , sub.Locale
+FROM _Subscribers AS sub
 ```
 
 </TabItem>
@@ -117,10 +117,10 @@ _SubscriberID | The subscriber ID for the affected subscriber. This number repre
 
 ```sql
 SELECT
-      _SubscriberID                     AS SubscriberID
-    , ProfileAttributeWithoutSpaces
-    , [Profile Attribute With Spaces]   AS ProfileAttributeWithSpace
-FROM _EnterpriseAttribute
+      ea._SubscriberID                     AS SubscriberID
+    , ea.ProfileAttributeWithoutSpaces
+    , ea.[Profile Attribute With Spaces]   AS ProfileAttributeWithSpace
+FROM _EnterpriseAttribute AS ea
 ```
 
 </TabItem>
@@ -197,44 +197,44 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 ```sql
 SELECT
-      JobID
-    , EmailID
-    , AccountID
-    , AccountUserID
-    , FromName
-    , FromEmail
-    , SchedTime
-    , PickupTime
-    , DeliveredTime
-    , EventID
-    , IsMultipart
-    , JobType
-    , JobStatus
-    , ModifiedBy
-    , ModifiedDate
-    , EmailName
-    , EmailSubject
-    , IsWrapped
-    , TestEmailAddr
-    , Category
-    , BccEmail
-    , OriginalSchedTime
-    , CreatedDate
-    , CharacterSet
-    , IPAddress
-    , SalesForceTotalSubscriberCount
-    , SalesForceErrorSubscriberCount
-    , SendType
-    , DynamicEmailSubject
-    , SuppressTracking
-    , SendClassificationType
-    , SendClassification
-    , ResolveLinksWithCurrentData
-    , EmailSendDefinition
-    , DeduplicateByEmail
-    , TriggererSendDefinitionObjectID
-    , TriggeredSendCustomerKey
-FROM _Job
+      job.JobID
+    , job.EmailID
+    , job.AccountID
+    , job.AccountUserID
+    , job.FromName
+    , job.FromEmail
+    , job.SchedTime
+    , job.PickupTime
+    , job.DeliveredTime
+    , job.EventID
+    , job.IsMultipart
+    , job.JobType
+    , job.JobStatus
+    , job.ModifiedBy
+    , job.ModifiedDate
+    , job.EmailName
+    , job.EmailSubject
+    , job.IsWrapped
+    , job.TestEmailAddr
+    , job.Category
+    , job.BccEmail
+    , job.OriginalSchedTime
+    , job.CreatedDate
+    , job.CharacterSet
+    , job.IPAddress
+    , job.SalesForceTotalSubscriberCount
+    , job.SalesForceErrorSubscriberCount
+    , job.SendType
+    , job.DynamicEmailSubject
+    , job.SuppressTracking
+    , job.SendClassificationType
+    , job.SendClassification
+    , job.ResolveLinksWithCurrentData
+    , job.EmailSendDefinition
+    , job.DeduplicateByEmail
+    , job.TriggererSendDefinitionObjectID
+    , job.TriggeredSendCustomerKey
+FROM _Job AS job
 ```
 
 </TabItem>
@@ -289,18 +289,18 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 ```sql
 SELECT
-      AccountID
-    , OYBAccountID
-    , JobID
-    , ListID
-    , BatchID
-    , SubscriberID
-    , SubscriberKey
-    , EventDate
-    , Domain
-    , TriggererSendDefinitionObjectID
-    , TriggeredSendCustomerKey
-FROM _Sent
+      sent.AccountID
+    , sent.OYBAccountID
+    , sent.JobID
+    , sent.ListID
+    , sent.BatchID
+    , sent.SubscriberID
+    , sent.SubscriberKey
+    , sent.EventDate
+    , sent.Domain
+    , sent.TriggererSendDefinitionObjectID
+    , sent.TriggeredSendCustomerKey
+FROM _Sent AS sent
 ```
 
 </TabItem>
@@ -347,19 +347,19 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 ```sql
 SELECT
-      AccountID
-    , OYBAccountID
-    , JobID
-    , ListID
-    , BatchID
-    , SubscriberID
-    , SubscriberKey
-    , EventDate
-    , Domain
-    , IsUnique
-    , TriggererSendDefinitionObjectID
-    , TriggeredSendCustomerKey
-FROM _Open
+      open.AccountID
+    , open.OYBAccountID
+    , open.JobID
+    , open.ListID
+    , open.BatchID
+    , open.SubscriberID
+    , open.SubscriberKey
+    , open.EventDate
+    , open.Domain
+    , open.IsUnique
+    , open.TriggererSendDefinitionObjectID
+    , open.TriggeredSendCustomerKey
+FROM _Open AS open
 ```
 
 </TabItem>
@@ -425,22 +425,22 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 ```sql
 SELECT
-      AccountID
-    , OYBAccountID
-    , JobID
-    , ListID
-    , BatchID
-    , SubscriberID
-    , SubscriberKey
-    , EventDate
-    , Domain
-    , URL
-    , LinkName
-    , LinkContent
-    , IsUnique
-    , TriggererSendDefinitionObjectID
-    , TriggeredSendCustomerKey
-FROM _Click
+      click.AccountID
+    , click.OYBAccountID
+    , click.JobID
+    , click.ListID
+    , click.BatchID
+    , click.SubscriberID
+    , click.SubscriberKey
+    , click.EventDate
+    , click.Domain
+    , click.URL
+    , click.LinkName
+    , click.LinkContent
+    , click.IsUnique
+    , click.TriggererSendDefinitionObjectID
+    , click.TriggeredSendCustomerKey
+FROM _Click AS click
 ```
 
 </TabItem>
@@ -506,28 +506,28 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 ```sql
 SELECT
-      AccountID
-    , OYBAccountID
-    , JobID
-    , ListID
-    , BatchID
-    , SubscriberID
-    , SubscriberKey
-    , EventDate
-    , IsUnique
-    , Domain
-    , BounceCategoryID
-    , BounceCategory
-    , BounceSubcategoryID
-    , BounceSubcategory
-    , BounceTypeID
-    , BounceType
-    , SMTPBounceReason
-    , SMTPMessage
-    , SMTPCode
-    , TriggererSendDefinitionObjectID
-    , TriggeredSendCustomerKey
-FROM _Bounce
+      bounce.AccountID
+    , bounce.OYBAccountID
+    , bounce.JobID
+    , bounce.ListID
+    , bounce.BatchID
+    , bounce.SubscriberID
+    , bounce.SubscriberKey
+    , bounce.EventDate
+    , bounce.IsUnique
+    , bounce.Domain
+    , bounce.BounceCategoryID
+    , bounce.BounceCategory
+    , bounce.BounceSubcategoryID
+    , bounce.BounceSubcategory
+    , bounce.BounceTypeID
+    , bounce.BounceType
+    , bounce.SMTPBounceReason
+    , bounce.SMTPMessage
+    , bounce.SMTPCode
+    , bounce.TriggererSendDefinitionObjectID
+    , bounce.TriggeredSendCustomerKey
+FROM _Bounce AS bounce
 ```
 
 </TabItem>
@@ -584,17 +584,17 @@ Domain | The domain at which the send occurred | Text |
 
 ```sql
 SELECT
-      AccountID
-    , OYBAccountID
-    , JobID
-    , ListID
-    , BatchID
-    , SubscriberID
-    , SubscriberKey
-    , EventDate
-    , IsUnique
-    , Domain
-FROM _Complaint
+      complaint.AccountID
+    , complaint.OYBAccountID
+    , complaint.JobID
+    , complaint.ListID
+    , complaint.BatchID
+    , complaint.SubscriberID
+    , complaint.SubscriberKey
+    , complaint.EventDate
+    , complaint.IsUnique
+    , complaint.Domain
+FROM _Complaint AS complaint
 ```
 
 </TabItem>
@@ -674,17 +674,17 @@ Domain | The domain at which the unsubscribe occurred | Text |
 
 ```sql
 SELECT
-      AccountID
-    , OYBAccountID
-    , JobID
-    , ListID
-    , BatchID
-    , SubscriberID
-    , SubscriberKey
-    , EventDate
-    , IsUnique
-    , Domain
-FROM _Unsubscribe
+      unsub.AccountID
+    , unsub.OYBAccountID
+    , unsub.JobID
+    , unsub.ListID
+    , unsub.BatchID
+    , unsub.SubscriberID
+    , unsub.SubscriberKey
+    , unsub.EventDate
+    , unsub.IsUnique
+    , unsub.Domain
+FROM _Unsubscribe AS unsub
 ```
 
 </TabItem>
@@ -737,12 +737,12 @@ UnsubReason | The reason listed is a custom value configured by your administrat
 
 ```sql
 SELECT
-      BusinessUnitID
-    , SubscriberID
-    , SubscriberKey
-    , UnsubDateUTC
-    , UnsubReason
-FROM _BusinessUnitUnsubscribes
+      buUnsub.BusinessUnitID
+    , buUnsub.SubscriberID
+    , buUnsub.SubscriberKey
+    , buUnsub.UnsubDateUTC
+    , buUnsub.UnsubReason
+FROM _BusinessUnitUnsubscribes AS buUnsub
 ```
 
 </TabItem>
@@ -814,19 +814,19 @@ SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
 
 ```sql
 SELECT
-      AddedBy
-    , AddMethod
-    , CreatedDate
-    , DateUnsubscribed
-    , EmailAddress
-    , ListID
-    , ListName
-    , ListType
-    , Status
-    , SubscriberID
-    , SubscriberKey
-    , SubscriberType
-FROM _ListSubscribers
+      listSub.AddedBy
+    , listSub.AddMethod
+    , listSub.CreatedDate
+    , listSub.DateUnsubscribed
+    , listSub.EmailAddress
+    , listSub.ListID
+    , listSub.ListName
+    , listSub.ListType
+    , listSub.Status
+    , listSub.SubscriberID
+    , listSub.SubscriberKey
+    , listSub.SubscriberType
+FROM _ListSubscribers AS listSub
 ```
 
 </TabItem>
@@ -912,27 +912,27 @@ _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or no
 
 ```sql
 SELECT
-      _MobileID         AS MobileID
-    , _ContactID        AS ContactID
-    , _MobileNumber     AS MobileNumber
-    , _Status           AS Status
-    , _Source           AS Source
-    , _SourceObjectId   AS SourceObjectId
-    , _Priority         AS Priority
-    , _Channel          AS Channel
-    , _CarrierID        AS CarrierID
-    , _CountryCode      AS CountryCode
-    , _CreatedDate      AS CreatedDate
-    , _CreatedBy        AS CreatedBy
-    , _ModifiedBy       AS ModifiedBy
-    , _City             AS City
-    , _State            AS State
-    , _ZipCode          AS ZipCode
-    , _FirstName        AS FirstName
-    , _LastName         AS LastName
-    , _UTCOffset        AS UTCOffset
-    , _IsHonorDST       AS IsHonorDST
-FROM _MobileAddress
+      mobileAddress._MobileID         AS MobileID
+    , mobileAddress._ContactID        AS ContactID
+    , mobileAddress._MobileNumber     AS MobileNumber
+    , mobileAddress._Status           AS Status
+    , mobileAddress._Source           AS Source
+    , mobileAddress._SourceObjectId   AS SourceObjectId
+    , mobileAddress._Priority         AS Priority
+    , mobileAddress._Channel          AS Channel
+    , mobileAddress._CarrierID        AS CarrierID
+    , mobileAddress._CountryCode      AS CountryCode
+    , mobileAddress._CreatedDate      AS CreatedDate
+    , mobileAddress._CreatedBy        AS CreatedBy
+    , mobileAddress._ModifiedBy       AS ModifiedBy
+    , mobileAddress._City             AS City
+    , mobileAddress._State            AS State
+    , mobileAddress._ZipCode          AS ZipCode
+    , mobileAddress._FirstName        AS FirstName
+    , mobileAddress._LastName         AS LastName
+    , mobileAddress._UTCOffset        AS UTCOffset
+    , mobileAddress._IsHonorDST       AS IsHonorDST
+FROM _MobileAddress AS mobileAddress
 ```
 
 </TabItem>
@@ -1010,20 +1010,20 @@ _ModifiedBy | Person responsible for the modification | Text | X
 
 ```sql
 SELECT
-      _SubscriptionDefinitionID AS SubscriptionDefinitionID
-    , _MobileNumber             AS MobileNumber
-    , _OptOutStatusID           AS OptOutStatusID
-    , _OptOutMethodID           AS OptOutMethodID
-    , _OptOutDate               AS OptOutDate
-    , _OptInStatusID            AS OptInStatusID
-    , _OptInMethodID            AS OptInMethodID
-    , _OptInDate                AS OptInDate
-    , _Source                   AS Source
-    , _CreatedDate              AS CreatedDate
-    , _CreatedBy                AS CreatedBy
-    , _ModifiedDate             AS ModifiedDate
-    , _ModifiedBy               AS ModifiedBy
-FROM _MobileSubscription
+      mobileSub._SubscriptionDefinitionID AS SubscriptionDefinitionID
+    , mobileSub._MobileNumber             AS MobileNumber
+    , mobileSub._OptOutStatusID           AS OptOutStatusID
+    , mobileSub._OptOutMethodID           AS OptOutMethodID
+    , mobileSub._OptOutDate               AS OptOutDate
+    , mobileSub._OptInStatusID            AS OptInStatusID
+    , mobileSub._OptInMethodID            AS OptInMethodID
+    , mobileSub._OptInDate                AS OptInDate
+    , mobileSub._Source                   AS Source
+    , mobileSub._CreatedDate              AS CreatedDate
+    , mobileSub._CreatedBy                AS CreatedBy
+    , mobileSub._ModifiedDate             AS ModifiedDate
+    , mobileSub._ModifiedBy               AS ModifiedBy
+FROM _MobileSubscription AS mobileSub
 ```
 
 </TabItem>
@@ -1064,17 +1064,17 @@ SMSCarrierName | Name of the SMS Carrier used for delivery | Text | X
 
 ```sql
 SELECT
-      SubscriberID
-    , SubscriberKey
-    , MobileNumber
-    , TransactionalOptIn
-    , TransactionalOptInDate
-    , TransactionalOptOutDate
-    , MarketingOptIn
-    , MarketingOptInDate
-    , MarketingOptOutDate
-    , SMSCarrierName
-FROM _SubscriberSMS
+      smsSub.SubscriberID
+    , smsSub.SubscriberKey
+    , smsSub.MobileNumber
+    , smsSub.TransactionalOptIn
+    , smsSub.TransactionalOptInDate
+    , smsSub.TransactionalOptOutDate
+    , smsSub.MarketingOptIn
+    , smsSub.MarketingOptInDate
+    , smsSub.MarketingOptOutDate
+    , smsSub.SMSCarrierName
+FROM _SubscriberSMS AS smsSub
 ```
 
 </TabItem>
@@ -1119,21 +1119,21 @@ ModifiedDate | Date the subscription was modified | Date |
 
 ```sql
 SELECT
-      LogDate
-    , SubscriberKey
-    , MobileSubscriptionID
-    , SubscriptionDefinitionID
-    , MobileNumber
-    , OptOutStatusID
-    , OptOutMethodID
-    , OptOutDate
-    , OptInStatusID
-    , OptInMethodID
-    , OptInDate
-    , Source
-    , CreatedDate
-    , ModifiedDate
-FROM _SMSSubscriptionLog
+      smsSubLog.LogDate
+    , smsSubLog.SubscriberKey
+    , smsSubLog.MobileSubscriptionID
+    , smsSubLog.SubscriptionDefinitionID
+    , smsSubLog.MobileNumber
+    , smsSubLog.OptOutStatusID
+    , smsSubLog.OptOutMethodID
+    , smsSubLog.OptOutDate
+    , smsSubLog.OptInStatusID
+    , smsSubLog.OptInMethodID
+    , smsSubLog.OptInDate
+    , smsSubLog.Source
+    , smsSubLog.CreatedDate
+    , smsSubLog.ModifiedDate
+FROM _SMSSubscriptionLog AS smsSubLog
 ```
 
 </TabItem>
@@ -1253,48 +1253,48 @@ FromName | From Name that an individual message was deployed with. Maximum lengt
 
 ```sql
 SELECT
-      MobileMessageTrackingID
-    , EID
-    , MID
-    , Mobile
-    , MessageID
-    , KeywordID
-    , CodeID
-    , ConversationID
-    , CampaignID
-    , Sent
-    , Delivered
-    , Undelivered
-    , Unsub
-    , OptIn
-    , OptOut
-    , Outbound
-    , Inbound
-    , CreateDateTime
-    , ModifiedDateTime
-    , ActionDateTime
-    , MessageText
-    , IsTest
-    , MobileMessageRecurrenceID
-    , ResponseToMobileMessageTrackingID
-    , IsValid
-    , InvalidationCode
-    , SendID
-    , SendSplitID
-    , SendSegmentID
-    , SendJobID
-    , SendGroupID
-    , SendPersonID
-    , SubscriberID
-    , SubscriberKey
-    , SMSStandardStatusCodeId
-    , Description
-    , Name
-    , ShortCode
-    , SharedKeyword
-    , Ordinal
-    , FromName
-FROM _SMSMessageTracking
+      smsTracking.MobileMessageTrackingID
+    , smsTracking.EID
+    , smsTracking.MID
+    , smsTracking.Mobile
+    , smsTracking.MessageID
+    , smsTracking.KeywordID
+    , smsTracking.CodeID
+    , smsTracking.ConversationID
+    , smsTracking.CampaignID
+    , smsTracking.Sent
+    , smsTracking.Delivered
+    , smsTracking.Undelivered
+    , smsTracking.Unsub
+    , smsTracking.OptIn
+    , smsTracking.OptOut
+    , smsTracking.Outbound
+    , smsTracking.Inbound
+    , smsTracking.CreateDateTime
+    , smsTracking.ModifiedDateTime
+    , smsTracking.ActionDateTime
+    , smsTracking.MessageText
+    , smsTracking.IsTest
+    , smsTracking.MobileMessageRecurrenceID
+    , smsTracking.ResponseToMobileMessageTrackingID
+    , smsTracking.IsValid
+    , smsTracking.InvalidationCode
+    , smsTracking.SendID
+    , smsTracking.SendSplitID
+    , smsTracking.SendSegmentID
+    , smsTracking.SendJobID
+    , smsTracking.SendGroupID
+    , smsTracking.SendPersonID
+    , smsTracking.SubscriberID
+    , smsTracking.SubscriberKey
+    , smsTracking.SMSStandardStatusCodeId
+    , smsTracking.Description
+    , smsTracking.Name
+    , smsTracking.ShortCode
+    , smsTracking.SharedKeyword
+    , smsTracking.Ordinal
+    , smsTracking.FromName
+FROM _SMSMessageTracking AS smsTracking
 ```
 
 </TabItem>
@@ -1371,12 +1371,12 @@ HoldDate | Date when the subscriber can be used in sends again | Date | X
 
 ```sql
 SELECT
-      MobileNumber
-    , Undeliverable
-    , BounceCount
-    , FirstBounceDate
-    , HoldDate
-FROM _UndeliverableSMS
+      undeliverableSMS.MobileNumber
+    , undeliverableSMS.Undeliverable
+    , undeliverableSMS.BounceCount
+    , undeliverableSMS.FirstBounceDate
+    , undeliverableSMS.HoldDate
+FROM _UndeliverableSMS AS undeliverableSMS
 ```
 
 </TabItem>
@@ -1419,13 +1419,13 @@ ActivityType | The type of activity | Text | X
 
 ```sql
 SELECT
-      VersionID
-    , ActivityID
-    , ActivityName
-    , ActivityExternalKey
-    , JourneyActivityObjectID
-    , ActivityType
-FROM _JourneyActivity
+      journeyActivity.VersionID
+    , journeyActivity.ActivityID
+    , journeyActivity.ActivityName
+    , journeyActivity.ActivityExternalKey
+    , journeyActivity.JourneyActivityObjectID
+    , journeyActivity.ActivityType
+FROM _JourneyActivity AS journeyActivity
 ```
 
 </TabItem>
@@ -1467,15 +1467,15 @@ JourneyStatus | The current running mode of the Journey. Possible values are Dra
 
 ```sql
 SELECT
-      VersionID
-    , JourneyID
-    , JourneyName
-    , VersionNumber
-    , CreatedDate
-    , LastPublishedDate
-    , ModifiedDate
-    , JourneyStatus
-FROM _Journey
+      journey.VersionID
+    , journey.JourneyID
+    , journey.JourneyName
+    , journey.VersionNumber
+    , journey.CreatedDate
+    , journey.LastPublishedDate
+    , journey.ModifiedDate
+    , journey.JourneyStatus
+FROM _Journey AS journey
 ```
 
 </TabItem>
