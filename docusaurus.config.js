@@ -34,13 +34,13 @@ module.exports = {
             { name: 'theme-color', content: '#212121' },
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
-        announcementBar: {
-            id: 'announcementBar',
-            content:
-                '☁️  <a href="https://nominations.salesforcemvps.com/s/" style="text-decoration: none">Do you know someone in the #TrailblazerCommunity who goes above and beyond to help others? Nominations for the 2022 Salesforce MVP class are <span style="text-decoration:underline">open</span></a> ☁️',
-            backgroundColor: '#0176d3',
-            textColor: '#fffffe',
-        },
+        // announcementBar: {
+        //     id: 'announcementBar',
+        //     content:
+        //         '☁️  <a href="https://nominations.salesforcemvps.com/s/" style="text-decoration: none">Do you know someone in the #TrailblazerCommunity who goes above and beyond to help others? Nominations for the 2022 Salesforce MVP class are <span style="text-decoration:underline">open</span></a> ☁️',
+        //     backgroundColor: '#0176d3',
+        //     textColor: '#fffffe',
+        // },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
