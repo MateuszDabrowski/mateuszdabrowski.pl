@@ -163,7 +163,7 @@ module.exports = {
             anonymizeIP: true,
         },
         algolia: {
-            apiKey: 'f22602915deedadeaab48112c6e2d1b7',
+            apiKey: 'd7932184e92b94d052fab9cea784b13f',
             indexName: 'mateuszdabrowski',
             placeholder: 'Search Docs & Snipptes',
         },
