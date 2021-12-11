@@ -30,7 +30,7 @@ module.exports = {
         image: 'img/og/og-image-base.png', // Default image for meta tag
         defaultMode: 'dark',
         respectPrefersColorScheme: true,
-        metadatas: [
+        metadata: [
             { name: 'theme-color', content: '#212121' },
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
@@ -158,11 +158,8 @@ module.exports = {
                 },
             ],
         },
-        gtag: {
-            trackingID: 'GTM-N46LB5K',
-            anonymizeIP: true,
-        },
         algolia: {
+            appId: 'F4XVDD6BM8',
             apiKey: 'd7932184e92b94d052fab9cea784b13f',
             indexName: 'mateuszdabrowski',
             placeholder: 'Search Docs & Snipptes',
@@ -187,6 +184,10 @@ module.exports = {
                 sitemap: {
                     changefreq: 'weekly',
                     priority: 0.5,
+                },
+                gtag: {
+                    trackingID: 'GTM-N46LB5K',
+                    anonymizeIP: true,
                 },
             },
         ],
