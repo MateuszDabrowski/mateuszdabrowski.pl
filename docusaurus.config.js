@@ -160,7 +160,7 @@ module.exports = {
         },
         algolia: {
             appId: 'F4XVDD6BM8',
-            apiKey: '827d6f96621e0dbe509d129cf0666adc',
+            apiKey: 'd7932184e92b94d052fab9cea784b13f',
             indexName: 'mateuszdabrowski',
             placeholder: 'Search Docs & Snipptes',
         },
