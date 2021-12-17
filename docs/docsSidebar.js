@@ -21,7 +21,7 @@ module.exports = {
                     '» SSJS Snippets': [
                         'ssjs/ssjs-snippet-ampscript-in-ssjs',
                         'ssjs/ssjs-snippet-mobileconnect-phone-change',
-                        'ssjs/ssjs-snippet-ssjs-script-template'
+                        'ssjs/ssjs-snippet-ssjs-script-template',
                     ],
                 },
             ],
@@ -68,7 +68,7 @@ module.exports = {
                     '» SQL Snippets': [
                         'sql/sfmc-sql-snippet-debugging-email-sends',
                         'sql/sfmc-sql-snippet-debugging-value-length',
-                        'sql/sfmc-sql-snippet-enhanced-send-log'
+                        'sql/sfmc-sql-snippet-enhanced-send-log',
                     ],
                 },
             ],
@@ -90,7 +90,8 @@ module.exports = {
                 'usecase/tailor-with-data',
                 'usecase/engage-with-countdown',
                 'usecase/sfmc-cloud-page-apps',
-                'usecase/sfmc-code-resources',
+                'usecase/sfmc-contact-deletion',
+                // 'usecase/sfmc-code-resources',
             ],
         },
     ],
