@@ -13,13 +13,52 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## Contact Deletion in SFMC
 
-Salesforce Marketing Cloud makes Contact Deletion not only easy but also powerful. The out-of-the-box solution does the most of the heavy lifting leaving us mostly just the decision who and when should be deleted from our platform.
+Salesforce Marketing Cloud makes Contact Deletion not only easy but also powerful. The out-of-the-box solution does the most of the heavy lifting leaving to us the decision who and when should be deleted from our platform.
 
 So what exactly is the out-of-box SFMC Contact Deletion process doing behind the scenes?
+
+1. It manages __supression period for contacts__ requested for deletion:
+    - Suppression in __Contact Builder__ hides the contacts and blocks possibility to create a new one with the same Contact Key.
+    - Suppression in __Email Studio__ hides the contacts and blocks them from receiving Emails or interacting with Triggered Sends.
+    - Suppression in __Journey Builder__ blocks the contacts from entering Journeys and Automations.
+    - Suppression in __Mobile Studio__ (MobileConnect, MobilePush, GroupConnect) hides the contacts and blocks them from receiving any communication and doing any interactions (exception - block requests are still processed).
+    - Suppression in __Einstein__ hides the contacts and blocks both Recommendations as well as Analytics.
+2. After the suppresion period, it __deletes contacts__ from:
+    - Sendable Data Extensions
+    - Populations
+    - Lists
+    - Groups
+    - Journeys
+    - Automations
+    - Einstein Data Extensions
+
+As you can see, Marketing Cloud has quite a lot built-in. But what is the supression period when we just want to delete some contacts? It's a helper that serves very important purpose.
+
+Contact Deletion is irreversible. Once contact is deleted, it is deleted for good and there is no option to bring it back. Sure, you can add the contact again, but it won't have any of the old data. So, if you are not confident in your Contact Deletion process, you might [configure suppression period](#contact-deletion-configuration) to have some time for reflection. That's why it is there by default! If you find out a mistake during that period, put a Support ticket as soon as possible with high priority.
+
+There is also second reason for suppression period. Depending on the amount of contacts requested for deletion, as well as data in the system, SFMC Contact Deletion can be very time consuming process. Suppression makes sure that even if it takes longer than you would like, the Contact will not get any unwanted communication.
+
+:::note You Should Know
+
+There are few places that are not targeted by the out-of-the-box Marketing Cloud Contact Deletion process:
+
+- Non-Sendable Data Extensions » _Can be removed with either retention or heavy custom scripting_
+- Synchronized Data Extensions » _Can be removed in the source system_
+- Triggered Send Lists » _Can be removed using [API method](#sfmc-api-contact-deletion)_
+
+It also ignores any data that is not connected to the deleted contact by Contact Key / Subscriber Key / Contact ID, so be sure to have proper deduplication process in place for compliance.
+
+:::
 
 ### Contact Deletion Configuration
 
 ### Manual Contact Deletion
+
+:::note You Should Know
+
+Manual Contact Deletion in Email Studio will remove the contact only from Email Studio. To trigger the Contact Deletion Process you must either leverage Contact Builder or [API method](#sfmc-api-contact-deletion).
+
+:::
 
 ### SFMC API Contact Deletion
 
