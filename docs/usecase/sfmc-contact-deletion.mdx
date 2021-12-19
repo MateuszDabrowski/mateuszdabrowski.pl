@@ -30,13 +30,13 @@ So what exactly is the out-of-box SFMC Contact Deletion process doing behind the
     - Groups
     - Journeys
     - Automations
-    - Einstein Data Extensions
+    - Einstein
 
-As you can see, Marketing Cloud has quite a lot built-in. But what is the supression period when we just want to delete some contacts? It's a helper that serves very important purpose.
+As you can see, a lot built-in. But what is the purpose of the supression period when we just want to delete some contacts?
 
-Contact Deletion is irreversible. Once contact is deleted, it is deleted for good and there is no option to bring it back. Sure, you can add the contact again, but it won't have any of the old data. So, if you are not confident in your Contact Deletion process, you might [configure suppression period](#contact-deletion-configuration) to have some time for reflection. That's why it is there by default! If you find out a mistake during that period, put a Support ticket as soon as possible with high priority.
+Contact Deletion is irreversible. Once contact is deleted, it is deleted for good and there is no option to bring it back. Sure, you can add the contact again, but it won't have any of the old data. So, if you are not confident in your Contact Deletion process, you might [configure suppression period](#enable-contact-deletion) to have some time for reflection. That's why it is there by default (currently at 2 days). If you find out a mistake during that period, put a Support ticket as soon as possible with high priority.
 
-There is also second reason for suppression period. Depending on the amount of contacts requested for deletion, as well as data in the system, SFMC Contact Deletion can be very time consuming process. Suppression makes sure that even if it takes longer than you would like, the Contact will not get any unwanted communication.
+There is also second reason for the suppression period. Depending on the parallel processes run in your Marketing Cloud, the amount of contacts requested for deletion, as well as the volume of data in the system, SFMC Contact Deletion can be very time consuming process. Suppression makes sure that even if it takes longer than you would like, the Contact will not get any unwanted communication.
 
 :::note You Should Know
 
@@ -50,9 +50,30 @@ It also ignores any data that is not connected to the deleted contact by Contact
 
 :::
 
-### Contact Deletion Configuration
+### Enable Contact Deletion
+
+To be able to use Contact Deletion Process in Salesforce Marketing Cloud you have to enable it first. To do this, you need to have Marketing Cloud Administrator role.
+
+1. Go to parent Business Unit
+2. Go to Audience Builder » Contact Builder
+3. Click Contacts Configuration in top menu
+4. Enable the process in the Contact Delete section
+5. Configure suppression period by clicking Manage Settings (default is 2 days)
+6. Save
+
+If you want the Contact Deletion process to trigger automatically after you start it - set the suppression period to 0 days. It will be added to processing queue instantly after request.
+
+:::note You Should Know
+
+For the most popular SFMC tenant type - Enterprise 2.0 - the deletion must happen at the parent level and will be automatically applied across all Business Units.
+
+If you have a different tenat type, check details in the official [documentation](https://help.salesforce.com/s/articleView?id=sf.mc_cab_contact_deletion.htm&type=5).
+
+:::
 
 ### Manual Contact Deletion
+
+Once the Contact Deletion is [enabled and configured](#enable-contact-deletion), you can start cleaning. The easiest way to do it is to leverage manual deletion options available in the Contact Builder.
 
 :::note You Should Know
 
@@ -60,9 +81,47 @@ Manual Contact Deletion in Email Studio will remove the contact only from Email 
 
 :::
 
+#### Delete contacts from All Contacts
+
+This method is best if you have just few contacts you want to delete. It's simple, it's fast, it's very limited.
+
+1. Go to parent Business Unit
+2. Go to Audience Builder » Contact Builder
+3. Click All Contacts in top menu
+4. Find a contact(s) you want to delete and click checkboxes next to them
+5. Click trash icon and select Delete selected contacts
+
+Using this method you can delete multiple contacts, but only from a single page of results. If you navigate to the next page of results, previously checked contacts will no longer be part of your selection.
+
+If you want to remove more contacts, leverage the Data Extension method shared below.
+
+#### Delete all contacts from List or Data Extension
+
+This method will be better if you want to remove significant number of contacts once, but don't want the hassle of the most powerful [API method](#sfmc-api-contact-deletion).
+
+1. Go to parent Business Unit
+2. Go to Audience Builder » Contact Builder
+3. Click All Contacts in top menu
+4. Without selecting any contact, click the trash icon
+5. Click Delete contacts from list / data extension depending on your needs
+6. Select the Sendable Data Extension used for Contact Deletion process
+7. Decide whether the Data Extension itself should stay in the system after the contacts are deleted
+8. Click Delete Contacts
+9. Review and confirm by clicking Delete
+
+You can monitor the Contact Deletion Process by clicking the trash icon in All Contacts and selecting View Pending Deletions.
+
+:::note You Should Know
+
+This method allows you to delete up to one million contacts per operation. If you want to remove more than that, you will have to run the above steps multiple times or leverage [contact deletion automation](#contact-deletion-with-automation Studio).
+
+:::
+
 ### SFMC API Contact Deletion
 
 ### Contact Deletion with Automation Studio
+
+## Which contacts should be deleted?
 
 ## Enhanced Contact Deletion
 
