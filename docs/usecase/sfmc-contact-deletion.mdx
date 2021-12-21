@@ -15,22 +15,22 @@ import { LeadText } from '../../src/components/LeadText.js';
 ## Outline
 
 1. [Learn everything about SFMC Contact Deletion Process](#contact-deletion-in-sfmc)
-2. [Check out sample segments just waiting to be deleted](#which-contacts-should-be-deleted)
+2. [Check out sample segments just waiting to be deleted](#which-contacts-should-you-delete)
 3. [Create privacy-focused Contact Deletion Archive](#contact-deletion-archive)
 
 ## Contact Deletion in SFMC
 
-Salesforce Marketing Cloud makes Contact Deletion not only easy but also powerful. The out-of-the-box solution does the most of the heavy lifting leaving to us the decision who and when should be deleted from our platform.
+Salesforce Marketing Cloud makes Contact Deletion not only easy but also powerful. The out-of-the-box solution does most of the heavy lifting, leaving us the decision of who and when should be deleted from our platform.
 
 So what exactly is the built-in SFMC Contact Deletion process doing behind the scenes?
 
 1. It manages __supression period for contacts__ requested for deletion:
-    - Suppression in __Contact Builder__ hides the contacts and blocks possibility to create a new one with the same Contact Key.
+    - Suppression in __Contact Builder__ hides the contacts and blocks the possibility to create a new one with the same Contact Key.
     - Suppression in __Email Studio__ hides the contacts and blocks them from receiving Emails or interacting with Triggered Sends.
     - Suppression in __Journey Builder__ blocks the contacts from entering Journeys and Automations.
     - Suppression in __Mobile Studio__ (MobileConnect, MobilePush, GroupConnect) hides the contacts and blocks them from receiving any communication and doing any interactions (exception - block requests are still processed).
-    - Suppression in __Einstein__ hides the contacts and blocks both Recommendations as well as Analytics.
-2. After the suppresion period, it __deletes contacts__ from:
+    - Suppression in __Einstein__ hides the contacts and blocks both Recommendations and Analytics.
+2. After the suppression period, it __deletes contacts__ from:
     - Sendable Data Extensions
     - Populations
     - Lists
@@ -39,80 +39,80 @@ So what exactly is the built-in SFMC Contact Deletion process doing behind the s
     - Automations
     - Einstein
 
-As you can see, a lot out-of-the-box. But what is the purpose of the supression period when we just want to delete some contacts?
+As you can see, a lot out-of-the-box. But what is the purpose of the suppression period when we just want to delete some contacts?
 
-Contact Deletion is irreversible. Once contact is deleted, it is deleted for good and there is no option to bring it back. Sure, you can add the contact again, but it won't have any of the old data. So, if you are not confident in your Contact Deletion process, you might [configure suppression period](#enable-contact-deletion) to have some time for reflection. That's why it is there by default (currently at 2 days). If you find out a mistake during that period, put a Support ticket as soon as possible with high priority.
+Contact Deletion is irreversible. Once we remove the contact, it is deleted for good, and there is no option to bring it back. Sure, you can add it again, but it won't have any past data. So, if you are not confident in your Contact Deletion process, you might [configure suppression period](#enable-contact-deletion) to have some time for reflection. That's why it is there by default (currently at two days). If you find a mistake during that period, put a Support ticket as soon as possible with high priority.
 
-There is also second reason for the suppression period. Depending on the parallel processes run in your Marketing Cloud, the amount of contacts requested for deletion, as well as the volume of data in the system, SFMC Contact Deletion can be very time consuming process. Suppression makes sure that even if it takes longer than you would like, the Contact will not get any unwanted communication.
+There is also a second reason for the suppression period. Depending on the parallel processes run in your Marketing Cloud, the number of contacts requested for deletion, as well as the volume of data in the system, SFMC Contact Deletion can be a very time-consuming process. Suppression makes sure that even if it takes longer than you would like, the Contact will not get any unwanted communication.
 
 :::note You Should Know
 
-There are few places that are not targeted by the out-of-the-box Marketing Cloud Contact Deletion process:
+Few places are not targeted by the out-of-the-box Marketing Cloud Contact Deletion process:
 
 - Non-Sendable Data Extensions » _Can be removed with either retention or heavy custom scripting_
 - Synchronized Data Extensions » _Can be removed in the source system_
 - Triggered Send Lists » _Can be removed using [API method](#sfmc-api-contact-deletion)_
 
-It also ignores any data that is not connected to the deleted contact by Contact Key / Subscriber Key / Contact ID, so be sure to have proper deduplication process in place for compliance.
+It also ignores any data that is not connected to the deleted contact by Contact Key / Subscriber Key / Contact ID, so be sure to have a proper deduplication process in place for compliance.
 
 :::
 
 ### Enable Contact Deletion
 
-To be able to use Contact Deletion Process in Salesforce Marketing Cloud you have to enable it first. To do this, you need to have Marketing Cloud Administrator role.
+To use the Contact Deletion Process in Salesforce Marketing Cloud, you must enable it first. To do this, you need to have a Marketing Cloud Administrator role.
 
 1. Go to parent Business Unit.
 2. Go to Audience Builder » Contact Builder.
-3. Click Contacts Configuration in top menu.
+3. Click Contacts Configuration in the top menu.
 4. Enable the process in the Contact Delete section.
-5. Configure suppression period by clicking Manage Settings (default is 2 days).
+5. Configure suppression period by clicking Manage Settings (default is two days).
 6. Save.
 
-If you want the Contact Deletion process to trigger automatically after you start it - set the suppression period to 0 days. It will be added to processing queue instantly after request.
+If you want the Contact Deletion process to trigger automatically after starting it, set the suppression period to 0 days. It will be added to the processing queue instantly after the request.
 
 :::note You Should Know
 
-For the most popular SFMC tenant type - Enterprise 2.0 - the deletion must happen at the parent level and will be automatically applied across all Business Units.
+For the most popular SFMC tenant type - Enterprise 2.0 - the deletion must happen at the parent level and automatically apply across all Business Units.
 
-If you have a different tenat type, check details in the official [documentation](https://help.salesforce.com/s/articleView?id=sf.mc_cab_contact_deletion.htm&type=5).
+If you have a different tenant type, check the official [documentation](https://help.salesforce.com/s/articleView?id=sf.mc_cab_contact_deletion.htm&type=5).
 
 :::
 
 ### Manual Contact Deletion
 
-Once the Contact Deletion is [enabled and configured](#enable-contact-deletion), you can start cleaning. The easiest way to do it is to leverage manual deletion options available in the Contact Builder.
+Once the Contact Deletion is [enabled and configured](#enable-contact-deletion), you can start cleaning. The easiest way is to leverage manual deletion options available in the Contact Builder.
 
 :::note You Should Know
 
-Manual Contact Deletion in Email Studio will remove the contact only from Email Studio. To trigger the Contact Deletion Process you must either leverage Contact Builder or [API method](#sfmc-api-contact-deletion).
+Manual Contact Deletion in Email Studio will remove the contact only from Email Studio. To trigger the Contact Deletion Process, you must leverage Contact Builder or [API method](#sfmc-api-contact-deletion).
 
 :::
 
 #### Delete contacts from All Contacts
 
-This method is best if you have just few contacts you want to delete. It's simple, it's fast, it's very limited.
+This method is best if you have just a few contacts you want to delete. It's simple, it's fast, it's constrained.
 
 1. Go to parent Business Unit.
 2. Go to Audience Builder » Contact Builder.
-3. Click All Contacts in top menu.
+3. Click All Contacts in the top menu.
 4. Find a contact(s) you want to delete and click checkboxes next to them.
-5. Click trash icon and select Delete selected contacts.
+5. Click the trash icon and select Delete selected contacts.
 
-Using this method you can delete multiple contacts, but only from a single page of results. If you navigate to the next page of results, previously checked contacts will no longer be part of your selection.
+Using this method, you can delete multiple contacts, but only from a single page of results. If you navigate to the next page of results, previously checked contacts will no longer be part of your selection.
 
 If you want to remove more contacts, leverage the Data Extension method shared below.
 
 #### Delete all contacts from List or Data Extension
 
-This method will be better if you want to remove significant number of contacts once, but don't want the hassle of the most powerful [API method](#sfmc-api-contact-deletion).
+This method will be better if you want to remove a significant number of contacts once but don't want the hassle of the most potent [API method](#sfmc-api-contact-deletion).
 
 1. Go to parent Business Unit.
 2. Go to Audience Builder » Contact Builder.
-3. Click All Contacts in top menu.
+3. Click All Contacts in the top menu.
 4. Without selecting any contact, click the trash icon.
 5. Click Delete contacts from list / data extension depending on your needs.
-6. Select the Sendable Data Extension used for Contact Deletion process.
-7. Decide whether the Data Extension itself should stay in the system after the contacts are deleted.
+6. Select the Sendable Data Extension used for the Contact Deletion process.
+7. Decide whether the Data Extension itself should stay in the system after SFMC deletes the contacts.
 8. Click Delete Contacts.
 9. Review and confirm by clicking Delete.
 
@@ -124,26 +124,26 @@ This method allows you to delete up to one million contacts per operation. If yo
 
 ### SFMC API Contact Deletion
 
-Previous methods are nice, but they require manual triggering in Salesforce Marketing cloud each time you want to run Contact Deletion Process. There are however many use cases where you might want to trigger it automatically - for example from a different system responsible for managing privacy.
+Previous methods are nice, but they require manual triggering in the Salesforce Marketing cloud each time you run the Contact Deletion Process. There are, however, many use cases where you might want to trigger it automatically - for example, from a different system responsible for managing privacy.
 
 Thankfully, SFMC offers a solution for that as well with REST API. To implement it:
 
 1. Create authentication endpoint with correct permissions with Installed Package
     1. Go to Setup.
-    2. Within Platform Tools section roll out Apps and click Installed Packages.
-    3. Click New in top right.
+    2. Within the Platform Tools section, roll out Apps and click Installed Packages.
+    3. Click New in the top right.
     4. Provide a meaningful name and description for your Installed Package.
     5. Add Component - API Integration.
-    6. Select Server-to-Server integration type.
-    7. Within Contacts section select Read and Write for List and Subscribers. Write is needed for Deletion. Read - for checking the deletion status.
+    6. Select the Server-to-Server integration type.
+    7. Select Read and Write for List and Subscribers within the Contacts section. Write is needed for Deletion. Read - for checking the deletion status.
     8. Click Save.
-2. Copy Client Id, Client Secret and Client Base (the unique string in either of the API URIs that is between `https://` and api type).
+2. Copy Client Id, Client Secret and Client Base (the unique string in either of the API URIs that is between `https://` and API type).
 3. Leverage the contact deletion endpoint in the solution of your choice: `https://CLIENT_BASE.rest.marketingcloudapis.com/contacts/v1/contacts/actions/delete`.
 
-This single endpoint will allow you to trigger Contact Deletion process in three ways, by adding a query string at the end. All scenarios will use the same Method, Content Type and Authorization, but the endpoint and payload will be different:
+This single endpoint will allow you to trigger the Contact Deletion process in three ways by adding a query string at the end. All scenarios will use the same Method, Content-Type and Authorization, but the endpoint and payload will be different:
 
 - Method: POST
-- Content Type: application/json
+- Content-Type: application/json
 - Authorization: Bearer TOKEN
 
 #### Contact Deletion by Contact ID
@@ -156,7 +156,7 @@ Endpoint: `https://CLIENT_BASE.rest.marketingcloudapis.com/contacts/v1/contacts/
 }
 ```
 
-The `values` for this endpoint is an array of Contact IDs (integers).
+This endpoint's `values` is an array of Contact IDs (integers).
 
 #### Contact Deletion by Contact Key
 
@@ -169,7 +169,7 @@ Endpoint: `https://CLIENT_BASE.rest.marketingcloudapis.com/contacts/v1/contacts/
 }
 ```
 
-The `values` for this endpoint is an array of Contact Keys (strings).
+This endpoint's `values` is an array of Contact Keys (strings).
 
 #### Contact Deletion using Data Extension
 
@@ -183,22 +183,22 @@ Endpoint: `https://CLIENT_BASE.rest.marketingcloudapis.com/contacts/v1/contacts/
     },
     "deleteListWhenCompleted": false,
     "deleteListContentsWhenCompleted": true
-    }
+}
 ```
 
-In this endpoint you have control over three values:
+In this endpoint, you have control over three values:
 
-- `listKey`: the external key of the Data Extension you use for Contact Deletion process.
-- `deleteListWhenCompleted`: when `true`, it will delete the Data Extension during Contact Deletion process.
+- `listKey`: the external key of the Data Extension you use for the Contact Deletion process.
+- `deleteListWhenCompleted`: when `true`, it will delete the Data Extension during the Contact Deletion process.
 - `deleteListContentsWhenCompleted`: when `true` it will delete records from the Data Extensions during Contact Deletion process.
 
 ### Contact Deletion with Automation Studio
 
 With the [API Contact Deletion](#sfmc-api-contact-deletion) we are not limited to external triggers. We can also leverage AMPScript or SSJS to trigger it directly from Marketing Cloud.
 
-The most popular use case for it is a Contact Deletion Automation that is scheduled to clean up the database on regular basis. It's great idea to keep your SFMC instance clean without much of a hassle.
+The most popular use case is a Contact Deletion Automation scheduled to clean up the database regularly. It's a great idea to keep your SFMC instance clean without much of a hassle.
 
-My recommended approach is to create a dedicated Pending Contact Deletion Shared Data Extension that will store records to-be-deleted along with some context and remove it's content nightly with the Script Activity.
+My recommended approach is to create a dedicated Pending Contact Deletion Shared Data Extension that will store records to be deleted along with some context and remove its content nightly with the Script Activity.
 
 #### Contact Deletion Pending Data Extension
 
@@ -213,7 +213,7 @@ If you want to capture contacts-to-be-deleted from multiple Business Units, make
 External Key: `contact-deletion-pending-de`
 Sendable: `true`
 
-For basic contact deletion you don't need anything but the Subscriber Key, however, I prefere to add a bit more context that I can leverage in the [Contact Deletion arhcive](#contact-deletion-archive) described later in this article.
+You don't need anything but the Subscriber Key for essential contact deletion. However, I prefer to add a bit more context that I can leverage in the [Contact Deletion arhcive](#contact-deletion-archive) described later in this article.
 
 #### Contact Deletion Script Activity
 
@@ -272,11 +272,11 @@ To learn more about `errorDE` check my [debugging guide](../ssjs/debugging-ssjs.
     /* --------------------------- 2.1. Debugging ---------------------------- */
 
     /**
-    * @function debugValue
-    * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
-    * @param {string} description - Describes meaning of the second parameter in the output
-    * @param {*} value - The value that needs to be debugged
-    */
+     * @function debugValue
+     * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+     * @param {string} description - Describes meaning of the second parameter in the output
+     * @param {*} value - The value that needs to be debugged
+     */
     function debugValue(description, value) {
         Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
     };
@@ -285,9 +285,9 @@ To learn more about `errorDE` check my [debugging guide](../ssjs/debugging-ssjs.
 
     /**
      * @function handleError
-     * @description Adds the error with context to error logging Data Extension and redirects to error page.
-     * @param {Object} error - The caught error object. Can come from the try/catch block or be manually created.
-     * @param {string} error.message - First error key stores short error message describing the issue.
+     * @description Adds the error with context to error logging Data Extension and redirects to an error page.
+     * @param {Object} error - The caught error object. It can come from the try/catch block or be manually created.
+     * @param {string} error.message - First error key stores a short error message describing the issue.
      * @param {string} error.description - Second error key stores detailed error path helping with root cause analysis
      */
     function handleError(error) {
@@ -339,7 +339,6 @@ To learn more about `errorDE` check my [debugging guide](../ssjs/debugging-ssjs.
     try {
         response = HTTP.Post(endpoint, contentType, Stringify(payload), headerNames, headerValues);
         if (debugging) debugValue('Response', response);
-
     } catch (error) {
         handleError(error);
     }
@@ -348,64 +347,64 @@ To learn more about `errorDE` check my [debugging guide](../ssjs/debugging-ssjs.
 
 ### Monitor Contact Deletion Process
 
-There are three ways to monitor what is happening with your Contact Deletion requesta (all should be performed from parent Business Unit):
+There are three ways to monitor what is happening with your Contact Deletion requests (you should perform all three from the parent Business Unit):
 
-1. In Contact Builder in top menu click All Contacts. Click the trash icon in top right and select __View Pending Deletions__.
-2. In Contact Builder in top menu click Contact Analytics. You will see a full __Contact Deletion Dashboard__.
+1. In Contact Builder, in the top menu, click All Contacts. Click the trash icon in the top right, and select __View Pending Deletions__.
+2. In Contact Builder, in the top menu, click Contact Analytics. You will see a full __Contact Deletion Dashboard__.
 3. Request details using [__Contact Deletion Details API__](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ContactsDeleteRequestsDetails.html).
 
 ----
 
-## Which contacts should be deleted?
+## Which contacts should you delete?
 
-This question should be always aligned with the specific business needs of your company, however, there are some very popular segments that may inspire you.
+You should always align this question with the specific business needs of your company. However, there are some very popular segments that may inspire you.
 
-You can add them within the same Automation as the [Contact Deletion Script Activity](#contact-deletion-script-activity) to make sure they are captured right before cleanup. You may also create separate Automations on your child Business Unit to capture a BU-specific candidates for cleanup using data available only there.
+You can add them within the same Automation as the [Contact Deletion Script Activity](#contact-deletion-script-activity) to ensure they are captured right before cleanup. You may also create separate Automations on your child Business Unit to capture BU-specific candidates for cleanup using data available only there.
 
-Remember to test those recommendations and queries (for example using [Query Studio](../sql/sfmc-sql-basics.mdx#query-studio)) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
+Remember to test those recommendations and queries (for example, using [Query Studio](../sql/sfmc-sql-basics.mdx#query-studio)) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
 
 ### Contacts deleted in Salesforce CRM
 
-If you are using Marketing Cloud Connect to integrate your Salesforce CRM with the Marketing Cloud, you should definitely think about synchronizing deletions between those two systems. This does not happen automatically. By default, contacts deleted in SF CRM are removed only from Synchronized Data Extensions, but stay in all other tables of Marketing Cloud where they were added previously.
+If you use Marketing Cloud Connect to integrate your Salesforce CRM with the Marketing Cloud, you should think about synchronizing deletions between those two systems. It does not happen automatically. By default, contacts deleted in SF CRM are removed from Synchronized Data Extensions and stay in other Marketing Cloud tables.
 
-You can however add this using Query Activity in Automation Studio. For email channel it's straightforward:
+You can, however, add this using Query Activity in Automation Studio. For the email channel, it's straightforward:
 
 ```sql title="Find subscribers deleted in SF CRM"
 SELECT
       subscriber.SubscriberKey
-    , 'Deleted in SF CRM' AS DeletionReason
-FROM _Subscribers AS subscriber
-    LEFT JOIN Contact_Salesforce AS contact
+    , 'Deleted in SF CRM'       AS DeletionReason
+FROM _Subscribers                   AS subscriber
+    LEFT JOIN Contact_Salesforce    AS contact
         ON contact.Id = subscriber.SubscriberKey
 WHERE contact.Id IS NULL
 ```
 
-If you are using also other channels, you can also include their [System Data Views](../config/sfmc-config-system-data-views.mdx) to the query.
+If you are also using other channels, you can include their [System Data Views](../config/sfmc-config-system-data-views.mdx) to the query.
 
 ### Leads and Users deleted or filtered in Salesforce CRM
 
 This method is also great for removing deleted or unused records from other objects counted against your All Contacts licence limits - Leads and Users. There are two caveats, however.
 
-First, to remove unused Leads and Users you must first stop them from synchronizing via Marketing Cloud Connect. Otherwise, they will come back to SFMC at the next scheuled synchronization. The best way to do it is to create a boolean field on those objects (for example called `ShouldSyncToSFMC`) that would be `true` only for records you need in your system. Depending on your use case, it might be neither (so just set `false` as default value) or it might be complicated (calculated field will be your best friend). With such boolean you will be able to select it as a filter for your Marketing Cloud Connect object synchronization.
+First, to remove unused Leads and Users, you must first stop them from synchronizing via Marketing Cloud Connect. Otherwise, they will come back to SFMC at the next scheduled synchronization. The best way to do it is to create a boolean field on those objects (for example, `ShouldSyncToSFMC`) that would be `true` only for records you need in your system. Depending on your use case, it might be neither (so just set `false` as the default value), or it might be complicated (the calculated field will be your best friend). With such a boolean, you will be able to select it as a filter for your Marketing Cloud Connect object synchronization.
 
-Second, is the problem of finding those records in the Marketing Cloud. The easy way is to create a copy of Synchronized Data Extensions before filtering them. However, this will not always be possible and it won't capture Leads and Users that were removed in the past from CRM.
+Second is the problem of finding those records in the Marketing Cloud. The easy way is to create a copy of Synchronized Data Extensions before filtering them. However, this will not always be possible, and it won't capture Leads and Users that were removed in the past from CRM.
 
-If you have Mobile Studio in yoru SFMC licence, you have a nice workaround:
+If you have Mobile Studio in your SFMC licence, you have a nice workaround:
 
 1. Go to Contact Builder.
-2. Click All Contacts in top menu.
-3. Select Mobile List tab.
-4. Click Create Mobile List button in top right.
-5. Leave MobileConnect as the channel as select Filtered List as a type. Click Ok.
+2. Click All Contacts in the top menu.
+3. Select the Mobile List tab.
+4. Click Create Mobile List button in the top right.
+5. Leave MobileConnect as the channel and select Filtered List as a type. Click Ok.
 6. Select All Contacts and click Select.
 7. Remove prepopulated Mobile Number filter and on the left pane select System Data » Contact.
 8. Drag and drop Contact Key and configure it to `is not null`. Click Done.
-9. Click Save as Filter button in top right.
-10. Provide sensible name (like "AllContactsList") and click Save.
+9. Click the Save as Filter button in the top right.
+10. Provide a sensible name (like "AllContactsList") and click Save.
 
 :::note You Should Know
 
-All Contacts view show many cool data fields, but unfortunately, most of them are no longer available after the export to the List.
+All Contacts view shows many cool data fields, but unfortunately, most are no longer available after the export to the List.
 
 Mobile List fields are: `SubscriberKey`, `CustomerKey`, `AudienceID`, `TrackingCode`, `AudienceCode`, `SegmentCode`, `SegmentName`, `Priority`, `SegmentID`, `SplitID`.
 
@@ -413,7 +412,7 @@ So in nearly every case you will have to take the Subscriber Key and enrich it w
 
 :::
 
-It will create and populate the list with all your Contacts. Save its name - it will be useful for the Query.
+It will create and populate the list with all your Contacts. Save its name - it will be helpful for the Query.
 
 If you want to remove all Leads and Users, you will need only this List:
 
@@ -427,7 +426,7 @@ WHERE
 
 :::note You Should Know
 
-You might wonder what is happening within the [`WHERE`](../sql/sfmc-sql-where.mdx) fitler above - this is magic that is possible thanks to Salesforce ID structure. The ID is not completly random, instead it has specific structure.
+You might wonder what is happening within the [`WHERE`](../sql/sfmc-sql-where.mdx) filter above - this is magic that is possible thanks to Salesforce ID structure. The ID is not entirely random. Instead, it has a specific format.
 
 For our need here, the key is the three-character prefix that point to a specific Salesforce Object:
 
@@ -436,18 +435,18 @@ For our need here, the key is the three-character prefix that point to a specifi
 - 005 = User
 - 00Q = Lead
 
-For full list, check [Daniel Ballinger's cheat sheet](http://www.fishofprey.com/2011/09/obscure-salesforce-object-key-prefixes.html).
+For the complete list, check [Daniel Ballinger's cheat sheet](http://www.fishofprey.com/2011/09/obscure-salesforce-object-key-prefixes.html).
 
 :::
 
-If you want to remove only those Leads / Users that are no longer synchronized via filtered Marketing Cloud Connect, you will need to add comparision similar to the Contacts use case.
+If you want to remove only those Leads / Users that you no longer synchronize via filtered Marketing Cloud Connect, you will need to add a comparison similar to the Contacts use case.
 
 ```sql title="Find all Users and Leads that are no longer synchronized to SFMC"
 SELECT contact.SubscriberKey
-FROM AllContactsList AS contact
-    LEFT JOIN Leads_Salesforce AS lead
+FROM AllContactsList                    AS contact
+    LEFT JOIN Leads_Salesforce          AS lead
         ON contact.SubscriberKey = lead.ID
-    LEFT JOIN Users_Salesforce AS user
+    LEFT JOIN Users_Salesforce          AS user
         ON contact.SubscriberKey = user.ID
 WHERE
     (
@@ -463,47 +462,47 @@ WHERE
 
 ### Contactless Contacts
 
-Another group ripe for deletion are Contacts that you cannot contact. There are multiple subgroups that fill that definition:
+Another group ripe for deletion are Contacts that you cannot contact. Multiple subgroups fill that definition:
 
-1. Supressed contacts
+1. Suppressed contacts
 2. Hard bounced contacts
-3. Contacts that does not have any channel information (like email address or mobile phone)
+3. Contacts that do not have any channel information (like an email address or mobile phone)
 4. Bad quality contacts (test records, fake emails, contacts that failed Email Studio List Detective)
 
-Before deletion, it might be worth to save some of this data for the future (especially suppressed contacts for compliance or hard bounced contacts for future deliverability).
+Before deletion, it might be worth saving some of this data for the future (especially suppressed contacts for compliance or hard bounced contacts for future deliverability).
 
 ### Zombie Contacts
 
 Apart from contactless contacts, there are always some zombies in each database. Contacts that you can contact - and you do - but they are not reacting in any way. No opens, no clicks, for months.
 
-I know, it might be hard to delete opted-in contacts when obtaining new ones is a hard work, but after some time you need to finish this toxic relationship. Zombie contacts skew your analytics, put unncesary strain on your instance, degare your IP Reputation and create costs. All this without any value to your business. You will be far better without them.
+I know it might be hard to delete opted-in contacts when obtaining new ones is hard work, but you need to finish this toxic relationship after some time. Zombie contacts skew your analytics, put unnecessary strain on your instance, degrade your IP Reputation and create costs without providing any value to your business in return. You will be far better without them.
 
-Align with your busienss what should be the treshhold for marking a contact as a zombie. It will be different from company to company, but my starting point recommendation is a contact that (1) Was sent at least 6 emails (2) within at least 3 different months and (3) did not open or click any email.
+Align with your business the threshold for marking a contact as a zombie. It will be different from company to company, but my starting point recommendation is a contact that (1) Was sent at least six emails, (2) within at least three different months and (3) did not open or click any email.
 
-1. Makes sure that you tried enough times to make your opinion based in solid facts
-2. Makes sure that it's not matter of out-of-office period, but a constant issue
+1. Makes sure that you tried enough times to make your opinion based on solid facts
+2. Makes sure that it's not a matter of out-of-office period, but a constant issue
 3. Makes sure that temporary problem is not leading to deletion of otherwise valuable contact
 
-Before making the final decision, I recommend checking few versions of those rules against your database to see which variation gives you best results without beeing too lax.
+Before making the final decision, I recommend checking a few versions of those rules against your database to see which variation gives you the best results without being too lax.
 
 ----
 
 ## Contact Deletion Archive
 
-Deleting contacts is super fun, but sometimes you might need to know who you have deleted. Or be able to debug recurring deletions to fix a leak in your data pipeline. Contact Deletion Archive is the way to go - it allows you to keep details of your deletions in a privacy-first way.
+Deleting contacts is super fun, but sometimes you might need to know whom you have deleted. Or be able to debug recurring deletions to fix a leak in your data pipeline. Contact Deletion Archive is the way to go - it allows you to keep details of your deletions in a privacy-first way.
 
-It is build with two additional elements on top of the standard Contact Deletion process described above.
+It is built with two additional elements on top of the standard Contact Deletion process described above.
 
 ### Contact Deletion Archive Data Extension
 
-It will store the information about past deletions allowing you to check multiple things securily:
+It will store the information about past deletions allowing you to check multiple things securely:
 
 1. Subscriber Key of deleted contacts.
-2. Hashed Email of the deleted contacts.
+2. Hashed Emails of the deleted contacts.
 3. Reason for the deletion.
-4. Date of first and last deletion (and therefore information whether the SubscriberKey was deleted more then once).
+4. Date of first and last deletion (and, therefore, whether we deleted the SubscriberKey more than once).
 
-__Important__: Make sure you configure it as __NOT__ sendable Data Extension. Otherwise your Contact Deletion Process will remove data also from it.
+__Important__: Make sure you configure it as __NOT__ sendable Data Extension. Otherwise, your Contact Deletion Process will remove data also from it.
 
 | Name | DataType | Default Value | Length | Nullable |
 |--|--|--|--|--|
@@ -515,9 +514,9 @@ __Important__: Make sure you configure it as __NOT__ sendable Data Extension. Ot
 
 ### Contact Deletion Archive Query Activity
 
-The Archive Data Extension will be filled with new Query Activity that moves the data from the [Contact Deletion Pending Data Extension](#contact-deletion-pending-data-extension).
+We will need new Query Activity to fill that Archive Data Extension. One that moves the data from the [Contact Deletion Pending Data Extension](#contact-deletion-pending-data-extension).
 
-What is important, it will leverage `HASHBYTES` function to hash the Email Address. It will on one hand protect privacy of the deleted contacts and make sure they won't be used for any send, on the other - it allows you to check list of deleted contacts against known email by hasing it the same way.
+It will leverage the `HASHBYTES` function to hash the Email Address. On the one hand, it will protect the privacy of the deleted contacts and make sure no one will use them for any send. On the other - it allows you to check the list of deleted contacts against known email by hashing it the same way.
 
 ```sql title="Archive your deletions on schedule"
 SELECT
@@ -525,9 +524,9 @@ SELECT
     , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2)    AS HashedEmail
     , pending.DeletionReason
     , pending.DeletionDate                                                  AS LastDeletionDate
-FROM [Contact Deletion Pending DE]   AS pending
-    INNER JOIN _Subscribers          AS sub
+FROM [Contact Deletion Pending DE]  AS pending
+    INNER JOIN _Subscribers         AS sub
         ON sub.SubscriberKey = pending.SubscriberKey
 ```
 
-This new Query Activity should be put in the Contact Deletion Automation between the [Contact Deletion Query Activity](#which-contacts-should-be-deleted) that selects the contacts to-be-deleted and the [Contact Deletion Script Activity](#contact-deletion-script-activity) that does the deed.
+This new Query Activity should be put in the Contact Deletion Automation between the [Contact Deletion Query Activity](#which-contacts-should-you-delete) that selects the contacts to-be-deleted and the [Contact Deletion Script Activity](#contact-deletion-script-activity) that does the deed.
