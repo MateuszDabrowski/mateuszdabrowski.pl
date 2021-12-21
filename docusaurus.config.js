@@ -31,6 +31,7 @@ module.exports = {
         defaultMode: 'dark',
         respectPrefersColorScheme: true,
         metadata: [
+            { name: 'author', content: 'Mateusz Dąbrowski' },
             { name: 'theme-color', content: '#212121' },
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
