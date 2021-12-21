@@ -200,7 +200,7 @@ The most popular use case for it is a Contact Deletion Automation that is schedu
 
 My recommended approach is to create a dedicated Pending Contact Deletion Shared Data Extension that will store records to-be-deleted along with some context and remove it's content nightly with the Script Activity.
 
-#### Pending Contact Deletion Data Extension
+#### Contact Deletion Pending Data Extension
 
 If you want to capture contacts-to-be-deleted from multiple Business Units, make it Shared Data Extension.
 
@@ -368,22 +368,142 @@ Remember to test those recommendations and queries (for example using [Query Stu
 
 If you are using Marketing Cloud Connect to integrate your Salesforce CRM with the Marketing Cloud, you should definitely think about synchronizing deletions between those two systems. This does not happen automatically. By default, contacts deleted in SF CRM are removed only from Synchronized Data Extensions, but stay in all other tables of Marketing Cloud where they were added previously.
 
-You can however easily
+You can however add this using Query Activity in Automation Studio. For email channel it's straightforward:
 
-```sql title=""
+```sql title="Find subscribers deleted in SF CRM"
 SELECT
       subscriber.SubscriberKey
-    , 'Deleted in SFID' AS DeletionReason
+    , 'Deleted in SF CRM' AS DeletionReason
 FROM _Subscribers AS subscriber
     LEFT JOIN Contact_Salesforce AS contact
         ON contact.Id = subscriber.SubscriberKey
 WHERE contact.Id IS NULL
 ```
 
+If you are using also other channels, you can also include their [System Data Views](../config/sfmc-config-system-data-views.mdx) to the query.
+
+### Leads and Users deleted or filtered in Salesforce CRM
+
+This method is also great for removing deleted or unused records from other objects counted against your All Contacts licence limits - Leads and Users. There are two caveats, however.
+
+First, to remove unused Leads and Users you must first stop them from synchronizing via Marketing Cloud Connect. Otherwise, they will come back to SFMC at the next scheuled synchronization. The best way to do it is to create a boolean field on those objects (for example called `ShouldSyncToSFMC`) that would be `true` only for records you need in your system. Depending on your use case, it might be neither (so just set `false` as default value) or it might be complicated (calculated field will be your best friend). With such boolean you will be able to select it as a filter for your Marketing Cloud Connect object synchronization.
+
+Second, is the problem of finding those records in the Marketing Cloud. The easy way is to create a copy of Synchronized Data Extensions before filtering them. However, this will not always be possible and it won't capture Leads and Users that were removed in the past from CRM.
+
+If you have Mobile Studio in yoru SFMC licence, you have a nice workaround:
+
+1. Go to Contact Builder.
+2. Click All Contacts in top menu.
+3. Select Mobile List tab.
+4. Click Create Mobile List button in top right.
+5. Leave MobileConnect as the channel as select Filtered List as a type. Click Ok.
+6. Select All Contacts and click Select.
+7. Remove prepopulated Mobile Number filter and on the left pane select System Data » Contact.
+8. Drag and drop Contact Key and configure it to `is not null`. Click Done.
+9. Click Save as Filter button in top right.
+10. Provide sensible name (like "AllContactsList") and click Save.
+
+:::note You Should Know
+
+All Contacts view show many cool data fields, but unfortunately, most of them are no longer available after the export to the List.
+
+Mobile List fields are: `SubscriberKey`, `CustomerKey`, `AudienceID`, `TrackingCode`, `AudienceCode`, `SegmentCode`, `SegmentName`, `Priority`, `SegmentID`, `SplitID`.
+
+So in nearly every case you will have to take the Subscriber Key and enrich it with [`JOIN`](../sql/sfmc-sql-join.mdx) to other more interesting Data Extensions or [System Data Views](../config/sfmc-config-system-data-views.mdx).
+
+:::
+
+It will create and populate the list with all your Contacts. Save its name - it will be useful for the Query.
+
+If you want to remove all Leads and Users, you will need only this List:
+
+```sql title="Find all Users and Leads"
+SELECT SubscriberKey
+FROM AllContactsList
+WHERE
+    SubscriberKey LIKE '005%'
+    OR SubscriberKey LIKE '00Q%'
+```
+
+:::note You Should Know
+
+You might wonder what is happening within the [`WHERE`](../sql/sfmc-sql-where.mdx) fitler above - this is magic that is possible thanks to Salesforce ID structure. The ID is not completly random, instead it has specific structure.
+
+For our need here, the key is the three-character prefix that point to a specific Salesforce Object:
+
+- 001 = Account
+- 003 = Contact
+- 005 = User
+- 00Q = Lead
+
+For full list, check [Daniel Ballinger's cheat sheet](http://www.fishofprey.com/2011/09/obscure-salesforce-object-key-prefixes.html).
+
+:::
+
+If you want to remove only those Leads / Users that are no longer synchronized via filtered Marketing Cloud Connect, you will need to add comparision similar to the Contacts use case.
+
+```sql title="Find all Users and Leads that are no longer synchronized to SFMC"
+SELECT contact.SubscriberKey
+FROM AllContactsList AS contact
+    LEFT JOIN Leads_Salesforce AS lead
+        ON contact.SubscriberKey = lead.ID
+    LEFT JOIN Users_Salesforce AS user
+        ON contact.SubscriberKey = user.ID
+WHERE
+    (
+        SubscriberKey LIKE '005%'
+        AND user.ID IS NULL
+    )
+    OR
+    (
+        SubscriberKey LIKE '00Q%'
+        AND lead.ID IS NULL
+    )
+```
+
+### Contactless Contacts
+
+Another group ripe for deletion are Contacts that you cannot contact. There are multiple subgroups that fill that definition:
+
+1. Supressed contacts
+2. Hard bounced contacts
+3. Contacts that does not have any channel information (like email address or mobile phone)
+4. Bad quality contacts (test records, fake emails, contacts that failed Email Studio List Detective)
+
+Before deletion, it might be worth to save some of this data for the future (especially suppressed contacts for compliance or hard bounced contacts for future deliverability).
+
+### Zombie Contacts
+
+Apart from contactless contacts, there are always some zombies in each database. Contacts that you can contact - and you do - but they are not reacting in any way. No opens, no clicks, for months.
+
+I know, it might be hard to delete opted-in contacts when obtaining new ones is a hard work, but after some time you need to finish this toxic relationship. Zombie contacts skew your analytics, put unncesary strain on your instance, degare your IP Reputation and create costs. All this without any value to your business. You will be far better without them.
+
+Align with your busienss what should be the treshhold for marking a contact as a zombie. It will be different from company to company, but my starting point recommendation is a contact that (1) Was sent at least 6 emails (2) within at least 3 different months and (3) did not open or click any email.
+
+1. Makes sure that you tried enough times to make your opinion based in solid facts
+2. Makes sure that it's not matter of out-of-office period, but a constant issue
+3. Makes sure that temporary problem is not leading to deletion of otherwise valuable contact
+
+Before making the final decision, I recommend checking few versions of those rules against your database to see which variation gives you best results without beeing too lax.
 
 ----
 
 ## Contact Deletion Archive
+
+Deleting contacts is super fun, but sometimes you might need to know who you have deleted. Or be able to debug recurring deletions to fix a leak in your data pipeline. Contact Deletion Archive is the way to go - it allows you to keep details of your deletions in a privacy-first way.
+
+It is build with two additional elements on top of the standard Contact Deletion process described above.
+
+### Contact Deletion Archive Data Extension
+
+It will store the information about past deletions allowing you to check multiple things securily:
+
+1. Subscriber Key of deleted contacts.
+2. Hashed Email of the deleted contacts.
+3. Reason for the deletion.
+4. Date of first and last deletion (and therefore information whether the SubscriberKey was deleted more then once).
+
+__Important__: Make sure you configure it as __NOT__ sendable Data Extension. Otherwise your Contact Deletion Process will remove data also from it.
 
 | Name | DataType | Default Value | Length | Nullable |
 |--|--|--|--|--|
@@ -393,14 +513,21 @@ WHERE contact.Id IS NULL
 | FirstDeletionDate | Date | Current date | | Yes |
 | LastDeletionDate | Date | | | No |
 
-```sql
+### Contact Deletion Archive Query Activity
+
+The Archive Data Extension will be filled with new Query Activity that moves the data from the [Contact Deletion Pending Data Extension](#contact-deletion-pending-data-extension).
+
+What is important, it will leverage `HASHBYTES` function to hash the Email Address. It will on one hand protect privacy of the deleted contacts and make sure they won't be used for any send, on the other - it allows you to check list of deleted contacts against known email by hasing it the same way.
+
+```sql title="Archive your deletions on schedule"
 SELECT
       pending.SubscriberKey
     , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2)    AS HashedEmail
     , pending.DeletionReason
     , pending.DeletionDate                                                  AS LastDeletionDate
-    , pending.Source
-FROM [contact-deletion-pending-de]   AS pending
-    INNER JOIN _Subscribers                             AS sub
+FROM [Contact Deletion Pending DE]   AS pending
+    INNER JOIN _Subscribers          AS sub
         ON sub.SubscriberKey = pending.SubscriberKey
 ```
+
+This new Query Activity should be put in the Contact Deletion Automation between the [Contact Deletion Query Activity](#which-contacts-should-be-deleted) that selects the contacts to-be-deleted and the [Contact Deletion Script Activity](#contact-deletion-script-activity) that does the deed.
