@@ -2,15 +2,15 @@
 id: sfmc-contact-deletion
 title: SFMC Contact Deletion
 sidebar_label: Contact Deletion Process
-description: Marketing Automation is as good as the database quality behind it. To have good quality you must first remove the bad quality. Let's do it.
+description: Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
 image: img/og/og-image-sfmc-contact-deletion.png
-tags: [Marketing Cloud, Snippet, SSJS, SQL, Data Extensions, Data Management,]
+tags: [Marketing Cloud, Snippet, SSJS, SQL, Data Extensions, Data Management]
 toc_max_heading_level: 4
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content="Marketing Automation is as good as the database quality behind it. To have good quality you must first remove the bad quality. Let's do it." />
+<LeadText content="Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it." />
 
 ## Outline
 
@@ -22,7 +22,16 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 Salesforce Marketing Cloud makes Contact Deletion not only easy but also powerful. The out-of-the-box solution does most of the heavy lifting, leaving us the decision of who and when should be deleted from our platform.
 
-So what exactly is the built-in SFMC Contact Deletion process doing behind the scenes?
+But before we start the cleanup, let's see why we should do it in the first place. It's not easy to get new opted-in Contacts, so we shouldn't take removal lightly. However, there are multiple good reasons to do that:
+
+- __Compliance__: Many legal systems (like European GDPR) allow subscribers to request contact deletion.
+- __Licensing__: A marketing Cloud licence allows you to store a limited number of Contacts.
+- __Performance__: The more Contacts you have, the slower will be your Journeys and Automations.
+- __Cost__: Sending to dead Contacts means burning SuperMessages without any value in return.
+- __Deliverability__: Sending to dead or bad quality Contacts hurts your email deliverability and inbox placement.
+- __Analytics__: Bad quality data negatively impacts the quality of your analytics, making it harder to make the right decisions.
+
+Once we know why we should delete, it's time to see what exactly is the built-in SFMC Contact Deletion process doing behind the scenes:
 
 1. It manages __supression period for contacts__ requested for deletion:
     - Suppression in __Contact Builder__ hides the contacts and blocks the possibility to create a new one with the same Contact Key.
