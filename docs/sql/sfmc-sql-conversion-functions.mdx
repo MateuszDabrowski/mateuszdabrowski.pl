@@ -51,7 +51,7 @@ SELECT CONVERT(DATE, DATEADD(MM, 1, GETUTCDATE())) AS TrialPeriodEndDate
 
 Up to this point, `CAST` and `CONVERT` seem similar in the features.
 
-However, only `CONVERT` have an additional third optional argument - [style](#convert-style-codes). Thanks to it, you can convert even from non-standard (for the server) formats that would result in an error:
+However, only `CONVERT` have an additional third optional argument - [style](#convert-date-style-codes). Thanks to it, you can convert even from non-standard (for the server) formats that would result in an error:
 
 ```sql {3} title="Converting dd/MM/yyyy format throws 'Could not convert date and/or time from string data type'"
 SELECT SubscriberKey
@@ -59,7 +59,7 @@ FROM _Subscribers
 WHERE DateJoined > CONVERT(DATE, '30/10/2019') /* Error */
 ```
 
-With [style codes](#convert-style-codes), we can make it work with minimal change:
+With [style codes](#convert-date-style-codes), we can make it work with minimal change:
 
 ```sql {3} title="Converting dd/MM/yyyy format with appropriate style code"
 SELECT SubscriberKey
@@ -71,7 +71,7 @@ It is not possible with `CAST`.
 
 :::note You Should Know
 
-You can also leverage [style codes](#convert-style-codes) to format your dates during conversion to string, without the need to use [`FORMAT`](./sfmc-sql-date-functions.mdx#format-with-dates) function on top.
+You can also leverage [style codes](#convert-date-style-codes) to format your dates during conversion to string, without the need to use [`FORMAT`](./sfmc-sql-date-functions.mdx#format-with-dates) function on top.
 
 ```sql
 SELECT
@@ -143,7 +143,7 @@ It is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are trunc
 
 :::
 
-### CONVERT Style Codes
+### CONVERT Date Style Codes
 
 Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](./sfmc-sql-date-functions.mdx#custom-date-formats)):
 
@@ -174,5 +174,24 @@ SELECT
 ```
 
 You can find the full list of style codes on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver15#date-and-time-styles).
+
+:::note You Should Know
+
+Date style codes should cover most scenarios, but it is possible to encounter a non-supported date format (for example: `27/12/2021 07:31:01`). In such a case, you have two options:
+
+1. __Change the format in the source__ - if possible, aligning the format to one of the supported date styles will be the best solution from the performance point of view.
+2. __Split conversion trick__ - if changing the format in the source is not possible, you can still enforce the conversion by splitting the string date and converting its parts.
+
+For the second option, you have to find Date Style Codes within your string date and convert each separately. This can be easily done with [LEFT & RIGHT](./sfmc-sql-string-functions.mdx#left--right) functions.
+
+For example, the `27/12/2021 07:31:01` string does not have a matching Date Style Code, but we can see that the date part matches Style Code 103 and the time part fits 108. With that, we can do the conversion:
+
+```sql
+CONVERT(DATETIME2, LEFT('27/12/2021 07:31:01', 10), 103) + CONVERT(DATETIME2, RIGHT('27/12/2021 07:31:01', 8), 108) AS ConvertedDate
+```
+
+With [LEFT & RIGHT](./sfmc-sql-string-functions.mdx#left--right) functions we split the datetime on the space, then [CONVERT](#convert) each part to finally sum it into a single date that is equal to our original string.
+
+:::
 
 
