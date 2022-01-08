@@ -64,7 +64,7 @@ With dates, you will frequently want to use a bit more complex structure for the
 
 ## LIKE operator
 
-Another handy operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. You may know it from the [`SELECT` statement](./sfmc-sql-select.mdx#like-in-case), but it is much more useful with `WHERE`. Think about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element within multi picklist (for instance finding one value within the comma-separated list of all purchased products).
+Another handy operator is `LIKE`. It allows you to leverage wildcards to search for matching records based on value fragment. You may know it from the [`SELECT` `CASE` statement](./sfmc-sql-case.mdx#like-in-case), but it is much more useful with `WHERE`. Think about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element within multi picklist (for instance finding one value within the comma-separated list of all purchased products).
 
 However, in the marketing automation world, the `LIKE` operator is handy for selecting contacts based on the multi-picklist columns. Consider `ActiveSubscriptions` field with any combination of values `Phone`, `TV`, or `Internet`.
 
@@ -180,9 +180,9 @@ FROM _Subscribers
 WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
 ```
 
-## CASE in WHERE
+## CASE operator
 
-The `CASE` statement is not only useful in a [`SELECT`](./sfmc-sql-select.mdx#conditions) part of the query. You can use it also within the `WHERE`. There are two approaches to do this.
+The `CASE` statement is not only useful in a [`SELECT`](./sfmc-sql-select.mdx) part of the query. You can use it also within the `WHERE`. There are two approaches to do this.
 
 The first compare `1` to the outcome of the `CASE` statement that evaluates each of its conditions to either `1` or `0`. If the comparison evaluates to `WHERE 1 = 1` it will resolve to `TRUE` and return the result.
 
@@ -193,10 +193,10 @@ SELECT
 FROM _Subscribers
 WHERE
     1 = CASE Status
-        WHEN 'active' THEN 1
-        WHEN 'held' THEN 0
+        WHEN 'active'       THEN 1
+        WHEN 'held'         THEN 0
         WHEN 'unsubscribed' THEN 0
-        WHEN 'bounced' THEN 0
+        WHEN 'bounced'      THEN 0
     END
 ```
 
@@ -204,7 +204,7 @@ It works, but you can write it better with other means mentioned above in most c
 
 :::note You Should Know
 
-You can do better even with the [search version of `CASE`](./sfmc-sql-select.mdx#search-version-of-case), as it allows you to use `AND`/`OR`/`IN` within the `CASE`:
+You can do better even with the [search version of `CASE`](./sfmc-sql-case.mdx#search-version-of-case), as it allows you to use `AND`/`OR`/`IN` within the `CASE`:
 
  ```sql {6-9} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
@@ -213,8 +213,8 @@ SELECT
 FROM _Subscribers
 WHERE
     1 = CASE
-        WHEN Status = 'active' THEN 1
-        WHEN Status IN ('held', 'unsubscribed', 'bounced') THEN 0
+        WHEN Status = 'active'                              THEN 1
+        WHEN Status IN ('held', 'unsubscribed', 'bounced')  THEN 0
     END
 ```
 
@@ -231,8 +231,8 @@ SELECT
 FROM MasterSubscriberDE
 WHERE
     EmailAddress != CASE
-        WHEN PreferredEmail = 'Personal Email' THEN PersonalEmail
-        WHEN PreferredEmail = 'Work Email' THEN WorkEmail
+        WHEN PreferredEmail = 'Personal Email'  THEN PersonalEmail
+        WHEN PreferredEmail = 'Work Email'      THEN WorkEmail
     END
 ```
 
@@ -245,3 +245,5 @@ It can still be written using multiple `AND` & `OR` statements, but it is shorte
 Always consider the order of the conditions in your `CASE` statement. It might lead to errors if you don't expect behaviour mentioned above, and make your life much easier if you know it works that way.
 
 :::
+
+To learn more about the possibilities and [shorthands](./sfmc-sql-case.mdx#iif-shorthand), check out the [`CASE` guide](./sfmc-sql-case.mdx).

@@ -11,11 +11,11 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Get a LIKE and build more flexible SQL queries' />
+<LeadText content='Get a LIKE and build more flexible SQL queries.' />
 
-`LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](./sfmc-sql-select.mdx#like-in-case) and [`WHERE`](./sfmc-sql-where.mdx) statements.
+`LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](./sfmc-sql-case.mdx#like-in-case) and [`WHERE`](./sfmc-sql-where.mdx#like-operator) statements.
 
-In [`SELECT`](./sfmc-sql-select.mdx#like-in-case), think about normalizing and categorizing data. In [`WHERE`](./sfmc-sql-where.mdx) - about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element of multi picklist (for instance finding one value within the comma-separated list of all purchased products).
+In [`SELECT`](./sfmc-sql-case.mdx#like-in-case), think about normalizing and categorizing data. In [`WHERE`](./sfmc-sql-where.mdx#like-operator) - about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element of multi picklist (for instance finding one value within the comma-separated list of all purchased products).
 
 There are two levels of `LIKE` usage. First is focused on two essential character wildcards and is very straightforward — the second use full potential of group operator. Let's go through both with practical examples.
 

@@ -157,13 +157,13 @@ CASE
 END AS SubscriberKey
 ```
 
-As you can see, we changed a simple line to a more complex [`CASE`](./sfmc-sql-select.mdx#conditional-values-with-case) statement. There is a good reason for it. Thanks to it, the query will evaluate each field against the expected length and in the Value Length Data Extension display information only for the problematic values.
+As you can see, we changed a simple line to a more complex [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) statement. There is a good reason for it. Thanks to it, the query will evaluate each field against the expected length and in the Value Length Data Extension display information only for the problematic values.
 
 The administrator will no longer have to compare each field with configured maximum - he will see it directly in the Data Extension, which saves time and limits the errors.
 
 ### Extended length information
 
-We can go even further with this approach and add a bit more data to the output for those problematic fields by making few calculations in `THEN` part of the [`CASE`](./sfmc-sql-select.mdx#conditional-values-with-case) statement.
+We can go even further with this approach and add a bit more data to the output for those problematic fields by making few calculations in `THEN` part of the [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) statement.
 
 ```sql {3} title="Let the code do the work"
 CASE

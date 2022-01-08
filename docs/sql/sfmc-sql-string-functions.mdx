@@ -72,7 +72,7 @@ CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
 
 :::note You Should Know
 
-`CHARINDEX` is especially useful when combined with [`CASE`](./sfmc-sql-select.mdx#conditional-values-with-case) and [`LEFT`](#left--right)/[`RIGHT`](#left--right) functions, as it allows for smart string operations:
+`CHARINDEX` is especially useful when combined with [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) and [`LEFT`](#left--right)/[`RIGHT`](#left--right) functions, as it allows for smart string operations:
 
 ```sql {3} title="Dynamically pull part of the Institution Name value"
 SELECT
@@ -115,7 +115,7 @@ SELECT
 
 It might seem cleaner, but there are two downsides to this method:
 1. With the plus notation, if at least one provided value is `NULL`, then the whole outcome becomes `NULL`. `CONCAT` function treats such values as empty strings.
-2. If you want to join a string with a date type value, you need to use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert), but `CONCAT` will do the implicit conversion for you.
+2. If you want to join a string with a date type value, you need to use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert), but `CONCAT` will do the implicit conversion for you.
 
 :::
 
@@ -152,4 +152,4 @@ In the above code, we firstly added a string `'_- '` containing all characters w
 
 `FORMAT` function lets you quickly change the data into a different format. In Salesforce Marketing Cloud, it is especially useful, as you cannot create your functions. `FORMAT` might save you massive headaches.
 
-The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](./sfmc-sql-date-functions.mdx#format-with-dates) and [`FORMAT` with Numbers](./sfmc-sql-numeric-functions.mdx#format-with-numbers) for more information. The outcome of formatting both number and date types with this function is a string.
+The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](./sfmc-sql-date-functions.mdx#format-with-dates) and [`FORMAT` with Numbers](./sfmc-sql-numeric-functions.mdx#format-with-numbers) for more information. The outcome of formatting both number and date types with this function is a string.

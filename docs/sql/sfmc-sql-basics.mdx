@@ -23,7 +23,7 @@ Finally, the significant limitation that you might hit as your Marketing Cloud g
 
 ## Fundamentals of SQL queries
 
-SQL is straightforward to read but requires a bit of understanding to write. However, with only the `SELECT` being available, it is effortless to grasp.
+SQL is straightforward to read but requires a bit of understanding to write. However, with only the [`SELECT`](./sfmc-sql-select.mdx) being available in Marketing Cloud, it is effortless to grasp.
 
 There are four most important elements that you will be using in nearly every query in SFMC:
 
@@ -32,11 +32,15 @@ There are four most important elements that you will be using in nearly every qu
 * [`JOIN`](./sfmc-sql-join.mdx): tell the query how you want to merge data from multiple sources
 * [`WHERE`](./sfmc-sql-where.mdx): tell the query which part of the above data is interesting to you
 
-However, there is much to learn to unlock the full power of SQL in SFMC. Check out deep-dive docs on other SQL Statements ([`LIKE`](./sfmc-sql-like.mdx)), [String](./sfmc-sql-string-functions.mdx), [Date](./sfmc-sql-date-functions.mdx), [Numeric](./sfmc-sql-numeric-functions.mdx), [Conversion](./sfmc-sql-conversion-functions.mdx), [Aggregate](./sfmc-sql-aggregate-functions.mdx) Functions and [SFMC System Data Views](../config/sfmc-config-system-data-views.mdx).
+However, there is much to learn to unlock the full power of SQL in SFMC. Check out deep-dive docs on SQL operators ([`LIKE`](./sfmc-sql-like.mdx), [`CASE`](./sfmc-sql-case.mdx)), functions ([String](./sfmc-sql-string-functions.mdx), [Date](./sfmc-sql-date-functions.mdx), [Numeric](./sfmc-sql-numeric-functions.mdx), [Conversion](./sfmc-sql-conversion-functions.mdx), [Aggregate](./sfmc-sql-aggregate-functions.mdx)) and [SFMC System Data Views](../config/sfmc-config-system-data-views.mdx).
+
+Knowing the available functions is one thing. Writing good and readable queries - another. Salesforce Marketing Cloud is always a team sport, so be sure to leverage the power of a [Style Guide](./sfmc-sql-style-guide.mdx) to improve the quality of your SQL.
 
 ## Query Studio
 
 Working with queries in the out-of-the-box version of Salesforce Marketing Cloud is quite hard. Whenever you want to check the output of your query, you must run the SQL Query in Automation Studio and check the output Data Extension. There is, however, a better way.
 
-A [Query Studio](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) by Salesforce. It is a Marketing Cloud App available in [AppExchange](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) that is must-have for anyone interested in working with SQL in SFMC. Think about SQL Server Studio or, if this is not telling you much, a one-stop-shop for writing, validating, checking and saving your queries. Check it. You will never look back. Learn more on [sfmarketing.cloud](https://sfmarketing.cloud/2019/08/05/query-studio-for-marketing-cloud/).
+A [Query Studio](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) by Salesforce. It is a Marketing Cloud App available in [AppExchange](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) that is must-have for anyone interested in working with SQL in SFMC. Think about SQL Server Studio or, if this is not telling you much, a one-stop-shop for writing, validating, checking and saving your queries. Check it. You will never look back.
+
+Learn more on [sfmarketing.cloud](https://sfmarketing.cloud/2019/08/05/query-studio-for-marketing-cloud/).
 

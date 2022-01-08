@@ -165,7 +165,7 @@ FROM _Subscribers AS s
         ON ea._SubscriberID = s.SubscriberID
 ```
 
-As you can see, we had to use the [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) function with the `BIGINT` parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it quickly. It could get even better with [`LIKE` in `CASE`](./sfmc-sql-like.mdx) used to create different formats depending on the country code.
+As you can see, we had to use the [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert) function with the `BIGINT` parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it quickly. It could get even better with [`LIKE` in `CASE`](./sfmc-sql-case.mdx#like-in-case) used to create different formats depending on the country code.
 
 Another use case? Let's assume we have a VIPDiscount field. It contains a number between 0.00 and 0.99 that tells what discount is appropriate for the selected user based on their VIP status. You store it in decimal numeric because it is a much more accessible format for SSJS or AMPScript to calculate the final price of items promoted in communication.
 

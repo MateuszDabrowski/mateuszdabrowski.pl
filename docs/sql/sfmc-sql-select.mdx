@@ -79,181 +79,6 @@ It becomes mighty with the [SQL String functions](./sfmc-sql-string-functions.md
 
 :::
 
-## Conditional values with CASE
-
-`CASE` statement evaluates a list of conditions and returns one of the multiple possible result expressions. For Marketing Cloud purposes, it is especially useful when you want to select a column and modify the values within it. Perfect for translating numeric codes to descriptive ones for personalisation purposes. Excellent for standardising data (change those `1`, `true` and `on` values of opt-in to a single format).
-
-```sql {8-14}
-SELECT
-      ContactKey
-    , EmailAddress
-    , [External Contact Id] AS ExternalContactId
-    , Gender__c             AS Gender
-    , 'Lead'                AS RecordType
-    , GETUTCDATE()          AS ImportDate
-    , CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
-        ELSE 'Unregistered'
-      END
-```
-
-You can have as many `WHEN`/`THEN` conditions as you want. Also, the `ELSE` statement is optional but a good idea to catch unexpected values.
-
-Feel free also to leverage [aliases](#aliasing-with-as) to manipulate the column name at the same time:
-
-```sql {14}
-SELECT
-      ContactKey
-    , EmailAddress
-    , [External Contact Id] AS ExternalContactId
-    , Gender__c             AS Gender
-    , 'Lead'                AS RecordType
-    , GETUTCDATE()          AS ImportDate
-    , CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
-        ELSE 'Unregistered'
-      END                   AS MemberType
-```
-
-### Search version of CASE
-
-The above examples are already helpful in segmentation, but there is also one more way to write and use a `CASE` statement that gives even more power. The search `CASE`.
-
-The difference is that you are not passing the column name on which you will be building conditions. Instead, you create a boolean expression from scratch for each scenario.
-
-```sql {8-14} title="The same query as the previous one, but written with Search Case"
-SELECT
-      ContactKey
-    , EmailAddress
-    , [External Contact Id] AS ExternalContactId
-    , Gender__c             AS Gender
-    , 'Lead'                AS RecordType
-    , GETUTCDATE()          AS ImportDate
-    , CASE
-        WHEN MemberType__c = 1 THEN 'Bronze'
-        WHEN MemberType__c = 2 THEN 'Silver'
-        WHEN MemberType__c = 3 THEN 'Gold'
-        WHEN MemberType__c = 4 THEN 'Platinum'
-        ELSE 'Unregistered'
-      END                   AS MemberType
-```
-
-The example above doesn't show why it is worth using the search `CASE`. It is a bit longer than the standard approach! But there is a reason to use this form of `CASE` statement that is visible once you want to create more elaborate conditions that are possible only with this version:
-
-```sql {3-7} title="Let's calculate what channel we should use in our campaign for a given user"
-SELECT
-      ContactKey
-    , CASE
-        WHEN IsAppInstalled = 1 THEN 'Push'
-        WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
-        WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
-      END AS PreferredChannel
-```
-
-:::note You Should Know
-
-`CASE` statement returns `THEN` value of the first condition that evaluated to `TRUE`. In the above example, if the `IsAppInstalled = 1` is true, other conditions are not considered. Even if for selected contact all of them will be true, it will still have the value `Push` in PreferredChannel. It is perfect, as it allows us to prioritise cheaper channels.
-
-Always consider the order of the conditions in your `CASE` statement. It both might lead to errors if you don't expect the behaviour mentioned above and make your life much easier if you know it works that way.
-
-:::
-
-As you can see, thanks to search `CASE` statements, we can check conditions on multiple different columns and connect them with `AND`/`OR` statements for better control. You can use this version of the `CASE` statement for all your needs (even those covered by the basic one) to not worry about two ways of formatting.
-
-:::note You Should Know
-
-You can use `CASE` statements inside a `CASE` statement to have an even more dynamic query.
-
-```sql {3-16} title="Let's add another dimension of membership level to differentiate available channels"
-SELECT
-      ContactKey
-    , CASE
-        WHEN MemberType = 'Platinum' THEN 'Key Account Manager'
-        WHEN MemberType = 'Gold' OR MemberType = 'Silver' THEN
-            CASE
-                WHEN IsAppInstalled = 1 THEN 'Push'
-                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
-                WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL THEN 'Phone'
-            END
-        WHEN MemberType = 'Bronze' THEN
-            CASE
-                WHEN IsAppInstalled = 1 THEN 'Push'
-                WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL THEN 'Email'
-            END
-      END AS PreferredChannel
-```
-
-:::
-
-### LIKE in CASE
-
-`LIKE` is not only valuable for the [`WHERE` Statement](./sfmc-sql-where.mdx#like-operator). It is also an incredible tool empowering the `CASE` statement. It allows you to build flexible conditions on free text values:
-
-```sql {4} title="Great way to split your database between Internal and External users for different communication"
-SELECT
-      ContactKey
-    , CASE
-        WHEN EmailAddress LIKE '%@mateuszdabrowski.%' THEN 'Internal'
-        ELSE 'External'
-      END AS ContactType
-```
-
-In the `SELECT` statement, the `LIKE` operator is handy for fixing data coming from the free text fields. To learn more about the possibilities, check out the [`LIKE` guide](./sfmc-sql-like.mdx).
-
-### IIF Shorthand
-
-The `CASE` statement is a fantastic tool but can be overkill for simple conditions. The `IIF` comes to the rescue.
-
-It takes three arguments:
-
-1. Condition
-2. The value returned if the condition evaluates to true
-3. The value returned if the condition evaluates to false
-
-With it, instead of multiline `CASE`:
-
-```sql {3-6}
-SELECT
-      _Subscriber.SubscriberKey
-    , CASE
-        WHEN _Subscriber.Status = 'active' THEN 'TRUE'
-        ELSE 'FALSE'
-      END AS Sendable
-```
-
-You can have the same outcome in a single, more readable `IIF` line:
-
-```sql {3}
-SELECT
-      _Subscriber,SubscriberKey,
-    , IIF(_Subscriber.Status = 'active', 'TRUE', 'FALSE') AS Sendable
-```
-
-Whenever you have a single condition - go with `IIF`.
-
-:::note You Should Know
-
-You can take both `CASE` and `IIF` to the next level with dynamic values. Don't limit yourself to a string, integer or boolean - pass a column name.
-
-Use case? Think of a Master Data Extension that stores a massive amount of contact information, including preferred channel (Email or Mobile). With dynamic values and `IIF` in just a few lines, we can create an optimised Data Extension with crucial information:
-
-```sql {4}
-SELECT
-      SubscriberKey
-    , PreferredChannel
-    , IIF(PreferredChannel = 'Email', EmailAddress, MobileNumber) AS PointOfContact
-```
-
-Now, even with just three columns in your Entry Point, you can create a Journey that adapts the channel to customer preferences.
-
-:::
-
 ## TOP
 
 You can add a `TOP` clause to your `SELECT` statement to limit the number of rows returned by your query.
@@ -323,7 +148,7 @@ ORDER BY CONVERT(INT, QuizScore) DESC
 
 :::
 
-`ORDER BY` can operate not only on the selected column. You already saw above that you can use expression (even [`CASE`](#conditional-values-with-case)!) to calculate the sorting value, but it's much more flexible.
+`ORDER BY` can operate not only on the selected column. You already saw above that you can use expression (even [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case)!) to calculate the sorting value, but it's much more flexible.
 
 You can sort using a column not picked in `SELECT`:
 
@@ -464,4 +289,4 @@ Despite official [SFMC SQL documentation](https://help.salesforce.com/articleVie
 
 Unfortunately, SFMC SQL does not support variables.
 
-Fortunately, it does support (selected) functions. Learn more about them in SFMC SQL Functions documentation pages related to [Strings](./sfmc-sql-string-functions.mdx), [Dates](./sfmc-sql-date-functions.mdx), [Numbers](./sfmc-sql-numeric-functions.mdx), [Conversion](./sfmc-sql-conversion-functions.mdx), [Aggregation](./sfmc-sql-aggregate-functions.mdx).
+Fortunately, it does support (selected) functions. Learn more about them in SFMC SQL Functions documentation pages related to [Strings](./sfmc-sql-string-functions.mdx), [Dates](./sfmc-sql-date-functions.mdx), [Numbers](./sfmc-sql-numeric-functions.mdx), [Conversion](./sfmc-sql-conversion-functions.mdx), [Aggregation](./sfmc-sql-aggregate-functions.mdx), [`CASE`](./sfmc-sql-case.mdx) and [`LIKE`](./sfmc-sql-like.mdx).

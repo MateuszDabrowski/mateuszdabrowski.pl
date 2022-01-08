@@ -43,7 +43,7 @@ SELECT GETUTCDATE() AS CurrentUTCDate
 
 Both return a datetime object (for example, `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
 
-However, you can limit its output to either date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#case--convert) or [`FORMAT`](#format-with-dates) Functions.
+However, you can limit its output to either date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert) or [`FORMAT`](#format-with-dates) Functions.
 
 ## DATEPART
 
@@ -359,7 +359,7 @@ SELECT
 
 In the example above, the first two `FORMAT` functions return date in the same format - `30/10/2020` - one by using manually provided value, another by taking the current UTC date from the function.
 
-The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CASE`](./sfmc-sql-select.mdx#conditional-values-with-case) to change your short date into an extended date personalized on user language.
+The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) to change your short date into an extended date personalized on user language.
 
 ### Standard date formats
 
