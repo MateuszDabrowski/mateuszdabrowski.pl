@@ -164,6 +164,7 @@ module.exports = {
             apiKey: 'd7932184e92b94d052fab9cea784b13f',
             indexName: 'mateuszdabrowski',
             placeholder: 'Search Docs & Snipptes',
+            contextualSearch: false,
         },
     },
     presets: [
