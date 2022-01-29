@@ -69,7 +69,6 @@ module.exports = {
                     '» SQL Snippets': [
                         'sql/sfmc-sql-snippet-debugging-email-sends',
                         'sql/sfmc-sql-snippet-debugging-value-length',
-                        'sql/sfmc-sql-snippet-enhanced-send-log',
                     ],
                 },
             ],
@@ -91,6 +90,7 @@ module.exports = {
                 'usecase/tailor-with-data',
                 'usecase/engage-with-countdown',
                 'usecase/sfmc-cloud-page-apps',
+                'usecase/sfmc-enhanced-send-log',
                 // 'usecase/sfmc-code-resources',
                 'usecase/sfmc-contact-deletion',
             ],

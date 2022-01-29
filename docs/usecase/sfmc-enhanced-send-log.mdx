@@ -1,5 +1,5 @@
 ---
-id: sfmc-sql-snippet-enhanced-send-log
+id: sfmc-enhanced-send-log
 title: SFMC Enhanced Send Log
 sidebar_label: Enhanced Send Log
 description: Create, customise and enhance SFMC Send Log for debugging and reporting.
@@ -41,6 +41,12 @@ The Send Log template comes with six default fields:
 `TriggeredSendID` stores the ID of a Triggered Send Definition if it was used for the specific send.
 
 `ErrorCode` captures an error that stopped a specific send. I have added the list of all possible codes with an explanation [at the bottom](#send-log-errorcode-values).
+
+:::note You Should Know
+
+If your send was not delivered, but you can see it in the Send Log without any `ErrorCode`, leverage [Email Sends Debugging Query](../sql/sfmc-sql-snippet-debugging-email-sends.mdx) to learn what happened with the message.
+
+:::
 
 ### Send Log vs _Sent System Data View
 
@@ -213,7 +219,7 @@ WHERE
 
 In the above query, we pull Journey Builder information and Sent, Delivered, Open, Click, Bounce information. We are also adding a custom logic that will provide more real Delivery and Open data using the fundamental assumption that if the recipient clicked something - the email had to be delivered and opened.
 
-In the [`WHERE`](./sfmc-sql-where.mdx) section, we filter the data to pull only updates for sends from the last month to optimise the query performance.
+In the [`WHERE`](../sql/sfmc-sql-where.mdx) section, we filter the data to pull only updates for sends from the last month to optimise the query performance.
 
 Schedule that Automation nightly and share the Enhanced Send Log with your users.
 

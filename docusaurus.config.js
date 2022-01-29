@@ -222,6 +222,10 @@ module.exports = {
             {
                 redirects: [
                     {
+                        from: ['/docs/sql/sfmc-sql-snippet-enhanced-send-log'],
+                        to: '/docs/usecase/sfmc-enhanced-send-log',
+                    },
+                    {
                         from: ['/docs/ideas/engage-with-countdown', '/ideas/engage-with-countdown'],
                         to: '/docs/usecase/engage-with-countdown',
                     },
