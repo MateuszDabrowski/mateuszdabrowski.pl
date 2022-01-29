@@ -13,11 +13,11 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
-Here, I will cover only selected string functions, that I find most useful for Marketing Automation purposes. They will help you change the values, split and concatenate them, or find elements within.
+Here, I will cover only selected string functions that I find most useful for Marketing Automation purposes. They will help you change the values, split and concatenate them, or find elements within.
 
 :::note You Should Know
 
-All string functions in SQL are using a 1-based index instead of 0-based indexing known from, for example, JavaScript. The first character starts at index 1. It is crucial for both providing the correct value to the parameters, as well as for correctly interpreting the results.
+All string functions in SQL use a 1-based index instead of 0-based indexing known from, for example, JavaScript. The first character starts at index 1. It is crucial for both providing the correct value to the parameters and correctly interpreting the results.
 
 :::
 
@@ -25,7 +25,7 @@ All string functions in SQL are using a 1-based index instead of 0-based indexin
 
 `LEFT` and `RIGHT` functions allow you to cut down the string to just part of it.
 
-Both require two parameters - source value and the number of characters to return.
+Both require source value and the number of characters to return.
 
 ```sql title="LEFT and RIGHT can work both on strings as well as on other data types"
 SELECT
@@ -56,15 +56,15 @@ It is less useful for segmentation but awesome for various administrative purpos
 CHARINDEX("Manager", JobTitle, 1)
 ```
 
-In the example above, I used the optional starting index, but in most cases, you will not be using it. The `CHARINDEX` defaults to starting from the beginning so we can write the above line shorter as `CHARINDEX("Manager", JobTitle)`.
+In the example above, I used the optional starting index, but you will not be using it in most cases. The `CHARINDEX` defaults to starting from the beginning so that we can write the above line shorter as `CHARINDEX("Manager", JobTitle)`.
 
-The function returns one three possible values:
+The function returns one of the three possible values:
 
 1. NULL - if either value to find or searched value is NULL
 2. 0 - if the value to find is not within the searched value
 3. any other digit - the index where the value to find starts within the searched value - if there are multiple occurrences, the result will show the starting index of just the first one.
 
-By default, `CHARINDEX` in SFMC is case-insensitive in its searches. You can, however, enforce case-sensitivity by adding `COLLATE`:
+By default, `CHARINDEX` in SFMC is case-insensitive in its searches. You can, however, enforce case sensitivity by adding `COLLATE`:
 
 ```sql title="Case sensitive CHARINDEX search - note lack of a comma between the value and COLLATE"
 CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
@@ -83,7 +83,7 @@ SELECT
 FROM Accounts
 ```
 
-The above query checks whether there is a space within `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create new simplified data point categorizing records by type.
+The above query checks whether there is a space within the `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create a new simplified data point categorizing records by type.
 
 :::
 
@@ -114,14 +114,14 @@ SELECT
 ```
 
 It might seem cleaner, but there are two downsides to this method:
-1. With the plus notation, if at least one provided value is `NULL`, then the whole outcome becomes `NULL`. `CONCAT` function treats such values as empty strings.
+1. With the plus notation, if at least one provided value is `NULL`, the whole outcome becomes `NULL`. `CONCAT` function treats such values as empty strings.
 2. If you want to join a string with a date type value, you need to use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert), but `CONCAT` will do the implicit conversion for you.
 
 :::
 
 ## TRIM
 
-`TRIM` function allows you to quickly clean your data by deleting unneeded characters from the beginning and the end of the provided string. By default it deletes whitespace.
+`TRIM` function allows you to quickly clean your data by deleting unneeded characters from the beginning and the end of the provided string. By default, it deletes whitespace.
 
 ```sql title="Noone likes useless whitespace in their database"
 SELECT TRIM('   data from webform ') AS CleanData   /* Output: 'data from webform' */
@@ -144,9 +144,19 @@ You can also use `TRIM` to clean specified characters instead of (just) whitespa
 SELECT TRIM('_- ' FROM DirtyWebformData) AS CleanData
 ```
 
-In the above code, we firstly added a string `'_- '` containing all characters we want automatically deleted from the beginning and end. Then - after `FROM` joiner - the value, we want to clean.
+In the above code, we first added a string `'_- '` containing all characters we want to be automatically deleted from the beginning and end. Then - after `FROM` joiner - the value we want to clean.
 
 :::
+
+## NEWID
+
+`NEWID` function creates a pseudorandom identifier in the form of a 36-character string GUID (RFC4122 compliant).
+
+The output structure is the same as for the SSJS `Platform.Function.GUID()` or AMPScript `GUID()` functions - five alphanumerical strings joined by hyphens: `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`.
+
+```sql {1}
+SELECT NEWID() AS UniqueID
+```
 
 ## FORMAT with Strings
 
