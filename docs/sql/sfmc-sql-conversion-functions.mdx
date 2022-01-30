@@ -192,6 +192,8 @@ CONVERT(DATETIME2, LEFT('27/12/2021 07:31:01', 10), 103) + CONVERT(DATETIME2, RI
 
 With [LEFT & RIGHT](./sfmc-sql-string-functions.mdx#left--right) functions we split the datetime on the space, then [CONVERT](#convert) each part to finally sum it into a single date that is equal to our original string.
 
+If you have specific parts of your date stored in separte fields, you can leverage [`DATETIMEFROMPARTS`](./sfmc-sql-date-functions.mdx#datefromparts--datetimefromparts) function as well.
+
 :::
 
 

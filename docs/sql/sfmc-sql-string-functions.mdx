@@ -152,9 +152,9 @@ In the above code, we first added a string `'_- '` containing all characters we 
 
 `NEWID` function creates a pseudorandom identifier in the form of a 36-character string GUID (RFC4122 compliant).
 
-The output structure is the same as for the SSJS `Platform.Function.GUID()` or AMPScript `GUID()` functions - five alphanumerical strings joined by hyphens: `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`.
+The output structure is the same as for the SSJS `Platform.Function.GUID()` or AMPScript `GUID()` functions - five alphanumerical strings joined by hyphens.
 
-```sql {1}
+```sql {1} title="Returns GUID in the form of XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
 SELECT NEWID() AS UniqueID
 ```
 
