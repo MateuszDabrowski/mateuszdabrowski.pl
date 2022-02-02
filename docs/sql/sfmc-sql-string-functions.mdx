@@ -83,7 +83,7 @@ SELECT
 FROM Accounts
 ```
 
-The above query checks whether there is a space within the `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create a new simplified data point categorizing records by type.
+The above query checks whether there is a space within the `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create a new simplified data point categorising records by type.
 
 :::
 
@@ -151,9 +151,9 @@ There are also two child functions - `RTRIM` and `LTRIM` that works the same but
 
 ```sql title="Noone likes useless whitespace in their database"
 SELECT
-      LTRIM('   data from webform ')        AS CleanLeftSide      /* Output: 'data from webform ' */
-    , RTRIM('   data from webform ')        AS CleanRightSide     /* Output: '   data from webform' */
-    , LTRIM(RTRIM('   data from webform ')) AS SameAsTRIM  /* Output: 'data from webform' */
+      LTRIM('   data from webform ')        AS CleanLeftSide    /* Output: 'data from webform ' */
+    , RTRIM('   data from webform ')        AS CleanRightSide   /* Output: '   data from webform' */
+    , LTRIM(RTRIM('   data from webform ')) AS SameAsTRIM       /* Output: 'data from webform' */
 ```
 
 :::note You Should Know
@@ -177,6 +177,31 @@ The output structure is the same as for the SSJS `Platform.Function.GUID()` or A
 ```sql {1} title="Returns GUID in the form of XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
 SELECT NEWID() AS UniqueID
 ```
+
+## LOWER, UPPER and Title Case
+
+When working with SQL, you will frequently encounter dirty data that needs some cleaning before being leveraged for personalisation in marketing sends. One of the frequent issues is inconsistent letter cases, especially on self-filled data points like first and last names coming from lead forms.
+
+Thankfully, SQL can clean up such data with built-in `LOWER` and `UPPER`.
+
+```sql {3-4}
+SELECT
+      'DIRTY Data' AS SampleData
+    , LOWER('DIRTY Data') AS Lowercase /* Output: 'dirty data' */
+    , UPPER('DIRTY Data') AS Uppercase /* Output: 'DIRTY DATA' */
+```
+
+However, there is no out-of-the-box function for Proper Case - a popular requirement, especially around names and titles. The basic solution for single-word strings is straightforward:
+
+```sql {3}
+SELECT
+      FirstName /* Output: 'MATEUSZ' */
+    , UPPER(LEFT(FirstName, 1)) + LOWER(RIGHT(FirstName, LEN(FirstName) - 1)) AS Propercase /* Output: 'Mateusz' */
+```
+
+However, it will not work with complex (like names with a hyphen in the middle) or multi-word values. The standard SQL solution - User Defined Function - doesn't work in a limited Salesforce Marketing Cloud SQL environment. The alternative - using [`CHARINDEX`](#charindex)/[`PATINDEX`](#patindex) to find each word - gets awful as soon as you hit three words and more.
+
+Recommended approach? Either clean the data before ingestion to SFMC or do it directly in the email with the built-in AMPScript `ProperCase` function.
 
 ## FORMAT with Strings
 
