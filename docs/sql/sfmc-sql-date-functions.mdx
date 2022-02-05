@@ -101,7 +101,7 @@ For 99% of SFMC needs, you will be fine with `YEAR`, `MONTH`, `DAY`, `HOUR` and 
 
 ## DATENAME
 
-The `DATENAME` functions return the string value of the specified [datepart](#date-parts) from a given date.
+The `DATENAME` functions return the string value of the specified [date part](#date-parts) from a given date.
 
 ```sql {3} title="Capture the whole day's name"
 SELECT
@@ -110,7 +110,7 @@ SELECT
 FROM Ent._Subscribers
 ```
 
-It might help quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the day's name for a given date, thanks to the `WEEKDAY` [datepart](#date-parts).
+It might help quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the day's name for a given date, thanks to the `WEEKDAY` [date part](#date-parts).
 
 ```sql {3} title="Create an automation that will capture weekend meetings for Friday reminder"
 SELECT SubscriberKey
@@ -121,7 +121,7 @@ WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
 
 It works for months as well: `DATENAME(MONTH, GETDATE())`.
 
-As `DATENAME` returns a string, you won't be able to do any calculations on the outcome - even if it will contain only digits (like `DATENAME` from the `YEAR` date part). If you want to perform operations, you must use the [`DATEPART`] function.
+As `DATENAME` returns a string, you won't be able to do any calculations on the outcome - even if it will contain only digits (like `DATENAME` from the `YEAR` date part). If you want to perform operations, you must use the [`DATEPART`](#datepart) function.
 
 ## DATEFROMPARTS & DATETIMEFROMPARTS
 
