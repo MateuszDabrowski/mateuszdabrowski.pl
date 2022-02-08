@@ -1,24 +1,46 @@
 ---
 id: sfmc-code-resources
-title: Power of SFMC Code Resources
+title: SFMC Code Resources
 sidebar_label: Power of Code Resources
-description: WIP
-image: img/og/og-image-power-of-sfmc-code-resources.png
+description: Learn how to use and abuse SFMC Code Resources, the free-of-charge programmatic powerhouse.
+image: img/og/og-image-sfmc-code-resources.png
 tags: [Marketing Cloud, SSJS, AMPScript, Snippet, Cloud Page, App]
 ---
-// TODO Image
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content="Divide and conquer your SFMC Cloud Page solutions" />
+<LeadText content="Learn how to use and abuse SFMC Code Resources, the free-of-charge programmatic powerhouse." />
 
 ## What are the Code Resources?
 
 Code Resources in Salesforce Marketing Cloud are a solution for hosting JavaScript, CSS, JSON, RSS, Text and XML files within your account.
 
-They were part of the legacy Classic Cloud Pages. However, their unique features and usefulness allowed them to survive sunsetting and thrive in the Web Studio. With Spring '22 Release they got a new home in Content Builder, and live along Content Blocks.
+They were part of the legacy Classic CloudPages. However, their features and usefulness allowed them to survive sunsetting and thrive in the Web Studio. With [Spring '22 Release](https://help.salesforce.com/s/articleView?id=sf.mc_rn_2022_spring_cloud_pages_classic_editor_migrated_to_content_builder.htm&type=5) they got a new home in Content Builder, and live along Content Blocks.
 
-You may ask - why use Code Resources when we have new Cloud Pages in Web Studio and Code Content Blocks in Content Builder? As I highlighted above, a unique set of features makes Code Resources irreplaceable.
+You may ask - why use Code Resources when we have new CloudPages in Web Studio and Code Content Blocks in Content Builder? As I highlighted above, a unique set of features makes Code Resources irreplaceable:
 
-|Feature | Cloud Page | Code Resource | Content Block |
-| -- | -- | -- | -- |
+- Unlike Content Blocks, Code Resources have their __own URL__. It means that they are not just a building block, but can works alone as a web asset. It also means that they can be linked and API called as any other website.
+- Unlike Cloud Pages, Code Resources have __no HTML structures appended automatically__ by Marketing Cloud. This allows you to have full control over what is returned by the Code Resource.
+- Unlike externally hosted file, you can leverage SFMC programmatic solutions - __SSJS and AMPScript__ - to provide a backend logic to your Code Resources.
+- Finally, unlike Cloud Pages, there is __no cost__ associated with loading a Code Resource.
+
+That combination makes Code Resources perfect for multiple use cases - from very basic to complex ones. Let's see some examples.
+
+## Code Resource Use Cases
+
+### The Basics
+
+The most obvious use case is hosting shared CSS and JavaScript, just as you would on a CMS. It works great - you can just paste your stylesheet or scripts and import it the standard way to your Cloud Pages benefitting from storing all assets on the same server:
+
+```html title="JS & CSS imports from Code Resources - the URLs will follow your Marketing Cloud configuration"
+<link rel="stylesheet" type="text/css" href="https://coderesource.sfmc.com/my-css" />
+<script src="https://coderesource.sfmc.com/my-js"></script>
+```
+
+Similarly, you can store a complex data structures in the form of JSON or XML files to leverage it later with SSJS or AMPScript/GTL.
+
+This way of using, however, is not showcasing any strengths of the Code Resources.
+
+### The Fun Things
+
+
