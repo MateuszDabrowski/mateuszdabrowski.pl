@@ -37,10 +37,61 @@ The most obvious use case is hosting shared CSS and JavaScript, just as you woul
 <script src="https://coderesource.sfmc.com/my-js"></script>
 ```
 
-Similarly, you can store a complex data structures in the form of JSON or XML files to leverage it later with SSJS or AMPScript/GTL.
+Similarly, you can store a complex data structures in the form of JSON or XML files to leverage it later with SSJS or AMPScript/GTL - for deep immutable structures it can be a better solution then Data Extensions.
 
-This way of using, however, is not showcasing any strengths of the Code Resources.
+This approach, as useful as it is, does not showcase the true strength of the Code Resources.
 
 ### The Fun Things
 
+The real power comes with the use of Salesforce Marketign Cloud programmatic languages - AMPScript and SSJS. Those two allow you to execute logic on the backend and impact the front-facing outcome on the Code Resource. This enables some powerful use cases.
 
+#### Dynamic Code Resources
+
+For example, you cannot host fonts in Marketing Cloud. But, you can encode them to base64 and in that format add to your CSS Code Resource.
+
+```css title="Web Font in CSS Code Resource"
+%%[ SET @SalesforceSansRegular = "AAEAAAASAQAAABAAgR0RFRgQOBQMAAN38AAAAKEdQT1N..." ]%%
+@font-face {
+    font-family: "Salesforce Sans";
+    src: url(data:font/ttf;base64,%%=v(@SalesforceSansRegular)=%%) format('truetype');
+    font-weight: 400;
+    font-display: swap;
+}
+```
+
+Sometimes, however, you might need different font depending on the market to cover various alphabets. Adding all those fonts to your CSS is not a good idea. You can leverage the power of SFMC programmatic languages to load only the required font. How? By requesting the specific font using a query parameter:
+
+```html title="CSS Import with query parameter on the Frontend"
+<link rel="stylesheet" type="text/css" href="https://coderesource.sfmc.com/my-css?font=salesforce-sans" />
+```
+
+```css title="Dynamic Stylesheet on the backend"
+%%[
+    SET @FontSelected = RequestParameter("font")
+    IF @FontSelected == "salesforce-sans" THEN
+        SET @FontName = "Salesforce Sans"
+        SET @FontInBase64 = "AAEAAAASAQAAABAAgR0RFRgQOBQMAAN38AAAAKEdQT1N..."
+    ELSE
+        SET @FontName = "Different Font"
+        SET @FontInBase64 = "AAAEEMDJJEkdEDKEJ849DJEHD33DJslsAAAA3EKFEK03..."
+    ENDIF
+]%%
+@font-face {
+    font-family: "%%=v(@FontName)=%%";
+    src: url(data:font/ttf;base64,%%=v(@FontInBase64)=%%) format('truetype');
+    font-weight: 400;
+    font-display: swap;
+}
+```
+
+#### Personalised Code Resources
+
+
+
+#### Generated Code Resources
+
+### The Backends
+
+## Code Resource Security
+
+## Examples
