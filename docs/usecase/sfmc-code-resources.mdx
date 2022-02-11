@@ -65,7 +65,7 @@ Sometimes, however, you might need different font depending on the market to cov
 <link rel="stylesheet" type="text/css" href="https://coderesource.sfmc.com/my-css?font=salesforce-sans" />
 ```
 
-```css title="Dynamic Stylesheet on the backend"
+```css {2-3} title="Dynamic Stylesheet on the backend"
 %%[
     SET @FontSelected = RequestParameter("font")
     IF @FontSelected == "salesforce-sans" THEN
@@ -88,7 +88,7 @@ Sometimes, however, you might need different font depending on the market to cov
 
 Making your CSS or JS dynamic is just the beginning. Code Resources let's you leverage the Marketing Cloud Data Model. With SSJS and AMPScript you can make Lookups and use other functions to adapt the outcome to a specific subscriber.
 
-It is especially useful when you want to hide the business logic from competition. For example you might have a JavaScript for a form that calculates rates based on loyalty status, purchases and LTV. You don't have to share your logic in accessible JavaScript - you can Lookup required data for each subscriber with SSJS and calculate everything there - outputting only the final multipliers to your JS Code Resource.
+It is especially useful when you want to hide the business logic from competition. For example you might have a script for a web form that calculates rates based on loyalty status, purchases and LTV. You don't have to share your logic in accessible JavaScript - you can Lookup required data for each subscriber with SSJS and calculate everything there - outputting only the final multipliers to your JS Code Resource.
 
 You can even perform API calls with SSJS or AMPScript to external systems to take advantage of their data in a secure manner. That can be especially useful when working with JSON Code Resources that can hold whole data structures used for presentation layer on the Cloud Page.
 
@@ -96,9 +96,25 @@ You can even perform API calls with SSJS or AMPScript to external systems to tak
 
 JSON Code Resources are where the real magic happens. This is because they pair beautifully with SSJS and allows us to generate whole outputs from scratch with a nifty combination of SSJS object, `Stringify()` function and `<ctrl:var name=string />` personalisation string. Yeah, you can have no line of JSON in your JSON Code Resource and still use it to its fullest potential. Let's dive into details.
 
+```html {3,5} title="Make a JSON from external data"
+<script runat='server'>
+    (...)
+    var stringifiedResult = Stringify({ 'created': createdAssets, 'deleted': deletedAssets });
+</script>
+<ctrl:var name=stringifiedResult />
+```
 
+As you can see above, there is no line of JSON, but the Code Resource will output a proper JSON. How? As the SSJS and AMPScript are executed on the backend, their code is deleted from the output. However, with personalisation string, you can push some data to the frontend. And if that data is an SSJS object, then with `Stringify` you can convert it to proper JSON.
+
+This trick enables many different use cases that make Code Resources shine:
+
+1. AMPScript and [SSJS debugging](../ssjs/debugging-ssjs.mdx) - there are many places where you might want to use SFMC programmatic languages, but most of them either doesn't allow for easy debugging or drive SuperMessages costs. Code Resources are free and allow you to output error descriptions.
+2. Deploying, cleaning and retrieving scripts - there are a lot of situations where doing things through SFMC User Interface is not the best option. Deploying dozens of Data Extensions on multiple business units, cleaning hundreds of archival images or pulling asset JSONs for version control - all those use cases can be covered with a script that can do the work in a fraction of time needed for manual approach. What is more, there are some things that cannot be done through UI at all (like targeting AutoSuppression List with Query Activity). Code Resource again will allow you to write, test and run such solutions. For free.
+3. Creating custom mini backends - that use case deserves it's own section ;)
 
 ### The Backends
+
+
 
 ## Code Resource Security
 
