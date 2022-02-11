@@ -49,7 +49,7 @@ The real power comes with the use of Salesforce Marketign Cloud programmatic lan
 
 For example, you cannot host fonts in Marketing Cloud. But, you can encode them to base64 and in that format add to your CSS Code Resource.
 
-```css title="Web Font in CSS Code Resource"
+```css title="Web Font in CSS Code Resource" {1,4}
 %%[ SET @SalesforceSansRegular = "AAEAAAASAQAAABAAgR0RFRgQOBQMAAN38AAAAKEdQT1N..." ]%%
 @font-face {
     font-family: "Salesforce Sans";
@@ -86,9 +86,17 @@ Sometimes, however, you might need different font depending on the market to cov
 
 #### Personalised Code Resources
 
+Making your CSS or JS dynamic is just the beginning. Code Resources let's you leverage the Marketing Cloud Data Model. With SSJS and AMPScript you can make Lookups and use other functions to adapt the outcome to a specific subscriber.
 
+It is especially useful when you want to hide the business logic from competition. For example you might have a JavaScript for a form that calculates rates based on loyalty status, purchases and LTV. You don't have to share your logic in accessible JavaScript - you can Lookup required data for each subscriber with SSJS and calculate everything there - outputting only the final multipliers to your JS Code Resource.
+
+You can even perform API calls with SSJS or AMPScript to external systems to take advantage of their data in a secure manner. That can be especially useful when working with JSON Code Resources that can hold whole data structures used for presentation layer on the Cloud Page.
 
 #### Generated Code Resources
+
+JSON Code Resources are where the real magic happens. This is because they pair beautifully with SSJS and allows us to generate whole outputs from scratch with a nifty combination of SSJS object, `Stringify()` function and `<ctrl:var name=string />` personalisation string. Yeah, you can have no line of JSON in your JSON Code Resource and still use it to its fullest potential. Let's dive into details.
+
+
 
 ### The Backends
 
