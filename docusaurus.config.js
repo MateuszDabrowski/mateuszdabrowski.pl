@@ -9,7 +9,7 @@ module.exports = {
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
     customFields: {
-        description: 'Automate marketing automation. let code = do("our job").',
+        description: 'Personal website focused on making the most out of Salesforce Marketing Cloud. let code = do("our job").',
         keywords: [
             'Mateusz',
             'Dąbrowski',
