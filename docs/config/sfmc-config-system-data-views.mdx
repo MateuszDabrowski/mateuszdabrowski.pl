@@ -96,7 +96,7 @@ When working with `_Subscribers` Data View:
 
 ### _EnterpriseAttribute
 
-Stores information about your Profile Attributes from Email Studio.
+Stores information about your Profile and Preference Attributes from Email Studio.
 
 <Tabs
     defaultValue='fields'
@@ -120,6 +120,8 @@ SELECT
       ea._SubscriberID                     AS SubscriberID
     , ea.ProfileAttributeWithoutSpaces
     , ea.[Profile Attribute With Spaces]   AS ProfileAttributeWithSpace
+    , ea.PreferenceAttributeWithoutSpaces
+    , ea.[Preference Attribute With Spaces]   AS PreferenceAttributeWithSpace
 FROM _EnterpriseAttribute AS ea
 ```
 
@@ -132,8 +134,9 @@ When working with `_EnterpriseAttribute` Data View:
 1. If you are using the query in the child Business Unit, always use `ENT.` prefix as it is enterprise-level only Data View.
 2. When querying or joining `_EnterpriseAttribute`, always include the underscore before SubscriberID - this is the only Data View that requires it.
 3. Despite the `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get the Email Address of your Subscriber, query the `_Subscribers` Data View.
-4. `_EnterpriseAttribute` Data View is unique, as it might contain spaces in field names. You build it by creating the Profile Attributes in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
-5. This Data View, along with [`_Subscribers`](#_subscribers), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers) , does not have six-month data retention.
+4. Unfortunately, the default Preference Attribute `HTML Email` is not accessible via query.
+5. `_EnterpriseAttribute` Data View is unique, as it might contain spaces in field names. You build it by creating the Profile Attributes in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
+6. This Data View, along with [`_Subscribers`](#_subscribers), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers) , does not have six-month data retention.
 
 ---
 
