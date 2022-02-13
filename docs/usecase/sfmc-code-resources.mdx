@@ -28,7 +28,7 @@ That combination makes Code Resources perfect for multiple use cases - from very
 
 ## Code Resource Use Cases
 
-### The Basics
+### Code Resource Basics
 
 The most obvious use case is hosting shared CSS and JavaScript, just as you would on a CMS. It works great - you can just paste your stylesheet or scripts and import it the standard way to your Cloud Pages benefitting from storing all assets on the same server:
 
@@ -41,7 +41,7 @@ Similarly, you can store a complex data structures in the form of JSON or XML fi
 
 This approach, as useful as it is, does not showcase the true strength of the Code Resources.
 
-### The Fun Things
+### Code Resource Fun Things
 
 The real power comes with the use of Salesforce Marketign Cloud programmatic languages - AMPScript and SSJS. Those two allow you to execute logic on the backend and impact the front-facing outcome on the Code Resource. This enables some powerful use cases.
 
@@ -112,10 +112,157 @@ This trick enables many different use cases that make Code Resources shine:
 2. Deploying, cleaning and retrieving scripts - there are a lot of situations where doing things through SFMC User Interface is not the best option. Deploying dozens of Data Extensions on multiple business units, cleaning hundreds of archival images or pulling asset JSONs for version control - all those use cases can be covered with a script that can do the work in a fraction of time needed for manual approach. What is more, there are some things that cannot be done through UI at all (like targeting AutoSuppression List with Query Activity). Code Resource again will allow you to write, test and run such solutions. For free.
 3. Creating custom mini backends - that use case deserves it's own section ;)
 
-### The Backends
+### Code Resource Backends
 
+Code Resources can do so much more then just serve some content. Thanks to the SSJS and AMPScript along with the rich set of Salesforce Marketing Cloud features backing them up, they can serve purpose of a dedicated backend for various solutions.
 
+The most popular use case for SFMC's Web Studio is landing page with a form (for leads, data capture, preference management or whitepaper download). As far as creating is a fairly simple task with the modern HTML, the most complex part is capturing the submitted data and saving it into the Data Extension.
+
+#### Easy Form Backend with Cloud Page
+
+The most basic solution utilized two Cloud Pages. One contains the form, while the other contains the data capture logic and displays the thank you page. This appraoch is strightforward, as you can create a standard HTML form with action pointing to the second Cloud Page and most of the process will be done automatically. You are just left with the need to capture submitted data with SSJS `Request.GetFormField()` or AMPScript `RequestParameter()` and push it to a DataExtension.
+
+This approach, while easy to implement, have a lot of drawbacks:
+
+- Submission redirects to another page - it takes time and creates suboptimal User Experience
+- You can create only limited (front-end JS based) validation - if you need some checks against the SFMC data, that needs to happen after submission on the second Cloud Page. And if the validation fails, the user will be redirected back to the form page (in many cases loosing the data submitted in the form).
+- As each Cloud Page load costs a SuperMessage, this solution will require 2 in the best scenario - and more if there is a validation fail on the thank you page
+- If you want to make your form dynamic, you need to have all required data in the front end (showing your business logic)
+- You will have limited antispam capabilities (only basic honeypots and validations)
+
+Second very popular pattern is using single Cloud Page and changing displayed content depending on the request type thanks to SSJS `Request.Method()` (form view for GET and thank you page for POST). Unfortunatelly, all drawbacks are exactly the same - including the cost - as each Cloud Page load costs 1 SuperMessage (regardless whether it is the same or different one).
+
+#### Good Form Backend with Code Resource
+
+This is where Code Resources come to save the day (or at least your forms). Instead of hosting your data processing code on second Cloud Page - put it on the JSON Code Resource and [generate](#generated-code-resources) responses. On the form page add AJAX calls to the Code Resource with request for all interactions needed:
+
+```js title="JavaScript functions on the form Cloud Page"
+/**
+ * @function request
+ * @description AJAX handler for POST calls to Code Resource Backend
+ * @param {Object} payload - request payload with at least action key
+ */
+function request(payload) {
+    return new Promise(function(resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        xhr.timeout = 30 * 1000;
+        xhr.open('POST', '<ctrl:var name=backendURL/>', true);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.onload = () => {
+            if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 400)) {
+                resolve(JSON.parse(xhr.response))
+            } else {
+                reject(xhr.status)
+            }
+        }
+        xhr.onerror = () => {
+            if (debugging) console.log('Connection Error')
+        }
+        xhr.ontimeout = () => {
+            if (debugging) console.log('Request Timed Out')
+        };
+        xhr.send(JSON.stringify(payload));
+    })
+}
+
+/**
+ * @function pushData
+ * @description UI handler for POST calls to Code Resource Backend
+ * @param {Object} payload - prequest payload with at least action key
+ */
+async function pushData(payload) {
+    if (debugging) debugValue('Processing', payload);
+
+    /* Make the request with the optional spinner overlay during load time */
+    overlaySectionSpinner.classList.add('overlay__section-show');
+    let response = await request(payload);
+    overlaySectionSpinner.classList.remove('overlay__section-show');
+
+    if (debugging) debugValue(`${payload.action} Response`, response);
+
+    return response
+}
+```
+
+With that code you can trigger calls in an easy and readable manner:
+
+```js title="Example of pushing data to backend"
+pushData({
+    action: 'createLead',
+    payload: formData,
+    sourceName: '<ctrl:var name=sourceName />',
+    subscriberKey: '<ctrl:var name=subscriberKey />'
+}).then(response => {
+    /* Display appropriate feedback overlay based on the response */
+    if (response.Status === 'OK') {
+        overlaySectionSuccess.classList.add('overlay__section-show');
+    } else {
+        overlaySectionError.classList.add('overlay__section-show');
+    };
+});
+```
+
+Finally, that data needs to be captured, processed and responded on the Code Resource:
+
+```html title="Example processing structure on the Code Resource"
+<script runat="server">
+    /* Get the Form Submission Data from JSON POST */
+    var postedData = Platform.Request.GetPostData();
+
+    /* Parse Stringified JSON back to Object */
+    var parsedData = Platform.Function.ParseJSON(postedData);
+    if (debugging) debugValue('parsedData', parsedData);
+
+    /* Capture data from POST body */
+    var action = parsedData.action;
+    var payload = parsedData.payload;
+    var subscriberKey = parsedData.subscriberKey;
+
+    switch (action) {
+        case 'validateEmail':
+            /* Your Validation code */
+            result = { Action: 'validateEmail', Status: isEmailValdiated }
+            break;
+        case 'createLead':
+            /* Your Lead processing code */
+            result = { Action: 'createLead', Status: isLeadCreated }
+            break;
+    };
+
+    stringifiedResult = Stringify(result);
+</script>
+<ctrl:var name=stringifiedResult />
+```
+
+With this approach any interaction (like form submission) is inserted into object along with optional metadata, pushed through AJAX asynchronously, loaded in the Code Resource and directed to appropriate processing unit within a switch block. Once the processing is completed, the key information is saved into obejct and outputted as a JSON and comes back through AJAX to the front end with the form.
+
+Whoa, that's a lot. So why choose all of this instead of the easy solution?
+
+Let's start with the obvious drawback: it's more complex and harder to implement.
+
+There is, however, a prize for all that work:
+
+- It's using asynchronous AJAX calls, so user never leaves your form - meaning better User Experience
+- It separtes your front end and backend - you can leverage single Code Resource for many different forms
+- It enables full power of the backend - you can build dynamic form, full-blown validation, antispam and more, as everything can just make a hidden call in the back of your experience
+- It minimizes cost - Code Resources are free, so no matter how many AJAX calls you make, there will be just 1 Supermessage cost for the initial load of form Cloud Page
+- Once the complex implementation is done, you can just copy paste the solution to all your forms with minimal changes making it easily portable
+- You can create a Code Resource on different Business Unit then the form Cloud Page allowing for the data being added in different context (for example, centralized parent BU backend managing all child BU specific front ends)
+
+And then there is more! Code Resource is available not only for Cloud Pages - you can use exactly the same approach for any form hosted on your CMS or even within internal systems. As long as your front end can make an AJAX call, you can target your Code Resource and make use of Marketing Cloud power.
+
+#### More ideas
+
+Using Code Resource as a form backend is very popular use case, but it is definitely not the only one. It's worth considering whenever you need to have some interaction with the Marketing Cloud features or data model.
+
+Personalisation builder on external websites or systems, lookup tool for internal sales or support tools, triggers for communication pushes. Sure, a lot of those approaches can be built with the official API, but leverageing Code Resources might allow you to create a wrapper that will wangle with the data before outputting it to an external system.
 
 ## Code Resource Security
+
+With great power comes great responsibility. Security should be a top priority whenever dealing with Code Resources, as after publishing they are available for everyone with the link. There are few ways to protect your data:
+
+### Security through obscurity
+
+
 
 ## Examples
