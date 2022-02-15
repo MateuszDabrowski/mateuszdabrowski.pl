@@ -241,7 +241,7 @@ To learn more about them, check out detailed descriptions of [`debugValue`](../s
 
 :::note You Should Know
 
-If the script will be used in JSON Code Resource backend I modify those two functions a bit by:
+If the script will be used in [JSON Code Resource backend](../usecase/sfmc-code-resource.mdx) I modify those two functions a bit by:
 
 1. Changing the `debugValue` Write to: `Write(' --- ' + description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + ' --- ');` as break line tag will not work.
 
