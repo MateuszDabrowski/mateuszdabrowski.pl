@@ -56,7 +56,7 @@ Here the approach changes depending on where you run your Query. Shared Data Ext
 SELECT
       ContactKey
     , EmailAddress
-FROM SharedSegment
+FROM SharedDataExtension
 ```
 
 However, if you want to query them from the child Business Unit level, you will have to use a unique prefix - `Ent.`:
@@ -65,7 +65,16 @@ However, if you want to query them from the child Business Unit level, you will 
 SELECT
       ContactKey
     , EmailAddress
-FROM Ent.SharedSegment
+FROM Ent.SharedDataExtension
+```
+
+The same is true for Synchronized Data Extensions. If you want to pull data from a child Business Unit, you will need the `Ent.` prefix:
+
+```sql {4}
+SELECT
+      Id    AS SubscriberKey
+    , Email AS EmailAddress
+FROM Ent.Contact_Salesforce
 ```
 
 Remember that account permissions restrictions may apply.
