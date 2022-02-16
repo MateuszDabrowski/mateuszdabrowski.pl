@@ -1,6 +1,6 @@
 ---
 id: sfmc-code-resource
-title: SFMC Code Resources
+title: SFMC Code Resource
 sidebar_label: Power of Code Resources
 description: Learn how to use and abuse SFMC Code Resources, the free-of-charge programmatic powerhouse.
 image: img/og/og-image-sfmc-code-resources.png
@@ -17,7 +17,7 @@ Code Resources in Salesforce Marketing Cloud are a solution for hosting JavaScri
 
 They were part of the legacy Classic CloudPages. However, their features and usefulness allowed them to survive sunsetting and thrive in the Web Studio. With [Spring '22 Release](https://help.salesforce.com/s/articleView?id=sf.mc_rn_2022_spring_cloud_pages_classic_editor_migrated_to_content_builder.htm&type=5), they got a new home in Content Builder and live along with Content Blocks.
 
-Why use Code Resources when we have new CloudPages in Web Studio and Code Content Blocks in Content Builder? As I highlighted above, a unique set of features makes Code Resources irreplaceable:
+Why use Code Resources when we have new CloudPages in Web Studio and Code Content Blocks in Content Builder? Unique set of features makes Code Resources irreplaceable:
 
 - Unlike Content Blocks, Code Resources have their __own URL__. It means that they are not just a building block but can work alone as a web asset. It also means that they can be linked and API called as any other website.
 - Unlike Cloud Pages, Code Resources have __no HTML structures appended automatically__ by Marketing Cloud. It allows you to have complete control over what is returned by the Code Resource.
@@ -33,13 +33,13 @@ That combination makes Code Resources perfect for multiple use cases - from basi
 The most obvious use case is hosting shared CSS and JavaScript, just as you would on a CMS. It works great - you can paste your stylesheet or scripts and import it the standard way to your Cloud Pages benefitting from storing all assets on the same server:
 
 ```html title="JS & CSS imports from Code Resources - the URLs will follow your Marketing Cloud configuration"
-<link rel="stylesheet" type="text/css" href="https://coderesource.sfmc.com/my-css" />
-<script src="https://coderesource.sfmc.com/my-js"></script>
+<link rel="stylesheet" type="text/css" href="https://code-resource.sfmc.com/my-css" />
+<script src="https://code-resource.sfmc.com/my-js"></script>
 ```
 
 Similarly, you can store complex data structures in JSON or XML files to leverage them later with SSJS or AMPScript/GTL. It can be a better solution for deep immutable structures than Data Extensions.
 
-As practical as it is, this approach does not showcase the true strength of the Code Resources.
+As practical as it is, this approach does not showcase the true strength of the Code Resources, so let's check something more interesting.
 
 ### Code Resource Fun Things
 
@@ -59,7 +59,7 @@ For example, you cannot host fonts in Marketing Cloud. But, you can encode them 
 }
 ```
 
-However, you might need different font depending on the market to cover various alphabets. Adding all those fonts to your CSS is not a good idea. You can leverage the power of SFMC programmatic languages to load only the required font. How? By requesting the specific font using a query parameter:
+What if you need a different font depending on the market to cover various alphabets? Adding all of them to your CSS is not a good idea from the performance point of view. However, you can leverage the power of SFMC programmatic languages to load only the required font. How? By requesting the specific font using a query parameter:
 
 ```html title="CSS Import with query parameter on the frontend"
 <link rel="stylesheet" type="text/css" href="https://coderesource.sfmc.com/my-css?font=salesforce-sans" />
@@ -88,7 +88,7 @@ However, you might need different font depending on the market to cover various 
 
 Making your CSS or JS dynamic is just the beginning. Code Resources lets you leverage the Marketing Cloud Data Model. With SSJS and AMPScript, you can make Lookups and use other functions to adapt the outcome to a specific subscriber.
 
-It is handy when you want to hide the business logic from the competition. For example, you might have a script for a web form that calculates rates based on loyalty status, purchases and LTV. You don't have to share your logic in an accessible JavaScript - you can Lookup required data for each subscriber with SSJS and calculate everything there - outputting only the final multipliers to your JS Code Resource.
+It is handy when you want to hide the business logic from the competition. For example, you might have a script for a web form that calculates rates based on loyalty status, purchases and LTV. You don't have to share your logic in an accessible JavaScript - you can Lookup required data for each subscriber with SSJS and calculate everything on the server side - outputting only the final multipliers to your JS Code Resource.
 
 You can even perform API calls with SSJS or AMPScript to external systems to securely take advantage of their data. That can be especially useful when working with JSON Code Resources that can hold whole data structures used for the presentation layer on the Cloud Page.
 
@@ -96,7 +96,7 @@ You can even perform API calls with SSJS or AMPScript to external systems to sec
 
 JSON Code Resources are where the real magic happens. They pair beautifully with SSJS and allow us to generate whole outputs from scratch with a nifty combination of SSJS object, `Stringify()` function and `<ctrl:var name=string />` personalisation string. Yeah, you can have no line of JSON in your JSON Code Resource and still use it to its fullest potential. Let's dive into details.
 
-```html {3,5} title="Make a JSON from external data"
+```html {3,5} title="Make a JSON from generated data"
 <script runat='server'>
     (...)
     var stringifiedResult = Stringify({ 'created': createdAssets, 'deleted': deletedAssets });
@@ -104,19 +104,21 @@ JSON Code Resources are where the real magic happens. They pair beautifully with
 <ctrl:var name=stringifiedResult />
 ```
 
-As you can see above, there is no line of JSON, but the Code Resource will output a proper JSON. How? Once Marketing Cloud executes SSJS and AMPScript on the backend, it removes that code from the output. However, you can push some data to the frontend with a personalisation string. If that data is an SSJS object, you can convert it to proper JSON with `Stringify`.
+As you can see above, there is no line of JSON, but the Code Resource will output a proper JSON. How?
+
+Once Marketing Cloud executes SSJS and AMPScript on the backend, it removes that code from the output. However, you can push some data to the frontend with a personalisation string. If that data is an SSJS object, you can convert it to proper JSON with `Stringify()`.
 
 This trick enables many different use cases that make Code Resources shine:
 
 1. AMPScript and [SSJS debugging](../ssjs/debugging-ssjs.mdx) - there are many places where you might want to use SFMC programmatic languages. Most of them either doesn't allow for easy debugging or drive SuperMessages costs. Code Resources are free and allow you to output error descriptions.
-2. Deploying, cleaning and retrieving scripts - in many situations doing things through SFMC User Interface is not the best option. Deploying dozens of Data Extensions on multiple business units, cleaning hundreds of archival images or pulling asset JSONs for version control. We can cover all those use cases with a script that can do the work in a fraction of the time needed for a manual approach. Then, some things cannot be done through UI at all (like targeting AutoSuppression List with Query Activity). Code Resource again will allow you to write, test and run such solutions. For free.
+2. Deploying, cleaning and retrieving scripts - in many situations doing things through SFMC User Interface is not the best option. Deploying dozens of Data Extensions on multiple business units, cleaning hundreds of archival images or pulling assets JSON for version control. We can cover all those use cases with a script that can do the work in a fraction of the time needed for a manual approach. Then, some things cannot be done through UI at all (like targeting AutoSuppression List with Query Activity). Code Resource again will allow you to write, test and run such solutions. For free.
 3. Creating custom mini backends - that use case deserves a separate section ;)
 
 ### Code Resource Backends
 
 Code Resources can do so much more than just serve some content. Thanks to the Salesforce Marketing Cloud programmatic languages, they can become a dedicated backend for various solutions.
 
-The most popular use case for SFMC's Web Studio is a landing page with a form (for leads, data capture, preference management or whitepaper download). As far as creating is a relatively simple task with the modern HTML, the most complex part is capturing the submitted data and saving it into the Data Extension.
+The most popular use case for SFMC's Web Studio is a Cloud Page with a form (for leads, data capture, preference management or whitepaper download). As far as creating the form is a relatively simple task with the modern HTML, the complex part is capturing the submitted data and saving it into the Data Extension.
 
 #### Easy Form Backend with Cloud Page
 
@@ -130,13 +132,13 @@ This approach, while easy to implement, has many drawbacks:
 - If you want to make your form dynamic, you need to have all required data in the front end (showing your business logic)
 - You will have limited antispam capabilities (only basic honeypots and validations)
 
-The second popular pattern is using a single Cloud Page and changing displayed content depending on the request type thanks to SSJS `Request.Method()` (form view with GET and thank you page with POST). Unfortunately, all drawbacks are the same - including the cost - as each Cloud Page load costs 1 SuperMessage (whether it is the same or different).
+The second popular pattern is using a single Cloud Page and changing displayed content depending on the request type thanks to SSJS `Request.Method()` (GET outpits form view and POST shows thank you page). Unfortunately, all drawbacks (including the cost) are the same as each Cloud Page load (whether it is the same or different) costs 1 SuperMessage.
 
 #### Good Form Backend with Code Resource
 
-Code Resources come to save the day (or at least your forms). Instead of hosting your data processing code on the second Cloud Page - put it on the JSON Code Resource and [generate](#generated-code-resources) responses. On the form page, add AJAX calls to the Code Resource with a request for all interactions needed:
+Code Resources come to save the day (or at least your forms and license limits). Instead of hosting your data processing code on the second Cloud Page - put it on the JSON Code Resource and [generate](#generated-code-resources) responses. On the form page, add AJAX calls to the Code Resource for all required interactions:
 
-```js {10,39} title="JavaScript functions on the form Cloud Page"
+```js {10,39} title="JavaScript helper functions on the form Cloud Page"
 /**
  * @function request
  * @description AJAX handler for POST calls to Code Resource Backend
@@ -232,7 +234,7 @@ Finally, that data needs to be captured, processed and responded on the Code Res
 <ctrl:var name=stringifiedResult />
 ```
 
-With this approach, any interaction (like form submission) is inserted into an object along with optional metadata, pushed through AJAX asynchronously, loaded in the Code Resource and directed to the appropriate processing unit within a switch block. Once SFMC completes the processing, the response is saved into an object and outputted as a JSON. Then it comes back through AJAX to the front end with the form.
+With this approach, any interaction (like form submission) is inserted into an object along with optional metadata, pushed through AJAX asynchronously, loaded in the Code Resource and directed to the appropriate processing unit within a switch block. Once SFMC completes the processing, the response is saved into an object and outputted as a JSON. Then it comes back from Code Resource through AJAX to the frontend with the form.
 
 Whoa, that's a lot. So why choose all of this instead of the easy solution?
 
@@ -240,12 +242,12 @@ Let's start with the obvious drawback: it's more complex and harder to implement
 
 There is, however, a prize for all that work:
 
-- It's using asynchronous AJAX calls, so the user never leaves your form - meaning better User Experience
-- It separates your front end and backend - you can leverage a single Code Resource for many different forms
-- It enables the full power of the backend - you can build dynamic form, full-blown validation, antispam and more, as everything can just make a hidden call in the back of your experience
-- It minimises cost - Code Resources are free, so no matter how many AJAX calls you make, there will be just 1 Supermessage cost for the initial load of the Form Cloud Page
-- Once you complete the complex implementation, it becomes portable and can be easily copy-pasted to all your forms with minimal changes
-- You can create a Code Resource on a different Business Unit than the Form Cloud Page allowing for the data being added in a different context (for example, centralised parent BU backend managing all child BU specific front ends)
+- It's using asynchronous AJAX calls, so the user never leaves your form - better User Experience.
+- It separates your front end and backend - you can leverage a single Code Resource for many different forms.
+- It enables the full power of the backend - you can build dynamic form, full-blown validation, antispam and more, as everything can just make a hidden call in the back of your experience.
+- It minimises cost - Code Resources are free, so no matter how many AJAX calls you make, there will be just 1 Supermessage cost for the initial load of the Form Cloud Page.
+- Once you complete the complex implementation, it becomes portable and can be easily copy-pasted to all your forms with minimal changes.
+- You can create a Code Resource on a different Business Unit than the Form Cloud Page allowing for the data being added in a different context (for example, centralised parent BU backend managing all child BU specific front ends).
 
 And then there is more! Code Resource is available not only for Cloud Pages - you can use precisely the same approach for any form hosted on your CMS or even within internal systems. As long as your front end can make an AJAX call, you can target your Code Resource and use Marketing Cloud power. Nifty solution for providing Triggered Sends for 3rd party forms without the need to implement SFMC API on external services.
 
@@ -253,7 +255,7 @@ And then there is more! Code Resource is available not only for Cloud Pages - yo
 
 Using Code Resource as a form backend is a practical and frequent use case, but it is not the only one. It's worth considering whenever you need a more complex interaction with the Marketing Cloud features or data model.
 
-Custom Preference Center backend, personalisation builder for external websites or systems, lookup tool for internal sales or support tools, trigger for communication pushes. Sure, we can build many of those approaches with the official API. Still, leveraging Code Resources might allow you to create a wrapper that will wrangle the data before outputting it to an external system.
+Custom Preference Center backend, personalisation builder for external websites, lookup tool for internal sales or support tools, trigger for communication pushes. Sure, we can build many of those approaches with the official API. Still, leveraging Code Resources might allow you to create a wrapper that will wrangle the data before outputting it to an external system.
 
 ## Code Resource Security
 
@@ -265,21 +267,21 @@ The most obvious form of security is the obscurity of the solution. While standa
 
 And you can leverage that fact to your advantage by using SSJS `Request.Method()` to control output depending on the request type. For example, if you are creating a web form backend, you will only need to output something for POST calls, so you can catch GET method calls and output an empty page.
 
-Yet another level you can apply is looking for specific elements within the payload. In the examples above, I used the `action` key in the frontend payload and built a `switch` block around it on the Code Resource. Thanks to it, you not only need to know the correct `action` value, but even then, you will only see its specific response.
+Another layer you can apply is looking for specific elements within the payload. In the examples above, I used the `action` key in the frontend payload and built a `switch` block around it on the Code Resource. Thanks to it, you not only need to know the correct `action` value, but even then, you will only see its specific response.
 
-This level of protection might be acceptable for low-risk solutions (for example, dynamic CSS/JS or publicly available data structured for processing), but you should consider additional security levels for anything more critical.
+This level of protection might be acceptable for low-risk solutions (for example, dynamic CSS/JS or publicly available data structured for processing), but you should consider additional security for anything more critical.
 
 ### Allowlisting
 
-Another option available in the arsenal are three types of allowlists:
+Another option available in the security arsenal are three types of allowlists:
 
-1. Referer Allowlist allows you to limit which pages can interact with the Code Resource by using either SSJS `Platform.Request.ReferrerURL` or AMPScript `HTTPRequestHeader('Referer')` to check the URL.
-2. IP Allowlist enables simillar feature, but uses IP address instead of URL with the help of SSJS `Platform.Request.ClientIP()` or AMPScript `HTTPRequestHeader('X-Forwarded-For')`.
-3. Cookie Allowlist let's you validate cookies created on previous step with SSJS `Platform.Request.GetCookieValue('CookieName')`.
+1. __Referer Allowlist__ allows you to limit which pages can interact with the Code Resource by using either SSJS `Platform.Request.ReferrerURL` or AMPScript `HTTPRequestHeader('Referer')` to check the URL.
+2. __IP Allowlist__ enables simillar feature, but checks IP address instead of URL with the help of SSJS `Platform.Request.ClientIP()` or AMPScript `HTTPRequestHeader('X-Forwarded-For')`.
+3. __Cookie Allowlist__ let's you validate cookies created on previous step with SSJS `Platform.Request.GetCookieValue('CookieName')`.
 
 ### DE Lookup
 
-If the request comes from Marketing Cloud controlled resource (Cloud Page, Email, another Code Resource), you can also leverage Data Extension for even more strict security. Insert some data into the Data Extension in the first step and validate it with Lookup against the payload content on Code Resource.
+If the request comes from Marketing Cloud controlled resource (Cloud Page, Email, another Code Resource), you can also leverage Data Extension for even more strict security. Insert some data into the Data Extension in the first step of the process and validate it with Lookup against the payload content within the Code Resource.
 
 ### SSO
 
@@ -292,6 +294,6 @@ With the flexibility of Code Resources, the sky is the limit for compelling use 
 1. Protect your Cloud Page Forms from spambots with [Google reCaptcha v2](https://ampscript.xyz/how-tos/how-to-implement-google-recaptcha-on-marketing-cloud-forms/) and [v3](https://ampscript.xyz/how-tos/how-to-add-recaptcha-v3-to-your-forms-in-salesforce-marketing-cloud/) by [Ivan Razine](https://www.linkedin.com/in/ivanrazine/).
 2. Run [SSJS within a Journey Activity](https://www.linkedin.com/pulse/ssjs-journey-builder-sascha-huwald/) by [Sascha Huwald](https://www.linkedin.com/in/sascha-huwald/).
 3. Create a custom Chrome search engine that can find and directly open SFMC Data Extensions right from your URL bar by [Michał Rzepka](https://www.linkedin.com/in/michalrzepka90/) (unfortunately not yet documented - we are waiting, Michał ;)).
-4. [Cloud Page Apps](./sfmc-cloud-page-apps.mdx) can make your and your team lives easier.
+4. Build [Cloud Page Apps](./sfmc-cloud-page-apps.mdx) to make your and your team lives easier.
 
 Know other inspiring Code Resource use cases? Let me know!
