@@ -695,7 +695,7 @@ FROM _Unsubscribe AS unsub
 
 When working with `_Unsubscribe` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Job`](#_job) and [`_Subscribers](#_subscribers) to check unsubscription context.
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Job`](#_job) and [`_Subscribers`](#_subscribers) to check unsubscription context.
 2. Use `_unsubscribe.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event.
 3. If you query this Data View on the child Business Unit, it will return only unsubscribe events from that specific BU.
 4. The most valuable data here are:
