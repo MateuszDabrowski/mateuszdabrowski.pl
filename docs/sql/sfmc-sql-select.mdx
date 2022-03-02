@@ -144,7 +144,7 @@ SELECT TOP 10 PERCENT
 ORDER BY CONVERT(INT, QuizScore) DESC
 ```
 
-`ORDER BY` will also sort dates in Marketing Cloud alphabetically using month(start with `Apr`, follow up with `Aug` and so on). You can fix it by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) to `DATE`, just as in previous example.
+`ORDER BY` will also sort dates in Marketing Cloud alphabetically using month(start with `Apr`, follow up with `Aug` and so on). You can fix it by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) to `DATE` (if you to order only by date) or `DATETIME2` (if time is important for ordering as well), just as in previous example.
 
 :::
 
