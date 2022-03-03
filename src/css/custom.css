@@ -44,6 +44,10 @@ background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
     no-repeat;
 }
 
+.header-github-link {
+  padding-right: 16px;
+}
+
 .header-github-link:before {
   content: '';
   width: 24px;
