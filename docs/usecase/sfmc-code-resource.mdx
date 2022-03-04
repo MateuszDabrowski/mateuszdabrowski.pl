@@ -97,7 +97,7 @@ You can even perform API calls with SSJS or AMPScript to external systems to sec
 JSON Code Resources are where the real magic happens. They pair beautifully with SSJS and allow us to generate whole outputs from scratch with a nifty combination of SSJS object, `Stringify()` function and `<ctrl:var name=string />` personalisation string. Yeah, you can have no line of JSON in your JSON Code Resource and still use it to its fullest potential. Let's dive into details.
 
 ```html {3,5} title="Make a JSON from generated data"
-<script runat='server'>
+<script runat="server">
     (...)
     var stringifiedResult = Stringify({ 'created': createdAssets, 'deleted': deletedAssets });
 </script>

@@ -100,7 +100,7 @@ for (var i = 0; i < 10000; i++) {
     var b;
     </script>
 
-    <script runat='server'>
+    <script runat="server">
 };
 ```
 
@@ -115,7 +115,7 @@ for (var i = 0; i < 10000; i++) {
     %%[
         VAR @c
     ]%%
-    <script runat='server'>
+    <script runat="server">
 };
 ```
 
@@ -131,7 +131,7 @@ Then I put the for loop in the AMPScript context. As a result, the SSJS code blo
         VAR @d
     NEXT @current
 ]%%
-<script runat='server'>
+<script runat="server">
 
 ```
 
@@ -150,7 +150,7 @@ For the final scenario I decided to break out of AMPScript context within an AMP
         %%[
     NEXT @current
     ]%%
-<script runat='server'>
+<script runat="server">
 ```
 
 </TabItem>
