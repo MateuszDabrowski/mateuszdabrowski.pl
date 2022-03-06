@@ -32,6 +32,7 @@ module.exports = {
             items: [
                 'js/js-if-and-switch',
                 'js/js-loops',
+                'js/js-dom',
             ],
         },
         {
