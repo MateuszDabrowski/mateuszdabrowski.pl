@@ -13,5 +13,35 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## What is Document Object Model?
 
-The Document Object Model (DOM) represents the structure of a web document and serves as its programming interface. In simpler words, it let's JavaScript talk with the HTML. And that is huge, especially in Marketing Automation world.
+The Document Object Model (DOM) represents the structure of a web document and serves as its programming interface. In simpler words, it let's JavaScript talk with the HTML of the page. And that is huge, especially in Marketing Automation world.
 
+Why? Because it let's you manipulate your website in many ways - visible and not. Dynamic forms adapting to selections, real-time restructring of the pages and data capture. All that is possible thanks to DOM. So let's dive into details.
+
+## Accessing the DOM
+
+To start working with Document Object Model in JavaScript, you just need to use one of the special objects - `window` (browser tab) or `document` (page within that tab). Each of those objects offer multitude of methods that let you interact with a webpage.
+
+### Selecting HTML elements
+
+JavaScript lets you capture specific parts of your website and make them accessible for all your scripting needs:
+
+- __getElementByTagName__: returns a collection of matching tags (for example, all `p` tags)
+- __getElementByName__: returns a collection of tags with matching name (for example, all inputs with name `email`)
+- __getElementByClassName__: returns a collection of tags with matching class (for example, all tags with class `hiddenContent`)
+- __getElementById__: returns an element with matching id (for example, `emailAddressField`)
+- __querySelector__: returns an element with a matching CSS3 selector (for example `#mainContent .hiddenContent h2`)
+- __querySelectorAll__: returns a collection of elements matching CSS3 selector (for example `#attributes-repeater tbody tr`)
+
+As you can see, there are a lot of options you can leverage. Which one is right for the job?
+
+The rule of thumb is that if one of the `getElementBy` selectors can do the job, it's better choice due to optimised performance. However, for more complex selections it might either be better or the only possible choice to use the newer `querySelector` family.
+
+```js
+// Instead of using three getElementBy selectors
+document.getElementById('attributes-repeater').getElementByClassName('DataCell').getElementByTagName('tr');
+// you might use single querySelectorAll selector
+document.querySelectorAll('#attributes-repeater .DataCell tr');
+
+// There are also cases where querySelector is the only choice
+document.querySelectorAll('input[type="checkbox"]');
+```
