@@ -23,25 +23,38 @@ To start working with Document Object Model in JavaScript, you just need to use 
 
 ### Selecting HTML elements
 
-JavaScript lets you capture specific parts of your website and make them accessible for all your scripting needs:
+JavaScript lets you capture specific parts of your website and make them accessible for all your scripting needs with the help of `document` object methods:
 
-- __getElementByTagName__: returns a collection of matching tags (for example, all `p` tags)
-- __getElementByName__: returns a collection of tags with matching name (for example, all inputs with name `email`)
-- __getElementByClassName__: returns a collection of tags with matching class (for example, all tags with class `hiddenContent`)
-- __getElementById__: returns an element with matching id (for example, `emailAddressField`)
-- __querySelector__: returns an element with a matching CSS3 selector (for example `#mainContent .hiddenContent h2`)
-- __querySelectorAll__: returns a collection of elements matching CSS3 selector (for example `#attributes-repeater tbody tr`)
+- __getElementById__: returns an element with matching id (for example, `document.getElementById('emailAddressField')`)
+- __getElementsByTagName__: returns a collection of matching tags (for example, all `document.getElementByTagName('p')` tags)
+- __getElementsByName__: returns a collection of tags with matching name (for example, all inputs with name `document.getElementByName('email')`)
+- __getElementsByClassName__: returns a collection of tags with matching class (for example, all tags with class `document.getElementByClassName('hiddenContent')`)
+- __querySelector__: returns an element with a matching CSS3 selector (for example `document.querySelector('#mainContent .hiddenContent h2')`)
+- __querySelectorAll__: returns a collection of elements matching CSS3 selector (for example `document.querySelectorAll('#attributes-repeater .DataCell tr')`)
 
 As you can see, there are a lot of options you can leverage. Which one is right for the job?
 
-The rule of thumb is that if one of the `getElementBy` selectors can do the job, it's better choice due to optimised performance. However, for more complex selections it might either be better or the only possible choice to use the newer `querySelector` family.
+The rule of thumb is that if one of the `getElement` selectors can do the job, it's better choice due to optimised performance (the longer HTML, the bigger difference). However, for more complex selections it might either be better or even the only possible choice to use the newer `querySelector` family.
 
-```js
-// Instead of using three getElementBy selectors
-document.getElementById('attributes-repeater').getElementByClassName('DataCell').getElementByTagName('tr');
-// you might use single querySelectorAll selector
+```js title="Good use cases for the querySelector family"
+// Instead of using three getElement selectors (that wouldn't even work in this example)
+document.getElementById('attributes-repeater').getElementsByClassName('DataCell').getElementsByTagName('tr');
+// you should use a single querySelectorAll selector
 document.querySelectorAll('#attributes-repeater .DataCell tr');
 
 // There are also cases where querySelector is the only choice
 document.querySelectorAll('input[type="checkbox"]');
 ```
+
+As always, the devil lies in the details. While chained `getElement` selectors will have better performance than clean `querySelector`, there are three issues with the former:
+
+1. Readability: after two or three selectors the `getElement` chain gets really hard to read and debug, natural CSS3 style of `querySelector` is much more straightforward.
+2. Flexibility: you can only chain `getElements` on single elements. Refering to the previous code sample, while the `.getElementsByClassName('DataCell')` called on single outcome of `.getElementById('attributes-repeater')` works, returned collection of outcomes would crash the `.getElementsByTagName('tr')`.
+3. Loopability: outcomes of `getElements` selection cannot be looped using [`forEach()`](./js-loops.mdx#foreach).
+
+So my approach is to use the more flexible and readable `querySelector` whenever performance is not a dealbraker, and switch where possible to `getElement` toolset when the performance is crucial.
+
+:::note You Should Know
+
+variable assignment and reuse
+:::
