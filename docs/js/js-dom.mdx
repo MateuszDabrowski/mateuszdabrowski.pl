@@ -21,20 +21,18 @@ Why? Because it let's you manipulate your website in many ways - visible and not
 
 To start working with Document Object Model in JavaScript, you just need to use one of the special objects - `window` (browser tab) or `document` (page within that tab). Each of those objects offer multitude of methods that let you interact with a webpage.
 
-### Selecting HTML elements
-
 JavaScript lets you capture specific parts of your website and make them accessible for all your scripting needs with the help of `document` object methods:
 
 - __getElementById__: returns an element with matching id (for example, `document.getElementById('emailAddressField')`)
 - __getElementsByTagName__: returns a collection of matching tags (for example, all `document.getElementByTagName('p')` tags)
 - __getElementsByName__: returns a collection of tags with matching name (for example, all inputs with name `document.getElementByName('email')`)
 - __getElementsByClassName__: returns a collection of tags with matching class (for example, all tags with class `document.getElementByClassName('hiddenContent')`)
-- __querySelector__: returns an element with a matching CSS3 selector (for example `document.querySelector('#mainContent .hiddenContent h2')`)
+- __querySelector__: returns an element with a matching CSS3 selector (for example `document.querySelector('#mainContent .hiddenContent h2')`). If there are multiple matching - it will return the first one.
 - __querySelectorAll__: returns a collection of elements matching CSS3 selector (for example `document.querySelectorAll('#attributes-repeater .DataCell tr')`)
 
 As you can see, there are a lot of options you can leverage.
 
-#### Should you use getElement or querySelector?
+### Should you use getElement or querySelector?
 
 The rule of thumb is that if one of the `getElement` selectors can do the job, it's better choice due to optimised performance (the longer HTML, the bigger difference). However, for more complex selections it might either be better or even the only possible choice to use the newer `querySelector` family.
 
@@ -64,25 +62,57 @@ You can do the latter by replacing the `document` object with your variable - it
 
 ```js
 const form = document.querySelector('form');
-const divsInForm = form.querySelectorAll('div'); // Returns only div tags within your form
+const divsInForm = form.querySelectorAll('div.legalNotice'); // Returns only div tags with legalNotice class that are within your form
 ```
 
 It works like chaining selectors and with the same limitation - you can chain only if previous outcome is single element.
 
 ```js
 /* ✅ Chain from a single element to a collection - same outcome as previous code snippet */
-document.querySelector('form').querySelectorAll('div');
+document.querySelector('form').querySelectorAll('div.legalNotice');
 
 /* ❌ Chain from a collection to a collection - will throw TypeError */
-document.querySelectorAll('form').querySelectorAll('div');
+document.querySelectorAll('form').querySelectorAll('div.legalNotice');
 
-/* ✅ Chain from a single element (thank you, index) to a collection - same outcome as previous code snippet */
-document.querySelectorAll('form')[0].querySelectorAll('div');
+/* ✅ Chain from a single element (thanks to index) to a collection */
+document.querySelectorAll('form')[0].querySelectorAll('div.legalNotice');
+
+/* Of course, in real scenario, you should use a compound selector for the same result */
+document.querySelectorAll('form div.legalNotice');
 ```
 
 :::
 
-#### How to use getElements and querySelectors?
+Selecting elements is just the beginning. Once you pick them, you can [explore](#exploring-the-dom), [traverse](#traversing-the-dom) and [manipulate](#manipulating-the-dom) the DOM. You can check what is available for selected element with `console.dir(selectedElement)` in the developer console.
+
+## Exploring the DOM
+
+## Traversing the DOM
+
+Think about the DOM as a complex hierarchy of elements. When you select specific element, it will be somewhere within that hierarchy. And with the help of properties and methods you can travel through that web.
+
+
+
+## Manipulating the DOM
+
+
+
+
+
+### Element Properties
+
+From the Marketing Automation perspective, there are a lot of interesting properties that help understand what is happening on the page. They are especially useful when working with web forms and dynamic content.
+
+Firstly, there is set of descriptive properties that let you get more context about the element. `Element.id` and `Element.classList` will let you know what are the values of the id and class attributes respectively. There is also `Element.tagName` that provides the name of the HTML tag of the element.
+
+Next
+
+### Element Methods
+
+
+
+1. Properties related to forms and dynamic content sections, like: checked, hidden, innerText, innerHTML, classList
+2.
 
 
 
