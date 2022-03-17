@@ -27,7 +27,7 @@ JavaScript lets you capture specific parts of your website and make them accessi
 - __getElementsByTagName__: returns a collection of matching tags (for example, all `document.getElementByTagName('p')` tags)
 - __getElementsByName__: returns a collection of tags with matching name (for example, all inputs with name `document.getElementByName('email')`)
 - __getElementsByClassName__: returns a collection of tags with matching class (for example, all tags with class `document.getElementByClassName('hiddenContent')`)
-- __querySelector__: returns an element with a matching CSS3 selector (for example `document.querySelector('#mainContent .hiddenContent h2')`). If there are multiple matching - it will return the first one.
+- __querySelector__: returns an element with a matching CSS3 selector (for example `document.querySelector('#mainContent .hiddenContent h2')` - notice the `#` prefix for id and `.` for a class). If there are multiple matching elements - it will return the first one.
 - __querySelectorAll__: returns a collection of elements matching CSS3 selector (for example `document.querySelectorAll('#attributes-repeater .DataCell tr')`)
 
 As you can see, there are a lot of options you can leverage.
@@ -87,32 +87,58 @@ Selecting elements is just the beginning. Once you pick them, you can [explore](
 
 ## Exploring the DOM
 
+Once you select the page element, you can learn more about it thanks to properties and methods. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation space.
+
+### .attributes
+
+With `.attributes` property you can list all HTML attributes on selected element as a NamedNodeMap. What is more, you can drill down on those details to get specific values:
+
+```js
+/* <main id="content" class="main-content" role="main">…</main> */
+document.querySelector('#content').attributes;              // returns a Map with id, class and role
+document.querySelector('#content').attributes.class.value;  // returns 'main-content'
+```
+
+While it is great way of learning what attributes are used on a specific elements, in most scenarios the attribute-specific shorthands will be much more useful.
+
+### .classList and .className
+
+The `.classList` property let's you directly list all classes assigned to the selected element (in a form of DOMTokenList). It is great when you want to [loop](./js-loops.mdx) through to find a specific class or when you want to [manipulate the DOM](#manipulating-the-dom).
+
+On the other hand, when you want to do a simple check or condition, `.className` is a great shorthand returning a string with all the classes.
+
+```js
+/* <div class="page-wrapper category-api document-page">…</div> */
+document.querySelector('div.page-wrapper').classList;                           // returns an object with all the classes, length and value
+document.querySelector('div.page-wrapper').classList.contains('document-page'); // returns true
+document.querySelector('div.page-wrapper').classList.value;                     // returns 'page-wrapper category-api document-page'
+document.querySelector('div.page-wrapper').className;                           // shorthand of the previous, returns 'page-wrapper category-api document-page'
+```
+
+The `.classList` property is the bread and butter of page manipulation, as it allows you to add, remove, replace and toggle classes on an element. Think of hiding and displaying elements, changing the styles and other dynamic scenarios. More on that, in the [Manipulating the DOM](#manipulating-the-dom) section.
+
+### .id and .tagName
+
+Similarly to class-related properties, there is `.id` property that returns the value of id attribute and `.tagName` property that returns name of the selected tag.
+
+```js
+/* <main id="content" class="main-content" role="main">…</main> */
+document.querySelector('.main-content').id;      // returns 'content'
+document.querySelector('.main-content').tagName; // returns 'main'
+```
+
+### .innerText and .innerHTML
+
+### .hidden
+
+### .style
+
 ## Traversing the DOM
 
 Think about the DOM as a complex hierarchy of elements. When you select specific element, it will be somewhere within that hierarchy. And with the help of properties and methods you can travel through that web.
 
 
-
 ## Manipulating the DOM
-
-
-
-
-
-### Element Properties
-
-From the Marketing Automation perspective, there are a lot of interesting properties that help understand what is happening on the page. They are especially useful when working with web forms and dynamic content.
-
-Firstly, there is set of descriptive properties that let you get more context about the element. `Element.id` and `Element.classList` will let you know what are the values of the id and class attributes respectively. There is also `Element.tagName` that provides the name of the HTML tag of the element.
-
-Next
-
-### Element Methods
-
-
-
-1. Properties related to forms and dynamic content sections, like: checked, hidden, innerText, innerHTML, classList
-2.
 
 
 
