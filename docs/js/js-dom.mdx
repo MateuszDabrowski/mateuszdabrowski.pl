@@ -159,15 +159,48 @@ document.querySelector('.main-content').id;      // returns 'content'
 document.querySelector('.main-content').tagName; // returns 'main'
 ```
 
+Those two are less frequently used and mostly have some value when [travelling through the DOM](#traversing-the-dom).
+
 ### .innerText and .innerHTML
 
-### .hidden
+Another extremly important properties are `.innerText` and `.innerHTML`. They allow you to look into what is within the selected element.
 
-### .style
+`.innerText` returns a plain text version of element content (including all child tags within). Think the result of copy pasting fragment of the page into a chat.
+
+```js title="Example output for header of this section"
+document.querySelector('#innertext-and-innerhtml').innerText;
+// returns ".innerText and .innerHTML"
+```
+
+`.innerHTML`, on the other hand, will return a full blown HTML code of the selected element (including all child tags within). Keep in mind, however, that it will be the rendered HTML, not the original HTML (so the version adapted to your screen, your device, your context).
+
+```js title="Example output for header of this section"
+document.querySelector('#innertext-and-innerhtml').innerHTML;
+// returns ".innerText and .innerHTML<a class=\"hash-link\" href=\"#innertext-and-innerhtml\" title=\"Direct link to heading\"></a>"
+```
+
+While it is already useful, those properties shine when you want to [manipulate your page](#manipulating-the-dom). More on that later.
+
+### .hidden and .style
+
+Finally, there are landing page must-haves - `.hidden` and `.style`. Those two properties describe the CSS of the selected element.
+
+`.hidden` is straightforward. It returns a boolean telling you whether the element is hidden from the frontend of the page.
+
+`.style` is much deeper, as it returns a whole object build with all possible __inline__ CSS declarations for the element. You can then drill down to return a value of specific declaration.
+
+```js title="Example output for header of this section"
+document.querySelector('#hidden-and-style').hidden;         // returns false
+document.querySelector('#hidden-and-style').style.display;  // returns ''
+```
+
+As with other properties mentioned previously, those true shine when [manipulating the DOM](#manipulating-the-dom).
 
 ## Traversing the DOM
 
-Think about the DOM as a complex hierarchy of elements. When you select specific element, it will be somewhere within that hierarchy. And with the help of properties and methods you can travel through that web.
+Think about the DOM as a complex hierarchy of elements. When you select specific element, it is located somewhere within that hierarchy. And with the help of properties and methods you can travel through that web.
+
+
 
 
 ## Manipulating the DOM
