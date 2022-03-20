@@ -119,7 +119,7 @@ Selecting elements is just the beginning. Once you pick them, you can [explore](
 
 ## Exploring the DOM
 
-Once you select the page element, you can learn more about it thanks to properties and methods. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation space.
+Once you select the page element, you can learn more about it thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation world.
 
 ### .attributes
 
@@ -198,12 +198,55 @@ As with other properties mentioned previously, those true shine when [manipulati
 
 ## Traversing the DOM
 
-Think about the DOM as a complex hierarchy of elements. When you select specific element, it is located somewhere within that hierarchy. And with the help of properties and methods you can travel through that web.
+Think about the DOM as a complex hierarchy of elements. When you select specific element, it is located somewhere within that hierarchy. And with the help of the properties you can learn more about that web and travel through it.
 
+Before jumping to the specific ways to travel through the page, let's settle the DOM naming convention for the hierarchy of elements:
 
+```html title="HTML snippet"
+<article class="main-page-content">
+    <h1>Main Header</h1>
+    <div>
+        <p>
+            <strong>Example paragraph</strong> with some written content and a <a href="https://mateuszdabrowski.pl">link</a>.
+        </p>
+        <p>
+            Yet another paragraph of this article.
+        </p>
+    </div>
+</article>
+```
 
+Let's select the `div` tag from the above structure using:
+
+```js
+document.querySelector('article.main-page-content > div');
+```
+
+As you can see there are three relationships between the selected `div` tag and the rest of the code:
+
+1. The selected `div` tag is enclosed within `<article class="main-page-content">`. The tag higher in the DOM hierarchy is called __parent__.
+2. The selected `div` tag is not alone within the `<article class="main-page-content">` parent tag. There is also `h1`. The tags at the same level of DOM hierarchy are called __siblings__.
+3. The selected `div` tag has two `p` tags within itself. The tags lower in the DOM hierarchy are called __children__.
+
+To sum up, our `div` tag has `article` as a parent, `h1` as a sibling, and two `p` as children. What is more, the first `p` has two inline children of its own: `strong` and `a`.
+
+Let's jump into how to levarege all those informations.
+
+### Parent properties
+
+`.parentElement`
+
+### Sibling properties
+
+`.previousElementSibling`
+`.nextElementSibling`
+
+### Children properties
+
+`.children`
+`.childElementCount`
+`.firstElementChild`
+`.lastElementChild`
 
 ## Manipulating the DOM
-
-
 
