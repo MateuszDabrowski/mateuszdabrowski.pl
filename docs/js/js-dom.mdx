@@ -121,7 +121,7 @@ Selecting elements is just the beginning. Once you pick them, you can [explore](
 
 Once you select the page element, you can learn more about it thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation world.
 
-### .attributes
+### attributes
 
 With `.attributes` property you can list all HTML attributes on selected element as a NamedNodeMap. What is more, you can drill down on those details to get specific values:
 
@@ -133,7 +133,19 @@ document.querySelector('#content').attributes.class.value;  // returns 'main-con
 
 While it is great way of learning what attributes are used on a specific elements, in most scenarios the attribute-specific shorthand properties will be much more useful.
 
-### .classList and .className
+You can also list the names of all available attributes using `.getAttributesNames()`. There is also `getAttrubute()` method that lets you pull a value of specific attribute and a pair of condition checking methods: `hasAttributes()` that checks whether selected element has any attribute and `hasAttribute()` that tells you if the selected element has a specified attribute.
+
+```js
+/* <main id="content" class="main-content" role="main">…</main> */
+document.querySelector('#content').getAttributesNames();    // returns ['id', 'class', 'role']
+document.querySelector('#content').getAttrubute('role');    // returns 'main'
+document.querySelector('#content').hasAttrubutes();         // returns true
+document.querySelector('#content').hasAttrubute('role');    // returns true
+```
+
+This method is useful for non-standard attributes that doesn't have a dedicated shorthand.
+
+### classList and className
 
 The `.classList` property let's you directly list all classes assigned to the selected element (in a form of DOMTokenList). It is great when you want to [loop](./js-loops.mdx) through to find a specific class or [manipulate the DOM](#manipulating-the-dom).
 
@@ -149,7 +161,7 @@ document.querySelector('div.page-wrapper').className;                           
 
 The `.classList` property is the bread and butter of page manipulation, as it allows you to add, remove, replace and toggle classes on an element. Think of hiding and displaying elements, changing the styles and other dynamic scenarios. More on that, in the [Manipulating the DOM](#manipulating-the-dom) section.
 
-### .id and .tagName
+### id and tagName
 
 Similarly to class-related properties, there is `.id` property that returns the value of id attribute and `.tagName` property that returns name of the selected tag.
 
@@ -161,7 +173,7 @@ document.querySelector('.main-content').tagName; // returns 'main'
 
 Those two are less frequently used and mostly have some value when [travelling through the DOM](#traversing-the-dom).
 
-### .innerText and .innerHTML
+### innerText and innerHTML
 
 Another extremly important properties are `.innerText` and `.innerHTML`. They allow you to look into what is within the selected element.
 
@@ -181,7 +193,7 @@ document.querySelector('#innertext-and-innerhtml').innerHTML;
 
 While it is already useful, those properties shine when you want to [manipulate your page](#manipulating-the-dom). More on that later.
 
-### .hidden and .style
+### hidden and style
 
 Finally, there are landing page must-haves - `.hidden` and `.style`. Those two properties describe the CSS of the selected element.
 
@@ -219,7 +231,7 @@ Before jumping to the specific ways to travel through the page, let's settle the
 Let's select the `div` tag from the above structure using:
 
 ```js
-document.querySelector('article.main-page-content > div');
+document.querySelector('article.main-page-content > div'); // selects <div>
 ```
 
 As you can see there are three relationships between the selected `div` tag and the rest of the code:
@@ -230,23 +242,98 @@ As you can see there are three relationships between the selected `div` tag and 
 
 To sum up, our `div` tag has `article` as a parent, `h1` as a sibling, and two `p` as children. What is more, the first `p` has two inline children of its own: `strong` and `a`.
 
-Let's jump into how to levarege all those informations.
+Let's check how to levarege all those informations.
 
-### Parent properties
+### parentElement
 
-`.parentElement`
+If you want to go up in the hierarchy from your selection you can just use `.parentElement` (or `.parentNode` that is nearly the same now).
 
-### Sibling properties
+```js
+document.querySelector('article.main-page-content > div').parentElement; // selects <article class="main-page-content">
+```
 
-`.previousElementSibling`
-`.nextElementSibling`
+### previousElementSibling and nextElementSibling
 
-### Children properties
+For traversing the sibling elements, you can use either `.previousElementSibling` or `.nextElementSibling` to jump to previous or next Element respectively. If there is no such element, you will get `null`.
 
-`.children`
-`.childElementCount`
-`.firstElementChild`
-`.lastElementChild`
+```js
+document.querySelector('article.main-page-content > div').previousElementSibling; // selects <h1>
+document.querySelector('article.main-page-content > div').nextElementSibling; // returns null
+```
+
+:::note You Should Know
+
+You can also encounter similar properties - `.previousSibling` and `.nextSibling`. That pair is operating on HTML Nodes and will return for example whitespace between the elements (as `#test` node) or HTML comments. Unless you are sure you need it,  `.previousElementSibling` or `.nextElementSibling` are better choice.
+
+:::
+
+### All things children
+
+When you want to go down in the hierarchy, you can use `.children` to get a Collection of HTML elements.
+
+```js
+document.querySelector('article.main-page-content > div').children; // returns collection of two <p> tags
+```
+
+You can either [loop](./js-loops.mdx) through those or pick a specific children with an index. Helpful here can be `.childElementCount` that will show you the number of elements selected.
+
+```js
+document.querySelector('article.main-page-content > div').childElementCount; // returns 2
+```
+
+The nice thing is that for the most popular selections - the first and last child - you can use a clean shorthands `.firstElementChild` and `.lastElementChild`.
+
+```js
+/* ❌ Unnecessary complex selection of the first and last child */
+document.querySelector('article.main-page-content > div').children[0]; // selects first child
+document.querySelector('article.main-page-content > div').children[document.querySelector('article.main-page-content > div').childElementCount - 1]; // selects last child
+
+/* ✅  Optimised and readable selection of first and last child */
+document.querySelector('article.main-page-content > div').firstElementChild; // selects first child
+document.querySelector('article.main-page-content > div').lastElementChild;  // selects last child
+```
+
+:::note You Should Know
+
+Like with sibling selection, here also you have set of similar properties - `.childNodes`, `.firstChild`, `.lastChild`. All three work on Nodes, so will pick up not only elements, but also text (whitespace) and comments. Unless you are sure you need it, `.children`, `.firstElementChild` and `.lastElementChild` are better choice.
+
+:::
+
+### The power of DOM traversing
+
+Ok, we know how to traverse the DOM, but why should we? The beauty of using the above mentioned properties is that after traversing you can leverage all [exploratory properties](#exploring-the-dom) as you would on a normally selected element.
+
+```js
+document.querySelector('article.main-page-content > div').parentElement.className; // returns "main-page-content"
+```
+
+You can also mix and match the traversing properties to jump multiple levels of the hierarchy.
+
+```js
+document.querySelector('article.main-page-content > div').firstElementChild.lastElementChild.href // returns "https://mateuszdabrowski.pl/"
+```
+
+Finally, you are not limited by the need to know the exact path from the currently selected element to another one __higher in hierarchy__ that you are interested in. You can leverage `.closest` method to find it using the same CCS3 selection as with [`querySelector`](#accessing-the-dom).
+
+```js
+document.querySelector('article.main-page-content > div').closest('.main-page-content'); // selects <article class="main-page-content">
+```
+
+Keep in mind that `.closest` can select the originally selected element if it fulfills the new selection. If you want to stop it from happening, you can just chain it after `.parentElement`.
+
+```js
+document.querySelector('article.main-page-content > div').parentElement.closest('.main-page-content'); // selects <article class="main-page-content">
+```
 
 ## Manipulating the DOM
+
+Everything discussed up to this point was nice, but not breathtaking. Time to change this and jump straight into the real reason it is worth to dive into the DOM. The ins and outs of manipulating it with methods.
+
+### addEventListener
+
+### Changing attributes
+
+### Removing DOM elements
+
+### Creating and replacing DOM elements
 
