@@ -327,9 +327,17 @@ document.querySelector('article.main-page-content > div').parentElement.closest(
 
 ## Manipulating the DOM
 
-Everything discussed up to this point was nice, but not breathtaking. Time to change this and jump straight into the real reason it is worth to dive into the DOM. The ins and outs of manipulating it with methods.
+Everything discussed up to this point was nice, but not breathtaking. Time to change it and jump straight into the real reason it is worth to learn about the DOM. The ins and outs of manipulating it with JavaScript methods.
 
 ### addEventListener
+
+One of the key manipulation methods for marketing automation is adding events with `.addEventListener`. This method lets you perform some actions (a function) given a specific behaviour. In simpler words, you can tell the browser to execute some JavaScript function when the user for example clicks a button. Or moves the mouse out of the page to close it or change a tab.
+
+You can add an event to any selector:
+
+```js
+document.querySelector('button').addEventListener('click', event => console.log(event));
+```
 
 ### Changing attributes
 
