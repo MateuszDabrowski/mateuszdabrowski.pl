@@ -331,17 +331,45 @@ Everything discussed up to this point was nice, but not breathtaking. Time to ch
 
 ### addEventListener
 
-One of the key manipulation methods for marketing automation is adding events with `.addEventListener`. This method lets you perform some actions (a function) given a specific behaviour. In simpler words, you can tell the browser to execute some JavaScript function when the user for example clicks a button. Or moves the mouse out of the page to close it or change a tab.
+One of the key manipulation methods for marketing automation is adding events with `.addEventListener`. This method lets you perform some actions (a function) given a specific behaviour.
 
-You can add an event to any selector:
+In simpler words, you can tell the browser to execute a JavaScript function when the user clicks a button. Or moves the mouse out of the page to close it or change a tab. Or perform any other event you configure. You do it by attaching a specified Event Listener to a document, window or selected element:
 
-```js
+```js title="Example of attaching Click-based Event Listener on a <button> that logs click details to console"
 document.querySelector('button').addEventListener('click', event => console.log(event));
 ```
 
+:::note You Should Know
+
+Using anonymous functions like in the example above is __not recommended__. Each anonymous function is unique for the JavaScript, even if they have exactly the same code within. This leads to two issues:
+
+1. You may add multiple instances of the same anonymous function to a single element (no deduplication). It will lead not only to negative performance impact, but also the function being triggered multiple times on event.
+2. You cannot remove such anonymous Event Listener.
+
+In real world scenarios use named functions (unless you are absolutely sure what you are doing and have booked some time for debugging in the future):
+
+```js
+function consoleLogEvent(event) {
+    console.log(event)
+}
+
+document.querySelector('button').addEventListener('click', consoleLogEvent);
+```
+
+It will allow you to easily remove Event Listener (by referencing the target, event type and named function) once it is no longer needed:
+
+```js
+document.querySelector('button').removeEventListener('click', consoleLogEvent);
+```
+
+:::
+
+#### Available Events
+
+
+
+
 ### Changing attributes
 
-### Removing DOM elements
 
-### Creating and replacing DOM elements
 
