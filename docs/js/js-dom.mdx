@@ -364,10 +364,62 @@ document.querySelector('button').removeEventListener('click', consoleLogEvent);
 
 :::
 
-#### Available Events
+#### Event types
+
+There is over a hundred of available events that you can use, so I will focus only on the most useful ones for our Marketing Automation needs.
+
+##### Click
+
+Capturing a click event is probably the most popular event in the world wide web. Technically, it's a shorthand for two separate events (that you can listen for seprately as well) - `mousedown` and `mouseup`.
+
+The interesting part is that the event captures the number of consecutive clicks happening in short timeframe, so you can distinguish single, double, tripleclicks:
+
+```js
+document.querySelector('button').addEventListener('click',
+    event => console.log(`Click count: ${event.detail}`)
+);
+```
+
+##### Submit
+
+Another marketing must-have is the submit event. It is triggered on valid submission of a form.
+
+```js
+document.querySelector('form').addEventListener('submit',
+    event => console.log(`Submission timestamp: ${event.timeStamp}`) // miliseconds since the page/script load
+);
+```
+
+The key feature with submit events is possibility to stop the default form processing with `.preventDefault` method:
+
+```js {5}
+document.querySelector('form').addEventListener('submit',
+    event => {
+        const formData = Object.fromEntries(new FormData(event.target));
+        console.log(formData);
+        event.preventDefault();
+    }
+);
+```
+
+This approach allows you to implement any custom validation or data processing while still benefitting from the HTML5 form backbone. Perfect when you want to push your form submission to a [Code Resource](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource).
+
+##### Focus & Blur
+
+Another events that are very useful for forms are focus and blur. The first one is triggered when when element gets into focus, the other is the opposite. What does it mean? Let's say you have a form. When user click on the input, the input element gets focused. When he clicks on something else (another element, submit button, or just anywere else) it triggers blur event.
+
+```js
+document.querySelector('input[type="email"]').addEventListener('blur',
+    event => console.log(event.target.value)
+);
+```
+
+Using blur event can be great for triggering asynchronous checks on the provided data. For example, after user finishes writing the email and goes to the next field, the Event Listener can trigger an asynchronous call to [Code Resource backend](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource) to lookup whether this record is existing contact or needs to be created in Salesforce Sales Cloud first to generate the Contact ID.
 
 
 
+
+Those are just few key events that you can capture with `.addEventListener`. There is much more available, like scroll, paste, . Check the full list on [MDN](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing).
 
 ### Changing attributes
 
