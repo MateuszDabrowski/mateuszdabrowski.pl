@@ -2,24 +2,24 @@
 id: js-dom
 title: JS Document Object Model
 sidebar_label: DOM
-description: WIP
+description: Explore, traverse and modify web pages with the power of JavaScript DOM properties and methods.
 image: img/og/og-image-js-dom.png
 tags: [JavaScript, Cloud Page, Personalisation]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='WIP' />
+<LeadText content='Explore, traverse and modify web pages with the power of JavaScript DOM properties and methods.' />
 
 ## What is Document Object Model?
 
-The Document Object Model (DOM) represents the structure of a web document and serves as its programming interface. In simpler words, it let's JavaScript talk with the HTML of the page. And that is huge, especially in Marketing Automation world.
+The Document Object Model (DOM) represents the structure of a web document and serves as its programming interface. In simpler words, it lets JavaScript talk with the HTML of the page. And that is huge, especially in the Marketing Automation world.
 
-Why? Because it let's you manipulate your website in many ways - visible and not. Dynamic forms adapting to user actions, pages changing in real time and enhanced data capture. All that is possible thanks to DOM. So let's dive into details.
+Why? Because it lets you manipulate your website in many ways - visible and not. Dynamic forms adapting to user actions, pages changing in real-time and enhanced data capture. All that is possible thanks to DOM. So let's dive into details.
 
 ## Accessing the DOM
 
-To start working with Document Object Model in JavaScript, you need to use one of the special objects - `window` (browser tab) or `document` (page within that tab). Each of those objects offer multitude of methods that let you interact with a webpage.
+To start working with Document Object Model in JavaScript, you need to use one of the special objects - `window` (browser tab) or `document` (page within that tab). Each of those objects offers many methods that let you interact with a webpage.
 
 JavaScript lets you capture specific parts of your website and make them accessible for all your scripting needs with the help of `document` object methods:
 
@@ -32,7 +32,7 @@ JavaScript lets you capture specific parts of your website and make them accessi
 
 :::note You Should Know
 
-`querySelector` and `querySelectorAll` allows you to select elements using the power of CSS3. It means that you can go really specific with he right syntax.
+`querySelector` and `querySelectorAll` allow you to select elements using the power of CSS3. It means that you can go really specific with the proper syntax.
 
 You can select:
 1. Tag by its name: `document.querySelector('body')`
@@ -58,15 +58,15 @@ Sky is the limit, especially with chaining all of the above into single super qu
 document.querySelector('#content > article > div:nth-child(20) a:nth-child(1) > code');
 ```
 
-However, whenever possible, optimise. Either by finding a better way to select the element or (if possible) by adding easily selectable attribute to that element in the page HTML.
+However, whenever possible, optimise. Either by finding a better way to select the element or by adding an easily selectable attribute to that element in the page HTML.
 
 :::
 
-As you can see, there are a lot of options you can leverage.
+As you can see, there are many options you can leverage.
 
 ### Should you use getElement or querySelector?
 
-The rule of thumb is that if one of the `getElement` selectors can do the job, it's better choice due to optimised performance (the longer HTML, the bigger difference). However, for more complex selections it might either be better or even the only possible choice to use the newer `querySelector` family.
+The rule of thumb is that if one of the `getElement` selectors can do the job, it's a better choice due to optimised performance (the longer HTML, the bigger difference). However, for more complex selections, the newer `querySelector` family might be better or the only possible choice.
 
 ```js title="Good use cases for the querySelector family"
 // Instead of using three getElement selectors (that wouldn't even work in this example)
@@ -80,24 +80,24 @@ document.querySelectorAll('input[type="checkbox"]');
 
 As always, the devil lies in the details. While chained `getElement` selectors will have better performance than clean `querySelector`, there are three issues with the former:
 
-1. Readability: after two or three selectors the `getElement` chain gets really hard to read and debug, natural CSS3 style of `querySelector` is much more straightforward.
+1. Readability: after two or three selectors, the `getElement` chain gets really hard to read and debug; the natural CSS3 style of `querySelector` is straightforward.
 2. Flexibility: you can only chain `getElements` on single elements. Refering to the previous code sample, while the `.getElementsByClassName('DataCell')` called on single outcome of `.getElementById('attributes-repeater')` works, returned collection of outcomes would crash the `.getElementsByTagName('tr')`.
 3. Loopability: outcomes of `getElements` selection cannot be looped using [`forEach()`](./js-loops.mdx#foreach).
 
-So my approach is to use the more flexible and readable `querySelector` whenever performance is not a dealbraker, and switch where possible to `getElement` toolset when the performance is crucial.
+So my approach is to use the more flexible and readable `querySelector` whenever performance is not a dealbreaker and switch where possible to the `getElement` toolset when the performance is crucial.
 
 :::note You Should Know
 
-You can assign your DOM selection to a variable. It not only allow you to reuse it in multiple places of your script, but also let's you limit the scope of the selection.
+You can assign your DOM selection to a variable. It allows you to reuse it in multiple places of your script and lets you limit the scope of the selection.
 
-You can do the latter by replacing the `document` object with your variable - it will look for matching DOM elements only within the outcome of the previous seletion.
+You can do the latter by replacing the `document` object with your variable - it will look for matching DOM elements only within the outcome of the previous selection.
 
 ```js
 const form = document.querySelector('form');
 const divsInForm = form.querySelectorAll('div.legalNotice'); // Returns only div tags with legalNotice class that are within your form
 ```
 
-It works like chaining selectors and with the same limitation - you can chain only if previous outcome is single element.
+It works like chaining selectors and with the same limitation - you can chain only if the previous outcome is a single element.
 
 ```js
 /* ✅ Chain from a single element to a collection - same outcome as previous code snippet */
@@ -115,11 +115,11 @@ document.querySelectorAll('form div.legalNotice');
 
 :::
 
-Selecting elements is just the beginning. Once you pick them, you can [explore](#exploring-the-dom), [traverse](#traversing-the-dom) and [manipulate](#manipulating-the-dom) the DOM. You can check what is available for selected element with `console.dir(selectedElement)` in the developer console.
+Selecting elements is just the beginning. Once you pick them, you can [explore](#exploring-the-dom), [traverse](#traversing-the-dom) and [manipulate](#manipulating-the-dom) the DOM. You can check what is available for the selected element with `console.dir(selectedElement)` in the developer console.
 
 ## Exploring the DOM
 
-Once you select the page element, you can learn more about it thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation world.
+Once you select the page element, you can learn more about it, thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and the real-time personalisation world.
 
 ### attributes
 
@@ -131,9 +131,9 @@ document.querySelector('#content').attributes;              // returns a Map wit
 document.querySelector('#content').attributes.class.value;  // returns 'main-content'
 ```
 
-While it is great way of learning what attributes are used on a specific elements, in most scenarios the attribute-specific shorthand properties will be much more useful.
+While it is an excellent way of learning what attributes are used on a specific element, the attribute-specific shorthand properties will be more helpful in most scenarios.
 
-You can also list the names of all available attributes using `.getAttributesNames()`. There is also `getAttrubute()` method that lets you pull a value of specific attribute and a pair of condition checking methods: `hasAttributes()` that checks whether selected element has any attribute and `hasAttribute()` that tells you if the selected element has a specified attribute.
+You can also list the names of all available attributes using `.getAttributesNames()`. There is also the `getAttrubute()` method that lets you pull a value of a specific attribute and a pair of condition checking methods: `hasAttributes()` that checks whether the selected element has any attribute and `hasAttribute()` that tells you if the selected element has a specified attribute.
 
 ```js
 /* <main id="content" class="main-content" role="main">…</main> */
@@ -143,11 +143,11 @@ document.querySelector('#content').hasAttributes();         // returns true
 document.querySelector('#content').hasAttribute('role');    // returns true
 ```
 
-This method is useful for non-standard attributes that doesn't have a dedicated shorthand.
+This method is helpful for non-standard attributes that don't have a dedicated shorthand.
 
 ### classList and className
 
-The `.classList` property let's you directly list all classes assigned to the selected element (in a form of DOMTokenList). It is great when you want to [loop](./js-loops.mdx) through to find a specific class or [manipulate the DOM](#manipulating-the-dom).
+The `.classList` property lets you directly list all classes assigned to the selected element (in the form of DOMTokenList). It is excellent when you want to [loop](./js-loops.mdx) through to find a specific class or [manipulate the DOM](#manipulating-the-dom).
 
 On the other hand, when you want to do a simple [check or condition](./js-if-and-switch.mdx), `.className` is a great shorthand returning a string with all classes.
 
@@ -163,7 +163,7 @@ The `.classList` property is the bread and butter of page manipulation, as it al
 
 ### id and tagName
 
-Similarly to class-related properties, there is `.id` property that returns the value of id attribute and `.tagName` property that returns name of the selected tag.
+Similarly to class-related properties, a `.id` property returns the value of the id attribute and a `.tagName` property that returns the selected tag's name.
 
 ```js
 /* <main id="content" class="main-content" role="main">…</main> */
@@ -175,16 +175,16 @@ Those two are less frequently used and mostly have some value when [travelling t
 
 ### innerText and innerHTML
 
-Another extremly important properties are `.innerText` and `.innerHTML`. They allow you to look into what is within the selected element.
+Another extremely important properties are `.innerText` and `.innerHTML`. They allow you to look into what is within the selected element.
 
-`.innerText` returns a plain text version of element content (including all child tags within). Think the result of copy pasting fragment of the page into a chat.
+`.innerText` returns a plain text version of element content (including all child tags). Think copy-pasting fragment of the page into a chat.
 
 ```js title="Example output for header of this section"
 document.querySelector('#innertext-and-innerhtml').innerText;
 // returns ".innerText and .innerHTML"
 ```
 
-`.innerHTML`, on the other hand, will return a full blown HTML code of the selected element (including all child tags within). Keep in mind, however, that it will be the rendered HTML, not the original HTML (so the version adapted to your screen, your device, your context).
+`.innerHTML`, on the other hand, will return a full-blown HTML code of the selected element (including all child tags within). However, keep in mind that it will be the rendered HTML, not the original HTML (so the version adapted to your screen, your device, your context).
 
 ```js title="Example output for header of this section"
 document.querySelector('#innertext-and-innerhtml').innerHTML;
@@ -199,18 +199,18 @@ Finally, there are landing page must-haves - `.hidden` and `.style`. Those two p
 
 `.hidden` is straightforward. It returns a boolean telling you whether the element is hidden from the frontend of the page.
 
-`.style` is much deeper, as it returns a whole object build with all possible __inline__ CSS declarations for the element. You can then drill down to return a value of specific declaration.
+`.style` is much deeper, as it returns a whole object build with all possible __inline__ CSS declarations for the element. You can then drill down to return a value of a specific declaration.
 
 ```js title="Example output for header of this section"
 document.querySelector('#hidden-and-style').hidden;         // returns false
 document.querySelector('#hidden-and-style').style.display;  // returns ''
 ```
 
-As with other properties mentioned previously, those true shine when [manipulating the DOM](#changing-attributes).
+As with properties mentioned previously, `.style` and `.hidden` truly shine when [manipulating the DOM](#changing-attributes).
 
 ## Traversing the DOM
 
-Think about the DOM as a complex hierarchy of elements. When you select specific element, it is located somewhere within that hierarchy. And with the help of the properties you can learn more about that web and travel through it.
+Think about the DOM as a complex hierarchy of elements. When you select a specific element, it is located somewhere within that hierarchy. And with the help of the properties, you can learn more about that web and travel through it.
 
 Before jumping to the specific ways to travel through the page, let's settle the DOM naming convention for the hierarchy of elements:
 
@@ -234,19 +234,19 @@ Let's select the `div` tag from the above structure using:
 document.querySelector('article.main-page-content > div'); // selects <div>
 ```
 
-As you can see there are three relationships between the selected `div` tag and the rest of the code:
+As you can see, there are three relationships between the selected `div` tag and the rest of the code:
 
-1. The selected `div` tag is enclosed within `<article class="main-page-content">`. The tag higher in the DOM hierarchy is called __parent__.
-2. The selected `div` tag is not alone within the `<article class="main-page-content">` parent tag. There is also `h1`. The tags at the same level of DOM hierarchy are called __siblings__.
+1. The selected `div` tag is enclosed within `<article class="main-page-content">`. The tag higher in the DOM hierarchy is called a __parent__.
+2. The selected `div` tag is not alone within the `<article class="main-page-content">` parent tag. There is also `h1`. The tags at the same level of the DOM hierarchy are called __siblings__.
 3. The selected `div` tag has two `p` tags within itself. The tags lower in the DOM hierarchy are called __children__.
 
-To sum up, our `div` tag has `article` as a parent, `h1` as a sibling, and two `p` as children. What is more, the first `p` has two inline children of its own: `strong` and `a`.
+To sum up, our `div` tag has an `article` as a parent, `h1` as a sibling, and two `p` as children. Then, the first `p` has two inline children: `strong` and `a`.
 
-Let's check how to levarege all those informations.
+Let's check how to leverage all those information.
 
 ### parentElement
 
-If you want to go up in the hierarchy from your selection you can just use `.parentElement` (or `.parentNode` that is nearly the same now).
+If you want to go up in the hierarchy from your selection, you can just use `.parentElement` (or `.parentNode`, which is nearly the same now).
 
 ```js
 document.querySelector('article.main-page-content > div').parentElement; // selects <article class="main-page-content">
@@ -254,7 +254,7 @@ document.querySelector('article.main-page-content > div').parentElement; // sele
 
 ### previousElementSibling and nextElementSibling
 
-For traversing the sibling elements, you can use either `.previousElementSibling` or `.nextElementSibling` to jump to previous or next Element respectively. If there is no such element, you will get `null`.
+For traversing the sibling elements, you can use either `.previousElementSibling` or `.nextElementSibling` to jump to the previous or next element. If there is no such element, you will get `null`.
 
 ```js
 document.querySelector('article.main-page-content > div').previousElementSibling; // selects <h1>
@@ -263,7 +263,7 @@ document.querySelector('article.main-page-content > div').nextElementSibling; //
 
 :::note You Should Know
 
-You can also encounter similar properties - `.previousSibling` and `.nextSibling`. That pair is operating on HTML Nodes and will return for example whitespace between the elements (as `#test` node) or HTML comments. Unless you are sure you need it,  `.previousElementSibling` or `.nextElementSibling` are better choice.
+You can also encounter similar properties - `.previousSibling` and `.nextSibling`. That pair is operating on HTML Nodes and will return for example whitespace between the elements (as `#test` node) or HTML comments. Unless you are sure you need it, `.previousElementSibling` or `.nextElementSibling` are better choice.
 
 :::
 
@@ -275,7 +275,7 @@ When you want to go down in the hierarchy, you can use `.children` to get a Coll
 document.querySelector('article.main-page-content > div').children; // returns collection of two <p> tags
 ```
 
-You can either [loop](./js-loops.mdx) through those or pick a specific children with an index. Helpful here can be `.childElementCount` that will show you the number of elements selected.
+You can either [loop](./js-loops.mdx) through those or pick a specific child with an index. Helpful here can be `.childElementCount`, which will show you the number of elements selected.
 
 ```js
 document.querySelector('article.main-page-content > div').childElementCount; // returns 2
@@ -288,38 +288,38 @@ The nice thing is that for the most popular selections - the first and last chil
 document.querySelector('article.main-page-content > div').children[0]; // selects first child
 document.querySelector('article.main-page-content > div').children[document.querySelector('article.main-page-content > div').childElementCount - 1]; // selects last child
 
-/* ✅  Optimised and readable selection of first and last child */
+/* ✅ Optimised and readable selection of first and last child */
 document.querySelector('article.main-page-content > div').firstElementChild; // selects first child
 document.querySelector('article.main-page-content > div').lastElementChild;  // selects last child
 ```
 
 :::note You Should Know
 
-Like with sibling selection, here also you have set of similar properties - `.childNodes`, `.firstChild`, `.lastChild`. All three work on Nodes, so will pick up not only elements, but also text (whitespace) and comments. Unless you are sure you need it, `.children`, `.firstElementChild` and `.lastElementChild` are better choice.
+Like with sibling selection, here also you have set of similar properties - `.childNodes`, `.firstChild`, `.lastChild`. All three work on Nodes, so those will pick up not only elements but also text (whitespace) and comments. Unless you are sure you need it, `.children`, `.firstElementChild` and `.lastElementChild` are better choice.
 
 :::
 
 ### The power of DOM traversing
 
-Ok, we know how to traverse the DOM, but why should we? The beauty of using the above mentioned properties is that after traversing you can leverage all [exploratory properties](#exploring-the-dom) as you would on a normally selected element.
+Ok, we know how to traverse the DOM, but why should we? The beauty of using the properties mentioned above is that you can leverage all [exploratory properties](#exploring-the-dom) after traversing.
 
 ```js
 document.querySelector('article.main-page-content > div').parentElement.className; // returns "main-page-content"
 ```
 
-You can also mix and match the traversing properties to jump multiple levels of the hierarchy.
+You can also mix and match the traversing properties to jump multiple hierarchy levels.
 
 ```js
 document.querySelector('article.main-page-content > div').firstElementChild.lastElementChild.href // returns "https://mateuszdabrowski.pl/"
 ```
 
-Finally, you are not limited by the need to know the exact path from the currently selected element to another one __higher in hierarchy__ that you are interested in. You can leverage `.closest` method to find it using the same CCS3 selection as with [`querySelector`](#accessing-the-dom).
+Finally, you are not limited by the need to know the exact path from the currently selected element to another one __higher in the hierarchy__ that you are interested in. You can leverage the `.closest` method to find it using the same CCS3 selection as with [`querySelector`](#accessing-the-dom).
 
 ```js
 document.querySelector('article.main-page-content > div').closest('.main-page-content'); // selects <article class="main-page-content">
 ```
 
-Keep in mind that `.closest` can select the originally selected element if it fulfills the new selection. If you want to stop it from happening, you can just chain it after `.parentElement`.
+Remember that `.closest` can return the initially selected element if it fulfils the new selection. If you want to stop it from happening, you can just chain it after `.parentElement`.
 
 ```js
 document.querySelector('article.main-page-content > div').parentElement.closest('.main-page-content'); // selects <article class="main-page-content">
@@ -327,11 +327,11 @@ document.querySelector('article.main-page-content > div').parentElement.closest(
 
 ## Manipulating the DOM
 
-Everything discussed up to this point was nice, but not breathtaking. Time to change it and jump straight into the real reason it is worth to learn about the DOM. The ins and outs of manipulating it with JavaScript methods.
+Everything discussed up to this point was nice but not breathtaking. Time to change it and jump straight into the real reason it is worth learning about the DOM. The ins and outs of manipulating it with JavaScript methods.
 
 ### addEventListener
 
-One of the key manipulation methods for marketing automation is adding events with `.addEventListener`. This method lets you perform some actions (a function) given a specific behaviour.
+One of the critical manipulation methods for marketing automation is adding events with `.addEventListener`. This method lets you perform some actions (a function) given a specific behaviour.
 
 In simpler words, you can tell the browser to execute a JavaScript function when the user clicks a button. Or moves the mouse out of the page to close it or change a tab. Or perform any other event you configure. You do it by attaching a specified Event Listener to a document, window or selected element:
 
@@ -341,12 +341,12 @@ document.querySelector('button').addEventListener('click', event => console.log(
 
 :::note You Should Know
 
-Using anonymous functions like in the example above is __not recommended__. Each anonymous function is unique for the JavaScript, even if they have exactly the same code within. This leads to two issues:
+Using anonymous functions like in the example above is __not recommended__. Each anonymous function is unique for JavaScript, even if it has the same code within. This leads to two issues:
 
-1. You may add multiple instances of the same anonymous function to a single element (no deduplication). It will lead not only to negative performance impact, but also the function being triggered multiple times on event.
-2. You cannot remove such anonymous Event Listener.
+1. You may add multiple instances of the same anonymous function to a single element (no deduplication). It will lead to a negative performance impact and the function being triggered numerous times on event.
+2. You cannot remove such an anonymous Event Listener.
 
-In real world scenarios use named functions (unless you are absolutely sure what you are doing and have booked some time for debugging in the future):
+In real-world scenarios, use named functions (unless you are absolutely sure what you are doing and have booked some time for debugging in the future):
 
 ```js
 function consoleLogEvent(event) {
@@ -366,11 +366,11 @@ document.querySelector('button').removeEventListener('click', consoleLogEvent);
 
 #### Event types
 
-There is over a hundred of available events that you can use, so I will focus only on the most useful ones for our Marketing Automation needs.
+There are over a hundred available events that you can use, so I will focus only on the most useful ones for our Marketing Automation needs.
 
 ##### click
 
-Capturing a click event is probably the most popular event in the world wide web. Technically, it's a shorthand for two separate events (that you can listen for seprately as well) - `mousedown` and `mouseup`.
+Capturing a click event is probably the most popular event in the world wide web. Technically, it's a shorthand for two separate events (that you can listen for separately) - `mousedown` and `mouseup`.
 
 The interesting part is that the event captures the number of consecutive clicks happening in short timeframe, so you can distinguish single, double, tripleclicks:
 
@@ -382,7 +382,7 @@ document.querySelector('button').addEventListener('click',
 
 ##### submit
 
-Another marketing must-have is the submit event. It is triggered on valid submission of a form.
+Another marketing must-have is the submit event. It is triggered on the valid submission of a form.
 
 ```js
 document.querySelector('form').addEventListener('submit',
@@ -402,11 +402,11 @@ document.querySelector('form').addEventListener('submit',
 );
 ```
 
-This approach allows you to implement any custom validation or data processing while still benefitting from the HTML5 form backbone. Perfect when you want to push your form submission to a [Code Resource](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource).
+This approach allows you to implement custom validation or data processing while benefiting from the HTML5 form backbone. Perfect when you want to push your form submission to a [Code Resource](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource).
 
 ##### focus & blur
 
-Another events that are very useful for forms are focus and blur. The first one is triggered when when element gets into focus, the other is the opposite. What does it mean? Let's say you have a form. When user click on the input, the input element gets focused. When he clicks on something else (another element, submit button, or just anywere else) it triggers blur event.
+Other events that are very useful for forms are focus and blur. The first one is triggered when an element gets into focus; the other on the opposite. What does it mean? Let's say you have a form. When the user clicks on the input, the input element gets focused. When he clicks on something else (another element, submit button, or just anywhere else), it triggers a blur event.
 
 ```js
 document.querySelector('input[type="email"]').addEventListener('blur',
@@ -414,13 +414,13 @@ document.querySelector('input[type="email"]').addEventListener('blur',
 );
 ```
 
-Using blur event can be great for triggering asynchronous checks on the provided data. For example, after user finishes writing the email and goes to the next field, the Event Listener can trigger an asynchronous call to [Code Resource backend](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource) to lookup whether this record is existing contact or needs to be created in Salesforce Sales Cloud first to generate the Contact ID.
+Using blur events can be great for triggering asynchronous checks on the provided data. For example, the user finishes writing the email and goes to the following field. The Event Listener can then make an asynchronous call to the [Code Resource backend](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource). It will look up whether this record is an existing contact or needs to be created in Salesforce Sales Cloud to generate the Contact ID and return the Subscriber Key back to the form's hidden field.
 
 ##### mouseenter & mouseleave
 
-With mouseetner and mouseleave you can trigger events when user moves the pointer in or out of specific element. The caveat - there needs to be a pointer, so the solution is not working for touchscreen users.
+With mouseetner and mouseleave, you can trigger events when the user moves the pointer in or out of a specific element. The caveat - there needs to be a pointer, so the solution is not working for touchscreen users.
 
-Still, it can be used to capture which part of the website is getting hovered over with mouse (and for how long) or to create those annoying pop ups trying to guilt trip you into staying on the page:
+Still, it can be used to capture which part of the website is getting hovered over with a mouse (and for how long) or to create those annoying pop-ups trying to guilt-trip you into staying on the page:
 
 ```js
 document.documentElement.addEventListener('mouseleave',
@@ -428,19 +428,19 @@ document.documentElement.addEventListener('mouseleave',
 )
 ```
 
-Those are just few key events that you can capture with `.addEventListener`. There is much more available, like keydown & keyup, select, scroll, paste, error. Check out the full list on [MDN](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing).
+Those are just a few key events that you can capture with `.addEventListener`. There is much more available, like keydown & keyup, select, scroll, paste, error. Check out the complete list on [MDN](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing).
 
 ### Changing attributes
 
-Events are awesome, but there is something even better. Attribute manipulation. With it you can change your website in real time according to your logic. How? By going one step further with what you already learned above.
+Events are fantastic, but there is something even better. Attribute manipulation. With it, you can change your website in real-time according to your logic. How? By going one step further with what you already learned above.
 
 For example, you can add, remove and toggle (add if it wasn't there or remove if it was) CSS classes with [`.classlist`](#classlist-and-classname):
 
 ```js
 /* <div class="page-wrapper category-api document-page">…</div> */
-document.querySelector('div.page-wrapper').classList.remove('category-api'); // removes .categori-api
-document.querySelector('div.page-wrapper').classList.add('category-api'); // adds .categori-api back
-document.querySelector('div.page-wrapper').classList.toggle('category-api'); // removes .categori-api as it is on the element
+document.querySelector('div.page-wrapper').classList.remove('category-api');    // removes .categori-api
+document.querySelector('div.page-wrapper').classList.add('category-api');       // adds .categori-api back
+document.querySelector('div.page-wrapper').classList.toggle('category-api');    // removes .categori-api as it is on the element
 ```
 
 And just like you could get custom [attributes](#attributes), you can also create them with `.setAttribute`:
@@ -457,11 +457,11 @@ But probably the most useful feature is possibility to alter the properties:
 document.querySelector('#isOptedIn').required;          // returns false, as checkbox is not required
 document.querySelector('#isOptedIn').required = true;   // makes the checkbox required
 
-document.querySelector('#isOptedIn').checked;          // returns false, as checkbox is not checked
-document.querySelector('#isOptedIn').checked = true;   // checks the checkbox
+document.querySelector('#isOptedIn').checked;           // returns false, as checkbox is not checked
+document.querySelector('#isOptedIn').checked = true;    // checks the checkbox
 
-document.querySelector('#isOptedIn').hidden;          // returns false, as checkbox is not hidden
-document.querySelector('#isOptedIn').hidden = true;   // hides the checkbox
+document.querySelector('#isOptedIn').hidden;            // returns false, as checkbox is not hidden
+document.querySelector('#isOptedIn').hidden = true;     // hides the checkbox
 ```
 
 You can do the same with [`.innerText` and `.innerHTML`](#innerText-and-innerHTML), [`.style.display`](#hidden-and-style) and more.
@@ -478,4 +478,4 @@ document.querySelector('form').addEventListener('submit',
 );
 ```
 
-Document Object Model can be used to adapt your website in real time, fill in hidden fields with backend calls or even automate your processes through developer console. You are only limited by your imagination (and website performance).
+Document Object Model can be used to adapt your website in real-time, fill in hidden fields with backend calls or even automate your processes through developer console. You are only limited by your imagination (and website performance).
