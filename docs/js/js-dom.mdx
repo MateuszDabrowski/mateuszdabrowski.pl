@@ -138,9 +138,9 @@ You can also list the names of all available attributes using `.getAttributesNam
 ```js
 /* <main id="content" class="main-content" role="main">…</main> */
 document.querySelector('#content').getAttributesNames();    // returns ['id', 'class', 'role']
-document.querySelector('#content').getAttrubute('role');    // returns 'main'
-document.querySelector('#content').hasAttrubutes();         // returns true
-document.querySelector('#content').hasAttrubute('role');    // returns true
+document.querySelector('#content').getAttribute('role');    // returns 'main'
+document.querySelector('#content').hasAttributes();         // returns true
+document.querySelector('#content').hasAttribute('role');    // returns true
 ```
 
 This method is useful for non-standard attributes that doesn't have a dedicated shorthand.
@@ -159,7 +159,7 @@ document.querySelector('div.page-wrapper').classList.value;                     
 document.querySelector('div.page-wrapper').className;                           // shorthand of the previous, returns 'page-wrapper category-api document-page'
 ```
 
-The `.classList` property is the bread and butter of page manipulation, as it allows you to add, remove, replace and toggle classes on an element. Think of hiding and displaying elements, changing the styles and other dynamic scenarios. More on that, in the [Manipulating the DOM](#manipulating-the-dom) section.
+The `.classList` property is the bread and butter of page manipulation, as it allows you to add, remove, replace and toggle classes on an element. Think of hiding and displaying elements, changing the styles and other dynamic scenarios. More on that, in the [changing attributes](#changing-attributes) section.
 
 ### id and tagName
 
@@ -191,7 +191,7 @@ document.querySelector('#innertext-and-innerhtml').innerHTML;
 // returns ".innerText and .innerHTML<a class=\"hash-link\" href=\"#innertext-and-innerhtml\" title=\"Direct link to heading\"></a>"
 ```
 
-While it is already useful, those properties shine when you want to [manipulate your page](#manipulating-the-dom). More on that later.
+While it is already useful, those properties shine when you want to [manipulate your page](#changing-attributes). More on that later.
 
 ### hidden and style
 
@@ -206,7 +206,7 @@ document.querySelector('#hidden-and-style').hidden;         // returns false
 document.querySelector('#hidden-and-style').style.display;  // returns ''
 ```
 
-As with other properties mentioned previously, those true shine when [manipulating the DOM](#manipulating-the-dom).
+As with other properties mentioned previously, those true shine when [manipulating the DOM](#changing-attributes).
 
 ## Traversing the DOM
 
@@ -368,7 +368,7 @@ document.querySelector('button').removeEventListener('click', consoleLogEvent);
 
 There is over a hundred of available events that you can use, so I will focus only on the most useful ones for our Marketing Automation needs.
 
-##### Click
+##### click
 
 Capturing a click event is probably the most popular event in the world wide web. Technically, it's a shorthand for two separate events (that you can listen for seprately as well) - `mousedown` and `mouseup`.
 
@@ -380,7 +380,7 @@ document.querySelector('button').addEventListener('click',
 );
 ```
 
-##### Submit
+##### submit
 
 Another marketing must-have is the submit event. It is triggered on valid submission of a form.
 
@@ -392,19 +392,19 @@ document.querySelector('form').addEventListener('submit',
 
 The key feature with submit events is possibility to stop the default form processing with `.preventDefault` method:
 
-```js {5}
+```js {3}
 document.querySelector('form').addEventListener('submit',
     event => {
+        event.preventDefault();
         const formData = Object.fromEntries(new FormData(event.target));
         console.log(formData);
-        event.preventDefault();
     }
 );
 ```
 
 This approach allows you to implement any custom validation or data processing while still benefitting from the HTML5 form backbone. Perfect when you want to push your form submission to a [Code Resource](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource).
 
-##### Focus & Blur
+##### focus & blur
 
 Another events that are very useful for forms are focus and blur. The first one is triggered when when element gets into focus, the other is the opposite. What does it mean? Let's say you have a form. When user click on the input, the input element gets focused. When he clicks on something else (another element, submit button, or just anywere else) it triggers blur event.
 
@@ -416,12 +416,66 @@ document.querySelector('input[type="email"]').addEventListener('blur',
 
 Using blur event can be great for triggering asynchronous checks on the provided data. For example, after user finishes writing the email and goes to the next field, the Event Listener can trigger an asynchronous call to [Code Resource backend](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource) to lookup whether this record is existing contact or needs to be created in Salesforce Sales Cloud first to generate the Contact ID.
 
+##### mouseenter & mouseleave
 
+With mouseetner and mouseleave you can trigger events when user moves the pointer in or out of specific element. The caveat - there needs to be a pointer, so the solution is not working for touchscreen users.
 
+Still, it can be used to capture which part of the website is getting hovered over with mouse (and for how long) or to create those annoying pop ups trying to guilt trip you into staying on the page:
 
-Those are just few key events that you can capture with `.addEventListener`. There is much more available, like scroll, paste, . Check the full list on [MDN](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing).
+```js
+document.documentElement.addEventListener('mouseleave',
+    event => alert('Sad Alert')
+)
+```
+
+Those are just few key events that you can capture with `.addEventListener`. There is much more available, like keydown & keyup, select, scroll, paste, error. Check out the full list on [MDN](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing).
 
 ### Changing attributes
 
+Events are awesome, but there is something even better. Attribute manipulation. With it you can change your website in real time according to your logic. How? By going one step further with what you already learned above.
 
+For example, you can add, remove and toggle (add if it wasn't there or remove if it was) CSS classes with [`.classlist`](#classlist-and-classname):
 
+```js
+/* <div class="page-wrapper category-api document-page">…</div> */
+document.querySelector('div.page-wrapper').classList.remove('category-api'); // removes .categori-api
+document.querySelector('div.page-wrapper').classList.add('category-api'); // adds .categori-api back
+document.querySelector('div.page-wrapper').classList.toggle('category-api'); // removes .categori-api as it is on the element
+```
+
+And just like you could get custom [attributes](#attributes), you can also create them with `.setAttribute`:
+
+```js
+/* <main id="content" class="main-content" role="main">…</main> */
+document.querySelector('#content').setAttribute('data-columns', '3'); // returns 'main'
+```
+
+But probably the most useful feature is possibility to alter the properties:
+
+```js
+/* <input type="checkbox" id="isOptedIn" name="isOptedIn"> */
+document.querySelector('#isOptedIn').required;          // returns false, as checkbox is not required
+document.querySelector('#isOptedIn').required = true;   // makes the checkbox required
+
+document.querySelector('#isOptedIn').checked;          // returns false, as checkbox is not checked
+document.querySelector('#isOptedIn').checked = true;   // checks the checkbox
+
+document.querySelector('#isOptedIn').hidden;          // returns false, as checkbox is not hidden
+document.querySelector('#isOptedIn').hidden = true;   // hides the checkbox
+```
+
+You can do the same with [`.innerText` and `.innerHTML`](#innerText-and-innerHTML), [`.style.display`](#hidden-and-style) and more.
+
+Finally, you can mix DOM manipulation methods and change attributes on specific [events](#event-types):
+
+```js {5}
+document.querySelector('form').addEventListener('submit',
+    event => {
+        event.preventDefault();
+        const formData = Object.fromEntries(new FormData(event.target));
+        event.target.innerText = 'Submitted!'; // Replaces whole form with "Submitted!"
+    }
+);
+```
+
+Document Object Model can be used to adapt your website in real time, fill in hidden fields with backend calls or even automate your processes through developer console. You are only limited by your imagination (and website performance).
