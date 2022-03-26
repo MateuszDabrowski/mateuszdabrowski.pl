@@ -15,7 +15,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 The Document Object Model (DOM) represents the structure of a web document and serves as its programming interface. In simpler words, it lets JavaScript talk with the HTML of the page. And that is huge, especially in the Marketing Automation world.
 
-Why? Because it lets you manipulate your website in many ways - visible and not. Dynamic forms adapting to user actions, pages changing in real-time and enhanced data capture. All that is possible thanks to DOM. So let's dive into details.
+Why? Because it lets you manipulate your website in many ways - visible and not. Dynamic forms adapting to user actions, pages changing in real-time and enhanced data capture. All that (and so much more) is possible thanks to DOM access. So let's dive into details.
 
 ## Accessing the DOM
 
@@ -23,12 +23,12 @@ To start working with Document Object Model in JavaScript, you need to use one o
 
 JavaScript lets you capture specific parts of your website and make them accessible for all your scripting needs with the help of `document` object methods:
 
-- __getElementById__: returns an element with matching id (for example, `document.getElementById('emailAddressField')`)
-- __getElementsByTagName__: returns a collection of matching tags (for example, all `document.getElementByTagName('p')` tags)
-- __getElementsByName__: returns a collection of tags with matching name (for example, all inputs with name `document.getElementByName('email')`)
-- __getElementsByClassName__: returns a collection of tags with matching class (for example, all tags with class `document.getElementByClassName('hiddenContent')`)
-- __querySelector__: returns an element with a matching CSS3 selector (for example `document.querySelector('#mainContent .hiddenContent h2')` - notice the `#` prefix for id and `.` for a class). If there are multiple matching elements - it will return the first one.
-- __querySelectorAll__: returns a collection of elements matching CSS3 selector (for example `document.querySelectorAll('#attributes-repeater .DataCell tr')`)
+- __getElementById__: returns an element with matching id attribute (for example, elemnt with `id="emailAddressField"` using `document.getElementById('emailAddressField')`)
+- __getElementsByTagName__: returns a collection of matching HTML tags (for example, all `<p>` tags using `document.getElementByTagName('p')`)
+- __getElementsByName__: returns a collection of elements with matching name attribute (for example, all inputs with `name="email"` using `document.getElementByName('email')`)
+- __getElementsByClassName__: returns a collection of elements with matching class attribute (for example, all elements with `class="hiddenContent"` using `document.getElementByClassName('hiddenContent')`)
+- __querySelector__: returns an element with a matching CSS3 selector (for example, `<h2>` element that is within `<p class="hiddenContent">` using `document.querySelector(p.hiddenContent h2')` - notice the `.` prefix for a class). If there are multiple matching elements - it will return the first one.
+- __querySelectorAll__: returns a collection of elements matching CSS3 selector (for example, all `<tr>` elements that are within elements with `class=".DataCell"` that are within an element with `id="attributes-repeater"` using `document.querySelectorAll('#attributes-repeater .DataCell tr')`)
 
 :::note You Should Know
 
@@ -40,7 +40,7 @@ You can select:
 3. Class with `.` prefix: `document.querySelector('.className')`
 4. Tag with specific class by chaining: `document.querySelector('div.className')`
 5. Element with two classes: `document.querySelector('.className1.className2')` (notice lack of space between classes)
-6. Element that is direct child of another element: `document.querySelector('div > h2')`
+6. Element that is direct child of another element: `document.querySelector('div > h2')` (notice the `>` symbol between tags)
 7. Element that is any child another element: `document.querySelector('div h2')`
 8. Element that is any sibling (has the same parent): `document.querySelector('p.className ~ h2')` (this will capture `h2` that is under the same parent as `p.className`)
 9. Element that is adjecent sibling (has the same parent): `document.querySelector('p.className + h2')` (this will capture `h2` that is under the same parent as `p.className` and after that paragraph)
@@ -52,7 +52,7 @@ You can select:
 15. [Pseudo-element](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements): `document.querySelectorAll('h1::first-letter')`
 16. Element with negated selection: `document.querySelector('.className:not(div)')`
 
-Sky is the limit, especially with chaining all of the above into single super query:
+Sky is the limit, especially as you can chain all of the above into super query:
 
 ```js
 document.querySelector('#content > article > div:nth-child(20) a:nth-child(1) > code');
@@ -66,10 +66,10 @@ As you can see, there are many options you can leverage.
 
 ### Should you use getElement or querySelector?
 
-The rule of thumb is that if one of the `getElement` selectors can do the job, it's a better choice due to optimised performance (the longer HTML, the bigger difference). However, for more complex selections, the newer `querySelector` family might be better or the only possible choice.
+It depends on the purpose. The rule of thumb is that if one of the `getElement` selectors can do the job, it's a better choice performance-wise (the longer HTML, the bigger difference). However, for more complex selections, the newer `querySelector` family might be better or the only possible choice.
 
 ```js title="Good use cases for the querySelector family"
-// Instead of using three getElement selectors (that wouldn't even work in this example)
+// Instead of using three getElement selectors (that wouldn't even work in this example, more on that in the next paragraph)
 document.getElementById('attributes-repeater').getElementsByClassName('DataCell').getElementsByTagName('tr');
 // you should use a single querySelectorAll selector
 document.querySelectorAll('#attributes-repeater .DataCell tr');
@@ -80,11 +80,11 @@ document.querySelectorAll('input[type="checkbox"]');
 
 As always, the devil lies in the details. While chained `getElement` selectors will have better performance than clean `querySelector`, there are three issues with the former:
 
-1. Readability: after two or three selectors, the `getElement` chain gets really hard to read and debug; the natural CSS3 style of `querySelector` is straightforward.
-2. Flexibility: you can only chain `getElements` on single elements. Refering to the previous code sample, while the `.getElementsByClassName('DataCell')` called on single outcome of `.getElementById('attributes-repeater')` works, returned collection of outcomes would crash the `.getElementsByTagName('tr')`.
+1. Readability: after two or three chained selectors, the `getElement` chain gets really hard to read and debug; the natural CSS3 style of `querySelector` is straightforward.
+2. Flexibility: you can only chain `getElements` on single elements. Refering to the previous code sample, while the `.getElementsByClassName('DataCell')` called on single outcome of `.getElementById('attributes-repeater')` works, returned collection of outcomes would crash the `.getElementsByTagName('tr')` that works only on single element scope.
 3. Loopability: outcomes of `getElements` selection cannot be looped using [`forEach()`](./js-loops.mdx#foreach).
 
-So my approach is to use the more flexible and readable `querySelector` whenever performance is not a dealbreaker and switch where possible to the `getElement` toolset when the performance is crucial.
+My approach is to use the more flexible and readable `querySelector` whenever performance is not a dealbreaker and switch where possible to the `getElement` toolset for use cases where the performance is crucial.
 
 :::note You Should Know
 
@@ -375,9 +375,8 @@ Capturing a click event is probably the most popular event in the world wide web
 The interesting part is that the event captures the number of consecutive clicks happening in short timeframe, so you can distinguish single, double, tripleclicks:
 
 ```js
-document.querySelector('button').addEventListener('click',
-    event => console.log(`Click count: ${event.detail}`)
-);
+const logClickCount = event => console.log(`Click count: ${event.detail}`);
+document.querySelector('button').addEventListener('click', logClickCount);
 ```
 
 ##### submit
@@ -385,9 +384,8 @@ document.querySelector('button').addEventListener('click',
 Another marketing must-have is the submit event. It is triggered on the valid submission of a form.
 
 ```js
-document.querySelector('form').addEventListener('submit',
-    event => console.log(`Submission timestamp: ${event.timeStamp}`) // miliseconds since the page/script load
-);
+const logSubmissionTimestamp = event => console.log(`Submission timestamp: ${event.timeStamp}`); // miliseconds since the page/script load
+document.querySelector('form').addEventListener('submit', logSubmissionTimestamp);
 ```
 
 The key feature with submit events is possibility to stop the default form processing with `.preventDefault` method:
@@ -409,9 +407,8 @@ This approach allows you to implement custom validation or data processing while
 Other events that are very useful for forms are focus and blur. The first one is triggered when an element gets into focus; the other on the opposite. What does it mean? Let's say you have a form. When the user clicks on the input, the input element gets focused. When he clicks on something else (another element, submit button, or just anywhere else), it triggers a blur event.
 
 ```js
-document.querySelector('input[type="email"]').addEventListener('blur',
-    event => console.log(event.target.value)
-);
+const logInputValue = event => console.log(event.target.value);
+document.querySelector('input[type="email"]').addEventListener('blur', logInputValue);
 ```
 
 Using blur events can be great for triggering asynchronous checks on the provided data. For example, the user finishes writing the email and goes to the following field. The Event Listener can then make an asynchronous call to the [Code Resource backend](../usecase/sfmc-code-resource.mdx#good-form-backend-with-code-resource). It will look up whether this record is an existing contact or needs to be created in Salesforce Sales Cloud to generate the Contact ID and return the Subscriber Key back to the form's hidden field.
@@ -423,9 +420,8 @@ With mouseetner and mouseleave, you can trigger events when the user moves the p
 Still, it can be used to capture which part of the website is getting hovered over with a mouse (and for how long) or to create those annoying pop-ups trying to guilt-trip you into staying on the page:
 
 ```js
-document.documentElement.addEventListener('mouseleave',
-    event => alert('Sad Alert')
-)
+const onLeavePopUp = alert('Sad Alert');
+document.documentElement.addEventListener('mouseleave', onLeavePopUp);
 ```
 
 Those are just a few key events that you can capture with `.addEventListener`. There is much more available, like keydown & keyup, select, scroll, paste, error. Check out the complete list on [MDN](https://developer.mozilla.org/en-US/docs/Web/Events#event_listing).
@@ -479,3 +475,7 @@ document.querySelector('form').addEventListener('submit',
 ```
 
 Document Object Model can be used to adapt your website in real-time, fill in hidden fields with backend calls or even automate your processes through developer console. You are only limited by your imagination (and website performance).
+
+## Use Cases
+
+1. [Tailor with Data](../usecase/tailor-with-data.mdx) - how to leverage DOM manipulation and personalisation strings to create dynamic experiences for your customers.

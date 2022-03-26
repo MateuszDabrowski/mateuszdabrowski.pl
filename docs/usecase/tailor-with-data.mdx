@@ -75,7 +75,7 @@ To create a script that will allow for three use cases mentioned in the first pa
 
 :::note You Should Know
 
-You are not limited to the `id` attribute. Leverage any attribute and capture it with `document.querySelector()` or `document.querySelectorAll()`. For example, capturing `class` is great to change multiple related parts of the website at once.
+You are not limited to the `id` attribute. Leverage any attribute and capture it with [DOM selectors](../js/js-dom.mdx), like `document.querySelector()` or `document.querySelectorAll()`. For example, capturing `class` is great to change multiple related parts of the website at once.
 
 :::
 
@@ -121,7 +121,7 @@ With personalisation code and value of the `id` attribute at hand, we can start 
 
 Above script has three important lines that deserve some explanation.
 
-First one tells the web browser to launch the logic only after the whole page loaded. It is essential, as it guarantees that the browser already rendered the website element you want to hide.
+First one uses [Event Listener](../js/js-dom.mdx#addeventlistener) to launch the logic only after the whole page loaded. It is essential, as it guarantees that the browser already rendered the website element you want to hide.
 
 Next is the `if` statement. It evaluates the data model value received via personalisation (left side of ==) with another value we choose (right side of ==). In this case, it checks whether Email Opted In for a particular user is set to True (names and values may differ in your data model).
 
@@ -129,7 +129,7 @@ The third line looks for an HTML element with id equal to `'idValue'` and hides 
 
 :::note You Should Know
 
-You can adapt this script to do almost anything. Once you have your element selected with `querySelector` you can programmatically change its value, add or remove a class from it to impact the CSS applied or even create new elements around it.
+You can adapt this script to do almost anything. Once you have your element selected with `querySelector` you can programmatically [change its value](../js/js-dom.mdx#changing-attributes), add or remove a class from it to impact the CSS applied or even create new elements around it.
 
 :::
 
