@@ -59,31 +59,38 @@ module.exports = {
                     items: [
                         {
                             label: 'Zen of SFMC',
-                            href: 'docs/zen-of-sfmc',
+                            type: 'doc',
+                            docId: 'zen-of-sfmc',
                         },
                         {
                             label: 'SSJS',
-                            href: 'docs/ssjs/ssjs-if-and-switch',
+                            type: 'doc',
+                            docId: 'ssjs/ssjs-if-and-switch',
                         },
                         {
                             label: 'JavaScript',
-                            href: 'docs/js/js-if-and-switch',
+                            type: 'doc',
+                            docId: 'js/js-if-and-switch',
                         },
                         {
                             label: 'AMPScript',
-                            href: 'docs/ampscript/ampscript-style-guide',
+                            type: 'doc',
+                            docId: 'ampscript/ampscript-style-guide',
                         },
                         {
                             label: 'SFMC SQL',
-                            href: 'docs/sql/sfmc-sql-basics',
+                            type: 'doc',
+                            docId: 'sql/sfmc-sql-basics',
                         },
                         {
                             label: 'SFMC Config',
-                            href: 'docs/config/sfmc-config-features-on-demand',
+                            type: 'doc',
+                            docId: 'config/sfmc-config-features-on-demand',
                         },
                         {
                             label: 'SFMC Use Cases',
-                            href: 'docs/usecase/sfmc-cloud-apps',
+                            type: 'doc',
+                            docId: 'usecase/sfmc-cloud-page-apps',
                         },
                     ],
                 },
@@ -155,7 +162,7 @@ module.exports = {
                         },
                         {
                             label: 'SFMC Use Cases',
-                            to: 'docs/usecase/sfmc-cloud-apps',
+                            to: 'docs/usecase/sfmc-cloud-page-apps',
                         },
                     ],
                 },

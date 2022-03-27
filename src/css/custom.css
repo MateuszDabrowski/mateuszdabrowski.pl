@@ -90,10 +90,20 @@ html[data-theme='dark'] .header-salesforce-link:before {
   color: var(--ifm-color-white);
 }
 
+/* ------------------------------- NAVBAR MENU ------------------------------ */
+
+.navbar__item > .dropdown__menu a.navbar__link--active {
+  color: var(--ifm-navbar-link-color);
+}
+
+.navbar__item > .dropdown__menu a.navbar__link--active:hover {
+  color: var(--ifm-navbar-link-hover-color);
+}
+
 /* ------------------------------- SIDEBAR MENU ------------------------------ */
 
 ul > li > ul a.menu__link {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 /* ----------------------------------- DOCS ---------------------------------- */
