@@ -8,6 +8,8 @@ module.exports = {
     favicon: 'img/favicon.ico',
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
+    onBrokenLinks: 'warn',
+    onBrokenMarkdownLinks: 'warn',
     customFields: {
         description: 'Personal website focused on making the most out of Salesforce Marketing Cloud. let code = do("our job").',
         keywords: [
@@ -54,6 +56,36 @@ module.exports = {
                     to: 'docs',
                     activeBasePath: 'docs',
                     position: 'left',
+                    items: [
+                        {
+                            label: 'Zen of SFMC',
+                            href: 'docs/zen-of-sfmc',
+                        },
+                        {
+                            label: 'SSJS',
+                            href: 'docs/ssjs/ssjs-if-and-switch',
+                        },
+                        {
+                            label: 'JavaScript',
+                            href: 'docs/js/js-if-and-switch',
+                        },
+                        {
+                            label: 'AMPScript',
+                            href: 'docs/ampscript/ampscript-style-guide',
+                        },
+                        {
+                            label: 'SFMC SQL',
+                            href: 'docs/sql/sfmc-sql-basics',
+                        },
+                        {
+                            label: 'SFMC Config',
+                            href: 'docs/config/sfmc-config-features-on-demand',
+                        },
+                        {
+                            label: 'SFMC Use Cases',
+                            href: 'docs/usecase/sfmc-cloud-apps',
+                        },
+                    ],
                 },
                 {
                     label: 'Tags',

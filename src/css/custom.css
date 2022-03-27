@@ -90,6 +90,12 @@ html[data-theme='dark'] .header-salesforce-link:before {
   color: var(--ifm-color-white);
 }
 
+/* ------------------------------- SIDEBAR MENU ------------------------------ */
+
+ul > li > ul a.menu__link {
+  font-size: 0.8rem;
+}
+
 /* ----------------------------------- DOCS ---------------------------------- */
 
 main {
