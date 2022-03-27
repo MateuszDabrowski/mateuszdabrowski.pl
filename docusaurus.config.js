@@ -110,10 +110,16 @@ module.exports = {
                     position: 'left',
                 },
                 {
-                    href: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
+                    href: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing',
                     position: 'right',
                     className: 'header-linkedin-link',
                     'aria-label': 'LinkedIn Profile',
+                },
+                {
+                    href: 'https://twitter.com/MDabrowskiPL',
+                    position: 'right',
+                    className: 'header-twitter-link',
+                    'aria-label': 'Twitter Profile',
                 },
                 {
                     href: 'https://trailblazer.me/id/madabrowski',
