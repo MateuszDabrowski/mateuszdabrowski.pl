@@ -9,6 +9,42 @@ import { LeadText } from '../src/components/LeadText.js';
 
 <LeadText content="Here you can find all my Salesforce IdeaExchange contributions. Let's make the change!" />
 
+## Mobile Studio
+
+### Locale-based SMS Blackout
+
+SMS Blackout allows blocking SMS sends in the chosen timeframe. Currently, SMS Blackout can be configured based on Account Timezone.
+
+However, it would be much better for multi-country clients to configure the Blackout period based on the recipient's local timezone. MobilePhone locale is perfect for implementing this.
+
+This way, it would be possible to create, for example, a single SMS Blackout for nighttime and apply it for each contact regardless of the timezone. The locale is already there for MobileConnect and can be leveraged for determining timezone offset.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000sjSYQAY">Vote on IdeaExchange</a>
+
+---
+
+## Web Studio
+
+### Cloud Page Favicon & Open Graph Management
+
+Currently the only option to manage `<meta>` elements in Web Studio is to code them manually on each Cloud Page. This is creating a lot of workload and is an error prone process.
+
+While many `<meta>` tags are Cloud Page specific and this is not that big of a problem, there are some that could be shared:
+
+1. Favicon - not only it could be shared by all Cloud Pages, but now it's not even possible to upload one in .ico format to Content Builder.
+2. `og:image`/`twitter:image` - having possibility to set a default one (with possibility to overwrite for a specific page) would greatly improve the UX of social shared Cloud Pages - even just putting a nice company logo would make sharing lead or whitepaper forms look so much nicer and trigger better engagement.
+
+This could be easily improved by Salesforce by implementing one of two options:
+
+1. [__Minimum Valuable Solution__] Global configuration for Web Studio where one can upload a favicon and `og:image`/`twitter:image` and have it applied to all Cloud Pages
+2. [__Solution Deluxe__] Possibility to upload multiple favicons and `og:images`/`twitter:images` and use a picklist option on Cloud Page level to select the one that should be used.
+
+Input field in Cloud Page editor for `og:title` would be cherry on top.
+
+<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://ideas.salesforce.com/s/idea/a0B8W00000I8cvPUAR/cloud-page-favicon-open-graph-management">Vote on IdeaExchange</a>
+
+---
+
 ## Journey Builder
 
 ### DeliveryTime for Journey Builder emails
@@ -135,20 +171,6 @@ And for Behavioral Trigger Content block that parent is a `<td>` parameter withi
 There should be no `rem` units used in the Behavioral Trigger Content Block code and instead a standard `px` font-size assignment for the Block to render correctly.
 
 <a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000UKIKQA4">Vote on IdeaExchange</a>
-
----
-
-## Mobile Studio
-
-### Locale-based SMS Blackout
-
-SMS Blackout allows blocking SMS sends in the chosen timeframe. Currently, SMS Blackout can be configured based on Account Timezone.
-
-However, it would be much better for multi-country clients to configure the Blackout period based on the recipient's local timezone. MobilePhone locale is perfect for implementing this.
-
-This way, it would be possible to create, for example, a single SMS Blackout for nighttime and apply it for each contact regardless of the timezone. The locale is already there for MobileConnect and can be leveraged for determining timezone offset.
-
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000sjSYQAY">Vote on IdeaExchange</a>
 
 ---
 
