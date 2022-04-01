@@ -13,19 +13,16 @@ module.exports = {
     customFields: {
         description: 'Personal website focused on making the most out of Salesforce Marketing Cloud. let code = do("our job").',
         keywords: [
-            'Mateusz',
-            'Dąbrowski',
+            'Mateusz Dąbrowski',
             'mateuszdabrowski',
             'Marketing Cloud',
             'Salesforce Marketing Cloud',
             'SFMC',
-            'Configuration',
+            'JavaScript',
             'AMPScript',
             'SSJS',
             'SQL',
             'JS',
-            'JavaScript',
-            'Developer',
         ],
     },
     themeConfig: {
@@ -64,33 +61,27 @@ module.exports = {
                         },
                         {
                             label: 'SSJS',
-                            type: 'doc',
-                            docId: 'ssjs/ssjs-if-and-switch',
+                            to: 'docs/category/ssjs/',
                         },
                         {
                             label: 'JavaScript',
-                            type: 'doc',
-                            docId: 'js/js-if-and-switch',
+                            to: 'docs/category/javascript/',
                         },
                         {
                             label: 'AMPScript',
-                            type: 'doc',
-                            docId: 'ampscript/ampscript-style-guide',
+                            to: 'docs/category/ampscript/',
                         },
                         {
                             label: 'SFMC SQL',
-                            type: 'doc',
-                            docId: 'sql/sfmc-sql-basics',
+                            to: 'docs/category/sfmc-sql/',
                         },
                         {
                             label: 'SFMC Config',
-                            type: 'doc',
-                            docId: 'config/sfmc-config-features-on-demand',
+                            to: 'docs/category/sfmc-config/',
                         },
                         {
                             label: 'SFMC Use Cases',
-                            type: 'doc',
-                            docId: 'usecase/sfmc-cloud-page-apps',
+                            to: 'docs/category/sfmc-use-cases/',
                         },
                     ],
                 },
@@ -148,27 +139,27 @@ module.exports = {
                     items: [
                         {
                             label: 'SSJS',
-                            to: 'docs/ssjs/ssjs-if-and-switch',
+                            to: 'docs/category/ssjs/',
                         },
                         {
                             label: 'JavaScript',
-                            to: 'docs/js/js-if-and-switch',
+                            to: 'docs/category/javascript/',
                         },
                         {
                             label: 'AMPScript',
-                            to: 'docs/ampscript/ampscript-style-guide',
+                            to: 'docs/category/ampscript/',
                         },
                         {
                             label: 'SFMC SQL',
-                            to: 'docs/sql/sfmc-sql-basics',
+                            to: 'docs/category/sfmc-sql/',
                         },
                         {
                             label: 'SFMC Config',
-                            to: 'docs/config/sfmc-config-features-on-demand',
+                            to: 'docs/category/sfmc-config/',
                         },
                         {
                             label: 'SFMC Use Cases',
-                            to: 'docs/usecase/sfmc-cloud-page-apps',
+                            to: 'docs/category/sfmc-use-cases/',
                         },
                     ],
                 },
@@ -257,9 +248,9 @@ module.exports = {
             '@docusaurus/plugin-ideal-image',
             {
                 quality: 70,
-                max: 1030, // max resized image's size.
-                min: 640, // min resized image's size. if original is lower, use that size.
-                steps: 2, // the max number of images generated between min and max (inclusive)
+                max: 1030,      // max resized image's size.
+                min: 640,       // min resized image's size. if original is lower, use that size.
+                steps: 2,       // the max number of images generated between min and max (inclusive)
             },
         ],
         [
