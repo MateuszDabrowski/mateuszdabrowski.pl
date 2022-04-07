@@ -86,7 +86,7 @@ FROM _Subscribers AS sub
 
 When working with `_Subscribers` Data View:
 
-1. If you are using the query in the child Business Unit, always check whether you are querying local or enterprise Data View ([`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix).
+1. If you are using the query in the child Business Unit, use [`Ent.`](../sql/sfmc-sql-from.mdx#enterprise-data-extension) prefix, as the data is stored on Parent BU level.
 2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example, why a subscriber bounced, where did he unsubscribe), you will need to [`JOIN`](../sql/sfmc-sql-join.mdx) other Data Views.
 3. Use `SubscriberID` to [`JOIN`](../sql/sfmc-sql-join.mdx) data from different engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
 4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull the selection of your subscribers with SQL Query, add a new status with [custom value](../sql/sfmc-sql-select.mdx#custom-values) (for example, `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.
