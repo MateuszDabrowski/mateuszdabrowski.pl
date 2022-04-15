@@ -49,13 +49,27 @@ module.exports = {
                 type: 'generated-index',
                 title: 'JavaScript',
                 description: 'In this part, I am gathering selected elements of modern vanilla JavaScript that I find helpful for marketing technologists. Expect guides on asynchronous calls to API and backend resources, form-focused DOM manipulation and playing with data objects.',
-                keywords: ['JavaScript'],
+                keywords: ['JavaScript', 'JS'],
                 image: 'img/og/og-image-js.png',
             },
             items: [
                 'js/js-if-and-switch',
                 'js/js-loops',
                 'js/js-dom',
+                {
+                    type: 'category',
+                    label: '» JS Snippets',
+                    link: {
+                        type: 'generated-index',
+                        title: 'JS Snippets',
+                        description: 'Ready-to-use JavaScript Snippets',
+                        keywords: ['JavaScript', 'JS'],
+                        image: 'img/og/og-image-js-snippets.png',
+                    },
+                    items: [
+                        'js/js-snippet-export-and-import-sfmc-permissions',
+                    ],
+                },
             ],
         },
         {

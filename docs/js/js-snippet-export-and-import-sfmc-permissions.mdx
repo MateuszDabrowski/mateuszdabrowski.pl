@@ -1,0 +1,32 @@
+---
+id: js-snippet-export-and-import-sfmc-permissions
+title: Export & Import Permissions in SFMC
+sidebar_label: Export & Import Permissions
+description: WIP
+image: img/og/og-image-js-export-and-import-sfmc-permissions.png
+tags: [JavaScript, Marketing Cloud, Configuration, Users, Setup]
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content="WIP" />
+
+```js
+let permissions = {};
+for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
+    let permissionName = permission.closest('tr').querySelector('div.PermissionNameText').innerText;
+    let fullPermissionName = permissionName;
+    let permissionContainer = permission.closest('table')
+
+    do {
+        permissionContainer = permissionContainer.parentElement.previousElementSibling;
+        let permissionParentName = permissionContainer?.querySelector('div.PermissionNameText')?.innerText;
+        if (permissionParentName) fullPermissionName = `${permissionParentName} - ${fullPermissionName}`;
+    } while (permissionContainer && permissionContainer.id !== 'RolePanel')
+
+    let permissionType = permission.id.startsWith('a') ? 'Allowed' : 'Denied';
+    if (!permissions[fullPermissionName]) permissions[fullPermissionName] = {};
+    permissions[fullPermissionName][permissionType] = permission.checked;
+}
+console.table(permissions);
+```
