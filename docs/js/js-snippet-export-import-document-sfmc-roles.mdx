@@ -11,24 +11,99 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="Backup, clone and move cross-account the Salesforce Marketing Cloud roles. In seconds." />
 
+While you do get a set of standard user Roles in Salesforce Marketing Cloud, those are rarely enough. They are rather the base, on which you can create your custom tailored solutions that align with your business architecture.
+
+On top of that, standard Roles are silently changing from release to release as permissions come and go, so keeping track on them is crucial to have a clear picture of what your users can do.
+
+Marketing Cloud doesn't make it easy. There is no option to clone existing Roles to serve as a starting point for a new custom one. There is no option to export and import them between SFMC accounts. There is no option to create good documentation on them (unless you have a kink for super long print screens).
+
+Here comes JavaScript and [Document Object Model (DOM)](./js-dom.mdx) to unlock all those scenarios.
+
+Fear not - you don't have to be developer to leverage it. I will describe everything step-by-step and share ready-to-use snippets with you. Let's dive in.
+
+:::note You Should Know
+
+If you want to learn more about:
+
+- standard vs custom roles,
+- permission overlap logic,
+- meaning behind their sometimes very cryptic names
+
+Check out my [article on SFMC Permissions](../config/sfmc-config-permissions.mdx).
+
+:::
+
+## Where the magic happens
+
+To start using those SFMC Role-related, [DOM](./js-dom.mdx)-fueled solutions:
+
+1. Go to Marketing Cloud Setup » Users » Roles.
+2. Click on the name of the Role you want to work with.
+3. Click `expand all` Button to see whole permission tree for the Role.
+4. Right-click any permission name within that tree and select `Inspect Element`.
+5. This will open a Developer Console in a new part of your Browser. Select Console tab.
+6. [Optional] Click trash icon that will be visible in top left or right of the Console (depending on the browser you use) to clean up the working space.
+7. You are ready for the fun!
+
+:::note You Should Know
+
+If any of the solutions described later in this article doesn't work, try:
+
+1. Inspecting one of the permission names again (either with right click or using the aim icon visible in top left side of the Console).
+2. If above didn't help, refresh the page and go through the steps once more.
+
+:::
+
 ## Export & Import SFMC Roles
 
+Export and import solution is super useful when you want to either clone existing Role and make some changes on it or when you have your perfect custom Role already tried and tested and want to move it to yet another Salesforce Marketing Cloud Account.
+
+It will require two step approach.
+
+### Exporting a SFMC Role
+
+[Access the Console](#where-the-magic-happens) and paste the below code:
+
 ```js title="Export SFMC role"
-let permissions = {};
+let permissionsExport = {};
 for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
-    permissions[permission.id] = permission.checked;
+    permissionsExport[permission.id] = permission.checked;
 };
-console.log(JSON.stringify(permissions));
+console.log(JSON.stringify(permissionsExport));
 ```
 
+Click enter to run it.
+
+It will [loop](./js-loops.mdx) through all the checkboxes that you can see next to the permissions, save them in a single JavaScript object and output to the Console. Yeah, it looks awful, but that's all you need - list of checkboxes along with their status.
+
+Save this long text in it's entirety (either by highlighting and copy-pasting or by right clicking in empty space within the Console row and clicking `Copy Selected`). It should start with `{` and end with `}`.
+
+### Importing a SFMC Role
+
+Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different SFMC account).
+
+[Access the Console](#where-the-magic-happens) and paste the below code:
+
 ```js {1} title="Import SFMC role"
-let permissions = {}; // replace {} with the object copied from Export
-for (const [permissionId, permissionStatus] of Object.entries(permissions)) {
+let permissionsImport = {}; // replace {} with the object copied from Export script output
+for (const [permissionId, permissionStatus] of Object.entries(permissionsImport)) {
     document.getElementById(permissionId).checked = permissionStatus;
 }
 ```
 
+Change the `{}` in the first line with the export text you saved and click enter to run it.
+
+It will [loop](./js-loops.mdx) through all the saved checkboxes and update their state to the one from your export. Keep in mind, if there are some new checkboxes that don't exist in the export (for example, your export was done before Marketing Cloud Release that added some new permissions), those new ones will stay unchanged.
+
+That's it. You cloned a Role.
+
+Now, as you could see, the export text was not really readable. So if you don't want to clone a Role, but rather  create a documentation for it, there is yet another script that is just as easy to use.
+
 ## Document SFMC Roles
+
+Documenting Roles and Permissions is not easy. You cannot just copy-paste what you see, the HTML is a mess, and the indented names are not unique. Sure, you can print screen it, but that's a lot of checkboxes and images aren't accessible. There must be a better way.
+
+And there is, so [access the Console](#where-the-magic-happens) and paste the below code:
 
 ```js {24} title="Create documentation of your SFMC role"
 let permissions = {};
@@ -54,14 +129,26 @@ for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
 };
 
 /* Output permissions in documentation-friendly format (CSV) */
-const delimiter = '\t'; // Configure prefered CSV delimiter (tab is default, can be changed to comma, pipe, etc.)
+const delimiter = '\t'; // Configure prefered CSV delimiter (tab, comma, pipe, etc.)
 let csv = `Permission${delimiter}Allowed${delimiter}Denied\n`; // Headers
-/* Loop through permissions object to build full string for easy copy from console to table */
+/* Loop through permissions object to build a single string for easy copying from console to table */
 for (const [permissionName, permissionStatus] of Object.entries(permissions)) {
     csv += `${permissionName}${delimiter}${permissionStatus.Allowed}${delimiter}${permissionStatus.Denied}\n`;
 };
 console.log(csv);
 ```
 
-## Troubleshooting
+Click enter to run it.
 
+It will [loop](./js-loops.mdx) through all the checkboxes that you can see next to the permissions and:
+
+- Save the permission name (for example, `View All Contacts`).
+- Prefix it with all the parent permissions to get a full path (for example, `Contacts - Contact Builder - View All Contacts`).
+- Capture state of Allow and Deny (as a boolean).
+- Output it to the Console as a single long text with Headers and delimiter of your choice.
+
+Default delimiter is tab (`\t`) because it allows you to copy-paste the outcome from Console to a spreadsheet and have it automatically populate the columns. However, you are free to change it in the `delimiter` variable to anything else, like comma (`,`) or pipe (`|`), depending on your needs.
+
+Save this long text in it's entirety (either by highlighting and copy-pasting or by right clicking in empty space within the Console row and clicking `Copy Selected`) - I recommend pushing it stright to a spreadsheet to leverage the autoformatting and filtering capabilities.
+
+Add the Name of the Role along with its purpose stored in Description field and that's it. You are good to go.
