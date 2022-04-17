@@ -1,0 +1,67 @@
+---
+id: js-snippet-export-import-document-sfmc-roles
+title: Export, Import & Document SFMC Roles
+sidebar_label: Export, Import & Document SFMC Roles
+description: Backup, clone and move cross-account the Salesforce Marketing Cloud roles. In seconds.
+image: img/og/og-image-js-export-import-document-sfmc-roles.png
+tags: [JavaScript, Marketing Cloud, Configuration, Users, Setup]
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+
+<LeadText content="Backup, clone and move cross-account the Salesforce Marketing Cloud roles. In seconds." />
+
+## Export & Import SFMC Roles
+
+```js title="Export SFMC role"
+let permissions = {};
+for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
+    permissions[permission.id] = permission.checked;
+};
+console.log(JSON.stringify(permissions));
+```
+
+```js {1} title="Import SFMC role"
+let permissions = {}; // replace {} with the object copied from Export
+for (const [permissionId, permissionStatus] of Object.entries(permissions)) {
+    document.getElementById(permissionId).checked = permissionStatus;
+}
+```
+
+## Document SFMC Roles
+
+```js {24} title="Create documentation of your SFMC role"
+let permissions = {};
+/* Loop through all permission checkboxes to get their name and state */
+for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
+    /* Get the lowest-level permission name */
+    let permissionName = permission.closest('tr').querySelector('div.PermissionNameText').innerText;
+
+    /* Loop through all levels of permissions to build full path for each permission */
+    let permissionContainer = permission.closest('table');
+    do {
+        permissionContainer = permissionContainer.parentElement.previousElementSibling;
+        let permissionParentName = permissionContainer?.querySelector('div.PermissionNameText')?.innerText;
+        if (permissionParentName) permissionName = `${permissionParentName} - ${permissionName}`;
+    } while (permissionContainer && permissionContainer.id !== 'RolePanel');
+
+    /* Differentiate between Allowed and Denied checkboxes */
+    let permissionType = permission.id.startsWith('a') ? 'Allowed' : 'Denied';
+
+    /* Insert permission state into permissions object */
+    if (!permissions[permissionName]) permissions[permissionName] = {};
+    permissions[permissionName][permissionType] = permission.checked;
+};
+
+/* Output permissions in documentation-friendly format (CSV) */
+const delimiter = '\t'; // Configure prefered CSV delimiter (tab is default, can be changed to comma, pipe, etc.)
+let csv = `Permission${delimiter}Allowed${delimiter}Denied\n`; // Headers
+/* Loop through permissions object to build full string for easy copy from console to table */
+for (const [permissionName, permissionStatus] of Object.entries(permissions)) {
+    csv += `${permissionName}${delimiter}${permissionStatus.Allowed}${delimiter}${permissionStatus.Denied}\n`;
+};
+console.log(csv);
+```
+
+## Troubleshooting
+

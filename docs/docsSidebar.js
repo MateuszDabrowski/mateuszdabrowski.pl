@@ -67,7 +67,7 @@ module.exports = {
                         image: 'img/og/og-image-js-snippets.png',
                     },
                     items: [
-                        'js/js-snippet-export-and-import-sfmc-permissions',
+                        'js/js-snippet-export-import-document-sfmc-roles',
                     ],
                 },
             ],
