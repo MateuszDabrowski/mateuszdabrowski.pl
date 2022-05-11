@@ -1322,7 +1322,7 @@ When working with `_SMSMessageTracking` Data View:
     - `SendSplitID`, `SendSegmentID`, `SendGroupID`, `SendPersonID` are populated only when SMS is sent to Data Extension as Audience.
     - `ConversationID` is populated only when a conversation is created with a MO user using AMPScript [`CreateSMSConversation`](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/CreateSmsConversation.htm).
 7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. You should pull that data from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
-8. There are new fields, `JBDefinitionID` and `JBActivityID`, that let you cleanly match SMS data to [`Journey`](#_journey) and [`_JourneyActivity`](#_journeyactivity) Data Views using `VersionID` and `ActivityID` respectively. No longer you are limited to a fuzzy [`JOIN`](../sql/sfmc-sql-join.mdx) using `Name` field.
+8. `JBDefinitionID` and `JBActivityID` let you cleanly match SMS data to [`Journey`](#_journey) and [`_JourneyActivity`](#_journeyactivity) Data Views using `VersionID` and `ActivityID` respectively. However, it won't work for old (created before October 2020) SMS Activities - for those you can make a [`JOIN`](../sql/sfmc-sql-join.mdx) using `Name` field: `ON smsTracking.Name = journeyActivity.ActivityName`.
 9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
 
 #### SMS Status Codes
