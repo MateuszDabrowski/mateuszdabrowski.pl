@@ -1445,6 +1445,15 @@ When working with `_JourneyActivity` Data View:
 1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use the `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
 2. You can also connect it to SMS channel using [_SMSMessageTracking](#_smsmessagetracking) Data View by making a [`JOIN`](../sql/sfmc-sql-join.mdx) `ON journeyActivity.ActivityID = smsTracking.JBActivityID`.
 3. With the help of [`_Journey`](#_journey) Data View, you can use the `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you need to use Script Activity with REST API instead, but SQL is perfect for glancing at the multi-channel use.
+4. `_JourneyActivity` Data View holds data about activities from deleted Journeys and Journey Versions, so if you want to see only activities currently in use, [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View.
+
+:::note You Should Know
+
+`_JourneyActivity` Data View is unique, as it is limited to a single Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_JourneyActivity`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
+
+Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+
+:::
 
 ---
 
@@ -1497,6 +1506,15 @@ When working with `_Journey` Data View:
 2. You can also connect it to SMS channel using [_SMSMessageTracking](#_smsmessagetracking) Data View by making a [`JOIN`](../sql/sfmc-sql-join.mdx) `ON journey.VersionID = smsTracking.JBDefinitionID`.
 3. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](../sql/sfmc-sql-where.mdx) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found, it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
 4. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and, based on the send volume or performance, stop them and notify you about that.
+5. You can query only Journeys that currently exists in your Business Unit.
+
+:::note You Should Know
+
+`_Journey` Data View is unique, as it is limited to a single Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Journey`. You can query only those Journeys that were created in the Business Unit where you execute your SQL snippet.
+
+Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+
+:::
 
 ---
 
