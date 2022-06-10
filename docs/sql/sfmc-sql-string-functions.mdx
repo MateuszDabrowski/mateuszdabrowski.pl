@@ -139,34 +139,16 @@ It might seem cleaner, but there are two downsides to this method:
 
 :::
 
-## TRIM
+## LTRIM and RTRIM
 
-`TRIM` function allows you to quickly clean your data by deleting unneeded characters from the beginning and the end of the provided string. By default, it deletes whitespace.
-
-```sql title="Noone likes useless whitespace in their database"
-SELECT TRIM('   data from webform ') AS CleanData   /* Output: 'data from webform' */
-```
-
-There are also two child functions - `RTRIM` and `LTRIM` that works the same but limit the cleaning to just one side of the value.
+`LTRIM` and `RTRIM` functions allow you to quickly clean your data by deleting unneeded spaces from the beginning or the end of the provided string.
 
 ```sql title="Noone likes useless whitespace in their database"
 SELECT
       LTRIM('   data from webform ')        AS CleanLeftSide    /* Output: 'data from webform ' */
     , RTRIM('   data from webform ')        AS CleanRightSide   /* Output: '   data from webform' */
-    , LTRIM(RTRIM('   data from webform ')) AS SameAsTRIM       /* Output: 'data from webform' */
+    , LTRIM(RTRIM('   data from webform ')) AS CleanBothSides   /* Output: 'data from webform' */
 ```
-
-:::note You Should Know
-
-You can also use `TRIM` to clean specified characters instead of (just) whitespace.
-
-```sql title="No more '__-- Owner --__' in your values"
-SELECT TRIM('_- ' FROM DirtyWebformData) AS CleanData
-```
-
-In the above code, we first added a string `'_- '` containing all characters we want to be automatically deleted from the beginning and end. Then - after `FROM` joiner - the value we want to clean.
-
-:::
 
 ## NEWID
 
