@@ -254,7 +254,7 @@ When working with `_Job` Data View:
 
 :::note You Should Know
 
-`_Job` Data View is unique, as it is limited to a single Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Job`. You can query only those jobs that occurred in the Business Unit where you execute your SQL snippet.
+`_Job` Data View is unique among other Email-focused Data Views, as it shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Job`. You can query only those jobs that occurred in the Business Unit where you execute your SQL snippet.
 
 Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
@@ -862,7 +862,7 @@ When working with `_ListSubscribers` Data View:
 
 ## MobileConnect Data Views
 
-MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But some still works.
+MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But some still works. All those data views show data limited to a specific Business Unit.
 
 :::note You Should Know
 
@@ -1449,7 +1449,7 @@ When working with `_JourneyActivity` Data View:
 
 :::note You Should Know
 
-`_JourneyActivity` Data View is unique, as it is limited to a single Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_JourneyActivity`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
+`_JourneyActivity` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_JourneyActivity`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
 
 Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
@@ -1510,7 +1510,7 @@ When working with `_Journey` Data View:
 
 :::note You Should Know
 
-`_Journey` Data View is unique, as it is limited to a single Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Journey`. You can query only those Journeys that were created in the Business Unit where you execute your SQL snippet.
+`_Journey` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Journey`. You can query only those Journeys that were created in the Business Unit where you execute your SQL snippet.
 
 Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
