@@ -125,6 +125,7 @@ module.exports = {
                 'sql/sfmc-sql-numeric-functions',
                 'sql/sfmc-sql-conversion-functions',
                 'sql/sfmc-sql-aggregate-functions',
+                'sql/sfmc-sql-null-functions',
                 'sql/sfmc-sql-style-guide',
                 {
                     type: 'category',
