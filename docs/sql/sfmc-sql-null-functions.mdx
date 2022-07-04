@@ -11,14 +11,18 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content='To be or not to be, check it with IS NULL. Ways of working with NULL values in SFMC SQL.' />
 
-NULL
+NULL is a fickle beast and for the people not accustomed with how it works in SQL it can create a lot of problems (read: incorrect data output). This is especially true for those coming from nullish-friendly languages (like SSJS). Let's jump into the details.
 
-NULL vs ''
+## NULL
 
-IS NULL
+Like in other languages, `NULL` marks an empty value. Unlike in (some) other languages (like SSJS), it can be used in any data type. You can have `NULL` Date (datetime) , `NULL` Number (int), `NULL` Text (nvarchar) or `NULL` Boolean.
 
-ISNULL
+Also unlike in (some) other languages, SQL doesn't support a default nullish coalescing. In simpler words, it means that empty string (`''`) or zero (`0`) are not equal to `NULL`.
 
-NULLIF
+## IS NULL
 
-COALESCE
+## ISNULL
+
+## NULLIF
+
+## COALESCE
