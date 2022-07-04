@@ -1,28 +1,183 @@
 ---
 id: sfmc-sql-null-functions
 title: SFMC SQL NULL Functions
-sidebar_label: NULL Functions
-description: To be or not to be, check it with IS NULL. Ways of working with NULL values in SFMC SQL.
+sidebar_label: Null Functions
+description: IS NULL, or IS NOT NULL, that us the question. Ways of working with NULL values in SFMC SQL.
 image: img/og/og-image-sql-null-functions.png
 tags: [Marketing Cloud, SQL]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='To be or not to be, check it with IS NULL. Ways of working with NULL values in SFMC SQL.' />
+<LeadText content='IS NULL, or IS NOT NULL, that us the question. Ways of working with NULL values in SFMC SQL.' />
 
 NULL is a fickle beast and for the people not accustomed with how it works in SQL it can create a lot of problems (read: incorrect data output). This is especially true for those coming from nullish-friendly languages (like SSJS). Let's jump into the details.
 
 ## NULL
 
-Like in other languages, `NULL` marks an empty value. Unlike in (some) other languages (like SSJS), it can be used in any data type. You can have `NULL` Date (datetime) , `NULL` Number (int), `NULL` Text (nvarchar) or `NULL` Boolean.
+Like in other languages, NULL is a placeholder that marks an absent (unknown) value. Unlike in some other languages (like SSJS), it can be used in any data type. You can have `NULL` Date (datetime) , `NULL` Number (int), `NULL` Text (nvarchar) or `NULL` Boolean.
 
-Also unlike in (some) other languages, SQL doesn't support a default nullish coalescing. In simpler words, it means that empty string (`''`) or zero (`0`) are not equal to `NULL`.
+Also unlike in some other languages, SQL doesn't support a default nullish coalescing. In simpler words, it means that empty string (`''`) or zero (`0`) are not equal to `NULL`. It makes sense when you treat `NULL` as an unknown value - unknown is not equal to `0`.
+
+### NULL with standard SQL Functions
+
+Because `NULL` is unknown, if you try to do any standard operation on the NULL (like adding an integer, or [concatenating](./sfmc-sql-string-functions.mdx#concat) it with a string), it will return unknown (`NULL`):
+
+```sql {2-3} title="❌ Functions with NULLs"
+SELECT
+      NULL + 1              AS MathFunctionWithNull     -- Outputs NULL
+    , CONCAT(NULL, 'World') AS StringFunctionWithNull   -- Outputs NULL
+```
+
+### NULL with relational operators
+
+The fun doesn't stop there - it gets even better when you try to make any [comparision](./sfmc-sql-where.mdx#basic-operators) with NULL. Again, because it should be treated as unknown value, you just cannot compare it. Or, to be more specific, the comparision will evaluate to `FALSE`.
+
+```sql {4-6} title="❌ Comparisons with NULLs"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE
+    NullablePurchaseCount > 0
+    AND NullableProductName != 'T-Shirt'
+    AND EmailAddress != NULL
+```
+
+In the example above all three comparisons in the [`WHERE`](./sfmc-sql-where.mdx) statement will return `FALSE` for `NULL`s and the query will not output any rows.
+
+Let's check why step by step:
+
+1. `NullablePurchaseCount > 0` - The rows with a value (be it `0` or `10`) in the column would be evaluated. The rows with `NULL` (absent value) evaluate to `FALSE` and will be removed from the output.
+2. `NullableProductName != 'T-Shirt'` - The rows with a value (be it `''`, `'Hoodie'` or `'T-Shirt'`) in the column would be evaluated. The rows with `NULL` (absent value) evaluate to `FALSE` and will be removed from the output.
+3. `EmailAddress != NULL` - Regardless what will be the value of `EmailAddress`, because we are comparing it to `NULL`, will always evaluate to false and therefore drop the output to 0 rows.
+
+### NULL with conditional operators
+
+`NULL` gets even more problematic when you want to work with [`IN`/`NOT IN`](./sfmc-sql-where.mdx#in-shorthand) or [`BETWEEN`/`NOT IN BETWEEN`](./sfmc-sql-where.mdx#between-shorthand).
+
+When you use `NULL` as one of the values searched by `IN` shorthand, it will be ignored and no rows with `NULL` in checked column will be outputted for this condition.
+
+When you use `NULL` with the other shorthands (`NOT IN`, `BETWEEN` and `NOT IN BETWEEN`), there will be no results at all for this condition.
+
+### NULL with logical operators
+
+When you are building a boolean logic with `AND`/`OR` operators (be it in [`WHERE`](./sfmc-sql-where.mdx) or in [`CASE`](./sfmc-sql-case.mdx)) treat `NULL` as `FALSE`.
+
+#### AND operator
+
+When you have two booleans or expressions connected by `AND` operator it will evaluate to `TRUE` only if both are `TRUE`.
+
+Boolean or Expression | Boolean or Expression | Result
+- | - | -
+TRUE | TRUE | __TRUE__
+TRUE | FALSE | FALSE
+TRUE | NULL | NULL
+FALSE | TRUE | FALSE
+FALSE | FALSE | FALSE
+FALSE | NULL | NULL
+NULL | TRUE | NULL
+NULL | FALSE | NULL
+NULL | NULL | NULL
+
+#### OR operator
+
+When you have two booleans or expressions connected by `OR` operator it will evaluate to `TRUE` if at least one is `TRUE`.
+
+Boolean or Expression | Boolean or Expression | Result
+- | - | -
+TRUE | TRUE | __TRUE__
+TRUE | FALSE | __TRUE__
+TRUE | NULL | __TRUE__
+FALSE | TRUE | __TRUE__
+FALSE | FALSE | FALSE
+FALSE | NULL | NULL
+NULL | TRUE | __TRUE__
+NULL | FALSE | NULL
+NULL | NULL | NULL
+
+### NULL with aggregate functions
+
+[Aggregate functions](./sfmc-sql-aggregate-functions.mdx) just ignore `NULL` values. Calculating average? `NULL` will not be taken into consideration at all - which can scew your output a lot.
+
+The only exception is [`COUNT`](./sfmc-sql-aggregate-functions.mdx#count) that has specific `*` argument for counting rows with `NULL`.
+
+Ok, we discussed a lot of `NULL` problems, now it's time to solve them with dedicated `NULL` functions.
 
 ## IS NULL
 
+Firstly, let's cover how we can recognize whether a `NULL` is a `NULL`. Using standard `=`/`!=` operators won't work, but you can do it easily with dedicated `IS NULL`/`IS NOT NULL` operators:
+
+```sql {3} title="Subscribers with Email Address"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE EmailAddress IS NOT NULL
+```
+
+Because comparison operators don't work, if you are building filters on nullable values, you might have to query defensively:
+
+```sql {5} title="Subscribers with small amount of purchases"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE
+    PurchaseCount < 5
+    OR PurchaseCount IS NULL
+```
+
+Assuming `PurchaseCount` is nullable field, should you use only `PurchaseCount < 5`, you wouldn't see the rows with the `NULL` in that column. Adding another condition checking explicitely for `NULL` solves that.
+
+However, there are also other methods - dedicated shorthands of the universally useful [`CASE`](./sfmc-sql-case.mdx) statement. Let's check them.
+
 ## ISNULL
+
+`ISNULL` function is the first line of defence against the `NULL`s. It let's you pass two arguments and - if the first is a `NULL` - returns the second. Perfect for creating a fallback value for nullable columns.
+
+```sql {3} title="Subscribers with small amount of purchases"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE ISNULL(PurchaseCount, 0) < 5
+```
+
+Now the filter will check whether `PurchaseCount` is NULL, use it if not, treat it as zero otherwise.
+
+The second argument doesn't have to be a standard value. It can also be a column. Just make sure it is not nullable.
+
+## COALESCE
+
+If single fallback provided by `ISNULL` is not enough, `COALESCE` function let's you provide multiple. You can provide many arguments and `COALESCE` will return the first one that is not `NULL`. However, if all are `NULL` - the final outcome will also be `NULL`.
+
+```sql {3,5} title="Subscribers with address for direct mail"
+SELECT
+      SubscriberKey
+    , COALESCE(HomeAddress, WorkAddress, ParentAddress) AS Address
+FROM DataExtension
+WHERE COALESCE(HomeAddress, WorkAddress, ParentAddress) IS NOT NULL
+```
+
+:::note You Should Know
+
+`COALESCE` is perferct for creating concatenated fields where you are not sure if all parts will be available, as it let's you control the amount of spaces between elements:
+
+```sql title="Calculate FullName with nullable MiddleName"
+SELECT CONCAT(FirstName, ' ', COALESCE(MiddleName + ' ', ''), LastName) AS FullName
+```
+
+:::
 
 ## NULLIF
 
-## COALESCE
+Finally, there is `NULLIF` function that returns `NULL` if two provided arguments are equal or the first argument if they are different:
+
+```sql {4} title="Pulls WorkEmailAddress value only if it is different from general Email Address"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , NULLIF(WorkEmailAddress, EmailAddress) AS WorkEmailAddress
+```
+
+I personally find [`IIF`](./sfmc-sql-case.mdx#iif-shorthand) shorthand much more readable and user friendly, despite being slightlty longer than `NULLIF`:
+
+```sql {4} title="Pulls WorkEmailAddress value only if it is different from general Email Address with IIF"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , IIF(WorkEmailAddress = EmailAddress, NULL, EmailAddress) AS WorkEmailAddress
+```
