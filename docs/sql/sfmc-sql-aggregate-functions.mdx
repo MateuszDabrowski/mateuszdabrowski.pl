@@ -130,6 +130,12 @@ ORDER BY COUNT(*) DESC
 
 As you can see, by just adding more columns after a comma (order is irrelevant), we can make even more exciting groupings. In this case, we will have a separate row for each domain and year. Easy to see how many Subscribers using Gmail joined your database in 2021 vs 2020.
 
+:::note You Should Know
+
+`GROUP BY` will group [`NULL`](./sfmc-sql-null-functions.mdx#null) values as if they are equal.
+
+:::
+
 ### GROUP BY ROLLUP
 
 `ROLLUP` takes the multi-column grouping to the next level by showing totals and subtotals in the outcomes. Not useful for campaign segmentation, but excellent for quick analysis and reporting.
@@ -281,22 +287,22 @@ It rolls data like [`ROLLUP`](#group-by-rollup), but for all combinations of col
 
 `COUNT` function allows you to count the number of rows that matches a query. It is excellent for both _ad hoc_ data exploration and creating administrative queries that help maintain your instance. It's also a must-have for [`GROUP BY`](#group-by).
 
-Let's get the count of our Subscribers.
+Let's get the count of our Subscribers in Master Data Extension.
 
 ```sql {1} title="Count all rows in the _Subscribers Data View"
 SELECT COUNT(*)
-FROM _Subscribers
+FROM ContactMasterDE
 ```
 
 Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So, where is the added value?
 
-For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function parameter to the specific column to count only its values.
+For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function argument to the specific column to count only its [non-`NULL`](./sfmc-sql-null-functions.mdx#null) values.
 
 ```sql {3,6} title="This query will show you which Email Addresses exists on more than one subscriber"
 SELECT
       EmailAddress
     , COUNT(EmailAddress) AS EmailCount
-FROM _Subscribers
+FROM ContactMasterDE
 GROUP BY EmailAddress
 HAVING COUNT(EmailAddress) > 1
 ```
@@ -312,14 +318,14 @@ SELECT
       subscribers.SubscriberKey
     , subscribers.EmailAddress
     , counted.EmailCount
-FROM _Subscribers AS subscribers
+FROM ContactMasterDE AS subscribers
     INNER JOIN (
         SELECT
-              subscribers.EmailAddress        AS EmailAddress
-            , COUNT(subscribers.EmailAddress) AS EmailCount
-        FROM _Subscribers AS subscribers
-        GROUP BY subscribers.EmailAddress
-        HAVING COUNT(subscribers.EmailAddress) > 1
+              contacts.EmailAddress        AS EmailAddress
+            , COUNT(contacts.EmailAddress) AS EmailCount
+        FROM ContactMasterDE AS contacts
+        GROUP BY contacts.EmailAddress
+        HAVING COUNT(contacts.EmailAddress) > 1
     ) AS counted
         ON counted.EmailAddress = subscribers.EmailAddress
 ```
@@ -334,9 +340,9 @@ Pack it into Automation with Verification Activity on top and keep your database
 
 There are three approaches to using `COUNT` that differ slightly from each other.
 
-- `COUNT(*)` will return the number of items, including `NULL` values and duplicates.
-- `COUNT(FieldName)` / `COUNT(ALL FieldName)` will return the number on non-`NULL` values including duplicates.
-- `COUNT(DISTINCT FieldName)` will return the number of non-`NULL` and non-duplicate values.
+- `COUNT(*)` will return the number of items, including [`NULL`](./sfmc-sql-null-functions.mdx#null) values and duplicates.
+- `COUNT(FieldName)` / `COUNT(ALL FieldName)` will return the number on [non-`NULL`](./sfmc-sql-null-functions.mdx#null) values including duplicates.
+- `COUNT(DISTINCT FieldName)` will return the number of [non-`NULL`](./sfmc-sql-null-functions.mdx#null) and non-duplicate values.
 
 ```sql {2-4} title="Let's find out whether we have multiple Subscribers with the same Email Address"
 SELECT
@@ -471,6 +477,12 @@ ORDER BY AVG(BounceCount) DESC
 </Tabs>
 
 Learn more about `AVG` in [Numeric Functions documentation](./sfmc-sql-numeric-functions.mdx#avg).
+
+:::note You Should Know
+
+`AVG` will ignore rows with [`NULL`](./sfmc-sql-null-functions.mdx), which can skew your results. [`COALESCE`](./sfmc-sql-null-functions.mdx#coalesce) will be your best friend to make sense out of imperfect data.
+
+:::
 
 ## SUM
 

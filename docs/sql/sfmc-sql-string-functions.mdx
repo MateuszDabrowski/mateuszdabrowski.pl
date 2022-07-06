@@ -17,7 +17,7 @@ Here, I will cover only selected string functions that I find most useful for Ma
 
 :::note You Should Know
 
-All string functions in SQL use a 1-based index instead of 0-based indexing known from, for example, JavaScript. The first character starts at index 1. It is crucial to provide the correct value to the parameters and correctly interpret the results.
+All string functions in SQL use a 1-based index instead of 0-based indexing known from, for example, JavaScript. The first character starts at index 1. It is crucial to provide the correct value to the arguments and correctly interpret the results.
 
 :::
 
@@ -102,7 +102,7 @@ Wildcards & Operators | Description
 To learn more about specific wildcards and advanced operators, check out the [`LIKE` guide](./sfmc-sql-like.mdx).
 
 ```sql title="Broad C-Suite hunt with PATINDEX"
-PATINDEX(`%C_O%`, JobTitle)
+PATINDEX('%C_O%', JobTitle)
 ```
 
 While wildcards give `PATINDEX` an edge over [`CHARINDEX`](#charindex), it misses one feature of the latter - an optional argument for starting the search from a specific string. Either can be better depending on the use case at hand.

@@ -203,6 +203,8 @@ A similar date calculation is also available with the `DATEADD()` AMPScript func
 
 :::
 
+If the date field is nullable, be sure to use [`COALESCE`](./sfmc-sql-null-functions.mdx#coalesce) or add a [`NULL` checking condition](./sfmc-sql-null-functions.mdx#null).
+
 ## DATEDIFF
 
 The `DATEDIFF` function calculates the difference between two dates.
@@ -269,6 +271,8 @@ Depending on the use case, it might be good or bad, so be sure to select the cor
 There is a limit to how big the difference can be. If you go down to the `SECOND` [date part](#date-parts), the query's maximum time difference is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. It shouldn't be an issue in Marketing Cloud for most use cases.
 
 :::
+
+If the date field is nullable, be sure to use [`COALESCE`](./sfmc-sql-null-functions.mdx#coalesce) or add a [`NULL` checking condition](./sfmc-sql-null-functions.mdx#null).
 
 ## AT TIME ZONE
 

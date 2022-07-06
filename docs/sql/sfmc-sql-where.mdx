@@ -23,6 +23,12 @@ FROM _Subscribers
 WHERE Domain = 'mateuszdabrowski.pl'
 ```
 
+:::note You Should Know
+
+`WHERE` statement is heavily impacted by [`NULL`](./sfmc-sql-null-functions.mdx) values - be sure to check [dedicated guide](./sfmc-sql-null-functions.mdx) on how to solve those issues.
+
+:::
+
 ## Basic operators
 
 In many scenarios, you will be using the basic operators in your `WHERE` clauses. In the example above, you already saw the equality operator (`=`). There are a few more available.
