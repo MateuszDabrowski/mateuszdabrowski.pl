@@ -180,5 +180,14 @@ module.exports = {
                 'usecase/sfmc-contact-deletion',
             ],
         },
+        {
+            type: 'category',
+            label: 'SFMC AppExchange',
+            link: {
+                type: 'doc',
+                id: 'appexchange/sfmc-appexchange-overview',
+            },
+            items: [],
+        },
     ],
 };
