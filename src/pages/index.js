@@ -1,12 +1,14 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import classnames from 'classnames';
+import clsx from 'clsx';
+
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import Head from '@docusaurus/Head';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+
 import styles from './styles.module.css';
 
 const features = [
@@ -51,7 +53,7 @@ const features = [
 function Feature({ imageUrl, title, description, url, cta }) {
     const imgUrl = useBaseUrl(imageUrl);
     return (
-        <div className={classnames('col col--4', styles.feature)}>
+        <div className={clsx('col col--4', styles.feature)}>
             {imgUrl && (
                 <div className="text--center">
                     <img className={styles.featureImage} src={imgUrl} alt={title} />
@@ -61,7 +63,7 @@ function Feature({ imageUrl, title, description, url, cta }) {
             <p>{description}</p>
             <div className={styles.buttons}>
                 <Link
-                    className={classnames(
+                    className={clsx(
                         'button button--outline button--block button--secondary button--lg shadow--md',
                         styles.getStarted
                     )}
