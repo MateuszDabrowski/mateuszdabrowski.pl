@@ -162,6 +162,8 @@ Creator | Pricing
 - | -
 Salesforce Labs | Free
 
+#### The Good
+
 Query Studio solves two problems:
 
 1. SFMC SQL Query Testing
@@ -177,10 +179,21 @@ This sometime happens when you are writing and testing a new query. It happens a
 
 Query Studio automatically builds a temporary Data Extension to store the output of the query on every execution. It also displays a subset of outcomes right below your SQL so that you can easily check whether it is aligned with expectation.
 
-Those are huge timesavers and quality of life improvements and make Query Studio a must have for any SQL-enabled or learning team.
+And that's not all - Query Studio let's you save your work as ready-to-use Query Activities. Even in a way that is not possible through Automation Studio (like query targeting Auto-Suppression List)!
 
+#### The Bad
 
+However, Query Studio is not perfect. The main issue with it is that it has a different (and not that good) query validation implemented.
 
+It means that while every query you write in Query Studio will work in Query Activity, it is not always true the other way round. For example, Query Studio won't let you use comments, parentheses in the first line of the [SELECT](../sql/sfmc-sql-select.mdx) statement, [TOP PERCENT](../sql/sfmc-sql-select.mdx#top-percent), [CAST](../sql/sfmc-sql-conversion-functions.mdx#cast) in [SELECT](../sql/sfmc-sql-select.mdx) and some more elements that are not a problem in Query Activity.
+
+It also have very poor errors making it really hard to properly debug your queries. Sometimes it is useful to just copy the SQL to Query Activity and validate there to get better response.
+
+Finally, while it creates temporary Data Extension on execution, it is not useful as a template for the final solution because all fields will have Text data type.
+
+#### The Sum Up
+
+Despite some quirks, Query Studio is a huge timesaver and quality of life improvement. Useful for creating queries, debugging outcomes and making quick checks on Data Views. A must-have for any SQL-enabled or learning team.
 
 <Button
     link='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT'
@@ -193,6 +206,40 @@ Creator | Pricing
 - | -
 DESelect | [Starts at $700/month](https://deselect.com/pricing/)
 
+#### The Good
+
+DESelect Segment is the golden standard for a middle ground between the very limited Filtered Data Extensions and yes-code SQL Queries. Actually, "middle ground" is not fair. Over time it has been polished by the DESelect team to cover nearly all use cases that in the past were possible only with SQL.
+
+In a fully drag and drop experience DESelect Segment can:
+
+- Join multiple datapoints (both Data Extensions and Data Views and even on multiple relationships)
+- Create complex, multilevel filters (including dynamic dates, aggregates and checks against other Data Extensions)
+- Build Data Extensions based on the segment created in the tool
+- Select values you need in the outcome, including creating custom values based on any logic
+- Deduplicate using specified conditions
+- Preview the outcomes to validate the configuration
+
+And they didn't stop there - there are even few features that are not possible with any of the out-of-the-box solutions:
+
+- Picklists creation to mitigate typo issues when working with values
+- Relationships to make joining tables a breeze
+- Data Sets to prepare templates multi-table relationships for quick drag and drop
+- Cross Business Unit segmentation templates to speed up rolling solutions
+
+And all that can be made available to you within an hour directly in the Marketing Cloud main menu.
+
+#### The Bad
+
+It's not free. But it is nicely priced for the power you get. It's up to you whether you want to invest in SQL competencies or no-code solution that can do the same, faster.
+
+It's complex. Sure, it's a clean drag-and-drop interface, but because of all the available features, it has some learning curve (and training offered by DESelect).
+
+#### The Sum Up
+
+If you want to leverage Salesforce Marketing Cloud to it's fullest, you need robust segmentation solution. Filtered Data Extensions ain't it. This leaves you with SQL Query Activity and AppExchange.
+
+While I'm a big fan of SQL, I know that it's not for everyone and makes scaling the marketing team much harder. DESelect Segment is currently the best solution to solve that problem and, with ongoing updates, it gets better and better at it.
+
 <ButtonRow
     linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G0yE1UAJ'
     textLeft='AppExchange'
@@ -200,7 +247,7 @@ DESelect | [Starts at $700/month](https://deselect.com/pricing/)
     textRight='Website'
 />
 
-### Activation Studio
+<!-- ### Activation Studio
 
 Creator | Pricing
 - | -
@@ -211,5 +258,5 @@ Harvest Tech Labs | [Starts at €350/month](https://activation-studio.com/prici
     textLeft='AppExchange'
     linkRight='https://activation-studio.com/drag-and-drop-segmentation-salesforce-marketing-cloud/'
     textRight='Website'
-/>
+/> -->
 
