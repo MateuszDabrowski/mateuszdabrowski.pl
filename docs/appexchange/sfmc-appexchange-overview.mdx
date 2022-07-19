@@ -106,9 +106,81 @@ Looks complex? Would you rather have an example-based walkthrough? Got you cover
 
 ## SFMC Segmentation Solutions
 
+Finding the right approach to the database segmentation is one of the key elements of successful marketing automation. In Salesforce Marketing Cloud it's a complex topic, because there is no perfect - powerful, simple and free - solution. You need to choose your priorities.
+
+This is great use case to test the ["Is AppExchange worth it?" process](#when-is-appexchange-worth-it) on a real example. Let's check how it works.
+
+__1. Feature Requirements__
+
+Let me paraphrase the user story constrains I encounter on nearly every implementation:
+
+- As a company I want to have segmenation based on our broad data so that we are sending the right communication to the right persons at the right time.
+- As a marketer I want to have drag and drop segmentation so that it is easy and fast for me to deliver correctly build segments.
+
+Let's split it into key things to consider:
+- __What it needs to do__ - Segment database using multiple datapoints.
+- __How it needs to do it__ - Simple drag and drop solution.
+- __Where it needs to do it__ - Within Marketing Cloud.
+- __Who needs to do it__ - Undecided, but no internal resources for implementation.
+- __What is the budget__ - No budget.
+
+Does it sound familiar? ;)
+
+__2. Out-of-the-box options__
+
+There are two ways to segment contacts in Marketing Cloud core. Filtered Data Extensions and SQL Query Activities. How they stack against our requirements?
+
+Filtered Data Extensions are free, require nearly no implementation (apart from setting Data Relationships), works directly in SFMC, are simple drag and drop solution, but... They don't support segmenting on more then two Data Extensions. Not good enough.
+
+SQL Query Activities are free, require no implementation, work directly in SFMC and allow segmenting on multiple datapoints, but... require [SQL](../sql/sfmc-sql-basics.mdx) skills. While those are super useful, they require training and in the beginning the segmentation will be slow and requiring checks to mitigate errors. Not easy enough.
+
+__3. Free AppExchange__
+
+Filtering the AppExchange for free solutions will show only one related anyhow to segmentation - [Query Studio](#query-studio). While it's great tool, it's still a SQL-based solution and not directly for segmentation purposes. Not good enough.
+
+__4. Custom Solution__
+
+There are two base options for drag and drop focused custom solution approach.
+
+Generator that modifies predefines segments. It's relatively simple to build, but it only allows small adapations, mostly on filtering ([SQL WHERE](../sql/sfmc-sql-where.mdx). Very limited in possible outcomes and any new needs have to be hard coded. Not good enough and hard to maintain.
+
+Fully-fledged visual wrapper over SQL queries. Full power with drag and drop interface. Sounds like a dream? Good. Such solution requires a lot of work and testing and the cost would skyrocket well above - spoiler alert - what is available in paid section of AppExchange. Not worth it.
+
+__5. Paid AppExchange__
+
+Finally we get to the last stop and after quick search we can find two solutions: tried and tested [DESelect Segment](#deselect-segment) and the new contender [Activation Studio](#activation-studio). More details on them in the moment, but from perspective of this exercise - both are subscription based, while one of the key things to consider was the beloved "no budget".
+
+Therefore we get to the update requirements step where the company needs to prioritize between powerful, simple and free.
+
 <Image img={segmentation} />
 
+I hope that now it is easier to find the place for AppExchange in solving Marketing Cloud requirements. With that, let's jump to the solutions available there.
+
 ### Query Studio
+
+Creator | Pricing
+- | -
+Salesforce Labs | Free
+
+Query Studio solves two problems:
+
+1. SFMC SQL Query Testing
+2. SFMC SQL Data Exploratory Analysis
+
+Why I call those problems?
+
+Because the only out-of-the-box solution for working with SQL in Marketing Cloud is Query Activity in Automation Studio. It allows you to validate whether your query is valid, but checking if the outcomes are as expected is a pain.
+
+You are able to see the results only after manually creating a data extension with the right set of columns (names, data types, lengths) and executing the Query Activity. Outcomes are suboptimal and need to make some changes? The Data Extension needs a rework.
+
+This sometime happens when you are writing and testing a new query. It happens all the time when you are doing exploratory analysis.
+
+Query Studio automatically builds a temporary Data Extension to store the output of the query on every execution. It also displays a subset of outcomes right below your SQL so that you can easily check whether it is aligned with expectation.
+
+Those are huge timesavers and quality of life improvements and make Query Studio a must have for any SQL-enabled or learning team.
+
+
+
 
 <Button
     link='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT'
@@ -116,6 +188,10 @@ Looks complex? Would you rather have an example-based walkthrough? Got you cover
 />
 
 ### DESelect Segment
+
+Creator | Pricing
+- | -
+DESelect | [Starts at $700/month](https://deselect.com/pricing/)
 
 <ButtonRow
     linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G0yE1UAJ'
@@ -125,6 +201,10 @@ Looks complex? Would you rather have an example-based walkthrough? Got you cover
 />
 
 ### Activation Studio
+
+Creator | Pricing
+- | -
+Harvest Tech Labs | [Starts at €350/month](https://activation-studio.com/pricing/)
 
 <ButtonRow
     linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3u00000PurpQEAR'
