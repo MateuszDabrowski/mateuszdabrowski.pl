@@ -208,37 +208,49 @@ DESelect | [Starts at $700/month](https://deselect.com/pricing/)
 
 #### The Good
 
-DESelect Segment is the golden standard for a middle ground between the very limited Filtered Data Extensions and yes-code SQL Queries. Actually, "middle ground" is not fair. Over time it has been polished by the DESelect team to cover nearly all use cases that in the past were possible only with SQL.
+DESelect Segment is the golden standard for the middle ground between the very limited Filtered Data Extensions and yes-code SQL Queries. Actually, "middle ground" is not fair. Over time it has been polished by the DESelect team to cover nearly all use cases that in the past were possible only with SQL.
 
 In a fully drag and drop experience DESelect Segment can:
 
-- Join multiple datapoints (both Data Extensions and Data Views and even on multiple relationships)
-- Create complex, multilevel filters (including dynamic dates, aggregates and checks against other Data Extensions)
-- Build Data Extensions based on the segment created in the tool
-- Select values you need in the outcome, including creating custom values based on any logic
-- Deduplicate using specified conditions
+- Join multiple datapoints (both Data Extensions and Data Views)
+- Create complex, multilevel filters (using dynamic dates, aggregates and checks against other Data Extensions)
+- Build segment Data Extension on demand with selected or custom-created columns
+- Deduplicate the data using specified logic
 - Preview the outcomes to validate the configuration
 
-And they didn't stop there - there are even few features that are not possible with any of the out-of-the-box solutions:
+And it doesn't stop there - there are few features not available out-of-the-box in SFMC that lets you:
 
-- Picklists creation to mitigate typo issues when working with values
-- Relationships to make joining tables a breeze
-- Data Sets to prepare templates multi-table relationships for quick drag and drop
-- Cross Business Unit segmentation templates to speed up rolling solutions
+- Create Picklists to mitigate typo issues when working with set lists of values
+- Define Relationships to make joining tables a breeze
+- Build Data Sets that works as templated multi-table relationships for quick drag and drop
+- Share segmentation templates across Business Units to speed up rolling solutions
 
-And all that can be made available to you within an hour directly in the Marketing Cloud main menu.
+While the features sound great by themselves, true magic happens when you use them all together. Why? Because it will allow you to create your segment in one place, start to finish.
+
+The out-of-the-box path for query segmentation is:
+
+1. Write and test segmentation query in Query Studio (with Contact Builder in another tab to check the values)
+2. Manually create Data Extension that has all needed columns in correct data types and lengths in Contact Builder
+3. Fix it in Email Studio, because Content Builder is bugged around CustomerKey and default Current Date
+4. Copy the query to Query Activity in Automation Studio
+5. [Optionally] Create Automation
+
+All of that in a streamlined way can be done in DESelect Segment using guided creator. Faster, simpler and less intimidating to beginners. Launched right from the Marketing Cloud main menu.
+
+Is it perfect then?
 
 #### The Bad
 
-It's not free. But it is nicely priced for the power you get. It's up to you whether you want to invest in SQL competencies or no-code solution that can do the same, faster.
+Well, there are two issues:
 
-It's complex. Sure, it's a clean drag-and-drop interface, but because of all the available features, it has some learning curve (and training offered by DESelect).
+1. It's not free. But it is nicely priced for the power you get. It's up to you whether you want to invest in SQL competencies or no-code solution that can do the same, by everyone, faster.
+2. It's complex. Sure, it's a clean drag-and-drop interface, but because of all the available features, it has some learning curve (and a training offered by DESelect) to leverage its full potential.
 
 #### The Sum Up
 
 If you want to leverage Salesforce Marketing Cloud to it's fullest, you need robust segmentation solution. Filtered Data Extensions ain't it. This leaves you with SQL Query Activity and AppExchange.
 
-While I'm a big fan of SQL, I know that it's not for everyone and makes scaling the marketing team much harder. DESelect Segment is currently the best solution to solve that problem and, with ongoing updates, it gets better and better at it.
+While I'm a big fan of SQL, I know that it's not a tool for everyone. The code always makes scaling the marketing team much harder. DESelect Segment is currently the best solution to solve that problem and, with ongoing updates, it gets better and better at it.
 
 <ButtonRow
     linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G0yE1UAJ'
@@ -247,16 +259,50 @@ While I'm a big fan of SQL, I know that it's not for everyone and makes scaling 
     textRight='Website'
 />
 
-<!-- ### Activation Studio
+### Activation Studio
 
 Creator | Pricing
 - | -
 Harvest Tech Labs | [Starts at €350/month](https://activation-studio.com/pricing/)
+
+#### The Good
+
+Activation Studio is a new player that joined the SFMC Drag & Drop Segmentation game. Let's check what are it's unqiue identifiers that makes it stand out versus already existing solutions:
+
+1. Different target
+
+Activation Studio is not targeting power users, but rather digital marketers that need very simple, but potent way of creating segments. You won't be able to leverage the whole power of SQL in a drag and drop interface here. You also won't be able to join all Data Extension available in your Marketing Cloud.
+
+Instead, you will be able to leverage the Attribute Groups built in the Contact Builder Data Desinger. While it is limiting what you can do, it also makes building sgements a breeze, as all relationships are predefined.
+
+It let's you quickly create a Data Extension for output and leverage it as an Entry to the Journey. Och, and provide you with engagement benchmarks and analytics of actual performance.
+
+Not a jack-of-all-trades, but purpose build solution.
+
+2. More then just segmentation
+
+While segmentation is the core of Activation Studio, there is more features (to be made) available. Lead Scoring and Behavioral data from web are options that can increase the power of the tool significantly. Both are built with simple and easy usage by marketers in mind.
+
+3. Down to earth pricing
+
+Activation Studio segmentation is already significantly cheaper then other options and additional features make the price-to-value ratio even better.
+
+#### The Bad
+
+It's a new product and you can still see its infancy. While fully operational already, there are some relatively basic features (like folders) missing.
+
+However, the development pipeline is full of features and a lot of improvements will be delivered over the coming months making the value proposition much more interesting.
+
+#### The Sum Up
+
+Activation Studio fills a niche between Filtered Data Extensions and DESelect Segment. More powerful then the former, simpler and easier then latter.
+
+Especially with Scoring and Interaction focused add-ons it will be really good suite of solutions targeted at smaller Marketing Cloud users that would benefit from streamlined tool dedicated to non-technical marketers.
 
 <ButtonRow
     linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3u00000PurpQEAR'
     textLeft='AppExchange'
     linkRight='https://activation-studio.com/drag-and-drop-segmentation-salesforce-marketing-cloud/'
     textRight='Website'
-/> -->
+/>
 
