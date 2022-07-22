@@ -83,11 +83,6 @@ module.exports = {
                             label: 'SFMC Use Cases',
                             to: 'docs/category/sfmc-use-cases/',
                         },
-                        {
-                            label: 'SFMC AppExchange',
-                            type: 'doc',
-                            docId: 'appexchange/sfmc-appexchange-overview',
-                        },
                     ],
                 },
                 {
@@ -165,10 +160,6 @@ module.exports = {
                         {
                             label: 'SFMC Use Cases',
                             to: 'docs/category/sfmc-use-cases/',
-                        },
-                        {
-                            label: 'SFMC AppExchange',
-                            to: 'docs/appexchange/sfmc-appexchange-overview/',
                         },
                     ],
                 },
@@ -281,6 +272,10 @@ module.exports = {
                     {
                         from: ['/docs/usecase/sfmc-cloud-apps'],
                         to: '/docs/usecase/sfmc-cloud-page-apps',
+                    },
+                    {
+                        from: ['/docs/appexchange/sfmc-appexchange-overview'],
+                        to: '/docs/config/sfmc-config-appexchange-overview',
                     },
                     {
                         from: ['/ideas'],

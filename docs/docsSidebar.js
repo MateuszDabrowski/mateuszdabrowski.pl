@@ -159,6 +159,7 @@ module.exports = {
                 'config/sfmc-config-system-data-views',
                 'config/sfmc-config-features-on-demand',
                 'config/sfmc-config-behavioral-triggers',
+                'config/sfmc-config-appexchange-overview',
             ],
         },
         {
@@ -179,15 +180,6 @@ module.exports = {
                 'usecase/sfmc-enhanced-send-log',
                 'usecase/sfmc-contact-deletion',
             ],
-        },
-        {
-            type: 'category',
-            label: 'SFMC AppExchange',
-            link: {
-                type: 'doc',
-                id: 'appexchange/sfmc-appexchange-overview',
-            },
-            items: [],
         },
     ],
 };
