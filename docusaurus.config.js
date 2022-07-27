@@ -275,7 +275,7 @@ module.exports = {
                     },
                     {
                         from: ['/docs/appexchange/sfmc-appexchange-overview'],
-                        to: '/docs/config/sfmc-config-appexchange-overview',
+                        to: '/docs/config/sfmc-config-appexchange-solutions',
                     },
                     {
                         from: ['/ideas'],
