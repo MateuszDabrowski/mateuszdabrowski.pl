@@ -8,6 +8,9 @@ tags: [Marketing Cloud, SQL]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import { Button } from '../../src/components/Buttons.js';
+import Image from '@theme/IdealImage';
+import cheatSheet from '../../static/img/article/article-image-sql-join-cheat-sheet.png';
 
 <LeadText content='Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.' />
 
@@ -51,7 +54,7 @@ When using `INNER JOIN`, you can write just the word `JOIN`, as in the first exa
 
 ### Left and Right Joins
 
-The following joins are `LEFT JOIN` (also known as `LEFT OUTER JOIN`) and `RIGHT JOIN` (also known as `RIGHT OUTER JOIN`). Instead of limiting the output to records available in both tables, they take complete data from one table and append the additional information from the second one (if it is available).
+The following joins are `LEFT JOIN` (also known as LEFT OUTER JOIN) and `RIGHT JOIN` (also known as RIGHT OUTER JOIN). Instead of limiting the output to records available in both tables, they take complete data from one table and append the additional information from the second one (if it is available).
 
 `LEFT JOIN` will take complete data of the first table (in our example, Data Extension selected by `FROM`) and extend it with information from the second one (`_Open` System Data View joined with `LEFT JOIN`).
 
@@ -73,7 +76,7 @@ Due to the similarity of `LEFT JOIN` and `RIGHT JOIN`, I highly recommend choosi
 
 :::note You Should Know
 
-If you would want to see all contacts from our Data Extension that did not open the email, you could use `LEFT JOIN` with exclusion:
+If you would want to see all contacts from our Data Extension that did not open the email, you could use `LEFT JOIN` with exclusion (called LEFT EXCLUDING JOIN):
 
 ```sql {6-8} title="Example of exclusion applied to LEFT JOIN"
 SELECT
@@ -166,6 +169,21 @@ FROM Account_Salesforce AS a1
 ```
 
 :::
+
+## SFMC SQL JOIN Cheat Sheet
+
+All standard SQL JOINs in a single image with name, example SFMC-focused use case, key part of the SQL query and diagrams visualising the output. Ready to bookmark or download. Full size version linked below the preview.
+
+<Image img={cheatSheet} alt='Salesforce Marketing Cloud SQL JOIN Cheat Sheet' />
+
+<br/>
+<br/>
+
+<Button
+ link='https://raw.githubusercontent.com/MateuszDabrowski/mateuszdabrowski.pl/master/static/img/article/article-image-sql-join-cheat-sheet.png'
+ text='View full size'
+ newTab='true'
+/>
 
 ## Joining ON
 
