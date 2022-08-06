@@ -14,7 +14,7 @@ import cheatSheet from '../../static/img/article/article-image-sql-join-cheat-sh
 
 <LeadText content='Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.' />
 
-There will be some cases where all you need is to pull (and maybe transform) data [`FROM`](./sfmc-sql-from.mdx) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
+There are cases where all you need is to pull (and maybe transform) data [`FROM`](./sfmc-sql-from.mdx) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
 
 ```sql {6-7} title="Check who opened the email and when by querying the _Open System Data View"
 SELECT
@@ -26,7 +26,7 @@ FROM WelcomeCampaignSegment AS wel
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
-There are three things to unpack.
+Let's dive in the details of what you see above.
 
 ## JOIN Types
 
@@ -170,20 +170,7 @@ FROM Account_Salesforce AS a1
 
 :::
 
-## SFMC SQL JOIN Cheat Sheet
-
-All standard SQL JOINs in a single image with name, example SFMC-focused use case, key part of the SQL query and diagrams visualising the output. Ready to bookmark or download. Full size version linked below the preview.
-
-<Image img={cheatSheet} alt='Salesforce Marketing Cloud SQL JOIN Cheat Sheet' />
-
-<br/>
-<br/>
-
-<Button
- link='https://raw.githubusercontent.com/MateuszDabrowski/mateuszdabrowski.pl/master/static/img/article/article-image-sql-join-cheat-sheet.png'
- text='View full size'
- newTab='true'
-/>
+Thinking about how much easier it would be with a neat visual cheat sheet? Perfect - I prepared one for you [at the bottom](#sfmc-sql-join-cheat-sheet) :)
 
 ## Joining ON
 
@@ -452,7 +439,7 @@ As with [`UNION`](#union), `INTERSECT` works only if:
 
 The check for rows existing in both queries is done considering data in all provided columns.
 
-You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](./sfmc-sql-join.mdx) and [`WHERE`](./sfmc-sql-where.mdx).
+You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](#join-types) and [`WHERE`](./sfmc-sql-where.mdx).
 
 ## EXCEPT
 
@@ -476,4 +463,19 @@ As with [`UNION`](#union), `EXCEPT` works only if:
 
 The check for rows existing in both queries is done considering data in all provided columns.
 
-You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](./sfmc-sql-join.mdx) and [`WHERE`](./sfmc-sql-where.mdx).
+You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](#join-types) and [`WHERE`](./sfmc-sql-where.mdx).
+
+## SFMC SQL JOIN Cheat Sheet
+
+All standard SQL JOINs in a single image with name, example SFMC-focused use case, key part of the SQL query and diagrams visualising the output. Ready to bookmark or download. Full size version linked below the preview.
+
+<Image img={cheatSheet} alt='Salesforce Marketing Cloud SQL JOIN Cheat Sheet' />
+
+<br/>
+<br/>
+
+<Button
+ link='https://raw.githubusercontent.com/MateuszDabrowski/mateuszdabrowski.pl/master/static/img/article/article-image-sql-join-cheat-sheet.png'
+ text='View full size'
+ newTab='true'
+/>
