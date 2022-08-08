@@ -8,6 +8,9 @@ tags: [Marketing Cloud, SQL, Snippet, Email, Debugging, Analytics]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import { Button, ButtonRow } from '../../src/components/Buttons.js';
+import Image from '@theme/IdealImage';
+import flowchart from '../../static/img/article/article-image-sfmc-debugging-email-sends.png'
 
 <LeadText content='Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with the Query Studio to the rescue.' />
 
@@ -21,7 +24,7 @@ You can try to debug it with Journey Builder data or Reports, but in most cases,
 
 ## Solution
 
-My favourite way to debug email sends is by using a SQL Query. Open your [Query Studio](./sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
+My favourite way to start debugging email sends is by using a SQL Query. Open your [Query Studio](../config/sfmc-config-appexchange-solutions.mdx#query-studio) and copy-paste the below code:
 
 ```sql
 SELECT
@@ -69,7 +72,7 @@ FROM _Sent AS s
         AND u.IsUnique = 1
     LEFT JOIN _JourneyActivity AS ja
         ON ja.JourneyActivityObjectID = s.TriggererSendDefinitionObjectID
-    LEFT JOIN _Journey AS j
+    LEFT JOIN _Journey AS
         ON j.VersionID = ja.VersionID
     LEFT JOIN _Subscribers AS sub
         ON sub.SubscriberKey = s.SubscriberKey
@@ -78,13 +81,13 @@ WHERE s.EventDate >= DATEADD(DAY, -1, GETDATE())
 
 Within a few seconds you will see information about sends from the last day. With all the details that might be useful for debugging, like STMP Bounce Reason, Subscriber Status, Unsubscribe Date, etc.
 
+Wondering what to do with that data? Check out [Email Send Debugging Step-by-Step section](#email-send-debugging-step-by-step) below.
+
 :::note You Should Know
 
 If you are running it from child Business Unit and do not see EmailAddress, BounceCount and Status, add `Ent.` prefix to `_Subscribers` Data View name in the last `JOIN`. It will pull the data from _Subscribers of parent Business Unit.
 
 :::
-
-If you don't see the send in the outcomes at all - check whether it errored out in the [Send Log](../usecase/sfmc-enhanced-send-log.mdx) and confirm the subscriber status in Email Studio.
 
 ## Options
 
@@ -115,3 +118,30 @@ If you want to focus on a single Journey, you can limit your outcomes by adding 
 If you are interested only in bounces and do not need any other sends, add `b.IsUnique = 1` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators).
 
 You can use the same approach to output only opens or clicks by changing the prefix from `b` to the [alias](./sfmc-sql-join.mdx#table-name-prefix) representing the needed [System Data View](../config/sfmc-config-system-data-views.mdx).
+
+## Email Send Debugging Step-by-Step
+
+Now you know the SFMC Email Send Debugging query in and out. But how to work with the outcomes? And what are the next steps?
+
+As they say, with great power comes great complexity. And that's definitely true for finding the root cause of the undelivered email. The deliverability by itself is already beautiful mess and then there are various features and options you can use directly in Salesforce Marketing Cloud. Let's dive in.
+
+### 1. Query System Data Views
+
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get the high level picture of the situation. Free Salesforce [Query Studio](../config/sfmc-config-appexchange-solutions.mdx#query-studio) is the best place to execute that little exploratory analysis.
+
+Once you see the outcome, there are few possibilities:
+
+- __There is no data__ » It's time go to to the [next step](#2-check-send-log).
+- __BounceDate is filled__ » Either the email is invalid (hence the bounce) or the email was blocked by the recipient's inbox Admin (they sometime use fake bounces to fight of spam - especially in enterprise B2B and public markets).
+- __OpenDate or ClickDate is filled__ » It's time to compare their timestamps with DeliveryDate. If those are within a single second and there are no later subsequent opens/clicks, the email has been checked by antispam bot and flagged for no delivery to final recipient (again, B2B and Public). If the timestamp are spread out (especially engagement ones from the DeliveydDate), the email got delivered to the right person and they just forgot or lost it.
+- __DeliveryDate is filled__ » If there is no Bounce, Open or Click timestamps, but Delivery is filled in, the email should be in subscriber's Spam folder or Promotions tab.
+- __DeliveryDate is not filled__ » It's time go to to the [next step](#2-check-send-log).
+
+### 2. Check Send Log
+
+ [Send Log](../usecase/sfmc-enhanced-send-log.mdx)
+
+
+
+<Image img={flowchart} alt='Flowchart with visual representation of the debugging email sends process'/>
+
