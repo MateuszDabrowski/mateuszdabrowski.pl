@@ -16,15 +16,13 @@ import flowchart from '../../static/img/article/article-image-sfmc-debugging-ema
 
 ## Problem with straightforward Email Send analysis
 
-Deliverability issues, unfortunately, are a standard both during the Salesforce Marketing Cloud implementation phase, as well as after the go-live.
+Deliverability issues, unfortunately, are a standard both during the Salesforce Marketing Cloud implementation phase as well as after the go-live.
 
-The test you sent to yourself during the Marketing Cloud implementation that never arrived at the inbox. The subscriber that asks where is his newsletter with the promo code.
+The test you sent to yourself during the Marketing Cloud implementation that never arrived in the inbox. The subscriber that asks where is his newsletter with the promo code.
 
-You can try to debug it with Journey Builder data or Reports, but in most cases, those solutions provide either not enough or way too much for the specific check you need to make.
+You can try debugging it with Journey Builder data or Reports, but in most cases, those solutions provide either not enough or way too much for the specific check you need to make.
 
 ## Solution
-
-My favourite way to start debugging email sends is by using a SQL Query. Open your [Query Studio](../config/sfmc-config-appexchange-solutions.mdx#query-studio) and copy-paste the below code:
 
 ```sql
 SELECT
@@ -79,13 +77,13 @@ FROM _Sent AS s
 WHERE s.EventDate >= DATEADD(DAY, -1, GETDATE())
 ```
 
-Within a few seconds you will see information about sends from the last day. With all the details that might be useful for debugging, like STMP Bounce Reason, Subscriber Status, Unsubscribe Date, etc.
+Within a few seconds, you will see information about sends from the last day, with all the details that might be useful for debugging, like STMP Bounce Reason, Subscriber Status, Unsubscribe Date, etc.
 
 Wondering what to do with that data? Check out [Email Send Debugging Step-by-Step section](#email-send-debugging-step-by-step) below.
 
 :::note You Should Know
 
-If you are running it from child Business Unit and do not see EmailAddress, BounceCount and Status, add `Ent.` prefix to `_Subscribers` Data View name in the last `JOIN`. It will pull the data from _Subscribers of parent Business Unit.
+If you are running it from the child Business Unit and do not see EmailAddress, BounceCount and Status, add the `Ent.` prefix to `_Subscribers` Data View name in the last `JOIN`. It will pull the data from _Subscribers of the parent Business Unit.
 
 :::
 
@@ -95,23 +93,23 @@ You can even adapt the above query to better suit your needs.
 
 ### Change timeframe
 
-My default is checking the sends from last day. You can change it by modifying the [`DATEADD` function](./sfmc-sql-date-functions.mdx#dateadd).
+My default is checking the sends from the last day. You can change it by modifying the [`DATEADD` function](./sfmc-sql-date-functions.mdx#dateadd).
 
-### Limit to single subscriber
+### Limit to a single subscriber
 
-If you are looking for a problem related to only one specific subscriber you can add `s.SubscriberKey = 'SubscriberKeyOfThatContact'` or `sub.EmailAddress = 'specific@email.address'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+If you are looking for a problem related to only one specific subscriber, you can add `s.SubscriberKey = 'SubscriberKeyOfThatContact'` or `sub.EmailAddress = 'specific@email.address'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
 
-### Limit to single domain
+### Limit to a single domain
 
-If you see problems with deliverability for a particular user, I highly recommend checking whether any other users from the same domain are also having such issues. Maybe it is related to corporate server policy? Add `sub.Domain = 'Recipients.Domain'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+If you see problems with deliverability for a particular user, I highly recommend checking whether other users from the same domain also have such issues. Maybe it is related to corporate server policy? Add `sub.Domain = 'Recipients.Domain'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
 
-### Limit to single email
+### Limit to a single email
 
-If the problem is related to just one particular Email asset, you can limit your outcomes by adding `job.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+If the problem is related to just one email asset, you can limit your outcomes by adding `job.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
 
-### Limit to single journey
+### Limit to a single Journey
 
-If you want to focus on a single Journey, you can limit your outcomes by adding `j.JourneyName = 'ProblematicJourneyName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe. You can also pinpoint it even further by filtering on `j.JourneyVersion`.
+If you want to focus on a single Journey, you can limit your outcomes by adding `j.JourneyName = 'ProblematicJourneyName'` to the [`WHERE` statement](./sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe. You can also pinpoint it further by filtering on `j.JourneyVersion`.
 
 ### Limit to single engagement type
 
@@ -123,25 +121,57 @@ You can use the same approach to output only opens or clicks by changing the pre
 
 Now you know the SFMC Email Send Debugging query in and out. But how to work with the outcomes? And what are the next steps?
 
-As they say, with great power comes great complexity. And that's definitely true for finding the root cause of the undelivered email. The deliverability by itself is already beautiful mess and then there are various features and options you can use directly in Salesforce Marketing Cloud. Let's dive in.
+As they say, with great power comes great complexity. And that's definitely true for finding the root cause of the undelivered email. The deliverability by itself is already a beautiful mess, and then there are various features and options you can use directly in Salesforce Marketing Cloud. Let's dive in.
 
 ### 1. Query System Data Views
 
-I like to start with the query described in this guide - filtered down to problematic subscriber - to get the high level picture of the situation. Free Salesforce [Query Studio](../config/sfmc-config-appexchange-solutions.mdx#query-studio) is the best place to execute that little exploratory analysis.
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. Free Salesforce [Query Studio](../config/sfmc-config-appexchange-solutions.mdx#query-studio) is the best place to execute that little exploratory analysis.
 
 Once you see the outcome, there are few possibilities:
 
-- __There is no data__ » It's time go to to the [next step](#2-check-send-log).
-- __BounceDate is filled__ » Either the email is invalid (hence the bounce) or the email was blocked by the recipient's inbox Admin (they sometime use fake bounces to fight of spam - especially in enterprise B2B and public markets).
-- __OpenDate or ClickDate is filled__ » It's time to compare their timestamps with DeliveryDate. If those are within a single second and there are no later subsequent opens/clicks, the email has been checked by antispam bot and flagged for no delivery to final recipient (again, B2B and Public). If the timestamp are spread out (especially engagement ones from the DeliveydDate), the email got delivered to the right person and they just forgot or lost it.
-- __DeliveryDate is filled__ » If there is no Bounce, Open or Click timestamps, but Delivery is filled in, the email should be in subscriber's Spam folder or Promotions tab.
+- __There is no data for that subscriber/send__ » It's time go to to the [next step](#2-check-send-log).
+- __BounceDate is filled__ » Either the email is invalid (hence the bounce), or the recipient's inbox Admin blocked the email (they sometimes use fake bounces to fight spam - especially in enterprise B2B and public markets).
+- __OpenDate or ClickDate is filled__ » It's time to compare their timestamps with DeliveryDate. If those are within a single second and there are no later subsequent opens/clicks, the email has been checked by an antispam bot and flagged for no delivery to the final recipient (again, B2B and Public). If the timestamps are spread out (especially engagement ones from the DeliveryDate), the email got delivered to the right person, and they just forgot or lost it.
+- __DeliveryDate is filled__ » If there is no Bounce, Open or Click timestamps, but Delivery is filled in, the email should be in the subscriber's Spam folder or Promotions tab.
 - __DeliveryDate is not filled__ » It's time go to to the [next step](#2-check-send-log).
 
 ### 2. Check Send Log
 
- [Send Log](../usecase/sfmc-enhanced-send-log.mdx)
+If System Data Views don't have the data or the DeliveryDate is not filled, the email hasn't reached the recipient's inbox. Time to investigate the [Send Log](../usecase/sfmc-enhanced-send-log.mdx).
 
+Check whether an ErrorCode column value is filled for the send and subscriber you are debugging.
 
+- __There is no data for that subscriber/send__ » It's time go to to the [next step](#3-check-all-subscribers-list).
+- __ErrorCode is filled__ » Check the [Error Code value meaning](../usecase/sfmc-enhanced-send-log.mdx#send-log-errorcode-values) to find the root cause.
+- __ErrorCode is not filled__ » The email was sent but not delivered to the recipient - you have deliverability issues. Check your configuration (From Address Management in SFMC + SPF/DKIM/DMARC in DNS) and deliverability metrics (Salesforce offers Reputation Audit Test and Sender Rating as [features-on-demand](../config/sfmc-config-features-on-demand.mdx#deliverability-features)).
+
+### 3. Check All Subscribers List
+
+If there is no trace of the send in System Data Views and Send Log, it means that Marketing Cloud was not able to attempt sending. There are few possible reasons for that. Let's start with potential subscriber issues by searching for problematic Contact in Email Studio All Subscribers.
+
+- __There is no subscriber__ » The most probable reason is subscriber block by SFMC [List Detective](https://help.salesforce.com/s/articleView?id=000335444&type=1) that protects your lists from nasty emails. What frequently trips people is that it scrubs various group addresses like `admin@`, `info@` and [more](https://www.cameronrobert.com.au/sfmc/email-usernames-blocked-by-salesforce-marketing-cloud/).
+- __Subscriber Status is Unsubscribed or Held__ » Contact is not eligible for receiving the email. Should they want to get it - push them through the official subscription process to stay compliant.
+
+If you are sending through Journey Builder and in the Journey configuration selected to use Email Address from the Entry Source instead of Contacts, be sure to also check whether the Email Address field in the Data Extension selected for Entry stores correct email for that subscriber.
+
+### 4. Check Personalised Email Preview
+
+If everything was fine with the Subscriber, another option is an issue with the Email Asset. To check that, go to Content Builder, find the email, go to Preview and Test and select the subscriber in the same context as the one used for sending (for example, in the sendable Data Extension used as an Entry to the Journey). Check also a few other subscribers from the same place.
+
+- __Email Preview errors out for all Subscribers__ » There is an issue with your email (probably with some programmatic content) that errored out during send.
+- __Email Preview errors out only for that Subscriber__ » There is an issue with the personalisation data of that subscriber that clashes with your programmatic content.
+
+### 5. Check Suppressions and Exclusions
+
+If there are no errors within the Preview, the next potential culprit can be Exclusion or Suppression. There are quite a lot of them, and not all will be relevant for you, depending on the SFMC configuration and method of sending, so be sure to check applicable ones from the Exclusion List, Exclusion Script, Suppression List, Auto-Suppression List.
+
+### 6. Create Support Ticket
+
+If, after all those checks, there is still no answer to the root cause - create a Support Ticket. Sometimes, it can be a master unsubscribe, server-related queue build-up or a bug on the Marketing Cloud backend.
+
+### Email Send Debugging Flowchart
+
+Prefer visualisation for complex process steps? Got you covered:
 
 <Image img={flowchart} alt='Flowchart with visual representation of the debugging email sends process'/>
 
