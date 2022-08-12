@@ -123,6 +123,14 @@ Now you know the SFMC Email Send Debugging query in and out. But how to work wit
 
 As they say, with great power comes great complexity. And that's definitely true for finding the root cause of the undelivered email. The deliverability by itself is already a beautiful mess, and then there are various features and options you can use directly in Salesforce Marketing Cloud. Let's dive in.
 
+:::note You Should Know
+
+You don't have to follow the steps below in the same order as presented. You can mix and match them, as long as you leave the Support Ticket creation for when you tried all other options.
+
+I personally debug in that order because, while I wait for the Query Studio to return the output from query, I can check the following steps in parallel.
+
+:::
+
 ### 1. Query System Data Views
 
 I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. Free Salesforce [Query Studio](../config/sfmc-config-appexchange-solutions.mdx#query-studio) is the best place to execute that little exploratory analysis.
