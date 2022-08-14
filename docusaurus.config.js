@@ -281,6 +281,10 @@ module.exports = {
                         from: ['/ideas'],
                         to: '/sites/ideas',
                     },
+                    {
+                        from: ['/docs/sql'],
+                        to: '/docs/category/sfmc-sql/',
+                    },
                 ],
             },
         ],
