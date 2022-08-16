@@ -11,6 +11,8 @@ import { LeadText } from '../../src/components/LeadText.js';
 import { Button } from '../../src/components/Buttons.js';
 import Image from '@theme/IdealImage';
 import cheatSheet from '../../static/img/article/article-image-sql-join-cheat-sheet.png';
+import innerLeftJoin from '../../static/img/article/article-image-sql-join-inner-left-join.png'
+import innerLeftJoinReversed from '../../static/img/article/article-image-sql-join-inner-left-join-reversed.png'
 
 <LeadText content='Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.' />
 
@@ -235,6 +237,16 @@ Using table name prefixes is not always required (for example, when the two sour
 ## Multiple Joins
 
 Joining two tables is just the beginning. Working with multiple columns can be much more mind-boggling, and in some cases taking paper and pencil to draw some [Venn Diagrams](https://en.wikipedia.org/wiki/Venn_diagram) can make a huge difference. Let's check some of the most popular use cases.
+
+:::note You Should Know
+
+Order of joining the tables is always important, but it is crucial with multi-table JOINs as it can have enormous impact on the final outcome:
+
+<Image img={innerLeftJoin} alt='Example diagram of a three table INNER > LEFT JOIN' />
+
+<Image img={innerLeftJoinReversed} alt='Example diagram of a three table INNER > LEFT JOIN with reversed order of second and third table' />
+
+:::
 
 ### Multiple Inner Joins
 
