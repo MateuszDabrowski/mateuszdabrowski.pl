@@ -285,6 +285,10 @@ module.exports = {
                         from: ['/docs/sql'],
                         to: '/docs/category/sfmc-sql/',
                     },
+                    {
+                        from: ['/docs/ssjs'],
+                        to: '/docs/category/ssjs/',
+                    },
                 ],
             },
         ],
