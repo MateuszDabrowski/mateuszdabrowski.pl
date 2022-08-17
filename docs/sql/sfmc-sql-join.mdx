@@ -246,6 +246,10 @@ Order of joining the tables is always important, but it is crucial with multi-ta
 
 <Image img={innerLeftJoinReversed} alt='Example diagram of a three table INNER > LEFT JOIN with reversed order of second and third table' />
 
+As you can see, changing the order of second and third table creates significantly different outcome. And there is more - based on what you use in the [`ON`](#joining-on), the order might also impact to which records enriching data is applied.
+
+For example, if you enrich data with the first joined table and then add some new records with the another - only the records from the initial table will be enriched. The ones added in last step will not have this added context. Changing order of [`JOIN`](#join-types)s can solve it.
+
 :::
 
 ### Multiple Inner Joins
