@@ -14,23 +14,21 @@ import styles from './styles.module.css';
 const features = [
     {
         title: <>Let's connect</>,
-        imageUrl: 'img/undraw_connect_md.svg',
+        imageUrl: Math.random() < 0.5 ? 'img/md_profile_branded_hoodie.png' : 'img/md_profile_branded_suit.png', // 'img/undraw_connect_md.svg'
         description: (
             <>
-                Ahoj! My name is Mateusz Dąbrowski, and I find joy in telling the code to do my job. Got any questions
-                or suggestions? Or maybe just want to get in touch? Let's meet.
+                Ahoj! My name is Mateusz Dąbrowski. I'm Marketing Cloud Architect and Salesforce MVP. I find joy in telling the code to do my job. Got questions, suggestions or want to get in touch?
             </>
         ),
         url: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
-        cta: <>Connect</>,
+        cta: <>Let's Connect</>,
     },
     {
         title: <>Pick my brain</>,
         imageUrl: 'img/undraw_snippets_md.svg',
         description: (
             <>
-                My notes on AMPScript, SSJS, JavaScript, SQL and Configuration used in Marketing Cloud. Are you craving for more
-                in-depth documentation or looking for tested code snippets? Hop in!
+                My notes on AMPScript, SSJS, JavaScript, SQL and Configuration used in Marketing Cloud. Are you craving for more in-depth documentation or looking for tested code snippets? Hop in!
             </>
         ),
         url: '/docs',
@@ -41,12 +39,11 @@ const features = [
         imageUrl: 'img/undraw_ideas_md.svg',
         description: (
             <>
-                Salesforce Marketing Cloud is powerful. But it can always be more useful. Here you can find all my
-                Salesforce IdeaExchange contributions. Vote to make Marketing Cloud a better tool.
+                Salesforce Marketing Cloud is powerful. But it can always be more useful. Here you can find all my Salesforce IdeaExchange contributions. Vote to make Marketing Cloud a better tool.
             </>
         ),
         url: '/sites/ideas',
-        cta: <>Ideas</>,
+        cta: <>My Ideas</>,
     },
 ];
 
