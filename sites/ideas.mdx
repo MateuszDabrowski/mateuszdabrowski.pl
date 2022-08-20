@@ -6,6 +6,7 @@ image: img/og/og-image-ideas.png
 ---
 
 import { LeadText } from '../src/components/LeadText.js';
+import { Button } from '../src/components/Buttons.js';
 
 <LeadText content="Here you can find all my Salesforce IdeaExchange contributions. Let's make the change!" />
 
@@ -19,7 +20,11 @@ However, it would be much better for multi-country clients to configure the Blac
 
 This way, it would be possible to create, for example, a single SMS Blackout for nighttime and apply it for each contact regardless of the timezone. The locale is already there for MobileConnect and can be leveraged for determining timezone offset.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000sjSYQAY">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V000000sjSYQAY'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ---
 
@@ -41,7 +46,11 @@ This could be easily improved by Salesforce by implementing one of two options:
 
 Input field in Cloud Page editor for `og:title` would be cherry on top.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://ideas.salesforce.com/s/idea/a0B8W00000I8cvPUAR/cloud-page-favicon-open-graph-management">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=a0B8W00000I8cvPUAR'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ---
 
@@ -57,7 +66,11 @@ It is happening, however, only for Journey Builder emails. Sends via any other m
 
 I see it as a massive limitation for automations focused on keeping the database clean and debugging sends.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000001HkZgQAK">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V000001HkZgQAK'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ### _DataSourceName for Entry Data Extension in Journey Builder
 
@@ -67,7 +80,11 @@ It works when the email is sent via Email Studio -> Email -> Content -> Send flo
 
 `_DataSourceName` should show Entry Data Extension Name for Emails in Journey Builder. It is handy to debug from Send Log and create dynamic logic in emails based on the Data Extension naming convention.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000001HkZRQA0">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V000001HkZRQA0'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ### Journey Builder Script Activity
 
@@ -86,7 +103,11 @@ Salesforce can solve it. Below are two possible solutions (and a bonus one for e
 2. __Solution Deluxe__: Extension of the previous idea to define various paths based on a predefined value in the script. Think about custom decision splits using out-of-sfmc data that allow you to change the Journey path based on real-time information from external systems.
 3. __Bonus Solution__: There is also a place for a much less system-heavy script activity on the side. One that captures all members that get to that Activity and in predefined cadence (for example, every hour), if there is at least one member available, executes provided script once. Think of it as a mix of Wait and Script Activity that allows executing logic applied to groups. Use cases? Lazy update of the personalisation-source Data Extension that happens only if there are members that would need it. Or performance check of the subsequent communication to decide whether the members should receive it. All with the performance impact of one script execution per hour - regardless of the number of members.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000lglGQAQ">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V000000lglGQAQ'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ---
 
@@ -109,7 +130,11 @@ Salesforce can fix it. Below are two solution tiers:
 1. __Minimum Valuable Solution__: Add the required query string ("&user_attributes=X,Y") with all potential Custom Einsteins User Attributes to the request URL built within the Content Block code.
 2. __Solution Deluxe__: Improve the above with the UI-enabled selection of needed Profile Attributes, just as available with Product Attributes.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000003lB7QAI">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V0000003lB7QAI'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ### Link Tracking in Behavioral Trigger Content Block
 
@@ -126,7 +151,11 @@ Salesforce can fix it. Below are two possible solutions:
 1. __Minimum Valuable Solution__: Add a text box to a Behavioral Trigger Content Block configuration menu to add our custom tracking. The Content Block should apply the provided tracking query to each link. AMPScript support included.
 2. __Solution Deluxe__: On top of the above solution, Marketing Cloud should consider the Parameter Management to allow for a mix of global UTM's from Web Analytics Connector and local from the new text box in Behavioral Trigger Content Block configuration.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000UKBJQA4">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V000000UKBJQA4'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ### Behavioral Trigger Abandoned Cart Custom Attributes
 
@@ -152,7 +181,11 @@ Below are three solution tiers:
 2. __Nice Solution__: On top of the first point, add two additional (optional) attributes to `trackCart` Collect.js and IgoDigital [response](../../docs/config/sfmc-config-behavioral-triggers#api-responses): `couponCodeName`, `couponCodeDiscount `- and make them also available for selection in [Behavioral Trigger Content Block](../../docs/config/sfmc-config-behavioral-triggers#behavioral-trigger-content-block).
 3. __Solution Deluxe__: On top of the first point, add the possibility of defining Custom Cart Attributes in the UI and leveraging them in `trackCart` Collect.js and IgoDigital [response](../../docs/config/sfmc-config-behavioral-triggers#api-responses). Just as with Custom Profile Attributes / Custom Product Attributes. Additionally, make them also available for selection in [Behavioral Trigger Content Block](../../docs/config/sfmc-config-behavioral-triggers#behavioral-trigger-content-block).
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000003lCKQAY">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V0000003lCKQAY'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ### Behavioral Trigger Content Block rendering on Yahoo, AOL, Windows Outlook
 
@@ -170,7 +203,11 @@ And for Behavioral Trigger Content block that parent is a `<td>` parameter withi
 
 There should be no `rem` units used in the Behavioral Trigger Content Block code and instead a standard `px` font-size assignment for the Block to render correctly.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V000000UKIKQA4">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V000000UKIKQA4'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
 
 ---
 
@@ -194,4 +231,36 @@ This behaviour breaks a prevalent use case of having local folders available to 
 
 The fix is straightforward - if the current user does not have any permissions to Shared Content Builder Folders, it shouldn't see either the `All Shared Content` section or even the Shared Folders tab. That's it. It would then mirror the Shared Data Extension folder permissions and enable the local/administrative access split use case.
 
-<a class="button button--outline button--lg button--primary col col--6 col--offset-3" href="https://trailblazer.salesforce.com/ideaView?id=0874V0000019OQtQAM">Vote on IdeaExchange</a>
+<Button
+    link='https://trailblazer.salesforce.com/ideaView?id=0874V0000019OQtQAM'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+---
+
+## Setup
+
+### Restore default permissions for SFMC Standard System Roles
+
+While Salesforce updates the Standard Roles (Email Studio and Marketing Cloud ones) during Releases, users can also modify them within the SFMC Setup freely (permissions of those System Roles are not locked).
+
+Unfortunately, there is no option to see whether the Standard Role deviates from the default configuration. It creates problems for new administrators coming to existing implementation or after someone modifies the wrong role by mistake/not following the best practices.
+
+Official documentation only stores high-level information about the out-of-the-box configuration that cannot be used to restore the original state.
+
+It would be of great help to have on the Stnadard System Roles either:
+
+- Button that lets you restore the default (for new orgs) permissions configuration or
+- Information on each permission what is its default state.
+
+Currently, there is no real workaround apart from:
+
+- Checking it against another, unchanged SFMC (which is not an option for most) or
+- Using the manual [backup, I'm currently building](https://github.com/MateuszDabrowski/sfmc-roles-backup) (which is not the best long-term option, especially with all the changes to the permissions happening multiple times a year).
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000KSOTSUA5'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
