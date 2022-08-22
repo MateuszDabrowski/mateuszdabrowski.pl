@@ -8,6 +8,7 @@ tags: [JavaScript, Marketing Cloud, Configuration, Users, Setup]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import { Button } from '../../src/components/Buttons.js';
 
 <LeadText content="Backup, clone, and move cross-account the Salesforce Marketing Cloud roles. In seconds." />
 
@@ -135,6 +136,8 @@ let csv = `Permission${delimiter}Allowed${delimiter}Denied\n`; // Headers
 for (const [permissionName, permissionStatus] of Object.entries(permissions)) {
     csv += `${permissionName}${delimiter}${permissionStatus.Allowed}${delimiter}${permissionStatus.Denied}\n`;
 };
+/* Clean up uneeded whitespace */
+csv = csv.replace(/\n\t/g, '\t').replace(/\n /g, ' ');
 console.log(csv);
 ```
 
@@ -152,3 +155,13 @@ The default delimiter is a tab (`\t`) because it allows you to copy-paste the ou
 Save this long text in its entirety (either by highlighting and copy-pasting or by right-clicking in empty space within the Console row and clicking `Copy Selected`) - I recommend pushing it straight to a spreadsheet to leverage the autoformatting and filtering capabilities.
 
 Add the Name of the Role and its purpose stored in the Description field, and that's it. You are good to go.
+
+## Backup of Standard Roles
+
+As the [default System Roles permissions](https://mateuszdabrowski.pl/docs/config/sfmc-config-permissions/) in Salesforce Marketing Cloud can be edited freely and [currently there is no easy way to revert those changes](https://mateuszdabrowski.pl/sites/ideas/#restore-default-permissions-for-sfmc-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
+
+<Button
+ link='https://github.com/MateuszDabrowski/sfmc-roles-backup'
+ text='SFMC Roles Backup'
+ newTab='true'
+/>

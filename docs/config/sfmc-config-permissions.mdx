@@ -8,6 +8,7 @@ tags: [Marketing Cloud, Configuration, Users, Setup]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import { Button } from '../../src/components/Buttons.js';
 
 <LeadText content="Welcome to the jungle, we've got Roles and Permissions." />
 
@@ -344,9 +345,12 @@ __Legacy__ permissions for _Marketing Cloud Extension Manager_.
 
 __Legacy__ permissions.
 
+## Backup of Standard Roles
 
+As the [default System Roles permission sets](https://mateuszdabrowski.pl/docs/config/sfmc-config-permissions/) in Salesforce Marketing Cloud can be edited freely and [currently there is no easy way to revert those changes](https://mateuszdabrowski.pl/sites/ideas/#restore-default-permissions-for-sfmc-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
 
-
-
-
-
+<Button
+ link='https://github.com/MateuszDabrowski/sfmc-roles-backup'
+ text='SFMC Roles Backup'
+ newTab='true'
+/>
