@@ -10,6 +10,7 @@ tags: [Marketing Cloud, Configuration, Email, Journey, Personalisation]
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
+import { Button } from '../../src/components/Buttons.js';
 
 <LeadText content="Win-back your e-commerce customers with SFMC Behavioral Triggers." />
 
@@ -409,26 +410,6 @@ The basic structure of the Track Purchase data layer is very similar to the [Tra
 </script>
 ```
 
-You can, however, extend it with additional information that will provide more context to the conversion:
-
-```html {10-13} title="Track Cart Data Layer"
-<script type="text/javascript">
-    _etmc.push(["setOrgId", "MID"]);
-    _etmc.push(["setUserInfo", {"email": "UniqueIdentifier"}]);
-    _etmc.push(["trackPageView", {"item": "ProductCode"}]);
-    _etmc.push(["trackConversion", {
-        "cart": [
-            {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"},
-            {"item": "ProductCode", "quantity": "Quantity", "price": "IndividualPrice", "unique_id": "ProductSKU"}
-        ],
-        "order_number": "OrderNumber",
-        "discount": "DiscountAmount",
-        "shipping": "ShippingPrice",
-        "details": {"CustomAttribute": "CustomValue"}
-   }]);
-</script>
-```
-
 ### Do Not Track
 
 You may suppress all of the configured trackings by using a data layer based on customer decision and local laws.
@@ -439,6 +420,16 @@ You may suppress all of the configured trackings by using a data layer based on 
     _etmc.push(["doNotTrack"]);
 </script>
 ```
+
+### More details on Collect.js
+
+If you want even more details and implementation considerations related to the Collect.js code used by Behavioral Triggers and Einstein Recommendations, check the [awesome documentation](https://joernberkefeld.github.io/SFMC-Cookbook/einstein/recommendation/) by [Jörn Berkefeld](https://www.linkedin.com/in/joernberkefeld/).
+
+<Button
+ link='https://joernberkefeld.github.io/SFMC-Cookbook/einstein/recommendation/'
+ text='Einstein Documentation'
+ newTab='true'
+/>
 
 ---
 
