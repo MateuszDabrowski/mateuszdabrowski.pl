@@ -111,7 +111,7 @@ Salesforce can solve it. Below are two possible solutions (and a bonus one for e
 
 ### Wait Until Time Range Activity
 
-Salesforce Marketing Cloud offers many different Waione basic is stillis still one basic missing - Wait Until Time Range.
+Salesforce Marketing Cloud offers many different Wait Activities, but one basic is missing - Wait Until Time Range.
 
 __Use Case__
 
@@ -123,16 +123,16 @@ __Current Options__
 Right now, there is no easy workaround:
 
 1. Einstein STO is a blackbox
-2. Wait by Duration is closest to the solution, as it allows you to delay sending to a specific hour (for example, extend the wait du. Still, unfortunately, it means that if someone enters Journey at 10 AM, they will have to wait a whole day. We want to send emails normally in a given time range.
-3. Update Contact adding Timestamp to Data Extension, and Decision Split deciding what should happen (send or Wait by DurmanyNice, but a lot of steps, configuration, performance penalty and awful Journey readability for longer Journeys.
+2. Wait by Duration is closest to the solution, as it allows you to delay sending to a specific hour (for example, extend the wait duration till 9 AM). Still, unfortunately, it means that if someone enters Journey at 10 AM, they will have to wait a whole day. We want to send emails normally in a given time range.
+3. Update Contact adding Timestamp to Data Extension, and Decision Split deciding what should happen (send or Wait by Duration). Nice, but a lot of steps, configuration, performance penalty and awful Journey readability for longer Journeys.
 4. Custom Journey Builder Activity. Sure, but that's a lot of custom work and worrying about scalability.
 
 Salesforce can solve it.
 
 __Possible solutions__
 
-1. Minimum Valuable Solution: Improve Wait by Duration with "Extend wait duration outside of time range" or create a separate Wait Until Time Range Activity
-2. Solution Deluxe: Allow both time ranges and days of week ranges (with the possibility to mix both) to cover the no-sends-on-weekends use case.
+1. Minimum Valuable Solution: Improve Wait by Duration with "Extend wait duration outside of time range" or create a separate Wait Until Time Range Activity.
+2. Solution Deluxe: Allow both time ranges and days-of-week ranges (with the possibility to mix both) to cover the no-sends-on-weekends use case.
 
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000KrMaMUAV/wait-until-time-range-journey-builder-activity'
