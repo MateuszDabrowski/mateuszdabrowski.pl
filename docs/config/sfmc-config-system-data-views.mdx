@@ -256,7 +256,7 @@ When working with `_Job` Data View:
 
 `_Job` Data View is unique among other Email-focused Data Views, as it shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Job`. You can query only those jobs that occurred in the Business Unit where you execute your SQL snippet.
 
-Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+Always consider this when choosing Business Unit to execute the query and the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
 :::
 
@@ -1401,62 +1401,6 @@ When working with `_JourneyActivity` Data View:
 
 ## Journey Data Views
 
-### _JourneyActivity
-
-Stores information about Activities available in your Journeys. Must-have for joining Email data with Journey data.
-
-<Tabs
-    defaultValue='fields'
-    values={[
-        {label: '_JourneyActivity Fields', value: 'fields'},
-        {label: '_JourneyActivity SQL Query', value: 'sql'},
-    ]}
->
-<TabItem value='fields'>
-
-Name | Description | Data Type | Nullable
--- | -- | -- | --
-VersionID | The unique identifier for the version of the Journey | Text |
-ActivityID | The unique identifier for the activity. There are one or more ActivityID's associated to a VersionID. | Text |
-ActivityName | The name of the activity | Text | X
-ActivityExternalKey | The external key associated with the activity | Text |
-JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a Journey email's Triggered Send Definition. | Text | X
-ActivityType | The type of activity | Text | X
-
-</TabItem>
-<TabItem value='sql'>
-
-```sql
-SELECT
-      journeyActivity.VersionID
-    , journeyActivity.ActivityID
-    , journeyActivity.ActivityName
-    , journeyActivity.ActivityExternalKey
-    , journeyActivity.JourneyActivityObjectID
-    , journeyActivity.ActivityType
-FROM _JourneyActivity AS journeyActivity
-```
-
-</TabItem>
-</Tabs>
-
-When working with `_JourneyActivity` Data View:
-
-1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use the `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
-2. You can also connect it to SMS channel using [_SMSMessageTracking](#_smsmessagetracking) Data View by making a [`JOIN`](../sql/sfmc-sql-join.mdx) `ON journeyActivity.ActivityID = smsTracking.JBActivityID`.
-3. With the help of [`_Journey`](#_journey) Data View, you can use the `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you need to use Script Activity with REST API instead, but SQL is perfect for glancing at the multi-channel use.
-4. `_JourneyActivity` Data View holds data about activities from deleted Journeys and Journey Versions, so if you want to see only activities currently in use, [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View.
-
-:::note You Should Know
-
-`_JourneyActivity` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_JourneyActivity`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
-
-Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
-
-:::
-
----
-
 ### _Journey
 
 Stores information about your Journeys for when context matters.
@@ -1512,7 +1456,168 @@ When working with `_Journey` Data View:
 
 `_Journey` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_Journey`. You can query only those Journeys that were created in the Business Unit where you execute your SQL snippet.
 
-Always consider this when choosing the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+Always consider this when choosing Business Unit to execute the query and the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+
+:::
+
+---
+
+### _JourneyActivity
+
+Stores information about Activities available in your Journeys. Must-have for joining Email data with Journey data.
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_JourneyActivity Fields', value: 'fields'},
+        {label: '_JourneyActivity SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+VersionID | The unique identifier for the version of the Journey | Text |
+ActivityID | The unique identifier for the activity. There are one or more ActivityID's associated to a VersionID. | Text |
+ActivityName | The name of the activity | Text | X
+ActivityExternalKey | The external key associated with the activity | Text |
+JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a Journey email's Triggered Send Definition. | Text | X
+ActivityType | The type of activity | Text | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      journeyActivity.VersionID
+    , journeyActivity.ActivityID
+    , journeyActivity.ActivityName
+    , journeyActivity.ActivityExternalKey
+    , journeyActivity.JourneyActivityObjectID
+    , journeyActivity.ActivityType
+FROM _JourneyActivity AS journeyActivity
+```
+
+</TabItem>
+</Tabs>
+
+When working with `_JourneyActivity` Data View:
+
+1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use the `VersionID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
+2. You can also connect it to SMS channel using [_SMSMessageTracking](#_smsmessagetracking) Data View by making a [`JOIN`](../sql/sfmc-sql-join.mdx) `ON journeyActivity.ActivityID = smsTracking.JBActivityID`.
+3. With the help of [`_Journey`](#_journey) Data View, you can use the `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you need to use Script Activity with REST API instead, but SQL is perfect for glancing at the multi-channel use.
+4. `_JourneyActivity` Data View holds data about activities from deleted Journeys and Journey Versions, so if you want to see only activities currently in use, [`JOIN`](../sql/sfmc-sql-join.mdx) [`_Journey`](#_journey) Data View.
+
+:::note You Should Know
+
+`_JourneyActivity` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_JourneyActivity`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
+
+Always consider this when choosing Business Unit to execute the query and the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+
+:::
+
+---
+
+## Automation Data Views
+
+
+
+### _AutomationInstance
+
+
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: '_AutomationInstance Fields', value: 'fields'},
+        {label: '_AutomationInstance SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+MemberID | The Account ID for the Business Unit | Number |
+AutomationName | The name of the automation | Text |
+AutomationDescription | The description of the automation | Text | X
+AutomationCustomerKey | The unique ID of the automation | Text |
+AutomationType | The type of starting source used in automation | Text |
+AutomationNotificationRecipient_Complete | Email(s) receiving notification about completed runs | Text | X
+AutomationNotificationRecipient_Error | Email(s) receiving notification about errored runs | Text | X
+AutomationNotificationRecipient_Skip | Email(s) receiving notification about skipped runs | Text | X
+AutomationStepCount | The number of steps in the automation | Number |
+AutomationInstanceID | The unique ID of the specific automation run | Text |
+AutomationInstanceIsRunOnce | Was this specific automation run executed with Run Once? 1 for true, 0 for false in File Drop and Triggered automations. Null in Schedule automations | Boolean |
+FilenameFromTrigger | Name of the file that triggered the automation for Triggered and File Drop automations. Null for Schedule automations | Text | X
+AutomationInstanceScheduledTime_UTC | Starting schedule datetime in UTC timezone for Schedule automations. Null for Triggered and File Drop automation | Date | X
+AutomationInstanceStartTime_UTC | Automation run start datetime in UTC timezone. Null if not yet started | Date | X
+AutomationInstanceEndTime_UTC | Automation run end datetime in UTC timezone. Null if not yet ended | Date | X
+AutomationInstanceStatus | The status of the automation | Text |
+AutomationInstanceActivityErrorDetails | The first error message encountered in the automation run | Text | X
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      automation.MemberID
+    , automation.AutomationName
+    , automation.AutomationDescription
+    , automation.AutomationCustomerKey
+    , automation.AutomationType
+    , automation.AutomationNotificationRecipient_Complete
+    , automation.AutomationNotificationRecipient_Error
+    , automation.AutomationNotificationRecipient_Skip
+    , automation.AutomationStepCount
+    , automation.AutomationInstanceID
+    , automation.AutomationInstanceIsRunOnce
+    , automation.FilenameFromTrigger
+    , automation.AutomationInstanceScheduledTime_UTC
+    , automation.AutomationInstanceStartTime_UTC
+    , automation.AutomationInstanceEndTime_UTC
+    , automation.AutomationInstanceStatus
+    , automation.AutomationInstanceActivityErrorDetails
+FROM _AutomationInstance AS automation
+```
+
+</TabItem>
+</Tabs>
+
+`AutomationType` possible values:
+- Schedule
+- File Drop
+- Trigger
+
+`AutomationInstanceStatus` possible values:
+- QueuedFile
+- Initialized
+- Executing
+- Stopped
+- Complete
+- Error
+
+When working with `_AutomationInstance` Data View:
+1.
+
+
+:::note You Should Know
+
+`_AutomationInstance` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_AutomationInstance`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
+
+Always consider this when choosing Business Unit to execute the query and the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
+
+:::
+
+
+
+### _AutomationActivityInstance
+
+
+:::note You Should Know
+
+`_AutomationActivityInstance` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_AutomationActivityInstance`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
+
+Always consider this when choosing Business Unit to execute the query and the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
 :::
 
