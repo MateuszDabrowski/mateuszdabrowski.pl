@@ -44,8 +44,8 @@ Stores information about your Subscribers. Great for high-level perspective or a
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Subscribers Fields', value: 'fields'},
-        {label: '_Subscribers SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -103,8 +103,8 @@ Stores information about your Profile and Preference Attributes from Email Studi
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_EnterpriseAttribute Fields', value: 'fields'},
-        {label: '_EnterpriseAttribute SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -112,7 +112,6 @@ Stores information about your Profile and Preference Attributes from Email Studi
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 _SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record stored. | Number
-
 
 </TabItem>
 <TabItem value='sql'>
@@ -151,8 +150,8 @@ Stores information about your Email Sends Jobs. Great for capturing detailed dat
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Job Fields', value: 'fields'},
-        {label: '_Job SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -246,6 +245,7 @@ FROM _Job AS job
 </Tabs>
 
 When working with `_Job` Data View:
+
 1. `JobID` field will be your bread and butter to [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
 2. `EmailName`, `FromName`, and `FromEmail` are handy data points missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) Data Views and are worth checking for reporting needs.
 3. If you are performing A/B tests or want to analyse the subject line's impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) to create a great knowledge source for your content team.
@@ -269,8 +269,8 @@ Stores information about your Email Sends. Great for understanding who had a cha
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Sent Fields', value: 'fields'},
-        {label: '_Sent SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -326,8 +326,8 @@ Stores information about your Email Opens. For when you need to know when someon
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Open Fields', value: 'fields'},
-        {label: '_Open SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -399,8 +399,8 @@ There might be cases where the data is wrong the other way - when you see that e
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Click Fields', value: 'fields'},
-        {label: '_Click SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -472,8 +472,8 @@ There might be cases where the click data is wrong - when you see that email as 
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Bounce Fields', value: 'fields'},
-        {label: '_Bounce SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -565,8 +565,8 @@ This Data View, along with [`_Bounce`](#_bounce), should be monitored regularly 
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Complaint Fields', value: 'fields'},
-        {label: '_Complaint SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -655,8 +655,8 @@ All of this makes `_Unsubscribe` a much better source of knowledge about unsubsc
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Unsubscribe Fields', value: 'fields'},
-        {label: '_Unsubscribe SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -723,8 +723,9 @@ Despite `_BusinessUnitUnsubscribes` Data View focus on Business Units, you can q
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_BusinessUnitUnsubscribes Fields', value: 'fields'},
-        {label: '_BusinessUnitUnsubscribes SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'Field Values', value: 'values'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -736,6 +737,17 @@ SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 UnsubDateUTC | The date the subscriber unsubscribed on the BU. | Date | X
 UnsubReason | The reason listed is a custom value configured by your administrator. | Text | X
+
+</TabItem>
+<TabItem value='values'>
+
+`UnsubReason` possible values:
+- Spam Complaint
+- Unsubscribed from list details on subscriber properties dialog.
+- Unsubscribed by Salesforce Marketing Cloud RMM service based on subscriber Leave/Reply email.
+- Unsubscribed by subscriber edit API call.
+- Unsubscribed from the Subscription Center
+- Unsubscribed via Import
 
 </TabItem>
 <TabItem value='sql'>
@@ -752,14 +764,6 @@ FROM _BusinessUnitUnsubscribes AS buUnsub
 
 </TabItem>
 </Tabs>
-
-`UnsubReason` possible values:
-- Spam Complaint
-- Unsubscribed from list details on subscriber properties dialog.
-- Unsubscribed by Salesforce Marketing Cloud RMM service based on subscriber Leave/Reply email.
-- Unsubscribed by subscriber edit API call.
-- Unsubscribed from the Subscription Center
-- Unsubscribed via Import
 
 When working with `_BusinessUnitUnsubscribes` Data View:
 
@@ -793,8 +797,9 @@ DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscr
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_ListSubscribers Fields', value: 'fields'},
-        {label: '_ListSubscribers SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'Field Values', value: 'values'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -813,6 +818,24 @@ Status | The status of the subscriber: active, held, unsubscribed, or bounced | 
 SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
+
+</TabItem>
+<TabItem value='values'>
+
+`AddMethod` possible values:
+- API
+- Imported
+- WebApplication
+- DataExtensionSend
+- Unknown
+
+`ListType` possible values:
+- Publication list
+- Suppression list
+- List
+- Group
+- FTAF list
+- Unknown
 
 </TabItem>
 <TabItem value='sql'>
@@ -836,21 +859,6 @@ FROM _ListSubscribers AS listSub
 
 </TabItem>
 </Tabs>
-
-`AddMethod` possible values:
-- API
-- Imported
-- WebApplication
-- DataExtensionSend
-- Unknown
-
-`ListType` possible values:
-- Publication list
-- Suppression list
-- List
-- Group
-- FTAF list
-- Unknown
 
 When working with `_ListSubscribers` Data View:
 
@@ -883,8 +891,9 @@ When working with Mobile Number history of engagement and subscription, take thi
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_MobileAddress Fields', value: 'fields'},
-        {label: '_MobileAddress SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'Field Values', value: 'values'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -911,6 +920,30 @@ _FirstName | Contact's First Name | Text | X
 _LastName | Contact's Last Name | Text | X
 _UTCOffset | The number of hours from which the user's time zone deviates from UTC. Defaults to 0 | Number | X
 _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or not. Defaults to false | Boolean | X
+
+</TabItem>
+<TabItem value='values'>
+
+`_Status` possible values:
+- 1 = Active
+- 2 = Inactive
+- 3 = Deleted
+
+`_Source` possible values:
+- 0 = Unspecified
+- 1 = Webcollect
+- 2 = API
+- 3 = FTAF
+- 4 = Import
+- 5 = MoveCopy
+- 6 = Manual
+- 7 = SalesForce
+- 8 = Segmentation
+- 9 = GenericExtension
+- 10 = CustomObject
+- 11 = FacebookAPI
+- 12 = SmartCapture
+- 13 = MobileOptIn
 
 </TabItem>
 <TabItem value='sql'>
@@ -943,27 +976,6 @@ FROM _MobileAddress AS mobileAddress
 </TabItem>
 </Tabs>
 
-`_Status` possible values:
-- 1 = Active
-- 2 = Inactive
-- 3 = Deleted
-
-`_Source` possible values:
-- 0 = Unspecified
-- 1 = Webcollect
-- 2 = API
-- 3 = FTAF
-- 4 = Import
-- 5 = MoveCopy
-- 6 = Manual
-- 7 = SalesForce
-- 8 = Segmentation
-- 9 = GenericExtension
-- 10 = CustomObject
-- 11 = FacebookAPI
-- 12 = SmartCapture
-- 13 = MobileOptIn
-
 When working with `_MobileAddress` Data View:
 
 1. There is no guarantee of how long it will work and how long the data will be correct. Be sure you are checking it periodically or - even better - have validation in your code.
@@ -988,8 +1000,8 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_MobileSubscription Fields', value: 'fields'},
-        {label: '_MobileSubscription SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1045,8 +1057,8 @@ You shouldn't be working with `_MobileSubscription` Data View. Use [`_SMSSubscri
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_SubscriberSMS Fields', value: 'fields'},
-        {label: '_SubscriberSMS SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1096,8 +1108,9 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_SMSSubscriptionLog Fields', value: 'fields'},
-        {label: '_SMSSubscriptionLog SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'Field Values', value: 'values'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1120,29 +1133,7 @@ CreatedDate | Date the subscription was created | Date |
 ModifiedDate | Date the subscription was modified | Date |
 
 </TabItem>
-<TabItem value='sql'>
-
-```sql
-SELECT
-      smsSubLog.LogDate
-    , smsSubLog.SubscriberKey
-    , smsSubLog.MobileSubscriptionID
-    , smsSubLog.SubscriptionDefinitionID
-    , smsSubLog.MobileNumber
-    , smsSubLog.OptOutStatusID
-    , smsSubLog.OptOutMethodID
-    , smsSubLog.OptOutDate
-    , smsSubLog.OptInStatusID
-    , smsSubLog.OptInMethodID
-    , smsSubLog.OptInDate
-    , smsSubLog.Source
-    , smsSubLog.CreatedDate
-    , smsSubLog.ModifiedDate
-FROM _SMSSubscriptionLog AS smsSubLog
-```
-
-</TabItem>
-</Tabs>
+<TabItem value='values'>
 
 `OptOutStatusID` possible values:
 - 0 = NotOptedOut
@@ -1188,6 +1179,31 @@ FROM _SMSSubscriptionLog AS smsSubLog
 - 10 = CustomObject
 - 12 = MobileOptIn
 
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      smsSubLog.LogDate
+    , smsSubLog.SubscriberKey
+    , smsSubLog.MobileSubscriptionID
+    , smsSubLog.SubscriptionDefinitionID
+    , smsSubLog.MobileNumber
+    , smsSubLog.OptOutStatusID
+    , smsSubLog.OptOutMethodID
+    , smsSubLog.OptOutDate
+    , smsSubLog.OptInStatusID
+    , smsSubLog.OptInMethodID
+    , smsSubLog.OptInDate
+    , smsSubLog.Source
+    , smsSubLog.CreatedDate
+    , smsSubLog.ModifiedDate
+FROM _SMSSubscriptionLog AS smsSubLog
+```
+
+</TabItem>
+</Tabs>
+
 When working with `_SMSSubscriptionLog` Data View:
 
 1. SFMC assigns subscription data to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
@@ -1203,8 +1219,8 @@ When working with `_SMSSubscriptionLog` Data View:
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_SMSMessageTracking Fields', value: 'fields'},
-        {label: '_SMSMessageTracking SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1361,8 +1377,8 @@ There might be multiple reasons for the SMS to be undelivered, for example:
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_UndeliverableSMS Fields', value: 'fields'},
-        {label: '_UndeliverableSMS SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1408,8 +1424,8 @@ Stores information about your Journeys for when context matters.
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_Journey Fields', value: 'fields'},
-        {label: '_Journey SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1469,8 +1485,8 @@ Stores information about Activities available in your Journeys. Must-have for jo
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_JourneyActivity Fields', value: 'fields'},
-        {label: '_JourneyActivity SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1520,17 +1536,16 @@ Always consider this when choosing Business Unit to execute the query and the ty
 
 ## Automation Data Views
 
-
-
 ### _AutomationInstance
 
-
+Provides historical information about Automation runs.
 
 <Tabs
     defaultValue='fields'
     values={[
-        {label: '_AutomationInstance Fields', value: 'fields'},
-        {label: '_AutomationInstance SQL Query', value: 'sql'},
+        {label: 'Fields', value: 'fields'},
+        {label: 'Field Values', value: 'values'},
+        {label: 'SQL Query', value: 'sql'},
     ]}
 >
 <TabItem value='fields'>
@@ -1541,47 +1556,22 @@ MemberID | The Account ID for the Business Unit | Number |
 AutomationName | The name of the automation | Text |
 AutomationDescription | The description of the automation | Text | X
 AutomationCustomerKey | The unique ID of the automation | Text |
+AutomationInstanceID | The unique ID of the specific automation run | Text |
 AutomationType | The type of starting source used in automation | Text |
 AutomationNotificationRecipient_Complete | Email(s) receiving notification about completed runs | Text | X
 AutomationNotificationRecipient_Error | Email(s) receiving notification about errored runs | Text | X
 AutomationNotificationRecipient_Skip | Email(s) receiving notification about skipped runs | Text | X
 AutomationStepCount | The number of steps in the automation | Number |
-AutomationInstanceID | The unique ID of the specific automation run | Text |
 AutomationInstanceIsRunOnce | Was this specific automation run executed with Run Once? 1 for true, 0 for false in File Drop and Triggered automations. Null in Schedule automations | Boolean |
 FilenameFromTrigger | Name of the file that triggered the automation for Triggered and File Drop automations. Null for Schedule automations | Text | X
 AutomationInstanceScheduledTime_UTC | Starting schedule datetime in UTC timezone for Schedule automations. Null for Triggered and File Drop automation | Date | X
 AutomationInstanceStartTime_UTC | Automation run start datetime in UTC timezone. Null if not yet started | Date | X
-AutomationInstanceEndTime_UTC | Automation run end datetime in UTC timezone. Null if not yet ended | Date | X
+AutomationInstanceEndTime_UTC | Automation run end datetime in UTC timezone. Null if not yet finished | Date | X
 AutomationInstanceStatus | The status of the automation | Text |
 AutomationInstanceActivityErrorDetails | The first error message encountered in the automation run | Text | X
 
 </TabItem>
-<TabItem value='sql'>
-
-```sql
-SELECT
-      automation.MemberID
-    , automation.AutomationName
-    , automation.AutomationDescription
-    , automation.AutomationCustomerKey
-    , automation.AutomationType
-    , automation.AutomationNotificationRecipient_Complete
-    , automation.AutomationNotificationRecipient_Error
-    , automation.AutomationNotificationRecipient_Skip
-    , automation.AutomationStepCount
-    , automation.AutomationInstanceID
-    , automation.AutomationInstanceIsRunOnce
-    , automation.FilenameFromTrigger
-    , automation.AutomationInstanceScheduledTime_UTC
-    , automation.AutomationInstanceStartTime_UTC
-    , automation.AutomationInstanceEndTime_UTC
-    , automation.AutomationInstanceStatus
-    , automation.AutomationInstanceActivityErrorDetails
-FROM _AutomationInstance AS automation
-```
-
-</TabItem>
-</Tabs>
+<TabItem value='values'>
 
 `AutomationType` possible values:
 - Schedule
@@ -1596,26 +1586,161 @@ FROM _AutomationInstance AS automation
 - Complete
 - Error
 
-When working with `_AutomationInstance` Data View:
-1.
+</TabItem>
+<TabItem value='sql'>
 
+```sql
+SELECT
+      automation.MemberID
+    , automation.AutomationName
+    , automation.AutomationDescription
+    , automation.AutomationCustomerKey
+    , automation.AutomationInstanceID
+    , automation.AutomationType
+    , automation.AutomationNotificationRecipient_Complete
+    , automation.AutomationNotificationRecipient_Error
+    , automation.AutomationNotificationRecipient_Skip
+    , automation.AutomationStepCount
+    , automation.AutomationInstanceIsRunOnce
+    , automation.FilenameFromTrigger
+    , automation.AutomationInstanceScheduledTime_UTC
+    , automation.AutomationInstanceStartTime_UTC
+    , automation.AutomationInstanceEndTime_UTC
+    , automation.AutomationInstanceStatus
+    , automation.AutomationInstanceActivityErrorDetails
+FROM _AutomationInstance AS automation
+```
+
+</TabItem>
+</Tabs>
+
+When working with `_AutomationInstance` Data View:
+
+1. This data view stores all Automation __runs__, so you will see here separte row for each execution of the Automation. This is great basic audit tool for logging changes to the automation as well as a nice way to counting the amount of automation executions against licence limits.
+2. Key limitation of `_AutomationInstance` is that it outputs information only about a day after the execution took place. If you need real-time information about Automation Studio status, you will still need an API approach. But for not that urget use cases this new option will be much more performant.
+3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show `System Error`. In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_AutomationActivityInstance) Data View.
+4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
+5. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationActivityInstance`](#_AutomationActivityInstance). It lets you find information about execution of each activity within the Automation in the specific run.
 
 :::note You Should Know
 
-`_AutomationInstance` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_AutomationInstance`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
+`_AutomationInstance` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_AutomationInstance`. You can query only those Automtion runs that were executed in the Business Unit where you execute your SQL snippet.
 
 Always consider this when choosing Business Unit to execute the query and the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
 :::
 
-
-
 ### _AutomationActivityInstance
 
+Provides historical information about Automation Studio Activity runs.
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        {label: 'Fields', value: 'fields'},
+        {label: 'Field Values', value: 'values'},
+        {label: 'SQL Query', value: 'sql'},
+    ]}
+>
+<TabItem value='fields'>
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+MemberID | The Account ID for the Business Unit | Number |
+AutomationName | The name of the automation | Text |
+AutomationCustomerKey | The unique ID of the automation | Text |
+AutomationInstanceID | The unique ID of the specific automation run | Text |
+ActivityCustomerKey | The unique ID of the activity | Text |
+ActivityInstanceID | The unique ID of the specific activity execution | Text |
+ActivityType | The type of the activity (numeric ID) | Number |
+ActivityName | The name of the activity | Text |
+ActivityDescription | The description of the activity | Text | X
+ActivityInstanceStep | The two-dimensional description where in automation the activity is located | Text |
+ActivityInstanceStartTime_UTC | Activity execution start datetime in UTC timezone. Null if not yet started | Date | X
+ActivityInstanceEndTime_UTC | Activity execution end datetime in UTC timezone. Null if not yet finished | Date | X
+ActivityInstanceStatus | The status of the activity | Text |
+ActivityInstanceActivityErrorDetails | The error message encountered in the activity execution | Text | X
+
+</TabItem>
+<TabItem value='values'>
+
+`ActivityType` possible values:
+
+Value | Meaning
+-- | --
+33 | SMS Activity
+42 | Send Email
+43 | Import File
+45 | Refresh Group
+53 | File Transfer
+73 | Data Extract
+84 | Report Definition
+300 | SQL Query
+303 | Filter
+423 | Script
+425 | Data Factory Utility Activity
+426 | Refresh Segment Template
+427 | Publish Audience
+467 | Wait
+724 | Refresh Mobile Filtered List
+725 | Send SMS
+726 | Import Mobile Contacts
+733 | Journey Builder Event Activity
+736 | Send Push
+749 | Fire Event
+771 | Salesforce Email Send
+772 | Mobile Connect Send Salesforce Sync Subscriber
+783 | Send GroupConnect
+1000 | Verification
+1010 | Interaction Studio Data
+1101 | Interactions
+1701 | Batch Personalization
+3700 | Contact to Business Unit Mapping
+
+`ActivityInstanceStatus` possible values:
+- Initialized
+- Executing
+- Complete
+- Error
+- NotSelected
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      automationActivity.MemberID
+    , automationActivity.AutomationName
+    , automationActivity.AutomationCustomerKey
+    , automationActivity.AutomationInstanceID
+    , automationActivity.ActivityCustomerKey
+    , automationActivity.ActivityInstanceID
+    , automationActivity.ActivityType
+    , automationActivity.ActivityName
+    , automationActivity.ActivityDescription
+    , automationActivity.ActivityInstanceStep
+    , automationActivity.ActivityInstanceStartTime_UTC
+    , automationActivity.ActivityInstanceEndTime_UTC
+    , automationActivity.ActivityInstanceStatus
+    , automationActivity.ActivityInstanceActivityErrorDetails
+FROM _AutomationActivityInstance AS automationActivity
+```
+
+</TabItem>
+</Tabs>
+
+When working with `_AutomationActivityInstance` Data View:
+
+1. This data view stores all Automation Activity __runs__, so you will see here separte row for each execution of each Activity. It is awesome tool for checking how optimised our Activities are and what errors are troubling our Automations.
+2. Key limitation of `_AutomationActivityInstance` is that it outputs information only about a day after the execution took place.
+3. If activity run errored out due to system or unclassified error, `ActivityInstanceActivityErrorDetails` will show `System Error`. In other cases it will store the error message.
+4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
+5. The start and end dates in this data view can be leveraged with [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) and [`AVG`](../sql/sfmc-sql-aggregate-functions.mdx#avg) to calculate average time needed for each activity to finish. This information is crucial to assess whether the current automation Schedule is correct and where the optimisation efforts are required to protect against 30 minutes autokill.
+6. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationInstance`](#_AutomationInstance). It lets you find information about the Automation using this Activity.
 
 :::note You Should Know
 
-`_AutomationActivityInstance` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_AutomationActivityInstance`. You can query only those Journey Activities that were created in the Business Unit where you execute your SQL snippet.
+`_AutomationActivityInstance` Data View shows data limited to a specific Business Unit. Your parent Business Unit has access to [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) and other data from all Business Units, but this is not the case with `_AutomationActivityInstance`. You can query only those Automation Activities that were created in the Business Unit where you execute your SQL snippet.
 
 Always consider this when choosing Business Unit to execute the query and the type of [`JOIN`](../sql/sfmc-sql-join.mdx) statement.
 
