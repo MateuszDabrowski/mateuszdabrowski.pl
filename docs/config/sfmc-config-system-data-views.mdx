@@ -1565,9 +1565,9 @@ AutomationStepCount | The number of steps in the automation | Number |
 AutomationInstanceIsRunOnce | Was this specific automation run executed with Run Once? 1 for true, 0 for false in File Drop and Triggered automations. Null in Schedule automations | Boolean |
 FilenameFromTrigger | Name of the file that triggered the automation for Triggered and File Drop automations. Null for Schedule automations | Text | X
 AutomationInstanceScheduledTime_UTC | Starting schedule datetime in UTC timezone for Schedule automations. Null for Triggered and File Drop automation | Date | X
-AutomationInstanceStartTime_UTC | Automation run start datetime in UTC timezone. Null if not yet started | Date | X
-AutomationInstanceEndTime_UTC | Automation run end datetime in UTC timezone. Null if not yet finished | Date | X
-AutomationInstanceStatus | The status of the automation | Text |
+AutomationInstanceStartTime_UTC | Automation run start datetime in UTC timezone. Null if run is skipped| Date | X
+AutomationInstanceEndTime_UTC | Automation run end datetime in UTC timezone. Null if run is skipped or still running | Date | X
+AutomationInstanceStatus | The status of the automation run at the time of querying| Text |
 AutomationInstanceActivityErrorDetails | The first error message encountered in the automation run | Text | X
 
 </TabItem>
@@ -1617,7 +1617,7 @@ FROM _AutomationInstance AS automation
 When working with `_AutomationInstance` Data View:
 
 1. This data view stores all Automation __runs__, so you will see here separte row for each execution of the Automation. This is great basic audit tool for logging changes to the automation as well as a nice way to counting the amount of automation executions against licence limits.
-2. Key limitation of `_AutomationInstance` is that it outputs information only about a day after the execution took place. If you need real-time information about Automation Studio status, you will still need an API approach. But for not that urget use cases this new option will be much more performant.
+2. Key limitation of `_AutomationInstance` is that it starts outputting information about automation execution 24 hours after the automation instance was created. If you need real-time information about Automation Studio status, you will still need an API approach. But for not that urget use cases this new option will be much more performant.
 3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show `System Error`. In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_AutomationActivityInstance) Data View.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationActivityInstance`](#_AutomationActivityInstance). It lets you find information about execution of each activity within the Automation in the specific run.
@@ -1656,9 +1656,9 @@ ActivityType | The type of the activity (numeric ID) | Number |
 ActivityName | The name of the activity | Text |
 ActivityDescription | The description of the activity | Text | X
 ActivityInstanceStep | The two-dimensional description where in automation the activity is located | Text |
-ActivityInstanceStartTime_UTC | Activity execution start datetime in UTC timezone. Null if not yet started | Date | X
-ActivityInstanceEndTime_UTC | Activity execution end datetime in UTC timezone. Null if not yet finished | Date | X
-ActivityInstanceStatus | The status of the activity | Text |
+ActivityInstanceStartTime_UTC | Activity execution start datetime in UTC timezone. Null if run is skipped | Date | X
+ActivityInstanceEndTime_UTC | Activity execution end datetime in UTC timezone. Null if run is skipped or still running | Date | X
+ActivityInstanceStatus | The status of the activity run at the time of querying | Text |
 ActivityInstanceActivityErrorDetails | The error message encountered in the activity execution | Text | X
 
 </TabItem>
@@ -1732,7 +1732,7 @@ FROM _AutomationActivityInstance AS automationActivity
 When working with `_AutomationActivityInstance` Data View:
 
 1. This data view stores all Automation Activity __runs__, so you will see here separte row for each execution of each Activity. It is awesome tool for checking how optimised our Activities are and what errors are troubling our Automations.
-2. Key limitation of `_AutomationActivityInstance` is that it outputs information only about a day after the execution took place.
+2. Key limitation of `_AutomationActivityInstance` is that it starts showing information about activity execution 24 hours after the automation instance was created.
 3. If activity run errored out due to system or unclassified error, `ActivityInstanceActivityErrorDetails` will show `System Error`. In other cases it will store the error message.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. The start and end dates in this data view can be leveraged with [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) and [`AVG`](../sql/sfmc-sql-aggregate-functions.mdx#avg) to calculate average time needed for each activity to finish. This information is crucial to assess whether the current automation Schedule is correct and where the optimisation efforts are required to protect against 30 minutes autokill.
