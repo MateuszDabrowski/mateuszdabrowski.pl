@@ -83,7 +83,7 @@ Some like to start with a blank slate. Some - from a well-crafted template. I'm 
             debugValue('Found error', error);
         } else {
             // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
-            Platform.Function.InsertData(errorDE, ['ID', 'ScriptName', 'ErrorMessage', 'ErrorDescription'], [GUID(), scriptName, error.message, error.description]);
+            Platform.Function.InsertData(errorDE, ['id', 'scriptName', 'errorMessage', 'errorDescription'], [GUID(), scriptName, error.message, error.description]);
             Platform.Response.Redirect(errorURL + '?error=' + error.message + '&error_description=' + error.description);
         };
     };
@@ -227,7 +227,7 @@ The template contains the API Endpoint section that I frequently use, but if you
             debugValue('Found error', error);
         } else {
             // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
-            Platform.Function.InsertData(errorDE, ['ID', 'ScriptName', 'ErrorMessage', 'ErrorDescription'], [GUID(), scriptName, error.message, error.description]);
+            Platform.Function.InsertData(errorDE, ['id', 'scriptName', 'errorMessage', 'errorDescription'], [GUID(), scriptName, error.message, error.description]);
             Platform.Response.Redirect(errorURL + '?error=' + error.message + '&error_description=' + error.description);
         };
     };

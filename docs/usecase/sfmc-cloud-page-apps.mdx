@@ -230,10 +230,12 @@ Create Data Extension with the following structure (`session` column being the P
 | Name | DataType | Default Value | Length | Nullable |
 |--|--|--|--|--|
 | 🔑 session | Text | | 50 | No |
-| appName | Text | | 50 | Yes |
+| appName | Text | | 100 | Yes |
 | createdDate | Date | Current date | | Yes |
 | token | Text | | 520 | Yes |
 | tokenExpire | Date | | | Yes |
+| userName | Text | 100 | | Yes |
+| userEmail | Text | 254 | | Yes |
 
 As for data retention, one day for Individual Records is enough for authorisation purposes. However, you can extend it for logging history purposes. Keep in mind that the more data stored, the slower the Data Extension operations speeds. Pushing data to this table is straightforward:
 
@@ -293,8 +295,9 @@ By considering all the above, we get a robust and secure template for our Cloud 
     3.2.1. Build token request payload
     3.2.2. Request the token
     3.2.3. Destructure the response
-    3.2.4. Upsert Logging Data Extension
-    3.2.5. Handle authentication error
+    3.2.4. Get User Details
+    3.2.5. Upsert Logging Data Extension
+    3.2.6. Handle authentication error
     3.3. Authorisation Error
 
     -------------------------------------------------------------------------- */
@@ -388,9 +391,19 @@ By considering all the above, we get a robust and secure template for our Cloud 
             var tokenExpire = Platform.Function.SystemDateToLocalDate(Platform.Function.Now());
             tokenExpire.setMinutes(tokenExpire.getMinutes() + 18);
 
-            /* 3.2.4. Upsert Logging Data Extensions */
-            Platform.Function.UpsertData(authDE, ['session'], [state], ['appName', 'token', 'tokenExpire'], [appName, accessToken, tokenExpire]);
-        /* 3.2.5. Handle authentication error */
+            /* 3.2.4. Get User Details */
+            response = HTTP.Get('https://' + clientBase + '.auth.marketingcloudapis.com/v2/userinfo', ['Authorization'], ['Bearer ' + accessToken]);
+            if (debugging) debugValue('UserInfo Response', response)
+            userName = Platform.Function.ParseJSON(response.Content).user.name;
+            userEmail = Platform.Function.ParseJSON(response.Content).user.email;
+
+            /* 3.2.5. Upsert Authentication Logging Data Extension */
+            Platform.Function.UpsertData(authDE, ['session'], [state],
+                ['appName', 'token', 'tokenExpire', 'userName', 'userEmail'],
+                [appName, accessToken, tokenExpire, userName, userEmail]
+            );
+
+        /* 3.2.6. Handle authentication error */
         } else {
             handleError({message: 'Authentication Failed', description: 'Status: ' + response.StatusCode})
         };

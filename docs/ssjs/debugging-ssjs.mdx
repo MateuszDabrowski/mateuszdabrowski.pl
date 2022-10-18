@@ -342,11 +342,11 @@ Here you can find a sample setup:
 
 Column Name | Primary Key | Length | Type | Nullable | Default Value
 -- | -- | --  | -- | -- | --
-ID | Yes | 36 | Text | No |
-ErrorSource | | 100 | Text | No |
-ErrorMessage | | 2000 | Text | Yes |
-ErrorDescription | | 2000 | Text | Yes |
-ErrorDate | | | Date | Yes | Current Date
+id | Yes | 36 | Text | No |
+errorSource | | 100 | Text | No |
+errorMessage | | 2000 | Text | Yes |
+errorDescription | | 2000 | Text | Yes |
+errorDate | | | Date | Yes | Current Date
 
 If you have multiple Business Units on your instance, add it as a Shared Data Extension.
 
@@ -403,7 +403,7 @@ You can solve it by creating a single Error Handler function and just calling it
             // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
             Platform.Function.InsertData(
                 'Data_Extension_Name',
-                ['ID', 'ErrorSource', 'ErrorMessage', 'ErrorDescription'],
+                ['id', 'errorSource', 'errorMessage', 'errorDescription'],
                 [GUID(), 'Name of the asset where the script runs', Stringify(error.message), Stringify(error.description)]
             );
         };
