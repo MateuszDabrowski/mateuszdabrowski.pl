@@ -234,8 +234,8 @@ Create Data Extension with the following structure (`session` column being the P
 | createdDate | Date | Current date | | Yes |
 | token | Text | | 520 | Yes |
 | tokenExpire | Date | | | Yes |
-| userName | Text | 100 | | Yes |
-| userEmail | Text | 254 | | Yes |
+| userName | Text | | 100 | Yes |
+| userEmail | Text | | 254 | Yes |
 
 As for data retention, one day for Individual Records is enough for authorisation purposes. However, you can extend it for logging history purposes. Keep in mind that the more data stored, the slower the Data Extension operations speeds. Pushing data to this table is straightforward:
 
