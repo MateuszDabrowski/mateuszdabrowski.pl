@@ -181,5 +181,9 @@ module.exports = {
                 'usecase/sfmc-contact-deletion',
             ],
         },
+        {
+            type: 'doc',
+            id: 'sfmc-webinars',
+        },
     ],
 };

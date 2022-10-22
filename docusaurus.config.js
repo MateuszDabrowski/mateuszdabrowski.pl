@@ -91,6 +91,11 @@ module.exports = {
                     position: 'left',
                 },
                 {
+                    label: 'Webinars',
+                    to: 'docs/sfmc-webinars',
+                    position: 'left',
+                },
+                {
                     label: 'Ideas',
                     to: 'sites/ideas',
                     position: 'left',
@@ -169,6 +174,10 @@ module.exports = {
                         {
                             label: 'Zen of SFMC',
                             to: 'docs/zen-of-sfmc',
+                        },
+                        {
+                            label: 'Webinars',
+                            to: 'docs/sfmc-webinars',
                         },
                         {
                             label: 'Toolset',
