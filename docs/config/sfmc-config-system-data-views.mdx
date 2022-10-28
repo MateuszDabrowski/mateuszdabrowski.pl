@@ -1618,7 +1618,7 @@ When working with `_AutomationInstance` Data View:
 
 1. This data view stores all Automation __runs__, so you will see here separte row for each execution of the Automation. This is great basic audit tool for logging changes to the automation as well as a nice way to counting the amount of automation executions against licence limits.
 2. Key limitation of `_AutomationInstance` is that it shows data with 24 hours delay. If you need real-time information about Automation Studio status, you will still need an API approach. But for not that urget use cases this new option will be much more performant.
-3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show `System Error`. In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_AutomationActivityInstance) Data View.
+3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_AutomationActivityInstance) Data View.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationActivityInstance`](#_AutomationActivityInstance). It lets you find information about execution of each activity within the Automation in the specific run.
 
@@ -1659,7 +1659,7 @@ ActivityInstanceStep | The two-dimensional description where in automation the a
 ActivityInstanceStartTime_UTC | Activity execution start datetime in UTC timezone. Null if run is skipped | Date | X
 ActivityInstanceEndTime_UTC | Activity execution end datetime in UTC timezone. Null if run is skipped or still running | Date | X
 ActivityInstanceStatus | The status of the activity run at the time of querying | Text |
-ActivityInstanceActivityErrorDetails | The error message encountered in the activity execution | Text | X
+ActivityInstanceStatusDetails | The error message encountered in the activity execution | Text | X
 
 </TabItem>
 <TabItem value='values'>
@@ -1722,7 +1722,7 @@ SELECT
     , automationActivity.ActivityInstanceStartTime_UTC
     , automationActivity.ActivityInstanceEndTime_UTC
     , automationActivity.ActivityInstanceStatus
-    , automationActivity.ActivityInstanceActivityErrorDetails
+    , automationActivity.ActivityInstanceStatusDetails
 FROM _AutomationActivityInstance AS automationActivity
 ```
 
@@ -1733,7 +1733,7 @@ When working with `_AutomationActivityInstance` Data View:
 
 1. This data view stores all Automation Activity __runs__, so you will see here separte row for each execution of each Activity. It is awesome tool for checking how optimised our Activities are and what errors are troubling our Automations.
 2. Key limitation of `_AutomationActivityInstance` is that it shows data with 24 hours delay.
-3. If activity run errored out due to system or unclassified error, `ActivityInstanceActivityErrorDetails` will show `System Error`. In other cases it will store the error message.
+3. If activity run errored out due to system or unclassified error, `ActivityInstanceStatusDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the error message.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. The start and end dates in this data view can be leveraged with [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) and [`AVG`](../sql/sfmc-sql-aggregate-functions.mdx#avg) to calculate average time needed for each activity to finish. This information is crucial to assess whether the current automation Schedule is correct and where the optimisation efforts are required to protect against 30 minutes autokill.
 6. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationInstance`](#_AutomationInstance). It lets you find information about the Automation using this Activity.
