@@ -112,12 +112,6 @@ module.exports = {
                     'aria-label': 'LinkedIn Profile',
                 },
                 {
-                    href: 'https://twitter.com/MDabrowskiPL',
-                    position: 'right',
-                    className: 'header-twitter-link',
-                    'aria-label': 'Twitter Profile',
-                },
-                {
                     href: 'https://trailblazer.me/id/madabrowski',
                     position: 'right',
                     className: 'header-salesforce-link',
