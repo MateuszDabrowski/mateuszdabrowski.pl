@@ -10,6 +10,7 @@ module.exports = {
     projectName: 'mateuszdabrowski.pl',
     onBrokenLinks: 'warn',
     onBrokenMarkdownLinks: 'warn',
+    markdown: { mermaid: true },
     customFields: {
         description: 'Personal website focused on making the most out of Salesforce Marketing Cloud. let code = do("our job").',
         keywords: [
@@ -34,6 +35,17 @@ module.exports = {
             { name: 'theme-color', content: '#212121' },
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
+        mermaid: {
+            theme: { light: 'neutral', dark: 'dark' },
+            // mermaidOptions: {
+            //     themeVariables: {
+            //         primaryColor: '#0176d3',
+            //         secondaryColor: '#F6B355',
+            //         tertiaryColor: '#DA4E55',
+            //     },
+            //     flowchart: { curve: 'linear' }
+            // }
+        },
         // announcementBar: {
         //     id: 'announcementBar',
         //     content:
@@ -234,6 +246,7 @@ module.exports = {
         ],
     ],
     plugins: [
+        '@docusaurus/theme-mermaid',
         [
             '@docusaurus/plugin-content-docs',
             {
@@ -296,5 +309,4 @@ module.exports = {
             },
         ],
     ],
-    onBrokenLinks: 'warn',
 };
