@@ -293,7 +293,7 @@ module.exports = {
                     },
                     {
                         from: ['/ideas', '/sites/ideas/'],
-                        to: '/sites/ideas/sfmc-ideas/',
+                        to: '/sites/ideas/marketing-cloud-ideas/',
                     },
                     {
                         from: ['/docs/sql'],
