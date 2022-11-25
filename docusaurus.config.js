@@ -10,7 +10,6 @@ module.exports = {
     projectName: 'mateuszdabrowski.pl',
     onBrokenLinks: 'warn',
     onBrokenMarkdownLinks: 'warn',
-    markdown: { mermaid: true },
     customFields: {
         description: 'Personal website focused on making the most out of Salesforce Marketing Cloud. let code = do("our job").',
         keywords: [
@@ -35,17 +34,6 @@ module.exports = {
             { name: 'theme-color', content: '#212121' },
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
-        mermaid: {
-            theme: { light: 'neutral', dark: 'dark' },
-            // mermaidOptions: {
-            //     themeVariables: {
-            //         primaryColor: '#0176d3',
-            //         secondaryColor: '#F6B355',
-            //         tertiaryColor: '#DA4E55',
-            //     },
-            //     flowchart: { curve: 'linear' }
-            // }
-        },
         // announcementBar: {
         //     id: 'announcementBar',
         //     content:
@@ -109,8 +97,19 @@ module.exports = {
                 },
                 {
                     label: 'Ideas',
-                    to: 'sites/ideas',
+                    to: 'sites/category/ideas',
+                    activeBasePath: 'sites/ideas',
                     position: 'left',
+                    items: [
+                        {
+                            label: 'SFMC Ideas',
+                            to: 'sites/ideas/sfmc-ideas/',
+                        },
+                        {
+                            label: 'SFMC Personalisation Ideas',
+                            to: 'sites/ideas/sfmc-personalisation-ideas/',
+                        },
+                    ]
                 },
                 {
                     label: 'Toolset',
@@ -191,7 +190,7 @@ module.exports = {
                         },
                         {
                             label: 'Ideas',
-                            to: 'sites/ideas',
+                            to: 'sites/category/ideas',
                         },
                     ],
                 },
@@ -246,7 +245,6 @@ module.exports = {
         ],
     ],
     plugins: [
-        '@docusaurus/theme-mermaid',
         [
             '@docusaurus/plugin-content-docs',
             {
@@ -254,7 +252,7 @@ module.exports = {
                 path: 'sites',
                 routeBasePath: 'sites',
                 include: ['**/*.md', '**/*.mdx'],
-                sidebarPath: require.resolve('./sidebars.json'),
+                sidebarPath: require.resolve('./sites/sitesSidebar.js'),
                 showLastUpdateAuthor: true,
                 showLastUpdateTime: true,
                 editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
@@ -275,27 +273,27 @@ module.exports = {
                 redirects: [
                     {
                         from: ['/docs/sql/sfmc-sql-snippet-enhanced-send-log'],
-                        to: '/docs/usecase/sfmc-enhanced-send-log',
+                        to: '/docs/usecase/sfmc-enhanced-send-log/',
                     },
                     {
                         from: ['/docs/ideas/engage-with-countdown', '/ideas/engage-with-countdown'],
-                        to: '/docs/usecase/engage-with-countdown',
+                        to: '/docs/usecase/engage-with-countdown/',
                     },
                     {
                         from: ['/docs/ideas/tailor-with-data', '/ideas/tailor-with-data'],
-                        to: '/docs/usecase/tailor-with-data',
+                        to: '/docs/usecase/tailor-with-data/',
                     },
                     {
                         from: ['/docs/usecase/sfmc-cloud-apps'],
-                        to: '/docs/usecase/sfmc-cloud-page-apps',
+                        to: '/docs/usecase/sfmc-cloud-page-apps/',
                     },
                     {
                         from: ['/docs/appexchange/sfmc-appexchange-overview'],
-                        to: '/docs/config/sfmc-config-appexchange-solutions',
+                        to: '/docs/config/sfmc-config-appexchange-solutions/',
                     },
                     {
-                        from: ['/ideas'],
-                        to: '/sites/ideas',
+                        from: ['/ideas', '/sites/ideas/'],
+                        to: '/sites/sfmc-ideas/',
                     },
                     {
                         from: ['/docs/sql'],
