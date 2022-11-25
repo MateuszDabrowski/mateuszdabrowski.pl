@@ -6,13 +6,12 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Ideas',
-                description: 'Here you can find all my Salesforce IdeaExchange contributions. Let\'s make the change!',
-                keywords: ['Marketing Cloud', 'Marketing Cloud Personalisation', 'Ideas'],
+                description: 'Here you can find all my Salesforce IdeaExchange contributions by solution. Let\'s make the change!',
                 image: 'img/og/og-image-ideas.png',
             },
             items: [
-                'ideas/sfmc-ideas',
-                'ideas/sfmc-personalisation-ideas',
+                'ideas/marketing-cloud-ideas',
+                'ideas/interaction-studio-ideas',
             ],
         },
     ],

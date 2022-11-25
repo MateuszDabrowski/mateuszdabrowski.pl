@@ -102,12 +102,12 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'SFMC Ideas',
-                            to: 'sites/ideas/sfmc-ideas/',
+                            label: 'Marketing Cloud Ideas',
+                            to: 'sites/ideas/marketing-cloud-ideas/',
                         },
                         {
-                            label: 'SFMC Personalisation Ideas',
-                            to: 'sites/ideas/sfmc-personalisation-ideas/',
+                            label: 'Interaction Studio Ideas',
+                            to: 'sites/ideas/interaction-studio-ideas/',
                         },
                     ]
                 },
@@ -293,7 +293,7 @@ module.exports = {
                     },
                     {
                         from: ['/ideas', '/sites/ideas/'],
-                        to: '/sites/sfmc-ideas/',
+                        to: '/sites/ideas/sfmc-ideas/',
                     },
                     {
                         from: ['/docs/sql'],
