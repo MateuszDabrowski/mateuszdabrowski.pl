@@ -102,11 +102,11 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'Marketing Cloud Ideas',
+                            label: 'Marketing Cloud',
                             to: 'sites/ideas/marketing-cloud-ideas/',
                         },
                         {
-                            label: 'Interaction Studio Ideas',
+                            label: 'Interaction Studio',
                             to: 'sites/ideas/interaction-studio-ideas/',
                         },
                     ]
