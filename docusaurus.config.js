@@ -34,6 +34,9 @@ module.exports = {
             { name: 'theme-color', content: '#212121' },
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
+        docs: {
+            sidebar: { autoCollapseCategories: true, },
+        },
         // announcementBar: {
         //     id: 'announcementBar',
         //     content:
@@ -83,16 +86,20 @@ module.exports = {
                             label: 'SFMC Use Cases',
                             to: 'docs/category/sfmc-use-cases/',
                         },
+                        {
+                            label: 'Interaction Studio',
+                            to: 'docs/category/interaction-studio/',
+                        },
                     ],
+                },
+                {
+                    label: 'Webinars',
+                    to: 'docs/category/sfmc-webinars/',
+                    position: 'left',
                 },
                 {
                     label: 'Tags',
                     to: 'docs/tags',
-                    position: 'left',
-                },
-                {
-                    label: 'Webinars',
-                    to: 'docs/sfmc-webinars',
                     position: 'left',
                 },
                 {
@@ -145,7 +152,7 @@ module.exports = {
             style: 'dark',
             links: [
                 {
-                    title: 'Docs & Snippets',
+                    title: 'Programming Guides',
                     items: [
                         {
                             label: 'SSJS',
@@ -163,6 +170,15 @@ module.exports = {
                             label: 'SFMC SQL',
                             to: 'docs/category/sfmc-sql/',
                         },
+                    ],
+                },
+                {
+                    title: 'Solution Guides',
+                    items: [
+                        {
+                            label: 'Zen of SFMC',
+                            to: 'docs/zen-of-sfmc',
+                        },
                         {
                             label: 'SFMC Config',
                             to: 'docs/category/sfmc-config/',
@@ -171,18 +187,19 @@ module.exports = {
                             label: 'SFMC Use Cases',
                             to: 'docs/category/sfmc-use-cases/',
                         },
+                        {
+                            label: 'Interaction Studio',
+                            to: 'docs/category/interaction Studio/',
+                        },
                     ],
                 },
                 {
-                    title: 'About',
+                    title: 'My',
                     items: [
-                        {
-                            label: 'Zen of SFMC',
-                            to: 'docs/zen-of-sfmc',
-                        },
+
                         {
                             label: 'Webinars',
-                            to: 'docs/sfmc-webinars',
+                            to: 'docs/category/sfmc-webinars',
                         },
                         {
                             label: 'Toolset',
@@ -302,6 +319,10 @@ module.exports = {
                     {
                         from: ['/docs/ssjs'],
                         to: '/docs/category/ssjs/',
+                    },
+                    {
+                        from: ['/docs/sfmc-webinars'],
+                        to: '/docs/category/sfmc-webinars/',
                     },
                 ],
             },

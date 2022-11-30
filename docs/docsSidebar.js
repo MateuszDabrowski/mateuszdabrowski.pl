@@ -182,8 +182,35 @@ module.exports = {
             ],
         },
         {
-            type: 'doc',
-            id: 'sfmc-webinars',
+            type: 'category',
+            label: 'Interaction Studio',
+            link: {
+                type: 'generated-index',
+                title: 'Interaction Studio',
+                description: 'Interaction Studio is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!',
+                keywords: ['Interaction Studio', 'Personalisation'],
+                image: 'img/og/og-image-interaction-studio.png',
+            },
+            items: [
+                'interaction-studio/is-open-time-email',
+            ],
+        },
+    ],
+    webinars: [
+        {
+            type: 'category',
+            label: 'SFMC Webinars',
+            link: {
+                type: 'generated-index',
+                title: 'SFMC Webinars',
+                description: 'My sessions on various aspects of Marketing Cloud with summary, recordings, slides, snippets and articles. All-in-one, all for free.',
+                keywords: ['Marketing Cloud', 'Webinar'],
+                image: 'img/og/og-image-webinars.png',
+            },
+            items: [
+                'webinars/sfmc-webinar-architecting-web-solutions',
+                'webinars/sfmc-webinar-cloud-page-apps',
+            ],
         },
     ],
 };
