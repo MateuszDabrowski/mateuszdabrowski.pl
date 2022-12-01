@@ -1,5 +1,5 @@
 module.exports = {
-    snippets: [
+    docs: [
         {
             type: 'doc',
             id: 'docs-and-snippets',
@@ -25,20 +25,9 @@ module.exports = {
                 'ssjs/ssjs-style-guide',
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
-                    type: 'category',
+                    type: 'link',
                     label: '» SSJS Snippets',
-                    link: {
-                        type: 'generated-index',
-                        title: 'SFMC SSJS Snippets',
-                        description: 'Ready-to-use Salesforce Marketing Cloud SSJS Snippets',
-                        keywords: ['Marketing Cloud', 'SSJS'],
-                        image: 'img/og/og-image-sfmc-ssjs-snippets.png',
-                    },
-                    items: [
-                        'ssjs/ssjs-snippet-ampscript-in-ssjs',
-                        'ssjs/ssjs-snippet-mobileconnect-phone-change',
-                        'ssjs/ssjs-snippet-ssjs-script-template',
-                    ],
+                    href: '/docs/category/ssjs-snippets/',
                 },
             ],
         },
@@ -57,18 +46,9 @@ module.exports = {
                 'js/js-loops',
                 'js/js-dom',
                 {
-                    type: 'category',
+                    type: 'link',
                     label: '» JS Snippets',
-                    link: {
-                        type: 'generated-index',
-                        title: 'JS Snippets',
-                        description: 'Ready-to-use JavaScript Snippets',
-                        keywords: ['JavaScript', 'JS'],
-                        image: 'img/og/og-image-js-snippets.png',
-                    },
-                    items: [
-                        'js/js-snippet-export-import-document-sfmc-roles',
-                    ],
+                    href: '/docs/category/js-snippets/',
                 },
             ],
         },
@@ -86,20 +66,10 @@ module.exports = {
                 'ampscript/ampscript-style-guide',
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
-                    type: 'category',
+                    type: 'link',
                     label: '» AMPScript Snippets',
-                    link: {
-                        type: 'generated-index',
-                        title: 'SFMC AMPScript Snippets',
-                        description: 'Ready-to-use Salesforce Marketing Cloud AMPScript Snippets',
-                        keywords: ['Marketing Cloud', 'AMPScript'],
-                        image: 'img/og/og-image-sfmc-ampscript-snippets.png',
-                    },
-                    items: [
-                        'ssjs/ssjs-snippet-ampscript-in-ssjs',
-                    ],
+                    href: '/docs/category/ampscript-snippets/',
                 },
-
             ],
         },
         {
@@ -128,19 +98,9 @@ module.exports = {
                 'sql/sfmc-sql-null-functions',
                 'sql/sfmc-sql-style-guide',
                 {
-                    type: 'category',
+                    type: 'link',
                     label: '» SQL Snippets',
-                    link: {
-                        type: 'generated-index',
-                        title: 'SFMC SQL Snippets',
-                        description: 'Ready-to-use Salesforce Marketing Cloud SQL Snippets',
-                        keywords: ['Marketing Cloud', 'SQL'],
-                        image: 'img/og/og-image-sfmc-sql-snippets.png',
-                    },
-                    items: [
-                        'sql/sfmc-sql-snippet-debugging-email-sends',
-                        'sql/sfmc-sql-snippet-debugging-value-length',
-                    ],
+                    href: '/docs/category/sql-snippets/',
                 },
             ],
         },
@@ -193,6 +153,87 @@ module.exports = {
             },
             items: [
                 'interaction-studio/is-open-time-email',
+            ],
+        },
+    ],
+    snippets: [
+        {
+            type: 'category',
+            label: 'SSJS Snippets',
+            link: {
+                type: 'generated-index',
+                title: 'SFMC SSJS Snippets',
+                description: 'Ready-to-use Salesforce Marketing Cloud SSJS Snippets',
+                keywords: ['Marketing Cloud', 'SSJS'],
+                image: 'img/og/og-image-sfmc-ssjs-snippets.png',
+            },
+            items: [
+                'ssjs/ssjs-snippet-ampscript-in-ssjs',
+                'ssjs/ssjs-snippet-mobileconnect-phone-change',
+                'ssjs/ssjs-snippet-ssjs-script-template',
+                {
+                    type: 'link',
+                    label: '» SSJS Docs',
+                    href: '/docs/category/ssjs/',
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'JS Snippets',
+            link: {
+                type: 'generated-index',
+                title: 'JS Snippets',
+                description: 'Ready-to-use JavaScript Snippets',
+                keywords: ['JavaScript', 'JS'],
+                image: 'img/og/og-image-js-snippets.png',
+            },
+            items: [
+                'js/js-snippet-export-import-document-sfmc-roles',
+                {
+                    type: 'link',
+                    label: '» JS Docs',
+                    href: '/docs/category/javascript/',
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'AMPScript Snippets',
+            link: {
+                type: 'generated-index',
+                title: 'SFMC AMPScript Snippets',
+                description: 'Ready-to-use Salesforce Marketing Cloud AMPScript Snippets',
+                keywords: ['Marketing Cloud', 'AMPScript'],
+                image: 'img/og/og-image-sfmc-ampscript-snippets.png',
+            },
+            items: [
+                'ssjs/ssjs-snippet-ampscript-in-ssjs',
+                {
+                    type: 'link',
+                    label: '» AMPScript Docs',
+                    href: '/docs/category/ampscript/',
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'SQL Snippets',
+            link: {
+                type: 'generated-index',
+                title: 'SFMC SQL Snippets',
+                description: 'Ready-to-use Salesforce Marketing Cloud SQL Snippets',
+                keywords: ['Marketing Cloud', 'SQL'],
+                image: 'img/og/og-image-sfmc-sql-snippets.png',
+            },
+            items: [
+                'sql/sfmc-sql-snippet-debugging-email-sends',
+                'sql/sfmc-sql-snippet-debugging-value-length',
+                {
+                    type: 'link',
+                    label: '» SQL Docs',
+                    href: '/docs/category/sfmc-sql/',
+                },
             ],
         },
     ],

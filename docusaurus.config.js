@@ -18,6 +18,7 @@ module.exports = {
             'Marketing Cloud',
             'Salesforce Marketing Cloud',
             'SFMC',
+            'Interaction Studio',
             'JavaScript',
             'AMPScript',
             'SSJS',
@@ -52,7 +53,7 @@ module.exports = {
             },
             items: [
                 {
-                    label: 'Docs & Snippets',
+                    label: 'Docs',
                     to: 'docs',
                     activeBasePath: 'docs',
                     position: 'left',
@@ -93,14 +94,43 @@ module.exports = {
                     ],
                 },
                 {
+                    label: 'Snippets',
+                    to: 'docs',
+                    activeBasePath: 'docs',
+                    position: 'left',
+                    items: [
+                        {
+                            label: 'SSJS',
+                            to: 'docs/category/ssjs-snippets/',
+                        },
+                        {
+                            label: 'JavaScript',
+                            to: 'docs/category/js-snippets/',
+                        },
+                        {
+                            label: 'AMPScript',
+                            to: 'docs/category/ampscript-snippets/',
+                        },
+                        {
+                            label: 'SFMC SQL',
+                            to: 'docs/category/sql-snippets/',
+                        },
+                    ],
+                },
+                {
                     label: 'Webinars',
                     to: 'docs/category/sfmc-webinars/',
                     position: 'left',
-                },
-                {
-                    label: 'Tags',
-                    to: 'docs/tags',
-                    position: 'left',
+                    items: [
+                        {
+                            label: 'Architecting Web Solutions ',
+                            to: 'docs/webinars/sfmc-webinar-architecting-web-solutions',
+                        },
+                        {
+                            label: 'Cloud Page Apps',
+                            to: 'docs/webinars/sfmc-webinar-cloud-page-apps',
+                        },
+                    ],
                 },
                 {
                     label: 'Ideas',
@@ -119,8 +149,8 @@ module.exports = {
                     ]
                 },
                 {
-                    label: 'Toolset',
-                    to: 'sites/my-toolset',
+                    label: 'Tags',
+                    to: 'docs/tags',
                     position: 'left',
                 },
                 {
@@ -152,8 +182,12 @@ module.exports = {
             style: 'dark',
             links: [
                 {
-                    title: 'Programming Guides',
+                    title: 'Docs',
                     items: [
+                        {
+                            label: 'Zen of SFMC',
+                            to: 'docs/zen-of-sfmc',
+                        },
                         {
                             label: 'SSJS',
                             to: 'docs/category/ssjs/',
@@ -170,15 +204,6 @@ module.exports = {
                             label: 'SFMC SQL',
                             to: 'docs/category/sfmc-sql/',
                         },
-                    ],
-                },
-                {
-                    title: 'Solution Guides',
-                    items: [
-                        {
-                            label: 'Zen of SFMC',
-                            to: 'docs/zen-of-sfmc',
-                        },
                         {
                             label: 'SFMC Config',
                             to: 'docs/category/sfmc-config/',
@@ -190,6 +215,27 @@ module.exports = {
                         {
                             label: 'Interaction Studio',
                             to: 'docs/category/interaction Studio/',
+                        },
+                    ],
+                },
+                {
+                    title: 'Snippets',
+                    items: [
+                        {
+                            label: 'SSJS',
+                            to: 'docs/category/ssjs-snippets/',
+                        },
+                        {
+                            label: 'JavaScript',
+                            to: 'docs/category/js-snippets/',
+                        },
+                        {
+                            label: 'AMPScript',
+                            to: 'docs/category/ampscript-snippets/',
+                        },
+                        {
+                            label: 'SFMC SQL',
+                            to: 'docs/category/sql-snippets/',
                         },
                     ],
                 },
