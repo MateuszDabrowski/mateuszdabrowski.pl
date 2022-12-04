@@ -335,39 +335,43 @@ module.exports = {
             {
                 redirects: [
                     {
-                        from: ['/docs/sql/sfmc-sql-snippet-enhanced-send-log'],
+                        from: ['/docs/sql/sfmc-sql-snippet-enhanced-send-log/'],
                         to: '/docs/usecase/sfmc-enhanced-send-log/',
                     },
                     {
-                        from: ['/docs/ideas/engage-with-countdown', '/ideas/engage-with-countdown'],
-                        to: '/docs/usecase/engage-with-countdown/',
+                        from: ['/docs/config/sfmc-config-behavioral-triggers/'],
+                        to: '/docs/usecase/sfmc-behavioral-triggers/',
                     },
                     {
-                        from: ['/docs/ideas/tailor-with-data', '/ideas/tailor-with-data'],
-                        to: '/docs/usecase/tailor-with-data/',
+                        from: ['/docs/ideas/engage-with-countdown/', '/ideas/engage-with-countdown/', '/docs/usecase/engage-with-countdown/'],
+                        to: '/docs/js/js-snippet-engage-with-countdown/',
                     },
                     {
-                        from: ['/docs/usecase/sfmc-cloud-apps'],
+                        from: ['/docs/ideas/tailor-with-data/', '/ideas/tailor-with-data/', '/docs/usecase/tailor-with-data/'],
+                        to: '/docs/js/js-snippet-tailor-with-data/',
+                    },
+                    {
+                        from: ['/docs/usecase/sfmc-cloud-apps/'],
                         to: '/docs/usecase/sfmc-cloud-page-apps/',
                     },
                     {
-                        from: ['/docs/appexchange/sfmc-appexchange-overview'],
+                        from: ['/docs/appexchange/sfmc-appexchange-overview/'],
                         to: '/docs/config/sfmc-config-appexchange-solutions/',
                     },
                     {
-                        from: ['/ideas', '/sites/ideas/'],
+                        from: ['/ideas/', '/sites/ideas/'],
                         to: '/sites/ideas/marketing-cloud-ideas/',
                     },
                     {
-                        from: ['/docs/sql'],
+                        from: ['/docs/sql/'],
                         to: '/docs/category/sfmc-sql/',
                     },
                     {
-                        from: ['/docs/ssjs'],
+                        from: ['/docs/ssjs/'],
                         to: '/docs/category/ssjs/',
                     },
                     {
-                        from: ['/docs/sfmc-webinars'],
+                        from: ['/docs/sfmc-webinars/'],
                         to: '/docs/category/sfmc-webinars/',
                     },
                 ],

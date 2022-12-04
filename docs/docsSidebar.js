@@ -118,7 +118,6 @@ module.exports = {
                 'config/sfmc-config-permissions',
                 'config/sfmc-config-system-data-views',
                 'config/sfmc-config-features-on-demand',
-                'config/sfmc-config-behavioral-triggers',
                 'config/sfmc-config-appexchange-solutions',
             ],
         },
@@ -133,12 +132,11 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-use-cases.png',
             },
             items: [
-                'usecase/tailor-with-data',
-                'usecase/engage-with-countdown',
-                'usecase/sfmc-code-resource',
                 'usecase/sfmc-cloud-page-apps',
-                'usecase/sfmc-enhanced-send-log',
+                'usecase/sfmc-code-resource',
                 'usecase/sfmc-contact-deletion',
+                'usecase/sfmc-enhanced-send-log',
+                'usecase/sfmc-behavioral-triggers',
             ],
         },
         {
@@ -189,6 +187,8 @@ module.exports = {
                 image: 'img/og/og-image-js-snippets.png',
             },
             items: [
+                'js/js-snippet-tailor-with-data',
+                'js/js-snippet-engage-with-countdown',
                 'js/js-snippet-export-import-document-sfmc-roles',
                 {
                     type: 'link',
