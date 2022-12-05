@@ -718,7 +718,7 @@ If the subscriber clicks "Unsubscribe from All" on the out-of-the-box unsubscrip
 
 Here comes the fresh `_BusinessUnitUnsubscribes` Data View. It shows you the only unsubscribed contacts for each Business Unit. If the contact resubscribes - it will disappear from this Data View.
 
-Despite `_BusinessUnitUnsubscribes` Data View focus on Business Units, you can query it only from the Enterprise level (on Parent BU or using [`Ent.` prefix](../sql/sfmc-sql-from.mdx#enterprise-system-data-views)).
+`_BusinessUnitUnsubscribes` Data View will work differently depending on your SFMC [unsubscription configuration](https://help.salesforce.com/s/articleView?id=sf.mc_es_unsubscribe_settings.htm&type=5). You will be able to query it from the Child BU level only for Business Units set to "unsubscribe from this business unit only".
 
 <Tabs
     defaultValue='fields'
