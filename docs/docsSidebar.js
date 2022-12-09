@@ -2,10 +2,6 @@ module.exports = {
     docs: [
         {
             type: 'doc',
-            id: 'docs-and-snippets',
-        },
-        {
-            type: 'doc',
             id: 'zen-of-sfmc',
         },
         {
@@ -161,7 +157,7 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'SFMC SSJS Snippets',
-                description: 'Ready-to-use Salesforce Marketing Cloud SSJS Snippets',
+                description: 'Ready-to-use Salesforce Marketing Cloud SSJS Snippets.',
                 keywords: ['Marketing Cloud', 'SSJS'],
                 image: 'img/og/og-image-sfmc-ssjs-snippets.png',
             },
@@ -182,7 +178,7 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'JS Snippets',
-                description: 'Ready-to-use JavaScript Snippets',
+                description: 'Ready-to-use JavaScript Snippets.',
                 keywords: ['JavaScript', 'JS'],
                 image: 'img/og/og-image-js-snippets.png',
             },
@@ -203,7 +199,7 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'SFMC AMPScript Snippets',
-                description: 'Ready-to-use Salesforce Marketing Cloud AMPScript Snippets',
+                description: 'Ready-to-use Salesforce Marketing Cloud AMPScript Snippets.',
                 keywords: ['Marketing Cloud', 'AMPScript'],
                 image: 'img/og/og-image-sfmc-ampscript-snippets.png',
             },
@@ -222,7 +218,7 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'SFMC SQL Snippets',
-                description: 'Ready-to-use Salesforce Marketing Cloud SQL Snippets',
+                description: 'Ready-to-use Salesforce Marketing Cloud SQL Snippets.',
                 keywords: ['Marketing Cloud', 'SQL'],
                 image: 'img/og/og-image-sfmc-sql-snippets.png',
             },
