@@ -38,13 +38,13 @@ module.exports = {
         docs: {
             sidebar: { autoCollapseCategories: true, },
         },
-        // announcementBar: {
-        //     id: 'announcementBar',
-        //     content:
-        //         '☁️  <a href="https://nominations.salesforcemvps.com/s/" style="text-decoration: none">Do you know someone in the #TrailblazerCommunity who goes above and beyond to help others? Nominations for the 2022 Salesforce MVP class are <span style="text-decoration:underline">open</span></a> ☁️',
-        //     backgroundColor: '#0176d3',
-        //     textColor: '#fffffe',
-        // },
+        announcementBar: {
+            id: 'announcementBar',
+            content:
+                '🛠️ <a href="https://www.linkedin.com/in/mateusz-dabrowski-marketing/" style="text-decoration: none">Due to a massive site restructuring there might be some broken links. If you find any - please <span style="text-decoration: underline;">let me know</span>.</a> 🛠️',
+            backgroundColor: '#0176d3',
+            textColor: '#fffffe',
+        },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
@@ -214,7 +214,7 @@ module.exports = {
                         },
                         {
                             label: 'Interaction Studio',
-                            to: 'docs/category/interaction Studio/',
+                            to: 'docs/category/interaction-studio/',
                         },
                     ],
                 },
@@ -344,11 +344,35 @@ module.exports = {
                     },
                     {
                         from: ['/docs/ideas/engage-with-countdown/', '/ideas/engage-with-countdown/', '/docs/usecase/engage-with-countdown/'],
-                        to: '/docs/js/js-snippet-engage-with-countdown/',
+                        to: '/docs/js/snippets/js-snippet-engage-with-countdown/',
                     },
                     {
                         from: ['/docs/ideas/tailor-with-data/', '/ideas/tailor-with-data/', '/docs/usecase/tailor-with-data/'],
-                        to: '/docs/js/js-snippet-tailor-with-data/',
+                        to: '/docs/js/snippets/js-snippet-tailor-with-data/',
+                    },
+                    {
+                        from: ['/docs/ssjs/ssjs-snippet-ampscript-in-ssjs/'],
+                        to: '/docs/ssjs/snippets/ssjs-snippet-ampscript-in-ssjs/',
+                    },
+                    {
+                        from: ['/docs/ssjs/ssjs-snippet-mobileconnect-phone-change/'],
+                        to: '/docs/ssjs/snippets/ssjs-snippet-mobileconnect-phone-change/',
+                    },
+                    {
+                        from: ['/docs/ssjs/ssjs-snippet-ssjs-script-template/'],
+                        to: '/docs/ssjs/snippets/ssjs-snippet-ssjs-script-template/',
+                    },
+                    {
+                        from: ['/docs/js/js-snippet-export-import-document-sfmc-roles/'],
+                        to: '/docs/js/snippets/js-snippet-export-import-document-sfmc-roles/',
+                    },
+                    {
+                        from: ['/docs/sql/sfmc-sql-snippet-debugging-email-sends/'],
+                        to: '/docs/sql/snippets/sfmc-sql-snippet-debugging-email-sends/',
+                    },
+                    {
+                        from: ['/docs/sql/sfmc-sql-snippet-debugging-value-length/'],
+                        to: '/docs/sql/snippets/sfmc-sql-snippet-debugging-value-length/',
                     },
                     {
                         from: ['/docs/usecase/sfmc-cloud-apps/'],

@@ -7,7 +7,7 @@ image: img/og/og-image-sql-debugging-value-length.png
 tags: [Marketing Cloud, SQL, Snippet, Data Extensions, Debugging, Automation]
 ---
 
-import { LeadText } from '../../src/components/LeadText.js';
+import { LeadText } from '../../../src/components/LeadText.js';
 
 <LeadText content='Your Automations crash due to longer than expected values coming from the external source? Make your life easier with SQL.' />
 
@@ -35,7 +35,7 @@ All good, until one of the values, exceed the maximum length you set for its fie
 
 ## Short Term Solution
 
-You can make quick manual check with a simple SQL query. Open your [Query Studio](./sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
+You can make quick manual check with a simple SQL query. Open your [Query Studio](../sfmc-sql-basics.mdx#query-studio) and copy-paste the below code:
 
 ```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
 SELECT
@@ -54,7 +54,7 @@ If you are running those queries from the child Business Unit, add `Ent.` prefix
 
 :::
 
-This query will output one row of data with the current maximum length of the values that you have in your Synchronized Data Extension for the selected fields. It uses [`MAX`](./sfmc-sql-numeric-functions.mdx#min-and-max) function on the [`LEN`](./sfmc-sql-string-functions.mdx#len) outcome to find the single maximum length available across all records. It has two great uses:
+This query will output one row of data with the current maximum length of the values that you have in your Synchronized Data Extension for the selected fields. It uses [`MAX`](../sfmc-sql-numeric-functions.mdx#min-and-max) function on the [`LEN`](../sfmc-sql-string-functions.mdx#len) outcome to find the single maximum length available across all records. It has two great uses:
 
 ### Discovery with MAX LEN
 
@@ -66,7 +66,7 @@ Of course, as mentioned above, the values might get longer in the future. But as
 
 ### Debugging with MAX LEN
 
-The second use of the above snippet is quick debugging when an error occurs. Execute it in [Query Studio](./sfmc-sql-basics.mdx#query-studio) and compare against the column lengths you set up in your Data Extension. If you see in Query Studio any value longer than the maximum you set up in Data Extension - you found a culprit.
+The second use of the above snippet is quick debugging when an error occurs. Execute it in [Query Studio](../sfmc-sql-basics.mdx#query-studio) and compare against the column lengths you set up in your Data Extension. If you see in Query Studio any value longer than the maximum you set up in Data Extension - you found a culprit.
 
 Now you can look in the data source and check whether this longer-than-expected value is correct. If yes, it is time to update your maximum length in the Data Extension and Profile Attribute configuration.
 
@@ -74,9 +74,9 @@ Now you can look in the data source and check whether this longer-than-expected 
 
 In most cases, the field length of 255 should be more than enough. But if you need it, Marketing Cloud allows you to go up to 4000 characters per field.
 
-4000 characters length is an instant way of getting over the recommended limit, but it might be useful for logging Data Extensions that you won't query in the future. For example, if you want to save [`_Bounce` Data View](../config/sfmc-config-system-data-views.mdx#_bounce) to standard Data Extension, `SMTPBounceReason` might use such a long field.
+4000 characters length is an instant way of getting over the recommended limit, but it might be useful for logging Data Extensions that you won't query in the future. For example, if you want to save [`_Bounce` Data View](../../config/sfmc-config-system-data-views.mdx#_bounce) to standard Data Extension, `SMTPBounceReason` might use such a long field.
 
-If you need more, there is a trick reported by [Markus Slabina](https://salesforce.stackexchange.com/questions/154402/data-extension-maximum-characters-of-text-field/154403). Use Email Studio to add a new field and make the length empty. Save. It will create a [`nvarchar(max)`](./sfmc-sql-conversion-functions.mdx#data-types) field that allows absurdly long data to be stored.
+If you need more, there is a trick reported by [Markus Slabina](https://salesforce.stackexchange.com/questions/154402/data-extension-maximum-characters-of-text-field/154403). Use Email Studio to add a new field and make the length empty. Save. It will create a [`nvarchar(max)`](../sfmc-sql-conversion-functions.mdx#data-types) field that allows absurdly long data to be stored.
 
 Remember that:
 
@@ -115,11 +115,11 @@ WHERE
 
 Of course, you will want to adapt it to your needs. Change the fields along with their names and lengths. Select the right Synchronized Data Extension. How? Let's dive in what this code does so that you can make it your own.
 
-The first field we [`SELECT`](./sfmc-sql-select.mdx) is the Unique Identifier (Contact ID / Subscriber Key or other based on the specific object you are validating). It is useful to quickly know which record(s) should you checked when some values lengths exceed the expectations.
+The first field we [`SELECT`](../sfmc-sql-select.mdx) is the Unique Identifier (Contact ID / Subscriber Key or other based on the specific object you are validating). It is useful to quickly know which record(s) should you checked when some values lengths exceed the expectations.
 
-After that, you can see the standard [`FROM`](./sfmc-sql-from.mdx) statement. You can, of course, [`JOIN`](./sfmc-sql-join.mdx) additional data sources.
+After that, you can see the standard [`FROM`](../sfmc-sql-from.mdx) statement. You can, of course, [`JOIN`](../sfmc-sql-join.mdx) additional data sources.
 
-Finally, there is a [`WHERE`](./sfmc-sql-where.mdx) statement. In it, we are checking whether at least one field on each record has a value longer than expected. To adapt it - change the number on the left to the length of the field you set up in the target Data Extension / Profile Attribute.
+Finally, there is a [`WHERE`](../sfmc-sql-where.mdx) statement. In it, we are checking whether at least one field on each record has a value longer than expected. To adapt it - change the number on the left to the length of the field you set up in the target Data Extension / Profile Attribute.
 
 This SQL Query Activity should output the rows to a technical Value Length Data Extension with all the same columns as the target Data Extension / Profile Attributes list. However, it can have much shorter max lengths for the columns, as all fields but the Unique Identifier one will output only the field's length (up to 4 digits). Configure the SQL Activity to Overwrite the technical Data Extension and always have the latest state data.
 
@@ -146,9 +146,9 @@ The basic version above is already lovely, but we can make a few improvements to
 
 Previously shown query will show the problematic record, but it will display all field lengths for it. The administrator will still have to compare the lengths to find which one is the issue's source.
 
-However, we already are coding the expected field length in the [`FROM`](./sfmc-sql-from.mdx) part of the query. Why not use it to make life easier?
+However, we already are coding the expected field length in the [`FROM`](../sfmc-sql-from.mdx) part of the query. Why not use it to make life easier?
 
-Let's change the `LEN(c.Id) AS [Subscriber Key],` in the [`SELECT`](./sfmc-sql-select.mdx) statement part to something a bit more interesting:
+Let's change the `LEN(c.Id) AS [Subscriber Key],` in the [`SELECT`](../sfmc-sql-select.mdx) statement part to something a bit more interesting:
 
 ```sql title="Use CASE to display only the problematic fields"
 CASE
@@ -157,13 +157,13 @@ CASE
 END AS SubscriberKey
 ```
 
-As you can see, we changed a simple line to a more complex [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) statement. There is a good reason for it. Thanks to it, the query will evaluate each field against the expected length and in the Value Length Data Extension display information only for the problematic values.
+As you can see, we changed a simple line to a more complex [`CASE`](../sfmc-sql-case.mdx#conditional-values-with-case) statement. There is a good reason for it. Thanks to it, the query will evaluate each field against the expected length and in the Value Length Data Extension display information only for the problematic values.
 
 The administrator will no longer have to compare each field with configured maximum - he will see it directly in the Data Extension, which saves time and limits the errors.
 
 ### Extended length information
 
-We can go even further with this approach and add a bit more data to the output for those problematic fields by making few calculations in `THEN` part of the [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) statement.
+We can go even further with this approach and add a bit more data to the output for those problematic fields by making few calculations in `THEN` part of the [`CASE`](../sfmc-sql-case.mdx#conditional-values-with-case) statement.
 
 ```sql {3} title="Let the code do the work"
 CASE

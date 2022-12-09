@@ -7,7 +7,7 @@ image: img/og/og-image-ssjs-script-template.png
 tags: [Marketing Cloud, SSJS, Snippet]
 ---
 
-import { LeadText } from '../../src/components/LeadText.js';
+import { LeadText } from '../../../src/components/LeadText.js';
 
 <LeadText content='Jumpstart your coding with best practice fueled SSJS Template.' />
 
@@ -134,7 +134,7 @@ The opening section of the template does two things:
 1. Briefly informs everyone what the purpose of this script is
 2. Describes the high-level structure of the script to allow for quick navigation
 
-Read more on that approach in my [SSJS Style Guide](../ssjs/ssjs-style-guide.mdx#1-table-of-contents-comment).
+Read more on that approach in my [SSJS Style Guide](../ssjs-style-guide.mdx#1-table-of-contents-comment).
 
 ### Global Variables
 
@@ -169,7 +169,7 @@ In this category, you will find variables used multiple times within various par
 
 By declaring them here, I don't have to use `var` later in the script, and therefore I don't have to worry about the order of the code if I make some changes during the refactoring phase.
 
-There is also a second reason - defining them before the try/catch block, even without any value, will allow accessing its value after that block. Read more about that in [Debugging & Error Handling](../ssjs/debugging-ssjs.mdx#try-to-catch-the-error).
+There is also a second reason - defining them before the try/catch block, even without any value, will allow accessing its value after that block. Read more about that in [Debugging & Error Handling](../debugging-ssjs.mdx#try-to-catch-the-error).
 
 #### Customizable variables
 
@@ -190,7 +190,7 @@ There is also a second reason - defining them before the try/catch block, even w
 The second type I store here are customizable global variables:
 
 - changing from script to script or
-- controlling the script's behaviour (like configurational ones or the `debugging` variable described in detail [here](../ssjs/debugging-ssjs.mdx#debugging-variable))
+- controlling the script's behaviour (like configurational ones or the `debugging` variable described in detail [here](../debugging-ssjs.mdx#debugging-variable))
 
 The template contains the API Endpoint section that I frequently use, but if your script does not need it - delete it to optimize and simplify the code.
 
@@ -237,11 +237,11 @@ In this section, I keep all the helper functions used multiple times in the scri
 
 In the template, you can find my two favourite ones that I use in every single script.
 
-To learn more about them, check out detailed descriptions of [`debugValue`](../ssjs/debugging-ssjs.mdx#debugging-variable) and [`handleError`](../ssjs/debugging-ssjs.mdx#error-handler-function) functions.
+To learn more about them, check out detailed descriptions of [`debugValue`](../debugging-ssjs.mdx#debugging-variable) and [`handleError`](../debugging-ssjs.mdx#error-handler-function) functions.
 
 :::note You Should Know
 
-If the script will be used in [JSON Code Resource backend](../usecase/sfmc-code-resource.mdx) I modify those two functions a bit by:
+If the script will be used in [JSON Code Resource backend](../../usecase/sfmc-code-resource.mdx) I modify those two functions a bit by:
 
 1. Changing the `debugValue` Write to: `Write(' --- ' + description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + ' --- ');` as break line tag will not work.
 
@@ -249,9 +249,9 @@ If the script will be used in [JSON Code Resource backend](../usecase/sfmc-code-
 
 :::
 
-In many cross-cloud scenarios I also use [AMPScript runner](../ssjs/ssjs-snippet-ampscript-in-ssjs.mdx), but as it is more use case specific solution, I don't keep it in base template.
+In many cross-cloud scenarios I also use [AMPScript runner](../ssjs-snippet-ampscript-in-ssjs.mdx), but as it is more use case specific solution, I don't keep it in base template.
 
-I prefix all functions with [documentation comments](../ssjs/ssjs-style-guide.mdx#3-documentation-comments).
+I prefix all functions with [documentation comments](../ssjs-style-guide.mdx#3-documentation-comments).
 
 ### Script Body
 
@@ -272,4 +272,4 @@ I prefix all functions with [documentation comments](../ssjs/ssjs-style-guide.md
     }
 ```
 
-The final part of the template is where I'm adding the main part of the script. It's wrapped in try/catch (more on that [here](../ssjs/debugging-ssjs.mdx#try-to-catch-the-error)) and - if the script is long - split into [sections](../ssjs/ssjs-style-guide.mdx#2-section-comments).
+The final part of the template is where I'm adding the main part of the script. It's wrapped in try/catch (more on that [here](../debugging-ssjs.mdx#try-to-catch-the-error)) and - if the script is long - split into [sections](../ssjs-style-guide.mdx#2-section-comments).

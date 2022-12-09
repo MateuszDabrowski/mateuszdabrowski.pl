@@ -7,13 +7,13 @@ image: img/og/og-image-ampscript-in-ssjs.png
 tags: [Marketing Cloud, SSJS, AMPScript, Snippet]
 ---
 
-import { LeadText } from '../../src/components/LeadText.js';
+import { LeadText } from '../../../src/components/LeadText.js';
 
 <LeadText content="Not all AMPScript functions are available in SSJS. But you still can use them." />
 
 ## Problem with missing SSJS functions
 
-SSJS language has many features missing from AMPScript - [try/catch blocks](../ssjs/debugging-ssjs.mdx#try-to-catch-the-error), arrays and objects to mention the most used ones. But some things are available only in AMPScript.
+SSJS language has many features missing from AMPScript - [try/catch blocks](../debugging-ssjs.mdx#try-to-catch-the-error), arrays and objects to mention the most used ones. But some things are available only in AMPScript.
 
 Some, like `ProperCase` function, can be recreated in SSJS with a bit of RegEx creativity. Other, like `RetrieveSalesforceObjects`, cannot (unless you decide on building custom wrappers around Salesforce API).
 
@@ -62,7 +62,7 @@ var properCaseFullName = ampScript("SET @response = ProperCase(AttributeValue('f
 
 :::note You Should Know
 
-Be sure only to use this approach if there is no equivalent SSJS solution, as mixing languages will [impact performance](./ssjs-vs-ampscript-performance.mdx). It is crucial for code in the messages that Marketing Cloud will execute on send time.
+Be sure only to use this approach if there is no equivalent SSJS solution, as mixing languages will [impact performance](../ssjs-vs-ampscript-performance.mdx). It is crucial for code in the messages that Marketing Cloud will execute on send time.
 
 For example, if you are only planning to use ProperCase, it might be better to go the RegEx path for significant volume messaging.
 

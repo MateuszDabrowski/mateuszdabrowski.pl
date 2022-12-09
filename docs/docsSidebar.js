@@ -166,9 +166,9 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-ssjs-snippets.png',
             },
             items: [
-                'ssjs/ssjs-snippet-ampscript-in-ssjs',
-                'ssjs/ssjs-snippet-mobileconnect-phone-change',
-                'ssjs/ssjs-snippet-ssjs-script-template',
+                'ssjs/snippets/ssjs-snippet-ampscript-in-ssjs',
+                'ssjs/snippets/ssjs-snippet-mobileconnect-phone-change',
+                'ssjs/snippets/ssjs-snippet-ssjs-script-template',
                 {
                     type: 'link',
                     label: '» SSJS Docs',
@@ -187,9 +187,9 @@ module.exports = {
                 image: 'img/og/og-image-js-snippets.png',
             },
             items: [
-                'js/js-snippet-tailor-with-data',
-                'js/js-snippet-engage-with-countdown',
-                'js/js-snippet-export-import-document-sfmc-roles',
+                'js/snippets/js-snippet-tailor-with-data',
+                'js/snippets/js-snippet-engage-with-countdown',
+                'js/snippets/js-snippet-export-import-document-sfmc-roles',
                 {
                     type: 'link',
                     label: '» JS Docs',
@@ -208,7 +208,7 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-ampscript-snippets.png',
             },
             items: [
-                'ssjs/ssjs-snippet-ampscript-in-ssjs',
+                'ssjs/snippets/ssjs-snippet-ampscript-in-ssjs',
                 {
                     type: 'link',
                     label: '» AMPScript Docs',
@@ -227,8 +227,8 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-sql-snippets.png',
             },
             items: [
-                'sql/sfmc-sql-snippet-debugging-email-sends',
-                'sql/sfmc-sql-snippet-debugging-value-length',
+                'sql/snippets/sfmc-sql-snippet-debugging-email-sends',
+                'sql/snippets/sfmc-sql-snippet-debugging-value-length',
                 {
                     type: 'link',
                     label: '» SQL Docs',

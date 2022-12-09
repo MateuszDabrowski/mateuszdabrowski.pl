@@ -7,8 +7,8 @@ image: img/og/og-image-js-export-import-document-sfmc-roles.png
 tags: [JavaScript, Marketing Cloud, Configuration, Users, Setup]
 ---
 
-import { LeadText } from '../../src/components/LeadText.js';
-import { Button } from '../../src/components/Buttons.js';
+import { LeadText } from '../../../src/components/LeadText.js';
+import { Button } from '../../../src/components/Buttons.js';
 
 <LeadText content="Backup, clone, and move cross-account the Salesforce Marketing Cloud roles. In seconds." />
 
@@ -30,13 +30,13 @@ If you want to learn more about:
 - permission overlap logic,
 - the meaning behind their sometimes very cryptic names
 
-Check out my [article on SFMC Permissions](../config/sfmc-config-permissions.mdx).
+Check out my [article on SFMC Permissions](../../config/sfmc-config-permissions.mdx).
 
 :::
 
 ## Where the magic happens
 
-To start using those SFMC Role-related, [DOM](./js-dom.mdx)-fueled solutions:
+To start using those SFMC Role-related, [DOM](../js-dom.mdx)-fueled solutions:
 
 1. Go to Marketing Cloud Setup » Users » Roles.
 2. Click on the name of the Role you want to work with.
@@ -75,7 +75,7 @@ console.log(JSON.stringify(permissionsExport));
 
 Click enter to run it.
 
-It will [loop](./js-loops.mdx) through all the checkboxes that you can see next to the permissions, save them in a single JavaScript object and output them to the Console. Yeah, it looks awful, but that's all you need - list of checkboxes along with their status.
+It will [loop](../js-loops.mdx) through all the checkboxes that you can see next to the permissions, save them in a single JavaScript object and output them to the Console. Yeah, it looks awful, but that's all you need - list of checkboxes along with their status.
 
 Save this long text (either by highlighting and copy-pasting or by right-clicking in an empty space within the Console row and clicking `Copy Selected`). It should start with `{` and end with `}`.
 
@@ -94,7 +94,7 @@ for (const [permissionId, permissionStatus] of Object.entries(permissionsImport)
 
 Change the `{}` in the first line with the export text you saved and click enter to run it.
 
-It will [loop](./js-loops.mdx) through all the saved checkboxes and update their state to the one from your export. If some new checkboxes don't exist in the export (for example, you did your export before Marketing Cloud Release that added some new permissions), those new ones will stay unchanged.
+It will [loop](../js-loops.mdx) through all the saved checkboxes and update their state to the one from your export. If some new checkboxes don't exist in the export (for example, you did your export before Marketing Cloud Release that added some new permissions), those new ones will stay unchanged.
 
 That's it. You cloned a Role.
 
@@ -143,7 +143,7 @@ console.log(csv);
 
 Click enter to run it.
 
-It will [loop](./js-loops.mdx) through all the checkboxes that you can see next to the permissions and:
+It will [loop](../js-loops.mdx) through all the checkboxes that you can see next to the permissions and:
 
 - Save the permission name (for example, `View All Contacts`).
 - Prefix it with all the parent permissions to get a full path (for example, `Contacts - Contact Builder - View All Contacts`).
@@ -158,7 +158,7 @@ Add the Name of the Role and its purpose stored in the Description field, and th
 
 ## Backup of Standard Roles
 
-As the [default System Roles permissions](https://mateuszdabrowski.pl/docs/config/sfmc-config-permissions/) in Salesforce Marketing Cloud can be edited freely and [currently there is no easy way to revert those changes](https://mateuszdabrowski.pl/sites/ideas/marketing-cloud/#restore-default-permissions-for-sfmc-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
+As the [default System Roles permissions](../../config/sfmc-config-permissions/) in Salesforce Marketing Cloud can be edited freely and [currently there is no easy way to revert those changes](../../../sites/ideas/marketing-cloud/#restore-default-permissions-for-sfmc-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
 
 <Button
  link='https://github.com/MateuszDabrowski/sfmc-roles-backup'
