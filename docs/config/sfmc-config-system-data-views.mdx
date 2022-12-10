@@ -453,7 +453,7 @@ FROM _Click AS click
 
 When working with `_Click` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 3. The most valuable data here is the `EventDate` field that lets you know when the email was clicked (and whether that happened at all).
 4. You can significantly improve the value of that information by checking the `LinkName` and `LinkContent` fields to understand which links proved interesting for your customers.
@@ -540,7 +540,7 @@ FROM _Bounce AS bounce
 
 When working with `_Bounce` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
 3. The `Domain` helps aggregate the bounce data to see any domain-specific problem with deliverability.
 4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
