@@ -1,21 +1,40 @@
 ---
 id: is-open-time-email
-title: IS Open Time Email Template
+title: IS Open Time Email
 sidebar_label: Open Time Email
-description: Personalise your emails with the next best action. In real-time. Even after delivery. Magic.
+description: Personalise your emails with the next best action recommendations. In real time. Even after delivery. Magic.
 image: img/og/og-image-is-open-time-email.png
 tags: [Interaction Studio, Personalisation, Email]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Personalise your emails with the next best action recommenations. In real-time. Even after delivery. Magic.' />
+<LeadText content='Personalise your emails with the next best action recommendations. In real time. Even after delivery. Magic.' />
 
 ## What is Open Time Email Campaign
 
-The general rule of email communication is that the momement you send the email you loose control over it (just like with paper mail). There are, however, two exceptions:
+In short, Open Time Eamil Campaign in Interaction Studio (MCP) is a solution for providing __always up-to-date__, personalised recommendations to your customers.
 
-1. __Links__ - you cannot change the URL used in the email, but - if you use wrapper/tracking links - you can change the final target URL. In Marketing Cloud this feature is called [updating Job Links](https://help.salesforce.com/s/articleView?id=sf.mc_es_update_joblinks_overview.htm).
-2. __Images__ - you cannot change the URL of the image used in the email, but you can change the image hosted behind that URL. This is exactly what Open Time Email feature in Interaction Studio is all about.
+The general rule of email communication is that the momement you send the email you loose control over it and cannot make any changes (just like with paper mail). There are, however, two exceptions:
 
-With Open Time Email Template you define the recommendations format (dimensions, content, personalisations) and with Open Time Email Campaign you use that template with selected recommendations logic (Einstein Recipe) to automatically generate HTML that will be showing ever-updating Next Best Action in your emails.
+1. __Links__ - you cannot change the URL used in the email, but (if you use wrapper/tracking links) you can change the final target URL. In Marketing Cloud it is done via [updating Job Links](https://help.salesforce.com/s/articleView?id=sf.mc_es_update_joblinks_overview.htm).
+2. __Images__ - you cannot change the URL of the image used in the email, but you can change the image that is hosted behind that URL. This is exactly what Open Time Email feature in Interaction Studio is all about.
+
+It consists of two parts. In __Open Time Email Template__ you define the recommendations format (dimensions, content, personalisations). Then in __Open Time Email Campaign__ you use that template with selected recommendations logic (Einstein Recipe) to automatically generate HTML that will be rendering the ever-updating Next Best Action in your emails. But...
+
+There are few caveats:
+
+1. Open Time Email recommendation is an image (that's the only way to enable updating after sending), which means that on inboxes that hide images by default - the recommendations will not be shown.
+2. Some inboxes cache images. In this case the customer might not see the updates to the recommendation or they might be delayed.
+3. Apple Mail Privacy blocks the magic behind the Open Time Email and it falls back to a static recommendation generated on send time.
+
+With that out of the way, let's dive into what is officially possible and what is really possible with Interaction Studio Open Time Email.
+
+## Open Time Email Template
+
+To create Open Time Email Campaign, first you need to code the structure of the recommendation with HTML, CSS and personalisations. It will be used by Interaction Studio to generate the image on the fly.
+
+Good thing: because this HTML will be used for image generation and will not be available in the final Campaign, you are not limited to markup supported by Email clients.
+
+Bad thing: because this HTML will be used for image generation, you are not able to leverage custom fonts - there are only [17 built-in fonts](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) to choose from.
+
