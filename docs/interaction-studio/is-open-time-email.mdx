@@ -22,7 +22,7 @@ The general rule of email communication is that the momement you send the email 
 
 It consists of two parts. In __Open Time Email Template__ you define the recommendations format (dimensions, content, personalisations). Then in __Open Time Email Campaign__ you use that template with selected recommendations logic (Einstein Recipe) to automatically generate HTML that will be rendering the ever-updating Next Best Action in your emails. But...
 
-There are few caveats:
+There are three caveats:
 
 1. Open Time Email recommendation is an image (that's the only way to enable updating after sending), which means that on inboxes that hide images by default - the recommendations will not be shown.
 2. Some inboxes cache images. In this case the customer might not see the updates to the recommendation or they might be delayed.
@@ -34,7 +34,8 @@ With that out of the way, let's dive into what is officially possible and what i
 
 To create Open Time Email Campaign, first you need to code the structure of the recommendation with HTML, CSS and personalisations. It will be used by Interaction Studio to generate the image on the fly.
 
-Good thing: because this HTML will be used for image generation and will not be available in the final Campaign, you are not limited to markup supported by Email clients.
+__Good thing__: because this HTML will be used for image generation and will not be available in the final Campaign, you are not limited to markup supported by Email clients.
 
-Bad thing: because this HTML will be used for image generation, you are not able to leverage custom fonts - there are only [17 built-in fonts](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) to choose from.
+__Bad thing__: because this HTML will be used for image generation, you are not able to leverage custom fonts - there are only [17 built-in fonts](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) to choose from.
 
+To start building the template you need to provide dimensions of the final image. This is super important, because once you select those and save, you won't be able to edit it. Those dimensions are for the recommendation image only - you will be separately configuring the whole campaign dimensions in the Open Time Email Campaign configuration, so make sure you leave some pixels for whitespace.
