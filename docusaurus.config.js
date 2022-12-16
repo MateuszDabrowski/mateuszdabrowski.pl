@@ -113,7 +113,7 @@ module.exports = {
                         },
                         {
                             label: 'SFMC SQL',
-                            to: 'docs/category/sql-snippets/',
+                            to: 'docs/category/sfmc-sql-snippets/',
                         },
                     ],
                 },
@@ -235,7 +235,7 @@ module.exports = {
                         },
                         {
                             label: 'SFMC SQL',
-                            to: 'docs/category/sql-snippets/',
+                            to: 'docs/category/sfmc-sql-snippets/',
                         },
                     ],
                 },

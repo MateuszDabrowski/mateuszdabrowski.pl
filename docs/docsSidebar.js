@@ -96,7 +96,7 @@ module.exports = {
                 {
                     type: 'link',
                     label: '» SQL Snippets',
-                    href: '/docs/category/sql-snippets/',
+                    href: '/docs/category/sfmc-sql-snippets/',
                 },
             ],
         },
@@ -214,7 +214,7 @@ module.exports = {
         },
         {
             type: 'category',
-            label: 'SQL Snippets',
+            label: 'SFMC SQL Snippets',
             link: {
                 type: 'generated-index',
                 title: 'SFMC SQL Snippets',
