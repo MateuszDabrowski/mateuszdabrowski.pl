@@ -92,15 +92,69 @@
 }
 
 .featureHeading:before {
-    font-family: Courier, monospace;
-    content: "<";
-    color: var(--ifm-color-secondary);
+  font-family: Courier, monospace;
+  content: "<";
+  color: var(--ifm-color-secondary);
 }
 
 .featureHeading:after {
-    font-family: Courier, monospace;
-    content: "/>";
-    color: var(--ifm-color-secondary);
+  font-family: Courier, monospace;
+  content: "/>";
+  color: var(--ifm-color-secondary);
+}
+
+.articles {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+html[data-theme='light'] .articles {
+  background-color: #212121;
+}
+
+.articlesHeading {
+  color: var(--ifm-color-primary);
+  font-size: var(--ifm-h3-font-size);
+  font-family: Courier, monospace;
+  text-transform: uppercase;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  text-align: center;
+}
+
+html[data-theme='light'] .articlesHeading {
+  color: var(--ifm-color-tertiary);
+}
+
+.articlesHeading:before {
+  font-family: Courier, monospace;
+  content: "<";
+  color: var(--ifm-color-secondary);
+}
+
+.articlesHeading:after {
+  font-family: Courier, monospace;
+  content: "/>";
+  color: var(--ifm-color-secondary);
+}
+
+.articleCard {
+  margin-bottom: 2rem;
+}
+
+.articleTitle {
+  color: var(--ifm-color-primary);
+}
+
+.articleTag {
+  color: var(--ifm-color-secondary);
+  font-size: var(--ifm-h5-font-size);
+}
+
+.articleLink {
+  float: right;
 }
 
 .buttons {

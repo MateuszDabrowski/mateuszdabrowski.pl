@@ -52,7 +52,7 @@ function Feature({ imageUrl, title, description, url, cta }) {
     return (
         <div className={clsx('col col--4', styles.feature)}>
             {imgUrl && (
-                <div className="text--center">
+                <div className='text--center'>
                     <img className={styles.featureImage} src={imgUrl} alt={title} />
                 </div>
             )}
@@ -68,6 +68,86 @@ function Feature({ imageUrl, title, description, url, cta }) {
                 >
                     {cta}
                 </Link>
+            </div>
+        </div>
+    );
+}
+
+const highlightedArticles = [
+    {
+        title: <>SQL Basics</>,
+        url: './docs/sql/sfmc-sql-basics/',
+        imageUrl: 'img/og/og-image-sql-basics.png',
+        description: 'SELECT your best contacts FROM Salesforce Marketing Cloud WHERE Data Filter is not enough.',
+        mainTag: 'SFMC SQL',
+    },
+    {
+        title: <>SQL Select</>,
+        url: './docs/sql/sfmc-sql-select/',
+        imageUrl: 'img/og/og-image-sql-select.png',
+        description: 'Selected information on the SELECT statement in SFMC SQL',
+        mainTag: 'SFMC SQL',
+    },
+    {
+        title: <>SQL Join</>,
+        url: './docs/sql/sfmc-sql-join/',
+        imageUrl: 'img/og/og-image-sql-join.png',
+        description: 'Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.',
+        mainTag: 'SFMC SQL',
+    },
+    {
+        title: <>SQL Date Functions</>,
+        url: './docs/sql/sfmc-sql-date-functions/',
+        imageUrl: 'img/og/og-image-sql-date-functions.png',
+        description: 'Take control over dates with built-in SQL functions. Let the query do the job.',
+        mainTag: 'SFMC SQL',
+    },
+    {
+        title: <>Debugging Email Sends</>,
+        url: './docs/sql/snippets/sfmc-sql-snippet-debugging-email-sends/',
+        imageUrl: 'img/og/og-image-sql-debugging-email-sends.png',
+        description: 'Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with the Query Studio to the rescue.',
+        mainTag: 'SFMC SQL Snippets',
+    },
+    {
+        title: <>System Data Views</>,
+        url: './docs/config/sfmc-config-system-data-views/',
+        imageUrl: 'img/og/og-image-sfmc-system-data-views.png',
+        description: 'Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.',
+        mainTag: 'SFMC Config',
+    },
+    {
+        title: <>Behavioral Triggers</>,
+        url: './docs/usecase/sfmc-behavioral-triggers/',
+        imageUrl: 'img/og/og-image-sfmc-behavioral-triggers.png',
+        description: 'Win-back your e-commerce customers with SFMC Behavioral Triggers.',
+        mainTag: 'SFMC Use Cases',
+    },
+    {
+        title: <>Contact Deletion</>,
+        url: './docs/usecase/sfmc-contact-deletion/',
+        imageUrl: 'img/og/og-image-sfmc-contact-deletion.png',
+        description: 'Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let\'s do it.',
+        mainTag: 'SFMC Use Cases',
+    },
+];
+
+function Article({ title, url, description, mainTag }) {
+    return (
+        <div className='col col--3'>
+            <div className={clsx('card', styles.articleCard)}>
+                <div className='card__header'>
+                    <Link className={styles.articleTitle} to={url}>
+                        <strong>{title}</strong>
+                    </Link>
+                    <p className={styles.articleTag}>#{mainTag}</p>
+                </div>
+                <div className='card__body'>{description}</div>
+                <div className='card__footer'>
+                    <Link className={styles.articleLink} to={url}>
+                        Read more »
+                    </Link>
+                </div>
             </div>
         </div>
     );
@@ -135,6 +215,20 @@ function Home() {
                                 <div className="row">
                                     {features.map((props, idx) => (
                                         <Feature key={idx} {...props} />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    )}
+                    {highlightedArticles && highlightedArticles.length > 0 && (
+                        <section className={styles.articles}>
+                            <div className="container">
+                                <h2 className={styles.articlesHeading}>
+                                    Most popular docs & snippets
+                                </h2>
+                                <div className='row'>
+                                    {highlightedArticles.map((props, idx) => (
+                                        <Article key={idx} {...props} />
                                     ))}
                                 </div>
                             </div>
