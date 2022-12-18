@@ -41,7 +41,7 @@ module.exports = {
         announcementBar: {
             id: 'announcementBar',
             content:
-                '🛠️ <a href="https://www.linkedin.com/in/mateusz-dabrowski-marketing/" style="text-decoration: none">Due to a massive site restructuring there might be some broken links. If you find any - please <span style="text-decoration: underline;">let me know</span>.</a> 🛠️',
+                '🛠️ <a href="https://www.linkedin.com/in/mateusz-dabrowski-marketing/" style="text-decoration: none">Due to site restructuring there might be some broken links. If you find any - please <span style="text-decoration: underline;">let me know</span>.</a> 🛠️',
             backgroundColor: '#0176d3',
             textColor: '#fffffe',
         },
