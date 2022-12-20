@@ -78,56 +78,56 @@ const highlightedArticles = [
         title: <>SQL Basics</>,
         url: './docs/sql/sfmc-sql-basics/',
         imageUrl: 'img/og/og-image-sql-basics.png',
-        description: 'SELECT your best contacts FROM Salesforce Marketing Cloud WHERE Data Filter is not enough.',
+        description: 'Best place to start your journey with writing SQL Queries in SFMC.',
         mainTag: 'SFMC SQL',
     },
     {
         title: <>SQL Select</>,
         url: './docs/sql/sfmc-sql-select/',
         imageUrl: 'img/og/og-image-sql-select.png',
-        description: 'Selected information on the SELECT statement in SFMC SQL',
+        description: 'Learn how to SELECT the data and how to limit it with TOP & DISTINCT.',
         mainTag: 'SFMC SQL',
     },
     {
         title: <>SQL Join</>,
         url: './docs/sql/sfmc-sql-join/',
         imageUrl: 'img/og/og-image-sql-join.png',
-        description: 'Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.',
+        description: 'Check how to work with more than one Data Extension or Data View.',
         mainTag: 'SFMC SQL',
     },
     {
         title: <>SQL Date Functions</>,
         url: './docs/sql/sfmc-sql-date-functions/',
         imageUrl: 'img/og/og-image-sql-date-functions.png',
-        description: 'Take control over dates with built-in SQL functions. Let the query do the job.',
+        description: 'Create, calculate and format date, time and timezone with SQL.',
         mainTag: 'SFMC SQL',
-    },
-    {
-        title: <>Debugging Email Sends</>,
-        url: './docs/sql/snippets/sfmc-sql-snippet-debugging-email-sends/',
-        imageUrl: 'img/og/og-image-sql-debugging-email-sends.png',
-        description: 'Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with the Query Studio to the rescue.',
-        mainTag: 'SFMC SQL Snippets',
     },
     {
         title: <>System Data Views</>,
         url: './docs/config/sfmc-config-system-data-views/',
         imageUrl: 'img/og/og-image-sfmc-system-data-views.png',
-        description: 'Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.',
+        description: 'Learn about hidden Data Views storing key data about your SFMC.',
         mainTag: 'SFMC Config',
+    },
+    {
+        title: <>Debugging Email Sends</>,
+        url: './docs/sql/snippets/sfmc-sql-snippet-debugging-email-sends/',
+        imageUrl: 'img/og/og-image-sql-debugging-email-sends.png',
+        description: 'Step-by-step guide to resolving problems with SFMC email sends.',
+        mainTag: 'SFMC SQL Snippets',
     },
     {
         title: <>Behavioral Triggers</>,
         url: './docs/usecase/sfmc-behavioral-triggers/',
         imageUrl: 'img/og/og-image-sfmc-behavioral-triggers.png',
-        description: 'Win-back your e-commerce customers with SFMC Behavioral Triggers.',
+        description: 'All you need to know about working with SFMC Behavioral Triggers.',
         mainTag: 'SFMC Use Cases',
     },
     {
         title: <>Contact Deletion</>,
         url: './docs/usecase/sfmc-contact-deletion/',
         imageUrl: 'img/og/og-image-sfmc-contact-deletion.png',
-        description: 'Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let\'s do it.',
+        description: 'Everything you need to clean up your SFMC from dirty Contacts.',
         mainTag: 'SFMC Use Cases',
     },
 ];
@@ -193,6 +193,7 @@ function Home() {
 
             <Layout title="Automate Marketing Automation" description={customFields.description} keywords={customFields.keywords}>
                 <main>
+                    {/* Automate Marketing Automation Tagline */}
                     <div className={styles.hero}>
                         <div className={styles.heroInner}>
                             <h1 className={styles.heroProjectTagline}>
@@ -209,6 +210,7 @@ function Home() {
                             </h2>
                         </div>
                     </div>
+                    {/* Let's Connect, Pick My Brain and Change The Cloud Section */}
                     {features && features.length > 0 && (
                         <section className={styles.features}>
                             <div className="container">
@@ -220,6 +222,7 @@ function Home() {
                             </div>
                         </section>
                     )}
+                    {/* Highlighted Articles Section */}
                     {highlightedArticles && highlightedArticles.length > 0 && (
                         <section className={styles.articles}>
                             <div className="container">
