@@ -12,6 +12,28 @@ import { Button } from '../../src/components/Buttons.js';
 <LeadText content="Here you can find all my Interaction Studio (SFMC Personalisation) IdeaExchange contributions. Let's make the change!" />
 
 
+## Catalog
+
+### Full Category hierarchy support for ETL
+
+IS can create a working hierarchy tree of categories with a clean subcategory drill-down view in catalog UI and automatic summing of the views and revenue from the lowest level category up in the hierarchy.
+
+However, this is now possible only under multiple conditions: just one Category per product (for the attribution to work), a specific format of the category ID, and only through Sitemap.
+
+Especially problematic is that last limitation because, in many cases, ETL is the better way to manage it - especially with the format required for that feature.
+
+Category ETL already has a solution that provides the same level of detail to Interaction Studio using two out-of-the-box attributes: department and parentCategoryId.
+
+Interaction Studio displays the hierarchy built with those fields on the specific Category page under the ID. Unfortunately, it is not replicating the drill-down hierarchy tree UI in the Category list view and does not pass the data from the bottom Category up the hierarchy.
+
+It should change - there should be a feature parity between Sitemap and ETL for such an important feature. Especially considering that all information required for it is already available.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000MMZ27UAH/full-category-hierarchy-support-for-etl-in-interaction-studio'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
 ## Einstein Recipes
 
 ### Multiple Dimensional Variations for Products in Einstein Recipes
@@ -54,4 +76,3 @@ Currently, the only workaround is to create a separate Catalog for Departments, 
     text='Vote on IdeaExchange'
     newTab='true'
 />
-
