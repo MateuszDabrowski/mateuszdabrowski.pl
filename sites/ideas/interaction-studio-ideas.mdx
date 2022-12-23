@@ -76,3 +76,26 @@ Currently, the only workaround is to create a separate Catalog for Departments, 
     text='Vote on IdeaExchange'
     newTab='true'
 />
+
+### Price Reduction Ingredient in Einstein Recipes
+
+Triggered Campaigns added a great option of targetting various events for Journey Builder sends. Among them, there are Catalog Triggers. Some of them, like Product Expiring Soon, are also available for Web with Einstein Recipes Ingredients.
+
+However, currently, there is no Ingredient for a popular e-commerce use case - Price Reduction.
+
+Interaction Studio has all the required information (the price and listPrice attributes used for the Triggered Campaign).
+
+There is a workaround to make it possible now - calculating whether product price has been reduced externally and passing this information to a Related Catalog Object. However, there are better solutions for something that Interaction Studio is already doing out-of-the-box for another channel.
+
+There are two possible solutions to this:
+
+1. Simple ingredient that returns all price-reduced items (similar to Trending).
+2. Configurable ingredient with an option to select minimum price reduction percent.
+
+The solution can further improve it by adding a Recipe Booster on the price reduction percent.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000MMauyUAD/price-reduction-ingredient-in-einstein-recipes'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
