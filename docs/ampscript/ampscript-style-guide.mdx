@@ -129,7 +129,7 @@ I use `UPPERCASE` for three groups of elements:
 Those three groups are either fundamental data points within your AMPScript code (variables) or the only source of real complexity (`IF` statements and `FOR` loops). That's why I recommend improving readability and increasing attention around those parts of the script.
 
 ```js
-/* ✅ UPPERCASE for variable desclarations, IF and FOR syntax */
+/* ✅ UPPERCASE for variable declarations, IF and FOR syntax */
 VAR @response, @salesforceCampaigns, @rowCount, @counter, @row, @name, @id, @startDate, @endDate, @rowData, @response
 SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
 SET @rowCount = RowCount(@salesforceCampaigns)
@@ -146,7 +146,7 @@ IF @rowCount > 0 THEN
     NEXT @counter
 ENDIF
 
-/* ❌ PascalCase for variable desclarations, IF and FOR syntax */
+/* ❌ PascalCase for variable declarations, IF and FOR syntax */
 Var @response, @salesforceCampaigns, @rowCount, @counter, @row, @name, @id, @startDate, @endDate, @rowData, @response
 Set @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
 Set @rowCount = RowCount(@salesforceCampaigns)
