@@ -2,14 +2,14 @@
 id: is-open-time-email
 title: IS Open Time Email
 sidebar_label: Open Time Email
-description: Personalise your emails with the next best action recommendations. In real time. Even after delivery. Magic.
+description: Personalise your SFMC emails with the next best action recommendations. In real time. Even after delivery. Magic.
 image: img/og/og-image-is-open-time-email.png
 tags: [Interaction Studio, Personalisation, Email]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Personalise your emails with the next best action recommendations. In real time. Even after delivery. Magic.' />
+<LeadText content='Personalise your SFMC emails with the next best action recommendations. In real time. Even after delivery. Magic.' />
 
 ## What is Open Time Email Campaign
 
@@ -38,4 +38,35 @@ __Good thing__: because this HTML will be used for image generation and will not
 
 __Bad thing__: because this HTML will be used for image generation, you are not able to leverage custom fonts - there are only [17 built-in fonts](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) to choose from.
 
-To start building the template you need to provide dimensions of the final image. This is super important, because once you select those and save, you won't be able to edit it. Those dimensions are for the recommendation image only - you will be separately configuring the whole campaign dimensions in the Open Time Email Campaign configuration, so make sure you leave some pixels for whitespace.
+To start building the template you need to provide dimensions of the final image. This is super important, because once you select those and save, you won't be able to edit it. Those dimensions are for the recommendation image only - you will be separately configuring the whole campaign dimensions in the Open Time Email Campaign configuration, so leave some pixels for whitespace.
+
+### Basic OTE Template
+
+Building the template requires basic HTML & CSS knowledge and leveraging the built-in `Insert {Dynamic}` personalisation option to connect the code boilerplate with catalog data.
+
+The most popular boilerplate will leverage product image, name and price plus a call to action. Basic approach could look like this:
+
+```html {2,4,5}
+<div style="padding: 10px; font-family: Arial;">
+    <img src="${item.imageUrl}" style="max-width: 180px; max-height: 150px;">
+    <div>
+        ${item.name}<br/>
+        $currency.format(${item.price})
+    </div>
+    <div style="margin-top: 10px; text-align: center;">
+        <button style="border:none; padding: 10px;background:#1D73C9; color:#ffffff; font-size:16px;">
+            Buy now »
+        </button>
+    </div>
+</div>
+```
+
+You can see whole section wrapped in a div that sets the font and padding for proper spacing and three key elemnents within it:
+
+1. `img` for displaying how the product looks (with `max-width` & `max-height` to control non-standard images)
+2. `div` with name and price personalisation strings (we will talk about the difference in a moment)
+3. `div` with a button (we don't need any link, because whole final image will be a link)
+
+That's it. You can add more personalisation strings - including those using attrubutes defined on the catalog object. You can of course also write nicer HTML with separate CSS style section. But in the end - it will be just a boilerplate for an image that you can preview directly in the editor.
+
+It's fine, but you can quickly come up with the "what if..." scenarios (f.e. showing both current price and listPrice only if there is a promotion or displaying placeholder if the image is broken) that would require a bit more control over the template. Thankfully, there are some undocumented features that can solve those needs.
