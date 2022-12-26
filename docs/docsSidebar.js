@@ -148,10 +148,10 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-ssjs-snippets.png',
             },
             items: [
-                'ssjs/snippets/ampscript-in-ssjs',
-                'ssjs/snippets/ssjs-mobileconnect-phone-change',
                 'ssjs/snippets/ssjs-script-template',
                 'ssjs/snippets/sfmc-cloud-page-apps',
+                'ssjs/snippets/ssjs-mobileconnect-phone-change',
+                'ssjs/snippets/ampscript-in-ssjs',
                 {
                     type: 'link',
                     label: '» SSJS Docs',
