@@ -1,5 +1,5 @@
 ---
-id: js-snippet-export-import-document-sfmc-roles
+id: export-import-document-sfmc-roles
 title: Export, Import & Document SFMC Roles
 sidebar_label: Export, Import & Document SFMC Roles
 description: Backup, clone, and move cross-account the Salesforce Marketing Cloud roles. In seconds.
@@ -14,7 +14,7 @@ import { Button } from '../../../src/components/Buttons.js';
 
 While you get a set of standard user Roles in Salesforce Marketing Cloud, those are rarely enough. Instead, they are the base on which you can create custom-tailored solutions that align with your business architecture.
 
-On top of that, standard Roles are silently changing from release to release as [permissions](../../config/sfmc-config-permissions.mdx) come and go, so keeping track of them is crucial to have a clear picture of what your users can do.
+On top of that, standard Roles are silently changing from release to release as [permissions](../../config/sfmc-permissions.mdx) come and go, so keeping track of them is crucial to have a clear picture of what your users can do.
 
 Marketing Cloud doesn't make it easy. There is no option to clone existing Roles to serve as a starting point for a new custom one. There is no option to export and import them between SFMC accounts. There is no option to create good documentation on them (unless you have a kink for super long print screens).
 
@@ -30,7 +30,7 @@ If you want to learn more about:
 - permission overlap logic,
 - the meaning behind their sometimes very cryptic names
 
-Check out my [article on SFMC Permissions](../../config/sfmc-config-permissions.mdx).
+Check out my [article on SFMC Permissions](../../config/sfmc-permissions.mdx).
 
 :::
 
@@ -158,7 +158,7 @@ Add the Name of the Role and its purpose stored in the Description field, and th
 
 ## Backup of Standard Roles
 
-As the [default System Roles permissions](../../config/sfmc-config-permissions.mdx) in Salesforce Marketing Cloud can be edited freely and [currently there is no easy way to revert those changes](../../../sites/ideas/marketing-cloud/#restore-default-permissions-for-sfmc-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
+As the [default System Roles permissions](../../config/sfmc-permissions.mdx) in Salesforce Marketing Cloud can be edited freely and [currently there is no easy way to revert those changes](../../../sites/ideas/marketing-cloud/#restore-default-permissions-for-sfmc-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
 
 <Button
  link='https://github.com/MateuszDabrowski/sfmc-roles-backup'

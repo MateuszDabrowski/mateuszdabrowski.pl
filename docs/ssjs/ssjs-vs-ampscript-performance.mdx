@@ -169,7 +169,7 @@ SSJS | SSJS + HTML | SSJS + AMPScript | AMPScript | AMPScript x2
 
 ### ProperCase
 
-What should you use when you want to change a string to Proper Case? As there is no single function in SSJS for that, I compared two pure SSJS approaches (`split`/`join` & `replace` with RegEx) with [AMPScript in SSJS](./snippets/ssjs-snippet-ampscript-in-ssjs.mdx) and (nearly) pure AMPScript.
+What should you use when you want to change a string to Proper Case? As there is no single function in SSJS for that, I compared two pure SSJS approaches (`split`/`join` & `replace` with RegEx) with [AMPScript in SSJS](./snippets/ampscript-in-ssjs.mdx) and (nearly) pure AMPScript.
 
 The test was performed using ten different strings varying in number of words and capitalization:
 
@@ -273,7 +273,7 @@ Sentence | SSJS Split | SSJS Replace | AMPScript in SSJS | AMPScript
 
 1. Pure AMPScript execution time for ProperCase scenario murders SSJS.
 2. When working with arrays or regex replace, SSJS execution time extends with each additional word. However, AMPScript execution time is constant thanks to the optimised out-of-the-box `ProperCase` function.
-3. Although [AMPScript in SSJS](./snippets/ssjs-snippet-ampscript-in-ssjs.mdx) is doing levels-of-magnitude worse than pure AMPScript, it will be a better choice then pure SSJS for long sentences (10+ words).
+3. Although [AMPScript in SSJS](./snippets/ampscript-in-ssjs.mdx) is doing levels-of-magnitude worse than pure AMPScript, it will be a better choice then pure SSJS for long sentences (10+ words).
 4. SSJS Replace might be the option to choose despite the performance if you want more flexibility (for example, changing that `Nine-ten` to `Nine-Ten`).
 5. Otherwise, for anything longer than a few words, consider [breaking from the SSJS code block](#code-block-breaking) to leverage AMPscript.
 
@@ -373,4 +373,4 @@ Sentence | SSJS Method | SSJS Function | AMPScript in SSJS | AMPScript
 #### Sum up
 
 1. The out-of-the-box JavaScript method works much better then the custom solution developer for [Proper Case](#propercase) - just like the AMPScript function, it executes in constant time regardless of sentence length.
-2. Pure AMPScript execution time still is better, but due to constant time in both languages and much faster SSJS speed, there is no longer any reason to use [AMPScript in SSJS](./snippets/ssjs-snippet-ampscript-in-ssjs.mdx) or [break out of SSJS code block](#code-block-breaking).
+2. Pure AMPScript execution time still is better, but due to constant time in both languages and much faster SSJS speed, there is no longer any reason to use [AMPScript in SSJS](./snippets/ampscript-in-ssjs.mdx) or [break out of SSJS code block](#code-block-breaking).

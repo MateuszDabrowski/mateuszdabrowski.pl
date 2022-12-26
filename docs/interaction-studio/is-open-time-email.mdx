@@ -46,15 +46,17 @@ Building the template requires basic HTML & CSS knowledge and leveraging the bui
 
 The most popular boilerplate will leverage product image, name and price plus a call to action. Basic approach could look like this:
 
-```html {2,4,5}
-<div style="padding: 10px; font-family: Arial;">
-    <img src="${item.imageUrl}" style="max-width: 180px; max-height: 150px;">
+```html
+<div style="padding:10px; font-family: Arial;">
+    <img src="${item.imageUrl}" style="max-width:180px; max-height:150px;">
     <div>
-        ${item.name}<br/>
+        ${item.name}
+    </div>
+    <div style="font-size: 18px; margin-top:10px;">
         $currency.format(${item.price})
     </div>
-    <div style="margin-top: 10px; text-align: center;">
-        <button style="border:none; padding: 10px;background:#1D73C9; color:#ffffff; font-size:16px;">
+    <div style="text-align: center; position:absolute; left: 0px; right: 0px; bottom: 10px;">
+        <button style="border:none; padding: 10px; background:#1D73C9; color:#ffffff; font-size:16px;">
             Buy now »
         </button>
     </div>
@@ -64,9 +66,15 @@ The most popular boilerplate will leverage product image, name and price plus a 
 You can see whole section wrapped in a div that sets the font and padding for proper spacing and three key elemnents within it:
 
 1. `img` for displaying how the product looks (with `max-width` & `max-height` to control non-standard images)
-2. `div` with name and price personalisation strings (we will talk about the difference in a moment)
+2. `div`s with name and price personalisation strings (we will talk about the difference in a moment)
 3. `div` with a button (we don't need any link, because whole final image will be a link)
 
-That's it. You can add more personalisation strings - including those using attrubutes defined on the catalog object. You can of course also write nicer HTML with separate CSS style section. But in the end - it will be just a boilerplate for an image that you can preview directly in the editor.
+That's it. You can add more personalisation strings - including those using attrubutes defined on the catalog object. You can also write nicer HTML with separate CSS style section (and either way - be sure to test the code a lot with edge cases from your catalog). But in the end - it will be just a boilerplate for an image that you can preview directly in the editor.
 
 It's fine, but you can quickly come up with the "what if..." scenarios (f.e. showing both current price and listPrice only if there is a promotion or displaying placeholder if the image is broken) that would require a bit more control over the template. Thankfully, there are some undocumented features that can solve those needs.
+
+### if/else in OTE Template
+
+
+
+

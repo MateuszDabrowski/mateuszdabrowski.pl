@@ -8,7 +8,7 @@ tags: [Marketing Cloud, SSJS, AMPScript, Snippet, Cloud Page, App]
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import { LeadText } from '../../src/components/LeadText.js';
+import { LeadText } from '../../../src/components/LeadText.js';
 
 <LeadText content="Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud features." />
 
@@ -32,7 +32,7 @@ Marketing Cloud micro application offers AppExchange-style deep integration with
 
 The good? You can use Marketing Cloud programmatic languages (SSJS and AMPScript) with all their nifty built-in functions to control the assets and behaviours of the SFMC platform and connected Sales & Service Clouds. You can also leverage the APIs to gather even more power and pull external logic and data. All this without having to care about hosting, scaling and integration. Available directly from the Marketing Cloud menu. And cost? Just a super message for loading a Cloud Page.
 
-The bad? It is suitable for relatively simple apps. Think about a single front-end page powered by an SSJS or AMPScript backend on a [Code Resource](./sfmc-code-resource.mdx). Of course, you can try to build something more complex, but you may quickly get into a place where the whole endeavour would have been easier with an outside-hosted application.
+The bad? It is suitable for relatively simple apps. Think about a single front-end page powered by an SSJS or AMPScript backend on a [Code Resource](../../config/sfmc-code-resource.mdx). Of course, you can try to build something more complex, but you may quickly get into a place where the whole endeavour would have been easier with an outside-hosted application.
 
 ## Build your dream
 
@@ -552,7 +552,7 @@ There was much information to digest, so it's time for a streamlined step by ste
 
 1. __Logging Data Extensions__
     1. In Content Builder or Email Studio create a [Cloud Page App Logging Data Extension](#capture-your-cloud-app-usage).
-    2. In Content Builder or Email Studio create an [Error Logging Data Extension](../ssjs/debugging-ssjs.mdx#logging-to-data-extension).
+    2. In Content Builder or Email Studio create an [Error Logging Data Extension](../debugging-ssjs.mdx#logging-to-data-extension).
     3. In both cases, one is enough for multiple Cloud Page Apps. If stored in the Shared Data Extensions folder, both can serve multiple Business Units.
 2. __Cloud Page__
     1. Create a new Cloud Page.

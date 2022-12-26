@@ -111,28 +111,14 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-config.png',
             },
             items: [
-                'config/sfmc-config-permissions',
-                'config/sfmc-config-system-data-views',
-                'config/sfmc-config-features-on-demand',
-                'config/sfmc-config-appexchange-solutions',
-            ],
-        },
-        {
-            type: 'category',
-            label: 'SFMC Use Cases',
-            link: {
-                type: 'generated-index',
-                title: 'SFMC Use Cases',
-                description: 'Knowing how to code is one thing. Knowing what to code is another. In Use Cases, I focus not on specific features of the Marketing Cloud configuration or its programming languages but rather on using them to drive business value. Take a look and pick what you need.',
-                keywords: ['Marketing Cloud'],
-                image: 'img/og/og-image-sfmc-use-cases.png',
-            },
-            items: [
-                'usecase/sfmc-cloud-page-apps',
-                'usecase/sfmc-code-resource',
-                'usecase/sfmc-contact-deletion',
-                'usecase/sfmc-enhanced-send-log',
-                'usecase/sfmc-behavioral-triggers',
+                'config/sfmc-permissions',
+                'config/sfmc-system-data-views',
+                'config/sfmc-code-resource',
+                'config/sfmc-contact-deletion',
+                'config/sfmc-enhanced-send-log',
+                'config/sfmc-behavioral-triggers',
+                'config/sfmc-appexchange-solutions',
+                'config/sfmc-features-on-demand',
             ],
         },
         {
@@ -162,9 +148,10 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-ssjs-snippets.png',
             },
             items: [
-                'ssjs/snippets/ssjs-snippet-ampscript-in-ssjs',
-                'ssjs/snippets/ssjs-snippet-mobileconnect-phone-change',
-                'ssjs/snippets/ssjs-snippet-ssjs-script-template',
+                'ssjs/snippets/ampscript-in-ssjs',
+                'ssjs/snippets/ssjs-mobileconnect-phone-change',
+                'ssjs/snippets/ssjs-script-template',
+                'ssjs/snippets/sfmc-cloud-page-apps',
                 {
                     type: 'link',
                     label: '» SSJS Docs',
@@ -183,9 +170,9 @@ module.exports = {
                 image: 'img/og/og-image-js-snippets.png',
             },
             items: [
-                'js/snippets/js-snippet-tailor-with-data',
-                'js/snippets/js-snippet-engage-with-countdown',
-                'js/snippets/js-snippet-export-import-document-sfmc-roles',
+                'js/snippets/tailor-with-data',
+                'js/snippets/engage-with-countdown',
+                'js/snippets/export-import-document-sfmc-roles',
                 {
                     type: 'link',
                     label: '» JS Docs',
@@ -204,7 +191,7 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-ampscript-snippets.png',
             },
             items: [
-                'ssjs/snippets/ssjs-snippet-ampscript-in-ssjs',
+                'ssjs/snippets/ampscript-in-ssjs',
                 {
                     type: 'link',
                     label: '» AMPScript Docs',
@@ -223,8 +210,8 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-sql-snippets.png',
             },
             items: [
-                'sql/snippets/sfmc-sql-snippet-debugging-email-sends',
-                'sql/snippets/sfmc-sql-snippet-debugging-value-length',
+                'sql/snippets/sfmc-sql-debugging-email-sends',
+                'sql/snippets/sfmc-sql-debugging-value-length',
                 {
                     type: 'link',
                     label: '» SQL Docs',

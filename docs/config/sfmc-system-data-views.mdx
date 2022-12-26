@@ -1,5 +1,5 @@
 ---
-id: sfmc-config-system-data-views
+id: sfmc-system-data-views
 title: SFMC System Data Views
 sidebar_label: System Data Views
 description: Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.
@@ -313,9 +313,9 @@ FROM _Sent AS sent
 
 When working with `_Sent` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-debugging-email-sends.mdx#solution).
 2. The most valuable data here is the `EventDate` field that lets you know when the email was sent (and whether that happened at all).
-3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left Marketing Cloud. Check [enhanced Send Log](../usecase/sfmc-enhanced-send-log.mdx), applied personalisation, data source, `RaiseError` scripts.
+3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left Marketing Cloud. Check [enhanced Send Log](./sfmc-enhanced-send-log.mdx), applied personalisation, data source, `RaiseError` scripts.
 
 ---
 
@@ -372,8 +372,8 @@ FROM _Open AS open
 
 When working with `_Open` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-debugging-email-sends.mdx#solution).
+2. Use `_open.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-debugging-email-sends.mdx#solution).
 3. The most valuable data here is the `EventDate` field that lets you know when the email was opened (and whether that happened at all). But with email opens, it's not that easy. In many cases, the lack of open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some instances, tracked open might not mean he did.
 
 :::note You Should Know
@@ -453,8 +453,8 @@ FROM _Click AS click
 
 When working with `_Click` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-debugging-email-sends.mdx#solution).
+2. Use `_click.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-debugging-email-sends.mdx#solution).
 3. The most valuable data here is the `EventDate` field that lets you know when the email was clicked (and whether that happened at all).
 4. You can significantly improve the value of that information by checking the `LinkName` and `LinkContent` fields to understand which links proved interesting for your customers.
 5. Suppose you want to create an extensive report on link clicks. In that case, you might want to use the `URL` field instead of `LinkContent` due to the former not showing final personalisation values. It will be much easier to group clicks or even cleanly delete all AMPScript from them.
@@ -540,8 +540,8 @@ FROM _Bounce AS bounce
 
 When working with `_Bounce` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
-2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-debugging-email-sends.mdx#solution).
+2. Use `_bounce.IsUnique = 1` in [`JOIN`](../sql/sfmc-sql-join.mdx) or [`WHERE`](../sql/sfmc-sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](../sql/snippets/sfmc-sql-debugging-email-sends.mdx#solution).
 3. The `Domain` helps aggregate the bounce data to see any domain-specific problem with deliverability.
 4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
 5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases, it means you are considered a spammer by the server or already blocklisted. I recommend you to create an Automation with Verification Activity to get an automated warning whenever there are more than a few occurrences. Triage immediately.
@@ -980,7 +980,7 @@ When working with `_MobileAddress` Data View:
 
 1. There is no guarantee of how long it will work and how long the data will be correct. Be sure you are checking it periodically or - even better - have validation in your code.
 2. The rule of thumb when working with MobileConnect is to use the official, supported solutions. Only when they cannot deliver - check whether `_MobileAddress` can help.
-3. Do not use the User Interface editor in MobileConnect Demographics part of the Contact to edit information in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/snippets/ssjs-snippet-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. It is the most significant selling point of this Data View.
+3. Do not use the User Interface editor in MobileConnect Demographics part of the Contact to edit information in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/snippets/ssjs-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. It is the most significant selling point of this Data View.
 4. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
 5. Whenever creating a MobileConnect Contact, be sure to provide the `_MobileNumber` with the dialling code prefix (without the `+` or `00`). For example, Poland has a `+48` dialling code and nine-digit numbers, so the correct format is 48123456789. Double-check whether `_CountryCode` is an appropriate two-letter code (for example, `PL`).
 6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with the highest `_Priority`.

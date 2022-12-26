@@ -1,5 +1,5 @@
 ---
-id: sfmc-sql-snippet-debugging-value-length
+id: sfmc-sql-debugging-value-length
 title: SFMC SQL Debugging Value Length
 sidebar_label: Debugging Value Length
 description: Your Automations crash due to longer than expected values coming from the external source? Make your life easier with SQL.
@@ -74,7 +74,7 @@ Now you can look in the data source and check whether this longer-than-expected 
 
 In most cases, the field length of 255 should be more than enough. But if you need it, Marketing Cloud allows you to go up to 4000 characters per field.
 
-4000 characters length is an instant way of getting over the recommended limit, but it might be useful for logging Data Extensions that you won't query in the future. For example, if you want to save [`_Bounce` Data View](../../config/sfmc-config-system-data-views.mdx#_bounce) to standard Data Extension, `SMTPBounceReason` might use such a long field.
+4000 characters length is an instant way of getting over the recommended limit, but it might be useful for logging Data Extensions that you won't query in the future. For example, if you want to save [`_Bounce` Data View](../../config/sfmc-system-data-views.mdx#_bounce) to standard Data Extension, `SMTPBounceReason` might use such a long field.
 
 If you need more, there is a trick reported by [Markus Slabina](https://salesforce.stackexchange.com/questions/154402/data-extension-maximum-characters-of-text-field/154403). Use Email Studio to add a new field and make the length empty. Save. It will create a [`nvarchar(max)`](../sfmc-sql-conversion-functions.mdx#data-types) field that allows absurdly long data to be stored.
 

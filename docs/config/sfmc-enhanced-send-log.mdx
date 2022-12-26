@@ -15,7 +15,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 Send Log is a table that captures relevant data about sends happening in the platform. In the case of Salesforce Marketing Cloud, it is a unique Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
 
-SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](../config/sfmc-config-features-on-demand.mdx).
+SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](./sfmc-features-on-demand.mdx).
 
 Once you create it, it will automatically populate with each attempted send originating from its Business Unit.
 
@@ -44,17 +44,17 @@ The Send Log template comes with six default fields:
 
 :::note You Should Know
 
-If your send was not delivered, but you can see it in the Send Log without any `ErrorCode`, leverage [Email Sends Debugging Query](../sql/snippets/sfmc-sql-snippet-debugging-email-sends.mdx) to learn what happened with the message.
+If your send was not delivered, but you can see it in the Send Log without any `ErrorCode`, leverage [Email Sends Debugging Query](../sql/snippets/sfmc-sql-debugging-email-sends.mdx) to learn what happened with the message.
 
 :::
 
 ### Send Log vs _Sent System Data View
 
-You might wonder - why use email Send Log when [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent) captures the same data out of the box? There are two reasons.
+You might wonder - why use email Send Log when [_Sent Data View](./sfmc-system-data-views.mdx#_sent) captures the same data out of the box? There are two reasons.
 
 #### 1. Captured data is not precisely the same.
 
-It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log, and multiple additional fields in the [_Sent Data View](../config/sfmc-config-system-data-views.mdx#_sent). It's also about when the data is captured.
+It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log, and multiple additional fields in the [_Sent Data View](./sfmc-system-data-views.mdx#_sent). It's also about when the data is captured.
 
 Send Log is populated when SFMC prepares the send. That's why it can log [ErrorCode](#send-log-errorcode-values) if the send fails. The Data View is populated later when SFMC pushes a correctly constructed email out to the Email Service Providers.
 
@@ -62,7 +62,7 @@ It means that Send Log is an incredible tool to check why some emails did not go
 
 #### 2. You can customise the Send Log
 
-Data Views are set in stone (unless you purchase a [custom one](../config/sfmc-config-system-data-views.mdx#custom-data-views)), but you can add fields to the Send Log to align it better with your business needs. Let's dive into how it works and why you should use it.
+Data Views are set in stone (unless you purchase a [custom one](./sfmc-system-data-views.mdx#custom-data-views)), but you can add fields to the Send Log to align it better with your business needs. Let's dive into how it works and why you should use it.
 
 ## Custom Send Log
 
@@ -151,7 +151,7 @@ Create standard Data Extension with more user-friendly names and extend it with 
 
 ### Enhanced Send Log SQL Query Activity
 
-Create Automation with Query Activity that will take data from your technical Send Log and [System Data Views](../config/sfmc-config-system-data-views.mdx) to populate your Enhanced Send Log DE with actionable data.
+Create Automation with Query Activity that will take data from your technical Send Log and [System Data Views](./sfmc-system-data-views.mdx) to populate your Enhanced Send Log DE with actionable data.
 
 ```sql
 SELECT

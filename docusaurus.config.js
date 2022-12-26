@@ -84,10 +84,6 @@ module.exports = {
                             to: 'docs/category/sfmc-config/',
                         },
                         {
-                            label: 'SFMC Use Cases',
-                            to: 'docs/category/sfmc-use-cases/',
-                        },
-                        {
                             label: 'Interaction Studio',
                             to: 'docs/category/interaction-studio/',
                         },
@@ -207,10 +203,6 @@ module.exports = {
                         {
                             label: 'SFMC Config',
                             to: 'docs/category/sfmc-config/',
-                        },
-                        {
-                            label: 'SFMC Use Cases',
-                            to: 'docs/category/sfmc-use-cases/',
                         },
                         {
                             label: 'Interaction Studio',
@@ -334,58 +326,77 @@ module.exports = {
             '@docusaurus/plugin-client-redirects', // Works only on production
             {
                 redirects: [
+                    /* SFMC Config restructure */
                     {
-                        from: ['/docs/sql/sfmc-sql-snippet-enhanced-send-log/'],
-                        to: '/docs/usecase/sfmc-enhanced-send-log/',
+                        from: ['/docs/sql/sfmc-sql-snippet-enhanced-send-log/', '/docs/usecase/sfmc-enhanced-send-log/'],
+                        to: '/docs/config/sfmc-enhanced-send-log/',
                     },
                     {
-                        from: ['/docs/config/sfmc-config-behavioral-triggers/'],
-                        to: '/docs/usecase/sfmc-behavioral-triggers/',
+                        from: ['/docs/config/sfmc-config-behavioral-triggers/', '/docs/usecase/sfmc-behavioral-triggers/'],
+                        to: '/docs/config/sfmc-behavioral-triggers/',
                     },
+                    {
+                        from: ['/docs/usecase/sfmc-contact-deletion/'],
+                        to: '/docs/config/sfmc-contact-deletion/',
+                    },
+                    {
+                        from: ['/docs/usecase/sfmc-code-resource/'],
+                        to: '/docs/config/sfmc-code-resource/',
+                    },
+                    {
+                        from: ['/docs/appexchange/sfmc-appexchange-overview/', '/docs/config/sfmc-config-appexchange-solutions/'],
+                        to: '/docs/config/sfmc-appexchange-solutions/',
+                    },
+                    {
+                        from: ['/docs/config/sfmc-config-permissions/'],
+                        to: '/docs/config/sfmc-permissions/',
+                    },
+                    {
+                        from: ['/docs/config/sfmc-config-system-data-views/'],
+                        to: '/docs/config/sfmc-system-data-views/',
+                    },
+                    {
+                        from: ['/docs/config/sfmc-config-features-on-demand/'],
+                        to: '/docs/config/sfmc-features-on-demand/',
+                    },
+                    /* SFMC Snippets restructure */
                     {
                         from: ['/docs/ideas/engage-with-countdown/', '/ideas/engage-with-countdown/', '/docs/usecase/engage-with-countdown/'],
-                        to: '/docs/js/snippets/js-snippet-engage-with-countdown/',
+                        to: '/docs/js/snippets/engage-with-countdown/',
                     },
                     {
                         from: ['/docs/ideas/tailor-with-data/', '/ideas/tailor-with-data/', '/docs/usecase/tailor-with-data/'],
-                        to: '/docs/js/snippets/js-snippet-tailor-with-data/',
+                        to: '/docs/js/snippets/tailor-with-data/',
                     },
                     {
                         from: ['/docs/ssjs/ssjs-snippet-ampscript-in-ssjs/'],
-                        to: '/docs/ssjs/snippets/ssjs-snippet-ampscript-in-ssjs/',
+                        to: '/docs/ssjs/snippets/ampscript-in-ssjs/',
                     },
                     {
                         from: ['/docs/ssjs/ssjs-snippet-mobileconnect-phone-change/'],
-                        to: '/docs/ssjs/snippets/ssjs-snippet-mobileconnect-phone-change/',
+                        to: '/docs/ssjs/snippets/ssjs-mobileconnect-phone-change/',
                     },
                     {
                         from: ['/docs/ssjs/ssjs-snippet-ssjs-script-template/'],
-                        to: '/docs/ssjs/snippets/ssjs-snippet-ssjs-script-template/',
+                        to: '/docs/ssjs/snippets/ssjs-script-template/',
                     },
                     {
                         from: ['/docs/js/js-snippet-export-import-document-sfmc-roles/'],
-                        to: '/docs/js/snippets/js-snippet-export-import-document-sfmc-roles/',
+                        to: '/docs/js/snippets/export-import-document-sfmc-roles/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-snippet-debugging-email-sends/'],
-                        to: '/docs/sql/snippets/sfmc-sql-snippet-debugging-email-sends/',
+                        to: '/docs/sql/snippets/sfmc-sql-debugging-email-sends/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-snippet-debugging-value-length/'],
-                        to: '/docs/sql/snippets/sfmc-sql-snippet-debugging-value-length/',
+                        to: '/docs/sql/snippets/sfmc-sql-debugging-value-length/',
                     },
                     {
-                        from: ['/docs/usecase/sfmc-cloud-apps/'],
-                        to: '/docs/usecase/sfmc-cloud-page-apps/',
+                        from: ['/docs/usecase/sfmc-cloud-apps/', '/docs/usecase/sfmc-cloud-page-apps/'],
+                        to: '/docs/ssjs/snippets/sfmc-cloud-page-apps/',
                     },
-                    {
-                        from: ['/docs/appexchange/sfmc-appexchange-overview/'],
-                        to: '/docs/config/sfmc-config-appexchange-solutions/',
-                    },
-                    {
-                        from: ['/ideas/', '/sites/ideas/'],
-                        to: '/sites/ideas/marketing-cloud-ideas/',
-                    },
+                    /* Category pages restructure */
                     {
                         from: ['/docs/sql/'],
                         to: '/docs/category/sfmc-sql/',
@@ -397,6 +408,15 @@ module.exports = {
                     {
                         from: ['/docs/sfmc-webinars/'],
                         to: '/docs/category/sfmc-webinars/',
+                    },
+                    {
+                        from: ['/docs/category/sfmc-use-cases/'],
+                        to: '/docs/category/sfmc-config/',
+                    },
+                    /* Ideas restructure */
+                    {
+                        from: ['/ideas/', '/sites/ideas/'],
+                        to: '/sites/ideas/marketing-cloud-ideas/',
                     },
                 ],
             },

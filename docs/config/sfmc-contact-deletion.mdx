@@ -388,7 +388,7 @@ FROM _Subscribers                   AS subscriber
 WHERE contact.Id IS NULL
 ```
 
-If you are also using other channels, you can include their [System Data Views](../config/sfmc-config-system-data-views.mdx) to the query.
+If you are also using other channels, you can include their [System Data Views](./sfmc-system-data-views.mdx) to the query.
 
 ### Leads and Users deleted or filtered in Salesforce CRM
 
@@ -417,7 +417,7 @@ All Contacts view shows many cool data fields, but unfortunately, most are no lo
 
 Mobile List fields are: `SubscriberKey`, `CustomerKey`, `AudienceID`, `TrackingCode`, `AudienceCode`, `SegmentCode`, `SegmentName`, `Priority`, `SegmentID`, `SplitID`.
 
-So in nearly every case you will have to take the Subscriber Key and enrich it with [`JOIN`](../sql/sfmc-sql-join.mdx) to other more interesting Data Extensions or [System Data Views](../config/sfmc-config-system-data-views.mdx).
+So in nearly every case you will have to take the Subscriber Key and enrich it with [`JOIN`](../sql/sfmc-sql-join.mdx) to other more interesting Data Extensions or [System Data Views](./sfmc-system-data-views.mdx).
 
 :::
 
