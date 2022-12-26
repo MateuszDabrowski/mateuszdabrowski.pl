@@ -47,15 +47,12 @@ Building the template requires basic HTML & CSS knowledge and leveraging the bui
 The most popular boilerplate will leverage product image, name and price plus a call to action. Basic approach could look like this:
 
 ```html
-<div style="padding:10px; font-family: Arial;">
+<div style="padding:10px; text-align:center; font-family: Arial;">
     <img src="${item.imageUrl}" style="max-width:180px; max-height:150px;">
-    <div>
+    <div style="text-align:left;">
         ${item.name}
     </div>
-    <div style="font-size: 18px; margin-top:10px;">
-        $currency.format(${item.price})
-    </div>
-    <div style="text-align: center; position:absolute; left: 0px; right: 0px; bottom: 10px;">
+    <div style="position:absolute; left: 0px; right: 0px; bottom: 10px;">
         <button style="border:none; padding: 10px; background:#1D73C9; color:#ffffff; font-size:16px;">
             Buy now »
         </button>
@@ -66,15 +63,115 @@ The most popular boilerplate will leverage product image, name and price plus a 
 You can see whole section wrapped in a div that sets the font and padding for proper spacing and three key elemnents within it:
 
 1. `img` for displaying how the product looks (with `max-width` & `max-height` to control non-standard images)
-2. `div`s with name and price personalisation strings (we will talk about the difference in a moment)
+2. `div`s with name and price personalisation strings (we will talk about the format difference in a moment)
 3. `div` with a button (we don't need any link, because whole final image will be a link)
 
 That's it. You can add more personalisation strings - including those using attrubutes defined on the catalog object. You can also write nicer HTML with separate CSS style section (and either way - be sure to test the code a lot with edge cases from your catalog). But in the end - it will be just a boilerplate for an image that you can preview directly in the editor.
 
 It's fine, but you can quickly come up with the "what if..." scenarios (f.e. showing both current price and listPrice only if there is a promotion or displaying placeholder if the image is broken) that would require a bit more control over the template. Thankfully, there are some undocumented features that can solve those needs.
 
-### if/else in OTE Template
+:::note You Should Know
 
+While the `Insert {Dynamic}` will suggest you should use `${item.attributes.xxxx.value}` notation for custom attributes, this is not always true.
 
+If you try this style for a Object or MultiString (Array) attribute it will intead drop an "Error generating preview image: Failed to render DMC for template \[email\]" error.
 
+The value will be displayed correctly if you drop the `.value` from the personalisation string: `${item.attributes.MultiStringAttribute}`.
 
+:::
+
+### Fallback for null values
+
+First problem you may encounter with the official implementation is crashing on `null` values. If you want to leverage a product attribute for personalisation, for example brand with `${item.attributes.brand.value}`, products missing this value will error out with "Error generating preview image: Unfulfilled variable".
+
+Thankfully, there is a solution for it - a `#field()` function:
+
+```html
+<div style="text-align:left;">
+    #field(${item.attributes.brand.value}, 'Fallback Value')
+</div>
+```
+
+`#field()` functions expects two parameters:
+
+1. The personalisation you want to use
+2. The fallback value. It can be either a string or another variable. However, you are not able to put `#field()` function as a parameter of `#field()` function, so if you decide to use another variable, be sure it is filled in for all the products.
+
+```html title="Field function with two variables as parameters"
+<div style="text-align:left;">
+    #field(${item.attributes.customPromotionalImageUrl.value}, ${item.imageUrl})
+</div>
+```
+
+In most cases, the most useful way to use `#field()` will be with fallback to empty string, as it will just hide the personalisation from the image, while protecting against the error:
+
+```html title="Field function with empty fallback"
+<div style="text-align:left;">
+    #field(${item.attributes.brand.value}, '')
+</div>
+```
+
+:::note You Should Know
+
+Once again the MultiString attributes are problematic, as they are not considered a null for the above function and will show `[]` instead, ignoring the fallback.
+
+Empty Object fields are fallbacking correctly when they are truly empty, but once you add an JSON Object there, UI will no longer let you empty that field, forcing you to write at least `{}` and leading to the same issue as with MultiString.
+
+:::
+
+### Conditional content with if/else
+
+Sometimes you need more than just fallback for `null` value. When it is not about the `null` or there are more conditions to check, `if`/`else` is the best. Thankfully, it also can be leveraged in OTE:
+
+```html {3,7} title="Show striked listPrice only if the current price is lower"
+<div style="text-align:left;">
+    $currency.format(${item.price})
+    <!-- #if($item.listPrice > $item.price) -->
+    <span style="font-size: 14px; text-decoration: line-through;">
+        $currency.format(${item.listPrice})
+    </span>
+    <!-- #end -->
+</div>
+```
+
+As you can see, for `if` block you need to use HTML comment notation with `#if()` and `#end` statements. The `#if()` accepts parameters that return a boolean, just as in [JavaScript `if`](../js/js-if-and-switch.mdx).
+
+:::note You Should Know
+
+The Object and MultiString attributes does not work correctly with `if`/`else` statements.
+
+:::
+
+You can add more condition-based paths with `#else`:
+
+```html {3} title="If imageUrl is not proper .jpg link, display placeholder image"
+<!-- #if ($item.imageUrl && $item.imageUrl.endsWith('.jpg')) -->
+<img src="${item.imageUrl}" style="max-width:180px; max-height:150px;">
+<!-- #else -->
+<img src="https://mateuszdabrowski.pl/placeholder-image.jpg" style="max-width:180px; max-height:150px;">
+<!-- #end -->
+```
+
+:::note You Should Know
+
+While `if`/`else` block in Open Time Email Template works similar to what you may know from JavaScript or SSJS, it has one huge disadvantage - it is evaluating code in all paths.
+
+It means that even if a path is not being excuted for the final image generation, it can still error out the whole campaign. Example:
+
+```html {2} title="Will error out for a product without Brand"
+<!-- #if(${item.attributes.brand.value} && !${item.attributes.categoryName.value}) -->
+${item.attributes.brand.value}
+<!-- #end -->
+```
+
+Despite checking whether there is a value behind Brand attribute and only then personalising it, template with such code would still error out for products without Brand.
+
+Always use [fallbacks](#fallback-for-null-values) along with `if`/`else` blocks:
+
+```html {2} title="Will NOT error out for a product without Brand"
+<!-- #if(${item.attributes.brand.value} && !${item.attributes.categoryName.value}) -->
+#field(${item.attributes.brand.value}, '')
+<!-- #end -->
+```
+
+:::
