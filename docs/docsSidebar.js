@@ -127,7 +127,7 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Interaction Studio',
-                description: 'Interaction Studio is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!',
+                description: 'Interaction Studio (MCP) is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!',
                 keywords: ['Interaction Studio', 'Personalisation'],
                 image: 'img/og/og-image-interaction-studio.png',
             },

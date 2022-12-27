@@ -2,55 +2,64 @@
 id: is-open-time-email
 title: IS Open Time Email
 sidebar_label: Open Time Email
-description: Personalise your SFMC emails with the next best action recommendations. In real time. Even after delivery. Magic.
+description: Personalise your SFMC emails with the next best action recommendations. In real-time. Even after delivery. Magic.
 image: img/og/og-image-is-open-time-email.png
 tags: [Interaction Studio, Personalisation, Email]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content='Personalise your SFMC emails with the next best action recommendations. In real time. Even after delivery. Magic.' />
+<LeadText content='Personalise your SFMC emails with the next best action recommendations. In real-time. Even after delivery. Magic.'/>
 
 ## What is Open Time Email Campaign
 
-In short, Open Time Eamil Campaign in Interaction Studio (MCP) is a solution for providing __always up-to-date__, personalised recommendations to your customers.
+In short, Open Time Email Campaign in Interaction Studio (MCP) is a solution for providing __always up-to-date__, personalised recommendations to your customers.
 
-The general rule of email communication is that the momement you send the email you loose control over it and cannot make any changes (just like with paper mail). There are, however, two exceptions:
+The general rule of email communication is that the moment you send the email, you lose control and cannot make any changes (just like with paper mail). There are, however, two exceptions:
 
-1. __Links__ - you cannot change the URL used in the email, but (if you use wrapper/tracking links) you can change the final target URL. In Marketing Cloud it is done via [updating Job Links](https://help.salesforce.com/s/articleView?id=sf.mc_es_update_joblinks_overview.htm).
-2. __Images__ - you cannot change the URL of the image used in the email, but you can change the image that is hosted behind that URL. This is exactly what Open Time Email feature in Interaction Studio is all about.
+1. __Links__ - you cannot change the URL used in the email, but (if you use wrapper/tracking links), you can change the final target URL. In Marketing Cloud, it is done via [updating Job Links](https://help.salesforce.com/s/articleView?id=sf.mc_es_update_joblinks_overview.htm).
+2. __Images__ - you cannot change the URL of the image used in the email, but you can change the image that is hosted behind that URL. It is precisely what the Open Time Email feature in Interaction Studio is all about.
 
-It consists of two parts. In __Open Time Email Template__ you define the recommendations format (dimensions, content, personalisations). Then in __Open Time Email Campaign__ you use that template with selected recommendations logic (Einstein Recipe) to automatically generate HTML that will be rendering the ever-updating Next Best Action in your emails. But...
+It consists of two parts. In __Open Time Email Template__, you define the format of the recommendation (dimensions, content, personalisations). Then in __Open Time Email Campaign__, you use that template with selected recommendations logic (Einstein Recipe) to automatically generate HTML that will render the ever-updating Next Best Action in your emails. But...
 
 There are three caveats:
 
-1. Open Time Email recommendation is an image (that's the only way to enable updating after sending), which means that on inboxes that hide images by default - the recommendations will not be shown.
-2. Some inboxes cache images. In this case the customer might not see the updates to the recommendation or they might be delayed.
-3. Apple Mail Privacy blocks the magic behind the Open Time Email and it falls back to a static recommendation generated on send time.
+1. Open Time Email recommendation is an image (that's the only way to enable updating after sending), which means that the inboxes that hide images by default will not display the recommendations.
+2. Some inboxes cache images. In this case, the customer might not see the updates to the recommendation, or they might be delayed.
+3. Apple Mail Privacy blocks the magic behind the Open Time Email and falls back to a static recommendation generated on send time.
 
-With that out of the way, let's dive into what is officially possible and what is really possible with Interaction Studio Open Time Email.
+With that out of the way, let's dive into what is officially possible and what is possible with Interaction Studio Open Time Email.
 
 ## Open Time Email Template
 
-To create Open Time Email Campaign, first you need to code the structure of the recommendation with HTML, CSS and personalisations. It will be used by Interaction Studio to generate the image on the fly.
+To create an Open Time Email Campaign, first, you need to code the structure of the recommendation with HTML, CSS and personalisations. Interaction Studio will use it to generate the image on the fly.
 
 __Good thing__: because this HTML will be used for image generation and will not be available in the final Campaign, you are not limited to markup supported by Email clients.
 
-__Bad thing__: because this HTML will be used for image generation, you are not able to leverage custom fonts - there are only [17 built-in fonts](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) to choose from.
+__Bad thing__: because IS will use this HTML for image generation, you are not able to leverage custom fonts - there are only [17 built-in western](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) and [4 non-western](https://developer.evergage.com/campaign-development/email-campaigns-and-templates/render-non-western-characters) fonts to choose from.
 
-To start building the template you need to provide dimensions of the final image. This is super important, because once you select those and save, you won't be able to edit it. Those dimensions are for the recommendation image only - you will be separately configuring the whole campaign dimensions in the Open Time Email Campaign configuration, so leave some pixels for whitespace.
+To start building the template, you need to provide the dimensions of the final image. It is super important because once you select and save those, you won't be able to edit them. Those dimensions are for the recommendation image only - you will be configuring the whole campaign dimensions separately in the Open Time Email Campaign configuration, so leave some pixels for whitespace.
+
+:::note You Should Know
+
+Open Time Email code editor isn't very robust and likes to crash completly if there is a "wrong" set of characters for it to preview. I recommend writing code outside and just copy-pasting it into OTE for validation to not lose the work progress.
+
+:::
 
 ### Basic OTE Template
 
 Building the template requires basic HTML & CSS knowledge and leveraging the built-in `Insert {Dynamic}` personalisation option to connect the code boilerplate with catalog data.
 
-The most popular boilerplate will leverage product image, name and price plus a call to action. Basic approach could look like this:
+The most popular boilerplate will leverage product image, name and price plus a call to action. The basic approach could look like this:
 
 ```html
 <div style="padding:10px; text-align:center; font-family: Arial;">
     <img src="${item.imageUrl}" style="max-width:180px; max-height:150px;">
     <div style="text-align:left;">
         ${item.name}
+    </div>
+    <div style="margin-top:5px; text-align:left;">
+        $currency.format(${item.price})
     </div>
     <div style="position:absolute; left: 0px; right: 0px; bottom: 10px;">
         <button style="border:none; padding: 10px; background:#1D73C9; color:#ffffff; font-size:16px;">
@@ -60,118 +69,217 @@ The most popular boilerplate will leverage product image, name and price plus a 
 </div>
 ```
 
-You can see whole section wrapped in a div that sets the font and padding for proper spacing and three key elemnents within it:
+You can see a whole section wrapped in a div that sets the font and padding for proper spacing and three key elements within it:
 
 1. `img` for displaying how the product looks (with `max-width` & `max-height` to control non-standard images)
 2. `div`s with name and price personalisation strings (we will talk about the format difference in a moment)
-3. `div` with a button (we don't need any link, because whole final image will be a link)
+3. `div` with a button (we don't need any link because the whole final image will be a link)
 
-That's it. You can add more personalisation strings - including those using attrubutes defined on the catalog object. You can also write nicer HTML with separate CSS style section (and either way - be sure to test the code a lot with edge cases from your catalog). But in the end - it will be just a boilerplate for an image that you can preview directly in the editor.
+That's it. You can add more personalisation strings - including those using attributes defined on the catalog object. You can also write nicer HTML with a separate CSS style section (and either way - be sure to test the code a lot with edge cases from your catalog). But in the end - it will be just a boilerplate for an image you can preview directly in the editor.
 
-It's fine, but you can quickly come up with the "what if..." scenarios (f.e. showing both current price and listPrice only if there is a promotion or displaying placeholder if the image is broken) that would require a bit more control over the template. Thankfully, there are some undocumented features that can solve those needs.
+It's okay, but you can quickly come up with the "what if..." scenarios (f.e. showing both current price and listPrice only if there is a promotion or displaying a placeholder if the image is broken) that would require a bit more control over the template. Thankfully, some undocumented features can solve those needs.
+
+### Attributes vs Custom Fields
+
+When you select `Insert {Dynamic}`, you will find both Attributes and Custom Field options at the bottom of the picklist.
+
+That differentiation is a mess, as depending on the product value, you can use one, two or all three:
+
+```js title="Difference in scope"
+// ID
+${item.id}                              // Returns Product ID
+${item.attributes.published.value}      // Error generating preview image: Unfulfilled variable
+${item.custom.customDatetime}           // Error generating preview image: Unfulfilled variable
+
+// Name
+${item.name}                            // Returns Product Name
+${item.attributes.name.value}           // Returns Product Name
+${item.custom.name}                     // Returns Product Name
+
+// Published Date
+${item.published}                       // Returns Product Published Date
+${item.attributes.published.value}      // Returns Product Published Date
+${item.custom.published}                // Error generating preview image: Unfulfilled variable
+```
+
+To make it even more chaotic, the formatting of the output might be different:
+
+```js title="Difference in output"
+${item.published}                       // Wed Nov 30 23:00:00 UTC 2022
+${item.attributes.published.value}      // 1669849200000
+
+${item.attributes.customDatetime.value} // 1672182000000
+${item.custom.customDatetime}           // 2022-12-27T23:00:00.000Z
+```
 
 :::note You Should Know
 
 While the `Insert {Dynamic}` will suggest you should use `${item.attributes.xxxx.value}` notation for custom attributes, this is not always true.
 
-If you try this style for a Object or MultiString (Array) attribute it will intead drop an "Error generating preview image: Failed to render DMC for template \[email\]" error.
+If you try this style for an Object or MultiString (Array) attribute, it will instead crash with: "Error generating preview image: Failed to render DMC for template \[email\]".
 
-The value will be displayed correctly if you drop the `.value` from the personalisation string: `${item.attributes.MultiStringAttribute}`.
+IS will display the value correctly if you drop the `.value` suffix from the personalisation string: `${item.attributes.MultiStringAttribute}`.
 
 :::
 
+### Formatting values
+
+Unfortunately, the only working formatting option I was able to find is the currency one available by default for price and listPrice personalisations:
+
+```js
+$currency.format(${item.listPrice})
+```
+
+Currency formatting isn't limited to those built-in values, and you can leverage it also for any custom integer or decimal attribute:
+
+```js
+$currency.format(${item.attributes.decimalAttribute.value})
+```
+
+There is also a pseudo-formatting hack for datetime fields, but it is lacking:
+
+```js title="Various datetime outputs"
+${item.published}                       // Wed Nov 30 23:00:00 UTC 2022
+${item.attributes.published.value}      // 1669849200000
+
+${item.attributes.customDatetime.value} // 1672182000000
+${item.custom.customDatetime}           // 2022-12-27T23:00:00.000Z
+```
+
+As you can see, the built-in datetime attributes return a semi-readable date, `item.attributes` is outputting epoch timestamp (for both built-in and custom attributes) and the `item.custom` returns the full ISO format. Neither is remotely useful for Open Time Email...
+
+Applying the `.getDate()` or `.substring()` methods leads to an error.
+
 ### Fallback for null values
 
-First problem you may encounter with the official implementation is crashing on `null` values. If you want to leverage a product attribute for personalisation, for example brand with `${item.attributes.brand.value}`, products missing this value will error out with "Error generating preview image: Unfulfilled variable".
+The first problem you may encounter with the official implementation is crashing on `null` values. If you want to leverage a product attribute for personalisation (for example, the brand with `${item.attributes.brand.value}`), products missing this value will error out with "Error generating preview image: Unfulfilled variable".
 
 Thankfully, there is a solution for it - a `#field()` function:
 
-```html
-<div style="text-align:left;">
-    #field(${item.attributes.brand.value}, 'Fallback Value')
-</div>
+```js
+#field(${item.attributes.brand.value}, 'Fallback Value')
 ```
 
-`#field()` functions expects two parameters:
+`#field()` functions expect two parameters:
 
 1. The personalisation you want to use
-2. The fallback value. It can be either a string or another variable. However, you are not able to put `#field()` function as a parameter of `#field()` function, so if you decide to use another variable, be sure it is filled in for all the products.
+2. The fallback value. It can be either a string or another variable. However, you cannot nest the `#field()` function as a parameter of the `#field()` function, so if you decide to use another variable, be sure it is filled in for all the products.
 
-```html title="Field function with two variables as parameters"
-<div style="text-align:left;">
-    #field(${item.attributes.customPromotionalImageUrl.value}, ${item.imageUrl})
-</div>
+```js title="Field function with two variables as parameters"
+#field(${item.attributes.customPromotionalImageUrl.value}, ${item.imageUrl})
 ```
 
-In most cases, the most useful way to use `#field()` will be with fallback to empty string, as it will just hide the personalisation from the image, while protecting against the error:
+In most cases, the most useful way to use `#field()` will be with fallback to an empty string, as it will just hide the personalisation from the image while protecting against the error:
 
-```html title="Field function with empty fallback"
-<div style="text-align:left;">
-    #field(${item.attributes.brand.value}, '')
-</div>
+```js title="Field function with empty fallback"
+#field(${item.attributes.brand.value}, '')
+```
+
+If you want to add a fallback for formatted currency value, you need to wrap it around the formatting function:
+
+```js title="Fallback for formatted custom decimal attribute"
+#field($currency.format(${item.attributes.decimalAttribute.value}), '')
 ```
 
 :::note You Should Know
 
-Once again the MultiString attributes are problematic, as they are not considered a null for the above function and will show `[]` instead, ignoring the fallback.
+Once again, the MultiString attributes are problematic, as they are not considered `null` when empty and will show `[]` instead (ignoring the fallback).
 
-Empty Object fields are fallbacking correctly when they are truly empty, but once you add an JSON Object there, UI will no longer let you empty that field, forcing you to write at least `{}` and leading to the same issue as with MultiString.
+Empty Object fields fall back correctly when they are truly empty. However, once you fill them with a JSON Object, UI will no longer let you truly empty that field, forcing you to write at least `{}` and leading to the same issue as with MultiString.
 
 :::
 
 ### Conditional content with if/else
 
-Sometimes you need more than just fallback for `null` value. When it is not about the `null` or there are more conditions to check, `if`/`else` is the best. Thankfully, it also can be leveraged in OTE:
+Sometimes you need more than just a fallback for a `null` value. When it is not about the `null` or there are more conditions to check, `if`/`else` is the best. Thankfully, it also can be leveraged in OTE:
 
-```html {3,7} title="Show striked listPrice only if the current price is lower"
+```html {3,7} title="Show strike-through listPrice only if the current price is lower"
 <div style="text-align:left;">
     $currency.format(${item.price})
-    <!-- #if($item.listPrice > $item.price) -->
-    <span style="font-size: 14px; text-decoration: line-through;">
-        $currency.format(${item.listPrice})
-    </span>
+    <!-- #if(${item.listPrice} > ${item.price}) -->
+        <span style="font-size: 14px; text-decoration: line-through;">
+            $currency.format(${item.listPrice})
+        </span>
     <!-- #end -->
 </div>
 ```
 
-As you can see, for `if` block you need to use HTML comment notation with `#if()` and `#end` statements. The `#if()` accepts parameters that return a boolean, just as in [JavaScript `if`](../js/js-if-and-switch.mdx).
+As you can see, for the `if` block you need to use HTML comment notation with `#if()` and `#end` statements. The `#if()` accepts parameters that return a boolean, just as in [JavaScript `if`](../js/js-if-and-switch.mdx).
 
 :::note You Should Know
 
-The Object and MultiString attributes does not work correctly with `if`/`else` statements.
+The Object and MultiString attributes do not work correctly with `if`/`else` statements.
+
+If you test Object or MultiString with basic `#if(${item.attributes.attributeName})`, it will be treated as true even for an empty field. And even though `${item.attributes.MultiStringAttribute}` will output `[]` doing `#if(${item.attributes.attributeName} == [])` or `#if(${item.attributes.attributeName} == '[]')` will return false.
 
 :::
 
 You can add more condition-based paths with `#else`:
 
 ```html {3} title="If imageUrl is not proper .jpg link, display placeholder image"
-<!-- #if ($item.imageUrl && $item.imageUrl.endsWith('.jpg')) -->
-<img src="${item.imageUrl}" style="max-width:180px; max-height:150px;">
+<!-- #if (${item.imageUrl} && ${item.imageUrl.endsWith('.jpg')}) -->
+    <img src="${item.imageUrl}" style="max-width:180px; max-height:150px;">
 <!-- #else -->
-<img src="https://mateuszdabrowski.pl/placeholder-image.jpg" style="max-width:180px; max-height:150px;">
+    <img src="https://mateuszdabrowski.pl/placeholder-image.jpg" style="max-width:180px; max-height:150px;">
 <!-- #end -->
 ```
 
 :::note You Should Know
 
-While `if`/`else` block in Open Time Email Template works similar to what you may know from JavaScript or SSJS, it has one huge disadvantage - it is evaluating code in all paths.
+While the `if`/`else` block in the Open Time Email Template works similarly to what you may know from JavaScript or SSJS, it has one huge disadvantage - it is evaluating code in all paths.
 
-It means that even if a path is not being excuted for the final image generation, it can still error out the whole campaign. Example:
+It means that even if IS is not using a path for the final image generation, the code written there can still error out the whole Campaign. Example:
 
 ```html {2} title="Will error out for a product without Brand"
 <!-- #if(${item.attributes.brand.value} && !${item.attributes.categoryName.value}) -->
-${item.attributes.brand.value}
+    ${item.attributes.brand.value}
 <!-- #end -->
 ```
 
-Despite checking whether there is a value behind Brand attribute and only then personalising it, template with such code would still error out for products without Brand.
+Even with checking whether there is a value behind the Brand attribute and only then personalising it, a template with such code would still error out for products without a brand.
 
 Always use [fallbacks](#fallback-for-null-values) along with `if`/`else` blocks:
 
 ```html {2} title="Will NOT error out for a product without Brand"
 <!-- #if(${item.attributes.brand.value} && !${item.attributes.categoryName.value}) -->
-#field(${item.attributes.brand.value}, '')
+    #field(${item.attributes.brand.value}, '')
 <!-- #end -->
 ```
 
 :::
+
+## Example dynamic OTE Template
+
+```html title="OTE Template with image fallback, null attribute fallbacks and conditional promo price display"
+<div style="padding:10px; text-align:center; font-family:Arial; font-size:16px;">
+    <!-- #if (${item.imageUrl} && ${item.imageUrl.endsWith('.jpg')}) -->
+        <img src="${item.imageUrl}" style="max-width:180px; max-height:150px;">
+    <!-- #else -->
+        <img src="https://mateuszdabrowski.pl/placeholder-image.jpg" style="max-width:180px; max-height:150px;">
+    <!-- #end -->
+    <div style="text-align:left;">
+        <span style="font-size:14px; color:#212121;">
+            #field(${item.attributes.categoryName.value}, '')
+        </span>
+        <!-- #if (!${item.attributes.categoryName.value}) -->
+            <br />
+        <!-- #end -->
+        <span style="margin-top:5px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+            #field(${item.attributes.brand.value}, '') $item.name
+        </span>
+    </div>
+    <div style="margin-top:5px; text-align:left;">
+        $currency.format(${item.price})
+        <!-- #if(${item.listPrice} > ${item.price}) -->
+            <span style="font-size:14px; color:#212121;text-decoration:line-through;">
+                $currency.format(${item.listPrice})
+            </span>
+        <!-- #end -->
+    </div>
+    <div style="position:absolute; left:0px; right:0px; bottom:10px;">
+        <button style="border:none; padding:10px; background-color:#1D73C9; color:#ffffff;">
+            Buy now »
+        </button>
+    </div>
+</div>
+```
