@@ -2,7 +2,7 @@
 id: sfmc-sql-basics
 title: SFMC SQL Basics
 sidebar_label: SQL Basics
-description: SELECT your best contacts FROM Salesforce Marketing Cloud WHERE Data Filter is not enough.
+description: SELECT your data FROM Salesforce Marketing Cloud WHERE drag-and-drop Filters are not enough.
 image: img/og/og-image-sql-basics.png
 tags: [Marketing Cloud, SQL]
 ---
@@ -10,7 +10,19 @@ tags: [Marketing Cloud, SQL]
 import { LeadText } from '../../src/components/LeadText.js';
 import DocCardList from '@theme/DocCardList';
 
-<LeadText content='SELECT your best contacts FROM Salesforce Marketing Cloud WHERE Data Filter is not enough.' />
+<LeadText content='SELECT your data FROM Salesforce Marketing Cloud WHERE drag-and-drop Filters are not enough.' />
+
+## How to segment data in Marketing Cloud
+
+Salesforce Marketing Cloud offers few different ways of segmenting data for your marketing needs. Out-of-the-box, you can use Filters and SQL Query Activities.
+
+Filters are strightforward, drag-and-drop solution for one-time (Filtered Data Extensions) or refreshed on schedule (Data Filters with Automation) segmentation. Unfortunatelly, they are very limited, as they allow you to just copy single Data Extension with all its columns with filtered down amount of rows. That filtering can leverage source Data Extension values, another Data Extension values (through Data Relationship) or Measures. That's it. For real Marketing Automation, it's not enough.
+
+This is why you are looking to learn about SFMC SQL. Along with Automation Studio Query Activity it will allow you to deploy any segmentation scenario you might want with full control over the output columns, names and values. However, with great power comes some learning required.
+
+There is also a third way - paid AppExchange solutions that offer you a way to eat a cookie and have a cookie: full power of SQL with a drag-and-drop interface. For a price.
+
+You can check my comparision of all above options in my [here](../config/sfmc-appexchange-solutions.mdx#sfmc-segmentation-solutions). In this article we will focus only on the most powerful and free option - SFMC SQL.
 
 ## SQL in Salesforce Marketing Cloud
 
@@ -21,6 +33,23 @@ The main difference from standard SQL (SFMC uses more or less SQL Server 2016) i
 Another limiting characteristic of SFMC SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of SFMC are not relational databases.
 
 Finally, the significant limitation that you might hit as your Marketing Cloud grows is the AutoKill. It will automatically stop your query if execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is especially important for queries that are supposed to be backbones of your data management flow in Marketing Cloud. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
+
+## Where to learn SFMC SQL
+
+Before we start witht the real deal, let's cover where to learn writing SQL. My recommendation is to get a [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio). It's a free AppExchange add-on to Marketing Cloud developed by Salesforce. While it has its cons, it's perfect for quickly learning how to query.
+
+If you cannot install this app in your Marketing Cloud, you still can learn using Query Activities in Automation Studio, but it will be much less user-friendly. For each change in the query you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results.
+
+My personal approach is to always start in [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio) and only once my SQL Query is complete and validated I move it to Automation Studio.
+
+## How to learn SFMC SQL
+
+SFMC SQL is very limited compared to full power of Structured Query Language, but there is still quite a lot of topics to cover. To make it easier, I split them into steps that slowly add more complex concepts. Still, every step should give you some tangible knowledge that you can actively use in your work.
+
+### Step 1
+
+
+
 
 ## Fundamentals of SQL queries
 
@@ -44,14 +73,6 @@ One of the key things to remember when building more complex queries is the orde
 [`FROM`](./sfmc-sql-from.mdx) > [`WHERE`](./sfmc-sql-where.mdx) > [`GROUP BY`](#group-by) > [`HAVING`](#having) > [`DISTINCT`](./sfmc-sql-select.mdx#distinct) > [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by)
 
 It means that rows filtered with `WHERE` will not be taken into consideration for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
-
-## Query Studio
-
-Working with queries in the out-of-the-box version of Salesforce Marketing Cloud is quite hard. Whenever you want to check the output of your query, you must run the SQL Query in Automation Studio and check the output Data Extension. There is, however, a better way.
-
-A [Query Studio](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) by Salesforce. It is a Marketing Cloud App available in [AppExchange](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT) that is must-have for anyone interested in working with SQL in SFMC. Think about SQL Server Studio or, if this is not telling you much, a one-stop-shop for writing, validating, checking and saving your queries. Check it. You will never look back.
-
-Learn more on [sfmarketing.cloud](https://sfmarketing.cloud/2019/08/05/query-studio-for-marketing-cloud/).
 
 ## All SQL Guides
 
