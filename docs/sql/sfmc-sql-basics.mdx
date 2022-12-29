@@ -8,6 +8,8 @@ tags: [Marketing Cloud, SQL]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import DocCardList from '@theme/DocCardList';
 
 <LeadText content='SELECT your data FROM Salesforce Marketing Cloud WHERE drag-and-drop Filters are not enough.' />
@@ -46,10 +48,44 @@ My personal approach is to always start in [Query Studio](../config/sfmc-appexch
 
 SFMC SQL is very limited compared to full power of Structured Query Language, but there is still quite a lot of topics to cover. To make it easier, I split them into steps that slowly add more complex concepts. Still, every step should give you some tangible knowledge that you can actively use in your work.
 
-### Step 1
+In each level you will see:
 
+1. List of material to read.
+2. Exercise you can do in your own Marketing Cloud platform to test your skills.
+3. Hint that can help you with the exercise if you are stuck.
+4. Example solution for that exercise. Not the only correct answer, just an example.
 
+### Level 1 - SELECT, FROM, WHERE
 
+On this level you learn three most important SQL statements that are core for all queries. They will give you similar power to what Filters can do - with added bonus of choosing columns you need for your final segment.
+
+Learning material:
+
+- [SELECT](./sfmc-sql-select.mdx) - just the first part, before the aliasing section.
+- [FROM](./sfmc-sql-from.mdx) - whole article.
+- [WHERE](./sfmc-sql-where.mdx) - the first part, before the Basic Operators plus Equality Operators and Logical Operators. Don't worry about Comparision operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple value, like status.
+- [System Data Views](../config/sfmc-system-data-views.mdx) - the basics and [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View.
+
+<Tabs
+    defaultValue='exercise'
+    values={[
+        {label: 'Exercise', value: 'exercise'},
+        {label: 'Hint', value: 'hint'},
+        {label: 'Solution', value: 'solution'},
+    ]}
+>
+<TabItem value='exercise'>
+
+Write a query that will find Subscriber Key for all Active (opted-in) Subscribers in your All Subscribers list.
+
+</TabItem>
+<TabItem value='hint'>
+
+</TabItem>
+<TabItem value='solution'>
+
+</TabItem>
+</Tabs>
 
 ## Fundamentals of SQL queries
 
