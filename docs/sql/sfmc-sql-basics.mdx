@@ -55,22 +55,26 @@ In each level you will see:
 3. Hint that can help you with the exercise if you are stuck.
 4. Example solution for that exercise. Not the only correct answer, just an example.
 
+---
+
 ### Level 1 - SELECT, FROM, WHERE
 
 On this level you learn three most important SQL statements that are core for all queries. They will give you similar power to what Filters can do - with added bonus of choosing columns you need for your final segment.
 
-Learning material:
+#### Learning materials
 
 - [SELECT](./sfmc-sql-select.mdx) - just the first part, before the aliasing section.
 - [FROM](./sfmc-sql-from.mdx) - whole article.
-- [WHERE](./sfmc-sql-where.mdx) - the first part, before the Basic Operators plus Equality Operators and Logical Operators. Don't worry about Comparision operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple value, like status.
+- [WHERE](./sfmc-sql-where.mdx) - the first part, before the Basic Operators, plus Equality Operators and Logical Operators. Don't worry about Comparision operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple value, like status.
 - [System Data Views](../config/sfmc-system-data-views.mdx) - the basics and [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View.
+
+#### Check your skills
 
 <Tabs
     defaultValue='exercise'
     values={[
         {label: 'Exercise', value: 'exercise'},
-        {label: 'Hint', value: 'hint'},
+        {label: 'Hints', value: 'hints'},
         {label: 'Solution', value: 'solution'},
     ]}
 >
@@ -79,30 +83,88 @@ Learning material:
 Write a query that will find Subscriber Key for all Active (opted-in) Subscribers in your All Subscribers list.
 
 </TabItem>
-<TabItem value='hint'>
+<TabItem value='hints'>
+
+1. All Subscribers List data is stored in [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View.
+2. If you are running your query on a child Business Unit, you will need to use [`Ent.` prefix](./sfmc-sql-from.mdx#enterprise-system-data-views).
+3. You don't have to [SELECT](./sfmc-sql-select.mdx) any columns but the SubscriberKey. You can use [WHERE](./sfmc-sql-where.mdx) on not selected columns.
+4. Current status of a Subscriber is saved in `Status` column of [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View as a string. You can use it for filtering with [WHERE](./sfmc-sql-where.mdx).
 
 </TabItem>
 <TabItem value='solution'>
 
+```sql title="Solution working on Parent Business Unit"
+SELECT SubscriberKey
+FROM _Subscribers
+WHERE Status = 'active'
+```
+
 </TabItem>
 </Tabs>
 
-## Fundamentals of SQL queries
+---
 
-SQL is straightforward to read but requires a bit of understanding to write. However, with only the [`SELECT`](./sfmc-sql-select.mdx) being available in Marketing Cloud, it is effortless to grasp.
+### Level 2 - JOIN, ALIAS, NULL
 
-There are four most important elements that you will be using in nearly every query in SFMC:
+On this level you learn how to leverage second Data Extension or Data View, how to change column name for the output and how to deal with basic `NULL` cases.
 
-* [`SELECT`](./sfmc-sql-select.mdx): tell the query what data you want to leverage
-* [`FROM`](./sfmc-sql-from.mdx): tell the query where the data is in Marketing Cloud (name of Data Extension or System Data View)
-* [`JOIN`](./sfmc-sql-join.mdx): tell the query how you want to merge data from multiple sources
-* [`WHERE`](./sfmc-sql-where.mdx): tell the query which part of the above data is interesting to you
+#### Learning materials
 
-However, there is much to learn to unlock the full power of SQL in SFMC. Check out deep-dive docs on SQL operators ([`LIKE`](./sfmc-sql-like.mdx), [`CASE`](./sfmc-sql-case.mdx)), functions ([String](./sfmc-sql-string-functions.mdx), [Date](./sfmc-sql-date-functions.mdx), [Numeric](./sfmc-sql-numeric-functions.mdx), [Conversion](./sfmc-sql-conversion-functions.mdx), [Aggregate](./sfmc-sql-aggregate-functions.mdx)) and [SFMC System Data Views](../config/sfmc-system-data-views.mdx).
+- [JOIN](./sfmc-sql-join.mdx) - JOIN Types, Joining ON and Table Name Prefixes sections. It might be helpful to check out the [visual cheatsheet](./sfmc-sql-join.mdx#sfmc-sql-join-cheat-sheet) as well.
+- [Aliasing](./sfmc-sql-select.mdx#aliasing-with-as) - just the Aliasing with AS and Custom values sections.
+- [`NULL`s](./sfmc-sql-null-functions.mdx) - just the first three paragraphs and [`IS NULL`](./sfmc-sql-null-functions.mdx#is-null) section.
+- [_Sent](../config/sfmc-system-data-views.mdx#_sent), [_Open](../config/sfmc-system-data-views.mdx#_open) and [_Click](../config/sfmc-system-data-views.mdx#_click) Data Views.
+
+#### Check your skills
+
+<Tabs
+    defaultValue='exercise'
+    values={[
+        {label: 'Exercise', value: 'exercise'},
+        {label: 'Hints', value: 'hints'},
+        {label: 'Solution', value: 'solution'},
+    ]}
+>
+<TabItem value='exercise'>
+
+Write a query that will find Subscriber Key for all Active (opted-in) Subscribers in your All Subscribers list that were sent an email in the last 6 months.
+
+</TabItem>
+<TabItem value='hints'>
+
+1. Don't write SQL from scratch. Leverage what you already have.
+2. Sent data is stored in [_Sent](../config/sfmc-system-data-views.mdx#_sent) Data View.
+3. You don't have to worry about 6 months requirement, because _Sent Data View is storing only 6 months of data.
+4. You can chain multiple filters using [`WHERE` Logical Operators](./sfmc-sql-where.mdx#logical-operators).
+5. [LEFT JOIN](./sfmc-sql-join.mdx#left-and-right-joins) will add columns even if there is no data in second table.
+6. You can find those records without data in second table using [`IS NULL`](./sfmc-sql-null-functions.mdx#is-null).
+7. You need to join tables [`ON`](./sfmc-sql-join.mdx#joining-on) a common value.
+
+</TabItem>
+<TabItem value='solution'>
+
+```sql title="Solution working on Parent Business Unit"
+SELECT sub.SubscriberKey
+FROM _Subscribers AS sub
+    LEFT JOIN _Sent AS sent
+        ON sent.SubscriberKey = sub.SubscriberKey
+WHERE
+    sub.Status = 'active'
+    AND sent.EventDate IS NOT NULL
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+### Level 3
+
+---
 
 Knowing the available functions is one thing. Writing good and readable queries - another. Salesforce Marketing Cloud is always a team sport, so be sure to leverage the power of a [Style Guide](./sfmc-sql-style-guide.mdx) to improve the quality of your SQL.
 
-### Order of operations
+## Order of operations
 
 One of the key things to remember when building more complex queries is the order of operations, as it will decide what is in the output:
 
