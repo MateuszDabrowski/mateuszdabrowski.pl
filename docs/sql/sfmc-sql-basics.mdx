@@ -50,10 +50,10 @@ SFMC SQL is very limited compared to full power of Structured Query Language, bu
 
 In each level you will see:
 
-1. List of material to read.
+1. Learning materials to read.
 2. Exercise you can do in your own Marketing Cloud platform to test your skills.
 3. Hint that can help you with the exercise if you are stuck.
-4. Example solution for that exercise. Not the only correct answer, just an example.
+4. Example solution to that exercise. Keep in mind that there might be more than one correct approach.
 
 ---
 
@@ -65,7 +65,7 @@ On this level you learn three most important SQL statements that are core for al
 
 - [SELECT](./sfmc-sql-select.mdx) - just the first part, before the aliasing section.
 - [FROM](./sfmc-sql-from.mdx) - whole article.
-- [WHERE](./sfmc-sql-where.mdx) - the first part, before the Basic Operators, plus Equality Operators and Logical Operators. Don't worry about Comparision operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple value, like status.
+- [WHERE](./sfmc-sql-where.mdx) - the first part, before the Basic Operators, plus [Equality Operators](./sfmc-sql-where.mdx#equality-operators) and [Logical Operators](./sfmc-sql-where.mdx#logical-operators). Don't worry about Comparison operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple value, like status.
 - [System Data Views](../config/sfmc-system-data-views.mdx) - the basics and [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View.
 
 #### Check your skills
@@ -99,20 +99,22 @@ FROM _Subscribers
 WHERE Status = 'active'
 ```
 
+Bonus: you can change the last line to, for example, `WHERE Domain = 'gmail.com'` to see how many Subscribers are using free Google inbox.
+
 </TabItem>
 </Tabs>
 
 ---
 
-### Level 2 - JOIN, ALIAS, NULL
+### Level 2 - JOIN, Aliasing, NULL
 
 On this level you learn how to leverage second Data Extension or Data View, how to change column name for the output and how to deal with basic `NULL` cases.
 
 #### Learning materials
 
-- [JOIN](./sfmc-sql-join.mdx) - JOIN Types, Joining ON and Table Name Prefixes sections. It might be helpful to check out the [visual cheatsheet](./sfmc-sql-join.mdx#sfmc-sql-join-cheat-sheet) as well.
+- [JOIN](./sfmc-sql-join.mdx) - [JOIN Types](./sfmc-sql-join.mdx#join-types), [Joining ON](./sfmc-sql-join.mdx#joining-on) and [Table Name Prefixes](./sfmc-sql-join.mdx#table-name-prefix) sections. It might be helpful to check out the [visual cheatsheet](./sfmc-sql-join.mdx#sfmc-sql-join-cheat-sheet) as well.
 - [Aliasing](./sfmc-sql-select.mdx#aliasing-with-as) - just the Aliasing with AS and Custom values sections.
-- [`NULL`s](./sfmc-sql-null-functions.mdx) - just the first three paragraphs and [`IS NULL`](./sfmc-sql-null-functions.mdx#is-null) section.
+- [NULL](./sfmc-sql-null-functions.mdx) - just the first three paragraphs and [IS NULL](./sfmc-sql-null-functions.mdx#is-null) section.
 - [_Sent](../config/sfmc-system-data-views.mdx#_sent), [_Open](../config/sfmc-system-data-views.mdx#_open) and [_Click](../config/sfmc-system-data-views.mdx#_click) Data Views.
 
 #### Check your skills
@@ -153,12 +155,48 @@ WHERE
     AND sent.EventDate IS NOT NULL
 ```
 
+Bonus: Change `IS NOT NULL` to `IS NULL` in the last line to see how many active Subsribers haven't received any communication in last 6 months. Might be nice segment for win-back journey!
+
 </TabItem>
 </Tabs>
 
 ---
 
-### Level 3
+### Level 3 - Dates, Comparisons, WHERE Shorthands
+
+#### Learning materials
+
+-
+
+#### Check your skills
+
+<Tabs
+    defaultValue='exercise'
+    values={[
+        {label: 'Exercise', value: 'exercise'},
+        {label: 'Hints', value: 'hints'},
+        {label: 'Solution', value: 'solution'},
+    ]}
+>
+<TabItem value='exercise'>
+
+
+</TabItem>
+<TabItem value='hints'>
+
+1.
+
+</TabItem>
+<TabItem value='solution'>
+
+```sql title="Solution working on Parent Business Unit"
+
+```
+
+Bonus:
+
+</TabItem>
+</Tabs>
 
 ---
 
