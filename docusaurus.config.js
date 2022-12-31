@@ -41,7 +41,7 @@ module.exports = {
         announcementBar: {
             id: 'announcementBar',
             content:
-                '🛠️ <a href="https://www.linkedin.com/in/mateusz-dabrowski-marketing/" style="text-decoration: none">Due to site restructuring there might be some broken links. If you find any - please <span style="text-decoration: underline;">let me know</span>.</a> 🛠️',
+                '🧑🏻‍💻 <a href="https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketer-group-pardot-singapore-singapore-presents-episode-06-sfmc-bootcamp-salesforce-marketing-cloud-infrastructure-setup-org-setup/" style="text-decoration: none"> Jan 28th join me on the webinar covering part of the SFMC Org Setup: Business Units, Single-Org vs Multi-Org and Deliverability considerations. Register <span style="text-decoration: underline;">here</span>.</a> 🧑🏻‍💻',
             backgroundColor: '#0176d3',
             textColor: '#fffffe',
         },
