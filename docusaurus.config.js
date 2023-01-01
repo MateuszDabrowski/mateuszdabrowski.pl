@@ -413,6 +413,10 @@ module.exports = {
                         from: ['/docs/category/sfmc-use-cases/'],
                         to: '/docs/category/sfmc-config/',
                     },
+                    {
+                        from: ['/docs/interaction-studio/'],
+                        to: '/docs/category/interaction-studio/',
+                    },
                     /* Ideas restructure */
                     {
                         from: ['/ideas/', '/sites/ideas/'],
