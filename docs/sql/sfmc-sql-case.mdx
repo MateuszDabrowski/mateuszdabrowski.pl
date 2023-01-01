@@ -29,7 +29,7 @@ SELECT
         WHEN 3 THEN 'Gold'
         WHEN 4 THEN 'Platinum'
         ELSE 'Unregistered'
-      END
+      END                   AS MemberType
 ```
 
 You can have as many `WHEN`/`THEN` conditions as you want. Also, the `ELSE` statement is optional but a good idea to catch unexpected values.
