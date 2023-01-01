@@ -114,7 +114,7 @@ On this level you learn how to leverage second Data Extension or Data View, how 
 
 - [JOIN](./sfmc-sql-join.mdx) - [JOIN Types](./sfmc-sql-join.mdx#join-types), [Joining ON](./sfmc-sql-join.mdx#joining-on) and [Table Name Prefixes](./sfmc-sql-join.mdx#table-name-prefix) sections. It might be helpful to check out the [visual cheatsheet](./sfmc-sql-join.mdx#sfmc-sql-join-cheat-sheet) as well.
 - [Aliasing](./sfmc-sql-select.mdx#aliasing-with-as) - just the Aliasing with AS and Custom values sections.
-- [NULL](./sfmc-sql-null-functions.mdx) - just the first three paragraphs and [IS NULL](./sfmc-sql-null-functions.mdx#is-null) section.
+- [NULL functions](./sfmc-sql-null-functions.mdx) - just the first three paragraphs and [IS NULL](./sfmc-sql-null-functions.mdx#is-null) section.
 - [_Sent](../config/sfmc-system-data-views.mdx#_sent), [_Open](../config/sfmc-system-data-views.mdx#_open) and [_Click](../config/sfmc-system-data-views.mdx#_click) Data Views.
 
 #### Check your skills
@@ -162,7 +162,117 @@ Bonus: Change `IS NOT NULL` to `IS NULL` in the last line to see how many active
 
 ---
 
-### Level 3 - Dates, Comparisons, WHERE Shorthands
+### Level 3 - LIKE, CASE, Strings
+
+On this level you learn how to deal with string values, how to implement SQL version of if/else logic and how to make complex conditions calculating your own data. With this, you are no longer limited to the data already available in the tables.
+
+#### Learning materials
+
+- [LIKE](./sfmc-sql-like.mdx) - whole article, but focus on [LIKE with Wildcard](./sfmc-sql-like.mdx#like-with-wildcard), you will use it more. Check out also [LIKE operator in WHERE](./sfmc-sql-where.mdx#like-operator) section.
+- [CASE](./sfmc-sql-case.mdx) - whole article plus [CASE operator in WHERE](./sfmc-sql-where.mdx#case-operator) section.
+- [String functions](./sfmc-sql-string-functions.mdx) - check out all, but focus on most frequently used [LEFT & RIGHT](./sfmc-sql-string-functions.mdx#left--right), [LEN](./sfmc-sql-string-functions.mdx#len) and [CHARINDEX](./sfmc-sql-string-functions.mdx#charindex).
+
+#### Check your skills
+
+<Tabs
+    defaultValue='exercise'
+    values={[
+        {label: 'Exercise', value: 'exercise'},
+        {label: 'Hints', value: 'hints'},
+        {label: 'Solution', value: 'solution'},
+    ]}
+>
+<TabItem value='exercise'>
+
+Write a query that will find Subscriber Key for all Subscribers in your All Subscribers list and add a new column, called `SubscriberKeyType`. In that new column calculate whether the Subscriber Key is using email address, Salesforce ID (and in this case - source object) or other. Possible values should be: `Email`, `Account`, `Contact`, `User`, `Lead`, `Other`.
+
+:::note You Should Know
+
+For our need here, if the Subscriber Key has 18 characters, no `@` and starts with a three specific characters, it probably is a Salesforce ID. Th0se first three characters point to a specific Salesforce Object being a source of that record:
+
+- 001 = Account
+- 003 = Contact
+- 005 = User
+- 00Q = Lead
+
+:::
+
+</TabItem>
+<TabItem value='hints'>
+
+1. The easiest way to find an email is to use [LIKE with Wildcard](./sfmc-sql-like.mdx#like-with-wildcard) looking for `{something}@{domain}.{tld}`.
+2. [CASE](./sfmc-sql-case.mdx) returns value assigned to first scenario that matched, so the order of `WHEN`s makes a difference.
+3. You can use multiple conditions and [String functions](./sfmc-sql-string-functions.mdx) in `WHEN` checks.
+4. [CASE](./sfmc-sql-case.mdx) can create new column when you use it in [SELECT with an alias](./sfmc-sql-select.mdx#aliasing-with-as).
+
+</TabItem>
+<TabItem value='solution'>
+
+```sql title="Solution working on Parent Business Unit. The results will differ a lot depending on your SFMC implementation."
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN SubscriberKey LIKE '%@%.%'                                 THEN 'Email'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '001' THEN 'Account'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '003' THEN 'Contact'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '005' THEN 'User'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '00Q' THEN 'Lead'
+        ELSE 'Other'
+      END AS SubscriberKeyType
+FROM _Subscribers
+```
+
+While you could use `LIKE` for all the conditions, `LEFT` will perform better in this `CASE` because it will make a comparison only on the first three characters instead of anywhere in the whole string.
+
+This query is great to understand what is the source of your Subscribers. It will be even more useful later on, when you learn how to aggregate the data. With it, you will be able to quickly see exact numbers of subscribers from each source.
+
+</TabItem>
+</Tabs>
+
+---
+
+### Level 4 - Dates, WHERE operators, Conversion
+
+#### Learning materials
+
+- [Date functions](./sfmc-sql-date-functions.mdx) - [GETDATE](./sfmc-sql-date-functions.mdx#getdate--getutcdate) and [DATEADD](./sfmc-sql-date-functions.mdx#dateadd) are the most important sections.
+- [WHERE](./sfmc-sql-where.mdx) - while we already covered parts of where, this is time to make a deeper dive into [Comparison operators](./sfmc-sql-where.mdx#comparison-operators), [BETWEEN shorthand](./sfmc-sql-where.mdx#between-shorthand) and [IN shorthand](./sfmc-sql-where.mdx#in-shorthand).
+- [Conversion functions](./sfmc-sql-conversion-functions.mdx) - whole article, but treat Data Types and Data Style Codes more as a reference material.
+
+
+#### Check your skills
+
+<Tabs
+    defaultValue='exercise'
+    values={[
+        {label: 'Exercise', value: 'exercise'},
+        {label: 'Hints', value: 'hints'},
+        {label: 'Solution', value: 'solution'},
+    ]}
+>
+<TabItem value='exercise'>
+
+
+</TabItem>
+<TabItem value='hints'>
+
+1.
+
+</TabItem>
+<TabItem value='solution'>
+
+```sql title="Solution working on Parent Business Unit"
+
+```
+
+Bonus:
+
+</TabItem>
+</Tabs>
+
+---
+
+### Level 5
 
 #### Learning materials
 
