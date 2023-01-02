@@ -155,6 +155,8 @@ WHERE
     AND sent.EventDate IS NOT NULL
 ```
 
+This query can be written without filter on `sent.EventDate` but with `INNER JOIN _Sent` instead. Above version makes it easier for changing the query for the bonus below.
+
 Bonus: Change `IS NOT NULL` to `IS NULL` in the last line to see how many active Subsribers haven't received any communication in last 6 months. Might be nice segment for win-back journey!
 
 </TabItem>
@@ -233,11 +235,14 @@ This query is great to understand what is the source of your Subscribers. It wil
 
 ### Level 4 - Dates, WHERE operators, Conversion
 
+On this level you learn how to use the most important filter of all - date filter. You also get to know basic date functions and what to do when you don't have the right data type for your use case.
+
 #### Learning materials
 
 - [Date functions](./sfmc-sql-date-functions.mdx) - [GETDATE](./sfmc-sql-date-functions.mdx#getdate--getutcdate) and [DATEADD](./sfmc-sql-date-functions.mdx#dateadd) are the most important sections.
 - [WHERE](./sfmc-sql-where.mdx) - while we already covered parts of where, this is time to make a deeper dive into [Comparison operators](./sfmc-sql-where.mdx#comparison-operators), [BETWEEN shorthand](./sfmc-sql-where.mdx#between-shorthand) and [IN shorthand](./sfmc-sql-where.mdx#in-shorthand).
 - [Conversion functions](./sfmc-sql-conversion-functions.mdx) - whole article, but treat Data Types and Data Style Codes more as a reference material.
+- [_Bounce](../config/sfmc-system-data-views.mdx#_bounce) Data View.
 
 
 #### Check your skills
@@ -252,6 +257,9 @@ This query is great to understand what is the source of your Subscribers. It wil
 >
 <TabItem value='exercise'>
 
+Write a query that will find Subscriber Key for all Subscribers in your All Subscribers list that joined the list within last year and had a bounce on Google or Microsoft email between the first day of current month (write that date manually, as a string) and today.
+
+For the purpose of this exercise we will assume that Google users have emails `something@gmail.com`, Microsoft users - `something@outlook.com` and Yahoo - `something@yahoo.com`.
 
 </TabItem>
 <TabItem value='hints'>
@@ -262,10 +270,16 @@ This query is great to understand what is the source of your Subscribers. It wil
 <TabItem value='solution'>
 
 ```sql title="Solution working on Parent Business Unit"
-
+SELECT sub.SubscriberKey
+FROM _Subscribers AS sub
+    INNER JOIN _Bounce AS b
+WHERE
+    sub.DateJoined >= DATEADD(YEAR, -1, GETDATE())
+    AND b.Domain IN ('gmail.com', 'outlook.com', 'yahoo.com')
+    AND b.EventDate BETWEEN CONVERT(DATE, '2023-01-01') AND GETDATE()
 ```
 
-Bonus:
+Bonus: Dive deeper into bounces by selecting SMTPBounceReason and SMTPMessage in the `_Bounce` Data View to learn more about the root cause of the bounces.
 
 </TabItem>
 </Tabs>
