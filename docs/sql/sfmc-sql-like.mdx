@@ -117,10 +117,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts  LIKE '_'
-    OR RecommendedProducts LIKE '_,%'
-    OR RecommendedProducts LIKE '%,_,%'
-    OR RecommendedProducts LIKE '%,_'
+    RecommendedProducts     LIKE '_'
+    OR RecommendedProducts  LIKE '_,%'
+    OR RecommendedProducts  LIKE '%,_,%'
+    OR RecommendedProducts  LIKE '%,_'
 ```
 
 In the query above, we are filtering our database with `RecommendedProducts` field. To add a contact to our segment, in four steps, we check if at least one condition is true:
@@ -187,14 +187,14 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts  LIKE '1'
-    OR RecommendedProducts LIKE '1,%'
-    OR RecommendedProducts LIKE '%,1,%'
-    OR RecommendedProducts LIKE '%,1'
-    OR RecommendedProducts LIKE '2'
-    OR RecommendedProducts LIKE '2,%'
-    OR RecommendedProducts LIKE '%,2,%'
-    OR RecommendedProducts LIKE '%,2'
+    RecommendedProducts     LIKE '1'
+    OR RecommendedProducts  LIKE '1,%'
+    OR RecommendedProducts  LIKE '%,1,%'
+    OR RecommendedProducts  LIKE '%,1'
+    OR RecommendedProducts  LIKE '2'
+    OR RecommendedProducts  LIKE '2,%'
+    OR RecommendedProducts  LIKE '%,2,%'
+    OR RecommendedProducts  LIKE '%,2'
     ...
 ```
 
@@ -207,10 +207,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts  LIKE '[1234]'
-    OR RecommendedProducts LIKE '[1234],%'
-    OR RecommendedProducts LIKE '%,[1234],%'
-    OR RecommendedProducts LIKE '%,[1234]'
+    RecommendedProducts     LIKE '[1234]'
+    OR RecommendedProducts  LIKE '[1234],%'
+    OR RecommendedProducts  LIKE '%,[1234],%'
+    OR RecommendedProducts  LIKE '%,[1234]'
 ```
 
 </TabItem>
@@ -306,10 +306,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts  LIKE '[1-4]'
-    OR RecommendedProducts LIKE '[1-4],%'
-    OR RecommendedProducts LIKE '%,[1-4],%'
-    OR RecommendedProducts LIKE '%,[1-4]'
+    RecommendedProducts     LIKE '[1-4]'
+    OR RecommendedProducts  LIKE '[1-4],%'
+    OR RecommendedProducts  LIKE '%,[1-4],%'
+    OR RecommendedProducts  LIKE '%,[1-4]'
 ```
 
 </TabItem>
