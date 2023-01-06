@@ -121,14 +121,14 @@ const highlightedArticles = [
         url: './docs/config/sfmc-behavioral-triggers/',
         imageUrl: 'img/og/og-image-sfmc-behavioral-triggers.png',
         description: 'All you need to know about working with SFMC Behavioral Triggers.',
-        mainTag: 'SFMC Use Cases',
+        mainTag: 'SFMC Config',
     },
     {
         title: <>Contact Deletion</>,
         url: './docs/config/sfmc-contact-deletion/',
         imageUrl: 'img/og/og-image-sfmc-contact-deletion.png',
         description: 'Everything you need to clean up your SFMC from dirty Contacts.',
-        mainTag: 'SFMC Use Cases',
+        mainTag: 'SFMC Config',
     },
 ];
 

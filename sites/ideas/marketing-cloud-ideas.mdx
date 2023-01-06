@@ -59,9 +59,9 @@ Input field in Cloud Page editor for `og:title` would be cherry on top.
 
 ### DeliveryTime for Journey Builder emails
 
-`DeliveryTime` is [`_Job` Data View](../../../docs/config/sfmc-config-system-data-views#_job) field that stores timestamp for the email delivery (when it successfully reached the target Email Service Provider). It is currently impossible to get delivery time for emails sent via Journey Builder.
+`DeliveryTime` is [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) field that stores timestamp for the email delivery (when it successfully reached the target Email Service Provider). It is currently impossible to get delivery time for emails sent via Journey Builder.
 
-All other engagement data points are available (`EventDate` field for [_Sent](../../../docs/config/sfmc-config-system-data-views#_sent), [_Open](../../../docs/config/sfmc-config-system-data-views#_open), [_Click](../../../docs/config/sfmc-config-system-data-views#_click), [_Bounce](../../../docs/config/sfmc-config-system-data-views#_bounce)), but `DeliveryTime` from [`_Job` Data View](../../../docs/config/sfmc-config-system-data-views#_job) returns `NULL` for Journey Builder emails.
+All other engagement data points are available (`EventDate` field for [_Sent](../../../docs/config/sfmc-system-data-views/#_sent), [_Open](../../../docs/config/sfmc-system-data-views/#_open), [_Click](../../../docs/config/sfmc-system-data-views/#_click), [_Bounce](../../../docs/config/sfmc-system-data-views/#_bounce)), but `DeliveryTime` from [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) returns `NULL` for Journey Builder emails.
 
 It is happening, however, only for Journey Builder emails. Sends via any other methods (for example, Send Flow) are correctly displaying the delivery time.
 
@@ -147,13 +147,13 @@ __Possible solutions__
 
 ### Einstein User Attributes in Behavioral Trigger Content Block
 
-The [Behavioral Triggers Content Block](../../../docs/usecase/sfmc-behavioral-triggers#behavioral-trigger-content-block) for Emails is an excellent tool for easy drag-and-drop creation of Abandoned Engagement communication. But it is missing one powerful feature — the ability to personalise the email with customer data.
+The [Behavioral Triggers Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block) for Emails is an excellent tool for easy drag-and-drop creation of Abandoned Engagement communication. But it is missing one powerful feature — the ability to personalise the email with customer data.
 
 It is already available in the form of:
 
 - Einstein User Attributes that we can pass through the `setUserInfo` data layer.
-- The [request](../../../docs/usecase/sfmc-behavioral-triggers#5-building-the-api-query) used in the back end of the current Behavioral Triggers Content Block; by adding "&user_attributes=attributeName" to the endpoint.
-- [Code](../../../docs/usecase/sfmc-behavioral-triggers#6-response-parsing) of the existing Behavioral Triggers Content Block responsible for creating AMPScript variables based on the Einstein User Attributes data.
+- The [request](../../../docs/config/sfmc-behavioral-triggers/#5-building-the-api-query) used in the back end of the current Behavioral Triggers Content Block; by adding "&user_attributes=attributeName" to the endpoint.
+- [Code](../../../docs/config/sfmc-behavioral-triggers/#6-response-parsing) of the existing Behavioral Triggers Content Block responsible for creating AMPScript variables based on the Einstein User Attributes data.
 
 However, as the Einstein User Attributes are neither added to the request by default nor configured in the User Integrace of the Content Block, to get this data in the email, one must create yet another, the same call with the above query parameter added. Neither user friendly nor optimal due to expensive `HTTP.Get` function running twice in such a scenario.
 
@@ -170,7 +170,7 @@ Salesforce can fix it. Below are two solution tiers:
 
 ### Link Tracking in Behavioral Trigger Content Block
 
-[Behavioral Triggers Content Block](../../../docs/usecase/sfmc-behavioral-triggers#behavioral-trigger-content-block) allows for easy out-of-the-box use of abandoned engagement data in our Emails. It neatly pulls the Catalog items that captivated the customer's attention and displays them for win-back purposes. Of course, each item links back to its e-commerce page.
+[Behavioral Triggers Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block) allows for easy out-of-the-box use of abandoned engagement data in our Emails. It neatly pulls the Catalog items that captivated the customer's attention and displays them for win-back purposes. Of course, each item links back to its e-commerce page.
 
 Its implementation is, however, leading to a problem with tracking. My favourite solution - Parameter Manager with Web Analytics Connector - is not working on the Behavioral Trigger Content Block. Neither can we add the tracking parameters manually, as there is no such option in the UI.
 
@@ -191,7 +191,7 @@ Salesforce can fix it. Below are two possible solutions:
 
 ### Behavioral Trigger Abandoned Cart Custom Attributes
 
-The [Behavioral Triggers](../../../docs/usecase/sfmc-behavioral-triggers) are a terrific solution for Abandoned Engagement. The [Abandoned Cart](../../../docs/usecase/sfmc-behavioral-triggers#track-cart) scenario already has multiple great features that make it easy to implement.
+The [Behavioral Triggers](../../../docs/config/sfmc-behavioral-triggers/) are a terrific solution for Abandoned Engagement. The [Abandoned Cart](../../../docs/config/sfmc-behavioral-triggers/#track-cart) scenario already has multiple great features that make it easy to implement.
 
 There is, however, an area for an easy improvement on that idea to make it much more flexible and ready for real-world scenarios. Salesforce can do it with two solutions:
 
@@ -199,7 +199,7 @@ There is, however, an area for an easy improvement on that idea to make it much 
 
 Just as there are Custom Attributes for the Product Catalog, it would be great to have a similar option on the cart itself. Product Catalog ones are global - shared for all Customers interested in selected products. There is a need for something more unique and customer-specific.
 
-It is already available in the form of an optional `price` attribute of [`trackCart` Collect.js Data Layer](../../../docs/usecase/sfmc-behavioral-triggers#track-cart) that contains individual price that does not impact the Product Catalog.  It would be great to have the possibility to add a few more, available in [`trackCart` Collect.js](../../../docs/usecase/sfmc-behavioral-triggers#track-cart) and the [response](../../../docs/usecase/sfmc-behavioral-triggers#api-responses) from Einstein Backend (IgoDigital).
+It is already available in the form of an optional `price` attribute of [`trackCart` Collect.js Data Layer](../../../docs/config/sfmc-behavioral-triggers/#track-cart) that contains individual price that does not impact the Product Catalog.  It would be great to have the possibility to add a few more, available in [`trackCart` Collect.js](../../../docs/config/sfmc-behavioral-triggers/#track-cart) and the [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses) from Einstein Backend (IgoDigital).
 
 Use case? Sure. Coupon Code Name, Coupon Code Discount (either integer or float for per cent value), added Personalisation, Voucher ID. All those tools are frequently used in e-commerce and would be perfect for a `trackCart` layer. Suitable for personalisation, perfect for passing data needed for rebuilding the cart.
 
@@ -209,9 +209,9 @@ This one is an extension of the above idea. We already have a way to decide whic
 
 Below are three solution tiers:
 
-1. __Minimum Valuable Solution__: Add `price` `trackCart` attribute (`amount` in the [response](../../../docs/usecase/sfmc-behavioral-triggers#api-responses) from the IgoDigital) available for selection when defining fields shown for products in [Behavioral Trigger Content Block](../../../docs/usecase/sfmc-behavioral-triggers#behavioral-trigger-content-block).
-2. __Nice Solution__: On top of the first point, add two additional (optional) attributes to `trackCart` Collect.js and IgoDigital [response](../../../docs/usecase/sfmc-behavioral-triggers#api-responses): `couponCodeName`, `couponCodeDiscount `- and make them also available for selection in [Behavioral Trigger Content Block](../../../docs/usecase/sfmc-behavioral-triggers#behavioral-trigger-content-block).
-3. __Solution Deluxe__: On top of the first point, add the possibility of defining Custom Cart Attributes in the UI and leveraging them in `trackCart` Collect.js and IgoDigital [response](../../../docs/usecase/sfmc-behavioral-triggers#api-responses). Just as with Custom Profile Attributes / Custom Product Attributes. Additionally, make them also available for selection in [Behavioral Trigger Content Block](../../../docs/usecase/sfmc-behavioral-triggers#behavioral-trigger-content-block).
+1. __Minimum Valuable Solution__: Add `price` `trackCart` attribute (`amount` in the [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses) from the IgoDigital) available for selection when defining fields shown for products in [Behavioral Trigger Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block).
+2. __Nice Solution__: On top of the first point, add two additional (optional) attributes to `trackCart` Collect.js and IgoDigital [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses): `couponCodeName`, `couponCodeDiscount `- and make them also available for selection in [Behavioral Trigger Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block).
+3. __Solution Deluxe__: On top of the first point, add the possibility of defining Custom Cart Attributes in the UI and leveraging them in `trackCart` Collect.js and IgoDigital [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses). Just as with Custom Profile Attributes / Custom Product Attributes. Additionally, make them also available for selection in [Behavioral Trigger Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block).
 
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000GdbvFUAR/behavioral-trigger-abandoned-cart-custom-attributes'
@@ -229,7 +229,7 @@ The reason for this is using `rem` units font-size for product descriptions - `f
 
 `rem` units are currently not supported by Yahoo, AOL and Windows Outlook ([Can I Email](https://www.caniemail.com/features/css-unit-rem/)) which leads to those Email Providers ignoring this parameter. When this happens, the font-size value is inherited from the parent that have font-size configured.
 
-And for Behavioral Trigger Content block that parent is a `<td>` parameter within header [`markupFragment`](../../../docs/usecase/sfmc-behavioral-triggers#3-settings--markup-fragments). Unfortunately, it has `font-size: 0`:
+And for Behavioral Trigger Content block that parent is a `<td>` parameter within header [`markupFragment`](../../../docs/config/sfmc-behavioral-triggers/#3-settings--markup-fragments). Unfortunately, it has `font-size: 0`:
 
 `<td class="multi-column" style="padding: 0; text-align: center; font-size: 0; padding-top: 10px; padding-bottom: 10px;">`
 
