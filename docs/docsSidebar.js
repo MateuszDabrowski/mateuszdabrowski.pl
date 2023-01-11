@@ -232,6 +232,7 @@ module.exports = {
                 image: 'img/og/og-image-webinars.png',
             },
             items: [
+                'webinars/sfmc-webinar-account-architecture',
                 'webinars/sfmc-webinar-architecting-web-solutions',
                 'webinars/sfmc-webinar-cloud-page-apps',
             ],

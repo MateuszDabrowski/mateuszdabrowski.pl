@@ -119,7 +119,11 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'Architecting Web Solutions ',
+                            label: 'SFMC Account Architecture',
+                            to: 'docs/webinars/sfmc-webinar-account-architecture',
+                        },
+                        {
+                            label: 'Architecting Web Solutions',
                             to: 'docs/webinars/sfmc-webinar-architecting-web-solutions',
                         },
                         {
