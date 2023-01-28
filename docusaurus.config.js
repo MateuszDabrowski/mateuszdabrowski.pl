@@ -38,13 +38,13 @@ module.exports = {
         docs: {
             sidebar: { autoCollapseCategories: true, },
         },
-        announcementBar: {
-            id: 'announcementBar',
-            content:
-                '🧑🏻‍💻 <a href="/docs/webinars/sfmc-webinar-account-architecture/" style="text-decoration: none">Webinar covering SFMC Account Architecture considerations incoming - 28 Jan 2023 - register <span style="text-decoration: underline;">here</span>.</a> 🧑🏻‍💻',
-            backgroundColor: '#0176d3',
-            textColor: '#fffffe',
-        },
+        // announcementBar: {
+        //     id: 'announcementBar',
+        //     content:
+        //         '🧑🏻‍💻 <a href="/docs/webinars/sfmc-webinar-account-architecture/" style="text-decoration: none">Webinar covering SFMC Account Architecture considerations incoming - 28 Jan 2023 - register <span style="text-decoration: underline;">here</span>.</a> 🧑🏻‍💻',
+        //     backgroundColor: '#0176d3',
+        //     textColor: '#fffffe',
+        // },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
