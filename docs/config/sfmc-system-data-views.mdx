@@ -45,6 +45,7 @@ Stores information about your Subscribers. Great for high-level perspective or a
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -61,8 +62,24 @@ EmailAddress | The subscriber's email address | Email |
 BounceCount | The total number of bounces accrued by the subscriber | Number |
 SubscriberKey | A potential alternate identifier for subscribers. | Text |
 SubscriberType | The subscriber type for the affected subscriber | Text |
-Status | The status of the subscriber: active, held, unsubscribed, or bounced. | Text | X
+Status | The status of the subscriber | Text | X
 Locale | The locale code for the subscriber | Locale | X
+
+</TabItem>
+<TabItem value='values'>
+
+`Status` possible values:
+- active
+- held
+- unsubscribed
+- bounced
+
+`SubscriberType` possible values:
+- ExactTarget
+- Unknown External System
+In most cases you will see only `Exact Target` in your database.
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -151,6 +168,7 @@ Stores information about your Email Sends Jobs. Great for capturing detailed dat
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -188,13 +206,42 @@ SalesForceErrorSubscriberCount | The total number of Salesforce subscribers incl
 SendType | The type of send used in the job | Text |
 DynamicEmailSubject | The dynamic email subject included in the job | Text | X
 SuppressTracking | If tracking information for this job was suppressed | Boolean |
-SendClassificationType | The send classification type for the job | Text | X
-SendClassification | The send classification for the job | Text | X
+SendClassificationType | The type of send classification for the job | Text | X
+SendClassification | The custom name of send classification for the job | Text | X
 ResolveLinksWithCurrentData | If the job resolved links with current data | Boolean |
 EmailSendDefinition | The email send definition used in the job | Text | X
 DeduplicateByEmail | Whether the email addresses in the job are used to deduplicate subscribers | Boolean |
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Number | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+</TabItem>
+<TabItem value='values'>
+
+`JobType` possible values:
+- `null`
+- MULTIPLE_SEND
+
+`JobStatus` possible values:
+- Deleted
+- New
+
+`Category` possible values:
+- Test Send Emails
+- Triggered Sends
+- Version XX (where XX is a number)
+- GUID_VXX (36 character hyphen separated GUID followed by underscore and VXX where XX is a number)
+
+`CharacterSet` possible values:
+- Unicode - UTF-8
+
+`SendType` possible values:
+- ExactTargetSend
+
+`SendClassificationType` possible values:
+- Default Commercial
+- Default Transactional
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -352,19 +399,19 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 ```sql
 SELECT
-      open.AccountID
-    , open.OYBAccountID
-    , open.JobID
-    , open.ListID
-    , open.BatchID
-    , open.SubscriberID
-    , open.SubscriberKey
-    , open.EventDate
-    , open.Domain
-    , open.IsUnique
-    , open.TriggererSendDefinitionObjectID
-    , open.TriggeredSendCustomerKey
-FROM _Open AS open
+      opened.AccountID
+    , opened.OYBAccountID
+    , opened.JobID
+    , opened.ListID
+    , opened.BatchID
+    , opened.SubscriberID
+    , opened.SubscriberKey
+    , opened.EventDate
+    , opened.Domain
+    , opened.IsUnique
+    , opened.TriggererSendDefinitionObjectID
+    , opened.TriggeredSendCustomerKey
+FROM _Open AS opened
 ```
 
 </TabItem>
@@ -473,6 +520,7 @@ There might be cases where the click data is wrong - when you see that email as 
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -505,6 +553,75 @@ SMTPMessage | The message regarding the bounce from the mail system | Text | X
 SMTPCode | The error code for the bounce from the mail system | Number | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
+
+</TabItem>
+<TabItem value='values'>
+
+`BounceCategoryID` possible values:
+
+Value | Meaning
+-- | --
+1 | Hard Bounce
+2 | Soft Bounce
+3 | Block Bounce
+4 | Unknown Bounce
+5 | Technical/Other Bounce
+
+`BounceCategory` possible values:
+- Hard Bounce
+- Soft Bounce
+- Block Bounce
+- Unknown Bounce
+- Technical/Other Bounce
+
+`BounceSubcategoryID` possible values:
+
+Value | Meaning | Bounce Type
+-- | -- | --
+1001 | Complaints | Block Bounce
+1002 | Blocked | Block Bounce
+1004 | Content | Block Bounce
+1010 | Authentication | Block Bounce
+1999 | Other | Soft Bounce, Block Bounce
+2001 | User Unknown | Hard Bounce
+2002 | Domain Unknown | Hard Bounce
+2003 | Bad Address Syntax | Hard Bounce
+3001 | Mailbox Full | Soft Bounce
+3002 | Inactive Account | Hard Bounce, Soft Bounce
+4001 | Server Too Busy | Technical/Other Bounce
+4002 | Data Format Error | Technical/Other Bounce
+4003 | Network Error | Technical/Other Bounce
+4999 | Other | Hard Bounce, Soft Bounce, Technical/Other Bounce
+9999 | Unknown | Hard Bounce, Soft Bounce, Block Bounce, Unknown Bounce, Technical/Other Bounce
+
+`BounceSubcategory` possible values:
+- Complaints
+- Blocked
+- Content
+- Authentication
+- User Unknown
+- Domain Unknown
+- Bad Address Syntax
+- Mailbox Full
+- Inactive Account
+- Server Too Busy
+- Data Format Error
+- Network Error
+- Other
+- Unknown
+
+`BounceTypeId` possible values:
+
+Value | Meaning
+-- | --
+0 | immediate
+1 | delayed
+
+`BounceType` possible values:
+- immediate
+- delayed
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -724,7 +841,7 @@ Here comes the fresh `_BusinessUnitUnsubscribes` Data View. It shows you the onl
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
-        {label: 'Field Values', value: 'values'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -748,6 +865,8 @@ UnsubReason | The reason listed is a custom value configured by your administrat
 - Unsubscribed by subscriber edit API call.
 - Unsubscribed from the Subscription Center
 - Unsubscribed via Import
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -798,7 +917,7 @@ DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscr
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
-        {label: 'Field Values', value: 'values'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -814,7 +933,7 @@ EmailAddress | The subscriber's email address | Text | X
 ListID | The list ID number for the list used in the send | Number | X
 ListName | The name of the list containing the subscribers | Text | X
 ListType | Shows whether the type is list or group | Text |
-Status | The status of the subscriber: active, held, unsubscribed, or bounced | Text | X
+Status | The status of the subscriber | Text | X
 SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
@@ -830,12 +949,20 @@ SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
 - Unknown
 
 `ListType` possible values:
-- Publication list
-- Suppression list
+- Publication List
+- Suppression List
 - List
 - Group
-- FTAF list
+- FTAF List
 - Unknown
+
+`Status` possible values:
+- active
+- held
+- unsubscribed
+- bounced
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -892,7 +1019,7 @@ When working with Mobile Number history of engagement and subscription, take thi
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
-        {label: 'Field Values', value: 'values'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -903,8 +1030,8 @@ Name | Description | Data Type | Nullable
 _MobileID | MobileConnect Contact ID | Number | X
 _ContactID | Global Contact ID (not Contact Key) | Number |
 _MobileNumber | Mobile number for the subscriber  | Text |
-_Status | Status of the Contact. Possible values listed below | Number | X
-_Source | Source of the Contact. Possible values listed below | Number | X
+_Status | Status of the Contact | Number | X
+_Source | Source of the Contact | Number | X
 _SourceObjectId | ID of the object if `_Source` = 10 | Text | X
 _Priority | In case the contact uses multiple mobile numbers, the Priority field's value establishes the order in which to use those mobile numbers. `_Priority` = 1 is first in order | Number | X
 _Channel | Communication channel. Used to be Mobile, now not in use | Text | X
@@ -925,25 +1052,33 @@ _IsHonorDST | Whether the user's time zone observers Daylight Savings Time or no
 <TabItem value='values'>
 
 `_Status` possible values:
-- 1 = Active
-- 2 = Inactive
-- 3 = Deleted
+
+Value | Meaning
+-- | --
+1 | Active
+2 | Inactive
+3 | Deleted
 
 `_Source` possible values:
-- 0 = Unspecified
-- 1 = Webcollect
-- 2 = API
-- 3 = FTAF
-- 4 = Import
-- 5 = MoveCopy
-- 6 = Manual
-- 7 = SalesForce
-- 8 = Segmentation
-- 9 = GenericExtension
-- 10 = CustomObject
-- 11 = FacebookAPI
-- 12 = SmartCapture
-- 13 = MobileOptIn
+
+Value | Meaning
+-- | --
+0 | Unspecified
+1 | Webcollect
+2 | API
+3 | FTAF
+4 | Import
+5 | MoveCopy
+6 | Manual
+7 | SalesForce
+8 | Segmentation
+9 | GenericExtension
+10 | CustomObject
+11 | FacebookAPI
+12 | SmartCapture
+13 | MobileOptIn
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -1001,6 +1136,7 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -1021,6 +1157,70 @@ _CreatedDate | Date the subscription was created | Date |
 _CreatedBy | Person responsible for subscription creation | Text | X
 _ModifiedDate | Date the subscription was modified | Date |
 _ModifiedBy | Person responsible for the modification | Text | X
+
+</TabItem>
+<TabItem value='values'>
+
+`_OptOutStatusID` possible values:
+
+Value | Meaning
+-- | --
+0 | NotOptedOut
+1 | OptedOut
+10 | DeletingNotOptedOut
+11 | DeletingOptedOut
+
+`_OptOutMethodID` possible values (more can come in the future):
+
+Value | Meaning
+-- | --
+4 | Import
+6 | Application
+14 | MobileOriginated
+15 | Suppression
+NULL | Subscriber texted an Opt-Out Keyword
+
+`_OptInStatusID` possible values:
+
+Value | Meaning
+-- | --
+0 | NotOptedIn
+1 | OptInPending
+2 | OptedIn
+10 | DeletingNotOptedIn
+11 | DeletingOptInPending
+12 | DeletingOptedIn
+
+`_OptInMethodID` possible values:
+
+Value | Meaning
+-- | --
+0 | Unspecified
+1 | WebCollect
+2 | API
+3 | FTAF
+4 | Import
+5 | MoveCopy
+6 | Application
+7 | SalesForce
+8 | Segmentation
+9 | GenericExtension
+10 | CustomObject
+11 | RMM
+12 | Mobile Opt-In
+13 | DeviceRegistration
+
+`_Source` possible values:
+
+Value | Meaning
+-- | --
+2 | API
+4 | Import
+6 | Application
+10 | CustomObject
+12 | MobileOptIn
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -1109,7 +1309,7 @@ You shouldn't be working with `_SubscriberSMS` Data View.
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
-        {label: 'Field Values', value: 'values'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -1122,11 +1322,11 @@ SubscriberKey | The subscriber key for the affected subscriber | Text |
 MobileSubscriptionID | The unique ID of the subscription record | Number |
 SubscriptionDefinitionID | The unique Keyword ID (`GUID()`) | Text |
 MobileNumber | Mobile number for the subscriber | Phone |
-OptOutStatusID | Whether the subscriber has opted out of SMS messages. Possible values listed below | Number | X
-OptOutMethodID | Method the subscriber used to opt-out of SMS messages. Possible values listed below | Number | X
+OptOutStatusID | Whether the subscriber has opted out of SMS messages | Number | X
+OptOutMethodID | Method the subscriber used to opt-out of SMS messages | Number | X
 OptOutDate | Date, the subscriber, opted out of SMS messages | Date | X
-OptInStatusID | Whether the subscriber has opted-in to the SMS message. Possible values listed below | Number |
-OptInMethodID | Method the subscriber used to opt-in to the SMS messages. Possible values listed below | Number | X
+OptInStatusID | Whether the subscriber has opted-in to the SMS message | Number |
+OptInMethodID | Method the subscriber used to opt-in to the SMS messages | Number | X
 OptInDate | Date, the subscriber, opted-in to the SMS messages | Date | X
 Source | The subscription source | Number | X
 CreatedDate | Date the subscription was created | Date |
@@ -1136,48 +1336,65 @@ ModifiedDate | Date the subscription was modified | Date |
 <TabItem value='values'>
 
 `OptOutStatusID` possible values:
-- 0 = NotOptedOut
-- 1 = OptedOut
-- 10 = DeletingNotOptedOut
-- 11 = DeletingOptedOut
+
+Value | Meaning
+-- | --
+0 | NotOptedOut
+1 | OptedOut
+10 | DeletingNotOptedOut
+11 | DeletingOptedOut
 
 `OptOutMethodID` possible values (more can come in the future):
-- 4 = Import
-- 6 = Application
-- 14 = MobileOriginated
-- 15 = Suppression
-- NULL = Subscriber texted an Opt-Out Keyword
+
+Value | Meaning
+-- | --
+4 | Import
+6 | Application
+14 | MobileOriginated
+15 | Suppression
+NULL | Subscriber texted an Opt-Out Keyword
 
 `OptInStatusID` possible values:
-- 0 = NotOptedIn
-- 1 = OptInPending
-- 2 = OptedIn
-- 10 = DeletingNotOptedIn
-- 11 = DeletingOptInPending
-- 12 = DeletingOptedIn
+
+Value | Meaning
+-- | --
+0 | NotOptedIn
+1 | OptInPending
+2 | OptedIn
+10 | DeletingNotOptedIn
+11 | DeletingOptInPending
+12 | DeletingOptedIn
 
 `OptInMethodID` possible values:
-- 0 = Unspecified
-- 1 = WebCollect
-- 2 = API
-- 3 = FTAF
-- 4 = Import
-- 5 = MoveCopy
-- 6 = Application
-- 7 = SalesForce
-- 8 = Segmentation
-- 9 = GenericExtension
-- 10 = CustomObject
-- 11 = RMM
-- 12 = Mobile Opt-In
-- 13 = DeviceRegistration
+
+Value | Meaning
+-- | --
+0 | Unspecified
+1 | WebCollect
+2 | API
+3 | FTAF
+4 | Import
+5 | MoveCopy
+6 | Application
+7 | SalesForce
+8 | Segmentation
+9 | GenericExtension
+10 | CustomObject
+11 | RMM
+12 | Mobile Opt-In
+13 | DeviceRegistration
 
 `Source` possible values:
-- 2 = API
-- 4 = Import
-- 6 = Application
-- 10 = CustomObject
-- 12 = MobileOptIn
+
+Value | Meaning
+-- | --
+2 | API
+4 | Import
+6 | Application
+10 | CustomObject
+12 | MobileOptIn
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -1425,6 +1642,7 @@ Stores information about your Journeys for when context matters.
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -1439,7 +1657,19 @@ VersionNumber | The version number of the version of the Journey | Number |
 CreatedDate | The date that the version of the Journey was created | Date |
 LastPublishedDate | The date that the version of the Journey was last published | Date | X
 ModifiedDate | The date that the version of the Journey was last edited | Date |
-JourneyStatus | The current running mode of the Journey. Possible values are Draft, Running, Finishing, and Stopped. | Text
+JourneyStatus | The current running mode of the Journey | Text
+
+</TabItem>
+<TabItem value='values'>
+
+`JourneyStatus` possible values:
+- Draft
+- Running
+- Finishing
+- Stopped
+- Deleted
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -1486,6 +1716,7 @@ Stores information about Activities available in your Journeys. Must-have for jo
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -1499,6 +1730,34 @@ ActivityName | The name of the activity | Text | X
 ActivityExternalKey | The external key associated with the activity | Text |
 JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a Journey email's Triggered Send Definition. | Text | X
 ActivityType | The type of activity | Text | X
+
+</TabItem>
+<TabItem value='values'>
+
+`ActivityType` possible values:
+- `null`
+- APIEvent
+- Audience
+- AutomationAudience
+- CloudPagesSmartCaptureSubmissionEvent
+- ContactEvent
+- EMAILAUDIENCE
+- EMAILV2
+- ENGAGEMENTDECISION
+- Event
+- ExitCriteria
+- MULTICRITERIADECISION
+- NOOP
+- PUSHNOTIFICATIONACTIVITY
+- RANDOMSPLIT
+- SENDTOLINESYNC
+- StartActivity
+- STOWAIT
+- transactional-api
+- UPDATECONTACTDATA
+- WAIT
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -1544,7 +1803,7 @@ Provides historical information about Automation runs.
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
-        {label: 'Field Values', value: 'values'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -1585,6 +1844,8 @@ AutomationInstanceActivityErrorDetails | The first error message encountered in 
 - Stopped
 - Complete
 - Error
+
+---
 
 </TabItem>
 <TabItem value='sql'>
@@ -1638,7 +1899,7 @@ Provides historical information about Automation Studio Activity runs.
     defaultValue='fields'
     values={[
         {label: 'Fields', value: 'fields'},
-        {label: 'Field Values', value: 'values'},
+        {label: 'Field Picklist Values', value: 'values'},
         {label: 'SQL Query', value: 'sql'},
     ]}
 >
@@ -1703,6 +1964,8 @@ Value | Meaning
 - Complete
 - Error
 - NotSelected
+
+---
 
 </TabItem>
 <TabItem value='sql'>
