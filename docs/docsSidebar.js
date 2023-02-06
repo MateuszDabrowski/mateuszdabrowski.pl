@@ -113,6 +113,7 @@ module.exports = {
             items: [
                 'config/sfmc-permissions',
                 'config/sfmc-system-data-views',
+                'config/sfmc-mobile-connect-data-views',
                 'config/sfmc-code-resource',
                 'config/sfmc-contact-deletion',
                 'config/sfmc-enhanced-send-log',
