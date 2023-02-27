@@ -99,3 +99,49 @@ The solution can further improve it by adding a Recipe Booster on the price redu
     text='Vote on IdeaExchange'
     newTab='true'
 />
+
+## ETL
+
+### External Email Campaign ETL Experience Name & ID
+
+[External Email Campaign ETL](https://help.salesforce.com/s/articleView?id=sf.mc_pers_etl_external_email_campaign_events_data_feed.htm) enables passing behavioural data from Marketing Automation platforms (like Salesforce Marketing Cloud). However, currently, it is limited to a Campaign ID and Campaign Name. It is a problem because to benefit from that data in segmentation fully, it should also allow passing Email ID and Email Name.
+
+The good part - only minimal work is needed, as the groundwork is already laid down. The trick is to leverage it by adding Experience ID and Experience Name columns to the ETL as fields for Email metadata.
+
+When you check the event stream for an outcome from that ETL, you will see it described as `Impression on experience Default in campaign {CAMPAIGN_NAME}`. What is more, the same event will already show (empty) properties `.etl_eeid` (ExternalExperienceID) and `.etl_een` (ExternalExperienceName) that are matching filled in `.etl_ecid` (ExternalCampaignID) and `.etl_ecn` (ExternalCampaignName). Finally, the segmentation is also ready for this extension, as the External Email Campaign ETL is leveraging the same Campaign Stat Count (or Recency) segmentation as Interaction Studio built-in campaigns, leveraging both Campaigns and Experiences.
+
+Currently, one has to choose whether to segment only on emails (without any connection to a specific campaign) or only campaigns (without any ties to specific emails within the campaigns). With that ETL change, we could build segments focusing either on whole Campaigns (f.e. SFMC Journeys) or only particular Emails in selected Journeys (f.e. the First email in Welcome Journey). Easy win for truly targeted Personalization!
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVNMuUAP/external-email-campaign-etl-experience-name-id'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### External Email Campaign ETL Send Segmentation
+
+[External Email Campaign ETL](https://help.salesforce.com/s/articleView?id=sf.mc_pers_etl_external_email_campaign_events_data_feed.htm) enables passing Send, Click and Open data from Marketing Automation platforms (like Salesforce Marketing Cloud). However, only segmentation based on Click and Open (View) is currently supported.
+
+Two options are available in the Campaigns - Campaign Stat Count (or Recency) segmentation rule - `Get sent email campaign` and `Qualify to view (control)` - but neither works for the Send event. It renders that event type useless right now.
+
+Enabling one of the above segmentation rules (preferably `Get sent email campaign`) would unlock use cases like targeting Web or Push campaigns to users who we sent an email campaign, but they never opened it. Great way to fully leverage the cross-channel and real-time nature of Personalization.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVNN1UAP/external-email-campaign-etl-send-segmentation'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### External Email Campaign ETL Unsubscription Event Type
+
+[External Email Campaign ETL](https://help.salesforce.com/s/articleView?id=sf.mc_pers_etl_external_email_campaign_events_data_feed.htm) enables passing Send, Click and Open data from Marketing Automation platforms (like Salesforce Marketing Cloud). However, currently, it cannot pass unsubscriptions.
+
+Official documentation mentions this event type in the `eventType` column description but doesn't follow it up in the Example Values section. I also performed tests on my side and found it is impossible - Test Run in Feed returns an error: `Transform error: Invalid eventType 'Unsubscribe'. Valid types are Send, Click, Open`. Unsubscription could be easily segmentable as an already existing `Dismissal` action.
+
+Unsubscribe should be added to unlock a wide range of targeted campaigns like surveys about unsubscription reasons, win-back campaigns or replacing email subscription prompts with other channel recommendations.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVN9DUAX/external-email-campaign-etl-unsubscription-event-type'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
