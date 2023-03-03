@@ -1,0 +1,55 @@
+---
+id: is-catalog-metadata-viewer
+title: IS Catalog Metadata Viewer
+sidebar_label: Catalog Metadata Viewer
+description: WIP
+image: img/og/og-image-TBD.png
+---
+
+import { LeadText } from '../../src/components/LeadText.js';
+import { Button } from '../../src/components/Buttons.js';
+
+<LeadText content="WIP" />
+
+```ts
+export class ItemDetailViewer implements CampaignTemplateComponent {
+
+    @header(' ')
+
+    @markdown(`
+##### How to use
+
+In the Payload Preview pane on the right:
+
+1. Select catalog in the Current Item Type picklist
+2. Select item in the Current Item picklist
+3. View the Details in the section below
+
+Optionally, you can modify the scope of visible data in the configuration pane on the left.
+
+[Learn more here](https://www.salesforce.com/)
+`)
+
+    @title('Item attribute details to display:')
+    @subtitle('File and Updated Date are available only for ETL Source')
+    showItemAttributeDetails: ('Value'|'Source'|'File'|'Updated Date')[] = ['Value', 'Source', 'File', 'Updated Date'];
+
+    @header(' ')
+
+    @title('Item non-attribute details to display:')
+    @subtitle('Only Values available - there is no Source/File/Updated Date data')
+    showItemOtherDetails: ('ID'|'Location'|'Related Catalogs'|'Categories'|'SKUs')[];
+
+    run(context: CampaignComponentContext) {
+        const itemType = context.event.itemType();
+        const itemId = JSON.parse(context.event.fields.item as string)._id.value;
+        const itemDetail = context.services.catalog.findItem(itemType, itemId);
+
+        return {
+            product: itemDetail,
+            testing: itemId
+        };
+    }
+
+}
+```
