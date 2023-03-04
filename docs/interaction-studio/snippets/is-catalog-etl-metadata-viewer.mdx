@@ -2,20 +2,48 @@
 id: is-catalog-etl-metadata-viewer
 title: IS Catalog ETL Metadata Viewer
 sidebar_label: Catalog ETL Metadata Viewer
-description: WIP
-image: img/og/og-image-interaction-studio-etl-metadata-viewer.png
+description: Debug your Interaction Studio (SFMC Personalization) Catalog Object Item attributes with the power of Serverside Code.
+image: img/og/og-image-interaction-studio-catalog-etl-metadata-viewer.png
 ---
 
 import { LeadText } from '../../../src/components/LeadText.js';
 import { Button } from '../../../src/components/Buttons.js';
 
-<LeadText content="WIP" />
+<LeadText content="Debug your Interaction Studio (SFMC Personalization) Catalog Object Item attributes with the power of Serverside Code." />
 
+## Problem with Catalog Object ETL Metadata
 
-1. manual changes to field value retain metadata information of previous value source (so each data point might actually be Manual change)
-2. 'price', 'listPrice', 'margin', 'published', 'expiration' are being changed from 'ETL or Manual' to 'Sitemap' origin even on no changes applied
-3. if 'expiration' was NULL, it is set to a timestamp 100 yaers in the future
-4. if 'margin' was NULL, it is set to 0
+Interaction Studio (MCP) can pull product, content and related catalog data from multiple sources and does it on ongoing basis. That's perfect when all works great, but once you see some discrepancy in the data, debugging features are very limited. Sure,
+
+SFTP stores processed CSV Feed files, but finding the culprit is not easy. Especially if you push frequently with delta files.
+
+Knowing which exact ETL load introduced problematic data is huge help to find the root cause of the issue and rectify the data pipeline. While it is not available out-of-the-box, we can build a custom for it.
+
+## Solution
+
+Inspired by the awesome User Metadata Serverside template created by [Christopher Long](https://www.linkedin.com/in/christopherlong/) available [here](https://github.com/christopher-longSFDC/mcp/wiki/Serverside-Templates) I decided to create something similar forthe Catalog Object data.
+
+A Serverside Template that leverages built-in Simulated Payload Preview available in Template Editor to display hidden changelog for ETL updates.
+
+This approach leverages native features of the platform to access unsurfaced data in a techy, but easily transferable format.
+
+Additionally it's a great way to showcase some IS Serverside Code approaches that can be useful for building standard campaign templates.
+
+### Implementation Guide
+
+Implementation is straightforward and you can have the solution working within a minute.
+
+1. Go to SFMC » Personalization
+2. On left pane hover over Server-Side and click on Server-Side and Triggered Templates
+3. Click New Template
+4. Provide a meaningful name (for example: "Catalog ETL Metadata Viewer")
+5. Copy-paste code available below
+6. Save
+7. Use :)
+
+You don't need to Publish a template to leverage the Simulated Payload Preview. Keeping it unpublished will guarante noone will try to use it for a Campaign.
+
+### Serverside Code
 
 ```ts
 export class CatalogETLMetadataViewer implements CampaignTemplateComponent {
@@ -34,14 +62,14 @@ In the Payload Preview pane on the right:
 Optionally, you can modify the scope of returned data in the left Configuration pane.
 `)
 
-    @title('Item attribute details to display:')
+    @title('Item attribute metadata to display:')
     @subtitle('File and Updated Date are available only for the ETL Source.')
     showItemAttributeDetails: ('Value'|'Source'|'File'|'Updated Date'|'Locale')[] = ['Value', 'Source', 'File', 'Updated Date'];
 
     @markdown(`Platform displays partially incorrect data when you manually Save Item in the Catalog, learn more [here](https://mateuszdabrowski.pl/docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/).`)
 
-    @title('Item non-attribute details to display:')
-    @subtitle('Only Value is available - no Source/File/Updated Date/Locale data is exposed by the platform.')
+    @title('Item non-attribute values to display:')
+    @subtitle('Only values are available - no Source/File/Updated Date/Locale data is exposed by the platform.')
     showItemContextDetails: ('ID'|'Location'|'Related Catalog Objects'|'Categories'|'SKUs')[];
 
     run(context: CampaignComponentContext) {
@@ -59,7 +87,7 @@ Optionally, you can modify the scope of returned data in the left Configuration 
             };
             const attributes = processedItem.attributes;
 
-            const epochToDatetime = epoch => String(new Date(epoch)).substring(4, 24) + ' UTC';
+            const makeEpochReadableAgain = epoch => String(new Date(epoch)).substring(4, 24);
 
             // Conditional non-attribute data stuffing
             if (config.itemContext?.includes('ID')) processedItem['id'] = item.id;
@@ -73,10 +101,10 @@ Optionally, you can modify the scope of returned data in the left Configuration 
                 let processedAttributes = {};
 
                 if (config.itemAttributes?.includes('Value')) processedAttributes['value'] = attributeData.value;
-                if (Number.isInteger(attributeData.value) && attributeData.value > 10e10) processedAttributes['readableValue'] = epochToDatetime(attributeData.value);
+                if (Number.isInteger(attributeData.value) && attributeData.value > 10e10) processedAttributes['readableValue'] = makeEpochReadableAgain(attributeData.value);
                 if (config.itemAttributes?.includes('Source')) processedAttributes['lastChangeSource'] = attributeData.metadata?.origin || 'SDK';
-                if (config.itemAttributes?.includes('File') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeFromETL'] =  attributeData.metadata?.provider.substring(16);
-                if (config.itemAttributes?.includes('Updated Date') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeDate'] = epochToDatetime(attributeData.metadata?.lastUpdated);
+                if (config.itemAttributes?.includes('File') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeFromETL'] = attributeData.metadata?.provider.substring(16);
+                if (config.itemAttributes?.includes('Updated Date') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeDate'] = makeEpochReadableAgain(attributeData.metadata?.lastUpdated);
                 if (config.itemAttributes?.includes('Locale')) processedAttributes['locale'] = attributeData.locale;
 
                 attributes[attribute] = processedAttributes;
@@ -90,6 +118,41 @@ Optionally, you can modify the scope of returned data in the left Configuration 
             item: itemProcessor(itemDetail, {itemAttributes: this.showItemAttributeDetails, itemContext: this.showItemContextDetails}),
         };
     }
-
 }
 ```
+
+## Limitations
+
+While this solution can be really helpful for Interaction Studio Catalog Object debugging, there are few important limitations to consider.
+
+### Data scope
+
+Unfortunately, at the moment the platform surfaces metadata only for Catalog Items updated using ETL. Any other source (Manual update, Web or Mobile SDK) provides only current value, but no information about the last change or the exact source (apart from it not being an ETL).
+
+Additionally, the metadata returned for the ETL uploads provides only file name and timestamp that first introduced the current value. There is no option to check what was the previous value.
+
+This is still very helpful to find understand whether the attribute has been overwritten using wrong ETL and which CSVs should be checked for confirming the pipeline issues.
+
+### Data quality
+
+Another huge caveat with the metadata is that Manual changes through the Catalog UI are creating a lot of issues by silently changing attribute values and/or metadata. Example behaviours:
+
+1. Manual changes to field value retain metadata information of the previous value source (so both `ETL` and `SDK` Source can actually be introduced via a change in UI).
+2. `price`, `listPrice`, `margin`, `published`, `expiration` are being changed from `ETL` to `SDK` Source even when manual changes weren't touching those attributes.
+3. if `expiration` was `NULL`, it gets set to a timestamp 100 yaers in the future
+4. if `margin` was `NULL`, it gets set to 0
+
+This is awful, but hopefully there aren't a lot of manual changes happening in the production dataset and this issue will be minimal. Still, it's worth keeping this in mind when the metadata preview doesn't make sense.
+
+### Context.event.fields.item
+
+While `context.event.fields.item` is perfect for use case described here, don't try to use it in standard Campaigns. Unfortunately it is filled in only in the Similation Preview and will not be available when deployed to a website. This is huge limitation with one dirty workaround.
+
+To get a similar outcome in a real campaign you have to:
+1. Create a string User Attribute to store last viewed product ID.
+2. In the Sitemap extend the Product View Page Type `onActionEvent` with push of current product ID to the attribute created in the previous step.
+3. Leverage `context?.user?.attributes?.nameOfYourNewAttribute` to get the ID and leverage it for .findItem and other purposes.
+
+## Options
+
+The current version of the solution was created with easy-to-use, strightforward interface leveraging out-of-the-box features of the platform. However, you can extend the code with additional field accepting a list of IDs to return payloads for multiple items in a single run to facilitate faster debugging.
