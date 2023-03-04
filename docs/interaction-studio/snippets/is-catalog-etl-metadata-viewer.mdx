@@ -1,0 +1,95 @@
+---
+id: is-catalog-etl-metadata-viewer
+title: IS Catalog ETL Metadata Viewer
+sidebar_label: Catalog ETL Metadata Viewer
+description: WIP
+image: img/og/og-image-interaction-studio-etl-metadata-viewer.png
+---
+
+import { LeadText } from '../../../src/components/LeadText.js';
+import { Button } from '../../../src/components/Buttons.js';
+
+<LeadText content="WIP" />
+
+
+1. manual changes to field value retain metadata information of previous value source (so each data point might actually be Manual change)
+2. 'price', 'listPrice', 'margin', 'published', 'expiration' are being changed from 'ETL or Manual' to 'Sitemap' origin even on no changes applied
+3. if 'expiration' was NULL, it is set to a timestamp 100 yaers in the future
+4. if 'margin' was NULL, it is set to 0
+
+```ts
+export class CatalogETLMetadataViewer implements CampaignTemplateComponent {
+
+    @header(' ')
+
+    @markdown(`
+##### How to use
+
+In the Payload Preview pane on the right:
+
+1. Select catalog object in the Current Item Type
+2. Select item in the Current Item
+3. View the Details in the section below
+
+Optionally, you can modify the scope of returned data in the left Configuration pane.
+`)
+
+    @title('Item attribute details to display:')
+    @subtitle('File and Updated Date are available only for the ETL Source.')
+    showItemAttributeDetails: ('Value'|'Source'|'File'|'Updated Date'|'Locale')[] = ['Value', 'Source', 'File', 'Updated Date'];
+
+    @markdown(`Platform displays partially incorrect data when you manually Save Item in the Catalog, learn more [here](https://mateuszdabrowski.pl/docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/).`)
+
+    @title('Item non-attribute details to display:')
+    @subtitle('Only Value is available - no Source/File/Updated Date/Locale data is exposed by the platform.')
+    showItemContextDetails: ('ID'|'Location'|'Related Catalog Objects'|'Categories'|'SKUs')[];
+
+    run(context: CampaignComponentContext) {
+        // Pulls Catalog Object type from Simulation configuration
+        const itemType = context.event.itemType();
+        // Pulls selected Item ID from Simulation configuration
+        const itemId = JSON.parse(context.event.fields.item as string)._id.value;
+        // Pulls full Item data from the Catalog
+        const itemDetail = context.services.catalog.findItem(itemType, itemId);
+
+        // Prepares the payload response according to Configuration pane
+        function itemProcessor(item, config) {
+            let processedItem = {
+                attributes: {},
+            };
+            const attributes = processedItem.attributes;
+
+            const epochToDatetime = epoch => String(new Date(epoch)).substring(4, 24) + ' UTC';
+
+            // Conditional non-attribute data stuffing
+            if (config.itemContext?.includes('ID')) processedItem['id'] = item.id;
+            if (config.itemContext?.includes('SKUs')) processedItem['skus'] = item.skus;
+            if (config.itemContext?.includes('Categories')) processedItem['categories'] = item.categories;
+            if (config.itemContext?.includes('Related Catalog Objects')) processedItem['relatedCatalogObjects'] = item.dimensions;
+            if (config.itemContext?.includes('Locations')) processedItem['locations'] = item.locations;
+
+            // Conditional attribute data stuffing with processing
+            for (const [attribute, attributeData] of (<any>Object).entries(item.attributes)) {
+                let processedAttributes = {};
+
+                if (config.itemAttributes?.includes('Value')) processedAttributes['value'] = attributeData.value;
+                if (Number.isInteger(attributeData.value) && attributeData.value > 10e10) processedAttributes['readableValue'] = epochToDatetime(attributeData.value);
+                if (config.itemAttributes?.includes('Source')) processedAttributes['lastChangeSource'] = attributeData.metadata?.origin || 'SDK';
+                if (config.itemAttributes?.includes('File') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeFromETL'] =  attributeData.metadata?.provider.substring(16);
+                if (config.itemAttributes?.includes('Updated Date') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeDate'] = epochToDatetime(attributeData.metadata?.lastUpdated);
+                if (config.itemAttributes?.includes('Locale')) processedAttributes['locale'] = attributeData.locale;
+
+                attributes[attribute] = processedAttributes;
+            }
+
+            return processedItem
+        }
+
+        // Outputs final payload to the Payload Preview pane
+        return {
+            item: itemProcessor(itemDetail, {itemAttributes: this.showItemAttributeDetails, itemContext: this.showItemContextDetails}),
+        };
+    }
+
+}
+```
