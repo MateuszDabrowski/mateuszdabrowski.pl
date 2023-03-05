@@ -111,6 +111,10 @@ module.exports = {
                             label: 'SFMC SQL',
                             to: 'docs/category/sfmc-sql-snippets/',
                         },
+                        {
+                            label: 'Interaction Studio',
+                            to: 'docs/category/interaction-studio-snippets/',
+                        },
                     ],
                 },
                 {
@@ -232,6 +236,10 @@ module.exports = {
                         {
                             label: 'SFMC SQL',
                             to: 'docs/category/sfmc-sql-snippets/',
+                        },
+                        {
+                            label: 'Interaction Studio',
+                            to: 'docs/category/interaction-studio-snippets/',
                         },
                     ],
                 },

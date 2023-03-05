@@ -128,12 +128,17 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Interaction Studio',
-                description: 'Interaction Studio (MCP) is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!',
-                keywords: ['Interaction Studio', 'Personalisation'],
+                description: 'Interaction Studio (Salesforce Marketing Cloud Personalization) is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!',
+                keywords: ['Marketing Cloud', 'Interaction Studio', 'Personalisation'],
                 image: 'img/og/og-image-interaction-studio.png',
             },
             items: [
                 'interaction-studio/is-open-time-email',
+                {
+                    type: 'link',
+                    label: '» Interaction Studio Snippets',
+                    href: '/docs/category/interaction-studio-snippets/',
+                },
             ],
         },
     ],
@@ -217,6 +222,25 @@ module.exports = {
                     type: 'link',
                     label: '» SQL Docs',
                     href: '/docs/category/sfmc-sql/',
+                },
+            ],
+        },
+        {
+            type: 'category',
+            label: 'Interaction Studio Snippets',
+            link: {
+                type: 'generated-index',
+                title: 'Interaction Studio Snippets',
+                description: 'Ready-to-use Interaction Studio (Salesforce Marketing Cloud Personalization) Snippets.',
+                keywords: ['Marketing Cloud', 'Interaction Studio', 'Personalisation'],
+                image: 'img/og/og-image-interaction-studio-snippets.png',
+            },
+            items: [
+                'interaction-studio/snippets/is-catalog-etl-metadata-viewer',
+                {
+                    type: 'link',
+                    label: '» Interaction Studio Docs',
+                    href: '/docs/category/interaction-studio/',
                 },
             ],
         },
