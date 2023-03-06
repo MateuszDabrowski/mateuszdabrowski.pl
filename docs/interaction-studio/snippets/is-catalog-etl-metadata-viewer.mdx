@@ -17,13 +17,30 @@ Interaction Studio (MCP) can pull product, content and related catalog data from
 
 Sure, SFTP stores processed CSV Feed files, but finding the culprit takes work, especially if you push frequently with delta files.
 
-Knowing which exact ETL load introduced problematic attribute values is a tremendous help in finding the root cause of the issue and rectifying the data pipeline. While it is not available out of the box, we can build a custom for it.
+Knowing which exact ETL load introduced problematic attribute values is a tremendous help in finding the root cause of the issue and rectifying the data pipeline. While it is available only for custom attributes (hover over the value to see it), we can build a more powerful custom for it.
 
 ## Solution
 
 Inspired by the excellent User Metadata Serverside template created by [Christopher Long](https://www.linkedin.com/in/christopherlong/) available [here](https://github.com/christopher-longSFDC/mcp/wiki/Serverside-Templates) I decided to create something similar for the Catalog Object data.
 
 A Serverside Template that leverages built-in Simulated Payload Preview available in Template Editor to display hidden changelog for ETL updates: attribute's current value, timeframe it was first introduced and first CSV that provided it to IS.
+
+```json title="Example response"
+"item": {
+    "attributes": {
+        "archived": {
+            "value": false,
+            "lastChangeSource": "ETL",
+            "lastChangeFile": "product-2022-12-05_08-19-35.csv",
+            "lastChangeDate": "Dec 05 2022 07:25:30"
+        },
+        "brand":{
+            "value":"Apple",
+            "lastChangeSource":"SDK"
+        }
+    }
+}
+```
 
 This approach leverages native features of the platform to access unsurfaced data in a techy but easily transferable format.
 
@@ -103,7 +120,7 @@ Optionally, you can modify the scope of returned data in the left Configuration 
                 if (config.itemAttributes?.includes('Value')) processedAttributes['value'] = attributeData.value;
                 if (Number.isInteger(attributeData.value) && attributeData.value > 10e10) processedAttributes['readableValue'] = makeEpochReadableAgain(attributeData.value);
                 if (config.itemAttributes?.includes('Source')) processedAttributes['lastChangeSource'] = attributeData.metadata?.origin || 'SDK';
-                if (config.itemAttributes?.includes('File') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeFromETL'] = attributeData.metadata?.provider.substring(16);
+                if (config.itemAttributes?.includes('File') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeFile'] = attributeData.metadata?.provider.substring(16);
                 if (config.itemAttributes?.includes('Updated Date') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['lastChangeDate'] = makeEpochReadableAgain(attributeData.metadata?.lastUpdated);
                 if (config.itemAttributes?.includes('Locale')) processedAttributes['locale'] = attributeData.locale;
 
