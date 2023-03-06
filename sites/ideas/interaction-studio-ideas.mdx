@@ -44,8 +44,28 @@ It is a huge issue because it makes it impossible to debug catalog item states o
 
 There should be an option to export the catalog in full scope, matching the ETL schema.
 
+Bonus points for option to export also archived Items as this would be hugely beneficial for debugging and reintroduction.
+
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000NVRj3UAH/full-is-mcp-catalog-export'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Full IS / MCP Catalog Metadata visibility
+
+Interaction Studio (Personalization) already supports Catalog Object custom attribute metadata view (open Item in the Catalog and hover over custom attribute value to see the details). However, it is limited only to those custom attributes if the ETL updates them.
+
+We can slightly extend it with a custom [Metadata Viewer solution](../../../docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/) to show that data also for built-in attributes. However, it is still a very limited solution due to product gaps:
+
+1. `origin` and `lastUpdated` values for Sources other than ETL (Sitemap, Mobile App, Manual update in UI, API)
+2. Showing this information for built-in attributes in the Catalog UI
+3. General Item `createdDate` and `lastUpdatedDate` (not attribute-specific)
+
+That scope of information would make debugging Catalog metadata issues significantly easier. Less work for admins/developers. Less downtime for the recommendations. Fewer support tickets for Salesforce.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NWbmJUAT/full-is-mcp-catalog-metadata-visibility'
     text='Vote on IdeaExchange'
     newTab='true'
 />
