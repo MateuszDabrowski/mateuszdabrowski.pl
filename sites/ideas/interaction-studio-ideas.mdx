@@ -38,13 +38,13 @@ It should change - there should be a feature parity between Sitemap and ETL for 
 
 Interaction Studio (Personalization) already supports Catalog manual export through the Export button on the Catalog listing. However, it exports products only with the limited data set available in the listing view.
 
-The problem with the current state is that the exported file does not contain complete catalog data (like exclusion data) and cannot be used as an ETL source.
+The problem with the current state is that the exported file does not contain complete catalog data (like promotable and archived attributes) and cannot be used as an ETL source.
 
 It is a huge issue because it makes it impossible to debug catalog item states outside of IS/MCP (and doing it directly in the platform is not scalable). It also makes it impossible to batch-modify items (for example, for selective archiving or exclusion) for subsequent ETL import.
 
 There should be an option to export the catalog in full scope, matching the ETL schema.
 
-Bonus points for option to export also archived Items as this would be hugely beneficial for debugging and reintroduction.
+Bonus points for an option to include (or not) archived Items in the export. It would be a hugely beneficial addition for debugging purposes and Item reintroduction requirements (for example after mistake in archiving).
 
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000NVRj3UAH/full-is-mcp-catalog-export'
