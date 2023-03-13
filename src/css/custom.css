@@ -105,10 +105,6 @@ ul>li>ul a.menu__link {
 
 /* ----------------------------------- DOCS ---------------------------------- */
 
-main {
-  margin: 0 auto;
-}
-
 article {
   max-width: 800px;
   margin: 0 auto;
