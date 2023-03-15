@@ -26,6 +26,9 @@ module.exports = {
             'JS',
         ],
     },
+    markdown: {
+        mermaid: true,
+    },
     themeConfig: {
         image: 'img/og/og-image-base.png', // Default image for meta tag
         defaultMode: 'dark',
@@ -181,6 +184,9 @@ module.exports = {
             defaultLanguage: 'javascript',
             theme: require('prism-react-renderer/themes/github'),
             darkTheme: require('prism-react-renderer/themes/vsDark'),
+        },
+        mermaid: {
+            theme: { light: 'neutral', dark: 'dark' },
         },
         footer: {
             style: 'dark',
@@ -437,5 +443,6 @@ module.exports = {
                 ],
             },
         ],
+        '@docusaurus/theme-mermaid',
     ],
 };
