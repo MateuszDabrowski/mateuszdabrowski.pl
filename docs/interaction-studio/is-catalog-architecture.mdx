@@ -121,6 +121,71 @@ flowchart TD
 
 Once you know how you want to populate the Interaction Studio Catalog, it's time to decide what you will be filling in.
 
+## Catalog Attributes
+
+Each Catalog provides a set of attributes available on each Item. You can store there metadata about Products, Categories or other Objects - and you can leverage it for recommendations and personalisations. However, there are some quirks and features that needs to be taken into consideration when planning the Catalog Architecture.
+
+### Built-in Catalog Attributes
+
+#### Basic Catalog Attributes
+
+Attribute | Data Type | Purpose | Comment
+-- | -- | -- | --
+ID | String |  Unique identifier for each Item | ID can be reused in other Catalogs
+Name  | String | Readable name of an Item | It will be displayed as main value across the UI. Required to recommend an Item
+URL | String | Link to the Item | Required to recommend an Item
+Image URL | String | Link used to display an Image of an Item | Required to recommend the Product
+Description | String | Client-friendly description of an Item
+Average Rating | Decimal | Average score of an Item based on all Ratings
+Number of Ratings | Integer | Number of ratings an Item gathered
+
+#### Location Catalog Attributes
+
+Attribute | Data Type | Purpose | Comment
+-- | -- | -- | --
+City | String
+State / Provine Code | String
+Postal Code | String
+Longitude | Decimal
+Latitude | Decimal
+Country Code | String
+
+#### Promotion Settings Catalog Attributes
+
+Attribute | Data Type | Purpose | Comment
+-- | -- | -- | --
+Published | Datetime
+Expiration | Datetime
+Promotion State | Picklist
+Archived | Boolean
+
+#### Product Catalog Unique Attributes
+
+Attribute | Data Type | Purpose | Comment
+-- | -- | -- | --
+Units in Stock | Integer
+Alternate ID |
+Price | Decimal
+List Price | Decimal
+Price Description | String
+Currency | String
+Margin | Decimal
+
+#### Category Catalog Unique Attributes
+
+Attribute | Data Type | Purpose | Comment
+-- | -- | -- | --
+ID Path | Multistring
+Is Department | Boolean
+
+### Custom Catalog Attributes
+
+### Attribute Limitations
+
+
+
+## Related Catalog Objects
+
 ## Catalog Recipe Considerations
 
 ## Catalog Personalization Considerations
