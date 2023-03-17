@@ -25,6 +25,11 @@ module.exports = {
                     label: '» SSJS Snippets',
                     href: '/docs/category/ssjs-snippets/',
                 },
+                {
+                    type: 'link',
+                    label: '» Official SSJS Docs',
+                    href: 'https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ssjs_serverSideJavaScript.html',
+                },
             ],
         },
         {
@@ -65,6 +70,11 @@ module.exports = {
                     type: 'link',
                     label: '» AMPScript Snippets',
                     href: '/docs/category/ampscript-snippets/',
+                },
+                {
+                    type: 'link',
+                    label: '» Official AMPScript Docs',
+                    href: 'https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ampscript.html',
                 },
             ],
         },
@@ -133,11 +143,22 @@ module.exports = {
                 image: 'img/og/og-image-interaction-studio.png',
             },
             items: [
+                'interaction-studio/is-catalog-objects-architecture',
                 'interaction-studio/is-open-time-email',
                 {
                     type: 'link',
                     label: '» Interaction Studio Snippets',
                     href: '/docs/category/interaction-studio-snippets/',
+                },
+                {
+                    type: 'link',
+                    label: '» Official IS Business Docs',
+                    href: 'https://help.salesforce.com/s/articleView?id=sf.mc_pers.htm',
+                },
+                {
+                    type: 'link',
+                    label: '» Official IS Developer Docs',
+                    href: 'https://developer.salesforce.com/docs/marketing/personalization/guide/get-started.html',
                 },
             ],
         },
