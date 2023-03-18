@@ -127,28 +127,34 @@ Each Catalog provides a set of attributes available on each Item. You can store 
 
 ### Built-in Catalog Attributes
 
+Let's start with what is available out-of-the-box. There are three groups of available attributes (basic, location-based and promotion-related) plus few special attributes unique to Product and Category Catalogs.
+
 #### Basic Catalog Attributes
 
 Attribute | Data Type | Purpose | Comment
 -- | -- | -- | --
-ID | String |  Unique identifier for each Item | ID can be reused in other Catalogs
-Name  | String | Readable name of an Item | It will be displayed as main value across the UI. Required to recommend an Item
-URL | String | Link to the Item | Required to recommend an Item
-Image URL | String | Link used to display an Image of an Item | Required to recommend the Product
-Description | String | Client-friendly description of an Item
-Average Rating | Decimal | Average score of an Item based on all Ratings
+ID | String |  Unique identifier for each Item | It must be unique per Object, can be reused in others (for example, you can use the same ID in Product and Category obejcts).
+Name  | String | Readable name of an Item | Used to identify an Item across the UI. Does not have to be unique, so you might have multiple Items with the same name. Required to recommend an Item.
+URL | String | Link to the Item | Redirect target when User clicks on an Item in a Campaign. Required to recommend an Item.
+Image URL | String | Link used to display an Image of an Item | Used to showcase a Product. Required to recommend the Product (not needed for other Item types).
+Description | String | Client-friendly description of an Item | Any text beyond 200 characters will be replaced with an ellipsis (`...`).
+Average Rating | Decimal | Average score of an Item based on all Ratings | Useful as a filter for Einstein Recipes and Triggered Campaigns.
 Number of Ratings | Integer | Number of ratings an Item gathered
+
+Out of the Basic Catalog Attributes the first four are key - ID, Name, URL, Image URL. Average rating is useful for filtering products for Campaigns. The rest might be useful for some personalization purposes, but in most implementations can be skipped.
 
 #### Location Catalog Attributes
 
-Attribute | Data Type | Purpose | Comment
--- | -- | -- | --
+Attribute | Data Type
+-- | --
 City | String
 State / Provine Code | String
 Postal Code | String
 Longitude | Decimal
 Latitude | Decimal
 Country Code | String
+
+Location-based Attributes are niche but powerful. They are completly useless for most implementations (as in most cases the Item is either available in many locations or its location is irrelevant). However, for businesses that are offering unique, location-based Items (Hotels, houses, unique Products), filling in those enables you to leverage location-based recommendations (triggered by either User or currently viewed Item data).
 
 #### Promotion Settings Catalog Attributes
 
