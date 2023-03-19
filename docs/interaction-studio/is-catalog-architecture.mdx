@@ -5,6 +5,7 @@ sidebar_label: Catalog Objects Architecture
 description: Interaction Studio (MC Personalization) Catalog architecture, limitations, tricks and tips. Build right from the start.
 image: img/og/og-image-interaction-studio-catalog-object-architecture.png
 tags: [Interaction Studio, Personalisation, Setup, Data Management]
+toc_max_heading_level: 4
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
@@ -154,16 +155,31 @@ Longitude | Decimal
 Latitude | Decimal
 Country Code | String
 
-Location-based Attributes are niche but powerful. They are completly useless for most implementations (as in most cases the Item is either available in many locations or its location is irrelevant). However, for businesses that are offering unique, location-based Items (Hotels, houses, unique Products), filling in those enables you to leverage location-based recommendations (triggered by either User or currently viewed Item data).
+Location-based Attributes are niche but powerful. They are completly useless for most implementations (as in most cases the Item is either available in many locations or its location is irrelevant). However, for businesses that are offering unique, location-based Items (hotels, houses, unique Products), filling in those enables you to leverage location-based recommendations (triggered by either User or currently viewed Item data).
 
 #### Promotion Settings Catalog Attributes
 
 Attribute | Data Type | Purpose | Comment
 -- | -- | -- | --
-Published | Datetime
-Expiration | Datetime
-Promotion State | Picklist
-Archived | Boolean
+Published | Datetime | Availability start date for an Item | Must be `null` or in the past for Interaction Studio to recommend the Item. If you set it with the future date - Item will not be promoted until then.
+Expiration | Datetime | Availability end date for an Item | must be `null` or in the future for Interaction Studio to recommend the Item. Once you hit that date, Item stops being recommended.
+Promotable | Picklist | Marks whether Item should be Promoted | Items can be either Eligible or Excluded. Only Eligible ones will be returned in the recommendations, regardless of Published/Expirtation values.
+Archived | Boolean | Marks whether Item should be Archived | Archived Items are treated as Excluded (are not returned in the recommendations) and are hidden from the Catalog UI.
+
+Promotion-related attributes are crucial for controlling what is being recommended. They are also the most tricky ones, as they seem to be very simillar to each other. Rule of thumb when selecting what to use:
+
+1. If you are frequently updating the Catalog (thansk to using [ETL](#2-interaction-studio-with-etl)), go with Promotable attribute.
+2. If you have less control over when the update will come (due to using [Sitemap](#1-interaction-studio-with-sitemap)), or need the recommendation to start/end at a very specific time that is not perfectly aligned with your sync schedule, go with Published/Expiration attributes.
+3. If you are absolutely sure you don't need an Item, archive it. But I would treat it as a solution of last resort for some incorrect data, not as a general tool for managing Catalog content.
+
+:::note You Should Know
+
+Archived attribute does not delete Items (there is no such option in Interaction Studio). It only hides them from the Catalog UI while preserving all its values. This has two important ramifications:
+
+1. Archived Items are still being used by Interaction Studio personalisation engine - especially, they are still being used as anchors for recommendations. For example, if you have a campaign promoting Similar Items to the Item currently viewed, it will work (and leverage all the metadata) of an archived Item. If you don't want it to happen, be sure to clean all attributes and relationships before archiving.
+2. You won't be able to easily find archived items to make any changes or unarchive them. You can find partial workarounds in the [Tips & Tricks section](#TODO).
+
+:::
 
 #### Product Catalog Unique Attributes
 
@@ -186,7 +202,9 @@ Is Department | Boolean
 
 ### Custom Catalog Attributes
 
-### Attribute Limitations
+### Attribute Considerations
+
+#### When Interaction Studio recommends an item?
 
 
 
