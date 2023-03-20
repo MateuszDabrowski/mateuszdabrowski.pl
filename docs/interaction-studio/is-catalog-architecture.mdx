@@ -78,7 +78,7 @@ Pros:
 Cons:
 - Require you to export data in a particulary formatted .csv to IS SFTP.
 - Not real-time (but every 15 minutes is pretty damn close, come on!).
-- Doesn't support [drill-down Category hierarchy](https://issues.salesforce.com/issue/a028c00000gAwJyAAK/interaction-studio-not-correctly-displaying-category-hierarchy) in the UI.
+- Doesn't support [drill-down Category hierarchy](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-category-hierarchy-support-for-etl) in the UI.
 
 ### Recommended IS Catalog Data Source
 
@@ -97,7 +97,7 @@ While you can begin with Sitemap and then migrate to ETL approach, the transitor
 ```mermaid
 flowchart TD
     source[(Catalog Data Source)]
-    is[(Interaction Studio Catalog)]
+    is[(Interaction Studio Catalog)]:::success
     isRealTimeNeeded{{Do you need real-time updates?}}:::check
     isEtlTooSlow{{Is update every 15 mintues really too slow?}}:::check
     canPrepareFile{{Can you schedule a .csv export to IS SFTP?}}:::check
@@ -114,8 +114,7 @@ flowchart TD
     sitemap --> is
     etl --> is
 
-    style source fill:#da4e55,color:#ffffff
-    style is fill:#1d73c9,color:#ffffff
+    classDef success fill:#1d73c9,color:#ffffff
     classDef check fill:#f6b355,color:#ffffff
     classDef process fill:#333333,color:#ffffff
 ```
@@ -166,6 +165,14 @@ Expiration | Datetime | Availability end date for an Item | must be `null` or in
 Promotable | Picklist | Marks whether Item should be Promoted | Items can be either Eligible or Excluded. Only Eligible ones will be returned in the recommendations, regardless of Published/Expirtation values.
 Archived | Boolean | Marks whether Item should be Archived | Archived Items are treated as Excluded (are not returned in the recommendations) and are hidden from the Catalog UI.
 
+:::note You Should Know
+
+Published and Expiration fields are ISO-8601 datetime fields meaning they must be passed formatted as `2022-04-12T10:23:37Z`.
+
+If you want to push a datetime to Interaction Studio using [ETL](#2-interaction-studio-with-etl), you can prepare the data with SQL using clean [FORMAT](../sql/sfmc-sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking SFMC Data Extension).
+
+:::
+
 Promotion-related attributes are crucial for controlling what is being recommended. They are also the most tricky ones, as they seem to be very simillar to each other. Rule of thumb when selecting what to use:
 
 1. If you are frequently updating the Catalog (thansk to using [ETL](#2-interaction-studio-with-etl)), go with Promotable attribute.
@@ -174,9 +181,9 @@ Promotion-related attributes are crucial for controlling what is being recommend
 
 :::note You Should Know
 
-Archived attribute does not delete Items (there is no such option in Interaction Studio). It only hides them from the Catalog UI while preserving all its values. This has two important ramifications:
+Archiving does not delete Items (there is no such option in Interaction Studio). It only hides them from the Catalog UI while preserving all its values. This has two important ramifications:
 
-1. Archived Items are still being used by Interaction Studio personalisation engine - especially, they are still being used as anchors for recommendations. For example, if you have a campaign promoting Similar Items to the Item currently viewed, it will work (and leverage all the metadata) of an archived Item. If you don't want it to happen, be sure to clean all attributes and relationships before archiving.
+1. Archived Items are still being used by Interaction Studio personalisation engine - especially, they are still being used as anchors for recommendations. For example, if you have a campaign promoting Similar Items to the Item currently viewed, it will work (and leverage all the metadata of an archived Item). If you don't want it to happen, be sure to clean all attributes and relationships before archiving.
 2. You won't be able to easily find archived items to make any changes or unarchive them. You can find partial workarounds in the [Tips & Tricks section](#TODO).
 
 :::
@@ -185,13 +192,23 @@ Archived attribute does not delete Items (there is no such option in Interaction
 
 Attribute | Data Type | Purpose | Comment
 -- | -- | -- | --
-Units in Stock | Integer
-Alternate ID |
-Price | Decimal
-List Price | Decimal
-Price Description | String
-Currency | String
-Margin | Decimal
+Units in Stock | Integer | Provides products Inventory Count | If product is available but exact stock in unknown, provide 1, otherwise it will not get recommended.
+Alternate ID | Multistring | Pipe-separated SKUs for the Product | As there is no option to provide separate details for each SKU, it's quite useless now.
+Price | Decimal | Current price of the product | Used for personalization and Einstein Recipe price-based filtering. Price equal to 0 will block product from recommendations.
+List Price | Decimal | Full sticker price of the product | Useful for price drop personalization and Product Price Reduction Triggered Campaigns. Unfortunatelly, there is no Price Reduction Recipe [yet](../../../sites/ideas/interaction-studio-ideas#price-reduction-ingredient-in-einstein-recipes).
+Price Description | String | Information about the current Price | You can pass here promotion name that resulted in lower Price for personalization purposes.
+Currency | String | ISO-4217 Currency Code | Required when you switch on Product Localization and need to capture Product price in multiple currencies. To pass Currency you need to pass it along with Locale.
+Margin | Decimal | Profit margin on the Product | Useless.
+
+As you can see, there are two must-have attributes - Units in Stock and Price - followed by one highly recommended for most implementations - List Price. The rest is either niche or useless.
+
+:::note You Should Know
+
+Price attribute should reflect current global price. Site-wide promotions should be applied to it. Client-specific or voucher-based ones - should not. This is because one Product can have only one Price.
+
+Don't worry about final, unique price in the basket. Cart and Purchase actions have a separate model for storing the Cart Item price that can be different for each Client and won't impact the global Product Catalog Price.
+
+:::
 
 #### Category Catalog Unique Attributes
 
@@ -206,7 +223,50 @@ Is Department | Boolean
 
 #### When Interaction Studio recommends an item?
 
+```mermaid
+flowchart TD
+    item[(Item in Catalog)]
+    recommendation([Recommended]):::success
+    noRecommendation([Not recommended]):::fail
+    isItemArchived{{Archived?}}:::check
+    isItemPromotable{{Current Promotion State?}}:::check
+    isItemBeforePublished{{Published date in the future?}}:::check
+    isItemAfterExpired{{Expiration date in the past?}}:::check
+    hasName{{Name filled?}}:::check
+    hasURL{{URL filled?}}:::check
+    isProduct{{Is it Product?}}:::check
+    hasImage{{Image URL filled?}}:::check
+    hasPrice{{Price > 0?}}:::check
+    hasInventory{{Inventory Count > 0?}}:::check
 
+    item --> isItemArchived
+    isItemArchived -->|True| noRecommendation
+    isItemArchived -->|False| isItemPromotable
+    isItemPromotable -->|Excluded| noRecommendation
+    isItemPromotable -->|Eligible| isItemBeforePublished
+    isItemBeforePublished -->|Yes| noRecommendation
+    isItemBeforePublished -->|No| isItemAfterExpired
+    isItemBeforePublished -->|NULL| isItemAfterExpired
+    isItemAfterExpired -->|Yes| noRecommendation
+    isItemAfterExpired -->|No| hasName
+    isItemAfterExpired -->|NULL| hasName
+    hasName -->|No| noRecommendation
+    hasName -->|Yes| hasURL
+    hasURL -->|No| noRecommendation
+    hasURL -->|Yes| isProduct
+    isProduct -->|Yes| hasImage
+    hasImage -->|No| noRecommendation
+    hasImage -->|Yes| hasPrice
+    hasPrice -->|No| noRecommendation
+    hasPrice -->|Yes| hasInventory
+    hasInventory -->|No| noRecommendation
+    hasInventory -->|Yes| recommendation
+    isProduct -->|No| recommendation
+
+    classDef fail fill:#da4e55,color:#ffffff
+    classDef success fill:#1d73c9,color:#ffffff
+    classDef check fill:#f6b355,color:#ffffff
+```
 
 ## Related Catalog Objects
 
