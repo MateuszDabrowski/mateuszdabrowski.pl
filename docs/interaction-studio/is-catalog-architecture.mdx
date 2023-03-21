@@ -125,7 +125,7 @@ Once you know how you want to populate the Interaction Studio Catalog, it's time
 
 Each Catalog provides a set of attributes available on each Item. You can store there metadata about Products, Categories or other Objects - and you can leverage it for recommendations and personalisations. However, there are some quirks and features that needs to be taken into consideration when planning the Catalog Architecture.
 
-### Built-in Catalog Attributes
+### Catalog Built-in Attributes
 
 Let's start with what is available out-of-the-box. There are three groups of available attributes (basic, location-based and promotion-related) plus few special attributes unique to Product and Category Catalogs.
 
@@ -204,9 +204,9 @@ As you can see, there are two must-have attributes - Units in Stock and Price - 
 
 :::note You Should Know
 
-Price attribute should reflect current global price. Site-wide promotions should be applied to it. Client-specific or voucher-based ones - should not. This is because one Product can have only one Price.
+Price attribute should reflect current global price. Apply site-wide promotions to it, but don't adapt it for Client-specific or voucher-based ones. Product can have only one Price.
 
-Don't worry about final, unique price in the basket. Cart and Purchase actions have a separate model for storing the Cart Item price that can be different for each Client and won't impact the global Product Catalog Price.
+Don't worry about the final, unique basket price. Cart and Purchase actions have a separate model for storing the Product price data allowing for per-customer uniqueness without any impact to the global Product Catalog Price.
 
 :::
 
@@ -214,14 +214,75 @@ Don't worry about final, unique price in the basket. Cart and Purchase actions h
 
 Attribute | Data Type | Purpose | Comment
 -- | -- | -- | --
-ID Path | Multistring
-Is Department | Boolean
+ID Path | Multistring | Stores Category hierarchy information | Each Category can have only one Parent Category and root (top-level) Category should have this field empty.
+Is Department | Boolean | Marks root (top-level) Category | Used in Einstein Recipes for Department-based configurations.
 
-### Custom Catalog Attributes
+Dedicated Category Catalog attributes are focusing on the hierarchical relationship between the Categories. This area is a bit of a mess in the Interaction Studio, because it works differently depending on whether you use [ETL](#2-interaction-studio-with-etl) or [Sitemap](#1-interaction-studio-with-sitemap).
 
-### Attribute Considerations
+1. **Sitemap-based hierarchy** is using the [basic ID attribute](#basic-catalog-attributes). It expects pipe-delimited IDs providing full hierarchy path, so `Electronics` (single ID) for root Category, `Electronics|Computers` (two IDs pipe-delimited) for first-level child Category and so on for further levels (so it can get quite long for deeper structures: `Electronics|Computers|Laptops|Ultrabooks`). This will unlock visual hierarchy with tracking data rollups in the Category Catalog UI.
+2. **ETL-based hierarchy** is using the ID Path and Is Department attributes unique to Category Catalog. For it each Category has a single ID, passes a single Parent ID (if it has parent) or Is Department as True (if it doesn't have parent) and based on the above the ID Path will be generated. It's cleaner, but it won't provide the nice visual hierarchy with tracking data rollups in the Category Catalog UI as the Sitemap option offers. I created an[Idea to change that](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-category-hierarchy-support-for-etl).
 
-#### When Interaction Studio recommends an item?
+:::note You Should Know
+
+Officially, there is no option to overcome above limitations. If you try to push pipe-delimited IDs via Product ETL it will be treated as separate values and assign Product to multiple categories.
+
+However, if you dare, there is a workaround to eat a cookie and have a cookie. You can push Sitemap-style IDs via ETL and create the visual hierarchy in Category UI if you replace pipes with their hex code: `&#x7c;`. So instead of `Electronics|Computers|Laptops|Ultrabooks`, you would have to push `Electronics&#x7c;Computers&#x7c;Laptops&#x7c;Ultrabooks`.
+
+Keep in mind that it is not official, not supported, can break at any moment and I would consider implementing it a risky move. But for now it works.
+
+:::
+
+### Catalog Custom Attributes
+
+Outside of the built-in attributes you can go wild with custom ones - till you hit total of 35 attributes of any type on a single Object. Those are great for personalization - crucial especially for Open Time Email campaign where you don't have much wiggle room in terms of manipulating the values.
+
+Unfortunately, there is a feature huge gap related to custom Catalog Attributes, which makes their usefullness heavily limited. In Interaction Studio custom Item attributes cannot be used for Einstein Recipes. You cannot limit recommendations to products that have IsInPromotion checkbox checked. You cannot boost based on product tier.
+
+That's a huge let down, but fear not. There is a workaround - related custom Catalog Objects.
+
+## Custom Catalog Objects
+
+Let's start with the basics. You can create (up to 25) custom Catalog Objects that extend the out-of-the-box set of Products, Articles, Blog Posts, Categories and Promotions Objects. They structure and group Items assigned to them.
+
+Custom Catalog Objects have three super powers:
+
+1. You can create relationships between Items from various Catalogs (for example, between specific Product and specific colors in Color custom Catalog Objects - this doesn't sound awesome now, but the next two points will show you while it is something completely different from custom Attributes).
+2. You can capture affinity of each user towards those related Items (for example, how much each user likes specific color).
+3. You can leverage them in Einstein Recipes in multiple ways.
+
+This set of features makes custom Catalog Objects a huge deal when you want to have real control over your recommendations. Examples? Sure.
+
+### Promotions Related Catalog Object
+
+You want to only the products that are on a promotion. You can create a custom Catalog Object "Promotions" with an Item "Promoted" and assign it (via [ETL](#2-interaction-studio-with-etl) or [Sitemap](#1-interaction-studio-with-sitemap)) to each deserving Product. Then you can use this information in Einstein Recipe, Exclusion tab, to Include "Promotions" Catalog and select "Promoted" in "from explicit selection".
+
+You can even go a step further and create additional Items in that Catalog like "<10%", "<20%", "<30%", etc to be able to include (or prioritize in the Serverside Code of the template) more significant promotions.
+
+More? Extend that Catalog with a specific promotion names like "BlackFriday", "CyberMonday", "SpeedyTuesday", "FreeDelivery" "PromotionBecauseWeNeedToCloseTheQuarterHigherToGetBonus" and assign those to all eligible products. Now you can create separate Recipes for each promotion and show each customer the best products for their needs that are now with better price.
+
+Still not satisfied? Ask your database mages to calculate standard deviation for each current price drop per each product or category and assign the "coolness factor" of the promotion. 10% on phone case is not the same as 10% on newest flagship smartphone. Use that to focus on the real treats in your recommendations.
+
+Just remember that a single relationship (like this "Promotions") can store maximum of 50 values per Item (per specific Product in this case), so don't go overboard ;)
+
+### Features Related Catalog Objects
+
+Another popular use case it to display products similar to the one currently viewed (especially when product is Out Of Stock).
+
+Sure, there is a Similar Item Ingredient in Einstein Recipes, but with custom Catalog Objects you can bring it to the next level by sharing crucial specification details (like graphic card, storage, color, price bracket) and leveraging it to return recommendation of products that are truly a matching alternative, not just from name.
+
+### Custom Affinity Wheel
+
+Another great use case for custom Catalog Objects is related to the Affinity Wheel that you can see when viewing a User Profile. By default you will see there four values: Category, Product Class, Brand and Color. While those are quite good choices for many brands, those are not always perfect match for your business.
+
+Thankfully, there is a (dirty) way to change it. You won't be able to swap Category (and that's fine, as it is a must-have one in my opinion), but the other three are yours for taking.
+
+To make them whatever you want you need to create a custom Catalog Object with a special ID: Style, Brand or ItemClass. Use one of those and put what you really want in the Name. Once you save it - your Name will be shown in the Affinity Wheel and the Items in that Catalog will be displayed.
+
+Unfortunately, you will have to use those hardcoded IDs for populating data via [ETL](#2-interaction-studio-with-etl) or [Sitemap](#1-interaction-studio-with-sitemap). Not perfect, but still makes your Affinity Wheel nice and useful.
+
+## Catalog Tips & Tricks
+
+### When Interaction Studio recommends an item?
 
 ```mermaid
 flowchart TD
@@ -268,14 +329,8 @@ flowchart TD
     classDef check fill:#f6b355,color:#ffffff
 ```
 
-## Related Catalog Objects
-
-## Catalog Recipe Considerations
-
-## Catalog Personalization Considerations
-
-## Catalog Tips & Tricks
-
 ### Export full IS Catalog data
 
 ### View archived Products in the IS Catalog
+
+### Item-based Campaign Targetting
