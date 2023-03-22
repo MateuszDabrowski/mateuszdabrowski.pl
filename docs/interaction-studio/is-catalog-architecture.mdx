@@ -184,7 +184,7 @@ Promotion-related attributes are crucial for controlling what is being recommend
 Archiving does not delete Items (there is no such option in Interaction Studio). It only hides them from the Catalog UI while preserving all its values. This has two important ramifications:
 
 1. Archived Items are still being used by Interaction Studio personalisation engine - especially, they are still being used as anchors for recommendations. For example, if you have a campaign promoting Similar Items to the Item currently viewed, it will work (and leverage all the metadata of an archived Item). If you don't want it to happen, be sure to clean all attributes and relationships before archiving.
-2. You won't be able to easily find archived items to make any changes or unarchive them. You can find partial workarounds in the [Tips & Tricks section](#TODO).
+2. You won't be able to easily find archived items to make any changes or unarchive them. You can find partial workarounds in the [Tips & Tricks section](#view-archived-items-in-the-is-catalog).
 
 :::
 
@@ -244,6 +244,12 @@ That's a huge let down, but fear not. There is a workaround - related custom Cat
 
 Let's start with the basics. You can create (up to 25) custom Catalog Objects that extend the out-of-the-box set of Products, Articles, Blog Posts, Categories and Promotions Objects. They structure and group Items assigned to them.
 
+:::note You Should Know
+
+Depending on where you look in the Interaction Studio you might still see "Dimensions" - an old name for Related Custom Catalog Objects.
+
+:::
+
 Custom Catalog Objects have three super powers:
 
 1. You can create relationships between Items from various Catalogs (for example, between specific Product and specific colors in Color custom Catalog Objects - this doesn't sound awesome now, but the next two points will show you while it is something completely different from custom Attributes).
@@ -258,7 +264,7 @@ You want to only the products that are on a promotion. You can create a custom C
 
 You can even go a step further and create additional Items in that Catalog like "<10%", "<20%", "<30%", etc to be able to include (or prioritize in the Serverside Code of the template) more significant promotions.
 
-More? Extend that Catalog with a specific promotion names like "BlackFriday", "CyberMonday", "SpeedyTuesday", "FreeDelivery" "PromotionBecauseWeNeedToCloseTheQuarterHigherToGetBonus" and assign those to all eligible products. Now you can create separate Recipes for each promotion and show each customer the best products for their needs that are now with better price.
+More? Extend that Catalog with a specific promotion names like "BlackFriday", "CyberMonday", "SpeedyTuesday", "FreeDelivery" "AnotherPromotionBecauseWeNeedToCloseTheQuarterHigherToGetBonus" and assign those to all eligible products. Now you can create separate Recipes for each promotion and show each customer the best products for their needs that are now with better price.
 
 Still not satisfied? Ask your database mages to calculate standard deviation for each current price drop per each product or category and assign the "coolness factor" of the promotion. 10% on phone case is not the same as 10% on newest flagship smartphone. Use that to focus on the real treats in your recommendations.
 
@@ -282,7 +288,24 @@ Unfortunately, you will have to use those hardcoded IDs for populating data via 
 
 ## Catalog Tips & Tricks
 
-### When Interaction Studio recommends an item?
+There are quite some gotchas you can encounter when working with Interaction Studio Catalog. Here I gathered solutions to frequent problems and some undocumented tricks that can make your life easier.
+
+### When IS recommends an Item?
+
+Understanding when Interaction Studio decides to recommend an Item might not be that easy, as there is quite a lot of rules being checked in the backend:
+
+1. Four conditions related to special [Promotion attributes](#promotion-settings-catalog-attributes):
+    - Item cannot be Archived
+    - Item must be Eligible
+    - Item cannot have Published date in the future
+    - Item cannot have Expiration date in the past
+2. Two conditions related to key [Basic attributes](#basic-catalog-attributes):
+    - Item must have Name
+    - Item must have URL
+3. Three Product-only conditions related to that Object's [Unique attributes](#product-catalog-unique-attributes):
+    - Product must have Image
+    - Product must have Price
+    - Product must have Inventory
 
 ```mermaid
 flowchart TD
@@ -329,8 +352,64 @@ flowchart TD
     classDef check fill:#f6b355,color:#ffffff
 ```
 
+### Items missing in IS Catalog
+
+If you cannot find an Item in the Catalog UI there are three possible options:
+
+1. **The Item is not in the Catalog** - Check .csv files on the SFTP if you are using [ETL](#2-interaction-studio-with-etl) or use Visual Editor to validate whether the Item is being captured by the [Sitemap](#1-interaction-studio-with-sitemap).
+2. **The Item is filtered out with Date Picker** - Interaction Studio displays an Item in the Catalog only if there was any Item Action (View, Add to Cart or Purchase) in that time range selected in the Date Picker. You can extend it to up to 5 years to see more Items. Alternatively, use [my viewer script](./snippets/is-catalog-etl-metadata-viewer.mdx) that shows all non-archived Items.
+3. **The Item is archived** - Catalog does not display archived Items. Check out possible workarounds [here](#view-archived-items-in-the-is-catalog).
+
+### Data is not added to IS Catalog
+
+If Items are not [missing in the Interaction Studio Catalog](#items-missing-in-is-catalog), but you don't see the data you expect, there are three options:
+
+1. **You have Strict Catalog Security enabled** - In Interaction Studio » Settings » Catalog and Profile Objects » Catalog Settings » Security section there is Strict Catalog Security option. If it is checked and you are using Sitemap, only the Item IDs will be added to the Catalog. This is a security feature that protects integrity of your data, but it should be used only if you are using [ETL](#2-interaction-studio-with-etl) to populate the Catalog metadata. If you are use [Sitemap](#1-interaction-studio-with-sitemap) to build Catalog, you need to uncheck it.
+2. **You have a bug in the Sitemap** - Use Visual Editor from Salesforce Interactions browser extension and execute Sitemap in it on the Item page. Check the left pane to see if the data is being populated there. If not - you must fix the JavaScript that captures that data from the website.
+3. **You have another bug in the Sitemap** - If Visual Editor shows all the data, but you still don't have it on most Items, the most probable reason is issue with timing. Depending on how you are capturing Item metadata, some of it might not be available yet at the moment the Sitemap is executed on page load (but is ready when you launch the browser extension). Add a `console.log` to see whether the data is ready when you need it and leverage JS promises to solve the issue.
+
 ### Export full IS Catalog data
 
-### View archived Products in the IS Catalog
+Officially, the only option to export your Catalog data is to open the Catalog listing in the Interaction Studio UI and click Export button in top right. Sounds easy, but there are three big problems with it:
 
-### Item-based Campaign Targetting
+1. **You have limited control over what it will export** - Export file will return ID, Name, Views, ViewTime, AverageViewSeconds and URL. For Product Catalog it will also contains Cart, Purchase, Revenue, Price, Categories and all connected related Catalog Objects (each as concatenated IDs without any delimiter...). Och, and you cannot Export Categories at all. No way to get any additional details like other attributes (especially the key ones like Inventory Stock, Promotion State, Archived, etc.).
+2. **You might not be able to export all Items** - Export file will contain only the Items in the current Catalog view. It means that Date Picker in top right impact the scope of returned Items. Date Picker has limited range possible, so you might need to do multiple exports and deduplicate outcomes in the future.
+3. **You cannot export archived Items** - Export contains only visible Items - and archived ones are hidden. So no luck. I discuss partial workarounds [here](#view-archived-items-in-the-is-catalog).
+
+Ok, you know all the limitations. What now?
+
+I started this section with "officially", because I found an unofficial way. It's not as clean, but solves most problems:
+
+1. You need a .csv file with all Item Ids - You can get it using the official export described above or pull it from your website/ecommerce database. Extend that .csv with (empty) columns containing all your attributes and related catalog objects and one row with ID that doesn't exist in your catalog (ID `fullDataPlease` in the example below). For Product it might look like that:
+
+```csv
+id,categories,attribute:name,attribute:url,attribute:imageUrl,attribute:description,attribute:promotable,attribute:price,attribute:listPrice,attribute:priceDescription,attribute:margin,attribute:inventoryCount,attribute:published,attribute:expiration,attribute:currency,attribute:archived,attribute:rating,attribute:numRatings,attribute:myCustomAttribute1,attribute:myCustomAttribute2,relatedCatalogObject:myRelatedCatalogObject1,relatedCatalogObject:myRelatedCatalogObject2
+123,,,,,,,,,,,,,,,,,,,,,
+456,,,,,,,,,,,,,,,,,,,,,
+(...)
+fullDataPlease,,,,,,,,,,,,,,,,,,,,,
+```
+
+2. Upload that file to the testing folder on the Interaction Studio SFTP
+3. In Interaction Studio UI go to Feeds » Feeds Dashboard » Select the right ETL (all custom Catalog Objects are using CatalogObjectETL) and click Validate or Execute button in the top.
+4. Click Select File » Double click Testing folder » Select your .csv file. In the File Data section you should see all the columns you have passed and all the items with only ID column filled in.
+5. Click Run Test in bottom left and wait for it to complete. It might take some time for bigger loads. Do **NOT** click Commit button once it is ready.
+6. Click Export `{Something}` button in bottom right - the download will start for stagedObjects file.
+7. Open it and you will see three key row types: labels in first row and then set of rows starting with either Original or Change value. You don't need any of the Change ones. Filter them out with the tool of your choice. I like to do it in VSCode with `^Change.*(\n|)` regex replacement to nothing.
+8. And here you have it, full Interaction Studio Catalog exported to a .csv file. Two details: fields that you pushed with `relatedCatalogObject` prefix will be returned with `dimensions` prefix and Multistring fields will be returned as Arrays instead of being pipe-delimited.
+
+That's dirty, but there is currently no other option for that. I created an [Idea to change that](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-catalog-export).
+
+### View archived Items in the IS Catalog
+
+[Archiving hides Items](#promotion-settings-catalog-attributes) and that makes viewing them hard. They won't be visible in the Catalog UI, they won't be exported when you click the Export button and Salesforce Support won't be able to provide you the .csv with them.
+
+There are, however, two ways to do it:
+
+1. **One-by-One** - Great when you know the ID of the archived Item and need to view/edit only few of them:
+    - Option A: Go to the same Catalog as the Archived Item » Click any Item » Click Edit button on the right pane » In the URL find `&itemid=123456` and replace the value after equal sign with the ID of the archived item » Click Enter. A
+    - Option B: Open any Recipe » Simulate it » Find the archived Item in the Anchor Item picklist (because archived items still work as anchors) » Click the Book icon on the right side of the picklist.
+2. **All-at-Once** - Great when you know all possible Item IDs and need to find which are archived:
+    - Perform [Full IS Catalog data export](#export-full-is-catalog-data) using full list of IDs from your source system. It will return archived status for each one. Then you can leverage it for mass update with reupload via [ETL](#2-interaction-studio-with-etl).
+
+As you can see, in both cases you need to know the IDs (either exact or all possible). If you don't know what IDs could have been archived because there is no backup of all possible options - you are out of luck. Currently, there is no option to view such Items. I created an [Idea to change that](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-catalog-export).
