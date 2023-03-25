@@ -143,7 +143,7 @@ module.exports = {
                 image: 'img/og/og-image-interaction-studio.png',
             },
             items: [
-                'interaction-studio/is-catalog-objects-architecture',
+                'interaction-studio/is-catalog-architecture',
                 'interaction-studio/is-open-time-email',
                 {
                     type: 'link',

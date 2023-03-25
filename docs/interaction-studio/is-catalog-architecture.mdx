@@ -42,7 +42,7 @@ Mixing both sources is very tempting as it sounds like the best of both worlds. 
 
 For example, if you control the Exclusion and Eligibility of the Products using Sitemap and the `promotable` attribute, the ETL won't be able to overwrite it (despite officially having higher priority as a data source). It can quickly lead to considerable discrepancies in Product availability for recommendations. Due to that, I recommend enabling Strict Catalog Security setting to protect your Catalog integrity if you are using ETL.
 
-Another issue related to mixing is functional differences between the sources. For example, Sitemap and Category ETL use [different mechanisms for building hierarchy](https://issues.salesforce.com/issue/a028c00000gAwJyAAK/interaction-studio-not-correctly-displaying-category-hierarchy) that is not compatible with each other.
+Another issue related to mixing is functional differences between the sources. For example, Sitemap and Category ETL use [different mechanisms for building hierarchy](https://issues.salesforce.com/issue/a028c00000gAwJyAAK/interaction-studio-not-correctly-displaying-category-hierarchy) that are not compatible with each other.
 
 To sum up - do not mix Sitemap and ETL. And if you have to - do not mix Sitemap and ETL on the same Object. And if you have to - do not mix Sitemap and ETL for the promotable and archived attributes. But really, do not mix it.
 
@@ -54,15 +54,15 @@ Assuming you want to keep things clean, you have two options:
 
 Pros:
 - You need Sitemap either way.
-- The updates will happen in near-real-time once the User views the Item.
+- The updates will happen in real-time once the User views the Item.
 - You can build a [drill-down Category hierarchy](https://issues.salesforce.com/issue/a028c00000gAwJyAAK/interaction-studio-not-correctly-displaying-category-hierarchy) in the UI.
 
 Cons:
-- Sitemap will be more complex - depending on how the Catalog detail are stored (dataLayer, JSON LD, HTML), it might get very convoluted and impact the performance of your data capture and Campaigns.
-- Changes to the website can break your data capture (for example, updates to breadcrumb attributes or to how dataLayer is structured).
+- Sitemap will be more complex - depending on where the Catalog details are available on the website (dataLayer, JSON LD, HTML), getting them might get convoluted and impact the performance of your data capture and Campaigns.
+- Changes to the website can break your data capture (for example, updates to breadcrumb attributes or dataLayer structure).
 - Catalog gets updated only when a user views an Item, which creates a risk of incorrect recommendations for less-visited Items.
 - Can trigger massive amounts of concurrent updates for high-traffic Items.
-- Cannot overwrite Multi-String Object attributes and relationships (like Category) - Sitemap can only append.
+- Cannot overwrite Multistring Object attributes and relationships (like Category) - Sitemap can only append.
 - Catalog can be manipulated from the front end by malicious actors.
 
 #### 2. Interaction Studio with ETL
@@ -78,19 +78,19 @@ Pros:
 Cons:
 - Require you to export data in a particularly formatted .csv to IS SFTP.
 - Not real-time (but every 15 minutes is pretty damn close, come on!).
-- Doesn't support [drill-down Category hierarchy](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-category-hierarchy-support-for-etl) in the UI.
+- Doesn't support [drill-down Category hierarchy](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-category-hierarchy-support-for-etl) in the UI<sup>[*](#category-catalog-unique-attributes)</sup>.
 
 ### Recommended IS Catalog Data Source
 
-Considering the above, ETL seems like an obvious choice. And it nearly is. I see only two scenarios where we should choose Sitemap to populate the Catalog (spoiler alert, you should try to overcome those scenarios as much as possible).
+Considering the above, ETL seems like an obvious choice. And it nearly is. I see only two scenarios where we should choose Sitemap to populate the Catalog (spoiler alert, you should try to overcome those scenarios as much as possible):
 
-1. You must have Item (especially Product) updates in near-real-time.
+1. You must have Item (especially Product) updates in real-time.
 
 For example, due to swift changes in the price based on demand. Or due to having single-stock items that need to be pulled quickly from the recommendations (unfortunately, Purchase action does not adjust the stock). Consider this only if it is crucial for your business. Otherwise, the 15-minute cadence with ETL is close and lets you benefit from all the good things.
 
 2. You cannot schedule a correctly prepared .csv file to Interaction Studio SFTP.
 
-In most cases, your systems already use flat files and FTPs for communication, and you can extend the architecture to cover Interaction Studio. If not, many tools can help you transform your data cleanly into nice .csv and add it to Marketing Cloud Personalization Feed with the correct naming convention. You can even leverage Marketing Cloud's Automation Studio to prepare and deliver the file in the proper format! But sometimes data is just not there - and then, ETL is a no-go.
+In most cases, your systems already use flat files and FTPs for communication, and you can extend the architecture to cover Interaction Studio. If not, many tools can help you transform your data cleanly into a nice .csv and add it to Marketing Cloud Personalization Feed with the correct naming convention. You can even leverage Marketing Cloud's Automation Studio to prepare and deliver the files in the proper format! But sometimes data is just not there - and then, ETL is a no-go.
 
 While you can begin with Sitemap and then migrate to the ETL approach, the transitory period may be problematic due to issues described in the [Why not both?](#why-not-both) section above. I recommend finding a workaround and starting with the better option.
 
@@ -136,12 +136,12 @@ Attribute | Data Type | Purpose | Comment
 ID | String | Unique identifier for each Item | It must be unique per Object and can be reused in others (for example, you can use the same ID in Product and Category Objects).
 Name | String | Readable name of an Item | Used to identify an Item across the UI. It does not have to be unique; you might have multiple Items with the same name. Required to recommend an Item.
 URL | String | Link to the Item | Redirect target when User clicks on an Item in a Campaign. Required to recommend an Item.
-Image URL | String | Link used to display an Image of an Item | Used to showcase a Product. Required to recommend the Product (not needed for other Item types).
+Image URL | String | Link used to display an Image of an Item | Used to showcase a Product. Required to recommend a Product (not needed for other Item types).
 Description | String | Client-friendly description of an Item | Any text beyond 200 characters will be replaced with an ellipsis (`...`).
 Average Rating | Decimal | Average score of an Item based on all Ratings | Useful as a filter for Einstein Recipes and Triggered Campaigns.
-Number of Ratings | Integer | Number of ratings an Item gathered
+Number of Ratings | Integer | Number of ratings an Item gathered | Can be used in Serverside Code to conditionally hide Rating personalisation when it is based on a single rating.
 
-Out of the Basic Catalog Attributes, the first four are the most important: ID, Name, URL, and Image URL. The Average Rating helps filter products for Campaigns. The rest might be helpful for personalization purposes, but it can be skipped in most implementations.
+Out of the above Basic Catalog Attributes, the first four are the most important: ID, Name, URL, and Image URL. The Average Rating helps filter products for Campaigns. The rest might be helpful for personalization purposes, but can be skipped in most implementations.
 
 #### Location Catalog Attributes
 
@@ -163,11 +163,11 @@ Attribute | Data Type | Purpose | Comment
 Published | Datetime | Availability start date for an Item | Must be `null` or in the past for Interaction Studio to recommend the Item. If you set a future date - The Item will not be promoted until then.
 Expiration | Datetime | Availability end date for an Item | Must be `null` or in the future for Interaction Studio to recommend the Item. Once you hit that date, the Item stops being recommended.
 Promotable | Picklist | Marks whether Item should be Promoted | Items can be either Eligible or Excluded. Only Eligible ones will be returned in the recommendations, regardless of Published/Expiration values.
-Archived | Boolean | Marks whether Item should be Archived | Archived Items are treated as Excluded (are not returned in the recommendations) and are hidden from the Catalog UI.
+Archived | Boolean | Marks whether Item should be Archived | Archived Items are treated as Excluded (won't be recommended) and are hidden from the Catalog UI.
 
 :::note You Should Know
 
-Published and Expiration fields are ISO-8601 datetime fields. You must pass them formatted as `2022-04-12T10:23:37Z`.
+Published and Expiration fields (as all Interacton Studio date type fields) use ISO-8601 datetime formar. You must pass them as `2022-04-12T10:23:37Z`.
 
 If you want to push a datetime to Interaction Studio using [ETL](#2-interaction-studio-with-etl), you can prepare the data with SQL using clean [FORMAT](../sql/sfmc-sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking SFMC Data Extension).
 
@@ -177,14 +177,14 @@ Promotion-related attributes are crucial for controlling what Interaction Studio
 
 1. If you are frequently updating the Catalog (thanks to using [ETL](#2-interaction-studio-with-etl)), go with the Promotable attribute.
 2. If you have less control over when the update will come (due to using [Sitemap](#1-interaction-studio-with-sitemap)), or need the recommendation to start/end at a particular time that is not perfectly aligned with your sync schedule, go with Published/Expiration attributes.
-3. If you are sure you don't need an Item, archive it. But it is a last resort solution for some incorrect data, not a general tool for managing Catalog content.
+3. If you are sure you don't need an Item, archive it. But it is a last resort solution for incorrect data, not a general tool for managing Catalog content.
 
 :::note You Should Know
 
 Archiving does not delete Items (there is no such option in Interaction Studio). It only hides them from the Catalog UI while preserving all its values. It has two significant ramifications:
 
-1. Interaction Studio still uses archived Items for the personalisation engine - especially as anchors for recommendations. For example, a campaign promoting Similar Items to the Item currently viewed will work (and leverage all the metadata on the archived Item). If you want to avoid it, clean all attributes and relationships before archiving.
-2. You won't be able to easily find archived items to make any changes or unarchive them. You can find partial workarounds in the [Tips & Tricks section](#view-archived-items-in-the-is-catalog).
+1. Interaction Studio still uses archived Items for the personalisation engine - especially as anchors for recommendations. For example, a campaign promoting Similar Items to the Item currently viewed will work on the archvied Item page (and leverage all its metadata). If you want to avoid it, clean all attributes and relationships before archiving.
+2. You can't easily find archived items to make any changes or unarchive them. Find partial workarounds in the [Tips & Tricks section](#view-archived-items-in-the-is-catalog).
 
 :::
 
@@ -196,7 +196,7 @@ Units in Stock | Integer | Provides products Inventory Count | If the Product is
 Alternate ID | Multistring | Pipe-separated SKUs for the Product | As there is no option to provide separate details for each SKU, it's pretty useless now.
 Price | Decimal | Current price of the product | Used for personalization and Einstein Recipe price-based filtering. A price equal to 0 will block the Product from recommendations.
 List Price | Decimal | Full sticker price of the product | Useful for price drop personalization and Product Price Reduction Triggered Campaigns. Unfortunately, there is no Price Reduction Recipe [yet](../../../sites/ideas/interaction-studio-ideas#price-reduction-ingredient-in-einstein-recipes).
-Price Description | String | Information about the current Price | You can pass here the promotion name that resulted in a lower Price for personalization purposes.
+Price Description | String | Information about the current Price | You can pass here the promotion name that resulted in a lower Price for personalisation purposes.
 Currency | String | ISO-4217 Currency Code | Required when you enable Product Localization and capture Product price in multiple currencies. To pass Currency, you need to pass it along with Locale.
 Margin | Decimal | Profit margin on the Product | Useless.
 
@@ -204,7 +204,7 @@ As you can see, there are two must-have attributes - Units in Stock and Price - 
 
 :::note You Should Know
 
-The Price attribute should reflect the current global price. Apply site-wide promotions to it, but don't adapt it for Client-specific or voucher-based ones. The Product can have only one Price.
+The Price attribute should reflect the current global price. Apply site-wide promotions to it, but don't change it to a Client-specific or voucher-based ones. The Product can have only one Price.
 
 Don't worry about the final, unique basket price. Cart and Purchase actions have a separate model for storing the Product price data allowing for per-customer uniqueness without impacting the global Product Catalog Price.
 
@@ -219,8 +219,8 @@ Is Department | Boolean | Marks root (top-level) Category | Used in Einstein Rec
 
 Dedicated Category Catalog attributes focus on the hierarchical relationship between the Categories. This area is a bit of a mess in the Interaction Studio because it works differently depending on whether you use [ETL](#2-interaction-studio-with-etl) or [Sitemap](#1-interaction-studio-with-sitemap).
 
-1. **Sitemap-based hierarchy** is using the [basic ID attribute](#basic-catalog-attributes). It expects pipe-delimited IDs providing a full hierarchy path, so `Electronics` (single ID) for root Category, `Electronics|Computers` (two IDs pipe-delimited) for first-level child Category and so on for further levels (so it can get quite long for deeper structures: `Electronics|Computers|Laptops|Ultrabooks`). It will unlock the visual hierarchy with tracking data rollups in the Category Catalog UI.
-2. **ETL-based hierarchy** uses the ID Path and Is Department attributes unique to Category Catalog. Each Category has a single ID, passes a single Parent ID (if it has a parent) or Is Department as True (if it doesn't have a parent) and based on the above, Interaction Studio generates the ID Path. It's cleaner, but it won't provide the nice visual hierarchy with tracking data rollups in the Category Catalog UI as the Sitemap option offers. I created an [Idea to change that](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-category-hierarchy-support-for-etl).
+1. **Sitemap-based hierarchy** is using the [basic ID attribute](#basic-catalog-attributes). It expects pipe-delimited IDs providing a full hierarchy path, so `Electronics` (single ID) for root Category, `Electronics|Computers` (two IDs pipe-delimited) for first-level child Category and so on for further levels (it can get quite long for deeper structures: `Electronics|Computers|Laptops|Ultrabooks`). It will unlock the visual hierarchy with tracking data rollups in the Category Catalog UI.
+2. **ETL-based hierarchy** uses the ID Path and Is Department attributes unique to Category Catalog. Each Category has a single ID, passes a single Parent ID (if it has a parent) or Is Department as True (if it doesn't have a parent) and based on the above, Interaction Studio generates the ID Path. It's cleaner, but it won't provide the nice visual hierarchy with tracking data rollups in the Category Catalog UI as the Sitemap option offers. I created an [Idea to fix that](../../../sites/ideas/interaction-studio-ideas#full-is--mcp-category-hierarchy-support-for-etl).
 
 :::note You Should Know
 
@@ -246,13 +246,13 @@ Let's start with the basics. You can create (up to 25) custom Catalog Objects th
 
 :::note You Should Know
 
-Depending on where you look in the Interaction Studio, you might still see "Dimensions" - an old name for Related Custom Catalog Objects.
+Depending on where you look in the Interaction Studio, you might still see "Dimensions" - an old name for related Catalog Objects.
 
 :::
 
 Custom Catalog Objects have three superpowers:
 
-1. You can create relationships between Items from various Catalogs (for example, between specific Products and specific colours in Color custom Catalog Objects - this doesn't sound awesome now, but the following two points will show you that it is something completely different from custom Attributes).
+1. You can create relationships between Items from various Catalogs (for example, between specific Products and specific colours in custom "Color" Catalog Object - this doesn't sound awesome now, but the following two points will show you that it is something completely different from custom Attributes).
 2. You can capture the affinity of each User towards those related Items (for example, how much each User likes specific colour).
 3. You can leverage them in Einstein Recipes in multiple ways.
 
@@ -260,9 +260,9 @@ This set of features makes custom Catalog Objects a big deal when you want absol
 
 ### Promotions Related Catalog Object
 
-You want to only the products that are on promotion. You can create a custom Catalog Object "Promotions" with an Item "Promoted" and assign it (via [ETL](#2-interaction-studio-with-etl) or [Sitemap](#1-interaction-studio-with-sitemap)) to each deserving Product. Then you can use this information in Einstein Recipe, Exclusion tab to Include the "Promotions" Catalog and select "Promoted" in "from explicit selection".
+You want to recommend only the products that are on promotion. Create a custom Catalog Object "Promotions" with an Item "Promoted" and assign it (via [ETL](#2-interaction-studio-with-etl) or [Sitemap](#1-interaction-studio-with-sitemap)) to each deserving Product. Then you can use this information in Einstein Recipes » Exclusion tab to Include the "Promotions" Catalog and select "Promoted" using "from explicit selection" option.
 
-You can even go a step further and create additional Items in that Catalog like "<10%", "<20%", "<30%", etc., to be able to include (or prioritize in the Serverside Code of the template) more significant promotions.
+You can even go a step further and create additional Items in that Catalog like "0-10%", "11-20%", "21-30%", etc., to be able to include (or prioritize in the Serverside Code of the template) more significant promotions.
 
 More? Extend that Catalog with specific promotion names like "BlackFriday", "CyberMonday", "SpeedyTuesday", "FreeDelivery", "AnotherPromotionBecauseWeNeedToCloseTheQuarterHigherToGetBonus" and assign those to all eligible products. Now you can create different Recipes for each promotion and show each customer the best products for their needs that are currently at a better price.
 
@@ -274,7 +274,7 @@ Just remember that a single relationship (like this "Promotions") can store a ma
 
 Another widespread use case is to display products similar to the one currently viewed (especially when the Product is Out Of Stock).
 
-Sure, there is a Similar Item Ingredient in Einstein Recipes. Still, with custom Catalog Objects, you can bring it to the next level by sharing crucial specification details (like graphic card, storage, colour, price bracket) and leveraging it to return recommendations of products that are genuinely a matching alternative, not just from the name.
+Sure, there is a Similar Items Ingredient in Einstein Recipes. Still, with custom Catalog Objects, you can bring it to the next level by sharing crucial specification details (like graphic card, storage, colour, price bracket) and returning recommendations of products that are genuinely a matching alternative - not just from the name.
 
 ### Custom Affinity Wheel
 
