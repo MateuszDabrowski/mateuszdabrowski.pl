@@ -31,7 +31,7 @@ const features = [
                 My notes on AMPScript, SSJS, JavaScript, SQL and Configuration used in Marketing Cloud. Are you craving for more in-depth documentation or looking for tested code snippets? Hop in!
             </>
         ),
-        url: '/docs',
+        url: '/docs/',
         cta: <>Docs & Snippets</>,
     },
     {
@@ -42,7 +42,7 @@ const features = [
                 Salesforce Marketing Cloud is powerful. But it can always be more useful. Here you can find all my Salesforce IdeaExchange contributions. Vote to make Marketing Cloud a better tool.
             </>
         ),
-        url: '/sites/ideas',
+        url: '/sites/category/ideas/',
         cta: <>My Ideas</>,
     },
 ];
