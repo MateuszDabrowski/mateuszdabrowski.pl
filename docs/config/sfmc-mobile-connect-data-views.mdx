@@ -583,7 +583,7 @@ When working with `_SMSMessageTracking` Data View:
 7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. You should pull that data from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
 8. `JBDefinitionID` and `JBActivityID` let you cleanly match SMS data to [`Journey`](./sfmc-system-data-views.mdx#_journey) and [`_JourneyActivity`](./sfmc-system-data-views.mdx#_journeyactivity) Data Views using `VersionID` and `ActivityID` respectively. However, it won't work for old (created before October 2020) SMS Activities - for those you can make a [`JOIN`](../sql/sfmc-sql-join.mdx) using `Name` field: `ON smsTracking.Name = journeyActivity.ActivityName`.
 9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
-10. `SMSJobID` and `SMSBatchID` are the only way to connect _SMSMessageTracking Data View to [SMS Send Log](./sfmc-enhanced-send-log.mdx).
+10. `SMSJobID` and `SMSBatchID` are the only way to connect _SMSMessageTracking Data View to [SMS Send Log](./sfmc-enhanced-send-log.mdx). You can [`JOIN`](../sql/sfmc-sql-join.mdx) `ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SMSJobID AND smsTracking.SMSBatchID = sendLog.BatchID`.
 
 #### SMS Status Codes
 
