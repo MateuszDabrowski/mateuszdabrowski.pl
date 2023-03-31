@@ -492,6 +492,8 @@ MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. C
 ResponseToMobileMessageTrackingID | The tracking ID of the response to the message | Number | X |
 IsValid | Populates to 1 for inbound message and 0 for Outbound message | Number | X |
 InvalidationCode | Invalidation code for the message. Currently always null. | Number | X |
+SMSJobID | GUID with JobID matching value in [SMS Send Log](./sfmc-enhanced-send-log.mdx). Filled only for sends since Spring 2023. | String | X
+SMSBatchID | BatchID matching value in [SMS Send Log](./sfmc-enhanced-send-log.mdx). Filled only for sends since Spring 2023. | Number | X
 SendID | The send ID number for the SMS send | Number | X |
 SendSplitID | If the message was split, the ID of the split | Number | X |
 SendSegmentID | The ID of the segment tied to the message | Number | X |
@@ -541,6 +543,8 @@ SELECT
     , smsTracking.ResponseToMobileMessageTrackingID
     , smsTracking.IsValid
     , smsTracking.InvalidationCode
+    , smsTracking.SMSJobID
+    , smsTracking.SMSBatchID
     , smsTracking.SendID
     , smsTracking.SendSplitID
     , smsTracking.SendSegmentID
@@ -579,6 +583,7 @@ When working with `_SMSMessageTracking` Data View:
 7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. You should pull that data from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
 8. `JBDefinitionID` and `JBActivityID` let you cleanly match SMS data to [`Journey`](./sfmc-system-data-views.mdx#_journey) and [`_JourneyActivity`](./sfmc-system-data-views.mdx#_journeyactivity) Data Views using `VersionID` and `ActivityID` respectively. However, it won't work for old (created before October 2020) SMS Activities - for those you can make a [`JOIN`](../sql/sfmc-sql-join.mdx) using `Name` field: `ON smsTracking.Name = journeyActivity.ActivityName`.
 9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
+10. `SMSJobID` and `SMSBatchID` are the only way to connect _SMSMessageTracking Data View to [SMS Send Log](./sfmc-enhanced-send-log.mdx).
 
 #### SMS Status Codes
 
