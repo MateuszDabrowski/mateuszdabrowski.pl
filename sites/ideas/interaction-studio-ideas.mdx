@@ -44,7 +44,7 @@ The problem with the current state is that the exported file does not contain co
 
 It is a huge issue because it makes it impossible to debug catalog item states outside of IS/MCP (and doing it directly in the platform is not scalable). It also makes it impossible to batch-modify items (for example, for selective archiving or exclusion) for subsequent ETL import.
 
-There should be an option to export the catalog in full scope, matching the ETL schema.
+There should be an option to export the catalog in full scope, matching the ETL schema, including hidden Items that didn't yet get any action (view, cart, purchase).
 
 Bonus points for an option to include (or not) archived Items in the export. It would be a hugely beneficial addition for debugging purposes and Item reintroduction requirements (for example after mistake in archiving).
 
