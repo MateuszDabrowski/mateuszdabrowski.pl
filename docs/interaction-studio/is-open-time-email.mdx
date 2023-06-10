@@ -248,6 +248,14 @@ Always use [fallbacks](#fallback-for-null-values) along with `if`/`else` blocks:
 
 :::
 
+### Related Catalog Object support
+
+Unfortunatelly support for Related Catalog Objects is heavily limited in Open Time Email.
+
+You can leverage `${item.getTagValue("YourRelatedCatalogObject")}` call to return the ID of the Item in RCO but you won't be able to get any other information (like name of that Item). Additionally, if you have one-to-many relationship, you will still get only one ID for the first related Item. Due to those limitations, I recommend using it only if you have one-to-one relationship with readable IDs (f.e. color names as IDs in Color RCO).
+
+The workaround for other use cases is to pass the key RCO data (like brand name or color) as custom attributes on the Product. It's not perfect as it duplicates the data and eats up attributes, but it is currently the only way you will be able to leverage that information in OTE.
+
 ## Example dynamic OTE Template
 
 ```html title="OTE Template with image fallback, null attribute fallbacks and conditional promo price display"
