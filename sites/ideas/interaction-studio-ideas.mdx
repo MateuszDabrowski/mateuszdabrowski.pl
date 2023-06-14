@@ -140,6 +140,20 @@ The solution can further improve it by adding a Recipe Booster on the price redu
     newTab='true'
 />
 
+### Abandoned Cart Retention setting
+
+Interaction Studio (MCP) captures the cart information and makes it available for Einstein Recipes recommendation generation & context object in Campaign Template Server-Side Code. Unfortunately, we can only manage the cart content through proactive actions. If a client adds something to the cart and doesn't visit it for long periods, their cart content will remain in the IS.
+
+Currently, a dirty workaround for that is a Web Campaign launching on the first visit in the session using the context.user object to check whether the user has a cart and its age. Depending on that, it can push clear cart action. But this could be more user and performance friendly.
+
+The better option would be adding an option to Interaction Studio settings that would allow each business to configure (or not) the retention of the cart data so that it can be removed from the system automatically after some time.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000OYz84UAD/abandoned-cart-retention-setting'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
 ## ETL
 
 ### External Email Campaign ETL Experience Name & ID
@@ -182,6 +196,22 @@ Unsubscribe should be added to unlock a wide range of targeted campaigns like su
 
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000NVN9DUAX/external-email-campaign-etl-unsubscription-event-type'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+## Segmentation
+
+### IS Action Name Management
+
+Interaction Studio (MCP) captures actions from multiple sources to enable user segmentation and campaign targeting. Unfortunately, it does not offer any option to manage created actions, meaning everything that was pushed stays on the Dataset forever.
+
+At the very least, there should be an option to view and remove existing Actions that are no longer needed (for example, test or refactored ones). It would significantly improve user experience by providing control over the number of options in the segmentation/targeting picklists.
+
+Even better would be an option to merge existing actions so that we wouldn't lose any behavioural after refactoring the action names.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000OYyaAUAT/is-action-name-management'
     text='Vote on IdeaExchange'
     newTab='true'
 />
