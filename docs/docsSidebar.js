@@ -121,15 +121,17 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-config.png',
             },
             items: [
-                'config/sfmc-permissions',
                 'config/sfmc-system-data-views',
                 'config/sfmc-mobile-connect-data-views',
+                'config/sfmc-mcc-integration-patterns',
                 'config/sfmc-code-resource',
                 'config/sfmc-contact-deletion',
                 'config/sfmc-enhanced-send-log',
                 'config/sfmc-behavioral-triggers',
                 'config/sfmc-appexchange-solutions',
                 'config/sfmc-features-on-demand',
+                'config/sfmc-permissions',
+
             ],
         },
         {
