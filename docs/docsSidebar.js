@@ -130,7 +130,6 @@ module.exports = {
                 'config/sfmc-behavioral-triggers',
                 'config/sfmc-appexchange-solutions',
                 'config/sfmc-features-on-demand',
-                'config/sfmc-permissions',
 
             ],
         },

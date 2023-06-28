@@ -367,7 +367,11 @@ module.exports = {
                     },
                     {
                         from: ['/docs/config/sfmc-config-permissions/'],
-                        to: '/docs/config/sfmc-permissions/',
+                        to: '/docs/js/snippets/export-import-document-sfmc-roles/',
+                    },
+                    {
+                        from: ['/docs/config/sfmc-permissions/'],
+                        to: '/docs/js/snippets/export-import-document-sfmc-roles/',
                     },
                     {
                         from: ['/docs/config/sfmc-config-system-data-views/'],
