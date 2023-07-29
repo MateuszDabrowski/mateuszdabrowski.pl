@@ -5,10 +5,136 @@ sidebar_label: MCC Integration Patterns
 description: "Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud the right way."
 image: img/og/og-image-sfmc-mcc-integration-patterns.png
 tags: [Marketing Cloud, CRM, Configuration, Setup, Integration, Automation]
+toc_max_heading_level: 4
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud the right way." />
 
-##
+## Marketing Cloud Connect Basics
+
+## Single-Org vs Multi-Org
+
+## Marketing Cloud Connect Patterns
+
+### Single-Org Patterns
+
+#### Single Business Unit Single-Org Setup
+
+```mermaid
+graph LR
+ crm1[(Salesforce CRM)]:::sfdc
+ crmIU[(CRM\nIntegration User)]:::mcc
+ sfmcIU[(SFMC\nIntegration User)]:::mcc
+ sfmc1[(Marketing Cloud)]:::sfmc
+
+ crm1 --> crmIU
+ crmIU -. Marketing Cloud\nConnect .-> sfmcIU
+ subgraph sfmc [Salesforce Marketing Cloud]
+    sfmcIU --> sfmc1
+ end
+
+ classDef sfdc fill:#1d73c9,color:#ffffff
+ classDef sfmc fill:#f6b355,color:#ffffff
+ classDef mcc fill:#333333,color:#ffffff
+```
+
+#### Multiple Business Units Single-Org Setup
+
+```mermaid
+graph LR
+ crm1[(Salesforce CRM)]:::sfdc
+ crmIU[(CRM\nIntegration User)]:::mcc
+ sfmcIU[(SFMC\nIntegration User)]:::mcc
+ sfmc1[(Parent Business Unit)]:::sfmc
+ sfmcBU1[(Child Business Unit 1)]:::sfmc
+ sfmcBU2[(Child Business Unit 2)]:::sfmc
+  sfmcBUn[("Child Business Unit (n)")]:::sfmc
+
+ crm1 --> crmIU
+  crmIU -. Marketing Cloud\nConnect .-> sfmcIU
+ subgraph sfmc [Salesforce Marketing Cloud]
+    sfmcIU --> sfmc1
+    sfmc1 -.-> sfmcBU1
+    sfmc1 -.-> sfmcBU2
+    sfmc1 -.-> sfmcBUn
+ end
+
+ classDef sfdc fill:#1d73c9,color:#ffffff
+ classDef sfmc fill:#f6b355,color:#ffffff
+ classDef mcc fill:#333333,color:#ffffff
+```
+
+### Multi-Org Patterns
+
+#### Basic Multi-Org Setup
+
+```mermaid
+graph LR
+ crm1[(Salesforce CRM\nOrg 1)]:::sfdc
+ crm2[(Salesforce CRM\nDev Org)]:::sfdc
+ crm1IU[(CRM Org 1\nIntegration User)]:::mcc
+ crm2IU[(CRM Dev Org\nIntegration User)]:::mcc
+ sfmc1IU[(SFMC\nIntegration User)]:::mcc
+ sfmc2IU[(SFMC\nIntegration User)]:::mcc
+ sfmc1[(Parent Bunsiness Unit)]:::sfmc
+ sfmcBU1[(Child Business Unit 1)]:::sfmc
+ sfmcBU2[(Child Business Unit 2)]:::sfmc
+ sfmcBU3[(Child Business Unit 3)]:::sfmc
+ sfmcBU4[(Child Business Unit 4)]:::sfmc
+
+ crm1 --> crm1IU
+ crm1IU -. Marketing Cloud\nConnect .-> sfmc1IU
+ crm2 --> crm2IU
+ crm2IU -. Marketing Cloud\nConnect .-> sfmc2IU
+ subgraph sfmc [Salesforce Marketing Cloud]
+    sfmc1IU --> sfmc1
+    sfmc1IU --> sfmcBU1
+    sfmc1IU --> sfmcBU2
+    sfmc1IU --> sfmcBU3
+    sfmc2IU --> sfmcBU4
+ end
+
+ classDef sfdc fill:#1d73c9,color:#ffffff
+ classDef sfmc fill:#f6b355,color:#ffffff
+ classDef mcc fill:#333333,color:#ffffff
+```
+
+#### Complex Multi-Org Setup
+
+```mermaid
+graph LR
+ crm1[(Salesforce CRM\nOrg 1)]:::sfdc
+ crm2[(Salesforce CRM\nOrg 2)]:::sfdc
+ crm3[(Salesforce CRM\nDev Org)]:::sfdc
+ crm1IU[(CRM Org 1\nIntegration User)]:::mcc
+ crm2IU[(CRM Org 2\nIntegration User)]:::mcc
+ crm3IU[(CRM Dev Org\nIntegration User)]:::mcc
+ sfmc1IU[(SFMC\nIntegration User)]:::mcc
+ sfmc2IU[(SFMC\nIntegration User)]:::mcc
+ sfmc3IU[(SFMC\nIntegration User)]:::mcc
+ sfmc1[(Parent Bunsiness Unit)]:::sfmc
+ sfmcBU1[(Child Business Unit 1)]:::sfmc
+ sfmcBU2[(Child Business Unit 2)]:::sfmc
+ sfmcBU3[(Child Business Unit 3)]:::sfmc
+ sfmcBU4[(Child Business Unit 4)]:::sfmc
+
+ crm1 --> crm1IU
+ crm1IU -. Marketing Cloud\nConnect .-> sfmc1IU
+ crm2 --> crm2IU
+ crm2IU -. Marketing Cloud\nConnect .-> sfmc2IU
+ crm3 --> crm3IU
+ crm3IU -. Marketing Cloud\nConnect .-> sfmc3IU
+ subgraph sfmc [Salesforce Marketing Cloud]
+    sfmc1IU --> sfmc1
+    sfmc2IU --> sfmcBU1
+    sfmc2IU --> sfmcBU2
+    sfmc3IU --> sfmcBU3
+    sfmcBU4
+ end
+
+ classDef sfdc fill:#1d73c9,color:#ffffff
+ classDef sfmc fill:#f6b355,color:#ffffff
+ classDef mcc fill:#333333,color:#ffffff
+```
