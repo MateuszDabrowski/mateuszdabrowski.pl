@@ -161,7 +161,7 @@ module.exports = {
                     position: 'left',
                 },
                 {
-                    href: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing',
+                    href: 'https://www.linkedin.com/in/mateusz-dabrowski-pl',
                     position: 'right',
                     className: 'header-linkedin-link',
                     'aria-label': 'LinkedIn Profile',
