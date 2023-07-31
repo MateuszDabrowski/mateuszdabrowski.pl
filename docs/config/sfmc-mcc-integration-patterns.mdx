@@ -20,9 +20,9 @@ Unfortunately, Marketing Cloud is not (yet?) on the same Lightning Platform as t
 
 Fortunately, there is out-of-the-box integration suite made by Salesforce, called Marketing Cloud Connect (MCC), that lets you use those tools in tandem. It offers quite a lot of features ranging from simple data sync between the platforms, through dedicated Journey Builder activities and AMPScript functions, up to reporting feedback loop and extended marketing features for the CRM. Using it also means no need for custom API calls eating up the licence limits.
 
-The connector is very flexible and provide wide range of configuration options to meet the needs of your organisations. That's perfect, but it also means that you need to architect how you want the connection to work. It is especially true for the very initial step of deciding on the integration pattern between the CRM(s) and SFMC(s), as configuration won't be (easily or even at all) reversible after the initial choice is made.
+The connector is very flexible and provide wide range of configuration options to meet the needs of your organisations. That's perfect, but it also means that you need to architect how you want the connection to work. It is especially true for the very initial step of deciding on the integration aproach between the CRM(s) and SFMC(s), as configuration won't be (easily or even at all) reversible after the initial choice is made.
 
-In this article I will share quirks and features of possible integration approaches and help you make the right choice from the start. Let's dive in.
+In this article I will share quirks and features of possible integration patterns and help you make the right choice from the start. Let's dive in.
 
 ### Single-Org vs Multi-Org
 
@@ -56,10 +56,9 @@ On top of the differences showcased above, there are few other things that you s
 4. You cannot connect multiple Salesforce CRM Orgs to a single Marketing Cloud Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
 5. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts using Marketing Cloud Connect.
 
-## Marketing Cloud Conenct Best Practices
-
-
 ## Marketing Cloud Connect Patterns
+
+With high-level overview and key limitations covered, let's discuss various possible integration patterns with their pros, cons and best matched use cases.
 
 ### Single-Org Patterns
 
@@ -83,6 +82,15 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
+If you have:
+
+- one Salesforce CRM Org and
+- one SFMC Business Unit
+
+this is your choice.
+
+There are zero benefits in going Multi-Org for this use case. Keep it simple and rejoice.
+
 #### Multiple Business Units Single-Org Setup
 
 ```mermaid
@@ -93,7 +101,7 @@ graph LR
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
-  sfmcBUn[("Child Business Unit (n)")]:::sfmc
+ sfmcBUn[("Child Business Unit (n)")]:::sfmc
 
  crm1 --> crmIU
   crmIU -. Marketing Cloud\nConnect .-> sfmcIU
@@ -109,6 +117,25 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
+If you have:
+
+- one Salesforce CRM Org and
+- multiple SFMC Business Units
+
+this might be your choice.
+
+It is perfect if only you are ok with all Business Units having the same configuration and filters applied.
+
+However, if you need to have different objects or scope of Contacts/Leads/Users synchronized to each Business Unit, you will have to go with [Filtered Multi-Org Setup](#filtered-multi-org-setup). Keep in mind that by doing it you will:
+
+- need separate Integration Users for each version of configuration/filtering
+- loose possibility to hide Synchronized Data Extensions on Child Business Units
+- loose Shared Salesforce Data Extensions
+- loose Standard Profile Center
+- loose Web Collect
+
+And as going Multi-Org is non-reversible, you should be 110% certain that custom configuration/filters are worth it.
+
 #### API Extended Single-Org Setup
 
 ```mermaid
@@ -120,11 +147,11 @@ graph LR
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
-sfmcBUn[("Child Business Unit (n)")]:::sfmc
-sfmcBUDev[("Child Dev Business Unit")]:::sfmc
+ sfmcBUn[("Child Business Unit (n)")]:::sfmc
+ sfmcBUDev[("Child Dev Business Unit")]:::sfmc
 
  crm1 --> crmIU
-  crmIU -. Marketing Cloud\nConnect .-> sfmcIU
+ crmIU -. Marketing Cloud\nConnect .-> sfmcIU
  crm2 -. API Integration ....-> sfmcBUDev
  subgraph sfmc [Salesforce Marketing Cloud]
     sfmcIU --> sfmc1
@@ -138,6 +165,22 @@ sfmcBUDev[("Child Dev Business Unit")]:::sfmc
  classDef sfmc fill:#f6b355,color:#ffffff
  classDef mcc fill:#333333,color:#ffffff
 ```
+
+If you have:
+
+- one production Salesforce CRM Org and
+- one developer Salesforce CRM Org and
+- multiple SFMC Business Units
+
+it might be your choice.
+
+To be honest, I wouldn't recommend this approach. In most cases, it is much better to either go with [Basic Multi-Org Setup](#basic-multi-org-setup) or [Multiple BU Single-Org Setup](#multiple-business-units-single-org-setup) and have test data in production CRM.
+
+When this pattern might be the right one for you?
+
+1. You have dozens of SFMC Business Units.
+2. You don't want to use multiple Integration Users (each can cover up to 5 Business Units) due to cost.
+3. You absolutely don't won't to have dev/test data on production SF CRM.
 
 #### Merge-Org Setup
 
@@ -282,3 +325,6 @@ graph LR
  classDef sfmc fill:#f6b355,color:#ffffff
  classDef mcc fill:#333333,color:#ffffff
 ```
+
+## Marketing Cloud Conenct Best Practices
+
