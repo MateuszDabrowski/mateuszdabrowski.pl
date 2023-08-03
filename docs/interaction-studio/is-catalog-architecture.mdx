@@ -95,7 +95,7 @@ In most cases, your systems already use flat files and FTPs for communication, a
 While you can begin with Sitemap and then migrate to the ETL approach, the transitory period may be problematic due to issues described in the [Why not both?](#why-not-both) section above. I recommend finding a workaround and starting with the better option.
 
 ```mermaid
-flowchart TD
+graph TB
  source[(Catalog Data Source)]
  is[(Interaction Studio Catalog)]:::success
  isRealTimeNeeded{{Do you need real-time updates?}}:::check
@@ -308,7 +308,7 @@ Understanding when Interaction Studio decides to recommend an Item might not be 
     - Product must have Inventory
 
 ```mermaid
-flowchart TD
+graph TB
  item[(Item in Catalog)]
  recommendation([Recommended]):::success
  noRecommendation([Not recommended]):::fail
