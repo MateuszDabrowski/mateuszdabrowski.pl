@@ -82,14 +82,12 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
-If you have:
+It is your choice if you have:
 
 - one Salesforce CRM Org and
 - one SFMC Business Unit
 
-this is your choice.
-
-There are zero benefits in going Multi-Org for this use case. Keep it simple and rejoice.
+Keep it simple and rejoice.
 
 #### Multiple Business Units Single-Org Setup
 
@@ -117,16 +115,14 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
-If you have:
+It might be your choice if you have:
 
 - one Salesforce CRM Org and
 - multiple SFMC Business Units
 
-this might be your choice.
+It is perfect if only you are ok with all Business Units having the same configuration and filters applied. It provides simplicity and unlimited Business Unit scaling.
 
-It is perfect if only you are ok with all Business Units having the same configuration and filters applied.
-
-However, if you need to have different objects or scope of Contacts/Leads/Users synchronized to each Business Unit, you will have to go with [Filtered Multi-Org Setup](#filtered-multi-org-setup). Keep in mind that by doing it you will:
+However, if you need to have different objects or scope of Contacts/Leads/Users synchronized to each Business Unit, you will have to go with [Filtered Multi-Org Setup](#filtered-multi-org-setup). Keep in mind that by doing so you will:
 
 - need separate Integration Users for each version of configuration/filtering
 - loose possibility to hide Synchronized Data Extensions on Child Business Units
@@ -166,13 +162,11 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
-If you have:
+It might be your choice (but better consider other options) if you have:
 
 - one production Salesforce CRM Org and
 - one developer Salesforce CRM Org and
 - multiple SFMC Business Units
-
-it might be your choice.
 
 To be honest, I wouldn't recommend this approach. In most cases, it is much better to either go with [Basic Multi-Org Setup](#basic-multi-org-setup) or [Multiple BU Single-Org Setup](#multiple-business-units-single-org-setup) and have test data in production CRM.
 
@@ -181,6 +175,8 @@ When this pattern might be the right one for you?
 1. You have dozens of SFMC Business Units.
 2. You don't want to use multiple Integration Users (each can cover up to 5 Business Units) due to cost.
 3. You absolutely don't won't to have dev/test data on production SF CRM.
+
+However, be sure to calculate the implementation cost of custom API calls and check the API licence limits as you might find that going with Multi-Org will be not only better, but also cheaper in the end.
 
 #### Merge-Org Setup
 
@@ -213,6 +209,15 @@ graph LR
  classDef sfmc fill:#f6b355,color:#ffffff
  classDef mcc fill:#333333,color:#ffffff
 ```
+
+It might be your choice if you have:
+
+- multiple Salesforce CRM Orgs and
+- single SFMC with one or many Business Units
+
+
+
+
 
 ### Multi-Org Patterns
 
