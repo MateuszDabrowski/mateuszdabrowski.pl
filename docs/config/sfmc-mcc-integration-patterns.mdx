@@ -54,13 +54,16 @@ On top of the differences showcased above, there are few other things that you s
 2. With Multi-Org you need to manage the duplicate Subscribers risk (if the same Contact, Lead or User exist in multiple integrated SF Orgs, in each it will have different Contact ID and will be created as a separate Contact in SFMC).
 3. With Multi-Org setup Parent Business Unit will have access to Subscribers from all integrations. Best practice is to keep it as administrative BU with business operations happening only on Child Business Units.
 4. You cannot connect multiple Salesforce CRM Orgs to a single Marketing Cloud Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
-5. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts using Marketing Cloud Connect.
+5. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts (separate SFMCs) using Marketing Cloud Connect.
+6. You cannot fully limit access to data between Business Units. There are some options to make it harder to see data belonging to other BUs (like All Subscribers List filters or denied Shared Data Extensions permissions) but in the end the data is accessible for example through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce Marketing Cloud Accounts.
 
 ## Marketing Cloud Connect Patterns
 
 With high-level overview and key limitations covered, let's discuss various possible integration patterns with their pros, cons and best matched use cases.
 
 ### Single-Org Patterns
+
+This is the default Saleforce Marketing Cloud configuration that allows you to connect all Business Units to a single Salesforce CRM Org using the official Marketing Cloud Connect integration tool.
 
 #### Single Business Unit Single-Org Setup
 
@@ -87,7 +90,7 @@ It is your choice if you have:
 - one Salesforce CRM Org and
 - one SFMC Business Unit
 
-Keep it simple and rejoice.
+Keep it simple and rejoice strightforward architecture with no limtiations.
 
 #### Multiple Business Units Single-Org Setup
 
@@ -120,7 +123,7 @@ It might be your choice if you have:
 - one Salesforce CRM Org and
 - multiple SFMC Business Units
 
-It is perfect if only you are ok with all Business Units having the same configuration and filters applied. It provides simplicity and unlimited Business Unit scaling.
+It is perfect if you are ok with all Business Units having the same configuration and filters applied. It brings simplicity and unlimited Business Unit scaling.
 
 However, if you need to have different objects or scope of Contacts/Leads/Users synchronized to each Business Unit, you will have to go with [Filtered Multi-Org Setup](#filtered-multi-org-setup). Keep in mind that by doing so you will:
 
@@ -162,7 +165,7 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
-It might be your choice (but better consider other options) if you have:
+It might (but shouldn't) be your choice if you have:
 
 - one production Salesforce CRM Org and
 - one developer Salesforce CRM Org and
@@ -173,10 +176,12 @@ To be honest, I wouldn't recommend this approach. In most cases, it is much bett
 When this pattern might be the right one for you?
 
 1. You have dozens of SFMC Business Units.
-2. You don't want to use multiple Integration Users (each can cover up to 5 Business Units) due to cost.
+2. You don't want to use multiple Integration Users (each can cover up to 5 Business Units).
 3. You absolutely don't won't to have dev/test data on production SF CRM.
 
 However, be sure to calculate the implementation cost of custom API calls and check the API licence limits as you might find that going with Multi-Org will be not only better, but also cheaper in the end.
+
+Additionally, this approach pushes both test and production data to your Dev & Test Business Unit (as you cannot limit the Single-Org MCC integration scope), which creates a risk of sending test assets to real customers.
 
 #### Merge-Org Setup
 
@@ -215,11 +220,17 @@ It might be your choice if you have:
 - multiple Salesforce CRM Orgs and
 - single SFMC with one or many Business Units
 
+This approach moves the complexity from Marketing Cloud Connect to Salesforce CRM. By using one SF Org as a Merge Org where the data from multiple other Orgs if being synchronized, we can create simple MCC Single-Org integration that will cover all available Business Units.
 
+Of course, it has (considerable) drawbacks:
+1. Cost & Complexity - you need to have (and integrate into data pipeline) yet another Salesforce CRM Org to serve as a Merge Org
+2. Real-timeness - as there is additional step in the integration (Merge Org), the data sync loop will be slower.
 
-
+Due to the above I would only consider this approach when you need data from multiple Salesforce CRMs in a single Business Unit along with full support for Marketing Cloud Connect features (f.e. SF Journey Builder Activities and Entries).
 
 ### Multi-Org Patterns
+
+This is the optional Saleforce Marketing Cloud configuration that allows you to connect multiple Salesforce CRM Orgs to various Business Units or differentiate synchronized data filters on each Business Unit. You can enable it with Support request but keep in mind it is not reversible - once it's switched on, there is no going back to Single-Org.
 
 #### Basic Multi-Org Setup
 
@@ -235,7 +246,7 @@ graph LR
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
  sfmcBU3[(Child Business Unit 3)]:::sfmc
- sfmcBU4[(Child Business Unit 4)]:::sfmc
+ sfmcBU4[("Child Dev Business Unit")]:::sfmc
 
  crm1 --> crm1IU
  crm1IU -. Marketing Cloud\nConnect .-> sfmc1IU
@@ -253,6 +264,18 @@ graph LR
  classDef sfmc fill:#f6b355,color:#ffffff
  classDef mcc fill:#333333,color:#ffffff
 ```
+
+It might be your choice if you have:
+
+- one production Salesforce CRM Org and
+- one developer Salesforce CRM Org and
+- multiple SFMC Business Units
+
+This pattern covers one of the most popular Multi-Org setups where you have up to five production Business Units connected to the production Salesforce CRM Org but also want to have a full testing suite with dedicated Dev & Test Business Unit connected to Dev Org. The closest you can get to CI/CD with the lack of dedicated SFMC sandboxes.
+
+It is much cleaner approach than the [API Extended Single-Org Setup](#api-extended-single-org-setup) and as long as long as you have up to five production Business Units (soft but highly recommended limit per single Integration user) doesn't have many cons.
+
+Things to keep in mind:
 
 #### Complex Multi-Org Setup
 
