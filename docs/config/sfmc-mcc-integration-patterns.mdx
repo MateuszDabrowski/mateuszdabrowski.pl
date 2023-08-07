@@ -52,10 +52,9 @@ On top of the differences showcased above, there are few other things that you s
 
 1. You can change Single-Org to Multi-Org at any time (existing integration will stay at Parent BU). You cannot change Multi-Org to Single-Org.
 2. With Multi-Org you need to manage the duplicate Subscribers risk (if the same Contact, Lead or User exist in multiple integrated SF Orgs, in each it will have different Contact ID and will be created as a separate Contact in SFMC).
-3. With Multi-Org setup Parent Business Unit will have access to Subscribers from all integrations. Best practice is to keep it as administrative BU with business operations happening only on Child Business Units.
+3. You cannot fully limit access to data between Business Units. There are some options to make it harder to see data belonging to other BUs (like All Subscribers List filters or denied Shared Data Extensions permissions) but in the end the data is accessible for example through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce Marketing Cloud Accounts.
 4. You cannot connect multiple Salesforce CRM Orgs to a single Marketing Cloud Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
 5. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts (separate SFMCs) using Marketing Cloud Connect.
-6. You cannot fully limit access to data between Business Units. There are some options to make it harder to see data belonging to other BUs (like All Subscribers List filters or denied Shared Data Extensions permissions) but in the end the data is accessible for example through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce Marketing Cloud Accounts.
 
 ## Marketing Cloud Connect Patterns
 
@@ -70,8 +69,8 @@ This is the default Saleforce Marketing Cloud configuration that allows you to c
 ```mermaid
 graph LR
  crm1[(Salesforce CRM)]:::sfdc
- crmIU[(CRM\nIntegration User)]:::mcc
- sfmcIU[(SFMC\nIntegration User)]:::mcc
+ crmIU((CRM\nIntegration User)):::mcc
+ sfmcIU((SFMC\nIntegration User)):::mcc
  sfmc1[(Marketing Cloud)]:::sfmc
 
  crm1 --> crmIU
@@ -97,8 +96,8 @@ Keep it simple and rejoice strightforward architecture with no limtiations.
 ```mermaid
 graph LR
  crm1[(Salesforce CRM)]:::sfdc
- crmIU[(CRM\nIntegration User)]:::mcc
- sfmcIU[(SFMC\nIntegration User)]:::mcc
+ crmIU((CRM\nIntegration User)):::mcc
+ sfmcIU((SFMC\nIntegration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -141,8 +140,8 @@ And as going Multi-Org is non-reversible, you should be 110% certain that custom
 graph LR
  crm1[(Salesforce CRM)]:::sfdc
  crm2[(Salesforce CRM\nDev Org)]:::sfdc
- crmIU[(CRM\nIntegration User)]:::mcc
- sfmcIU[(SFMC\nIntegration User)]:::mcc
+ crmIU((CRM\nIntegration User)):::mcc
+ sfmcIU((SFMC\nIntegration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -191,8 +190,8 @@ graph LR
  crm2[(Salesforce CRM\nOrg 2)]:::sfdc
  crm3[(Salesforce CRM\nOrg 3)]:::sfdc
  crm4[(Salesforce CRM\nMerge Org)]:::sfdc
- crmIU[(CRM Merge Org\nIntegration User)]:::mcc
- sfmcIU[(SFMC\nIntegration User)]:::mcc
+ crmIU((CRM Merge Org\nIntegration User)):::mcc
+ sfmcIU((SFMC\nIntegration User)):::mcc
  sfmc1[(Parent Bunsiness Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -238,10 +237,10 @@ This is the optional Saleforce Marketing Cloud configuration that allows you to 
 graph LR
  crm1[(Salesforce CRM\nOrg 1)]:::sfdc
  crm2[(Salesforce CRM\nDev Org)]:::sfdc
- crm1IU[(CRM Org 1\nIntegration User)]:::mcc
- crm2IU[(CRM Dev Org\nIntegration User)]:::mcc
- sfmc1IU[(SFMC\nIntegration User)]:::mcc
- sfmc2IU[(SFMC\nIntegration User)]:::mcc
+ crm1IU((CRM Org 1\nIntegration User)):::mcc
+ crm2IU((CRM Dev Org\nIntegration User)):::mcc
+ sfmc1IU((SFMC\nIntegration User)):::mcc
+ sfmc2IU((SFMC\nIntegration User)):::mcc
  sfmc1[(Parent Bunsiness Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -271,11 +270,11 @@ It might be your choice if you have:
 - one developer Salesforce CRM Org and
 - multiple SFMC Business Units
 
-This pattern covers one of the most popular Multi-Org setups where you have up to five production Business Units connected to the production Salesforce CRM Org but also want to have a full testing suite with dedicated Dev & Test Business Unit connected to Dev Org. The closest you can get to CI/CD with the lack of dedicated SFMC sandboxes.
+This pattern covers one of the most popular Multi-Org setups where you have between one and five production Business Units connected to the production Salesforce CRM Org and also want to have a full testing suite with dedicated Dev & Test Business Unit connected to a Dev Org. The closest you can get to CI/CD due to lack of dedicated SFMC sandbox offering.
 
-It is much cleaner approach than the [API Extended Single-Org Setup](#api-extended-single-org-setup) and as long as long as you have up to five production Business Units (soft but highly recommended limit per single Integration user) doesn't have many cons.
+It is much cleaner approach than the [API Extended Single-Org Setup](#api-extended-single-org-setup) and it doesn't have significant cons other than standard [Multi-Org limitations](#single-org-vs-multi-org).
 
-Things to keep in mind:
+If you have more than five production Business Units or need different data filters per each production Business Unit you will need to go with [Filtered Multi-Org Setup](#filtered-multi-org-setup).
 
 #### Complex Multi-Org Setup
 
@@ -284,12 +283,12 @@ graph LR
  crm1[(Salesforce CRM\nOrg 1)]:::sfdc
  crm2[(Salesforce CRM\nOrg 2)]:::sfdc
  crm3[(Salesforce CRM\nDev Org)]:::sfdc
- crm1IU[(CRM Org 1\nIntegration User)]:::mcc
- crm2IU[(CRM Org 2\nIntegration User)]:::mcc
- crm3IU[(CRM Dev Org\nIntegration User)]:::mcc
- sfmc1IU[(SFMC\nIntegration User)]:::mcc
- sfmc2IU[(SFMC\nIntegration User)]:::mcc
- sfmc3IU[(SFMC\nIntegration User)]:::mcc
+ crm1IU((CRM Org 1\nIntegration User)):::mcc
+ crm2IU((CRM Org 2\nIntegration User)):::mcc
+ crm3IU((CRM Dev Org\nIntegration User)):::mcc
+ sfmc1IU((SFMC\nIntegration User)):::mcc
+ sfmc2IU((SFMC\nIntegration User)):::mcc
+ sfmc3IU((SFMC\nIntegration User)):::mcc
  sfmc1[(Parent Bunsiness Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -315,20 +314,31 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
+It might be your choice if you have:
+
+- multiple Salesforce CRM Orgs and
+- multiple SFMC Business Units
+
+This pattern is where Multi-Org truly shines. Multiple CRMs (be it production, sandbox or dev), multiple Business Units connected in various configurations. Very popular approach for enterprise where each country can have separate CRM and dedicated SFMC Business Unit.
+
+You can plan 1 CRM to 1 BU integrations, 1 CRM to multiple Business Units integrations and even keep some Business Units not integrated (for example for markets using non-SF CRMs). This amount of flexibility of course results in a complexity as each integration will require separate configuration, connection and data pipeline.
+
+If you want to connect more than five production Business Units to a single CRM within this setup you will need to mix this approach with [Filtered Multi-Org Setup](#filtered-multi-org-setup).
+
 #### Filtered Multi-Org Setup
 
 ```mermaid
 graph LR
  crm1[(Salesforce CRM\nOrg 1)]:::sfdc
  crm2[(Salesforce CRM\nDev Org)]:::sfdc
- crm1IU[(CRM Org 1\nIntegration User A)]:::mcc
- crm2IU[(CRM Org 1\nIntegration User B)]:::mcc
- crm3IU[(CRM Org 1\nIntegration User C)]:::mcc
- crm4IU[(CRM Dev Org\nIntegration User)]:::mcc
- sfmc1IU[(SFMC\nIntegration User)]:::mcc
- sfmc2IU[(SFMC\nIntegration User)]:::mcc
- sfmc3IU[(SFMC\nIntegration User)]:::mcc
- sfmc4IU[(SFMC\nIntegration User)]:::mcc
+ crm1IU((CRM Org 1\nIntegration User A)):::mcc
+ crm2IU((CRM Org 1\nIntegration User B)):::mcc
+ crm3IU((CRM Org 1\nIntegration User C)):::mcc
+ crm4IU((CRM Dev Org\nIntegration User)):::mcc
+ sfmc1IU((SFMC\nIntegration User)):::mcc
+ sfmc2IU((SFMC\nIntegration User)):::mcc
+ sfmc3IU((SFMC\nIntegration User)):::mcc
+ sfmc4IU((SFMC\nIntegration User)):::mcc
  sfmc1[(Parent Bunsiness Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -354,5 +364,39 @@ graph LR
  classDef mcc fill:#333333,color:#ffffff
 ```
 
+It might be your choice if you have:
+
+- multiple Salesforce CRM Orgs and
+- multiple SFMC Business Units and
+
+This pattern leverages multiple CRM Integration Users per single CRM to get around two limitations of Marketing Cloud Connect:
+
+1. One CRM Integration User in Multi-Org Setup can integrate up to five Business Units before the integration performance and stability are impacted
+2. One CRM Integration User share Object synchronization configuration and filters across all integrated Business Units.
+
+As you can see, both those limitations are per one CRM Integration User. And while you can have only one Marketing Cloud Connect in a single Salesforce CRM, you can have multiple Integration Users leveraged to conenct to the same Marketing Cloud. It allows you to go around both those issues - and is easier on your licence than ever now with freshly introduced five free integration user licences.
+
+:::note You Should Known
+
+The workaround for up-to-five-BUs is strightforward - you just create multiple integration users and connect each of them to up to five Business Units.
+
+Same is true for different Object configuration - with each Integration User you can just choose different Objects and fields you will synchronize.
+
+The workaround for unqiue filters adds a bit of complexity. While the filter setup can also be set per integration user just as Object sync configuration, the filters themselves are quite limited - with the most useful field-based filter possible only on booleans. You can leverage it by creating checkbox flags for your filters, for example `IsGermanContact`, `IsUnitedStatesContact` and `IsPolishContact` fields that match the country assignment of a Contact record.
+
+Keep in mind that those checkboxes cannot be calculated using formula. You will need to fill them in using deafult value, Apex Triger or Flow (generally any mean that triggers record update).
+
+:::
+
 ## Marketing Cloud Conenct Best Practices
 
+### Plan before you do
+
+Abraham Lincolon once said "Give me six hours to chop down a tree and I will spend the first four sharpening the axe". Will this is great maxim for most Marketing Cloud work, it is especially true for Marketing Cloud Connect configration. Wrong decision here can in the best case add you hours of work and in worse - lock you with a setup that you can change only by purchasing a fresh Marketing Cloud Account. Plan, read up, check and recheck before you commit to the work.
+
+###
+
+Things to keep in mind:
+
+1. If you have full copy sandbox integrated to Dev & Test Business Unit, it can heavily impact your Contact Count licence limits, as each Contact, Lead and User will have different SFID and due to that counted separately.
+2. All Subscribers list is global, so make sure to use Filters to limit visibility of your test data on other Business Untis and vice versa.
