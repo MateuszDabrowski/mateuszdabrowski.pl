@@ -51,10 +51,11 @@ Disconnecting MCC Integration | On Parent for whole SFMC | On per Business Unit 
 On top of the differences showcased above, there are few other things that you should keep in mind:
 
 1. You can change Single-Org to Multi-Org at any time (existing integration will stay at Parent BU). You cannot change Multi-Org to Single-Org.
-2. With Multi-Org you need to manage the duplicate Subscribers risk (if the same Contact, Lead or User exist in multiple integrated SF Orgs, in each it will have different Contact ID and will be created as a separate Contact in SFMC).
-3. You cannot fully limit access to data between Business Units. There are some options to make it harder to see data belonging to other BUs (like All Subscribers List filters or denied Shared Data Extensions permissions) but in the end the data is accessible for example through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce Marketing Cloud Accounts.
-4. You cannot connect multiple Salesforce CRM Orgs to a single Marketing Cloud Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
-5. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts (separate SFMCs) using Marketing Cloud Connect.
+2. All records in Contact, Lead and User Synchronized Data Extensions will be automatically added to All Contacts list and counted against your licence limit.
+3. With Multi-Org you need to manage the duplicate Subscribers risk (if the same Contact, Lead or User exist in multiple integrated SF Orgs, in each it will have different Contact ID and will be created as a separate Contact in SFMC).
+4. You cannot fully limit access to data between Business Units. There are some options to make it harder to see data belonging to other BUs (like All Subscribers List filters or denied Shared Data Extensions permissions) but in the end the data is accessible for example through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce Marketing Cloud Accounts.
+5. You cannot connect multiple Salesforce CRM Orgs to a single Marketing Cloud Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
+6. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts (separate SFMCs) using Marketing Cloud Connect.
 
 ## Marketing Cloud Connect Patterns
 
@@ -394,9 +395,36 @@ Keep in mind that those checkboxes cannot be calculated using formula. You will 
 
 Abraham Lincolon once said "Give me six hours to chop down a tree and I will spend the first four sharpening the axe". Will this is great maxim for most Marketing Cloud work, it is especially true for Marketing Cloud Connect configration. Wrong decision here can in the best case add you hours of work and in worse - lock you with a setup that you can change only by purchasing a fresh Marketing Cloud Account. Plan, read up, check and recheck before you commit to the work.
 
-###
+### Document what you do
 
-Things to keep in mind:
+Marketing Cloud Connect integration is complex and - especially with Multi-Org - there are a lot of configurations, usernames and passwords involved. Document all of that. It will save you hours or more in the future.
 
-1. If you have full copy sandbox integrated to Dev & Test Business Unit, it can heavily impact your Contact Count licence limits, as each Contact, Lead and User will have different SFID and due to that counted separately.
-2. All Subscribers list is global, so make sure to use Filters to limit visibility of your test data on other Business Untis and vice versa.
+### Use dedicated emails
+
+When implementing Marketing Cloud Connect you will need to create (sometimes a lot of) Integration Users. Don't use individual email addresses. Always create a dedicated group email inbox that will be used for those integration users. Employees come and go and the last thing you want is rebuilding whole integration from scratch on production because you cannot access inbox of an employee that left a year ago.
+
+### Manage the data
+
+Marketing Cloud Connect lets you move the data between the clouds. And it is extremly easy to push a lot of data. It can both impact the performance of your platform as well as create a compliance risk. Always try to minimise the amount and visibility of the data to what is truly necessary.
+
+1. Don't synchronize all the Obejcts - pick only those that are truly needed.
+2. Even if you have to synchronize useless Object, because it is prerequisite to synchronizing other Objects you need, use synchronization filters to stop the data from flowing (this is especially true for Leads and User Objects that are required but in many cases not needed).
+3. Don't synchronize all fields - pick only those that are truly needed.
+4. If you go Multi-Org, consider using different filters per Business Unit as suggested in [Filtered Multi-Org Setup](#filtered-multi-org-setup).
+5. If you go Multi-Org, make the Parent Business Unit an administrative BU, not a production one. Parent will have visibility over data from all the integrations which can lead to compliance issues in many setups.
+6. If you go Multi-Org, be wary of duplicates - if you have the same Contact in two CRMs, those will have different Salesforce IDs and therefore will be created as two separate Contacts in SFMC (and eat up your licence contact count limit appropriately).
+
+### Don't use Synchronized Data Extensions directly
+
+Synchronized Data Extensions are awesome - they get updated up to every 15 minutes with fresh data coming from Salesforce CRM. However, I wouldn't recommend using them directly as a Journey Entries or segmentation/decisioning logic. This is because if there will be an issue with the Marketing Cloud Connect (be it rare backend one or more frequent user error), the Synchronized Data Extensions will disappear along with all the data in them. This will also break all dependent assets.
+
+What is more, if you are using Multi-Org setup, Synchronized Data Extensions from subsequent integrations get numeric suffix in their name. When the integration breaks, their name might change to a different suffix breaking also all your SQL queries.
+
+The solution I recommend is to create Master Data Extensions that will capture all the needed data points from Synchronized Data Extensions and keep them updated with Automation Studio SQL Query. Then, use those Master Data Extensions for all your Journey, segmentation and decisioning needs instead of directly pulling from Synchronized DEs.
+
+This approach will provide two security layers:
+
+1. Master Data Extensions will not disappear even when there is an issue with Marketing Cloud Connect meaning that the dependent assets will no break.
+2. Master Data Extensions will keep the last synchronized version of data during the MCC crash letting segmentation and decisioning work correctly on slightly older data while you are fixing sync.
+
+Of course, there is one downside to this approach - as you need to use Automation Studio to copy Synchronized Data Extensions to your Master Data Extensions, it will add 60 minutes (minimum Automation Studio schedule) to the 15 minutes (minimum Marketing Cloud Connect schedule) delay in the data real-timeness. Still, I believe this is small price to pay for security and peace of mind.
