@@ -140,6 +140,26 @@ The solution can further improve it by adding a Recipe Booster on the price redu
     newTab='true'
 />
 
+### Rating Count in Recipe's Rating Exclusion
+
+Interaction Studio (MCP) offers many Exclusions/Inclusions on Recipes that allow to hone the recommendations to the exact business needs. Among them there is Rating that allows to exclude/include items based on their rating (with an optional zero rating capture).
+
+It would be great to have additional option in the same exclusion/inclusion to decide on rating count being greater than, less then or between two values. It should be easy, as the rating count is already part of the data model just like rating itself.
+
+This would enable use cases like:
+
+1. Including only products with great rating that have at least 10 ratings.
+2. Excluding products with bad rating if they have more than 3 ratings.
+3. Including products user purchased that have less than 3 ratings for review-request campaign.
+
+Currently such filters can be applied only on the Serverside Code level in the Template, which is not perfect as it can very easily limit the 12 received recommendations to just few or even zero. Having it on recipe level would be much more powerful.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000PjMarUAF/rating-count-in-is-recipes-rating-exclusion'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
 ### Abandoned Cart Retention setting
 
 Interaction Studio (MCP) captures the cart information and makes it available for Einstein Recipes recommendation generation & context object in Campaign Template Server-Side Code. Unfortunately, we can only manage the cart content through proactive actions. If a client adds something to the cart and doesn't visit it for long periods, their cart content will remain in the IS.
@@ -210,8 +230,38 @@ At the very least, there should be an option to view and remove existing Actions
 
 Even better would be an option to merge existing actions so that we wouldn't lose any behavioural after refactoring the action names.
 
+:::note You Should Know
+
+Partially implemented now - you can view and remove (but not merge or edit) actions by going in the Interaction Studio to Settings » Modules » Actions tab.
+
+:::
+
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000OYyaAUAT/is-action-name-management'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### IS Hourly-based Segmentation Rules
+
+Currently segmentation rules in the Interaction Studio are based on number of days. This is very limiting for on-the-site campaign targeting.
+
+For example, if we would like to display an infobar or slide-in for abandoned cart basket, current segemntation can only show us users that:
+
+1. Do have Items in cart
+2. Didn't do any Cart Action today
+
+It means we can start abandoned cart Web Campaign only on the next day.
+
+With hourly based segmentation rules we could improve it greatly to show us users that:
+
+1. Do have Items in cart
+2. Didn't do any Cart Action in the last hour
+
+The best way to solve it would be to have additional picklist at the end of rule configuration where we can choose whether it should be day or hour based.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000PjMb6UAF/is-hourlybased-segmentation-rules'
     text='Vote on IdeaExchange'
     newTab='true'
 />
