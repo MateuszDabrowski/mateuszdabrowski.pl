@@ -145,6 +145,7 @@ module.exports = {
             },
             items: [
                 'interaction-studio/is-catalog-architecture',
+                'interaction-studio/is-serverside-code-in-campaigns',
                 'interaction-studio/is-open-time-email',
                 {
                     type: 'link',
