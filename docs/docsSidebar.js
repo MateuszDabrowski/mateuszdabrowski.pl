@@ -145,8 +145,21 @@ module.exports = {
             },
             items: [
                 'interaction-studio/is-catalog-architecture',
-                'interaction-studio/is-serverside-code-in-campaigns',
-                'interaction-studio/is-open-time-email',
+                {
+                    type: 'category',
+                    label: 'Campaign Templates',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Campaign Templates',
+                        description: 'Guides focused on various aspects of Interaction Studio (Salesforce Marketing Cloud Personalization) Campaigns.',
+                        keywords: ['Marketing Cloud', 'Interaction Studio', 'Personalisation'],
+                        image: 'img/og/og-image-interaction-studio-campaign-templates.png',
+                    },
+                    items: [
+                        'interaction-studio/is-serverside-code-in-campaigns',
+                        'interaction-studio/is-open-time-email',
+                    ],
+                },
                 {
                     type: 'link',
                     label: '» Interaction Studio Snippets',
