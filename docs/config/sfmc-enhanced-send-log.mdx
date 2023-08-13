@@ -99,10 +99,11 @@ Here you can see sample Customised Send Log that I like to use:
 | SubscriberKey | String | 18 | | Yes |
 | EmailAddr | Email | 254 | | Yes |
 | EmailName_ | String | 150 | | Yes |
+| LogDate | Date | | Yes |
 | BusinessSpecificField1 | | | | Yes |
 | BusinessSpecificField2 | | | | Yes |
 
-I always add the `SubscriberKey` field (filled from a column of the same name in the Data Extension used for send) along with `EmailAddr` and `EmailName_` fields filled in from personalisation strings.
+I always add the `SubscriberKey` field (filled from a column of the same name in the Data Extension used for send) along with `EmailAddr` and `EmailName_` fields filled in from personalisation strings. I also add `LogDate` field filled with current date as default to be able to filter rows based on a attempted send date.
 
 As Send Log will show the data as it is at the moment of email preparation, I frequently extend it with customer-specific fields that are crucial for send-time data checks. For example - VIP status, Contact vs Lead status, assigned Account Executive.
 
@@ -138,6 +139,7 @@ Create standard Data Extension with more user-friendly names and extend it with 
 | EmailName | String | 150 | | Yes |
 | JourneyName | String | 100 | | Yes |
 | JourneyVersion | String | 100 | | Yes |
+| LogDate | Date | | | Yes |
 | SentDate | Date | | | Yes |
 | Delivered | String | 20 | | Yes |
 | FirstOpenDate | Date | | | Yes |
@@ -163,8 +165,10 @@ SELECT
     , sl.EmailName              AS EmailName
     , j.JourneyName             AS JourneyName
     , j.VersionNumber           AS JourneyVersion
+    , sl.LogDate                AS LogDate
     , s.EventDate               AS SentDate
     , CASE
+        WHEN s.EventDate IS NULL THEN 'False'
         WHEN job.DeliveredTime IS NOT NULL THEN CONVERT(NVARCHAR, job.DeliveredTime)
         WHEN  b.EventDate IS NOT NULL THEN 'False'
         WHEN  o.EventDate IS NOT NULL OR  c.EventDate IS NOT NULL THEN 'True'
@@ -182,9 +186,14 @@ SELECT
     , sl.BatchID                AS BatchID
     , sl.TriggeredSendID        AS TriggeredSendID
     , sl.ErrorCode              AS ErrorCode
-FROM _Sent AS s
-    LEFT JOIN _Job job
-        ON s.JobID = job.JobID
+FROM TechnicalSendLog AS sl
+    LEFT JOIN _Job AS job
+        ON sl.JobID = job.JobID
+    LEFT JOIN _Sent AS s
+        ON sl.JobID = s.JobID
+        AND sl.ListID = s.ListID
+        AND sl.BatchID = s.BatchID
+        AND sl.SubID = s.SubscriberID
     LEFT JOIN _Open AS o
         ON s.JobID = o.JobID
         AND s.ListID = o.ListID
@@ -203,18 +212,13 @@ FROM _Sent AS s
         AND s.BatchID = b.BatchID
         AND s.SubscriberID = b.SubscriberID
         AND b.IsUnique = 1
-    LEFT JOIN TechnicalSendLog AS sl
-        ON s.JobID = sl.JobID
-        AND s.ListID = sl.ListID
-        AND s.BatchID = sl.BatchID
-        AND s.SubscriberID = sl.SubID
     LEFT JOIN _JourneyActivity AS ja
         ON s.TriggererSendDefinitionObjectID = ja.JourneyActivityObjectID
     LEFT JOIN _Journey AS j
         ON ja.VersionID = j.VersionID
 WHERE
     sl.SubscriberKey IS NOT NULL
-    AND CONVERT(DATE, s.EventDate) >= DATEADD(MONTH, -1, CONVERT(DATE, GETDATE()))
+    AND CONVERT(DATE, sl.LogDate) >= DATEADD(MONTH, -1, CONVERT(DATE, GETDATE()))
 ```
 
 In the above query, we pull Journey Builder information and Sent, Delivered, Open, Click, Bounce information. We are also adding a custom logic that will provide more real Delivery and Open data using the fundamental assumption that if the recipient clicked something - the email had to be delivered and opened.
