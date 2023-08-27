@@ -9,7 +9,52 @@ tags: [Interaction Studio, Personalisation, TypeScript]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import Image from '@theme/IdealImage';
+import purpose from '../../static/img/article/article-image-is-serverside-purpose.png';
+import templateUi from '../../static/img/article/article-image-is-serverside-template-ui.png';
 
 <LeadText content="" />
 
-##
+## IS Serverside Code Purpose
+
+Whether you are creating a Web, Serverside or Triggered Campaign Template in the Interaction Studio (Marketing Cloud Personalization), in each case you will start with the Serverside Code tab. It is true core of the platform responsible for delivering data-driven personalizations.
+
+This is the place where the developer can:
+
+- leverage user profile and behavioral data
+- lookup company catalog data
+- build campaign configuration and use provided data
+- select and pull Einstein Recipe recommendations
+
+to output transformed payload containing everything that is needed for a unique experience for each customer.
+
+<Image img={purpose} alt='Graph displaying the purpose of Serverside code as a centre collecting data, configuration and recommendations to output personalisation payload'/>
+
+## IS Serverside Code Basics
+
+All above things are done within Serverside Code tab of the Interaction Studio Template creation UI with TypeScript programming language and built-in functions. Don't worry if you don't know TypeScript - basic knowledge of modern JavaScript is enough to create good templates.
+
+:::note You Should Know
+
+Open Time Email Campaigns are using different, older system. I covered its details in a [separate guide](./is-open-time-email.mdx).
+
+:::
+
+When you open the Serverside Code tab in a new Template creation screen for Web, Serverside or Triggered Campaign within the Marketing Cloud Personalization, you will be greeted by a bit intimidating interface. Let's start by breaking it down section by section:
+
+1. The middle pane contains your whole TypeScript code responsible for all the magic happening on the serverside.
+2. Within the middle section (1) you will see two sections. First one is responsible for defining the Campaign configuration form. In the screenshot below you can see a `header` field being defined as a `string` and decorated with custom title.
+3. The form definitions you develop (2) will be available for a preview on the left pane. This section not only allows you to see how the Campaign Configuration screen will look like, but also try filling it in to see the interactions.
+4. Coming back to the middle section (1), below the configuration form definitions (2) you will find the `run` function with `context` being passed as an argument. This is part where you can optionally transform or enrich the data captured from the configuration form. The `context` provided to the function contains triggering event data as well as access to a lot of helper functions that can bring your template to the next level. You can also add additional properties (for example, debugging details) to the returned object to make them available in the payload (5).
+5. The bottom part of the right pane displays the Payload Preview. It is updated in real-time as you write your TypeScript (1) or change the configuration (3). it is great way to validate whether you are getting outcome you need.
+6. If your template leverages user or catalog data (for example, user attributes for personalisation or anchored recipes) to see the proper payload you will need to provide example data. Top section of the right pane lets you do it. You can provide the IDs and see the payload (5) adapt to simulated scenario.
+
+<Image img={templateUi} alt='Interaction Studio Serverside Template UI screenshot'/>
+
+:::note You Should Know
+
+If you don't see experience or campaign in the payload section (5), it means there is an error in your template code (1).
+
+If you don't see the configuration form preview (3) updates despite writing changes in the serverside code (1) it might froze. Check whether you are still logged in to the Interaction Studio (MCP session length is shorter to that of SFMC). If yes, cut (`ctrl`/`cmd` + `x`) your whole serverside code, provide any symbol (like `a`) to overwrite the cache and paste back the code (`ctrl`/`cmd` + `v`).
+
+:::
