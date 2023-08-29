@@ -124,13 +124,30 @@ IS will display the value correctly if you drop the `.value` suffix from the per
 
 ### Formatting values
 
-Unfortunately, the only working formatting option I was able to find is the currency one available by default for price and listPrice personalisations:
+The only working formatting option I was able to find are the currency ones:
 
 ```js
-$currency.format(${item.listPrice})
+$currency.format(${item.price}) // 49,00
+$currency.formatNumber(${item.price},0) // 49
 ```
 
-Currency formatting isn't limited to those built-in values, and you can leverage it also for any custom integer or decimal attribute:
+:::note You Should Know
+
+`$currency.formatNumber(decimal, scale)` lets you provide second argument to define the number of decimal places in the formatted value.
+
+If scale is smaller than original value - it will be rounded. If scale is higher - zeroes will be added.
+
+```js
+// For item.price === 39,99
+$currency.formatNumber(${item.price},0) // 40
+$currency.formatNumber(${item.price},1) // 40,0
+$currency.formatNumber(${item.price},2) // 39,99
+$currency.formatNumber(${item.price},3) // 39,990
+```
+
+:::
+
+Currency formatting isn't limited to built-in price and listPrice. You can leverage it also for any custom integer or decimal attribute:
 
 ```js
 $currency.format(${item.attributes.decimalAttribute.value})
