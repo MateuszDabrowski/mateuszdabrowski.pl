@@ -63,6 +63,78 @@ If you don't see the configuration form preview (3) updates despite making chang
 
 ## Writing Serverside Code
 
+As mwentioned above, when you create new Web, Serverside or Triggered Campaign Template and view the Serverside Code tab, you will get a very short and simple code snippet:
+
+```ts
+export class NewTemplate implements CampaignTemplateComponent {
+
+    @title("Example Field")
+    header: string;
+
+    run(context: CampaignComponentContext) {
+        return {};
+    }
+
+}
+```
+
+There is a collection of much more complex [Global Templates available](https://github.com/evergage/evergage-global-templates/tree/master) that are great starting points for building real campaigns, but here we will start with the base snippet and build up from it for learning purposes.
+
+There are three key parts of that snippet:
+
+```ts {3-5,7-8,10}
+export class NewTemplate implements CampaignTemplateComponent {
+
+    // 1: field configuraiton
+    @title("Example Field")
+    header: string;
+
+    run(context: CampaignComponentContext) {
+        // 2: run block
+
+        return {}; // 3: return statement
+    }
+}
+```
+
+1. Field Configuration
+
+The field configuration let's you add properties that will become part of the campaign configuration form used by marketers to set the experiences. This is the main data input and all properties you set here will be passed directly to the campaign response.
+
+2. Run Block
+
+Run block has access to the context - triggering event details and Interaction Studio data. It can also pull information configured in the properties by the marketer. With all of this you can use it to enrich and transform the data that will be returned by the campaign.
+
+3. Return Statement
+
+Return statement within the run block lets you add custom properties to the final campaign payload. Whatever you add to the returned object will be made available along with the properties from field configuration section.
+
+:::note You Should Know
+
+Run block execution works differently during the template creation and in the campaign configuration. When marketer configures the campaign, the changes executed within the run section will be applied - this may lead to content changes or even removal of configuration parts. You shouldn't transform the data in the fields directly, but rather do it on new variables:
+
+```ts {8,10} title="Transform content using new variable"
+export class PersonalizedOverlay implements CampaignTemplateComponent {
+
+    @title("Personalized Header")
+    @subtitle("Use {firstName} to insert first name personalization")
+    initialHeader: string;
+
+    run(context: CampaignComponentContext) {
+        let header = this.initialHeader.replace(/{firstName}/g, context.user.attributes?.firstName);
+
+        return {header};
+    }
+}
+```
+
+This way the configured field will stay as it is, but in the final campaign payload you will also have the transformed variable for use.
+
+Keep this in mind when you have to provide a payload accoridng to a specification (f.e. in Serverside Campaign Tempalate). If you want to make any transformations to a manual input, add some prefix to the property in the field configuration section (f.e. `initial`) and output the expected name only through the return statement of the run block as shown in the snippet above.
+
+:::
+
+
 ### Basic properties
 
 ### Complex properties
@@ -80,3 +152,7 @@ If you don't see the configuration form preview (3) updates despite making chang
 ### Context
 
 ### Imports
+
+## Best Practices
+
+Don't use final needed in payload values as field names. It will make any transformations/fitlerings a pain. Use different value and normalize in return statement.
