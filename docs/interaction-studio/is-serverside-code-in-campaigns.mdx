@@ -5,10 +5,13 @@ sidebar_label: Serverside Code
 description: ""
 image: img/og/og-image-interaction-studio-serverside-code.png
 tags: [Interaction Studio, Personalisation, TypeScript]
+toc_max_heading_level: 4
 
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import Image from '@theme/IdealImage';
 import purpose from '../../static/img/article/article-image-is-serverside-purpose.png';
 import templateUi from '../../static/img/article/article-image-is-serverside-template-ui.png';
@@ -60,6 +63,8 @@ If you don't see `experience` or `campaign` in the payload object (5), it means 
 If you don't see the configuration form preview (3) updates despite making changes in the serverside code (1) it probably froze. Check whether you are still logged in to the Interaction Studio (MCP session length is shorter to that of SFMC). If yes, cut (`ctrl`/`cmd` + `x`) your whole serverside code, provide any symbol (like `a`) to overwrite the cache and replace it back by pasting the code (`ctrl`/`cmd` + `v`).
 
 :::
+
+---
 
 ## Writing Serverside Code
 
@@ -113,7 +118,7 @@ Return statement within the run block lets you add custom properties to the fina
 
 Run block execution works differently during the template creation and in the campaign configuration. When marketer configures the campaign, the changes executed within the run section will be applied - this may lead to content changes or even removal of configuration parts. You shouldn't transform the data in the fields directly, but rather do it on new variables:
 
-```ts {8,10} title="Transform content using new variable"
+```ts {8,10} title="Transform field values using new variable"
 export class PersonalizedOverlay implements CampaignTemplateComponent {
 
     @title("Personalized Header")
@@ -121,9 +126,9 @@ export class PersonalizedOverlay implements CampaignTemplateComponent {
     initialHeader: string;
 
     run(context: CampaignComponentContext) {
-        let header = this.initialHeader.replace(/{firstName}/g, context.user.attributes?.firstName);
+        let header = this.initialHeader.replace(/{firstName}/g, context.user.attributes?.firstName || 'Trailblazer');
 
-        return {header};
+        return { header };
     }
 }
 ```
@@ -134,25 +139,219 @@ Keep this in mind when you have to provide a payload accoridng to a specificatio
 
 :::
 
+With the basics of how the Serverside Code processing works, let's talk how you can leverage it.
+
+---
 
 ### Basic properties
 
+Marketing Cloud Personalization offers five basic properties: Boolean, String, Number, Color and DateTime. That selectiona long with powerful [decorators](#decorators) will enable you to build nearly anything for your campaign configuration screen.
+
+#### Boolean
+
+Boolean property lets you capture a `true` or `false` flag by creating a checkbox input:
+
+```ts title="Create simple checkbox"
+isTextLeftToRight: boolean;
+```
+
+The boolean property is unchecked by default (returns `false`), but you can change it by passing a `true` value in the code:
+
+```ts title="Checkbox checked by default"
+isTextLeftToRight: boolean = true;
+```
+
+Boolean fields are crucial for the template development as they are perfect for building logic, for example with the [`@shownIf` decorator](#shownif).
+
+#### String
+
+String property lets you capture a text input:
+
+```ts title="Create empty text input field"
+content: string;
+```
+
+However, there is much more to string property than just that.
+
+##### Array String
+
+Sometimes you may want to capture more than one string. Easy, you can do it with two characters:
+
+```ts title="Capture multiple strings"
+hashtags: string[];
+```
+
+By adding `[]` after the type definition we convert the field to an array of strings. During configuration you will be able to provide multiple values that in payload will be returned as an array.
+
+##### Default String
+
+To simplify the work for your marketers or provide recommended example of expected data you can easily add a default value to your string by providing it as a string after equal sign:
+
+```ts title="Add default content"
+content: string = 'This is default content';
+```
+
+It can be freely edited during configuration, but will be passed as is to the payload if no changes are made.
+
+:::note You Should Know
+
+You can provide default values also for string arrays:
+
+```ts title="Default values for array string"
+hashtags: string[] = ['interaction-studio', 'marketing-cloud-personalization'];
+```
+
+:::
+
+##### Select String
+
+You can go one step further and lock the string property to only a set of preconfigured values using `@options` decorator. This is great option when you need a very specific value, for example for a programmatic logic in other part of your template.
+
+```ts title="Limit possible values with select"
+@options(['brandA', 'brandB', 'brandC'])
+brand: string;
+```
+
+With such code the campaign configuration will display a picklist with the hardcoded values. It will output standard string to the campaign payload.
+
+You can also provide [default value](#default-string) for your select field:
+
+```ts title="Provide default select value"
+@options(['brandA', 'brandB', 'brandC'])
+brand: string = 'brandA';
+```
+
+:::note You Should Know
+
+You can also create select field without the decorator using literals:
+
+```ts title="Literal select field"
+brand: 'brandA' | 'brandB' | 'brandC';
+```
+
+It is shorter than `@options` approach, but I recommend using the decorator approach for consistency. `@options` will be used in multiple other snippets.
+
+:::
+
+##### Multi-Select String
+
+Just as you can capture array of text inputs, you can also do the same for [select strings](#select-string) and create a multi-picklist:
+
+```ts title="Multi-picklist"
+@options(['brandA', 'brandB', 'brandC'])
+brands: string[];
+```
+
+Similarly, you can also provide [default value](#default-string) for your multi-select field:
+
+```ts title="Provide default multi-select values"
+@options(['brandA', 'brandB', 'brandC'])
+brands: string[] = ['brandA', 'brandB'];
+```
+
+It will output array of strings to the campaign payload.
+
+:::note You Should Know
+
+You can also create multi-select field without the decorator using literals:
+
+```ts title="Literal select field"
+brand: ('brandA' | 'brandB' | 'brandC')[];
+```
+
+But just as with [select](#select-string), I recommend using the decorator approach for consistency.
+
+:::
+
+##### Rich Text String
+
+You can easily convert this simple text input into a rich text field by using a `@richText` decorator:
+
+```ts {1} title="Capture styling with a single decorator"
+@richText(true)
+content: string;
+```
+
+This decorator will change the input field to a multiline box with bold, italic, underscore and link features. The payload will return those styles in a form of HTML that can then be used directly for example in Handlebars tab of Web Campaign.
+
+#### Number
+
+Number property lets you capture integer (`3`) and decimal (`3.14`) values:
+
+```ts title="Create empty numeric input"
+recommendationsCount: number;
+```
+
+Keep in mind that non-numeric values will break the campaign without any error visible in the configuration screen. You can either display a warning using [`@shownIf` decorator](#shownIf) and a [string field](#string) or create sanitization logic in the run block.
+
+##### Array Number
+
+Just as with strings, you can capture multiple numeric values by adding `[]`:
+
+```ts title="Capture multiple numbers"
+productIds: number[];
+```
+
+It will output array of numbers to the campaign payload.
+
+
+
+
+---
+
 ### Complex properties
+
+---
 
 ### Arrays
 
+---
+
 ### Default values
+
+---
 
 ### Options
 
+---
+
 ### Decorators
+
+---
 
 ### Recommendations
 
+---
+
 ### Context
+
+---
 
 ### Imports
 
-## Best Practices
+<Tabs
+    defaultValue='snippet'
+    values={[
+        {label: 'Serverside Code', value: 'snippet'},
+        {label: 'Example Template', value: 'template'},
+        {label: 'Campaign Configuration', value: 'form'},
+        {label: 'Campaign Payload', value: 'payload'},
+    ]}
+>
+<TabItem value='snippet'>
 
-Don't use final needed in payload values as field names. It will make any transformations/fitlerings a pain. Use different value and normalize in return statement.
+
+</TabItem>
+<TabItem value='template'>
+
+
+</TabItem>
+<TabItem value='form'>
+
+
+</TabItem>
+<TabItem value='payload'>
+
+
+</TabItem>
+</Tabs>
