@@ -357,8 +357,9 @@ graph TB
 If you cannot find an Item in the Catalog UI, there are three possible options:
 
 1. **The Item is not in the Catalog** - Check .csv files on the SFTP if you are using [ETL](#2-interaction-studio-with-etl) or use Visual Editor to validate whether the Item is captured by the [Sitemap](#1-interaction-studio-with-sitemap).
-2. **The Item is filtered out with Date Picker** - Interaction Studio displays an Item in the Catalog only if there was any Item Action (View, Add to Cart or Purchase) in that time range selected in the Date Picker. You can extend it to up to 5 years to see more Items. Alternatively, use [my viewer script](./snippets/is-catalog-etl-metadata-viewer.mdx) that shows all non-archived Items.
-3. **The Item is archived** - Catalog does not display archived Items. Check out possible workarounds [here](#view-archived-items-in-the-is-catalog).
+2. **The Item does not have any item actions** - The catalog only shows items that have been viewied, added to cart or purchased.
+3. **The Item is filtered out with Date Picker** - Interaction Studio displays an Item in the Catalog only if there was any Item Action (View, Add to Cart or Purchase) in that time range selected in the Date Picker. You can extend it to up to 5 years to see more Items. Alternatively, use [my viewer script](./snippets/is-catalog-etl-metadata-viewer.mdx) that shows all non-archived Items.
+4. **The Item is archived** - Catalog does not display archived Items. Check out possible workarounds [here](#view-archived-items-in-the-is-catalog).
 
 ### Data is not added to IS Catalog
 
