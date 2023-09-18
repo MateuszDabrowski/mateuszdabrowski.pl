@@ -294,6 +294,65 @@ productIds: number[];
 
 It will output array of numbers to the campaign payload.
 
+##### Default Number
+
+Again, just as with strings, you can capture editable default value for your number:
+
+```ts title="Default numeric value"
+recommendationsCount: number = 6;
+```
+
+And the same can be done for Array Numbers:
+
+```ts title="Default numeric array value"
+productIds: number[] = [123, 456, 789];
+```
+
+##### Select Number
+
+According to documentation, you can also create number picklist. According to my tests, you can't.
+
+The `@options` decorator will be ignored whereas using the literal select approach will showcase a picklist in the interface, but it will not have any values. Providing any value manually will crash whole template by rendering a whitescreen.
+
+The workaround is to work with either [Select String](#select-string) or [Multi-Select String](#multi-select-string) and convert selected value to a number.
+
+#### Color
+
+Color property let's you create a color picker with a single line of code:
+
+```ts title"Create color picker"
+backgroundColor: Color;
+```
+
+You will be able to select the color by dragging the selector over a colour palette or by providing hex/rgba/hsl values.
+
+The property will output to payload a `color` object with both hex and rgba values:
+
+```json title="Color property output"
+"color": {
+    "hex": "#da4e55",
+    "r": 218,
+    "g": 78,
+    "b": 85,
+    "a": 1
+}
+```
+
+##### Default Color
+
+You can provide a default color, but in this case it will be a bit more complex. You cannot just provide a single hext value, you need to replicate the whole output object:
+
+```ts title"Default color value"
+backgroundColor: Color = {
+    "hex": "#da4e55",
+    "r": 218,
+    "g": 78,
+    "b": 85,
+    "a": 1
+};
+```
+
+#### Datetime
 
 
 
