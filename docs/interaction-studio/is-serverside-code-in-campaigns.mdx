@@ -153,12 +153,16 @@ Boolean property lets you capture a `true` or `false` flag by creating a checkbo
 
 ```ts title="Create simple checkbox"
 isTextLeftToRight: boolean;
+// Input: Editable unchecked checkbox
+// Output: true or false
 ```
 
 The boolean property is unchecked by default (returns `false`), but you can change it by passing a `true` value in the code:
 
 ```ts title="Checkbox checked by default"
 isTextLeftToRight: boolean = true;
+// Input: Editable checked checkbox
+// Output: true or false
 ```
 
 Boolean fields are crucial for the template development as they are perfect for building logic, for example with the [`@shownIf` decorator](#shownif).
@@ -169,6 +173,8 @@ String property lets you capture a text input:
 
 ```ts title="Create empty text input field"
 content: string;
+// Input: Empty text input
+// Output: "Provided text"
 ```
 
 However, there is much more to string property than just that.
@@ -179,9 +185,11 @@ Sometimes you may want to capture more than one string. Easy, you can do it with
 
 ```ts title="Capture multiple strings"
 hashtags: string[];
+// Input: Empty text input with option for converting entered text into one of the values
+// Output: ["Array", "of", "Strings"]
 ```
 
-By adding `[]` after the type definition we convert the field to an array of strings. During configuration you will be able to provide multiple values that in payload will be returned as an array.
+By adding `[]` after the type definition we convert the field to an array of strings. During configuration you will be able to provide multiple values that in payload will be returned as an array. It doesn't accept duplicate values.
 
 ##### › Default String
 
@@ -189,9 +197,11 @@ To simplify the work for your marketers or provide recommended example of expect
 
 ```ts title="Add default content"
 content: string = 'This is default content';
+// Input: Editable prefilled text input
+// Output: "Provided text"
 ```
 
-It can be freely edited during configuration, but will be passed as is to the payload if no changes are made.
+It can be freely edited during configuration, but will be passed as-is to the payload if no changes are made.
 
 :::note You Should Know
 
@@ -199,6 +209,8 @@ You can provide default values also for string arrays:
 
 ```ts title="Default values for array string"
 hashtags: string[] = ['interaction-studio', 'marketing-cloud-personalization'];
+// Input: Editable prefilled text input with two deletable values and space to write additional ones
+// Output: ["Array", "of", "Strings"]
 ```
 
 :::
@@ -210,15 +222,19 @@ You can go one step further and lock the string property to only a set of precon
 ```ts title="Limit possible values with select"
 @options(['brandA', 'brandB', 'brandC'])
 brand: string;
+// Input: Empty text input showing dropdown with configured options on click
+// Output: "Selected text"
 ```
 
-With such code the campaign configuration will display a picklist with the hardcoded values. It will output standard string to the campaign payload.
+With such code the campaign configuration will display a picklist with the hardcoded values. It will output a string to the campaign payload.
 
 You can also provide [default value](#-default-string) for your select field:
 
 ```ts title="Provide default select value"
 @options(['brandA', 'brandB', 'brandC'])
 brand: string = 'brandA';
+// Input: Editable prefilled text input showing dropdown with configured options on click
+// Output: "Selected text"
 ```
 
 :::note You Should Know
@@ -227,6 +243,8 @@ You can also create select field without the decorator using literals:
 
 ```ts title="Literal select field"
 brand: 'brandA' | 'brandB' | 'brandC';
+// Input: Empty text input showing dropdown with configured options on click
+// Output: "Selected text"
 ```
 
 It is shorter than `@options` approach, but I recommend using the decorator approach for consistency. `@options` will be used in multiple other snippets.
@@ -235,18 +253,22 @@ It is shorter than `@options` approach, but I recommend using the decorator appr
 
 ##### › Multi-Select String
 
-Just as you can capture array of text inputs, you can also do the same for [select strings](#-select-string) and create a multi-picklist:
+Just as you can capture array of text inputs, you can also do the same for [select strings](#-select-string) and create a multi-picklist. However, while the preconfigured options will be visible and easy to pick, new options - outside of what you hardcoded - can be freely added.
 
 ```ts title="Multi-picklist"
 @options(['brandA', 'brandB', 'brandC'])
 brands: string[];
+// Input: Empty text field with picklist and option to create new values. Allows for multiple additions.
+// Output: ["Array", "of", "Strings"]
 ```
 
-Similarly, you can also provide [default value](#-default-string) for your multi-select field:
+You can also provide [default value](#-default-string) for your multi-select field:
 
 ```ts title="Provide default multi-select values"
 @options(['brandA', 'brandB', 'brandC'])
 brands: string[] = ['brandA', 'brandB'];
+// Input: Editable prefilled text field with picklist and option to create new values. Allows for multiple additions.
+// Output: ["Array", "of", "Strings"]
 ```
 
 It will output array of strings to the campaign payload.
@@ -255,8 +277,10 @@ It will output array of strings to the campaign payload.
 
 You can also create multi-select field without the decorator using literals:
 
-```ts title="Literal select field"
+```ts title="Literal multi-select field"
 brand: ('brandA' | 'brandB' | 'brandC')[];
+// Input: Empty text field with picklist and option to create new values. Allows for multiple additions.
+// Output: ["Array", "of", "Strings"]
 ```
 
 But just as with [select](#-select-string), I recommend using the decorator approach for consistency.
@@ -267,12 +291,20 @@ But just as with [select](#-select-string), I recommend using the decorator appr
 
 You can easily convert this simple text input into a rich text field by using a `@richText` decorator:
 
-```ts {1} title="Capture styling with a single decorator"
+```ts title="Capture styling with a single decorator"
 @richText(true)
 content: string;
+// Input: Text input that adapts to the content size and provides bold, italic, underscore and link WYSIWYG options.
+// Output: "String with <span style='font-weight:bold;'>optional</span>HTML<br/>Includes multiline"
 ```
 
 This decorator will change the input field to a multiline box with bold, italic, underscore and link features. The payload will return those styles in a form of HTML that can then be used directly for example in Handlebars tab of Web Campaign.
+
+:::note You Should Know
+
+While the rich text options are very limited, you can write some other HTML (for example `<span>` with style attribute) directly in the box and it will also be passed to the output correctly. It will even display as a formatted text after you revisit the configuration.
+
+:::
 
 #### Number
 
@@ -280,9 +312,11 @@ Number property lets you capture integer (`3`) and decimal (`3.14`) values:
 
 ```ts title="Create empty numeric input"
 recommendationsCount: number;
+// Input: Empty text (yeah...) input
+// Output: 3.14
 ```
 
-Keep in mind that non-numeric values will break the campaign without any error visible in the configuration screen. You can either display a warning using [`@shownIf` decorator](#shownIf) and a [string field](#string) or create sanitization logic in the run block.
+Keep in mind that non-numeric values might break the campaign without any error visible in the configuration screen. You can either display a warning using [`@shownIf` decorator](#shownIf) and a [string field](#string) or create sanitization logic in the run block.
 
 ##### › Array Number
 
@@ -290,6 +324,8 @@ Just as with strings, you can capture multiple numeric values by adding `[]`:
 
 ```ts title="Capture multiple numbers"
 productIds: number[];
+// Input: A plus icon that adds new text inputs with delete buttons
+// Output: [3.14, 3, 5]
 ```
 
 It will output array of numbers to the campaign payload.
@@ -300,12 +336,17 @@ Again, just as with strings, you can capture editable default value for your num
 
 ```ts title="Default numeric value"
 recommendationsCount: number = 6;
+// Input: Editable prefilled text input
+// Output: 3.14
 ```
 
 And the same can be done for Array Numbers:
 
 ```ts title="Default numeric array value"
 productIds: number[] = [123, 456, 789];
+// Input: Editable and deletable prefilled text inputs and a plus icon that can add more
+// Output: [3.14, 3, 5]
+
 ```
 
 ##### › Select Number
@@ -322,21 +363,23 @@ Color property let's you create a color picker with a single line of code:
 
 ```ts title="Create color picker"
 backgroundColor: Color;
+// Input: An input pseudo-prefilled with #FFFFFF and color box that on click opens color selection interface
+// Output: {
+//    "hex": "#da4e55",
+//    "r": 218,
+//    "g": 78,
+//    "b": 85,
+//    "a": 1
+//}
 ```
 
-You will be able to select the color by dragging the selector over a colour palette or by providing hex/rgba/hsl values.
+You will be able to select the color by dragging the selector over a colour palette or by providing hex/rgba/hsl values. The property will output to payload a `color` object with both hex and rgba values.
 
-The property will output to payload a `color` object with both hex and rgba values:
+:::note You Should Know
 
-```json title="Color property output"
-"backgroundColor": {
-    "hex": "#da4e55",
-    "r": 218,
-    "g": 78,
-    "b": 85,
-    "a": 1
-}
-```
+While the property will look like it is prefilled with white color, until you pick a color in the interface, it will output `null`. If you want the white to be working default option, you must configure it explicitly.
+
+:::
 
 ##### › Default Color
 
@@ -350,6 +393,14 @@ backgroundColor: Color = {
     "b": 85,
     "a": 1
 };
+// Input: An input truly-prefilled with #FFFFFF and color box that on click opens color selection interface
+// Output: {
+//    "hex": "#da4e55",
+//    "r": 218,
+//    "g": 78,
+//    "b": 85,
+//    "a": 1
+//}
 ```
 
 #### Datetime
@@ -358,20 +409,18 @@ Datetime property provides a clean looking calendar widget that lets marketer ea
 
 ```ts title="Create datetime picker"
 promotionDate: DateTime;
+// Input: Empty input with calendar icon that on click opens full calendar for date selection
+// Output: {
+//    "dateTime": [
+//        "2023-10-01T16:00:00.000Z"
+//    ]
+//}
 ```
 
-There are two payload-related caveats to consider:
+There are two payload-related things to consider:
 
 1. DateTime property always outputs an object with a single `dateTime` property assigned to an array of strings.
 2. The datetimes are returned as ISO 8601 strings (`2023-10-01T16:00:00.000Z`).
-
-```json title="Datetime property output"
-"promotableDate": {
-    "dateTime": [
-        "2023-10-01T16:00:00.000Z"
-    ]
-}
-```
 
 ##### Datetime Range
 
@@ -380,6 +429,13 @@ While you cannot create multi-select datetime field, you can use `@range` decora
 ```ts title="Create range datetime picker"
 @range(true)
 promotionDate: DateTime;
+// Input: Empty input with calendar icon that on click opens full calendar for two dates selection with range indicator
+// Output: {
+//    "dateTime": [
+//        "2023-10-01T16:00:00.000Z",
+//        "2023-10-03T16:00:00.000Z"
+//    ]
+//}
 ```
 
 The output will return both selected dates in the `dateTime` array of strings.
@@ -387,14 +443,6 @@ The output will return both selected dates in the `dateTime` array of strings.
 ---
 
 ### Complex properties
-
----
-
-### Arrays
-
----
-
-### Default values
 
 ---
 
