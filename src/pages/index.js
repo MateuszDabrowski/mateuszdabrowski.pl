@@ -14,7 +14,7 @@ import styles from './styles.module.css';
 const features = [
     {
         title: <>Let's connect</>,
-        imageUrl: 'img/md_hoodie_icon.png',
+        imageUrl: 'img/md_profile_icon.png',
         description: (
             <>
                 Ahoj! My name is Mateusz Dąbrowski. I'm Marketing Cloud Architect and Salesforce MVP. I find joy in telling the code to do my job. Got questions, suggestions or want to get in touch?
