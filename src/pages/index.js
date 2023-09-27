@@ -20,7 +20,7 @@ const features = [
                 Ahoj! My name is Mateusz Dąbrowski. I'm Marketing Cloud Architect and Salesforce MVP. I find joy in telling the code to do my job. Got questions, suggestions or want to get in touch?
             </>
         ),
-        url: 'https://www.linkedin.com/in/mateusz-dabrowski-marketing/',
+        url: 'https://www.linkedin.com/in/mateusz-dabrowski-pl/',
         cta: <>Let's Connect</>,
     },
     {
