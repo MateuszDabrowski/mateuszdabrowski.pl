@@ -68,7 +68,7 @@ If you don't see the configuration form preview (3) updates despite making chang
 
 ## Writing Serverside Code
 
-As mwentioned above, when you create new Web, Serverside or Triggered Campaign Template and view the Serverside Code tab, you will get a very short and simple code snippet:
+As mentioned above, when you create new Web, Serverside or Triggered Campaign Template and view the Serverside Code tab, you will get a very short and simple code snippet:
 
 ```ts
 export class NewTemplate implements CampaignTemplateComponent {
@@ -312,7 +312,7 @@ Number property lets you capture integer (`3`) and decimal (`3.14`) values:
 
 ```ts title="Create empty numeric input"
 recommendationsCount: number;
-// Input: Empty text (yeah...) input
+// Input: Empty text (sic!) input
 // Output: 3.14
 ```
 
@@ -422,7 +422,7 @@ There are two payload-related things to consider:
 1. DateTime property always outputs an object with a single `dateTime` property assigned to an array of strings.
 2. The datetimes are returned as ISO 8601 strings (`2023-10-01T16:00:00.000Z`).
 
-##### Datetime Range
+##### › Datetime Range
 
 While you cannot create multi-select datetime field, you can use `@range` decorator to be able to select two dates with a nice UI.
 
@@ -444,9 +444,126 @@ The output will return both selected dates in the `dateTime` array of strings.
 
 ### Complex properties
 
----
+You can do more with [Basic properties](#basic-properties). The real fun starts when you combine them into complex ones. The method is strightforward. Outside the main class that implements CampaignTemplateComponent create a new class export that contains all the basic inputs you need:
 
-### Options
+```ts title="Define complex property"
+export class TimeframedColorPicker {
+    @range(true)
+    timeframe: Date;
+
+    color: Color;
+}
+```
+
+With complex property defined you can leverage it in the main class the same way as you do with basic properties:
+
+```ts title="Use complex property"
+timeframedColor: TimeframedColorPicker;
+// Input: Set of basic properties - datetime range and color pickers in this case
+// Output: {
+//    timeframedColor: {
+//        timeframe: "dateTime": [
+//            "2023-10-01T16:00:00.000Z",
+//            "2023-10-03T16:00:00.000Z"
+//        ],
+//        color: {
+//            "hex": "#da4e55",
+//            "r": 218,
+//            "g": 78,
+//            "b": 85,
+//            "a": 1
+//        }
+//    }
+//}
+```
+
+What are the benefits of this approach?
+
+1. You can define your complex property class once and then use it multiple times in your form.
+2. You can control the structure of Serverside payload.
+
+Complex property is creating a new nested object assigned to a input property. Let's look at the difference:
+
+```ts title="Payload using basic properties"
+@range(true)
+timeframe: Date;
+
+color: Color;
+// Input: Two basic properties - datetime range and color pickers in this case
+// Output: {
+//    timeframe: "dateTime": [
+//        "2023-10-01T16:00:00.000Z",
+//        "2023-10-03T16:00:00.000Z"
+//    ],
+//    color: {
+//        "hex": "#da4e55",
+//        "r": 218,
+//        "g": 78,
+//        "b": 85,
+//        "a": 1
+//    }
+//}
+```
+
+```ts {4,16} title="Payload using complex property"
+timeframedColor: TimeframedColorPicker;
+// Input: Set of basic properties - datetime range and color pickers in this case
+// Output: {
+//    timeframedColor: {
+//        timeframe: "dateTime": [
+//            "2023-10-01T16:00:00.000Z",
+//            "2023-10-03T16:00:00.000Z"
+//        ],
+//        color: {
+//            "hex": "#da4e55",
+//            "r": 218,
+//            "g": 78,
+//            "b": 85,
+//            "a": 1
+//        }
+//    }
+//}
+```
+
+As you can see, complex property is taking the basic output and assigning it to the field using the complex property. This can help with payload readability and might be crucial when you have to adapt your payload to a specific requirements (for example, schema expected by React website or 3rd party system).
+
+3. You can nest complex properties
+
+Just as you can add a complex property to a field, you can also create a complex property using complex properties. While it can again give you all the benefits mentioned here, be careful not to go overboard. Deep nesting is harder to understand and use. There is no perfect rule, but check out [Simple/Complex recommendations in Zen of SFMC](../zen-of-sfmc/#simple-is-better-than-complex).
+
+4. You can leverage it to build an Array of complex properties!
+
+This is the real game changer - out of the basic properties only [Strings](#-array-string) and [Numbers](#-array-string) can be used an arrays. But using a complex one, you can leverage also Boolean, Color and Datetime. The approach is the same as previously - just add `[]`:
+
+```ts {4,16} title="Array of complex properties"
+timeframedColor: TimeframedColorPicker[];
+// Input: A plus icon that adds new sets of basic properties with delete buttons
+// Output: {
+//    timeframedColor: [{
+//        timeframe: "dateTime": [
+//            "2023-10-01T16:00:00.000Z",
+//            "2023-10-03T16:00:00.000Z"
+//        ],
+//        color: {
+//            "hex": "#da4e55",
+//            "r": 218,
+//            "g": 78,
+//            "b": 85,
+//            "a": 1
+//        }
+//    }]
+//}
+```
+
+It allows you to capture multiple complex configurations (for example, multiple recommendations or - as in example above - multiple colors that can change in the campaign based on the current date).
+
+:::note You Should Know
+
+There are currently two bugs related to arrays of complex properties:
+
+1.
+
+:::
 
 ---
 
@@ -454,39 +571,9 @@ The output will return both selected dates in the `dateTime` array of strings.
 
 ---
 
-### Recommendations
-
----
-
-### Context
-
----
-
 ### Imports
 
-<Tabs
-    defaultValue='snippet'
-    values={[
-        {label: 'Serverside Code', value: 'snippet'},
-        {label: 'Example Template', value: 'template'},
-        {label: 'Campaign Configuration', value: 'form'},
-        {label: 'Campaign Payload', value: 'payload'},
-    ]}
->
-<TabItem value='snippet'>
+---
 
+### Run
 
-</TabItem>
-<TabItem value='template'>
-
-
-</TabItem>
-<TabItem value='form'>
-
-
-</TabItem>
-<TabItem value='payload'>
-
-
-</TabItem>
-</Tabs>
