@@ -449,7 +449,7 @@ You can do more with [Basic properties](#basic-properties). The real fun starts 
 ```ts title="Define complex property"
 export class TimeframedColorPicker {
     @range(true)
-    timeframe: Date;
+    timeframe: DateTime;
 
     color: Color;
 }
@@ -476,6 +476,43 @@ timeframedColor: TimeframedColorPicker;
 //    }
 //}
 ```
+
+:::note You Should Know
+
+With complex properties you can provide default values in two ways:
+
+1. You can provide default values within the defining class directly on basic properties.
+
+```ts title="Define complex property with default values"
+export class RecommendationsConfig {
+    recommendationsHeader: String = 'Chosen for You';
+    recommendationsDisplayed: Number = 6;
+}
+```
+
+This approach will work for complex property arrays, but not for single complex property.
+
+2. You can provide default value in the main class implementing the CampaignTemplateComponent.
+
+```ts title="Use complex property with default value"
+recsConfig: RecommendationsConfig = {
+  "recommendationsHeader": "Chosen for You",
+  "recommendationsDisplayed": 6
+};
+```
+
+This approach will work for single complex property and - if you provide the default value(s) in the array - also for arrays for complex properties.
+
+```ts title="Use array of complex properties with default value"
+recsConfig: RecommendationsConfig = [{
+  "recommendationsHeader": "Chosen for You",
+  "recommendationsDisplayed": 6
+}];
+```
+
+As you can see both approaches work for arrays of complex properties but they result in a different outcome. The first approach provides a default values to all element of a complex property array that you will create. The second approch pre-fills the array with the provided default elements. You can use both at the same time to have few array elements prefilled and provide default values for all new elements created on top of it.
+
+:::
 
 What are the benefits of this approach?
 
@@ -559,9 +596,9 @@ It allows you to capture multiple complex configurations (for example, multiple 
 
 :::note You Should Know
 
-There are currently two bugs related to arrays of complex properties:
+There is a [bug with removal UI](https://issues.salesforce.com/issue/a028c00000p5gvMAAQ/personalization-incorrect-behaviour-of-array-of-complex-objects-in-templates) for complex properties.
 
-1.
+Lets say you have multiple properties configured in an array and want to remove one. If you click the removal button, regardless for which element you did it, the UI will remove the bottom one. However, in the backend the correct one was removed, which you can check in the Payload Preview. Save, reenter configuration screen or refresh, and you will see the correct configuration.
 
 :::
 
@@ -577,3 +614,14 @@ There are currently two bugs related to arrays of complex properties:
 
 ### Run
 
+---
+
+### Examples
+
+Here, I want to share a few of my favourite sources of Interaction Studio Templates:
+
+1. Official [GitHub repository](https://github.com/evergage/evergage-global-templates) with Global Templates
+2. Christoper's Long [GitHub repository](https://github.com/christopher-longSFDC/mcp/) with Complex Templates
+3. Salesforce Japan [Template Catalog](https://github.com/christopher-longSFDC/mcp/) with Web Campaigns
+
+Know other inspiring MCP Serverside Code examples? Let me know!
