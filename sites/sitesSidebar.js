@@ -11,7 +11,7 @@ module.exports = {
             },
             items: [
                 'ideas/marketing-cloud-ideas',
-                'ideas/interaction-studio-ideas',
+                'ideas/mc-personalization-ideas',
             ],
         },
     ],

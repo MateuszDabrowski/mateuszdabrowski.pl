@@ -87,8 +87,8 @@ module.exports = {
                             to: 'docs/category/sfmc-config/',
                         },
                         {
-                            label: 'Interaction Studio',
-                            to: 'docs/category/interaction-studio/',
+                            label: 'MC Personalization',
+                            to: 'docs/category/mc-personalization/',
                         },
                     ],
                 },
@@ -115,8 +115,8 @@ module.exports = {
                             to: 'docs/category/sfmc-sql-snippets/',
                         },
                         {
-                            label: 'Interaction Studio',
-                            to: 'docs/category/interaction-studio-snippets/',
+                            label: 'MC Personalization',
+                            to: 'docs/category/mc-personalization-snippets/',
                         },
                     ],
                 },
@@ -150,8 +150,8 @@ module.exports = {
                             to: 'sites/ideas/marketing-cloud-ideas/',
                         },
                         {
-                            label: 'Interaction Studio',
-                            to: 'sites/ideas/interaction-studio-ideas/',
+                            label: 'MC Personalization',
+                            to: 'sites/ideas/mc-personalization-ideas/',
                         },
                     ]
                 },
@@ -219,8 +219,8 @@ module.exports = {
                             to: 'docs/category/sfmc-config/',
                         },
                         {
-                            label: 'Interaction Studio',
-                            to: 'docs/category/interaction-studio/',
+                            label: 'MC Personalization',
+                            to: 'docs/category/mc-personalization/',
                         },
                     ],
                 },
@@ -244,8 +244,8 @@ module.exports = {
                             to: 'docs/category/sfmc-sql-snippets/',
                         },
                         {
-                            label: 'Interaction Studio',
-                            to: 'docs/category/interaction-studio-snippets/',
+                            label: 'MC Personalization',
+                            to: 'docs/category/mc-personalization-snippets/',
                         },
                     ],
                 },
@@ -417,6 +417,31 @@ module.exports = {
                     {
                         from: ['/docs/usecase/sfmc-cloud-apps/', '/docs/usecase/sfmc-cloud-page-apps/'],
                         to: '/docs/ssjs/snippets/sfmc-cloud-page-apps/',
+                    },
+                    /* Interaction Studio rename */
+                    {
+                        from: ['/docs/category/interaction-studio/'],
+                        to: '/docs/category/mc-personalization/',
+                    },
+                    {
+                        from: ['/docs/interaction-studio/is-catalog-architecture/'],
+                        to: '/docs/interaction-studio/mcp-catalog-architecture/',
+                    },
+                    {
+                        from: ['/docs/interaction-studio/is-open-time-email/'],
+                        to: '/docs/interaction-studio/mcp-open-time-email/',
+                    },
+                    {
+                        from: ['/docs/category/interaction-studio-snippets/'],
+                        to: '/docs/category/mc-personalization-snippets/',
+                    },
+                    {
+                        from: ['/docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/'],
+                        to: '/docs/interaction-studio/mcp-catalog-etl-metadata-viewer/',
+                    },
+                    {
+                        from: ['/sites/ideas/interaction-studio-ideas/'],
+                        to: '/sites/ideas/mc-personalization-ideas/',
                     },
                     /* Category pages restructure */
                     {

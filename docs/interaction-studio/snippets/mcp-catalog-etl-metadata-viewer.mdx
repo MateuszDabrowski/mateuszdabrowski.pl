@@ -1,33 +1,33 @@
 ---
-id: is-catalog-etl-metadata-viewer
-title: IS Catalog ETL Metadata Viewer
+id: mcp-catalog-etl-metadata-viewer
+title: MCP Catalog ETL Metadata Viewer
 sidebar_label: Catalog ETL Metadata Viewer
-description: Debug your Interaction Studio (SFMC Personalization) Catalog Object Item attributes with the power of Serverside Code.
-image: img/og/og-image-interaction-studio-catalog-etl-metadata-viewer.png
-tags: [Interaction Studio, Personalisation, Data Management]
+description: Debug your Marketing Cloud Personalization (Interaction Studio) Catalog Object Item attributes with the power of Serverside Code.
+image: img/og/og-image-mcp-catalog-etl-metadata-viewer.png
+tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, TypeScript, Data Management]
 ---
 
 import { LeadText } from '../../../src/components/LeadText.js';
 import { Button } from '../../../src/components/Buttons.js';
 
-<LeadText content="Debug your Interaction Studio (SFMC Personalization) Catalog Object Item attributes with the power of Serverside Code." />
+<LeadText content="Debug your Marketing Cloud Personalization (Interaction Studio) Catalog Object Item attributes with the power of Serverside Code." />
 
 ## Problem with debugging Catalog data
 
-Interaction Studio (MCP) can pull [product, content and related catalog data](../is-catalog-architecture.mdx) from multiple sources and does it continuously. That's perfect when all works great, but debugging features are minimal once you see some data discrepancies.
+Marketing Cloud Personalization (Interaction Studio) can pull [product, content and related catalog data](../mcp-catalog-architecture.mdx) from multiple sources and does it continuously. That's perfect when all works great, but debugging features are minimal once you see some data discrepancies.
 
 Sure, SFTP stores processed CSV Feed files, but finding the culprit takes work, especially if you push frequently with delta files.
 
 Knowing which exact ETL load introduced problematic attribute values is a tremendous help in finding the root cause of the issue and rectifying the data pipeline. While it is available only for custom attributes (hover over the value to see it), we can:
 
-1. [Vote for IdeaExchange](https://ideas.salesforce.com/s/idea/a0B8W00000NWbmJUAT/full-is-mcp-catalog-metadata-visibility) to make it perfect out-of-the-box.
+1. [Vote for IdeaExchange](https://ideas.salesforce.com/s/idea/a0B8W00000NWbmJUAT/full-mcp-catalog-metadata-visibility) to make it perfect out-of-the-box.
 2. Build a more powerful custom solution for it in the meantime.
 
 ## Solution
 
 Inspired by the excellent User Metadata Serverside template created by [Christopher Long](https://www.linkedin.com/in/christopherlong/) available [here](https://github.com/christopher-longSFDC/mcp/wiki/Serverside-Templates) I decided to create something similar for the Catalog Object data.
 
-A Serverside Template that leverages built-in Simulated Payload Preview available in Template Editor to display hidden changelog for ETL updates: attribute's current value, timeframe it was first introduced and first CSV that provided it to IS.
+A Serverside Template that leverages built-in Simulated Payload Preview available in Template Editor to display hidden changelog for ETL updates: attribute's current value, timeframe it was first introduced and first CSV that provided it to MCP.
 
 ```json title="Example response"
 "item": {
@@ -48,7 +48,7 @@ A Serverside Template that leverages built-in Simulated Payload Preview availabl
 
 This approach leverages native features of the platform to access unsurfaced data in a techy but easily transferable format.
 
-Additionally, it's a great way to showcase some IS Serverside Code approaches that can be useful for building standard campaign templates.
+Additionally, it's a great way to showcase some [MCP Serverside Code](../mcp-serverside-code-basics.mdx) approaches that can be useful for building standard campaign templates.
 
 ### Implementation Guide
 
@@ -87,7 +87,7 @@ Optionally, you can modify the scope of returned data in the left Configuration 
     @subtitle('File and Change Date are available only for the ETL Source.')
     showItemAttributeDetails: ('Value'|'Source'|'File'|'Change Date'|'Locale')[] = ['Value', 'Source', 'File', 'Change Date'];
 
-    @markdown(`Platform displays partially incorrect data when you manually Save Item in the Catalog, learn more [here](https://mateuszdabrowski.pl/docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/).`)
+    @markdown(`Platform displays partially incorrect data when you manually Save Item in the Catalog, learn more [here](https://mateuszdabrowski.pl/docs/interaction-studio/snippets/mcp-catalog-etl-metadata-viewer/).`)
 
     @title('Item non-attribute values to display:')
     @subtitle('Only values are available - no Source/File/Change Date/Locale data is exposed by the platform.')
@@ -144,7 +144,7 @@ Optionally, you can modify the scope of returned data in the left Configuration 
 
 ## Limitations
 
-While this solution can benefit Interaction Studio [Catalog Object](../is-catalog-architecture.mdx) debugging, there are a few significant limitations.
+While this solution can benefit [MCP Catalog Object](../mcp-catalog-architecture.mdx) debugging, there are a few significant limitations.
 
 ### Data scope
 
@@ -152,7 +152,7 @@ Unfortunately, at the moment, the platform surfaces metadata only for Catalog It
 
 Additionally, the metadata returned for the ETL uploads provides only the file name and timestamp that first introduced the current value. There is no option to check what was the previous value.
 
-It is still very helpful to understand whether the Interaction Studio overwrote the attribute using incorrect ETL data and which CSVs you should check to confirm the pipeline issues.
+It is still very helpful to understand whether the MC Personalization overwrote the attribute using incorrect ETL data and which CSVs you should check to confirm the pipeline issues.
 
 ### Data quality
 

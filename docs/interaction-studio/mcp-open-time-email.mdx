@@ -1,10 +1,10 @@
 ---
-id: is-open-time-email
-title: IS Open Time Email
+id: mcp-open-time-email
+title: MCP Open Time Email
 sidebar_label: Open Time Email
 description: Personalise your SFMC emails with the next best action recommendations. In real-time. Even after delivery. Magic.
-image: img/og/og-image-interaction-studio-open-time-email.png
-tags: [Interaction Studio, Personalisation, Email]
+image: img/og/og-image-mcp-open-time-email.png
+tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, Personalisation, Email]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
@@ -13,12 +13,12 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## What is Open Time Email Campaign
 
-In short, Open Time Email Campaign in Interaction Studio (SFMC Personalization) is a solution for providing __always up-to-date__, personalised recommendations to your customers.
+In short, Open Time Email Campaign in Marketing Cloud Personalization (Interaction Studio) is a solution for providing __always up-to-date__, personalised recommendations to your customers.
 
 The general rule of email communication is that the moment you send the email, you lose control and cannot make any changes (just like with paper mail). There are, however, two exceptions:
 
 1. __Links__ - you cannot change the URL used in the email, but (if you use wrapper/tracking links), you can change the final target URL. In Marketing Cloud, it is done via [updating Job Links](https://help.salesforce.com/s/articleView?id=sf.mc_es_update_joblinks_overview.htm).
-2. __Images__ - you cannot change the URL of the image used in the email, but you can change the image that is hosted behind that URL. It is precisely what the Open Time Email feature in Interaction Studio is all about.
+2. __Images__ - you cannot change the URL of the image used in the email, but you can change the image that is hosted behind that URL. It is precisely what the Open Time Email feature in MC Personalization is all about.
 
 It consists of two parts. In __Open Time Email Template__, you define the format of the recommendation (dimensions, content, personalisations). Then in __Open Time Email Campaign__, you use that template with selected recommendations logic (Einstein Recipe) to automatically generate HTML that will render the ever-updating Next Best Action in your emails. But...
 
@@ -28,15 +28,15 @@ There are three caveats:
 2. Some inboxes cache images. In this case, the customer might not see the updates to the recommendation, or they might be delayed.
 3. Apple Mail Privacy blocks the magic behind the Open Time Email and falls back to a static recommendation generated on send time.
 
-With that out of the way, let's dive into what is officially possible and what is possible with Interaction Studio Open Time Email.
+With that out of the way, let's dive into what is officially possible and what is possible with MCP Open Time Email.
 
 ## Open Time Email Template
 
-To create an Open Time Email Campaign, first, you need to code the structure of the recommendation with HTML, CSS and personalisations. Interaction Studio will use it to generate the image on the fly.
+To create an Open Time Email Campaign, first, you need to code the structure of the recommendation with HTML, CSS and personalisations. MC Personalization will use it to generate the image on the fly.
 
 __Good thing__: because this HTML will be used for image generation and will not be available in the final Campaign, you are not limited to markup supported by Email clients.
 
-__Bad thing__: because IS will use this HTML for image generation, you are not able to leverage custom fonts - there are only [17 built-in western](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) and [4 non-western](https://developer.evergage.com/campaign-development/email-campaigns-and-templates/render-non-western-characters) fonts to choose from.
+__Bad thing__: because MCP will use this HTML for image generation, you are not able to leverage custom fonts - there are only [17 built-in western](https://doc.evergage.com/display/EKB/Create+Open-Time+Item+Templates#CreateOpenTimeItemTemplates-AvailableFontsforEmail) and [4 non-western](https://developer.evergage.com/campaign-development/email-campaigns-and-templates/render-non-western-characters) fonts to choose from.
 
 To start building the template, you need to provide the dimensions of the final image. It is super important because once you select and save those, you won't be able to edit them. Those dimensions are for the recommendation image only - you will be configuring the whole campaign dimensions separately in the Open Time Email Campaign configuration, so leave some pixels for whitespace.
 
@@ -118,7 +118,7 @@ While the `Insert {Dynamic}` will suggest you should use `${item.attributes.xxxx
 
 If you try this style for an Object or MultiString (Array) attribute, it will instead crash with: "Error generating preview image: Failed to render DMC for template \[email\]".
 
-IS will display the value correctly if you drop the `.value` suffix from the personalisation string: `${item.attributes.MultiStringAttribute}`.
+Marketing Cloud Personalization will display the value correctly if you drop the `.value` suffix from the personalisation string: `${item.attributes.MultiStringAttribute}`.
 
 :::
 
@@ -245,7 +245,7 @@ You can add more condition-based paths with `#else`:
 
 While the `if`/`else` block in the Open Time Email Template works similarly to what you may know from JavaScript or SSJS, it has one huge disadvantage - it is evaluating code in all paths.
 
-It means that even if IS is not using a path for the final image generation, the code written there can still error out the whole Campaign. Example:
+It means that even if MC Personalization is not using a path for the final image generation, the code written there can still error out the whole Campaign. Example:
 
 ```html {2} title="Will error out for a product without Brand"
 <!-- #if(${item.attributes.brand.value} && !${item.attributes.categoryName.value}) -->

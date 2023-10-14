@@ -1,153 +1,21 @@
 ---
-id: is-serverside-code-in-campaigns
-title: Serverside Code in IS Campaigns
-sidebar_label: Serverside Code
+id: mcp-serverside-code-properties
+title: MCP Serverside Code Properties
+sidebar_label: Serverside Code Properties
 description: ""
-image: img/og/og-image-interaction-studio-serverside-code.png
-tags: [Interaction Studio, Personalisation, TypeScript]
-toc_max_heading_level: 4
-
+image: img/og/og-image-mcp-serverside-code-properties.png
+tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, Personalisation, TypeScript]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-import Image from '@theme/IdealImage';
-import purpose from '../../static/img/article/article-image-is-serverside-purpose.png';
-import templateUi from '../../static/img/article/article-image-is-serverside-template-ui.png';
 
 <LeadText content="" />
 
-## IS Serverside Code Purpose
-
-Whether you are creating a Web, Serverside or Triggered Campaign Template in the Interaction Studio (Marketing Cloud Personalization), in each case you will start with the Serverside Code tab. It is true core of the platform responsible for delivering data-driven personalizations.
-
-This is the place where the developer can:
-
-- leverage user profile and behavioral data
-- lookup company catalog data
-- build campaign configuration and use provided data
-- select and pull Einstein Recipe recommendations
-
-to output transformed payload containing everything that is needed for a unique experience for each customer.
-
-<Image img={purpose} alt='Graph displaying the purpose of Serverside code as a centre collecting data, configuration and recommendations to output personalisation payload'/>
-
-## IS Serverside Code Basics
-
-All above things are done within Serverside Code tab of the Interaction Studio Template creation UI with TypeScript programming language and built-in functions. Don't worry if you don't know TypeScript - basic knowledge of modern JavaScript is enough to create good templates.
-
-:::note You Should Know
-
-Open Time Email Campaigns are using different, older system. I covered its details in a [separate guide](./is-open-time-email.mdx).
-
-:::
-
-When you open the Serverside Code tab in a new Template creation screen for Web, Serverside or Triggered Campaign within the Marketing Cloud Personalization, you will be greeted by a bit intimidating interface. Let's start by breaking it down section by section:
-
-1. The middle pane contains your whole TypeScript code responsible for all the magic happening on the serverside.
-2. Within the middle section (1) you will see two sections. First one is responsible for defining the Campaign configuration form. In the screenshot below you can see a `header` field being defined as a `string` and decorated with custom title.
-3. The form definitions you develop (2) will be available for a preview on the left pane. This section not only allows you to see how the Campaign Configuration screen will look like, but also try filling it in to see the interactions.
-4. Coming back to the middle section (1), below the configuration form definitions (2) you will find the `run` function with `context` being passed as an argument. This is part where you can optionally transform or enrich the data captured from the configuration form. The `context` provided to the function contains triggering event data as well as access to a lot of helper functions that can bring your template to the next level. You can also add additional properties (for example, debugging details) to the returned object to make them available in the payload (5).
-5. The bottom part of the right pane displays the Payload Preview. It is updated in real-time as you write your TypeScript (1) or change the configuration (3). it is great way to validate whether you are getting outcome you need.
-6. If your template leverages user or catalog data (for example, user attributes for personalisation or anchored recipes) to see the proper payload you will need to provide example data. Top section of the right pane lets you do it. You can provide the IDs and see the payload (5) adapt to simulated scenario.
-
-<Image img={templateUi} alt='Interaction Studio Serverside Template UI screenshot'/>
-
-The final outcome of your work in this tab is the personalised payload (5). Depending on the type of Campaign this template is for it will either be delivered as is (Serverside), put into a Data Extension (Triggered Campaign) or be available to leverage for logic in Clientside Code and experience in Handlebars tabs (Web Campaign).
-
-:::note You Should Know
-
-If you don't see `experience` or `campaign` in the payload object (5), it means there is a bug in your template code (1).
-
-If you don't see the configuration form preview (3) updates despite making changes in the serverside code (1) it probably froze. Check whether you are still logged in to the Interaction Studio (MCP session length is shorter to that of SFMC). If yes, cut (`ctrl`/`cmd` + `x`) your whole serverside code, provide any symbol (like `a`) to overwrite the cache and replace it back by pasting the code (`ctrl`/`cmd` + `v`).
-
-:::
-
----
-
-## Writing Serverside Code
-
-As mentioned above, when you create new Web, Serverside or Triggered Campaign Template and view the Serverside Code tab, you will get a very short and simple code snippet:
-
-```ts
-export class NewTemplate implements CampaignTemplateComponent {
-
-    @title("Example Field")
-    header: string;
-
-    run(context: CampaignComponentContext) {
-        return {};
-    }
-
-}
-```
-
-There is a collection of much more complex [Global Templates available](https://github.com/evergage/evergage-global-templates/tree/master) that are great starting points for building real campaigns, but here we will start with the base snippet and build up from it for learning purposes.
-
-There are three key parts of that snippet:
-
-```ts {3-5,7-8,10}
-export class NewTemplate implements CampaignTemplateComponent {
-
-    // 1: field configuraiton
-    @title("Example Field")
-    header: string;
-
-    run(context: CampaignComponentContext) {
-        // 2: run block
-
-        return {}; // 3: return statement
-    }
-}
-```
-
-1. Field Configuration
-
-The field configuration let's you add properties that will become part of the campaign configuration form used by marketers to set the experiences. This is the main data input and all properties you set here will be passed directly to the campaign response.
-
-2. Run Block
-
-Run block has access to the context - triggering event details and Interaction Studio data. It can also pull information configured in the properties by the marketer. With all of this you can use it to enrich and transform the data that will be returned by the campaign.
-
-3. Return Statement
-
-Return statement within the run block lets you add custom properties to the final campaign payload. Whatever you add to the returned object will be made available along with the properties from field configuration section.
-
-:::note You Should Know
-
-Run block execution works differently during the template creation and in the campaign configuration. When marketer configures the campaign, the changes executed within the run section will be applied - this may lead to content changes or even removal of configuration parts. You shouldn't transform the data in the fields directly, but rather do it on new variables:
-
-```ts {8,10} title="Transform field values using new variable"
-export class PersonalizedOverlay implements CampaignTemplateComponent {
-
-    @title("Personalized Header")
-    @subtitle("Use {firstName} to insert first name personalization")
-    initialHeader: string;
-
-    run(context: CampaignComponentContext) {
-        let header = this.initialHeader.replace(/{firstName}/g, context.user.attributes?.firstName || 'Trailblazer');
-
-        return { header };
-    }
-}
-```
-
-This way the configured field will stay as it is, but in the final campaign payload you will also have the transformed variable for use.
-
-Keep this in mind when you have to provide a payload accoridng to a specification (f.e. in Serverside Campaign Tempalate). If you want to make any transformations to a manual input, add some prefix to the property in the field configuration section (f.e. `initial`) and output the expected name only through the return statement of the run block as shown in the snippet above.
-
-:::
-
-With the basics of how the Serverside Code processing works, let's talk how you can leverage it.
-
----
-
-### Basic properties
+## Basic properties
 
 Marketing Cloud Personalization offers five basic properties: Boolean, String, Number, Color and DateTime. That selectiona long with powerful [decorators](#decorators) will enable you to build nearly anything for your campaign configuration screen.
 
-#### Boolean
+### Boolean
 
 Boolean property lets you capture a `true` or `false` flag by creating a checkbox input:
 
@@ -167,7 +35,7 @@ isTextLeftToRight: boolean = true;
 
 Boolean fields are crucial for the template development as they are perfect for building logic, for example with the [`@shownIf` decorator](#shownif).
 
-#### String
+### String
 
 String property lets you capture a text input:
 
@@ -179,7 +47,7 @@ content: string;
 
 However, there is much more to string property than just that.
 
-##### › Array String
+#### › Array String
 
 Sometimes you may want to capture more than one string. Easy, you can do it with two characters:
 
@@ -191,7 +59,7 @@ hashtags: string[];
 
 By adding `[]` after the type definition we convert the field to an array of strings. During configuration you will be able to provide multiple values that in payload will be returned as an array. It doesn't accept duplicate values.
 
-##### › Default String
+#### › Default String
 
 To simplify the work for your marketers or provide recommended example of expected data you can easily add a default value to your string by providing it as a string after equal sign:
 
@@ -215,7 +83,7 @@ hashtags: string[] = ['interaction-studio', 'marketing-cloud-personalization'];
 
 :::
 
-##### › Select String
+#### › Select String
 
 You can go one step further and lock the string property to only a set of preconfigured values using `@options` decorator. This is great option when you need a very specific value, for example for a programmatic logic in other part of your template.
 
@@ -251,7 +119,7 @@ It is shorter than `@options` approach, but I recommend using the decorator appr
 
 :::
 
-##### › Multi-Select String
+#### › Multi-Select String
 
 Just as you can capture array of text inputs, you can also do the same for [select strings](#-select-string) and create a multi-picklist. However, while the preconfigured options will be visible and easy to pick, new options - outside of what you hardcoded - can be freely added.
 
@@ -287,7 +155,7 @@ But just as with [select](#-select-string), I recommend using the decorator appr
 
 :::
 
-##### › Rich Text String
+#### › Rich Text String
 
 You can easily convert this simple text input into a rich text field by using a `@richText` decorator:
 
@@ -306,7 +174,7 @@ While the rich text options are very limited, you can write some other HTML (for
 
 :::
 
-#### Number
+### Number
 
 Number property lets you capture integer (`3`) and decimal (`3.14`) values:
 
@@ -318,7 +186,7 @@ recommendationsCount: number;
 
 Keep in mind that non-numeric values might break the campaign without any error visible in the configuration screen. You can either display a warning using [`@shownIf` decorator](#shownIf) and a [string field](#string) or create sanitization logic in the run block.
 
-##### › Array Number
+#### › Array Number
 
 Just as with strings, you can capture multiple numeric values by adding `[]`:
 
@@ -330,7 +198,7 @@ productIds: number[];
 
 It will output array of numbers to the campaign payload.
 
-##### › Default Number
+#### › Default Number
 
 Again, just as with strings, you can capture editable default value for your number:
 
@@ -349,7 +217,7 @@ productIds: number[] = [123, 456, 789];
 
 ```
 
-##### › Select Number
+#### › Select Number
 
 According to documentation, you can also create number picklist. According to my tests, you can't.
 
@@ -357,7 +225,7 @@ The `@options` decorator will be ignored whereas using the literal select approa
 
 The workaround is to work with either [Select String](#-select-string) or [Multi-Select String](#-multi-select-string) and convert selected value to a number.
 
-#### Color
+### Color
 
 Color property let's you create a color picker with a single line of code:
 
@@ -381,7 +249,7 @@ While the property will look like it is prefilled with white color, until you pi
 
 :::
 
-##### › Default Color
+#### › Default Color
 
 You can provide a default color, but in this case it will be a bit more complex. You cannot just provide a single hext value, you need to replicate the whole output object:
 
@@ -403,7 +271,7 @@ backgroundColor: Color = {
 //}
 ```
 
-#### Datetime
+### Datetime
 
 Datetime property provides a clean looking calendar widget that lets marketer easily pick up a date.
 
@@ -422,7 +290,7 @@ There are two payload-related things to consider:
 1. DateTime property always outputs an object with a single `dateTime` property assigned to an array of strings.
 2. The datetimes are returned as ISO 8601 strings (`2023-10-01T16:00:00.000Z`).
 
-##### › Datetime Range
+#### › Datetime Range
 
 While you cannot create multi-select datetime field, you can use `@range` decorator to be able to select two dates with a nice UI.
 
@@ -442,7 +310,7 @@ The output will return both selected dates in the `dateTime` array of strings.
 
 ---
 
-### Complex properties
+## Complex properties
 
 You can do more with [Basic properties](#basic-properties). The real fun starts when you combine them into complex ones. The method is strightforward. Outside the main class that implements CampaignTemplateComponent create a new class export that contains all the basic inputs you need:
 
@@ -503,10 +371,13 @@ recsConfig: RecommendationsConfig = {
 
 This approach will work for single complex property and - if you provide the default value(s) in the array - also for arrays for complex properties.
 
-```ts title="Use array of complex properties with default value"
+```ts title="Use array of complex properties with default values"
 recsConfig: RecommendationsConfig = [{
   "recommendationsHeader": "Chosen for You",
   "recommendationsDisplayed": 6
+}, {
+  "recommendationsHeader": "Bestsellers",
+  "recommendationsDisplayed": 3
 }];
 ```
 
@@ -596,7 +467,7 @@ It allows you to capture multiple complex configurations (for example, multiple 
 
 :::note You Should Know
 
-There is a [bug with removal UI](https://issues.salesforce.com/issue/a028c00000p5gvMAAQ/personalization-incorrect-behaviour-of-array-of-complex-objects-in-templates) for complex properties.
+There is a [bug with the removal UI](https://issues.salesforce.com/issue/a028c00000p5gvMAAQ/personalization-incorrect-behaviour-of-array-of-complex-objects-in-templates) for arrays of complex properties.
 
 Lets say you have multiple properties configured in an array and want to remove one. If you click the removal button, regardless for which element you did it, the UI will remove the bottom one. However, in the backend the correct one was removed, which you can check in the Payload Preview. Save, reenter configuration screen or refresh, and you will see the correct configuration.
 
@@ -604,24 +475,10 @@ Lets say you have multiple properties configured in an array and want to remove 
 
 ---
 
-### Decorators
+## Decorators
+
+Decorators are a TypeScript feature that can change or extend behaviour of properties in the MC Personalization's Serverside Code. You already seen some of them: [`@options`](#-select-string) used to provide picklist values, [`@richtext`](#-rich-text-string) that changes string input or [`@range`](#-datetime-range) that modifies date selection into range selection. But there is so much more available.
 
 ---
 
-### Imports
-
----
-
-### Run
-
----
-
-### Examples
-
-Here, I want to share a few of my favourite sources of Interaction Studio Templates:
-
-1. Official [GitHub repository](https://github.com/evergage/evergage-global-templates) with Global Templates
-2. Christoper's Long [GitHub repository](https://github.com/christopher-longSFDC/mcp/) with Complex Templates
-3. Salesforce Japan [Template Catalog](https://github.com/christopher-longSFDC/mcp/) with Web Campaigns
-
-Know other inspiring MCP Serverside Code examples? Let me know!
+Coming soon: Imports, run() and context object.
