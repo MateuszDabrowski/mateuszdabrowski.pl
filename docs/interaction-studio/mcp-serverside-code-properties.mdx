@@ -2,18 +2,25 @@
 id: mcp-serverside-code-properties
 title: MCP Serverside Code Properties
 sidebar_label: Serverside Code Properties
-description: ""
+description: "Build the dream campaign configuration UI for your marketers in Marketing Cloud Personalization (Interaction Studio). All the input magic in one place."
 image: img/og/og-image-mcp-serverside-code-properties.png
 tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, Personalisation, TypeScript]
+toc_max_heading_level: 4
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content="" />
+<LeadText content="Build the dream campaign configuration UI for your marketers in Marketing Cloud Personalization (Interaction Studio). All the input magic in one place." />
+
+Once you learn the [very basics of Serverside Code](./mcp-serverside-code-basics.mdx) in Marketing Cloud Personalization (Interaction Studio) it is time to start writing code. The easiest way is to begin with creating the campaign creation UI for the marketer - defining all the inputs they will need to fill in to drive the experience. It will be our focus in this article.
+
+MCP Serverside Code offers five basic property data types: [Boolean](#boolean), [String](#string), [Number](#number), [Color](#color) and [DateTime](#datime). Those, their combinations into [complex properties](#complex-property) and modifications through [decorators](#decorators) enable you to build nearly anything you need for your campaign configuration screen.
+
+Let's dive into how you can make the most of those features.
 
 ## Basic properties
 
-Marketing Cloud Personalization offers five basic properties: Boolean, String, Number, Color and DateTime. That selectiona long with powerful [decorators](#decorators) will enable you to build nearly anything for your campaign configuration screen.
+Basic properties are the base building blocks of your campaign configuration. You can make a perfect campaign template with only them and mastering them will be key to do more complex UI's with [complex properties](#complex-property) and [decorators](#decorators).
 
 ### Boolean
 
@@ -33,7 +40,7 @@ isTextLeftToRight: boolean = true;
 // Output: true or false
 ```
 
-Boolean fields are crucial for the template development as they are perfect for building logic, for example with the [`@shownIf` decorator](#shownif).
+Boolean fields are crucial for the template development as they are perfect for building logic, for example with the [`@shownIf` decorator](#hidden--shownif).
 
 ### String
 
@@ -115,13 +122,9 @@ brand: 'brandA' | 'brandB' | 'brandC';
 // Output: "Selected text"
 ```
 
-It is shorter than `@options` approach, but I recommend using the decorator approach for consistency. `@options` will be used in multiple other snippets.
-
 :::
 
-#### › Multi-Select String
-
-Just as you can capture array of text inputs, you can also do the same for [select strings](#-select-string) and create a multi-picklist. However, while the preconfigured options will be visible and easy to pick, new options - outside of what you hardcoded - can be freely added.
+Just as you can capture array of text inputs, you can also do the same for select strings and create a multi-picklist. However, while the preconfigured options will be visible and easy to pick, new options - outside of what you hardcoded - can be freely added.
 
 ```ts title="Multi-picklist"
 @options(['brandA', 'brandB', 'brandC'])
@@ -150,8 +153,6 @@ brand: ('brandA' | 'brandB' | 'brandC')[];
 // Input: Empty text field with picklist and option to create new values. Allows for multiple additions.
 // Output: ["Array", "of", "Strings"]
 ```
-
-But just as with [select](#-select-string), I recommend using the decorator approach for consistency.
 
 :::
 
@@ -184,7 +185,18 @@ recommendationsCount: number;
 // Output: 3.14
 ```
 
-Keep in mind that non-numeric values might break the campaign without any error visible in the configuration screen. You can either display a warning using [`@shownIf` decorator](#shownIf) and a [string field](#string) or create sanitization logic in the run block.
+Keep in mind that non-numeric values might break the campaign without any error visible in the configuration screen. You can either display a warning using [`@shownIf` decorator](#hidden--shownif) and a [string field](#string) or create sanitization logic in the run block.
+
+:::note You Should Know
+
+You can use `@unit` [decorator](#decorators) to provide a unit description next to the input. It has no impact on the outputted value, but gives marketer information about the expected value:
+
+```ts {1} title="Unit decorator on number"
+@unit('ms')
+delayBeforeDisplay: number;
+```
+
+:::
 
 #### › Array Number
 
@@ -205,7 +217,7 @@ Again, just as with strings, you can capture editable default value for your num
 ```ts title="Default numeric value"
 recommendationsCount: number = 6;
 // Input: Editable prefilled text input
-// Output: 3.14
+// Output: 6
 ```
 
 And the same can be done for Array Numbers:
@@ -213,17 +225,42 @@ And the same can be done for Array Numbers:
 ```ts title="Default numeric array value"
 productIds: number[] = [123, 456, 789];
 // Input: Editable and deletable prefilled text inputs and a plus icon that can add more
-// Output: [3.14, 3, 5]
+// Output: [123, 456, 32]
 
 ```
 
 #### › Select Number
 
-According to documentation, you can also create number picklist. According to my tests, you can't.
+As with [strings](#-select-string), you can create a numeric picklist:
 
-The `@options` decorator will be ignored whereas using the literal select approach will showcase a picklist in the interface, but it will not have any values. Providing any value manually will crash whole template by rendering a whitescreen.
+```ts title="Numeric picklist"
+recommendationsCount: 1 | 3 | 6 | 9;
+// Input: Empty text input showing dropdown with configured options on click
+// Output: 1
+```
 
-The workaround is to work with either [Select String](#-select-string) or [Multi-Select String](#-multi-select-string) and convert selected value to a number.
+You can also pass a default value:
+```ts title="Numeric picklist"
+recommendationsCount: 1 | 3 | 6 | 9 = 6;
+// Input: Editable prefilled text input showing dropdown with configured options on click
+// Output: 6
+```
+
+You can also create a numeric multipicklist:
+
+```ts title="Numeric multi-picklist"
+orderOfSections: (1 | 2 | 3 | 4 | 5)[];
+// Input: Empty text field with picklist. Allows for multiple additions.
+// Output: [1, 3, 4, 2, 5]
+```
+
+Different from [strings multi-select](#-select-string), with numeric multi-picklist marketer won't be able to add new options outside of what you preconfigured. Yay!
+
+However, there are three caveats to keep in mind:
+
+1. You cannot have `0` as one of the options. The picklist will crash.
+2. You cannot use `@options` to create the picklist. It will be ignored.
+3. The single-select picklist will always cut the visibility of the last digit in the longest option after selecting it.
 
 ### Color
 
@@ -251,7 +288,7 @@ While the property will look like it is prefilled with white color, until you pi
 
 #### › Default Color
 
-You can provide a default color, but in this case it will be a bit more complex. You cannot just provide a single hext value, you need to replicate the whole output object:
+You can provide a default color, but in this case it will be a bit more complex. You cannot just provide a single hex value, you need to replicate the whole output object:
 
 ```ts title"Default color value"
 backgroundColor: Color = {
@@ -310,9 +347,53 @@ The output will return both selected dates in the `dateTime` array of strings.
 
 ---
 
-## Complex properties
+## Readonly property
 
-You can do more with [Basic properties](#basic-properties). The real fun starts when you combine them into complex ones. The method is strightforward. Outside the main class that implements CampaignTemplateComponent create a new class export that contains all the basic inputs you need:
+Apart from [basic string property](#string) there is also a very similar readonly string property:
+
+```ts title="Static readonly property"
+readonly templateVersion = "Version 1.1"
+// Input: No input, just a readonly text written in the form
+// Output: 'Version 1.1'
+```
+
+As you can see, the key difference is the `readonly` prefix before defining the property. It also uses the [default string](#-default-string) approach to assign the value.
+
+However, readonly property has one superpower. You can assign an arrow function to it (as long as it will return a string) and use values from other properties to transform them:
+
+```ts {2,5-13} title="Dynamic readonly property"
+header: string = 'DEFault heaDER';
+readonly upperCaseHeader = () => this?.header.toUpperCase || '';
+// Input: No input, just a readonly text updating real time based on header input
+// Output: 'DEFAULT HEADER'
+readonly titleCaseHeader = () => {
+    return this?.header
+            .toLowerCase()
+            .split(' ')
+            .filter(word => word !== '')
+            .map(word => word.replace(word[0], word[0].toUpperCase()))
+            .join(' ')
+        || '';
+}
+// Input: No input, just a readonly text updating real time based on header input
+// Output: 'Default Header'
+```
+
+With dynamic readonly property you can transform string inputs, concatenate multiple inputs into one field or even create a logic based on non-string inputs (as long at the output is a string).
+
+:::note You Should Know
+
+You can do the same things later in the [run() block](./mcp-serverside-code-basics.mdx#2-run-block). It will be even more powerful there, as you will be able to use the context object. However, you will have to add those calculated values manually to [return statement](./mcp-serverside-code-basics.mdx#3-return-statement) to see it in the payload.
+
+For simple use cases, readonly property will be more strightforward and provide a nifty real time preview of the calculated value for the marketer.
+
+:::
+
+---
+
+## Complex property
+
+The real input configuration fun starts when you combine [basic properties](#basic-properties) into complex ones. The method is strightforward. Outside the main class that implements CampaignTemplateComponent create a new class export that contains all the basic inputs you need:
 
 ```ts title="Define complex property"
 export class TimeframedColorPicker {
@@ -344,46 +425,6 @@ timeframedColor: TimeframedColorPicker;
 //    }
 //}
 ```
-
-:::note You Should Know
-
-With complex properties you can provide default values in two ways:
-
-1. You can provide default values within the defining class directly on basic properties.
-
-```ts title="Define complex property with default values"
-export class RecommendationsConfig {
-    recommendationsHeader: String = 'Chosen for You';
-    recommendationsDisplayed: Number = 6;
-}
-```
-
-This approach will work for complex property arrays, but not for single complex property.
-
-2. You can provide default value in the main class implementing the CampaignTemplateComponent.
-
-```ts title="Use complex property with default value"
-recsConfig: RecommendationsConfig = {
-  "recommendationsHeader": "Chosen for You",
-  "recommendationsDisplayed": 6
-};
-```
-
-This approach will work for single complex property and - if you provide the default value(s) in the array - also for arrays for complex properties.
-
-```ts title="Use array of complex properties with default values"
-recsConfig: RecommendationsConfig = [{
-  "recommendationsHeader": "Chosen for You",
-  "recommendationsDisplayed": 6
-}, {
-  "recommendationsHeader": "Bestsellers",
-  "recommendationsDisplayed": 3
-}];
-```
-
-As you can see both approaches work for arrays of complex properties but they result in a different outcome. The first approach provides a default values to all element of a complex property array that you will create. The second approch pre-fills the array with the provided default elements. You can use both at the same time to have few array elements prefilled and provide default values for all new elements created on top of it.
-
-:::
 
 What are the benefits of this approach?
 
@@ -473,12 +514,121 @@ Lets say you have multiple properties configured in an array and want to remove 
 
 :::
 
+### Complex default values
+
+With complex properties you can provide default values in two ways:
+
+1. You can provide default values within the defining class directly on basic properties.
+
+```ts title="Define complex property with default values"
+export class RecommendationsConfig {
+    recommendationsHeader: String = 'Chosen for You';
+    recommendationsDisplayed: Number = 6;
+}
+```
+
+This approach will work for complex property arrays, but not for single complex property.
+
+2. You can provide default value in the main class implementing the CampaignTemplateComponent.
+
+```ts title="Use complex property with default value"
+recsConfig: RecommendationsConfig = {
+  "recommendationsHeader": "Chosen for You",
+  "recommendationsDisplayed": 6
+};
+```
+
+This approach will work for single complex property and - if you provide the default value(s) in the array - also for arrays for complex properties.
+
+```ts title="Use array of complex properties with default values"
+recsConfig: RecommendationsConfig = [{
+  "recommendationsHeader": "Chosen for You",
+  "recommendationsDisplayed": 6
+}, {
+  "recommendationsHeader": "Bestsellers",
+  "recommendationsDisplayed": 3
+}];
+```
+
+As you can see both approaches work for arrays of complex properties but they result in a different outcome. The first approach provides a default values to all element of a complex property array that you will create. The second approch pre-fills the array with the provided default elements. You can use both at the same time to have few array elements prefilled and provide default values for all new elements created on top of it.
+
+### Complex picklist
+
+
+### Complex tabular view
+
 ---
 
 ## Decorators
 
-Decorators are a TypeScript feature that can change or extend behaviour of properties in the MC Personalization's Serverside Code. You already seen some of them: [`@options`](#-select-string) used to provide picklist values, [`@richtext`](#-rich-text-string) that changes string input or [`@range`](#-datetime-range) that modifies date selection into range selection. But there is so much more available.
+Decorators are a TypeScript feature that can change or extend behaviour of properties in the MC Personalization's Serverside Code. You already seen some of them:
 
----
+- [`@options`](#-select-string) used to provide picklist values for [strings](#-select-string), [numbers](#-select-number) and [complex properties](#complex-picklist).
+- [`@richtext`](#-rich-text-string) that changes string input.
+- [`@unit`](#number) that gives context to a numeric input.
+- [`@range`](#-datetime-range) that modifies date selection into range selection.
+- [`@tabular`](#complex-tabular-view) that changes how a complex object is displayed.
 
-Coming soon: Imports, run() and context object.
+But there is so much more available:
+
+### @title & @subtitle
+
+When you add a property, its name will be used as a label for the input - in a smart way, with space being added before each uppercase (but not a digit):
+
+```ts title="Examples of default conversion from property name to label"
+header: string;             // Label: Header
+productDescription: string; // Label: Product Description
+listElement3: string;       // Label: List Element3
+```
+
+That's neat, but sometimes you might want to be more descriptive - without changing the actual property passed in the payload. This is where `@title` decorator comes in. By adding it above a property and passing a string you can change the label to anything you want.
+
+```ts {1} title="Examples of default conversion from property name to label"
+@title('Recommendations Box Header')
+header: string;             // Label: Recommendations Box Header
+```
+
+:::note You Should Know
+
+You can also pass a space into `@title` decorator to remove the input label altogether:
+
+```ts {1} title="Using space to hide the label"
+@title(' ')
+header: string;             // No label
+```
+
+It can be useful in some cases. Complex objects that have both their own label as well as labels of all properties used to create them. Or cases where you want to use [`@markdown`](#markdown) decorator instead.
+
+:::
+
+On the other hand, adding `@subtitle` decorator above a property will show the provided text in a smaller font right below the input. Great tool to provide a bit more context or example data to aid the person configuring the campaign.
+
+```ts {2} title="Example use of @subheader decorator for added context"
+@title('Recommendations Box Header')
+@subheader('Use Title Case and stay below 40 characters')
+header: string;
+```
+
+### @markdown
+
+When [`@title` and `@subtitle`](#header--headersubtitle) are not enough for the context you want to provide, you can use `@markdown` decorator
+
+
+### @header & @headerSubtitle
+
+There is also a pair of `@header` and `@subheader` decorators are very similar to [`@title` and `@subtitle`](#title--subtitle) with one key difference - they are not attaching to a property. That's right, you can use them anywhere to add context to a whole sections of your campaign configuration form.
+
+```ts  title="Example use of @subheader decorator for added context"
+@header('Recommendations Box Header')
+@headerSubtitle('Use Title Case and stay below 40 characters')
+```
+
+The `@header` will be in the same font size as input labels and `@headerSubtitle` will match [`@subtitle`](#title--subtitle) style.
+
+Oh, and using passing single space to `@header` will create a bit of padding. Perfect for those of us with OCD that can't stand that uneven spacing between inputs.
+
+### @hidden & @shownIf
+
+### @buttonGroup
+
+### @optional
