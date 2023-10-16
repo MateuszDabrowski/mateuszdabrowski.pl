@@ -437,7 +437,7 @@ module.exports = {
                     },
                     {
                         from: ['/docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/'],
-                        to: '/docs/interaction-studio/mcp-catalog-etl-metadata-viewer/',
+                        to: '/docs/interaction-studio/snippets/mcp-catalog-etl-metadata-viewer/',
                     },
                     {
                         from: ['/sites/ideas/interaction-studio-ideas/'],
@@ -462,7 +462,7 @@ module.exports = {
                     },
                     {
                         from: ['/docs/interaction-studio/'],
-                        to: '/docs/category/interaction-studio/',
+                        to: '/docs/category/mc-personalization/',
                     },
                     /* Ideas restructure */
                     {
