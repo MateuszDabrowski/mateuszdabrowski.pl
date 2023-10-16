@@ -5,7 +5,6 @@ sidebar_label: Serverside Code Properties
 description: "Build the dream campaign configuration UI for your marketers in Marketing Cloud Personalization (Interaction Studio). All the input magic in one place."
 image: img/og/og-image-mcp-serverside-code-properties.png
 tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, Personalisation, TypeScript]
-toc_max_heading_level: 4
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
@@ -554,8 +553,11 @@ As you can see both approaches work for arrays of complex properties but they re
 
 ### Complex picklist
 
+TODO
 
 ### Complex tabular view
+
+TODO
 
 ---
 
@@ -564,7 +566,7 @@ As you can see both approaches work for arrays of complex properties but they re
 Decorators are a TypeScript feature that can change or extend behaviour of properties in the MC Personalization's Serverside Code. You already seen some of them:
 
 - [`@options`](#-select-string) used to provide picklist values for [strings](#-select-string), [numbers](#-select-number) and [complex properties](#complex-picklist).
-- [`@richtext`](#-rich-text-string) that changes string input.
+- [`@richText`](#-rich-text-string) that changes string input.
 - [`@unit`](#number) that gives context to a numeric input.
 - [`@range`](#-datetime-range) that modifies date selection into range selection.
 - [`@tabular`](#complex-tabular-view) that changes how a complex object is displayed.
@@ -594,7 +596,7 @@ You can also pass a space into `@title` decorator to remove the input label alto
 
 ```ts {1} title="Using space to hide the label"
 @title(' ')
-header: string;             // No label
+header: string;           // No label
 ```
 
 It can be useful in some cases. Complex objects that have both their own label as well as labels of all properties used to create them. Or cases where you want to use [`@markdown`](#markdown) decorator instead.
@@ -605,14 +607,41 @@ On the other hand, adding `@subtitle` decorator above a property will show the p
 
 ```ts {2} title="Example use of @subheader decorator for added context"
 @title('Recommendations Box Header')
-@subheader('Use Title Case and stay below 40 characters')
+@subtitle('Use Title Case and stay below 40 characters')
 header: string;
 ```
 
 ### @markdown
 
-When [`@title` and `@subtitle`](#header--headersubtitle) are not enough for the context you want to provide, you can use `@markdown` decorator
+When [`@title` and `@subtitle`](#title--subtitle) are not enough for the context you want to provide, you can use `@markdown` decorator to go wild with text, styling and even links.
 
+```ts {1-6} title="Notice the backticks used to open and close markdown content in this decorator"
+@markdown(`
+---
+#### Conditional Configuration
+
+**Use only on campaigns targeted to small audiences**
+`)
+@title('Use Conditional Configuration?')
+isConditionalConfigurationUsed: boolean = false;
+```
+
+:::note You Should Know
+
+For `@markdown` to work you need to add the content without any indentation:
+
+```ts {2-5} title="@markdown decorator works only with unindented markdown"
+    @markdown(`
+---
+#### Conditional Configuration
+
+**Use only on campaigns targeted to small audiences**
+    `)
+    @title('Use Conditional Configuration?')
+    isConditionalConfigurationUsed: boolean = false;
+```
+
+:::
 
 ### @header & @headerSubtitle
 
@@ -623,12 +652,50 @@ There is also a pair of `@header` and `@subheader` decorators are very similar t
 @headerSubtitle('Use Title Case and stay below 40 characters')
 ```
 
-The `@header` will be in the same font size as input labels and `@headerSubtitle` will match [`@subtitle`](#title--subtitle) style.
-
-Oh, and using passing single space to `@header` will create a bit of padding. Perfect for those of us with OCD that can't stand that uneven spacing between inputs.
+The `@header` will be in the same font size as input labels and `@headerSubtitle` will match [`@subtitle`](#title--subtitle) style. Oh, and passing a space - `@header(' ')` - will add a bit of whitespace. Perfect for those of us with OCD that can't stand that uneven spacing between inputs.
 
 ### @hidden & @shownIf
 
+`@hidden` & `@shownIf` are one of the most important decorators as they allow you to control visibility of the inputs. Huge if you want to provide nice and clean campaign configuration UI that won't overhelm the marketer.
+
+There are two ways to use them.
+
+First, with basic `true` boolean argument, makes sense only for `@hidden`. It is perfect for data you will calculate in the [run() block](./mcp-serverside-code-basics.mdx#2-run-block) or just don't want to show to marketer.
+
+```ts title="Example use of simple boolean @hidden decorator"
+@hidden(true)
+templateVersion: string = "Version 1.1";
+```
+
+It gets much more interesting with the second way to use those decorators - with a function that returns a boolean as an argument. With this you can build conditional logic based on other inputs:
+
+```ts {3}title="Example use of function-based @shownIf decorator"
+bannerType: 'Manual' | 'Promotion' | 'Einstein';
+
+@shownIf(this, (self) => self.bannerType === 'Manual')
+imageURL: string;
+```
+:::note You Should Know
+
+Technically in both above scenarios you can use `@hidden` and `@shownIf` interchangeably after flipping the boolean appropriately. However, I find using `@hidden` only with `true` boolean argument and `@shownIf` with function argument easier to grasp when reading the code.
+
+:::
+
 ### @buttonGroup
 
+`@buttonGroup` is a simple decorator that can change a [`single-select picklist`](#-select-string) into a set of buttons with one line:
+
+```ts title="Example use of @buttonGroup decorator"
+@buttonGroup(true)
+bannerType: 'Manual' | 'Promotion' | 'Einstein';
+```
+
+It's nice if you have a small pool of options with short names.
+
 ### @optional
+
+`@optional` decorator was great tool to set required and non-required inputs. Was. It no longer works. Whether you add it to the code or not, nothing will change in the UI or on saving. And I doubt it will start working, as bringing the functionality back would break all templates created with it not working in mind. So to sum up - there is no way to enforce filling an input.
+
+---
+
+Imports and custom properties coming soon :)
