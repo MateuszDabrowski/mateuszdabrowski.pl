@@ -521,8 +521,8 @@ With complex properties, you can provide default values in two ways:
 
 ```ts title="Define complex property with default values"
 export class RecommendationsConfig {
-    recommendationsHeader: String = 'Chosen for You';
-    recommendationsDisplayed: Number = 6;
+    recommendationsHeader: string = 'Chosen for You';
+    recommendationsDisplayed: number = 6;
 }
 ```
 
@@ -553,7 +553,36 @@ As you can see, both approaches work for arrays of complex properties but result
 
 ### Complex picklist
 
-TODO
+Similar to how you can create selection for [strings](#-select-string) and [numbers](#-select-numbers), you can also build picklists for complex properties. And I don't mean using the selects within the complex property (which is, of course, also possible). I mean simplifying your complex property to a single straightforward picklist.
+
+Using the previous complex property example:
+
+```ts
+export class RecommendationsConfig {
+    recommendationsHeader: string;
+    recommendationsDisplayed: number;
+    label: string;
+}
+```
+
+Instead of requiring the user to fill in those values and giving them a free hand at that, you can instead provide preconfigured options with user-friendly labels using `@options` decorator:
+
+```ts
+@options([
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 12, label: "Bestellers Home" },
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 8, label: "Bestellers Category" },
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 4, label: "Bestellers Search" },
+    { recommendationsHeader: "Chosen For You", recommendationsDisplayed: 6, label: "Chosen for You" },
+])
+recsConfig: RecommendationsConfig;
+// Input: Single picklist showing only the label values
+// Output: {
+//    "recommendationsHeader": "Bestsellers",
+//    "recommendationsDisplayed": 12
+//}
+```
+
+With this, the campaign UI will display only a single picklist using the nice label values while in the backend you can provide even dozens of appropriately configured properties to the campaign payload.
 
 ### Complex tabular view
 
