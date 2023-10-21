@@ -434,7 +434,7 @@ A complex property creates a new nested object assigned to an input property. Le
 
 ```ts title="Payload using basic properties"
 @range(true)
-timeframe: Date;
+timeframe: DateTime;
 
 color: Color;
 // Input: Two basic properties - datetime range and color pickers, in this case
@@ -553,41 +553,88 @@ As you can see, both approaches work for arrays of complex properties but result
 
 ### Complex picklist
 
-Similar to how you can create selection for [strings](#-select-string) and [numbers](#-select-numbers), you can also build picklists for complex properties. And I don't mean using the selects within the complex property (which is, of course, also possible). I mean simplifying your complex property to a single straightforward picklist.
+Similar to how you can create a selection for [strings](#-select-string) and [numbers](#-select-numbers), you can also build picklists for complex properties. And I don't mean using the selects within the complex property (which is also possible), but simplifying your complex property to a single straightforward picklist.
 
 Using the previous complex property example:
 
-```ts
+```ts {4-5} title="Complex property with a hidden label property"
 export class RecommendationsConfig {
     recommendationsHeader: string;
     recommendationsDisplayed: number;
+    @hidden(true)
     label: string;
 }
 ```
 
-Instead of requiring the user to fill in those values and giving them a free hand at that, you can instead provide preconfigured options with user-friendly labels using `@options` decorator:
+Instead of requiring the user to fill in those values and giving them a free hand at that, you can instead provide preconfigured options with user-friendly labels using the `@options` decorator:
 
-```ts
+```ts {1-6} title="Change complex property to a single picklist with @options decorator"
 @options([
-    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 12, label: "Bestellers Home" },
-    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 8, label: "Bestellers Category" },
-    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 4, label: "Bestellers Search" },
-    { recommendationsHeader: "Chosen For You", recommendationsDisplayed: 6, label: "Chosen for You" },
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 12, label: "Bestsellers Home Page" },
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 8, label: "Bestsellers Category Page" },
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 4, label: "Bestsellers Search Page" },
+    { recommendationsHeader: "Chosen For You", recommendationsDisplayed: 6, label: "Chosen for You Global" },
 ])
 recsConfig: RecommendationsConfig;
 // Input: Single picklist showing only the label values
 // Output: {
 //    "recommendationsHeader": "Bestsellers",
 //    "recommendationsDisplayed": 12
+//    "label": "Bestsellers Home Page"
 //}
 ```
 
-With this, the campaign UI will display only a single picklist using the nice label values while in the backend you can provide even dozens of appropriately configured properties to the campaign payload.
+The campaign UI will display only a single picklist using the label values. At the same time, you can provide dozens of appropriately configured properties to the campaign payload in the backend.
+
+:::note You Should Know
+
+You can leverage complex picklist and [default values](#complex-default-values) at the same time. Just pass one of the `@options` decorator objects.
+
+```ts title="Complex property picklist with default value"
+@options([
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 12, label: "Bestsellers Home Page" },
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 8, label: "Bestsellers Category Page" },
+    { recommendationsHeader: "Bestsellers", recommendationsDisplayed: 4, label: "Bestsellers Search Page" },
+    { recommendationsHeader: "Chosen For You", recommendationsDisplayed: 6, label: "Chosen for You Global" },
+])
+recsConfig: RecommendationsConfig = {
+    recommendationsHeader: "Chosen For You",
+    recommendationsDisplayed: 6,
+    label: "Chosen for You Global"
+};
+```
+:::
 
 ### Complex tabular view
 
-TODO
+Complex properties can take up a lot of space in your campaign configuration screen. Sometimes, you can save some space using the `@tabular` decorator.
 
+```ts title="Example complex property with two numeric inputs"
+export class PriceRange {
+    @title('Price starts at')
+    lowerPriceBoundary: number;
+    @title('Price ends at')
+    upperPriceBoundary: number;
+}
+```
+
+The complex property above will take 5 lines in the campaign configuration pane - complex property title and two input label + title sets. We can change it to 3 lines with the `@tabular` decorator:
+
+```ts {1} title="Tabular decorator on a single complex property"
+@tabular()
+priceRange: PriceRange;
+// Input: Two inputs are provided side by side instead of one below the other
+// Output: {
+//    "lowerPriceBoundary": 10,
+//    "upperPriceBoundary": 20
+//}
+```
+
+:::note You Should Know
+
+You can also use that decorator for arrays of complex properties, but you will see that the input labels are now visible only on the first element of the array for an even more compact view. If it doesn't suit your needs, you can pass an argument to the decorator to change that behaviour: `@tabular({headersPerRow: true})`.
+
+:::
 
 ---
 
@@ -725,7 +772,3 @@ It's nice if you have a small pool of options with short names.
 ### @optional
 
 The `@optional` decorator was an excellent tool for setting required and non-required inputs. Was. It no longer works. Whether you add it to the code or not, nothing will change in the UI or on saving. And I doubt it will start working, as bringing the functionality back would break all templates created with it not working in mind. To sum up, there is no way to enforce filling an input.
-
----
-
-Imports and custom properties coming soon :)
