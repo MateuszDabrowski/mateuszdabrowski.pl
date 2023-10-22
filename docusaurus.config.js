@@ -15,10 +15,12 @@ module.exports = {
         keywords: [
             'Mateusz Dąbrowski',
             'mateuszdabrowski',
+            'Salesforce',
             'Marketing Cloud',
             'Salesforce Marketing Cloud',
             'SFMC',
             'Interaction Studio',
+            'Personalization',
             'JavaScript',
             'AMPScript',
             'SSJS',
@@ -138,6 +140,18 @@ module.exports = {
                             to: 'docs/webinars/sfmc-webinar-cloud-page-apps',
                         },
                     ],
+                },
+                {
+                    label: 'FAQ',
+                    to: 'sites/category/faq',
+                    activeBasePath: 'sites/faq',
+                    position: 'left',
+                    items: [
+                        {
+                            label: 'How to get SFMC Demo Account',
+                            to: 'sites/faq/how-to-get-sfmc-hands-on-experience/',
+                        },
+                    ]
                 },
                 {
                     label: 'Ideas',
@@ -264,6 +278,10 @@ module.exports = {
                         {
                             label: 'Ideas',
                             to: 'sites/category/ideas',
+                        },
+                        {
+                            label: 'FAQ',
+                            to: 'sites/category/faq',
                         },
                     ],
                 },
