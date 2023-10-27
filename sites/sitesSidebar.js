@@ -27,6 +27,7 @@ module.exports = {
             },
             items: [
                 'faq/how-to-get-sfmc-hands-on-experience',
+                'faq/how-to-get-sf-certification-vouchers',
             ],
         },
     ],

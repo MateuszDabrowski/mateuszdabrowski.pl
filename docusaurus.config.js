@@ -151,6 +151,10 @@ module.exports = {
                             label: 'How to get SFMC Demo Account',
                             to: 'sites/faq/how-to-get-sfmc-hands-on-experience/',
                         },
+                        {
+                            label: 'How to get SF Certification Vouchers',
+                            to: 'sites/faq/how-to-get-sf-certification-vouchers/',
+                        },
                     ]
                 },
                 {
