@@ -10,8 +10,9 @@ tags: [Marketing Cloud, Configuration, SQL, Analytics, Data Extensions, Email, A
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '../../src/components/LeadText.js';
+import { ButtonRow } from '../../src/components/Buttons.js';
 
-        <LeadText content='Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
+<LeadText content='Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
 
 ## Data Views Basics
 
@@ -31,6 +32,15 @@ Be sure to check the excellent [Dataviews.io](https://dataviews.io) - an interac
 
 There is also a more detailed [System Tables relationship diagram](https://dbdiagram.io/d/5ff259ed80d742080a34e3c3) created by [Cameron Roberts](https://cameronrobert.com.au) that contains SQL Database structure along with field lengths.
 
+<ButtonRow
+ linkLeft='https://dataviews.io'
+ textLeft="Zuza's DataViews.io"
+ newTabLeft='true'
+ linkRight='https://dbdiagram.io/d/5ff259ed80d742080a34e3c3'
+ textRight="Cam's Detailed Diagram"
+ newTabRight='true'
+/>
+
 :::
 
 ---
@@ -41,15 +51,15 @@ There is also a more detailed [System Tables relationship diagram](https://dbdia
 
 Stores information about your Subscribers. Great for high-level perspective or adding Email Address field to other more detailed Data Views.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -65,8 +75,8 @@ SubscriberType | The subscriber type for the affected subscriber | Text |
 Status | The status of the subscriber | Text | X
 Locale | The locale code for the subscriber | Locale | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `Status` possible values:
 - active
@@ -81,8 +91,8 @@ In most cases you will see only `Exact Target` in your database.
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -100,8 +110,8 @@ SELECT
 FROM _Subscribers AS sub
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Subscribers` Data View:
 
@@ -117,21 +127,21 @@ When working with `_Subscribers` Data View:
 
 Stores information about your Profile and Preference Attributes from Email Studio.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 _SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record stored. | Number
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -143,8 +153,8 @@ SELECT
 FROM _EnterpriseAttribute AS ea
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 
 When working with `_EnterpriseAttribute` Data View:
@@ -164,15 +174,15 @@ When working with `_EnterpriseAttribute` Data View:
 
 Stores information about your Email Sends Jobs. Great for capturing detailed data about your communication, especially when paired with Send Log. Must-have for extending your engagement-based Email Data Views.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -214,8 +224,8 @@ DeduplicateByEmail | Whether the email addresses in the job are used to deduplic
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Number | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `JobType` possible values:
 - `null`
@@ -243,8 +253,8 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -288,8 +298,8 @@ SELECT
 FROM _Job AS job
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Job` Data View:
 
@@ -313,14 +323,14 @@ Always consider this when choosing Business Unit to execute the query and the ty
 
 Stores information about your Email Sends. Great for understanding who had a chance to receive your message and whose communication did not leave your system.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -336,8 +346,8 @@ Domain | The domain at which the send occurred | Text |
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -355,8 +365,8 @@ SELECT
 FROM _Sent AS sent
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Sent` Data View:
 
@@ -370,14 +380,14 @@ When working with `_Sent` Data View:
 
 Stores information about your Email Opens. For when you need to know when someone opened your email. Kind of.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -394,8 +404,8 @@ IsUnique | Whether the event is unique or repeated | Boolean | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -414,8 +424,8 @@ SELECT
 FROM _Open AS opened
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Open` Data View:
 
@@ -443,14 +453,14 @@ There might be cases where the data is wrong the other way - when you see that e
 
 ### _Click
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Stores information about your Email Clicks. Detailed click reporting and behavioural logic are possible, thanks to this one.
 
@@ -472,8 +482,8 @@ IsUnique | Whether the event is unique or repeated |
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -495,8 +505,8 @@ SELECT
 FROM _Click AS click
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Click` Data View:
 
@@ -516,15 +526,15 @@ There might be cases where the click data is wrong - when you see that email as 
 
 ### _Bounce
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Stores information about your Email Bounces. Best place in Marketing Cloud to understand why your messages are not getting delivered.
 
@@ -554,8 +564,8 @@ SMTPCode | The error code for the bounce from the mail system | Number | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `BounceCategoryID` possible values:
 
@@ -623,8 +633,8 @@ Value | Meaning
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -652,8 +662,8 @@ SELECT
 FROM _Bounce AS bounce
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Bounce` Data View:
 
@@ -679,14 +689,14 @@ You can additionally [register for the Yahoo Feedback Loop](https://help.salesfo
 
 This Data View, along with [`_Bounce`](#_bounce), should be monitored regularly to assess the health of your email marketing.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -701,8 +711,8 @@ EventDate | The date the send took place | Date |
 IsUnique | Whether the event is unique or repeated - 1 for the first occurrence, 0 for subsequent | Boolean |
 Domain | The domain at which the send occurred | Text |
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -719,8 +729,8 @@ SELECT
 FROM _Complaint AS complaint
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Complaint` Data View:
 
@@ -769,14 +779,14 @@ This Data View stores data only for six-months, so retention-less `_Subscribers`
 
 All of this makes `_Unsubscribe` a much better source of knowledge about unsubscription.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable |
 -- | -- | -- | --
@@ -791,8 +801,8 @@ EventDate | The date the unsubscribe took place | Date |
 IsUnique | Whether the event is unique or repeated - 1 for the first occurrence, 0 for subsequent | Boolean |
 Domain | The domain at which the unsubscribe occurred | Text |
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -809,8 +819,8 @@ SELECT
 FROM _Unsubscribe AS unsub
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Unsubscribe` Data View:
 
@@ -837,15 +847,15 @@ Here comes the fresh `_BusinessUnitUnsubscribes` Data View. It shows you the onl
 
 `_BusinessUnitUnsubscribes` Data View will work differently depending on your SFMC [unsubscription configuration](https://help.salesforce.com/s/articleView?id=sf.mc_es_unsubscribe_settings.htm&type=5). You will be able to query it from the Child BU level only for Business Units set to "unsubscribe from this business unit only".
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable |
 -- | -- | -- | --
@@ -855,8 +865,8 @@ SubscriberKey | The subscriber key for the affected subscriber | Text |
 UnsubDateUTC | The date the subscriber unsubscribed on the BU. | Date | X
 UnsubReason | The reason listed is a custom value configured by your administrator. | Text | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `UnsubReason` possible values:
 - Spam Complaint
@@ -868,8 +878,8 @@ UnsubReason | The reason listed is a custom value configured by your administrat
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -881,8 +891,8 @@ SELECT
 FROM _BusinessUnitUnsubscribes AS buUnsub
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_BusinessUnitUnsubscribes` Data View:
 
@@ -913,15 +923,15 @@ DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscr
 - `_Subscribers` has data about All Subscribers list only. `_ListSubscribers` shows status for all Lists available in Salesforce Marketing Cloud.
 - `_BusinessUnitUnsubscribes` has data about contacts unsubscribed from All Subscribers on every Business Unit. `_ListSubscribers` doesn't show Business Unit information, but it covers all Lists and all Statuses.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -938,8 +948,8 @@ SubscriberID | The subscriber ID for the affected subscriber | Number |
 SubscriberKey | The subscriber key for the affected subscriber | Text |
 SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `AddMethod` possible values:
 - API
@@ -964,8 +974,8 @@ SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -984,8 +994,8 @@ SELECT
 FROM _ListSubscribers AS listSub
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_ListSubscribers` Data View:
 
@@ -1007,15 +1017,15 @@ Learn more about Mobile Connect [SMS Data Views here](./sfmc-mobile-connect-data
 
 Stores information about your Journeys for when context matters.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -1028,8 +1038,8 @@ LastPublishedDate | The date that the version of the Journey was last published 
 ModifiedDate | The date that the version of the Journey was last edited | Date |
 JourneyStatus | The current running mode of the Journey | Text
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `JourneyStatus` possible values:
 - Draft
@@ -1040,8 +1050,8 @@ JourneyStatus | The current running mode of the Journey | Text
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -1056,8 +1066,8 @@ SELECT
 FROM _Journey AS journey
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_Journey` Data View:
 
@@ -1081,15 +1091,15 @@ Always consider this when choosing Business Unit to execute the query and the ty
 
 Stores information about Activities available in your Journeys. Must-have for joining Email data with Journey data.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -1100,8 +1110,8 @@ ActivityExternalKey | The external key associated with the activity | Text |
 JourneyActivityObjectID | Use this unique identifier to join to email tracking system Data Views to identify a Journey email's Triggered Send Definition. | Text | X
 ActivityType | The type of activity | Text | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `ActivityType` possible values:
 - `null`
@@ -1128,8 +1138,8 @@ ActivityType | The type of activity | Text | X
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -1142,8 +1152,8 @@ SELECT
 FROM _JourneyActivity AS journeyActivity
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_JourneyActivity` Data View:
 
@@ -1168,15 +1178,15 @@ Always consider this when choosing Business Unit to execute the query and the ty
 
 Provides historical information about Automation runs.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -1198,8 +1208,8 @@ AutomationInstanceEndTime_UTC | Automation run end datetime in UTC timezone. Nul
 AutomationInstanceStatus | The status of the automation run at the time of querying| Text |
 AutomationInstanceActivityErrorDetails | The first error message encountered in the automation run | Text | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `AutomationType` possible values:
 - Schedule
@@ -1216,8 +1226,8 @@ AutomationInstanceActivityErrorDetails | The first error message encountered in 
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -1241,8 +1251,8 @@ SELECT
 FROM _AutomationInstance AS automation
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_AutomationInstance` Data View:
 
@@ -1264,15 +1274,15 @@ Always consider this when choosing Business Unit to execute the query and the ty
 
 Provides historical information about Automation Studio Activity runs.
 
-        <Tabs
-            defaultValue='fields'
-            values={[
-                { label: 'Fields', value: 'fields' },
-                { label: 'Field Picklist Values', value: 'values' },
-                { label: 'SQL Query', value: 'sql' },
-            ]}
-        >
-            <TabItem value='fields'>
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
@@ -1291,8 +1301,8 @@ ActivityInstanceEndTime_UTC | Activity execution end datetime in UTC timezone. N
 ActivityInstanceStatus | The status of the activity run at the time of querying | Text |
 ActivityInstanceStatusDetails | The error message encountered in the activity execution | Text | X
 
-            </TabItem>
-            <TabItem value='values'>
+</TabItem>
+<TabItem value='values'>
 
 `ActivityType` possible values:
 
@@ -1336,8 +1346,8 @@ Value | Meaning
 
 ---
 
-            </TabItem>
-            <TabItem value='sql'>
+</TabItem>
+<TabItem value='sql'>
 
 ```sql
 SELECT
@@ -1358,8 +1368,8 @@ SELECT
 FROM _AutomationActivityInstance AS automationActivity
 ```
 
-            </TabItem>
-        </Tabs>
+</TabItem>
+</Tabs>
 
 When working with `_AutomationActivityInstance` Data View:
 
