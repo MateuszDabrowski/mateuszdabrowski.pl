@@ -234,20 +234,19 @@ html[data-theme='dark'] .DocSearch {
 
 .form--container {
   position: relative;
-  padding-bottom: 240%;
   background-color: var(--ifm-color-white);
   border-radius: 10px;
 }
 
-@media only screen and (min-width: 568px) {
+@media only screen and (max-width: 768px) {
   .form--container {
-    padding-bottom: 180%;
+    height: 600px
   }
 }
 
 @media only screen and (min-width: 768px) {
   .form--container {
-    padding-bottom: 103%;
+    padding-bottom: 110%;
   }
 }
 
@@ -256,5 +255,11 @@ html[data-theme='dark'] .DocSearch {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 600px;
+}
+
+@media only screen and (min-width: 768px) {
+  .form--container iframe {
+    height: 100%;
+  }
 }

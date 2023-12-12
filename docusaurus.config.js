@@ -179,6 +179,11 @@ module.exports = {
                     position: 'left',
                 },
                 {
+                    label: 'Newsletter',
+                    to: 'sites/newsletter',
+                    position: 'left',
+                },
+                {
                     href: 'https://www.linkedin.com/in/mateusz-dabrowski-pl',
                     position: 'right',
                     className: 'header-linkedin-link',
@@ -270,7 +275,10 @@ module.exports = {
                 {
                     title: 'My',
                     items: [
-
+                        {
+                            label: 'Newsletter',
+                            to: 'sites/newsletter',
+                        },
                         {
                             label: 'Webinars',
                             to: 'docs/category/sfmc-webinars',
