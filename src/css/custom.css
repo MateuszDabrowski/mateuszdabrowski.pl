@@ -229,3 +229,32 @@ html[data-theme='dark'] .DocSearch {
   aspect-ratio: 16 / 9;
   width: 100%;
 }
+
+/* ---------------------------- GOOGLE FORM EMBED ---------------------------- */
+
+.form--container {
+  position: relative;
+  padding-bottom: 240%;
+  background-color: var(--ifm-color-white);
+  border-radius: 10px;
+}
+
+@media only screen and (min-width: 568px) {
+  .form--container {
+    padding-bottom: 180%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .form--container {
+    padding-bottom: 103%;
+  }
+}
+
+.form--container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
