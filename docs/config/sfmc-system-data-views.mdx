@@ -674,6 +674,7 @@ When working with `_Bounce` Data View:
 3. The `Domain` helps aggregate the bounce data to see any domain-specific problem with deliverability.
 4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
 5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases, it means you are considered a spammer by the server or already blocklisted. I recommend you to create an Automation with Verification Activity to get an automated warning whenever there are more than a few occurrences. Triage immediately.
+6. If you get errors when trying to select `IsFalseBounce` - it might be missing on the SFMC backend. Create a Support Ticket to resolve it.
 
 :::note You Should Know
 
