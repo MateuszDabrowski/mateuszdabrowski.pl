@@ -46,7 +46,7 @@ module.exports = {
         announcementBar: {
             id: 'announcementBar',
             content:
-                '📧 Looking for more SFMC-related spam? Happy to help with my new <a href="/sites/newsletter/" style="text-decoration: underline">Newsletter</a>. Coming to your inbox in 2024 📧',
+                '📧 Looking for more SFMC-related spam? Happy to help with my new <a href="/sites/newsletter/" style="text-decoration: underline">Newsletter</a> 📧',
             backgroundColor: '#0176d3',
             textColor: '#fffffe',
         },
