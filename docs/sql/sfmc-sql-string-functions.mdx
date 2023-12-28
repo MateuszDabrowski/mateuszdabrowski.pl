@@ -139,7 +139,7 @@ It might seem cleaner, but there are two downsides to this method:
 
 :::
 
-## LTRIM and RTRIM
+## LTRIM, RTRIM and TRIM
 
 `LTRIM` and `RTRIM` functions allow you to quickly clean your data by deleting unneeded spaces from the beginning or the end of the provided string.
 
@@ -147,7 +147,7 @@ It might seem cleaner, but there are two downsides to this method:
 SELECT
       LTRIM('   data from webform ')        AS CleanLeftSide    /* Output: 'data from webform ' */
     , RTRIM('   data from webform ')        AS CleanRightSide   /* Output: '   data from webform' */
-    , LTRIM(RTRIM('   data from webform ')) AS CleanBothSides   /* Output: 'data from webform' */
+    , TRIM('   data from webform ')         AS CleanBothSides   /* Output: 'data from webform' */
 ```
 
 ## NEWID
