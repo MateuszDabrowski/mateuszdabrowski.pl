@@ -31,19 +31,71 @@ import { LeadText } from '../../src/components/LeadText.js';
 }
 ```
 
-## campaignId
+## campaignId & experienceId
 
-## experienceId
+First two string properties of the context object are `campaignId` and `experienceId` and their purpose if very strightforward. They provide the five character, case sensitive, alphanumerical ids for the campaign and experience selected for a user (for example, `vALdQ` for Campaign ID and `f3WpK` for Experience Id).
+
+Both those values are passed by default from serverside to clientside and handlebars (as `campaign` and `experience` accordingly) so there is no much added value in those two unless you want to append those values as query strings to the links for tracking purposes.
+
+However, for Web Campaigns you can do it easily within the handlebars tab and for Serverside and Triggered Campaigns - do it on the receiving system side.
 
 ## userGroup
 
+`userGroup` string property should tell you to which user group the user got assigned. Well, should. In practice you will see there one of the two values: `Test` for users that got an A/B Test or Rule-Based experience and `testUserGroup` for those that are in Control group (or in Template preview pane within MCP UI).
+
+However, you will see better values in the out-of-the-box serverside payload `userGroup` property that shows values like `Test`, `Default`, `Control` correctly and only displays `testUserGroup` during preview.
+
+:::note You Should Know
+
+Control group creates more problems for the context, as it returns the payload preview version of it. So you will also see only the placeholder values for [`campaignId` and `experienceId`](#campaignid--experienceid), [`beaconVersion`](#beaconVersion) and skip other datapoints like [`event.fields`](#event).
+
+In short, don't use `context` for custom payload dedicated to control group users.
+
+:::
+
 ## beaconVersion
+
+`beaconVersion` number property will display current Web SDK version (f.e. `16` at the moment of writing it) or `0` for preview/control group. Not really useful.
 
 ## event
 
+`event` object property is where the magic of the `context` object starts. //TODO
+
+```js title="Structure of the context.event object"
+{
+    "time": datetime,
+    "fields": {
+        ".anonId": string,
+        ".bv": string,
+        ".pv": boolean,
+        ".scv": number,
+        ".skipProcessing": boolean,
+        "action": string,
+        "channel": string,
+        "clientIp": string,
+        "contentZones": string[],
+        "pageType": string,
+        "url": string,
+        "urlref": string,
+        "userAgent": string,
+        "_anon": boolean,
+        "_debug": boolean,
+        "customAttribute1": any,
+        "customAttribute2": any
+    },
+    "ipAddress": (): string,
+    "itemId": (): string,
+    "itemType": (): string
+}
+```
+
 ## contentZone
 
+`contentZone` string property returns the Content Zone that was selected for the Campaign. It might be useful if your campaign supports multiple content zones and you want to alter some payload elements based on the one selected (f.e. change the number of returned recommenations).
+
 ## trigger
+
+`trigger` object property is available only for the Triggered Campaign Templates. //TODO
 
 ## locale
 
@@ -51,8 +103,10 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 ## user
 
-## accountId
+## accountId & datasetId
 
-## datasetId
+`accountId` and `datasetId` are string properties that contain information about the Marketing Cloud Personalization account and dataset that generated the event. Not really useful, unless you want environment aware debug log visibility logic.
 
 ## configuration
+
+`configuration` object property contains information about the campaign properties (fields you expect marketer to fill in when configuring the campaign) in the experience for a given user. Not really useful, as in the serverside code you can access the same information using `this` keyword (f.e. `this.campaignPropertyName`).
