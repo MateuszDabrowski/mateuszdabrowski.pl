@@ -93,6 +93,7 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 `contentZone` string property returns the Content Zone that was selected for the Campaign. It might be useful if your campaign supports multiple content zones and you want to alter some payload elements based on the one selected (f.e. change the number of returned recommenations).
 
+
 ## trigger
 
 `trigger` object property is available only for the Triggered Campaign Templates. //TODO
@@ -101,7 +102,49 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 ## services
 
+```js title="Structure of the context.services object"
+{
+    "catalog": {
+        "dimensionFilter": (dimension: string): ItemFilter<any>,
+        "findClosestItems": (request: ClosestItemsRequest): Item[],
+        "findItem": (type: string, id: string): Item,
+        "findItems": (type: string, ids: string[]): Item[] || (type: ItemFilter<any>, ids: ItemSort<any>): Item[] || (type: ItemFilter<any>): Item[]
+    },
+    "recommendations": {
+        "recommend": (request: RecommendationsRequest): Item[],
+        "recommendIdsOnly":  (request: RecommendationsRequest): Item[],
+        "smartSearch": (request: SmartSearchRequest): Item[],
+        "smartSort": (request: SmartSort): Item[],
+    },
+    "smartTrends": {
+        "smartTrends": (request: SmartTrendsRequest): ItemTrends[],
+    },
+    "surveys": {
+        "getSurey": (surveyId: string): Survey,
+    },
+    "decisions": {
+        "decide": (request: ContextualBanditRequest): Item[],
+    },
+    "corvus": {
+        "contextualBandit": {
+            "decide": (request: ContextualBanditRequest, filter: PromotionFilter): Item[],
+        }
+    },
+    "promotionCatalog": {
+        "findPromotions": (filter: ItemFilter<any>, context: CampaignComponentContext): Promotion: [],
+        "promotionFilter": (contentZone: string): PromotionFilter,
+    }
+}
+```
+
 ## user
+
+
+```js title="Structure of the context.user object"
+{
+
+}
+```
 
 ## accountId & datasetId
 
