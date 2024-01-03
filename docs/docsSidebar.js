@@ -159,6 +159,7 @@ module.exports = {
                     items: [
                         'interaction-studio/mcp-serverside-code-basics',
                         'interaction-studio/mcp-serverside-code-properties',
+                        'interaction-studio/mcp-serverside-code-context',
                     ],
                 },
                 {
