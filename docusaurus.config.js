@@ -1,4 +1,10 @@
 /* eslint-disable global-require */
+
+// Prism theme import
+const { themes } = require('prism-react-renderer');
+const lightTheme = themes.github;
+const darkTheme = themes.vsDark;
+
 module.exports = {
     title: 'Mateusz Dąbrowski',
     tagline: 'Automate Marketing Automation',
@@ -205,8 +211,9 @@ module.exports = {
         },
         prism: {
             defaultLanguage: 'javascript',
-            theme: require('prism-react-renderer/themes/github'),
-            darkTheme: require('prism-react-renderer/themes/vsDark'),
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            additionalLanguages: ['sql', 'json'],
         },
         mermaid: {
             theme: { light: 'neutral', dark: 'dark' },
