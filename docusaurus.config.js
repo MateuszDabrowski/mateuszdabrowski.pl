@@ -15,6 +15,7 @@ module.exports = {
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
     onBrokenLinks: 'warn',
+    onBrokenAnchors: 'warn',
     onBrokenMarkdownLinks: 'warn',
     customFields: {
         description: 'Personal website focused on making the most out of Salesforce Marketing Cloud. let code = do("our job").',
