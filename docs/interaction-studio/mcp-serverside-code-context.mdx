@@ -142,8 +142,150 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 ```js title="Structure of the context.user object"
 {
-
-}
+        "attributes": {
+            "created": {
+                "value": number // epoch
+            },
+            "customAttribute": {
+                "value": any
+            },
+            "originatingReferrer": {
+                "value": "{\"medium\":\"Direct\",\"source\":null,\"terms\":null,\"domain\":null,\"subdomainReversed\":null,\"url\":null,\"landingUrl\":\"https://www.mateuszdabrowski.pl/\"}"
+            },
+            "firstName": {
+                "value": string
+            },
+            "lastViewedCartAt": {
+                "value": number // epoch
+            },
+            "firstActivity": {
+                "value": number // epoch
+            }
+        },
+        "profileObjects": {},
+        "visits": [
+            {
+                "start": number, // epoch
+                "lastEventTime": number, // epoch
+                "timeSinceLastVisit": number, // miliseconds
+                "referrer": { // || null
+                    "medium": "Direct",
+                    "source": null,
+                    "terms": null,
+                    "domain": null,
+                    "subdomainReversed": null,
+                    "url": null,
+                    "landingUrl": "https://www.mateuszdabrowski.pl/"
+                },
+                "deviceType": "Computer",
+                "browser": "Chrome",
+                "platform": "Web",
+                "operatingSystem": "Windows",
+                "weather": { // || null
+                    "temperature": 71,
+                    "humidity": 67,
+                    "windSpeed": 7,
+                    "rain3h": 0,
+                    "snow3h": 0,
+                    "cloudCoverage": 0,
+                    "condition": {
+                        "id": 800,
+                        "name": "clear sky",
+                        "icon": "01d",
+                        "category": "Clear"
+                    }
+                },
+                "pageViewIndex": 9
+            }
+        ],
+        "orderHistory": [
+            {
+                "id": null,
+                "created": 1679651026027,
+                "updated": 1692712875696,
+                "purchaseDate": null,
+                "visitAgeAtPurchase": 0,
+                "totalValue": 0,
+                "totalValueCurrency": null,
+                "status": "Open",
+                "metadata": null,
+                "lineItems": [
+                    {
+                        "quantity": 1,
+                        "price": 6,
+                        "itemId": "78103",
+                        "attributes": {}
+                    },
+                ],
+                "attributes": {}
+            }
+        ],
+        "location": {
+            "geographicPoint": {
+                "latitude": 52.22,
+                "longitude": 21.02
+            },
+            "timeZoneId": "Europe/Warsaw",
+            "continentKey": "EU",
+            "countryCode": "PL",
+            "countryNumericCode": 616,
+            "stateProvinceCode": "14",
+            "city": "Warsaw",
+            "postalCode": "00-633",
+            "organization": "Pwc Polska Sp. Z O.o.",
+            "naicsCode": "517311"
+        },
+        "currentCart": {
+            "id": null,
+            "created": 1679651026027,
+            "updated": 1692712875696,
+            "purchaseDate": null,
+            "visitAgeAtPurchase": 0,
+            "totalValue": 0,
+            "totalValueCurrency": null,
+            "status": "Open",
+            "metadata": null,
+            "lineItems": [
+                {
+                    "quantity": 1,
+                    "price": 6,
+                    "itemId": "78103",
+                    "attributes": {}
+                },
+            ],
+            "attributes": {}
+        },
+        "anonymous": true,
+        "segmentMembership": [
+            {
+                "segmentId": string,
+                "segmentName": string,
+                "joined": 1679651160649,
+                "createIfMissing": false,
+                "removal": false,
+                "userId": string,
+                "customerId": string,
+                "customerType": "User"
+            },
+        ],
+        "id": "6690fc1c49e87274",
+        actionCount: (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
+        actionCountPerItem:  (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
+        getDimensionActivity: (dimension: string, start: Date, end: Date): {
+            [itemId: string]: ItemActionStats
+        }, // 'Product', new Date('2023-08-23T23:30:58.937Z'), new Date('2023-08-24T08:30:58.937Z')
+        getDimensionActivityByDay: (dimension: string, start: Date, end: Date): {
+            [date: string] : ItemActionStats
+        },
+        getEmailSendHistory: (start: Date, end: Date): EmailSendActivity[] || (): EmailSendActivity[],
+        getLatestOrderByStatus: (status: 'Open' | 'Purchased' | 'Cancelled'): Order,
+        getSegmentJoinDate: (segmentId: string): Date,
+        itemStatTotal: (request: ItemStatsRequest): number, // (itemId?: string, itemType: string, statType: ItemStatType)
+        itemStatTotalPerItem: (request: ItemStatsRequest): ItemStat[], // (itemId?: string, itemType: string, statType: ItemStatType)
+        pageViewCount: (request: StatsRequest): number, // {start: Date, end: Date}
+        visitCount: (request: StatsRequest): number, // {start: Date, end: Date}
+        visitDurationMillis: (request: StatsRequest): number, // {start: Date, end: Date}
+    },
 ```
 
 ## accountId & datasetId
