@@ -201,19 +201,19 @@ In short, don't use `context` for custom payload dedicated to control group user
         "orderHistory": [
             {
                 "id": null,
-                "created": 1679651026027,
-                "updated": 1692712875696,
+                "created": number, // epoch
+                "updated": number, // epoch
                 "purchaseDate": null,
-                "visitAgeAtPurchase": 0,
-                "totalValue": 0,
+                "visitAgeAtPurchase": number, // miliseconds
+                "totalValue": number,
                 "totalValueCurrency": null,
                 "status": "Open",
                 "metadata": null,
                 "lineItems": [
                     {
-                        "quantity": 1,
-                        "price": 6,
-                        "itemId": "78103",
+                        "quantity": number,
+                        "price": number,
+                        "itemId": string,
                         "attributes": {}
                     },
                 ],
@@ -222,8 +222,8 @@ In short, don't use `context` for custom payload dedicated to control group user
         ],
         "location": {
             "geographicPoint": {
-                "latitude": 52.22,
-                "longitude": 21.02
+                "latitude": number,
+                "longitude": number
             },
             "timeZoneId": "Europe/Warsaw",
             "continentKey": "EU",
@@ -237,38 +237,38 @@ In short, don't use `context` for custom payload dedicated to control group user
         },
         "currentCart": {
             "id": null,
-            "created": 1679651026027,
-            "updated": 1692712875696,
+            "created": number, // epoch
+            "updated": number, // epoch
             "purchaseDate": null,
-            "visitAgeAtPurchase": 0,
-            "totalValue": 0,
+            "visitAgeAtPurchase": number, // miliseconds
+            "totalValue": number,
             "totalValueCurrency": null,
             "status": "Open",
             "metadata": null,
             "lineItems": [
                 {
-                    "quantity": 1,
-                    "price": 6,
-                    "itemId": "78103",
+                    "quantity": number,
+                    "price": number,
+                    "itemId": string,
                     "attributes": {}
                 },
             ],
             "attributes": {}
         },
-        "anonymous": true,
+        "anonymous": boolean,
         "segmentMembership": [
             {
                 "segmentId": string,
                 "segmentName": string,
-                "joined": 1679651160649,
-                "createIfMissing": false,
-                "removal": false,
+                "joined": number, // epoch
+                "createIfMissing": boolean,
+                "removal": boolean,
                 "userId": string,
                 "customerId": string,
                 "customerType": "User"
             },
         ],
-        "id": "6690fc1c49e87274",
+        "id": string,
         actionCount: (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
         actionCountPerItem:  (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
         getDimensionActivity: (dimension: string, start: Date, end: Date): {
