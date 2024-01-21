@@ -2,16 +2,26 @@
 id: mcp-serverside-code-context
 title: MCP Serverside Code Context
 sidebar_label: Serverside Code Context
-description: ""
+description: "Context is king. Also when writing MCP Template Serverside Code."
 image: img/og/og-image-mcp-serverside-code-context.png
 tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, Personalisation, TypeScript]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content="" />
+<LeadText content="Context is king. Also when coding MCP Campaign Templates. Read about all its undocumented tricks." />
 
+Marketing Cloud Personalization offers a flexible campaing template creation tooling with multiple [properties](./mcp-serverside-code-properties.mdx) and imports that helps you fulfil the business needs with a nice user experience for the marketer. There is also one more - undocumented - feature that can change your template from good to outstanding. The CampaignComponentContext object.
 
+:::note You Should Know
+
+In this article I'm covering the main `CampaignComponentContext` object that is being passed as a `context` argument to the [`run` method](./mcp-serverside-code-basics.mdx#writing-serverside-code) in the Serverside Code of every campaign template.
+
+There are some other contexts (like `GearLifecycleContext` passed to search methods), that have different structure and are out of the scope of this article.
+
+:::
+
+The `CampaignComponentContext` object is available in the Serverside Code of the Web, Serverside and Triggered Campaign Templates and provides extensive details about triggering event, user and delivered experience.
 
 ```js title="Structure of the context object"
 {
@@ -30,6 +40,18 @@ import { LeadText } from '../../src/components/LeadText.js';
     "configuration": Object
 }
 ```
+
+It's extremely easy to use once you know what's in there. For example, you can pull product ID stored with Sitemap in a User Attribute and leverage it to pull full data about that product for personalization:
+
+```ts {2-3} title="Leverage context in the run method of your Serverside Code"
+    run(context: CampaignComponentContext) {
+        let lastAddedToCartProductId = context.user.attributes?.lastAddedToCartProduct?.value;
+        let lastAddedToCartProductDetails = context.services.catalog.findItem('Product', lastAddedToCartProductId);
+        return { lastATCDetails: lastAddedToCartProductDetails };
+    }
+```
+
+And that's just a basic usage. The key to unlocking the power of context object is knowing what is stored there and how it can be used. So let's dive in, property by property (hint, the fun part starts at [`event`](#event)).
 
 ## campaignId & experienceId
 
