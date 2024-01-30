@@ -53,6 +53,12 @@ It's extremely easy to use once you know what's in there. For example, you can p
 
 And that's just a basic usage. The key to unlocking the power of context object is knowing what is stored there and how it can be used. So let's dive in, property by property (hint, the fun part starts at [`event`](#event)).
 
+:::note You Should Know
+
+This article is in a work in progress state - I'm ongoingly extending details about various parts of the context object as I have opportunity to use it in real-life.
+
+:::
+
 ## campaignId & experienceId
 
 First two string properties of the context object are `campaignId` and `experienceId` and their purpose if very strightforward. They provide the five character, case sensitive, alphanumerical ids for the campaign and experience selected for a user (for example, `vALdQ` for Campaign ID and `f3WpK` for Experience Id).
@@ -86,28 +92,34 @@ In short, don't use `context` for custom payload dedicated to control group user
 ```js title="Structure of the context.event object"
 {
     "time": datetime,
-    "fields": {
-        ".anonId": string,
-        ".bv": string,
-        ".pv": boolean,
-        ".scv": number,
-        ".skipProcessing": boolean,
-        "action": string,
-        "channel": string,
-        "clientIp": string,
-        "contentZones": string[],
-        "pageType": string,
-        "url": string,
-        "urlref": string,
-        "userAgent": string,
-        "_anon": boolean,
-        "_debug": boolean,
-        "customAttribute1": any,
-        "customAttribute2": any
-    },
+    "fields": Object,
     "ipAddress": (): string,
     "itemId": (): string,
     "itemType": (): string
+}
+```
+
+### event.fields
+
+```js title="Structure of the context.event.fields object"
+{
+    ".anonId": string,
+    ".bv": string,
+    ".pv": boolean,
+    ".scv": number,
+    ".skipProcessing": boolean,
+    "action": string,
+    "channel": string,
+    "clientIp": string,
+    "contentZones": string[],
+    "pageType": string,
+    "url": string,
+    "urlref": string,
+    "userAgent": string,
+    "_anon": boolean,
+    "_debug": boolean,
+    "customAttribute1": any,
+    "customAttribute2": any
 }
 ```
 
@@ -126,36 +138,79 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 ```js title="Structure of the context.services object"
 {
-    "catalog": {
-        "dimensionFilter": (dimension: string): ItemFilter<any>,
-        "findClosestItems": (request: ClosestItemsRequest): Item[],
-        "findItem": (type: string, id: string): Item,
-        "findItems": (type: string, ids: string[]): Item[] || (type: ItemFilter<any>, ids: ItemSort<any>): Item[] || (type: ItemFilter<any>): Item[]
-    },
-    "recommendations": {
-        "recommend": (request: RecommendationsRequest): Item[],
-        "recommendIdsOnly":  (request: RecommendationsRequest): Item[],
-        "smartSearch": (request: SmartSearchRequest): Item[],
-        "smartSort": (request: SmartSort): Item[],
-    },
-    "smartTrends": {
-        "smartTrends": (request: SmartTrendsRequest): ItemTrends[],
-    },
-    "surveys": {
-        "getSurey": (surveyId: string): Survey,
-    },
-    "decisions": {
-        "decide": (request: ContextualBanditRequest): Item[],
-    },
-    "corvus": {
-        "contextualBandit": {
-            "decide": (request: ContextualBanditRequest, filter: PromotionFilter): Item[],
-        }
-    },
-    "promotionCatalog": {
-        "findPromotions": (filter: ItemFilter<any>, context: CampaignComponentContext): Promotion: [],
-        "promotionFilter": (contentZone: string): PromotionFilter,
+    "catalog": Object,
+    "recommendations": Object,
+    "smartTrends": Object,
+    "surveys": Object,
+    "decisions": Object,
+    "corvus": Object,
+    "promotionCatalog": Object
+}
+```
+
+### services.catalog
+
+```js title="Structure of the context.services.catalog object"
+{
+    "dimensionFilter": (dimension: string): ItemFilter<any>,
+    "findClosestItems": (request: ClosestItemsRequest): Item[],
+    "findItem": (type: string, id: string): Item,
+    "findItems": (type: string, ids: string[]): Item[] || (type: ItemFilter<any>, ids: ItemSort<any>): Item[] || (type: ItemFilter<any>): Item[]
+}
+```
+
+### services.recommendations
+
+
+```js title="Structure of the context.services.recommendations object"
+{
+    "recommend": (request: RecommendationsRequest): Item[],
+    "recommendIdsOnly":  (request: RecommendationsRequest): Item[],
+    "smartSearch": (request: SmartSearchRequest): Item[],
+    "smartSort": (request: SmartSort): Item[]
+}
+```
+
+### services.smartTrends
+
+```js title="Structure of the context.services.smartTrends object"
+{
+     "smartTrends": (request: SmartTrendsRequest): ItemTrends[]
+}
+```
+
+### services.surveys
+
+```js title="Structure of the context.services.surveys object"
+{
+     "getSurey": (surveyId: string): Survey
+}
+```
+
+### services.decisions
+
+```js title="Structure of the context.services.decisions object"
+{
+     "decide": (request: ContextualBanditRequest): Item[]
+}
+```
+
+### services.corvus
+
+```js title="Structure of the context.services.corvus object"
+{
+    "contextualBandit": {
+        "decide": (request: ContextualBanditRequest, filter: PromotionFilter): Item[]
     }
+}
+```
+
+### services.promotionCatalog
+
+```js title="Structure of the context.services.promotionCatalog object"
+{
+    "findPromotions": (filter: ItemFilter<any>, context: CampaignComponentContext): Promotion: [],
+    "promotionFilter": (contentZone: string): PromotionFilter
 }
 ```
 
@@ -164,150 +219,194 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 ```js title="Structure of the context.user object"
 {
-        "attributes": {
-            "created": {
-                "value": number // epoch
-            },
-            "customAttribute": {
-                "value": any
-            },
-            "originatingReferrer": {
-                "value": "{\"medium\":\"Direct\",\"source\":null,\"terms\":null,\"domain\":null,\"subdomainReversed\":null,\"url\":null,\"landingUrl\":\"https://www.mateuszdabrowski.pl/\"}"
-            },
-            "firstName": {
-                "value": string
-            },
-            "lastViewedCartAt": {
-                "value": number // epoch
-            },
-            "firstActivity": {
-                "value": number // epoch
+    "attributes": Object,
+    "profileObjects": Object,
+    "visits": [Object],
+    "orderHistory": [Object],
+    "location": Object,
+    "currentCart": Object,
+    "anonymous": boolean,
+    "segmentMembership": [Object],
+    "id": string,
+    actionCount: (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
+    actionCountPerItem:  (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
+    getDimensionActivity: (dimension: string, start: Date, end: Date): {
+        [itemId: string]: ItemActionStats
+    }, // 'Product', new Date('2023-08-23T23:30:58.937Z'), new Date('2023-08-24T08:30:58.937Z')
+    getDimensionActivityByDay: (dimension: string, start: Date, end: Date): {
+        [date: string] : ItemActionStats
+    },
+    getEmailSendHistory: (start: Date, end: Date): EmailSendActivity[] || (): EmailSendActivity[],
+    getLatestOrderByStatus: (status: 'Open' | 'Purchased' | 'Cancelled'): Order,
+    getSegmentJoinDate: (segmentId: string): Date,
+    itemStatTotal: (request: ItemStatsRequest): number, // (itemId?: string, itemType: string, statType: ItemStatType)
+    itemStatTotalPerItem: (request: ItemStatsRequest): ItemStat[], // (itemId?: string, itemType: string, statType: ItemStatType)
+    pageViewCount: (request: StatsRequest): number, // {start: Date, end: Date}
+    visitCount: (request: StatsRequest): number, // {start: Date, end: Date}
+    visitDurationMillis: (request: StatsRequest): number, // {start: Date, end: Date}
+}
+```
+
+### user.attributes
+
+```js title="Structure of the context.user.attributes object"
+{
+    "created": {
+        "value": number // epoch
+    },
+    "customAttribute": {
+        "value": any
+    },
+    "originatingReferrer": {
+        "value": "{\"medium\":\"Direct\",\"source\":null,\"terms\":null,\"domain\":null,\"subdomainReversed\":null,\"url\":null,\"landingUrl\":\"https://www.mateuszdabrowski.pl/\"}"
+    },
+    "firstName": {
+        "value": string
+    },
+    "lastViewedCartAt": {
+        "value": number // epoch
+    },
+    "firstActivity": {
+        "value": number // epoch
+    }
+}
+```
+
+### user.profileObjects
+
+```js title="Structure of the context.user.attributes object"
+{
+
+}
+```
+
+### user.visits
+
+```js title="Structure of the context.user.visits array"
+[
+    {
+        "start": number, // epoch
+        "lastEventTime": number, // epoch
+        "timeSinceLastVisit": number, // miliseconds
+        "referrer": { // || null
+            "medium": "Direct",
+            "source": null,
+            "terms": null,
+            "domain": null,
+            "subdomainReversed": null,
+            "url": null,
+            "landingUrl": "https://www.mateuszdabrowski.pl/"
+        },
+        "deviceType": "Computer",
+        "browser": "Chrome",
+        "platform": "Web",
+        "operatingSystem": "Windows",
+        "weather": { // || null
+            "temperature": 71,
+            "humidity": 67,
+            "windSpeed": 7,
+            "rain3h": 0,
+            "snow3h": 0,
+            "cloudCoverage": 0,
+            "condition": {
+                "id": 800,
+                "name": "clear sky",
+                "icon": "01d",
+                "category": "Clear"
             }
         },
-        "profileObjects": {},
-        "visits": [
+        "pageViewIndex": 9
+    }
+]
+```
+
+### user.orderHistory
+
+```js title="Structure of the context.user.orderHistory array"
+[
+     {
+        "id": null,
+        "created": number, // epoch
+        "updated": number, // epoch
+        "purchaseDate": null,
+        "visitAgeAtPurchase": number, // miliseconds
+        "totalValue": number,
+        "totalValueCurrency": null,
+        "status": "Open",
+        "metadata": null,
+        "lineItems": [
             {
-                "start": number, // epoch
-                "lastEventTime": number, // epoch
-                "timeSinceLastVisit": number, // miliseconds
-                "referrer": { // || null
-                    "medium": "Direct",
-                    "source": null,
-                    "terms": null,
-                    "domain": null,
-                    "subdomainReversed": null,
-                    "url": null,
-                    "landingUrl": "https://www.mateuszdabrowski.pl/"
-                },
-                "deviceType": "Computer",
-                "browser": "Chrome",
-                "platform": "Web",
-                "operatingSystem": "Windows",
-                "weather": { // || null
-                    "temperature": 71,
-                    "humidity": 67,
-                    "windSpeed": 7,
-                    "rain3h": 0,
-                    "snow3h": 0,
-                    "cloudCoverage": 0,
-                    "condition": {
-                        "id": 800,
-                        "name": "clear sky",
-                        "icon": "01d",
-                        "category": "Clear"
-                    }
-                },
-                "pageViewIndex": 9
-            }
-        ],
-        "orderHistory": [
-            {
-                "id": null,
-                "created": number, // epoch
-                "updated": number, // epoch
-                "purchaseDate": null,
-                "visitAgeAtPurchase": number, // miliseconds
-                "totalValue": number,
-                "totalValueCurrency": null,
-                "status": "Open",
-                "metadata": null,
-                "lineItems": [
-                    {
-                        "quantity": number,
-                        "price": number,
-                        "itemId": string,
-                        "attributes": {}
-                    },
-                ],
+                "quantity": number,
+                "price": number,
+                "itemId": string,
                 "attributes": {}
-            }
-        ],
-        "location": {
-            "geographicPoint": {
-                "latitude": number,
-                "longitude": number
             },
-            "timeZoneId": "Europe/Warsaw",
-            "continentKey": "EU",
-            "countryCode": "PL",
-            "countryNumericCode": 616,
-            "stateProvinceCode": "14",
-            "city": "Warsaw",
-            "postalCode": "00-633",
-            "organization": "Pwc Polska Sp. Z O.o.",
-            "naicsCode": "517311"
-        },
-        "currentCart": {
-            "id": null,
-            "created": number, // epoch
-            "updated": number, // epoch
-            "purchaseDate": null,
-            "visitAgeAtPurchase": number, // miliseconds
-            "totalValue": number,
-            "totalValueCurrency": null,
-            "status": "Open",
-            "metadata": null,
-            "lineItems": [
-                {
-                    "quantity": number,
-                    "price": number,
-                    "itemId": string,
-                    "attributes": {}
-                },
-            ],
+        ],
+        "attributes": {}
+    }
+]
+```
+
+### user.location
+
+```js title="Structure of the context.user.location object"
+{
+    "geographicPoint": {
+        "latitude": number,
+        "longitude": number
+    },
+    "timeZoneId": "Europe/Warsaw",
+    "continentKey": "EU",
+    "countryCode": "PL",
+    "countryNumericCode": 616,
+    "stateProvinceCode": "14",
+    "city": "Warsaw",
+    "postalCode": "00-633",
+    "organization": "Pwc Polska Sp. Z O.o.",
+    "naicsCode": "517311"
+}
+```
+
+### user.currentCart
+
+```js title="Structure of the context.user.currentCart object"
+{
+    "id": null,
+    "created": number, // epoch
+    "updated": number, // epoch
+    "purchaseDate": null,
+    "visitAgeAtPurchase": number, // miliseconds
+    "totalValue": number,
+    "totalValueCurrency": null,
+    "status": "Open",
+    "metadata": null,
+    "lineItems": [
+        {
+            "quantity": number,
+            "price": number,
+            "itemId": string,
             "attributes": {}
         },
-        "anonymous": boolean,
-        "segmentMembership": [
-            {
-                "segmentId": string,
-                "segmentName": string,
-                "joined": number, // epoch
-                "createIfMissing": boolean,
-                "removal": boolean,
-                "userId": string,
-                "customerId": string,
-                "customerType": "User"
-            },
-        ],
-        "id": string,
-        actionCount: (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
-        actionCountPerItem:  (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
-        getDimensionActivity: (dimension: string, start: Date, end: Date): {
-            [itemId: string]: ItemActionStats
-        }, // 'Product', new Date('2023-08-23T23:30:58.937Z'), new Date('2023-08-24T08:30:58.937Z')
-        getDimensionActivityByDay: (dimension: string, start: Date, end: Date): {
-            [date: string] : ItemActionStats
-        },
-        getEmailSendHistory: (start: Date, end: Date): EmailSendActivity[] || (): EmailSendActivity[],
-        getLatestOrderByStatus: (status: 'Open' | 'Purchased' | 'Cancelled'): Order,
-        getSegmentJoinDate: (segmentId: string): Date,
-        itemStatTotal: (request: ItemStatsRequest): number, // (itemId?: string, itemType: string, statType: ItemStatType)
-        itemStatTotalPerItem: (request: ItemStatsRequest): ItemStat[], // (itemId?: string, itemType: string, statType: ItemStatType)
-        pageViewCount: (request: StatsRequest): number, // {start: Date, end: Date}
-        visitCount: (request: StatsRequest): number, // {start: Date, end: Date}
-        visitDurationMillis: (request: StatsRequest): number, // {start: Date, end: Date}
-    },
+    ],
+    "attributes": {}
+}
+```
+
+### user.segmentMembership
+
+```js title="Structure of the context.user.segmentMembership array"
+[
+     {
+        "segmentId": string,
+        "segmentName": string,
+        "joined": number, // epoch
+        "createIfMissing": boolean,
+        "removal": boolean,
+        "userId": string,
+        "customerId": string,
+        "customerType": "User"
+    }
+]
 ```
 
 ## accountId & datasetId
