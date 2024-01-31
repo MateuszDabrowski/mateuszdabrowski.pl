@@ -145,7 +145,6 @@ module.exports = {
             },
             items: [
                 'interaction-studio/mcp-catalog-architecture',
-                'interaction-studio/mcp-open-time-email',
                 {
                     type: 'category',
                     label: 'Serverside Code',
@@ -162,6 +161,7 @@ module.exports = {
                         'interaction-studio/mcp-serverside-code-context',
                     ],
                 },
+                'interaction-studio/mcp-open-time-email',
                 {
                     type: 'link',
                     label: '» MC Personalization Snippets',
