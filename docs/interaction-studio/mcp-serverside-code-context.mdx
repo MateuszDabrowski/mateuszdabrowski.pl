@@ -125,7 +125,14 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 ## contentZone
 
-`contentZone` string property returns the Content Zone that was selected for the Campaign. It might be useful if your campaign supports multiple content zones and you want to alter some payload elements based on the one selected (f.e. change the number of returned recommenations).
+`contentZone` string property returns the Content Zone that was selected for the Campaign. It might be useful if your campaign supports multiple content zones and you want to alter some payload elements based on the one selected (f.e. change the number of returned recommenations):
+
+```ts {2} title="Leverage context.contentZone to change the serverside payload"
+// Limit the number of recommendations to first four for smaller placements
+if (['search_see-more', 'listing_see-more'].includes(context.contentZone)) {
+    recommenations = recommendations.slice(0,4);
+}
+```
 
 
 ## trigger
@@ -133,6 +140,20 @@ In short, don't use `context` for custom payload dedicated to control group user
 `trigger` object property is available only for the Triggered Campaign Templates. //TODO
 
 ## locale
+
+If you have switched on Locale support in your Marketing Cloud Personalization, `locale` string will return a five-characters long combination of ISO language code and ISO country code (`language_COUNTRY`, for example: `en_US` for american english).
+
+You can use it to return the campaign content based on the most recent user locale (be it based on manually entered variations in the Campaign configuration or by pulling directly from the localized Catalog):
+
+```ts {6} title="Leverage context.locale to pull localized product details"
+const recommendedIds = recommendIdsOnly(context, recipeConfig);
+let localisedRecommendations = context.services.catalog
+    .findItems('Product', recommendedIds)
+    .map(product => product.toFlatJSON(
+        ['id', 'name,' 'imageUrl', 'url', 'price'],
+        context.locale || ''
+    ))
+```
 
 ## services
 
