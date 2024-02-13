@@ -87,7 +87,14 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 ## event
 
-`event` object property is where the magic of the `context` object starts. //TODO
+`event` object property is where the magic of the `context` object starts. It stores information related to the event that triggered the campaign - the data that you can see when you leverage `.setLoggingLevel('debug')` method in your Sitemap.
+
+:::note You Should Know
+
+The `context.event` object won't work correctly in the Template Preview sidebar, as there is no valid event in that mode. Use an active campaign directly on the website the preview the real output during development. Just make sure you use the campaign targeting to limit execution just to you.
+
+:::
+
 
 ```js title="Structure of the context.event object"
 {
@@ -98,6 +105,17 @@ In short, don't use `context` for custom payload dedicated to control group user
     "itemType": (): string
 }
 ```
+
+The first level of the `context.event` already contains some goodies.
+
+While the `context.event.time` is not that useful (unless you want to make some time-dependent changes to the camapign payload), the three functions available there are much more practical.
+
+`context.event.ipAddress()` returns an IP address of the user visiting your website. You might use it to blocklist specific IP ranges (be it internal or competitors) from seeing your camapigns. It's not a clean solution (as the campaign needs to be executed to get this far), but as there is no MCP-level IP blocklist, this might be your best bet. Of course, much better solution would be to build such logic on the website side to conditionally block IPs already on the Web SDK import step, but that might not be always possible.
+
+`context.event.itemId()` returns
+
+`context.event.itemType()` returns
+
 
 ### event.fields
 
@@ -134,10 +152,11 @@ if (['search_see-more', 'listing_see-more'].includes(context.contentZone)) {
 }
 ```
 
-
 ## trigger
 
-`trigger` object property is available only for the Triggered Campaign Templates. //TODO
+`trigger` object property is filled in only for the Triggered Campaign Templates.
+
+🚧 Work in progress 🚧
 
 ## locale
 
@@ -145,8 +164,9 @@ If you have switched on Locale support in your Marketing Cloud Personalization, 
 
 You can use it to return the campaign content based on the most recent user locale (be it based on manually entered variations in the Campaign configuration or by pulling directly from the localized Catalog):
 
-```ts {6} title="Leverage context.locale to pull localized product details"
+```ts {7} title="Leverage context.locale to pull localized product details"
 const recommendedIds = recommendIdsOnly(context, recipeConfig);
+// Return localized recommendations with key datapoints needed for the campaign
 let localisedRecommendations = context.services.catalog
     .findItems('Product', recommendedIds)
     .map(product => product.toFlatJSON(
@@ -200,6 +220,8 @@ let localisedRecommendations = context.services.catalog
 }
 ```
 
+🚧 Work in progress 🚧
+
 ### services.surveys
 
 ```js title="Structure of the context.services.surveys object"
@@ -207,6 +229,8 @@ let localisedRecommendations = context.services.catalog
      "getSurey": (surveyId: string): Survey
 }
 ```
+
+🚧 Work in progress 🚧
 
 ### services.decisions
 
@@ -295,11 +319,7 @@ let localisedRecommendations = context.services.catalog
 
 ### user.profileObjects
 
-```js title="Structure of the context.user.attributes object"
-{
-
-}
-```
+🚧 Work in progress 🚧
 
 ### user.visits
 
