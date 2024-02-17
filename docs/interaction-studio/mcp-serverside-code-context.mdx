@@ -148,10 +148,31 @@ On top of the above `context.event` contains also `context.event.fields` subobje
 
 `context.event.fields` subobject groups multiple datapoints, many of which are very technical and not really useful for us. But there are some that can open interesting use cases - let's dive in.
 
-1. `context.event.fields.pageType` returns the name of the currently viewed page type as configured in the Sitemap (f.e. `'Home'`).
-2. `context.event.fields.action` returns the name of the currently pushed action as configured in the Sitemap (f.e. `'Viewed Home'`, albeit it is much more interesting for custom actions that can drive different campaign experiences despite being triggered on the same page type).
+1. `context.event.fields.pageType` returns the name of the currently viewed page type as configured in the Sitemap (f.e. `'Home'`). Useful when you want to change the serverside payload for the campaign based on page type, when there are multiple sharing the content zone.
+2. `context.event.fields.action` returns the name of the currently pushed action as configured in the Sitemap (f.e. `'Viewed Home'`, albeit it is much more interesting for custom actions that can drive different campaign experiences despite being triggered on the same page type as you can then dynamically modify the payload based on that action).
 3. `context.event.fields.url` returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on query string valus that you set in the email campaign using SFMC data).
-4. Apart from those always-there properties, you will also see there custom attributes that you passed along with the event. For example, if in the sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns that are leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled on Add to Cart event to know whether you want to promote a cross-sell. Add `hasMetFreeDeliveryThershold` to conditionally trigger recommendations of products that will help the customer get over the line of free delivery.
+4. Apart from those always-there properties, you will also see there custom attributes that you passed along with the event. For example, if in the sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns that are leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled on Add to Cart event to know whether you want to promote a cross-sell. Add `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
+
+:::note You Should Know
+
+If you need some data only for the specific event purpose and don't want to store it in an attribute (be it due to limits or for the fact that Sitemap cannot remove the attribute value later) you can still use the `actionEvent.user.attributes.customAttribute = 'value'` approach to pass that information. It won't be stored on user attribute (if there isn't one matching the name) but will still be available on the Event Stream and in the `context` object as `context.event.fields.customAttribute`. Works also for pushing custom events:
+
+
+```js {5} title="Pushing custom event with a custom attribute that does not exist as a user attribute"
+Evergage.sendEvent({
+    action: 'Custom Event',
+    user: {
+        attributes: {
+            customAttribute: 'value',
+        },
+    },
+    source: {
+        contentZones: [{ name: 'virtual_for_global_control' }],
+    }
+})
+```
+
+:::
 
 ## contentZone
 
@@ -166,7 +187,7 @@ if (['search_see-more', 'listing_see-more'].includes(context.contentZone)) {
 
 ## trigger
 
-`trigger` object property is filled in only for the Triggered Campaign Templates.
+`trigger` object property is filled only for the Triggered Campaign Templates.
 
 🚧 Work in progress 🚧
 
@@ -189,6 +210,8 @@ let localisedRecommendations = context.services.catalog
 
 ## services
 
+`context.services` is the most powerful part of the `context` obejct as it is packed to the brim with functions that give you access to Marketing Cloud Personalization data or let you create new recommendations.
+
 ```js title="Structure of the context.services object"
 {
     "catalog": Object,
@@ -200,6 +223,8 @@ let localisedRecommendations = context.services.catalog
     "promotionCatalog": Object
 }
 ```
+
+It's a nested object, so we will go through it - property by property - to discuss each group of functions.
 
 ### services.catalog
 
@@ -252,6 +277,8 @@ let localisedRecommendations = context.services.catalog
 }
 ```
 
+🚧 Work in progress 🚧
+
 ### services.corvus
 
 ```js title="Structure of the context.services.corvus object"
@@ -262,6 +289,8 @@ let localisedRecommendations = context.services.catalog
 }
 ```
 
+🚧 Work in progress 🚧
+
 ### services.promotionCatalog
 
 ```js title="Structure of the context.services.promotionCatalog object"
@@ -270,6 +299,8 @@ let localisedRecommendations = context.services.catalog
     "promotionFilter": (contentZone: string): PromotionFilter
 }
 ```
+
+🚧 Work in progress 🚧
 
 ## user
 
