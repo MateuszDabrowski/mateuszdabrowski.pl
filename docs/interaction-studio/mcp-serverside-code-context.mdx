@@ -106,16 +106,21 @@ The `context.event` object won't work correctly in the Template Preview sidebar,
 }
 ```
 
-The first level of the `context.event` already contains some goodies.
+While the `context.event.time` is not that useful (unless you want to make some time-dependent changes to the camapign payload), the three functions available there are much more practical:
 
-While the `context.event.time` is not that useful (unless you want to make some time-dependent changes to the camapign payload), the three functions available there are much more practical.
+1. `context.event.ipAddress()` returns an IP address of the user visiting your website. You might use it to blocklist specific IP ranges (be it internal or competitors) from seeing your camapigns. It's not a clean solution (as the campaign needs to be executed to get this far), but as there is no MCP-level IP blocklist, this might be your best bet. Of course, much better solution would be to build such logic on the website side to conditionally block IPs already on the Web SDK import step, but that might not be always possible.
+2. `context.event.itemId()` returns the ID of the Catalog Item that was viewed in the event. It pairs perfectly with the next function:
+3. `context.event.itemType()` returns the Catalog of the Item that was viewed (f.e. `'Product'` for Product View).
 
-`context.event.ipAddress()` returns an IP address of the user visiting your website. You might use it to blocklist specific IP ranges (be it internal or competitors) from seeing your camapigns. It's not a clean solution (as the campaign needs to be executed to get this far), but as there is no MCP-level IP blocklist, this might be your best bet. Of course, much better solution would be to build such logic on the website side to conditionally block IPs already on the Web SDK import step, but that might not be always possible.
+The pair of `itemId` and `itemType` are really useful, as those two details are exactly what is required for a [`context.services.catalog.findItem()`](#servicescatalog) call that let's you get full details about the currently displayed item. It enables use cases where you want to change campaign payload based on dispalyed item attributes, related catalog objects or other details available on the full item detail. For example - access to [localized item data](#locale).
 
-`context.event.itemId()` returns
+:::note You Should Know
 
-`context.event.itemType()` returns
+Event is not only a nice datapoint that you can access through `context`, it is also the basis for the anchor in Einstein Recipes. You can leverage it (in a very dirty way) to create fake anchors and deploy recommendations for products related to the one currently viewed.
 
+:::
+
+On top of the above `context.event` contains also `context.event.fields` subobject capturing even more details about the triggering event.
 
 ### event.fields
 
@@ -140,6 +145,13 @@ While the `context.event.time` is not that useful (unless you want to make some 
     "customAttribute2": any
 }
 ```
+
+`context.event.fields` subobject groups multiple datapoints, many of which are very technical and not really useful for us. But there are some that can open interesting use cases - let's dive in.
+
+1. `context.event.fields.pageType` returns the name of the currently viewed page type as configured in the Sitemap (f.e. `'Home'`).
+2. `context.event.fields.action` returns the name of the currently pushed action as configured in the Sitemap (f.e. `'Viewed Home'`, albeit it is much more interesting for custom actions that can drive different campaign experiences despite being triggered on the same page type).
+3. `context.event.fields.url` returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on query string valus that you set in the email campaign using SFMC data).
+4. Apart from those always-there properties, you will also see there custom attributes that you passed along with the event. For example, if in the sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns that are leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled on Add to Cart event to know whether you want to promote a cross-sell. Add `hasMetFreeDeliveryThershold` to conditionally trigger recommendations of products that will help the customer get over the line of free delivery.
 
 ## contentZone
 
