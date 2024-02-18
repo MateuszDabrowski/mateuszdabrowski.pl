@@ -106,11 +106,22 @@ The `context.event` object won't work correctly in the Template Preview sidebar,
 }
 ```
 
-While the `context.event.time` is not that useful (unless you want to make some time-dependent changes to the camapign payload), the three functions available there are much more practical:
+While the `context.event.time` is not that useful (unless you want to make some time-dependent changes to the camapign payload), the three available methods availabl are much more practical.
 
-1. `context.event.ipAddress()` returns an IP address of the user visiting your website. You might use it to blocklist specific IP ranges (be it internal or competitors) from seeing your camapigns. It's not a clean solution (as the campaign needs to be executed to get this far), but as there is no MCP-level IP blocklist, this might be your best bet. Of course, much better solution would be to build such logic on the website side to conditionally block IPs already on the Web SDK import step, but that might not be always possible.
-2. `context.event.itemId()` returns the ID of the Catalog Item that was viewed in the event. It pairs perfectly with the next function:
-3. `context.event.itemType()` returns the Catalog of the Item that was viewed (f.e. `'Product'` for Product View).
+### event methods
+
+#### context.event.ipAddress()
+
+Returns an IP address of the user visiting your website. You might use it to blocklist specific IP ranges (be it internal or competitors) from seeing your camapigns. It's not a clean solution (as the campaign needs to be executed to get this far), but as there is no MCP-level IP blocklist, this might be your best bet. Of course, much better solution would be to build such logic on the website side to conditionally block IPs already on the Web SDK import step, but that might not be always possible.
+
+
+#### context.event.itemId()
+
+Returns the ID of the Catalog Item that was viewed in the event. It pairs perfectly with the next method: `context.event.itemType()`.
+
+#### context.event.itemType()
+
+Returns the Catalog of the Item that was viewed (f.e. `'Product'` for Product View).
 
 The pair of `itemId` and `itemType` are really useful, as those two details are exactly what is required for a [`context.services.catalog.findItem()`](#servicescatalog) call that let's you get full details about the currently displayed item. It enables use cases where you want to change campaign payload based on dispalyed item attributes, related catalog objects or other details available on the full item detail. For example - access to [localized item data](#locale).
 
@@ -148,10 +159,22 @@ On top of the above `context.event` contains also `context.event.fields` subobje
 
 `context.event.fields` subobject groups multiple datapoints, many of which are very technical and not really useful for us. But there are some that can open interesting use cases - let's dive in.
 
-1. `context.event.fields.pageType` returns the name of the currently viewed page type as configured in the Sitemap (f.e. `'Home'`). Useful when you want to change the serverside payload for the campaign based on page type, when there are multiple sharing the content zone.
-2. `context.event.fields.action` returns the name of the currently pushed action as configured in the Sitemap (f.e. `'Viewed Home'`, albeit it is much more interesting for custom actions that can drive different campaign experiences despite being triggered on the same page type as you can then dynamically modify the payload based on that action).
-3. `context.event.fields.url` returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on query string valus that you set in the email campaign using SFMC data).
-4. Apart from those always-there properties, you will also see there custom attributes that you passed along with the event. For example, if in the sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns that are leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled on Add to Cart event to know whether you want to promote a cross-sell. Add `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
+#### context.event.fields.pageType
+
+Returns the name of the currently viewed page type as configured in the Sitemap (f.e. `'Home'`). Useful when you want to change the serverside payload for the campaign based on page type, when there are multiple sharing the content zone.
+
+#### context.event.fields.action
+
+Returns the name of the currently pushed action as configured in the Sitemap (f.e. `'Viewed Home'`, albeit it is much more interesting for custom actions that can drive different campaign experiences despite being triggered on the same page type as you can then dynamically modify the payload based on that action).
+
+
+#### context.event.fields.url
+
+Returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on query string valus that you set in the email campaign using SFMC data).
+
+#### context.event.fields.customAttribute
+
+Apart from those always-there properties, you will also see there custom attributes that you passed along with the event. For example, if in the sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns that are leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled on Add to Cart event to know whether you want to promote a cross-sell. Add `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
 
 :::note You Should Know
 
@@ -210,7 +233,7 @@ let localisedRecommendations = context.services.catalog
 
 ## services
 
-`context.services` is the most powerful part of the `context` obejct as it is packed to the brim with functions that give you access to Marketing Cloud Personalization data or let you create new recommendations.
+`context.services` is the most powerful part of the `context` obejct as it is packed to the brim with methods that give you access to Marketing Cloud Personalization data or let you create new recommendations.
 
 ```js title="Structure of the context.services object"
 {
@@ -224,7 +247,7 @@ let localisedRecommendations = context.services.catalog
 }
 ```
 
-It's a nested object, so we will go through it - property by property - to discuss each group of functions.
+It's a nested object, so we will go through it - property by property - to discuss each group of methods.
 
 ### services.catalog
 
@@ -237,6 +260,9 @@ It's a nested object, so we will go through it - property by property - to discu
 }
 ```
 
+
+🚧 Work in progress 🚧
+
 ### services.recommendations
 
 
@@ -248,6 +274,9 @@ It's a nested object, so we will go through it - property by property - to discu
     "smartSort": (request: SmartSort): Item[]
 }
 ```
+
+
+🚧 Work in progress 🚧
 
 ### services.smartTrends
 
@@ -304,6 +333,7 @@ It's a nested object, so we will go through it - property by property - to discu
 
 ## user
 
+`context.user` is the biggest property covering massive amount of information about the user that triggered the campaign. It contains both multiple subobjects (which I will cover separately below), as well as multiple methods perfect for statistics-based use cases within the serverside code.
 
 ```js title="Structure of the context.user object"
 {
@@ -316,8 +346,8 @@ It's a nested object, so we will go through it - property by property - to discu
     "anonymous": boolean,
     "segmentMembership": [Object],
     "id": string,
-    actionCount: (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
-    actionCountPerItem:  (request: ActionStatsRequest): number, // {actionName: 'Action Name'}
+    actionCount: (request: ActionStatsRequest): number,
+    actionCountPerItem:  (request: ActionStatsRequest): Object,
     getDimensionActivity: (dimension: string, start: Date, end: Date): {
         [itemId: string]: ItemActionStats
     }, // 'Product', new Date('2023-08-23T23:30:58.937Z'), new Date('2023-08-24T08:30:58.937Z')
@@ -327,12 +357,122 @@ It's a nested object, so we will go through it - property by property - to discu
     getEmailSendHistory: (start: Date, end: Date): EmailSendActivity[] || (): EmailSendActivity[],
     getLatestOrderByStatus: (status: 'Open' | 'Purchased' | 'Cancelled'): Order,
     getSegmentJoinDate: (segmentId: string): Date,
-    itemStatTotal: (request: ItemStatsRequest): number, // (itemId?: string, itemType: string, statType: ItemStatType)
-    itemStatTotalPerItem: (request: ItemStatsRequest): ItemStat[], // (itemId?: string, itemType: string, statType: ItemStatType)
+    itemStatTotal: (request: ItemStatsRequest): number,
+    itemStatTotalPerItem: (request: ItemStatsRequest): ItemStat[],
     pageViewCount: (request: StatsRequest): number, // {start: Date, end: Date}
     visitCount: (request: StatsRequest): number, // {start: Date, end: Date}
     visitDurationMillis: (request: StatsRequest): number, // {start: Date, end: Date}
 }
+```
+
+Lets start our discovery of `context.user` with the methods.
+
+### user methods
+
+#### context.user.actionCount()
+
+Requires an ActionStatsRequest (`{actionName: 'Name of the action'}`) and returns the total of provided action triggers for the current user. You can also extend ActionStatsRequest with `start` and `end` date properties to limit the timeframe of action count.
+
+```js {3} title="Check how many times customer viewed cart within the last day"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let homeViewCount = context.user.actionCount({actionName: 'Viewed Cart', start: yesterday}); // Returns: 4
+```
+
+#### context.user.actionCountPerItem()
+
+In theory, it should be able to return the action count per item (as in after passing a `'Viewed Product'` action in ActionStatsRequest it would show the counts per each product where that action was triggered). But it doesn't. It returns the same informaction as [`actionCount()`](#contextuseractioncount) method but instead of doing it directly as a numer, it does it as an object with action name. Unless I'm missing something - useless.
+
+```js  title="Full on promise, null on delivery actionCountPerItem method"
+let homeViewCount = context.user.actionCountPerItem({actionName: 'Viewed Product'}); // Returns: {'Viewed Product': 5}
+```
+
+#### context.user.getDimensionActivity()
+
+#### context.user.getDimensionActivityByDay()
+
+#### context.user.getEmailSendHistory()
+
+#### context.user.getLatestOrderByStatus()
+
+#### context.user.getSegmentJoinDate()
+
+#### context.user.itemStatTotal()
+
+Requires an ItemStatsRequest (`{itemType: 'CatalogName', statType: 'StatTypeName'}`) and returns the count for that stat for a given Catalog. You can find available statTypes at the [bottom of this article](#itemstattype). ItemStatsRequest can also be extended with another optional property `itemId: 'id'` to limit the result just to a specific Item within a given Catalog (itemType). Finally, as with [actionCount()](#contextuseractioncount), you can also use `start` and `end` timeframe boundaries.
+
+```js {3-8} title="Time spent by user on Laptop Category within the last day in miliseconds"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let itemViewTime = context.user.itemStatTotal({
+    itemId: 'Laptop',
+    itemType: 'Category',
+    statType: 'ViewTime',
+    start: yesterday
+}); // Returns: 98663
+```
+
+Keep in mind that the meaning of returned value will differ depending on the selected statType - it can be count, miliseconds or money.
+
+#### context.user.itemStatTotalPerItem()
+
+`itemStatsPerItem()` works in a very similar manner to [`itemStatsTotal()`](#contextuseritemstattotal) and accepts the same ItemStatsRequest. The key difference is that instead of a single value it will return an array of objects each containing an itemId and value specific for that item.
+
+```js {3-7} title="Time spent by user on Products within the last day in miliseconds"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let itemViewTime = context.user.itemStatPerItem({
+    itemType: 'Product',
+    statType: 'ViewTime',
+    start: yesterday
+}); // Returns: [{itemId: '123', value: 9238}, {itemId: '456', value: 26651}]
+```
+
+While you can pass `itemId: 'id'` in the ItemStatsRequest, it will limit the outputted array to a single object for that item, making it not useful vs [`itemStatsTotal()`](#contextuseritemstattotal).
+
+#### context.user.pageViewCount()
+
+Requires StatsRequest (`{start: Date, end: Date}`) and returns the count of pages viewed in that timeframe. Both timeframe bounds are required.
+
+```js {3-6} title="Pages viewed within the last day"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let itemViewTime = context.user.pageViewCount({
+    start: yesterday,
+    end: today
+}); // Returns: 9
+```
+
+#### context.user.visitCount()
+
+Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}`) but returns the count of visits instead of specific pages.
+
+:::note You Should Know
+
+Visit for Marketing Cloud Personalization starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view few pages, leaves and then comes back after 40 minutes - it will be counted as a separate visit.
+
+:::
+
+```js {3-6} title="Visits within the last day"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let itemViewTime = context.user.visitCount({
+    start: yesterday,
+    end: today
+}); // Returns: 2
+```
+
+#### context.user.visitDurationMilis()
+
+Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}`) but returns the number of miliseconds user spent on your website in a specified timeframe.
+
+```js {3-6} title="Visits within the last day"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let itemViewTime = context.user.visitDurationMilis({
+    start: yesterday,
+    end: today
+}); // Returns: 98663
 ```
 
 ### user.attributes
@@ -500,3 +640,42 @@ It's a nested object, so we will go through it - property by property - to discu
 ## configuration
 
 `configuration` object property contains information about the campaign properties (fields you expect marketer to fill in when configuring the campaign) in the experience for a given user. Not really useful, as in the serverside code you can access the same information using `this` keyword (f.e. `this.campaignPropertyName`).
+
+## Picklists
+
+### ItemStatType
+
+Available values:
+
+- View
+- ViewOutOfStock
+- ViewValue
+- ViewDetail
+- QuickView
+- ViewTime
+- Cart
+- CartValue
+- Purchase
+- Visit
+- PurchaseValue
+- Review
+- Share
+- Comment
+- Favorite
+- Searches
+- SearchClicks
+- ClickThrough
+- RemoveFromCart
+- RemoveFromCartValue
+- RecommendedCount
+- PageLoadTime
+- PageLoadTimeCount
+- DomLoadTime
+- DomLoadTimeCount
+- TwReceiverTime
+- TwReceiverTimeCount
+- NumErrorEvents
+- TriggeredCount
+- RequestedForServing
+- EligibleForServing
+- Served
