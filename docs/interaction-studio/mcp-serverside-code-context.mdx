@@ -350,7 +350,7 @@ It's a nested object, so we will go through it - property by property - to discu
     actionCountPerItem:  (request: ActionStatsRequest): Object,
     getDimensionActivity: (dimension: string, start: Date, end: Date): {
         [itemId: string]: ItemActionStats
-    }, // 'Product', new Date('2023-08-23T23:30:58.937Z'), new Date('2023-08-24T08:30:58.937Z')
+    },
     getDimensionActivityByDay: (dimension: string, start: Date, end: Date): {
         [date: string] : ItemActionStats
     },
@@ -359,9 +359,9 @@ It's a nested object, so we will go through it - property by property - to discu
     getSegmentJoinDate: (segmentId: string): Date,
     itemStatTotal: (request: ItemStatsRequest): number,
     itemStatTotalPerItem: (request: ItemStatsRequest): ItemStat[],
-    pageViewCount: (request: StatsRequest): number, // {start: Date, end: Date}
-    visitCount: (request: StatsRequest): number, // {start: Date, end: Date}
-    visitDurationMillis: (request: StatsRequest): number, // {start: Date, end: Date}
+    pageViewCount: (request: StatsRequest): number,
+    visitCount: (request: StatsRequest): number,
+    visitDurationMillis: (request: StatsRequest): number,
 }
 ```
 
@@ -371,7 +371,7 @@ Lets start our discovery of `context.user` with the methods.
 
 #### context.user.actionCount()
 
-Requires an ActionStatsRequest (`{actionName: 'Name of the action'}`) and returns the total of provided action triggers for the current user. You can also extend ActionStatsRequest with `start` and `end` date properties to limit the timeframe of action count.
+Requires an ActionStatsRequest (`{actionName: 'Name of the action'}`) and returns the total of provided action triggers for the current user. You can also extend ActionStatsRequest with `start` or `end` (but not both due to a MCP bug) date properties to limit the timeframe of action count.
 
 ```js {3} title="Check how many times customer viewed cart within the last day"
 let today = new Date();
@@ -389,17 +389,108 @@ let homeViewCount = context.user.actionCountPerItem({actionName: 'Viewed Product
 
 #### context.user.getDimensionActivity()
 
+Requires a dimension (so a Catalog, like `'Product'`, '`Category`' or `'CustomCatalog'`) and start + end date boundaries. This time you need to provide both, in that exact order, always. Important difference with this method - here you pass direct arguments, not a grouping Stat object. It returns an Object with Item IDs and related activity data from the selected Dimension that the user interacted with in the selected timeframe.
+
+```js {3} title="Find the activity in a specified catalog"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let brandActivity = context.user.getDimensionActivity('Brand', yesterday, today); // Returns:
+// {
+//   "Apple": {
+//     "view": 2,
+//     "viewOutOfStock": 0,
+//     "viewDetail": 0,
+//     "viewTime": 43339,
+//     "cart": 1,
+//     "cartValue": 215,
+//     "purchase": 1,
+//     "purchaseValue": 215,
+//     "review": 0,
+//     "share": 0,
+//     "comment": 0,
+//     "favorite": 0
+//   }
+// }
+```
+
+That's really nice set of data to calculate the most viewed Catagory, longest viewed Product or most purchased Brand by that specific user. Poor proxy for the real affinity data that unfortunately is not available.
+
+:::note You Should Know
+
+For some reason while you can work on the returned object, you cannot pass it to the serverside payload directly. You can output the final value (f.e. `brandActivity.Apple.view`) but both `brandActivity` and `brandActivity.Apple` will break it.
+
+You can perform calculations in serverside on any level, but if you need to output it directly in the payload there is a trick to do it: `JSON.parse(JSON.strinify(brandActivity))`.
+
+:::
+
 #### context.user.getDimensionActivityByDay()
+
+`getDimensionActivityByDay` method works nearly the same as [`getDimensionActivity`](#contextusergetdimensionactivity). There are two key differences:
+
+1. It requires additional argument - right after selecting the Dimension you need to also pass specific Item ID for which you want to see the activity.
+2. The returned Object will have epoch properties for each day of activity within the selected time period.
+
+```js {3,5} title="Find the activity in a specified catalog"
+let today = new Date();
+let yesterday = new Date(today.setDate(today.getDate() - 1));
+let brandActivity = context.user.getDimensionActivityByDay('Brand', 'Apple', yesterday, today); // Returns:
+// {
+//   "1707782400000": {
+//     "view": 2,
+//     "viewOutOfStock": 0,
+//     "viewDetail": 0,
+//     "viewTime": 43339,
+//     "cart": 1,
+//     "cartValue": 215,
+//     "purchase": 1,
+//     "purchaseValue": 215,
+//     "review": 0,
+//     "share": 0,
+//     "comment": 0,
+//     "favorite": 0
+//   }
+// }
+```
+
+It also has the same payload limitation as [`getDimensionActivity`](#contextusergetdimensionactivity) - with the same workaround available.
 
 #### context.user.getEmailSendHistory()
 
+Requires either nothing or start/end data boundary and returns... nothing. At least I wasn't able to get it to work with the [OTE Campaign](./mcp-open-time-email.mdx) data. Might be that it is leveraging the barely working [External Email Campaign ETL](../../../sites/ideas/mc-personalization-ideas#external-email-campaign-etl-send-segmentation).
+
 #### context.user.getLatestOrderByStatus()
+
+Requires an order status (`'Open'`, `'Purchased'` or `'Cancelled'`) and returns the most recent Order object with the provided status. The data structure and content is the same as in the [`user.orderHistory`](#userorderhistory).
 
 #### context.user.getSegmentJoinDate()
 
+Requires Segment ID (you can view it in User Segments after you add the ID column or by opening a specific segment and copying five alphanumercal characters from URL: `.../segment/{SegmentID}/members...`) and returns an epoch with join date. Cool way to capture additional context for the user (f.e. how many days ago he joined the Gold Tier segment).
+
+```js  title="Segment join epoch fun"
+let segmentJoinEpoch = context.user.getSegmentJoinDate('qWeR1'); // Returns: 1695796858287
+```
+
+If the Segment ID is incorrect or the user did not yet join provided segment, it will return `null`.
+
+:::note You Should Know
+
+You can easily convert epoch to date to simplify date calculations:
+
+```js {2,7} title="Perform date comparisons on epoch"
+let segmentJoinEpoch = context.user.getSegmentJoinDate('qWeR1'); // Returns: 1695796858287
+let segmentJoinDate = new Date(segmentJoinEpoch);
+
+let today = new Date();
+let lastWeek = new Date(today.setDate(today.getDate() - 7));
+
+let hasJoinedLastWeek = segmentJoinDate > lastWeek;
+```
+
+:::
+
 #### context.user.itemStatTotal()
 
-Requires an ItemStatsRequest (`{itemType: 'CatalogName', statType: 'StatTypeName'}`) and returns the count for that stat for a given Catalog. You can find available statTypes at the [bottom of this article](#itemstattype). ItemStatsRequest can also be extended with another optional property `itemId: 'id'` to limit the result just to a specific Item within a given Catalog (itemType). Finally, as with [actionCount()](#contextuseractioncount), you can also use `start` and `end` timeframe boundaries.
+Requires an ItemStatsRequest (`{itemType: 'CatalogName', statType: 'StatTypeName'}`) and returns the count for that stat for a given Catalog. ItemStatsRequest can also be extended with another optional property `itemId: 'id'` to limit the result just to a specific Item within a given Catalog (itemType). Finally, as with [actionCount()](#contextuseractioncount), you can also use `start` or `end` timeframe boundaries - but not both due to a MCP bug.
 
 ```js {3-8} title="Time spent by user on Laptop Category within the last day in miliseconds"
 let today = new Date();
@@ -412,7 +503,15 @@ let itemViewTime = context.user.itemStatTotal({
 }); // Returns: 98663
 ```
 
-Keep in mind that the meaning of returned value will differ depending on the selected statType - it can be count, miliseconds or money.
+Available statTypes: 'View', 'ViewOutOfStock', 'ViewValue', 'ViewDetail', 'QuickView', 'ViewTime', 'Cart', 'CartValue', 'Purchase', 'Visit', 'PurchaseValue', 'Review', 'Share', 'Comment', 'Favorite', 'Searches', 'SearchClicks', 'ClickThrough', 'RemoveFromCart', 'RemoveFromCartValue', 'RecommendedCount', 'PageLoadTime', 'PageLoadTimeCount', 'DomLoadTime', 'DomLoadTimeCount', 'TwReceiverTime', 'TwReceiverTimeCount', 'NumErrorEvents', 'TriggeredCount', 'RequestedForServing', 'EligibleForServing', 'Served'.
+
+Keep in mind that the meaning of the returned value will differ depending on the selected statType - it can be count, miliseconds or money.
+
+:::note You Should Know
+
+This method works perfectly with the [`context.event.itemId()`](#contexteventitemid) and [`context.event.itemType()`](#contexteventitemtype) as with those you can pull relevant stats for a currently viewed Item and adapt payload for it (f.e. adapt Exit Intent incentive based on the number of visits or time spent on currently viewed product).
+
+:::
 
 #### context.user.itemStatTotalPerItem()
 
@@ -432,20 +531,19 @@ While you can pass `itemId: 'id'` in the ItemStatsRequest, it will limit the out
 
 #### context.user.pageViewCount()
 
-Requires StatsRequest (`{start: Date, end: Date}`) and returns the count of pages viewed in that timeframe. Both timeframe bounds are required.
+Requires StatsRequest (`{start: Date, end: Date}` - use either start or end, using both will always return 0) and returns the count of pages viewed in that timeframe. Both timeframe bounds are required.
 
 ```js {3-6} title="Pages viewed within the last day"
 let today = new Date();
 let yesterday = new Date(today.setDate(today.getDate() - 1));
 let itemViewTime = context.user.pageViewCount({
-    start: yesterday,
-    end: today
+    start: yesterday
 }); // Returns: 9
 ```
 
 #### context.user.visitCount()
 
-Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}`) but returns the count of visits instead of specific pages.
+Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}` - use either start or end, using both will always return 0) but returns the count of visits instead of specific pages.
 
 :::note You Should Know
 
@@ -457,14 +555,13 @@ Visit for Marketing Cloud Personalization starts from the first page view and en
 let today = new Date();
 let yesterday = new Date(today.setDate(today.getDate() - 1));
 let itemViewTime = context.user.visitCount({
-    start: yesterday,
-    end: today
+    start: yesterday
 }); // Returns: 2
 ```
 
 #### context.user.visitDurationMilis()
 
-Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}`) but returns the number of miliseconds user spent on your website in a specified timeframe.
+Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}` - use either start or end, using both will always return 0) but returns the number of miliseconds user spent on your website in a specified timeframe.
 
 ```js {3-6} title="Visits within the last day"
 let today = new Date();
@@ -640,42 +737,3 @@ let itemViewTime = context.user.visitDurationMilis({
 ## configuration
 
 `configuration` object property contains information about the campaign properties (fields you expect marketer to fill in when configuring the campaign) in the experience for a given user. Not really useful, as in the serverside code you can access the same information using `this` keyword (f.e. `this.campaignPropertyName`).
-
-## Picklists
-
-### ItemStatType
-
-Available values:
-
-- View
-- ViewOutOfStock
-- ViewValue
-- ViewDetail
-- QuickView
-- ViewTime
-- Cart
-- CartValue
-- Purchase
-- Visit
-- PurchaseValue
-- Review
-- Share
-- Comment
-- Favorite
-- Searches
-- SearchClicks
-- ClickThrough
-- RemoveFromCart
-- RemoveFromCartValue
-- RecommendedCount
-- PageLoadTime
-- PageLoadTimeCount
-- DomLoadTime
-- DomLoadTimeCount
-- TwReceiverTime
-- TwReceiverTimeCount
-- NumErrorEvents
-- TriggeredCount
-- RequestedForServing
-- EligibleForServing
-- Served
