@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkmd=self.webpackChunkmd||[]).push([[9379],{6791:e=>{e.exports=JSON.parse('{"label":"Best Practice","permalink":"/sites/tags/best-practice","allTagsPath":"/sites/tags","count":1,"items":[{"id":"newsletter","title":"Newsletter","description":"Get yet another email in your inbox. This time, about SFMC.","permalink":"/sites/newsletter"}]}')}}]);
