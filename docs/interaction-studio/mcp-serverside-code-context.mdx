@@ -11,13 +11,13 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="Context is king. Also when coding MCP Campaign Templates. Read about all its undocumented tricks." />
 
-Marketing Cloud Personalization offers a flexible campaing template creation tooling with multiple [properties](./mcp-serverside-code-properties.mdx) and imports that helps you fulfil the business needs with a nice user experience for the marketer. There is also one more - undocumented - feature that can change your template from good to outstanding. The CampaignComponentContext object.
+Marketing Cloud Personalization offers a flexible campaign template creation tooling with multiple [properties](./mcp-serverside-code-properties.mdx) and imports that help you fulfil business needs with a pleasant user experience for the marketer. There is also one more - undocumented - feature that can change your template from good to outstanding. The CampaignComponentContext object.
 
 :::note You Should Know
 
-In this article I'm covering the main `CampaignComponentContext` object that is being passed as a `context` argument to the [`run` method](./mcp-serverside-code-basics.mdx#writing-serverside-code) in the Serverside Code of every campaign template.
+In this article, I'm covering the main `CampaignComponentContext` object that is passed as a `context` argument to the [`run` method](./mcp-serverside-code-basics.mdx#writing-serverside-code) in the Serverside Code of every campaign template.
 
-There are some other contexts (like `GearLifecycleContext` passed to search methods), that have different structure and are out of the scope of this article.
+Some other contexts (like `GearLifecycleContext` passed to search methods) have different structures and are out of the scope of this article.
 
 :::
 
@@ -41,41 +41,41 @@ The `CampaignComponentContext` object is available in the Serverside Code of the
 }
 ```
 
-It's extremely easy to use once you know what's in there. For example, you can pull product ID stored with Sitemap in a User Attribute and leverage it to pull full data about that product for personalization:
+It's straightforward to use once you know what's in there. For example, you can pull product ID stored with Sitemap in a User Attribute and leverage it to pull complete data about that product for personalisation:
 
 ```ts {2-3} title="Leverage context in the run method of your Serverside Code"
     run(context: CampaignComponentContext) {
-        let lastAddedToCartProductId = context.user.attributes?.lastAddedToCartProduct?.value;
-        let lastAddedToCartProductDetails = context.services.catalog.findItem('Product', lastAddedToCartProductId);
+        const lastAddedToCartProductId = context.user.attributes?.lastAddedToCartProduct?.value;
+        const lastAddedToCartProductDetails = context.services.catalog.findItem('Product', lastAddedToCartProductId);
         return { lastATCDetails: lastAddedToCartProductDetails };
     }
 ```
 
-And that's just a basic usage. The key to unlocking the power of context object is knowing what is stored there and how it can be used. So let's dive in, property by property (hint, the fun part starts at [`event`](#event)).
+And that's just a basic usage. The key to unlocking the power of a context object is knowing what is stored there and how you can use it. So let's dive in, property by property (hint, the fun part starts at [`event`](#event)).
 
 :::note You Should Know
 
-This article is in a work in progress state - I'm ongoingly extending details about various parts of the context object as I have opportunity to use it in real-life.
+This article is in a work-in-progress state - I'm ongoingly extending details about various parts of the context object as I can use it in real life.
 
 :::
 
 ## campaignId & experienceId
 
-First two string properties of the context object are `campaignId` and `experienceId` and their purpose if very strightforward. They provide the five character, case sensitive, alphanumerical ids for the campaign and experience selected for a user (for example, `vALdQ` for Campaign ID and `f3WpK` for Experience Id).
+The first two string properties of the context object are `campaignId` and `experienceId`, and their purpose is very straightforward. They provide the five-character, case-sensitive, alphanumerical IDs for the campaign and experience selected for a user (for example, `vALdQ` for Campaign ID and `f3WpK` for Experience ID).
 
-Both those values are passed by default from serverside to clientside and handlebars (as `campaign` and `experience` accordingly) so there is no much added value in those two unless you want to append those values as query strings to the links for tracking purposes.
+Both those values are passed by default from serverside to clientside and handlebars (as `campaign` and `experience` accordingly), so there is not much added value in the two unless you want to append those values as query strings to the links for tracking purposes.
 
-However, for Web Campaigns you can do it easily within the handlebars tab and for Serverside and Triggered Campaigns - do it on the receiving system side.
+However, for Web Campaigns, you can do it easily within the handlebars tab, and for Serverside and Triggered Campaigns, you can do it on the receiving system side.
 
 ## userGroup
 
-`userGroup` string property should tell you to which user group the user got assigned. Well, should. In practice you will see there one of the two values: `Test` for users that got an A/B Test or Rule-Based experience and `testUserGroup` for those that are in Control group (or in Template preview pane within MCP UI).
+The `userGroup` string property should tell you the group assigned to the user. Well, it should. In practice, you will see there one of the two values: `Test` for users that got an A/B Test or Rule-Based experience and `testUserGroup` for those that are in the Control group (or in the Template preview pane within MCP UI).
 
-However, you will see better values in the out-of-the-box serverside payload `userGroup` property that shows values like `Test`, `Default`, `Control` correctly and only displays `testUserGroup` during preview.
+However, you will see better values in the out-of-the-box serverside payload `userGroup` property that correctly shows values like `Test`, `Default`, and `Control` and only displays `testUserGroup` during preview.
 
 :::note You Should Know
 
-Control group creates more problems for the context, as it returns the payload preview version of it. So you will also see only the placeholder values for [`campaignId` and `experienceId`](#campaignid--experienceid), [`beaconVersion`](#beaconVersion) and skip other datapoints like [`event.fields`](#event).
+The control group creates more problems for the context, as it keeps displaying the payload preview version of it. So you will also see only the placeholder values for [`campaignId` and `experienceId`](#campaignid--experienceid), [`beaconVersion`](#beaconVersion) and skip other datapoints like [`event.fields`](#event).
 
 In short, don't use `context` for custom payload dedicated to control group users.
 
@@ -83,15 +83,15 @@ In short, don't use `context` for custom payload dedicated to control group user
 
 ## beaconVersion
 
-`beaconVersion` number property will display current Web SDK version (f.e. `16` at the moment of writing it) or `0` for preview/control group. Not really useful.
+The `beaconVersion` number property will display the current Web SDK version (f.e. `16` at the moment of writing it) or `0` for the preview/control group. Not really useful.
 
 ## event
 
-`event` object property is where the magic of the `context` object starts. It stores information related to the event that triggered the campaign - the data that you can see when you leverage `.setLoggingLevel('debug')` method in your Sitemap.
+The `event` object property is where the magic of the `context` object starts. It stores information about the event that triggered the campaign - the data you can see when you leverage the `.setLoggingLevel('debug')` method in your Sitemap.
 
 :::note You Should Know
 
-The `context.event` object won't work correctly in the Template Preview sidebar, as there is no valid event in that mode. Use an active campaign directly on the website the preview the real output during development. Just make sure you use the campaign targeting to limit execution just to you.
+The `context.event` object won't work correctly in the Template Preview sidebar, as there is no valid event in that mode. Use an active campaign directly on the website to preview the actual output during development. Just make sure you use the campaign targeting to limit execution just to you.
 
 :::
 
@@ -106,32 +106,31 @@ The `context.event` object won't work correctly in the Template Preview sidebar,
 }
 ```
 
-While the `context.event.time` is not that useful (unless you want to make some time-dependent changes to the camapign payload), the three available methods availabl are much more practical.
+While the `context.event.time` is not that useful (unless you want to make some time-dependent changes to the campaign payload), the three available methods are much more practical.
 
 ### event methods
 
 #### context.event.ipAddress()
 
-Returns an IP address of the user visiting your website. You might use it to blocklist specific IP ranges (be it internal or competitors) from seeing your camapigns. It's not a clean solution (as the campaign needs to be executed to get this far), but as there is no MCP-level IP blocklist, this might be your best bet. Of course, much better solution would be to build such logic on the website side to conditionally block IPs already on the Web SDK import step, but that might not be always possible.
-
+Returns an IP address of the user visiting your website. You might use it to blocklist specific IP ranges (internal or competitors) from seeing your campaigns. It's not a clean solution (as the campaign needs to be executed to get this far), but this might be your best bet, as there is no MCP-level IP blocklist. Of course, a much better solution would be to build such logic on the website side to block IPs already on the Web SDK import step conditionally, but that might not always be possible.
 
 #### context.event.itemId()
 
-Returns the ID of the Catalog Item that was viewed in the event. It pairs perfectly with the next method: `context.event.itemType()`.
+Returns the ID of the Catalog Item the user viewed in the event. It pairs perfectly with the following method: `context.event.itemType()`.
 
 #### context.event.itemType()
 
-Returns the Catalog of the Item that was viewed (f.e. `'Product'` for Product View).
+Returns the Catalog of the Item viewed (f.e. `'Product'` for Product View).
 
-The pair of `itemId` and `itemType` are really useful, as those two details are exactly what is required for a [`context.services.catalog.findItem()`](#servicescatalog) call that let's you get full details about the currently displayed item. It enables use cases where you want to change campaign payload based on dispalyed item attributes, related catalog objects or other details available on the full item detail. For example - access to [localized item data](#locale).
+The pair of `itemId` and `itemType` is handy, as those two details are precisely what MCP requires for a [`context.services.catalog.findItem()`](#servicescatalog) call that lets you get complete details about the currently displayed item. It enables use cases where you want to change the campaign payload based on displayed item attributes, related catalog objects, or other information on the item details. For example, access to [localized item data](#locale).
 
 :::note You Should Know
 
-Event is not only a nice datapoint that you can access through `context`, it is also the basis for the anchor in Einstein Recipes. You can leverage it (in a very dirty way) to create fake anchors and deploy recommendations for products related to the one currently viewed.
+Event is not only an excellent data point that you can access through `context`. It is also the basis for the anchor in Einstein Recipes. You can leverage it (in a filthy way) to create fake anchors and deploy recommendations for products related to the one currently viewed.
 
 :::
 
-On top of the above `context.event` contains also `context.event.fields` subobject capturing even more details about the triggering event.
+On top of the above, `context.event` also contains the `context.event.fields` subobject, capturing even more details about the triggering event.
 
 ### event.fields
 
@@ -157,28 +156,27 @@ On top of the above `context.event` contains also `context.event.fields` subobje
 }
 ```
 
-`context.event.fields` subobject groups multiple datapoints, many of which are very technical and not really useful for us. But there are some that can open interesting use cases - let's dive in.
+`context.event.fields` subobject groups multiple data points, many of which are very technical and not really useful for us. But some can open exciting use cases - let's dive in.
 
 #### context.event.fields.pageType
 
-Returns the name of the currently viewed page type as configured in the Sitemap (f.e. `'Home'`). Useful when you want to change the serverside payload for the campaign based on page type, when there are multiple sharing the content zone.
+Returns the name of the currently viewed page type as configured in the Sitemap (f.e. `'Home'`). It is useful when you want to adapt the serverside payload of the campaign based on page type when the content zone is shared across many sites.
 
 #### context.event.fields.action
 
-Returns the name of the currently pushed action as configured in the Sitemap (f.e. `'Viewed Home'`, albeit it is much more interesting for custom actions that can drive different campaign experiences despite being triggered on the same page type as you can then dynamically modify the payload based on that action).
-
+Returns the name of the currently pushed action as configured in the Sitemap (f.e. `'Viewed Home'`). It shines for custom action names that can drive different campaign experiences - despite being triggered on the same page type.
 
 #### context.event.fields.url
 
-Returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on query string valus that you set in the email campaign using SFMC data).
+Returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on the query string values you set in the email campaign using SFMC data).
 
 #### context.event.fields.customAttribute
 
-Apart from those always-there properties, you will also see there custom attributes that you passed along with the event. For example, if in the sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns that are leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled on Add to Cart event to know whether you want to promote a cross-sell. Add `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
+Apart from those always-there properties, you will also see custom attributes you passed along with the event. For example, if in the Sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled out by the Add to Cart event to determine whether you want to promote a cross-sell. Add the `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
 
 :::note You Should Know
 
-If you need some data only for the specific event purpose and don't want to store it in an attribute (be it due to limits or for the fact that Sitemap cannot remove the attribute value later) you can still use the `actionEvent.user.attributes.customAttribute = 'value'` approach to pass that information. It won't be stored on user attribute (if there isn't one matching the name) but will still be available on the Event Stream and in the `context` object as `context.event.fields.customAttribute`. Works also for pushing custom events:
+If you need some data only for the specific event purpose and don't want to store it in an attribute (be it due to limits or because Sitemap cannot remove the attribute value later), you can still use the `actionEvent.user.attributes.customAttribute = 'value'` approach to pass that information. It won't be stored on the user attribute (if there isn't one matching the name) but will still be available on the Event Stream and in the `context` object as `context.event.fields.customAttribute`. Works also for pushing custom events:
 
 
 ```js {5} title="Pushing custom event with a custom attribute that does not exist as a user attribute"
@@ -186,7 +184,7 @@ Evergage.sendEvent({
     action: 'Custom Event',
     user: {
         attributes: {
-            customAttribute: 'value',
+            customAttribute: 'value', // You can make up any property name you want
         },
     },
     source: {
@@ -199,30 +197,30 @@ Evergage.sendEvent({
 
 ## contentZone
 
-`contentZone` string property returns the Content Zone that was selected for the Campaign. It might be useful if your campaign supports multiple content zones and you want to alter some payload elements based on the one selected (f.e. change the number of returned recommenations):
+The `contentZone` string property returns the Content Zone selected for the Campaign. It might be helpful if your campaign supports multiple content zones and you want to alter some payload elements based on the one selected (f.e. change the number of returned recommendations):
 
 ```ts {2} title="Leverage context.contentZone to change the serverside payload"
-// Limit the number of recommendations to first four for smaller placements
+// Limit the number of recommendations to the first four for smaller placements
 if (['search_see-more', 'listing_see-more'].includes(context.contentZone)) {
-    recommenations = recommendations.slice(0,4);
+    recommendations = recommendations.slice(0,4);
 }
 ```
 
 ## trigger
 
-`trigger` object property is filled only for the Triggered Campaign Templates.
+The `trigger` object property is filled only for the Triggered Campaign Templates.
 
 🚧 Work in progress 🚧
 
 ## locale
 
-If you have switched on Locale support in your Marketing Cloud Personalization, `locale` string will return a five-characters long combination of ISO language code and ISO country code (`language_COUNTRY`, for example: `en_US` for american english).
+If you have switched on Locale support in your Marketing Cloud Personalization, the `locale` string will return a five-character long combination of ISO language code and ISO country code (`language_COUNTRY`, for example: `en_US` for American English).
 
 You can use it to return the campaign content based on the most recent user locale (be it based on manually entered variations in the Campaign configuration or by pulling directly from the localized Catalog):
 
 ```ts {7} title="Leverage context.locale to pull localized product details"
 const recommendedIds = recommendIdsOnly(context, recipeConfig);
-// Return localized recommendations with key datapoints needed for the campaign
+// Return localized recommendations with key data points needed for the campaign
 let localisedRecommendations = context.services.catalog
     .findItems('Product', recommendedIds)
     .map(product => product.toFlatJSON(
@@ -233,7 +231,7 @@ let localisedRecommendations = context.services.catalog
 
 ## services
 
-`context.services` is the most powerful part of the `context` obejct as it is packed to the brim with methods that give you access to Marketing Cloud Personalization data or let you create new recommendations.
+`context.services` is the most potent part of the `context` object - packed to the brim with methods that give you access to Marketing Cloud Personalization data or let you create new recommendations.
 
 ```js title="Structure of the context.services object"
 {
@@ -247,7 +245,7 @@ let localisedRecommendations = context.services.catalog
 }
 ```
 
-It's a nested object, so we will go through it - property by property - to discuss each group of methods.
+It's a nested object, so let's go through it property by property to discuss each group of methods.
 
 ### services.catalog
 
@@ -259,7 +257,6 @@ It's a nested object, so we will go through it - property by property - to discu
     "findItems": (type: string, ids: string[]): Item[] || (type: ItemFilter<any>, ids: ItemSort<any>): Item[] || (type: ItemFilter<any>): Item[]
 }
 ```
-
 
 🚧 Work in progress 🚧
 
@@ -274,7 +271,6 @@ It's a nested object, so we will go through it - property by property - to discu
     "smartSort": (request: SmartSort): Item[]
 }
 ```
-
 
 🚧 Work in progress 🚧
 
@@ -333,7 +329,7 @@ It's a nested object, so we will go through it - property by property - to discu
 
 ## user
 
-`context.user` is the biggest property covering massive amount of information about the user that triggered the campaign. It contains both multiple subobjects (which I will cover separately below), as well as multiple methods perfect for statistics-based use cases within the serverside code.
+`context.user` is the most significant property covering tons of information about the user that triggered the campaign. It contains multiple subobjects and methods perfect for statistics-based use cases within the serverside code.
 
 ```js title="Structure of the context.user object"
 {
@@ -365,36 +361,36 @@ It's a nested object, so we will go through it - property by property - to discu
 }
 ```
 
-Lets start our discovery of `context.user` with the methods.
+Let's start our discovery of `context.user` with the methods.
 
 ### user methods
 
 #### context.user.actionCount()
 
-Requires an ActionStatsRequest (`{actionName: 'Name of the action'}`) and returns the total of provided action triggers for the current user. You can also extend ActionStatsRequest with `start` or `end` (but not both due to a MCP bug) date properties to limit the timeframe of action count.
+Requires an ActionStatsRequest (`{actionName: 'Name of the action'}`) and returns the total of provided action triggers for the current user. You can also extend ActionStatsRequest with `start` or `end` (but not both) date properties to limit the timeframe of the action count.
 
-```js {3} title="Check how many times customer viewed cart within the last day"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let homeViewCount = context.user.actionCount({actionName: 'Viewed Cart', start: yesterday}); // Returns: 4
+```ts {3} title="Check how many times customer viewed cart within the last day"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const homeViewCount = context.user.actionCount({actionName: 'Viewed Cart', start: yesterday}); // Returns: 4
 ```
 
 #### context.user.actionCountPerItem()
 
-In theory, it should be able to return the action count per item (as in after passing a `'Viewed Product'` action in ActionStatsRequest it would show the counts per each product where that action was triggered). But it doesn't. It returns the same informaction as [`actionCount()`](#contextuseractioncount) method but instead of doing it directly as a numer, it does it as an object with action name. Unless I'm missing something - useless.
+In theory, it should be able to return the action count per item (after passing a `'Viewed Product'` action in ActionStatsRequest, it should show the counts per each product where that action triggered). But it doesn't. It returns the same information as [`actionCount()`](#contextuseractioncount) method, but instead of doing it directly as a number, it does it as an object with an action name. Unless I'm missing something - useless.
 
-```js  title="Full on promise, null on delivery actionCountPerItem method"
-let homeViewCount = context.user.actionCountPerItem({actionName: 'Viewed Product'}); // Returns: {'Viewed Product': 5}
+```ts  title="Full on promise, null on delivery actionCountPerItem method"
+const homeViewCount = context.user.actionCountPerItem({actionName: 'Viewed Product'}); // Returns: {'Viewed Product': 5}
 ```
 
 #### context.user.getDimensionActivity()
 
-Requires a dimension (so a Catalog, like `'Product'`, '`Category`' or `'CustomCatalog'`) and start + end date boundaries. This time you need to provide both, in that exact order, always. Important difference with this method - here you pass direct arguments, not a grouping Stat object. It returns an Object with Item IDs and related activity data from the selected Dimension that the user interacted with in the selected timeframe.
+Requires a dimension (a Catalog, like `'Product'`, '`Category`' or `'CustomCatalog'`) and start + end date boundaries. This time, you must always provide both in that exact order. The significant difference with this method is that you pass direct arguments, not a grouping Stat object. It returns an object with Item IDs and related activity data from the selected Dimension with which the user interacted during the timeframe.
 
-```js {3} title="Find the activity in a specified catalog"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let brandActivity = context.user.getDimensionActivity('Brand', yesterday, today); // Returns:
+```ts {3,5} title="Find the activity in a specified catalog"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const brandActivity = context.user.getDimensionActivity('Brand', yesterday, today); // Returns:
 // {
 //   "Apple": {
 //     "view": 2,
@@ -413,27 +409,27 @@ let brandActivity = context.user.getDimensionActivity('Brand', yesterday, today)
 // }
 ```
 
-That's really nice set of data to calculate the most viewed Catagory, longest viewed Product or most purchased Brand by that specific user. Poor proxy for the real affinity data that unfortunately is not available.
+That's an excellent set of data to calculate the most viewed Category, longest viewed Product or most purchased Brand by that specific user. Unfortunately, it's still just a proxy for the actual affinity data that is unavailable.
 
 :::note You Should Know
 
-For some reason while you can work on the returned object, you cannot pass it to the serverside payload directly. You can output the final value (f.e. `brandActivity.Apple.view`) but both `brandActivity` and `brandActivity.Apple` will break it.
+While you can work on the returned object, you cannot directly pass it to the serverside payload. You can output the final value (f.e. `brandActivity.Apple.view`), but both `brandActivity` and `brandActivity.Apple` will break it.
 
-You can perform calculations in serverside on any level, but if you need to output it directly in the payload there is a trick to do it: `JSON.parse(JSON.strinify(brandActivity))`.
+You can perform calculations in serverside code on any level, but if you need to output it directly in the payload, there is a trick: `JSON.parse(JSON.strinify(brandActivity))`.
 
 :::
 
 #### context.user.getDimensionActivityByDay()
 
-`getDimensionActivityByDay` method works nearly the same as [`getDimensionActivity`](#contextusergetdimensionactivity). There are two key differences:
+The `getDimensionActivityByDay` method works nearly the same as [`getDimensionActivity`](#contextusergetdimensionactivity). There are two key differences:
 
-1. It requires additional argument - right after selecting the Dimension you need to also pass specific Item ID for which you want to see the activity.
-2. The returned Object will have epoch properties for each day of activity within the selected time period.
+1. It requires additional argument - right after selecting the Dimension, you must also pass the specific Item ID for which you want to see the activity.
+2. The returned Object will have epoch properties for each activity day within the selected period.
 
-```js {3,5} title="Find the activity in a specified catalog"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let brandActivity = context.user.getDimensionActivityByDay('Brand', 'Apple', yesterday, today); // Returns:
+```ts {3,5} title="Find the activity in a specified catalog"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const brandActivity = context.user.getDimensionActivityByDay('Brand', 'Apple', yesterday, today); // Returns:
 // {
 //   "1707782400000": {
 //     "view": 2,
@@ -452,50 +448,50 @@ let brandActivity = context.user.getDimensionActivityByDay('Brand', 'Apple', yes
 // }
 ```
 
-It also has the same payload limitation as [`getDimensionActivity`](#contextusergetdimensionactivity) - with the same workaround available.
+It also has the same payload limitation as [`getDimensionActivity`](#contextusergetdimensionactivity), and the same workaround is available.
 
 #### context.user.getEmailSendHistory()
 
-Requires either nothing or start/end data boundary and returns... nothing. At least I wasn't able to get it to work with the [OTE Campaign](./mcp-open-time-email.mdx) data. Might be that it is leveraging the barely working [External Email Campaign ETL](../../../sites/ideas/mc-personalization-ideas#external-email-campaign-etl-send-segmentation).
+Requires either nothing or start/end data boundary and returns... nothing. At least I couldn't get it to work with the [OTE Campaign](./mcp-open-time-email.mdx) data. It may leverage the barely working [External Email Campaign ETL](../../../sites/ideas/mc-personalization-ideas#external-email-campaign-etl-send-segmentation).
 
 #### context.user.getLatestOrderByStatus()
 
-Requires an order status (`'Open'`, `'Purchased'` or `'Cancelled'`) and returns the most recent Order object with the provided status. The data structure and content is the same as in the [`user.orderHistory`](#userorderhistory).
+Requires an order status (`'Open'`, `'Purchased'` or `'Cancelled'`) and returns the most recent Order object in the selected state. The data structure and content are the same as in the [`user.orderHistory`](#userorderhistory).
 
 #### context.user.getSegmentJoinDate()
 
-Requires Segment ID (you can view it in User Segments after you add the ID column or by opening a specific segment and copying five alphanumercal characters from URL: `.../segment/{SegmentID}/members...`) and returns an epoch with join date. Cool way to capture additional context for the user (f.e. how many days ago he joined the Gold Tier segment).
+Requires Segment ID (you can view it in User Segments after you add the ID column or by opening a specific segment and copying five alphanumerical characters from URL: `.../segment/{SegmentID}/members...`) and returns an epoch with join date. It's a fantastic way to capture additional context for the user (f.e. how many days ago he joined the Gold Tier segment).
 
-```js  title="Segment join epoch fun"
-let segmentJoinEpoch = context.user.getSegmentJoinDate('qWeR1'); // Returns: 1695796858287
+```ts  title="Segment join epoch fun"
+const segmentJoinEpoch = context.user.getSegmentJoinDate('qWeR1'); // Returns: 1695796858287
 ```
 
-If the Segment ID is incorrect or the user did not yet join provided segment, it will return `null`.
+If the Segment ID is incorrect or the user has not joined the provided segment, it will return `null`.
 
 :::note You Should Know
 
 You can easily convert epoch to date to simplify date calculations:
 
-```js {2,7} title="Perform date comparisons on epoch"
-let segmentJoinEpoch = context.user.getSegmentJoinDate('qWeR1'); // Returns: 1695796858287
-let segmentJoinDate = new Date(segmentJoinEpoch);
+```ts {2,7} title="Perform date comparisons on epoch"
+const segmentJoinEpoch = context.user.getSegmentJoinDate('qWeR1'); // Returns: 1695796858287
+const segmentJoinDate = new Date(segmentJoinEpoch);
 
-let today = new Date();
-let lastWeek = new Date(today.setDate(today.getDate() - 7));
+const today = new Date();
+const lastWeek = new Date(today.setDate(today.getDate() - 7));
 
-let hasJoinedLastWeek = segmentJoinDate > lastWeek;
+const hasJoinedLastWeek = segmentJoinDate > lastWeek;
 ```
 
 :::
 
 #### context.user.itemStatTotal()
 
-Requires an ItemStatsRequest (`{itemType: 'CatalogName', statType: 'StatTypeName'}`) and returns the count for that stat for a given Catalog. ItemStatsRequest can also be extended with another optional property `itemId: 'id'` to limit the result just to a specific Item within a given Catalog (itemType). Finally, as with [actionCount()](#contextuseractioncount), you can also use `start` or `end` timeframe boundaries - but not both due to a MCP bug.
+Requires an ItemStatsRequest (`{itemType: 'CatalogName', statType: 'StatTypeName'}`) and returns the count for that stat for a given Catalog. You can also extend ItemStatsRequest with another optional property `itemId: 'id'` to limit the result to a specific Item within a given Catalog (itemType). Finally, as with [actionCount()](#contextuseractioncount), you can also use `start` or `end` timeframe boundaries - but not both.
 
-```js {3-8} title="Time spent by user on Laptop Category within the last day in miliseconds"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let itemViewTime = context.user.itemStatTotal({
+```ts {3-8} title="Time spent by the user on Laptop Category within the last day in milliseconds"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const itemViewTime = context.user.itemStatTotal({
     itemId: 'Laptop',
     itemType: 'Category',
     statType: 'ViewTime',
@@ -505,22 +501,22 @@ let itemViewTime = context.user.itemStatTotal({
 
 Available statTypes: 'View', 'ViewOutOfStock', 'ViewValue', 'ViewDetail', 'QuickView', 'ViewTime', 'Cart', 'CartValue', 'Purchase', 'Visit', 'PurchaseValue', 'Review', 'Share', 'Comment', 'Favorite', 'Searches', 'SearchClicks', 'ClickThrough', 'RemoveFromCart', 'RemoveFromCartValue', 'RecommendedCount', 'PageLoadTime', 'PageLoadTimeCount', 'DomLoadTime', 'DomLoadTimeCount', 'TwReceiverTime', 'TwReceiverTimeCount', 'NumErrorEvents', 'TriggeredCount', 'RequestedForServing', 'EligibleForServing', 'Served'.
 
-Keep in mind that the meaning of the returned value will differ depending on the selected statType - it can be count, miliseconds or money.
+Remember that the meaning of the returned value will differ depending on the selected statType - it can be count, milliseconds or money.
 
 :::note You Should Know
 
-This method works perfectly with the [`context.event.itemId()`](#contexteventitemid) and [`context.event.itemType()`](#contexteventitemtype) as with those you can pull relevant stats for a currently viewed Item and adapt payload for it (f.e. adapt Exit Intent incentive based on the number of visits or time spent on currently viewed product).
+This method works perfectly with the [`context.event.itemId()`](#contexteventitemid) and [`context.event.itemType()`](#contexteventitemtype) as with those, you can pull relevant stats for a currently viewed Item and adapt payload for it (f.e. adapt Exit Intent incentive based on the number of visits or time spent on currently viewed product).
 
 :::
 
 #### context.user.itemStatTotalPerItem()
 
-`itemStatsPerItem()` works in a very similar manner to [`itemStatsTotal()`](#contextuseritemstattotal) and accepts the same ItemStatsRequest. The key difference is that instead of a single value it will return an array of objects each containing an itemId and value specific for that item.
+`itemStatsPerItem()` works in a very similar manner to [`itemStatsTotal()`](#contextuseritemstattotal) and accepts the same ItemStatsRequest. The key difference is that instead of a single value, it will return an array of objects, each containing an itemId and value specific to that item.
 
-```js {3-7} title="Time spent by user on Products within the last day in miliseconds"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let itemViewTime = context.user.itemStatPerItem({
+```ts {3-7} title="Time spent by the user on Products within the last day in milliseconds"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const itemViewTime = context.user.itemStatPerItem({
     itemType: 'Product',
     statType: 'ViewTime',
     start: yesterday
@@ -531,42 +527,42 @@ While you can pass `itemId: 'id'` in the ItemStatsRequest, it will limit the out
 
 #### context.user.pageViewCount()
 
-Requires StatsRequest (`{start: Date, end: Date}` - use either start or end, using both will always return 0) and returns the count of pages viewed in that timeframe. Both timeframe bounds are required.
+Requires StatsRequest (`{start: Date, end: Date}` - use either start or end; using both will always return 0) and returns the count of pages viewed in that timeframe. Both timeframe bounds are required.
 
-```js {3-6} title="Pages viewed within the last day"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let itemViewTime = context.user.pageViewCount({
+```ts {3-6} title="Pages viewed within the last day"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const itemViewTime = context.user.pageViewCount({
     start: yesterday
 }); // Returns: 9
 ```
 
 #### context.user.visitCount()
 
-Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}` - use either start or end, using both will always return 0) but returns the count of visits instead of specific pages.
+Similar to [pageViewCount()](#contextuserpageviewcount), it requires StatsRequest (`{start: Date, end: Date}` - use either start or end; using both will always return 0) but returns the count of visits instead of specific pages.
 
 :::note You Should Know
 
-Visit for Marketing Cloud Personalization starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view few pages, leaves and then comes back after 40 minutes - it will be counted as a separate visit.
+Visit for Marketing Cloud Personalization starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view a few pages, leaves and then returns after 40 minutes - it will be counted as a separate visit.
 
 :::
 
-```js {3-6} title="Visits within the last day"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let itemViewTime = context.user.visitCount({
+```ts {3-6} title="Visits within the last day"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const itemViewTime = context.user.visitCount({
     start: yesterday
 }); // Returns: 2
 ```
 
 #### context.user.visitDurationMilis()
 
-Similar to [pageViewCount()](#contextuserpageviewcount) it requires StatsRequest (`{start: Date, end: Date}` - use either start or end, using both will always return 0) but returns the number of miliseconds user spent on your website in a specified timeframe.
+Similar to [pageViewCount()](#contextuserpageviewcount), it requires StatsRequest (`{start: Date, end: Date}` - use either start or end, using both will always return 0) but returns the number of milliseconds the user spent on your website in a specified timeframe.
 
-```js {3-6} title="Visits within the last day"
-let today = new Date();
-let yesterday = new Date(today.setDate(today.getDate() - 1));
-let itemViewTime = context.user.visitDurationMilis({
+```ts {3-6} title="Visits within the last day"
+const today = new Date();
+const yesterday = new Date(today.setDate(today.getDate() - 1));
+const itemViewTime = context.user.visitDurationMilis({
     start: yesterday,
     end: today
 }); // Returns: 98663
@@ -574,7 +570,7 @@ let itemViewTime = context.user.visitDurationMilis({
 
 ### user.attributes
 
-`context.user.attributes` object contains out-of-the-box, custom and hidden attributes with respective values for the user. It's an incredibly useful part of the `context` as it allows you to pull user-specific data not only from the triggering event (like it is also possible with [`context.event.fields.customAttribute`](#contexteventfieldscustomattribute)) but also from past events. This enables fun use cases like saving in custom attributes the last viewed product and category with Sitemap and then leveraging that information when user is on non-product page of your website to bring them back onto funnel. It's also great if you want to personalize your personalization (f.e. with first name in the infobanner or overlay).
+`context.user.attributes` object contains out-of-the-box, custom and hidden attributes with respective values for the user. It's an instrumental part of the `context` as it allows you to pull user-specific data not only from the triggering event (like it is also possible with [`context.event.fields.customAttribute`](#contexteventfieldscustomattribute)) but also from past events. This enables fun use cases like saving in custom attributes the last viewed Product and Category with Sitemap and then leveraging that information when the user is on the non-product page of your website to bring them back onto the funnel. It's also great to personalize your campaign (f.e. with the first name in the info banner or overlay).
 
 ```js title="Structure of the context.user.attributes object"
 {
@@ -605,14 +601,14 @@ let itemViewTime = context.user.visitDurationMilis({
 
 ### user.visits
 
-`context.user.visits` is an Array with visits of the user. Keep in mind that for Marketing Cloud Personalization visit starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view few pages, leaves and then comes back after 40 minutes - it will be counted as a separate visit. This is key here, because it shows that there is no way to see each page view in the serverside. You can just see the visit (session start data) with a `pageViewIndex` that has a count of page views that happened during that visit.
+`context.user.visits` is an Array with user visits. Remember that the Marketing Cloud Personalization visit starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view a few pages, leaves and then returns after 40 minutes - it will be counted as a separate visit. It is critical - there is no way to access the history of each page the user visits. You can only see the visit (session start data) with a `pageViewIndex` with a count of page views during that visit.
 
 ```js title="Structure of the context.user.visits array"
 [
     {
         "start": number, // epoch
         "lastEventTime": number, // epoch
-        "timeSinceLastVisit": number, // miliseconds
+        "timeSinceLastVisit": number, // milliseconds
         "referrer": { // || null
             "medium": "Direct",
             "source": null,
@@ -645,14 +641,14 @@ let itemViewTime = context.user.visitDurationMilis({
 ]
 ```
 
-While there are few nice attributes here, I would like to focus on two that enable really interesting use cases:
+While there are a few attributes here, I would like to focus on two that enable exciting use cases:
 
-1. `referrer` can contain data of the website that led user to you - if it is the case, you can create a dedicated campaign focusing on source (f.e. small voucher to convert people coming from voucher gathering website) or terms (f.e. changing the experience based on social ad terms passed).
-2. `weather` can provide you with details about temperature, rain and snow unlocking like-magic use cases, f.e. if it is cold and rains for your customer, display a campaign with dediated message promoting a sunny and hot travel destination.
+1. `referrer` can contain data of the website that led the user to you. If this is the case, you can create a dedicated campaign focusing on the source (f.e. small vouchers to convert people coming from voucher-gathering websites) or terms (f.e. changing the experience based on social ad terms passed).
+2. `weather` can provide you with details about temperature, rain and snow, unlocking like-magic use cases, f.e. if it is cold and showers for your customer, display a campaign with a dedicated message promoting a sunny and hot travel destination.
 
 ### user.orderHistory
 
-`context.user.orderHistory` is an array with past orders in any status (open, purchased or cancelled) for the user. It contains everything - timeframes, order value and currency and even list of all products in that order.
+`context.user.orderHistory` is an array with past orders in any status (open, purchased or cancelled) for the user. It contains everything - timeframes, order value and currency and even a list of all products in that order.
 
 ```js title="Structure of the context.user.orderHistory array"
 [
@@ -661,7 +657,7 @@ While there are few nice attributes here, I would like to focus on two that enab
         "created": number, // epoch
         "updated": number, // epoch
         "purchaseDate": null,
-        "visitAgeAtPurchase": number, // miliseconds
+        "visitAgeAtPurchase": number, // milliseconds
         "totalValue": number,
         "totalValueCurrency": null,
         "status": "Open",
@@ -681,7 +677,7 @@ While there are few nice attributes here, I would like to focus on two that enab
 
 ### user.location
 
-`context.user.location` can be magic or trash - depending on the Internet Service Providers of your audience. Rule of thumb is: good data for B2B, mixed data for B2C. It's definitely worth checking because if you can trust/clean this data, you can do astounding things with it.
+`context.user.location` can be magic or trash - depending on the Internet Service Providers of your audience. The rule of thumb is good data for B2B and mixed data for B2C. It's worth checking because if you can trust/clean this data, you can do astounding things with it.
 
 ```js title="Structure of the context.user.location object"
 {
@@ -703,11 +699,11 @@ While there are few nice attributes here, I would like to focus on two that enab
 
 Firstly, `context.user.location.geographicPoint` contains latitude and longitude that can be perfect for [`context.services.catalog.findClosestItems()`](#servicescatalog) call.
 
-Secondly, if you are targeting B2B customers and get organisation details (the example above is real - it returned all those details when I checked it from the PwC Poland office) it can help you get extremly valuable details about your known __and anonymous__ visitors! However, grain of salt is for sure needed - the NAICS Code (2017 NAICS Definition) returned for me Wired Telecommnications Carriers which looks like code for Internet Services Provider, not PwC. For B2C in most cases the `organisation` field will just return the Internet Service Provider name.
+Secondly, if you target B2B customers and get organisation details (the example above is real - it returned all those details when I checked it from the PwC Poland office), it can help you get precious information about your known __and anonymous__ visitors! However, a (big) grain of salt is needed - the NAICS Code (2017 NAICS Definition) returned for me Wired Telecommunications Carriers, which looks like code for Internet Services Provider, not PwC. For B2C, the `organisation` field will return the Internet Service Provider name in most cases.
 
 ### user.currentCart
 
-`context.user.currentCart` is a single obejct with the same structure as each of the orders stored in [`context.user.orderHistory`](#contextuserorderhistory). But because it is still a cart, not order, most of the fields will be `null`/`0`.
+`context.user.currentCart` is a single object with the same structure as each of the orders stored in [`context.user.orderHistory`](#contextuserorderhistory). But because it is still a cart, not an order, most fields will be `null`/`0`.
 
 ```js title="Structure of the context.user.currentCart object"
 {
@@ -732,11 +728,11 @@ Secondly, if you are targeting B2B customers and get organisation details (the e
 }
 ```
 
-The fun use case here is checking when the cart was updated and if it is long enough, leverage the lineItems to deploy abandoned basket Web Campaign.
+The fun use case here is checking when the user updated the cart and, if enough time has passed, leveraging the lineItems to deploy an abandoned basket Web Campaign.
 
 ### user.segmentMembership
 
-`context.user.segmentMembership` is an array with segments the user is a member of. With good segmentation naming convention the `segmentName` and joined` can capture valuable additional context for the user (f.e. how many days ago he joined the Gold Tier segment or became at risk customer).
+`context.user.segmentMembership` is an array with segments the user is a member of. With a good segmentation naming convention, the `segmentName` and `joined` can capture valuable additional context for the user (f.e. how many days ago he joined the Gold Tier segment or became an at-risk customer).
 
 ```js title="Structure of the context.user.segmentMembership array"
 [
@@ -755,8 +751,8 @@ The fun use case here is checking when the cart was updated and if it is long en
 
 ## accountId & datasetId
 
-`accountId` and `datasetId` are string properties that contain information about the Marketing Cloud Personalization account and dataset that generated the event. Not really useful, unless you want environment aware debug log visibility logic.
+`accountId` and `datasetId` are string properties that contain information about the Marketing Cloud Personalization account and dataset that generated the event. It is only handy if you want environment-aware debug log visibility logic.
 
 ## configuration
 
-`configuration` object property contains information about the campaign properties (fields you expect marketer to fill in when configuring the campaign) in the experience for a given user. Not really useful, as in the serverside code you can access the same information using `this` keyword (f.e. `this.campaignPropertyName`).
+The `configuration` object property contains information about the campaign properties (fields you expect the marketer to fill in when configuring the campaign) in the experience for a given user. Not really useful, as in the serverside code, you can access the same information using the `this` keyword (f.e. `this.campaignPropertyName`).
