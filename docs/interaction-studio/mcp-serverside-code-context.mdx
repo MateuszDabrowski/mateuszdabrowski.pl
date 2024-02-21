@@ -574,6 +574,8 @@ let itemViewTime = context.user.visitDurationMilis({
 
 ### user.attributes
 
+`context.user.attributes` object contains out-of-the-box, custom and hidden attributes with respective values for the user. It's an incredibly useful part of the `context` as it allows you to pull user-specific data not only from the triggering event (like it is also possible with [`context.event.fields.customAttribute`](#contexteventfieldscustomattribute)) but also from past events. This enables fun use cases like saving in custom attributes the last viewed product and category with Sitemap and then leveraging that information when user is on non-product page of your website to bring them back onto funnel. It's also great if you want to personalize your personalization (f.e. with first name in the infobanner or overlay).
+
 ```js title="Structure of the context.user.attributes object"
 {
     "created": {
@@ -602,6 +604,8 @@ let itemViewTime = context.user.visitDurationMilis({
 🚧 Work in progress 🚧
 
 ### user.visits
+
+`context.user.visits` is an Array with visits of the user. Keep in mind that for Marketing Cloud Personalization visit starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view few pages, leaves and then comes back after 40 minutes - it will be counted as a separate visit. This is key here, because it shows that there is no way to see each page view in the serverside. You can just see the visit (session start data) with a `pageViewIndex` that has a count of page views that happened during that visit.
 
 ```js title="Structure of the context.user.visits array"
 [
@@ -641,7 +645,14 @@ let itemViewTime = context.user.visitDurationMilis({
 ]
 ```
 
+While there are few nice attributes here, I would like to focus on two that enable really interesting use cases:
+
+1. `referrer` can contain data of the website that led user to you - if it is the case, you can create a dedicated campaign focusing on source (f.e. small voucher to convert people coming from voucher gathering website) or terms (f.e. changing the experience based on social ad terms passed).
+2. `weather` can provide you with details about temperature, rain and snow unlocking like-magic use cases, f.e. if it is cold and rains for your customer, display a campaign with dediated message promoting a sunny and hot travel destination.
+
 ### user.orderHistory
+
+`context.user.orderHistory` is an array with past orders in any status (open, purchased or cancelled) for the user. It contains everything - timeframes, order value and currency and even list of all products in that order.
 
 ```js title="Structure of the context.user.orderHistory array"
 [
@@ -670,6 +681,8 @@ let itemViewTime = context.user.visitDurationMilis({
 
 ### user.location
 
+`context.user.location` can be magic or trash - depending on the Internet Service Providers of your audience. Rule of thumb is: good data for B2B, mixed data for B2C. It's definitely worth checking because if you can trust/clean this data, you can do astounding things with it.
+
 ```js title="Structure of the context.user.location object"
 {
     "geographicPoint": {
@@ -688,7 +701,13 @@ let itemViewTime = context.user.visitDurationMilis({
 }
 ```
 
+Firstly, `context.user.location.geographicPoint` contains latitude and longitude that can be perfect for [`context.services.catalog.findClosestItems()`](#servicescatalog) call.
+
+Secondly, if you are targeting B2B customers and get organisation details (the example above is real - it returned all those details when I checked it from the PwC Poland office) it can help you get extremly valuable details about your known __and anonymous__ visitors! However, grain of salt is for sure needed - the NAICS Code (2017 NAICS Definition) returned for me Wired Telecommnications Carriers which looks like code for Internet Services Provider, not PwC. For B2C in most cases the `organisation` field will just return the Internet Service Provider name.
+
 ### user.currentCart
+
+`context.user.currentCart` is a single obejct with the same structure as each of the orders stored in [`context.user.orderHistory`](#contextuserorderhistory). But because it is still a cart, not order, most of the fields will be `null`/`0`.
 
 ```js title="Structure of the context.user.currentCart object"
 {
@@ -696,8 +715,8 @@ let itemViewTime = context.user.visitDurationMilis({
     "created": number, // epoch
     "updated": number, // epoch
     "purchaseDate": null,
-    "visitAgeAtPurchase": number, // miliseconds
-    "totalValue": number,
+    "visitAgeAtPurchase": 0,
+    "totalValue": 0,
     "totalValueCurrency": null,
     "status": "Open",
     "metadata": null,
@@ -713,7 +732,11 @@ let itemViewTime = context.user.visitDurationMilis({
 }
 ```
 
+The fun use case here is checking when the cart was updated and if it is long enough, leverage the lineItems to deploy abandoned basket Web Campaign.
+
 ### user.segmentMembership
+
+`context.user.segmentMembership` is an array with segments the user is a member of. With good segmentation naming convention the `segmentName` and joined` can capture valuable additional context for the user (f.e. how many days ago he joined the Gold Tier segment or became at risk customer).
 
 ```js title="Structure of the context.user.segmentMembership array"
 [
