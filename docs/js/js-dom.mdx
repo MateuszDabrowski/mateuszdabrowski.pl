@@ -317,7 +317,7 @@ Finally, you are not limited by the need to know the exact path from the current
 document.querySelector('article.main-page-content > div').closest('.main-page-content'); // selects <article class="main-page-content">
 ```
 
-Remember that `.closest` can return the initially selected element if it fulfils the new selection. If you want to stop it from happening, you can just chain it after [`.parentElement`](#parentElement).
+Remember that `.closest` can return the initially selected element if it fulfils the new selection. If you want to stop it from happening, you can just chain it after [`.parentElement`](#parentelement).
 
 ```js
 document.querySelector('article.main-page-content > div').parentElement.closest('.main-page-content'); // selects <article class="main-page-content">
@@ -455,7 +455,7 @@ document.querySelector('#isOptedIn').hidden;            // returns false, as che
 document.querySelector('#isOptedIn').hidden = true;     // hides the checkbox
 ```
 
-You can do the same with [`.innerText`/`.innerHTML`](#innerText-and-innerHTML), [`.style.display`](#hidden-and-style) and more.
+You can do the same with [`.innerText`/`.innerHTML`](#innertext-and-innerhtml), [`.style.display`](#hidden-and-style) and more.
 
 Finally, you can mix DOM manipulation methods and change attributes in response to specific [events](#event-types):
 

@@ -54,7 +54,7 @@ SELECT
 FROM Contact_Salesforce AS c
 ```
 
-This query can be used _ad hoc_ in [Query Studio](./sfmc-sql-basics.mdx#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation.
+This query can be used _ad hoc_ in [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation.
 
 You can also extend it with [`WHERE`](./sfmc-sql-where.mdx) containing current lengths of fields in that data extension and make it part of your automation. It will find the records too long for the data extension, log them into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
 

@@ -16,7 +16,7 @@ import { ButtonRow } from '../../src/components/Buttons.js';
 
 ## Data Views Basics
 
-System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [Query Studio](../sql/sfmc-sql-basics.mdx#query-studio) or outputting to the standard Data Extension. They are excellent fuel for SSJS logic.
+System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [Query Studio](./sfmc-appexchange-solutions.mdx#query-studio) or outputting to the standard Data Extension. They are excellent fuel for SSJS logic.
 
 Data Views have **data retention settings set to 6 months**. If you want to store any data for a more extended period, you must create an Automation that will be copying data to your Data Extension.
 
@@ -306,7 +306,7 @@ When working with `_Job` Data View:
 
 1. `JobID` field will be your bread and butter to [`JOIN`](../sql/sfmc-sql-join.mdx) with other engagement-based Data Views.
 2. `EmailName`, `FromName`, and `FromEmail` are handy data points missing in the [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) Data Views and are worth checking for reporting needs.
-3. If you are performing A/B tests or want to analyse the subject line's impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-select.mdx#conditional-values-with-case) to create a great knowledge source for your content team.
+3. If you are performing A/B tests or want to analyse the subject line's impact on performance, be sure to pick `EmailSubject`. Pair it with [`CASE`](../sql/sfmc-sql-case.mdx#conditional-values-with-case) to create a great knowledge source for your content team.
 4. For debugging purposes, be sure to check out `IsWrapped` and `SuppressTracking` - if you are missing tracking data, `CharacterSet` - if you have problems with formatting, `SendClassification` - if you have issues with unsubscribers or spam complaints.
 5. `AccountUserID` field is fantastic for `_Job`-based Audit Log creation. Unfortunately, there is no UI-based easy way to determine which user has which UserID. You can either use SOAP API or match based on these SQL results.
 
@@ -762,7 +762,7 @@ To give us at least a chance to make sense of that mess, Salesforce created mult
 
 :::note You Should Know
 
-Spam Complaint and List-Unsubscribe Header are pretty particular unsubscription use cases. They are added to [`_Unsubscribe`](#_unsubscribe) and [`_BusinessUnitUnsubscribe`](#_businessunitunsubscribe) as unsubscriptions from a list used in send (for example, ID of Publication List selected for the send). In reality, Marketing Cloud will perform automatic unsubscribe from the All Subscriber list (depending on Email Studio settings - Child BU's or Enterprise one), not the list mentioned in `ListID`.
+Spam Complaint and List-Unsubscribe Header are pretty particular unsubscription use cases. They are added to [`_Unsubscribe`](#_unsubscribe) and [`_BusinessUnitUnsubscribe`](#_businessunitunsubscribes) as unsubscriptions from a list used in send (for example, ID of Publication List selected for the send). In reality, Marketing Cloud will perform automatic unsubscribe from the All Subscriber list (depending on Email Studio settings - Child BU's or Enterprise one), not the list mentioned in `ListID`.
 
 As a result, when querying, you will see the list-specific unsubscribe that doesn't result in unsubscription from the list but instead blocks all commercial communication as a Business Unit or Master unsubscribe.
 
@@ -1261,9 +1261,9 @@ When working with `_AutomationInstance` Data View:
 
 1. This data view stores all Automation __runs__, so you will see here separte row for each execution of the Automation. This is great basic audit tool for logging changes to the automation as well as a nice way to counting the amount of automation executions against licence limits.
 2. Key limitation of `_AutomationInstance` is that it shows data with 24 hours delay. If you need real-time information about Automation Studio status, you will still need an API approach. But for not that urget use cases this new option will be much more performant.
-3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_AutomationActivityInstance) Data View.
+3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_automationactivityinstance) Data View.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
-5. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationActivityInstance`](#_AutomationActivityInstance). It lets you find information about execution of each activity within the Automation in the specific run.
+5. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationActivityInstance`](#_automationactivityinstance). It lets you find information about execution of each activity within the Automation in the specific run.
 
 :::note You Should Know
 
@@ -1381,7 +1381,7 @@ When working with `_AutomationActivityInstance` Data View:
 3. If activity run errored out due to system or unclassified error, `ActivityInstanceStatusDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the error message.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. The start and end dates in this data view can be leveraged with [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) and [`AVG`](../sql/sfmc-sql-aggregate-functions.mdx#avg) to calculate average time needed for each activity to finish. This information is crucial to assess whether the current automation Schedule is correct and where the optimisation efforts are required to protect against 30 minutes autokill.
-6. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationInstance`](#_AutomationInstance). It lets you find information about the Automation using this Activity.
+6. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationInstance`](#_automationinstance). It lets you find information about the Automation using this Activity.
 
 :::note You Should Know
 

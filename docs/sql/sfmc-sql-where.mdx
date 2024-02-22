@@ -74,7 +74,7 @@ Another handy operator is `LIKE`. It allows you to leverage wildcards to search 
 
 However, in the marketing automation world, the `LIKE` operator is handy for selecting contacts based on the multi-picklist columns. Consider `ActiveSubscriptions` field with any combination of values `Phone`, `TV`, or `Internet`.
 
-Suppose you would like to select all contacts with active phone subscription. In that case, you shouldn't use [equality operator](#equality) (`WHERE ActiveSubscription = 'Phone'`), as it would return only contacts that have just this one subscription. However, some of your customers might have multiple (phone and tv or phone and internet plans). For SQL, a field containing `'Phone'` is not equal to having a value of `'Phone', Internet'`. `LIKE` operator is here to save the day.
+Suppose you would like to select all contacts with active phone subscription. In that case, you shouldn't use [equality operator](#equality-operators) (`WHERE ActiveSubscription = 'Phone'`), as it would return only contacts that have just this one subscription. However, some of your customers might have multiple (phone and tv or phone and internet plans). For SQL, a field containing `'Phone'` is not equal to having a value of `'Phone', Internet'`. `LIKE` operator is here to save the day.
 
 ```sql {5} title="All subscribers that have at least Phone subscription"
 SELECT

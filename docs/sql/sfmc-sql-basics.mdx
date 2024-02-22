@@ -438,7 +438,7 @@ Knowing the available functions is one thing. Writing good and readable queries 
 
 One of the key things to remember when building more complex queries is the order of operations, as it will decide what is in the output:
 
-[`FROM`](./sfmc-sql-from.mdx) > [`WHERE`](./sfmc-sql-where.mdx) > [`GROUP BY`](#group-by) > [`HAVING`](#having) > [`DISTINCT`](./sfmc-sql-select.mdx#distinct) > [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by)
+[`FROM`](./sfmc-sql-from.mdx) > [`WHERE`](./sfmc-sql-where.mdx) > [`GROUP BY`](./sfmc-sql-aggregate-functions.mdx#group-by) > [`HAVING`](./sfmc-sql-aggregate-functions.mdx#having) > [`DISTINCT`](./sfmc-sql-select.mdx#distinct) > [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by)
 
 It means that rows filtered with `WHERE` will not be considered for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
 

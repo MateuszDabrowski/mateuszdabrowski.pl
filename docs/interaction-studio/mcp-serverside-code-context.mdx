@@ -75,7 +75,7 @@ However, you will see better values in the out-of-the-box serverside payload `us
 
 :::note You Should Know
 
-The control group creates more problems for the context, as it keeps displaying the payload preview version of it. So you will also see only the placeholder values for [`campaignId` and `experienceId`](#campaignid--experienceid), [`beaconVersion`](#beaconVersion) and skip other datapoints like [`event.fields`](#event).
+The control group creates more problems for the context, as it keeps displaying the payload preview version of it. So you will also see only the placeholder values for [`campaignId` and `experienceId`](#campaignid--experienceid), [`beaconVersion`](#beaconversion) and skip other datapoints like [`event.fields`](#event).
 
 In short, don't use `context` for custom payload dedicated to control group users.
 
@@ -703,7 +703,7 @@ Secondly, if you target B2B customers and get organisation details (the example 
 
 ### user.currentCart
 
-`context.user.currentCart` is a single object with the same structure as each of the orders stored in [`context.user.orderHistory`](#contextuserorderhistory). But because it is still a cart, not an order, most fields will be `null`/`0`.
+`context.user.currentCart` is a single object with the same structure as each of the orders stored in [`context.user.orderHistory`](#userorderhistory). But because it is still a cart, not an order, most fields will be `null`/`0`.
 
 ```js title="Structure of the context.user.currentCart object"
 {

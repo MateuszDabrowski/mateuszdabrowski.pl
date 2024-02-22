@@ -45,10 +45,10 @@ As you can see, if you already use Einstein Recommendations, most of the necessa
 Behavioral Triggers seems to be easy to implement, but a lot is going in the backend. It is good to understand its basics, as it might help a lot when triaging a problem or customising the solution.
 
 1. A customer enters your e-commerce site - you trigger first [Collect.js](#collectjs) scripts to capture the Session and Page View.
-2. Customer clicks on a product page - you trigger the [Page View data layer](#page-view-data-layer) with a link to that product (Abandoned Browse scenario).
-3. Customer finds an exciting product and adds it to the wishlist - you trigger the [Wishlist data layer](#wishlist-data-layer) (Abandoned Wishlist scenario).
-4. A customer decides on one of the products and adds it to the cart - you trigger the [Cart data layer](#cart-data-layer) (Abandoned Cart scenario).
-5. Customer goes through the purchase process and buys the product - you trigger the [Cart data layer](#cart-data-layer) with explicit parameter (This blocks Abandoned Cart from launching communication).
+2. Customer clicks on a product page - you trigger the [Page View data layer](#track-page-view) with a link to that product (Abandoned Browse scenario).
+3. Customer finds an exciting product and adds it to the wishlist - you trigger the [Wishlist data layer](#track-wishlist) (Abandoned Wishlist scenario).
+4. A customer decides on one of the products and adds it to the cart - you trigger the [Cart data layer](#track-cart) (Abandoned Cart scenario).
+5. Customer goes through the purchase process and buys the product - you trigger the [Cart data layer](#track-cart) with explicit parameter (This blocks Abandoned Cart from launching communication).
 6. Each of the above triggers is sent to Einstein Backend (IgoDigital) that stores the information.
 7. Marketing Cloud Behavioral Triggers query the Einstein Backend for any events that occurred some time ago - you can configure it in the range from 15 minutes to 3 hours (in 15 minutes increments).
 8. If there is a matching event, it checks whether there is any other event that overwrites it. For example, if your customer viewed a product page, and a few minutes later, added this product to the cart, the page view will be ignored. The Behavioral Trigger will wait for the abandoned cart.
@@ -438,7 +438,7 @@ If you want even more details and implementation considerations related to the C
 
 ## Behavioral Trigger Content Block
 
-Now you can go forward with Behavioral Triggers. [Collect.js](#collectjs) will push the required data to Einstein backend, and after Session Timeout Limit, it will evaluate it against Suppression Rules as per your [configuration](#Behavioral-triggers-configuration). Then, the Behavioral Triggers adds Abandoned Engagement data to the respective [Data Extension](#Behavioral-triggers-configuration). Now it's time to use it.
+Now you can go forward with Behavioral Triggers. [Collect.js](#collectjs) will push the required data to Einstein backend, and after Session Timeout Limit, it will evaluate it against Suppression Rules as per your [configuration](#behavioral-triggers-configuration). Then, the Behavioral Triggers adds Abandoned Engagement data to the respective [Data Extension](#behavioral-triggers-configuration). Now it's time to use it.
 
 The standard way the leverage this information is to use those abandonment Data Extensions as a Journey Entry Source. The real magic, however, will happen in the email you will be sending in this Journey. And that is thanks to the out-of-the-box Behavioral Trigger Content Block.
 
