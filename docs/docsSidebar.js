@@ -280,6 +280,11 @@ module.exports = {
                     label: '» MC Personalization Docs',
                     href: '/docs/category/mc-personalization/',
                 },
+                {
+                    type: 'link',
+                    label: '» MCP Templates Repository',
+                    href: 'https://github.com/MateuszDabrowski/mcp-campaign-templates',
+                },
             ],
         },
     ],
