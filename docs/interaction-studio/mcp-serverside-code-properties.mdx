@@ -362,7 +362,7 @@ However, readonly property has one superpower. You can assign an arrow function 
 
 ```ts {2,5-13} title="Dynamic readonly property"
 header: string = 'DEFault heaDER';
-readonly upperCaseHeader = () => this?.header.toUpperCase || '';
+readonly upperCaseHeader = () => this?.header.toUpperCase() || '';
 // Input: No input, just a readonly text updating real-time based on header input
 // Output: 'DEFAULT HEADER'
 readonly titleCaseHeader = () => {
