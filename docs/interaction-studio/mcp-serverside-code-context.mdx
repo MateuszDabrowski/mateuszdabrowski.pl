@@ -93,6 +93,12 @@ The `event` object property is where the magic of the `context` object starts. I
 
 The `context.event` object won't work correctly in the Template Preview sidebar, as there is no valid event in that mode. Use an active campaign directly on the website to preview the actual output during development. Just make sure you use the campaign targeting to limit execution just to you.
 
+In Template Preview you will only be able to use [`context.event.fields.item`](#eventfields) - a single property with a stringified object containing details of the Item selected in top right Simulate section):
+```
+"{\"type\":\"ITEM_TYPE\",\"_id\":{\"label\":\"ITEM_LABEL\",\"value\":\"ITEM_ID\"}}"
+```
+You can find example usage of it in my [MCP Catalog ETL Metadata Viewer](./snippets/mcp-catalog-etl-metadata-viewer.mdx).
+
 :::
 
 
@@ -249,6 +255,8 @@ It's a nested object, so let's go through it property by property to discuss eac
 
 ### services.catalog
 
+The `services.catalog` object contains a set of lookup functions that can help you find Items in your Marketing Cloud Personalizaiton Catalogs. It opens a big range of use cases using related Items for cross-sell and up-sell purposes.
+
 ```js title="Structure of the context.services.catalog object"
 {
     "dimensionFilter": (dimension: string): ItemFilter<any>,
@@ -257,8 +265,6 @@ It's a nested object, so let's go through it property by property to discuss eac
     "findItems": (type: string, ids: string[]): Item[] || (type: ItemFilter<any>, ids: ItemSort<any>): Item[] || (type: ItemFilter<any>): Item[]
 }
 ```
-
-🚧 Work in progress 🚧
 
 ### services.recommendations
 

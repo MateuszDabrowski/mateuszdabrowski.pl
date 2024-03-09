@@ -167,13 +167,7 @@ It is awful, but hopefully, only a few manual changes are happening in the produ
 
 ### Context.event.fields.item
 
-While `context.event.fields.item` is perfect for the use case described here, don't try to use it in standard Campaigns. Unfortunately, it is filled in only in the Simulation Preview and will not be available when deployed to a website. It is a massive limitation with one dirty workaround.
-
-To get a similar outcome in an actual campaign, you have to:
-
-1. Create a string User Attribute to store the last viewed product ID.
-2. In the Sitemap, extend the Product View Page Type `onActionEvent` to push the current product ID to the attribute created in the previous step.
-3. Leverage `context?.user?.attributes?.nameOfYourNewAttribute` to get the ID and leverage it for .findItem and other purposes.
+While `context.event.fields.item` is perfect for the use case described here, don't try to use it in standard Campaigns. Unfortunately, it is filled in only in the Simulation Preview and will not be available when deployed to a website. However, for production purposes you can use [`context.event` methods](../mcp-serverside-code-context.mdx#event-methods) to get the same information dynamically from the item viewed by user.
 
 ## Options
 
