@@ -255,7 +255,7 @@ It's a nested object, so let's go through it property by property to discuss eac
 
 ### services.catalog
 
-The `services.catalog` object contains a set of lookup functions that can help you find Items in your Marketing Cloud Personalizaiton Catalogs. It opens a big range of use cases using related Items for cross-sell and up-sell purposes.
+The `services.catalog` object contains a set of lookup methods that help you find Items in your Marketing Cloud Personalizaiton Catalogs. It opens a big range of use cases using related Items for cross-sell and up-sell purposes.
 
 ```js title="Structure of the context.services.catalog object"
 {
@@ -265,6 +265,106 @@ The `services.catalog` object contains a set of lookup functions that can help y
     "findItems": (type: string, ids: string[]): Item[] || (type: ItemFilter<any>, ids: ItemSort<any>): Item[] || (type: ItemFilter<any>): Item[]
 }
 ```
+
+Most of those methods returns Item object - the content of it will differ depending on what type of item it is. By default, it will contain `id` string, and `attributes` object that has `name`, `imageUrl`, `description`, `promotable` and `archived` properties. Optionally, Item can also have `dimensions` object with RCO's data and `location` object. Finally, there are some properties that are related to a specific type of an Item - like `categories`, `skus`, `modifiedTime` or `subtitle`.
+
+```json title="Example Item structure for a Product Catalog"
+{
+  "id": "2050055",
+  "location": null,
+  "attributes": {
+    "imageUrl": {
+      "value": "https://www.northerntrailoutfitters.com/on/demandware.static/-/Sites-nto-apparel/default/dwf53f2476/images/large/2050055BEY-0.jpg"
+    },
+    "promotable": {
+      "value": true
+    },
+    "price": {
+      "value": 120
+    },
+    "inventoryCount": {
+      "value": 1
+    },
+    "name": {
+      "value": "Women's Hedgehog Agile NTO-tech"
+    },
+    "url": {
+      "value": "https://www.northerntrailoutfitters.com/default/women%27s-hedgehog-agile-nto-tech-2050055BEY.html"
+    },
+    "archived": {
+      "value": false
+    },
+    "customAttribute": {
+      "value": "customValue"
+    }
+  },
+  "dimensions": {
+    "Color": [
+      "AZT",
+      "APD",
+      "ANZ",
+      "AO5",
+      "BEY"
+    ],
+    "Feature": [
+      "Waterproof",
+      "Lightweight",
+      "Breathable"
+    ],
+    "Gender": [
+      "WOMEN"
+    ]
+  },
+  "categories": [
+    "WOMEN|FOOTWEAR|HIKING"
+  ],
+  "skus": {
+    "2050055BEY": {
+      "id": "2050055BEY"
+    }
+  }
+}
+```
+
+#### context.services.catalog.findItem()
+
+The `findItem()` is the most strightforward catalog lookup method. It requires a Catalog Type (f.e. 'Product', 'Category', or your custom Catalog) and Item ID (as string) to return the full Item detail.
+
+```ts title="Return Item details"
+const itemDetails = context.services.catalog.findItem('Product', '19542');
+```
+
+It pairs perfectly with the [`context.event` methods](#event-methods) if you want to get additional details of the currently viewed product (extremely useful when you are using ETL and strict catalog security for catalog data ingestion):
+
+```ts {3} title="Return Item details dynamically"
+const itemType = context.event.itemType();
+const itemId = context.event.itemId();
+const itemDetails = context.services.catalog.findItem(itemType, itemId);
+```
+
+This pairing lets us implement complex use cases like recommending direct cross-sells or up-sells using IDs passed to custom attributes on the product:
+
+```ts title="Return cross and up-sell details dynamically"
+// Get details of the currently viewed item
+const itemId = context.event.itemId();
+const viewedItemDetails = context.services.catalog.findItem('Product', itemId);
+// Leverage those details to pull IDs of the hardcoded upsell and crosssell products
+const upSellableItemId = viewedItemDetails.attributes?.upSellableItemId?.value;
+const crossSellableItemId = viewedItemDetails.attributes?.crossSellableItemId?.value;
+// Pass those IDs to yet another findItem method to get full details to fill in the handlebars with data
+const upSellableItemDetails = context.services.catalog.findItem('Product', upSellableItemId);
+const crossSellableItemDetails = context.services.catalog.findItem('Product', crossSellableItemId);
+```
+
+Of course, doing so many `findItem()` calls is not optimal - and MCP offers another method as a solution for that.
+
+#### context.services.catalog.findItems()
+
+#### context.services.catalog.findClosestItems()
+
+#### context.services.catalog.dimensionFilter()
+
+
 
 ### services.recommendations
 
