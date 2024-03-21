@@ -58,11 +58,11 @@ Input field in Cloud Page editor for `og:title` would be cherry on top.
 
 ## Journey Builder
 
-### DeliveryTime for Journey Builder emails
+### DeliveredTime for Journey Builder emails
 
-`DeliveryTime` is [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) field that stores timestamp for the email delivery (when it successfully reached the target Email Service Provider). It is currently impossible to get delivery time for emails sent via Journey Builder.
+`DeliveredTime` is [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) field that stores timestamp for the email delivery (when it successfully reached the target Email Service Provider). It is currently impossible to get delivery time for emails sent via Journey Builder.
 
-All other engagement data points are available (`EventDate` field for [_Sent](../../../docs/config/sfmc-system-data-views/#_sent), [_Open](../../../docs/config/sfmc-system-data-views/#_open), [_Click](../../../docs/config/sfmc-system-data-views/#_click), [_Bounce](../../../docs/config/sfmc-system-data-views/#_bounce)), but `DeliveryTime` from [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) returns `NULL` for Journey Builder emails.
+All other engagement data points are available (`EventDate` field for [_Sent](../../../docs/config/sfmc-system-data-views/#_sent), [_Open](../../../docs/config/sfmc-system-data-views/#_open), [_Click](../../../docs/config/sfmc-system-data-views/#_click), [_Bounce](../../../docs/config/sfmc-system-data-views/#_bounce)), but `DeliveredTime` from [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) returns `NULL` for Journey Builder emails.
 
 It is happening, however, only for Journey Builder emails. Sends via any other methods (for example, Send Flow) are correctly displaying the delivery time.
 
