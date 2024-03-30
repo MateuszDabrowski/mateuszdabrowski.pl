@@ -360,6 +360,14 @@ Of course, doing so many `findItem()` calls is not optimal - and MCP offers anot
 
 #### context.services.catalog.findItems()
 
+The `findItems()` method allows you to request details for multiple Items in a single call. Cleaner and more performant. The baseline way of calling this functions works just as [`findItem()`](#contextservicescatalogfinditem), but requires an array of IDs instead of a single ID and returns an array of Item detail objects instead of single Item object.
+
+```ts title="Return multiple Items details"
+const itemDetails = context.services.catalog.findItem('Product', ['19542', '12524', '91324']);
+```
+
+A neat use case for that method is pulling currently viewed Item details with [`findItem()`](#contextservicescatalogfinditem) to get values from a custom attribute containing alternative product IDs or a dedicated accessories for it and then pass all those found product IDs into `findItems()` to get a full detail required for a personalization showcasing those related items.
+
 #### context.services.catalog.findClosestItems()
 
 #### context.services.catalog.dimensionFilter()
