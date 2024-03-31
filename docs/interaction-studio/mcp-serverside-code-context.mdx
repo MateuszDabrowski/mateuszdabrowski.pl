@@ -363,16 +363,41 @@ Of course, doing so many `findItem()` calls is not optimal - and MCP offers anot
 The `findItems()` method allows you to request details for multiple Items in a single call. Cleaner and more performant. The baseline way of calling this functions works just as [`findItem()`](#contextservicescatalogfinditem), but requires an array of IDs instead of a single ID and returns an array of Item detail objects instead of single Item object.
 
 ```ts title="Return multiple Items details"
-const itemDetails = context.services.catalog.findItem('Product', ['19542', '12524', '91324']);
+const itemsDetails = context.services.catalog.findItem('Product', ['19542', '12524', '91324']);
 ```
 
 A neat use case for that method is pulling currently viewed Item details with [`findItem()`](#contextservicescatalogfinditem) to get values from a custom attribute containing alternative product IDs or a dedicated accessories for it and then pass all those found product IDs into `findItems()` to get a full detail required for a personalization showcasing those related items.
 
+The `findItems()` method offers more. You are not limited to just pushing an array of IDs like mentioned above - you can also pass an ItemFilter (created by [`dimensionFilter()`](#contextservicescatalogdimensionfilter) method) to get the IDs of items available in a custom (and only custom) catalog.
+
+```ts {2} title="Return multiple Items details"
+const catalogFilter = context.services.catalog.dimensionFilter('Color');
+const itemsDetails = context.services.catalog.findItems(catalogFilter);
+```
+
+It can be further extended that custom catalog based approach by passing an ItemSort as a second argument. However, despite trying my luck with `sortByActivity` and `sortByPublishedDate` properties, I haven't been able to make it work. Too bad, as sorting by activity could have been interesting when working with custom catalog Items.
+
 #### context.services.catalog.findClosestItems()
+
+If you are using locations details for your Items, `findClosestItems()` methods will work wonders for you as it allows you to get items based on provided longitude and latitude within defined distance:
+
+```ts {2} title="Return multiple Items details"
+const closestDefinition = {itemType: 'Product', latitude: 52.22, longitude: 21.02, maxDistance: 10, maxResults: 5};
+const itemsDetails = context.services.catalog.findClosestItems(closestDefinition);
+```
+
+As you can see, you need to provide an object with itemType, longitude and latitude, maxDistance (in miles) and maxResults as an argument. All fields are required. Of course, you don't have to hardcode it. There are two neat use cases around dynamically provided longitude and latitude:
+
+1. You can try to get longitude and latitude from [`context.user.location.geographicPoint`](#userlocation). This allows you for magic-like recommendations even for anonymous, first time vists. However, confidence might be limited depending on the market specifics.
+2. You can capture user-provided location (be it based on the shipping details or the city they are filtering for on your website) and pass calculated long/lat to a user attribute. Then user that user attribute as source of data for `findClosestItems()` call to provide location-aware recommendations for your customers.
 
 #### context.services.catalog.dimensionFilter()
 
+As mentioned in [`findItems()`](#contextservicescatalogfinditems), `dimensionFilter()` method lets us create an ItemFilter that can be leveraged to find Items from a given custom catalog (used to be called a Dimension, hence method name). Just pass the catalog name as a string in there. That's it.
 
+```ts title="Create an ItemFilter for Color Catalog"
+const catalogFilter = context.services.catalog.dimensionFilter('Color');
+```
 
 ### services.recommendations
 
