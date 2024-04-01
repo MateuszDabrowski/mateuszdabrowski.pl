@@ -382,7 +382,7 @@ It can be further extended that custom catalog based approach by passing an Item
 If you are using locations details for your Items, `findClosestItems()` methods will work wonders for you as it allows you to get items based on provided longitude and latitude within defined distance:
 
 ```ts {2} title="Return multiple Items details"
-const closestDefinition = {itemType: 'Product', latitude: 52.22, longitude: 21.02, maxDistance: 10, maxResults: 5};
+const closestDefinition = {itemType: 'Product', latitude: 52.23, longitude: 21.0118, maxDistance: 10, maxResults: 5};
 const itemsDetails = context.services.catalog.findClosestItems(closestDefinition);
 ```
 
@@ -402,6 +402,7 @@ const catalogFilter = context.services.catalog.dimensionFilter('Color');
 ### services.recommendations
 
 
+
 ```js title="Structure of the context.services.recommendations object"
 {
     "recommend": (request: RecommendationsRequest): Item[],
@@ -411,7 +412,21 @@ const catalogFilter = context.services.catalog.dimensionFilter('Color');
 }
 ```
 
-🚧 Work in progress 🚧
+#### context.services.recommendations.recommend()
+
+#### context.services.recommendations.recommendIdsOnly()
+
+#### context.services.recommendations.smartSearch()
+
+#### context.services.recommendations.smartSort()
+
+The `smartSort()` method requires an object with `itemIds` array, `recipeId` and `userId`.
+
+```ts {3} title="Return smar- sorted items"
+const itemsToBeSorted = ["1018913", "60365", "1017847", "1105"];
+const smartSortRequest = {itemIds: itemsToBeSorted, recipeId: "7H5OK", userId: "6690fc1c49e87274" }
+const smartSortedItems = context.services.recommendations.smartSort();
+```
 
 ### services.smartTrends
 
