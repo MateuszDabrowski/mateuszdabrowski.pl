@@ -50,13 +50,13 @@ module.exports = {
         docs: {
             sidebar: { autoCollapseCategories: true, },
         },
-        announcementBar: {
-            id: 'announcementBar',
-            content:
-                '📧 Looking for more SFMC-related spam? Happy to help with my new <a href="/sites/newsletter/" style="text-decoration: underline">Newsletter</a> 📧',
-            backgroundColor: '#0176d3',
-            textColor: '#fffffe',
-        },
+        // announcementBar: {
+        //     id: 'announcementBar',
+        //     content:
+        //         '📧 Looking for more SFMC-related spam? Happy to help with my new <a href="/sites/newsletter/" style="text-decoration: underline">Newsletter</a> 📧',
+        //     backgroundColor: '#0176d3',
+        //     textColor: '#fffffe',
+        // },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
