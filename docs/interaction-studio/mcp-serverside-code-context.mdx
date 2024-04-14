@@ -15,7 +15,7 @@ Marketing Cloud Personalization offers a flexible campaign template creation too
 
 :::note You Should Know
 
-In this article, I'm covering the main `CampaignComponentContext` object that is passed as a `context` argument to the [`run` method](./mcp-serverside-code-basics.mdx#writing-serverside-code) in the Serverside Code of every campaign template.
+In this article, I'm covering the main `CampaignComponentContext` object that is passed as a `context` argument to the [`run` block](./mcp-serverside-code-basics.mdx#writing-serverside-code) in the Serverside Code of every campaign template.
 
 Some other contexts (like `GearLifecycleContext` passed to search methods) have different structures and are out of the scope of this article.
 
@@ -401,7 +401,7 @@ const catalogFilter = context.services.catalog.dimensionFilter('Color');
 
 ### services.recommendations
 
-
+The `services.recommendations` object contains four methods related to Item recommendations. Two of them are absolutely great for delivering highly customized use cross-selling use cases wheareas the other two doesn't seem to work. A nice mixed bag. Let's dive in.
 
 ```js title="Structure of the context.services.recommendations object"
 {
@@ -414,18 +414,83 @@ const catalogFilter = context.services.catalog.dimensionFilter('Color');
 
 #### context.services.recommendations.recommend()
 
+The `recommend()` method is a great solution for generating Item recommendations in a programmatic and highly customized way. It requires `currentItemId` and `currentItemType` as an anchor for the Recipe, `maxResults` to limit the number of outcomes, `recipeId` to apply the correct recommendation model and `userId` to pull correct affinity data.
+
+Those data points can be hard coded, pulled from marketer-filled fields or captured from other context properties like [`context.user.id`](#user), [`context.event.itemId()`](#contexteventitemid) and [`context.event.itemType()`](#contexteventitemtype) or [`context.services.catalog`](#servicescatalog) outputs.
+
+```ts {9} title="Return details of items recommended from a recipe"
+const userId = context.user.id;
+const recommendationsRequest = {
+    currentItemId: '1017847',
+    currentItemType: 'Product',
+    maxResults: 12,
+    recipeId: '7H5OK',
+    userId: userId
+}
+const recommendedItems = context.services.recommendations.recommend(recommendationsRequest);
+```
+
+It's great feature to deploy recommendations that shouldn't be changed during campaign configuration, cross-sell offerings based on currently viewed item (using its custom attributes) or item filter based on negative recipes.
+
+:::note You Should Know
+
+This `recommend()` method works just as the `recommend` that you can import in the template along with `RecommendationsConfig` from `recs` module. The imported one is better suited for the user friendly module that marketer can setup according to the business needs during campaign configuration phase. Context method is better for deploying hardcoded logic programatically without any input from the marketer - the key value being the possibility to provide custom Item anchor that might be different from currently viewed one.
+
+However, forcing a custom anchor Item is also possible with the imported `recommend` thanks to the `overrideOnPageAnchor()` method (requiring `itemId` and `itemType` string arguments) that can be deployed both along with RecommendationsConfig as well as within the [`run` block](./mcp-serverside-code-basics.mdx#writing-serverside-code):
+
+```ts {9} title="Changing Item anchor for recommendation"
+import { RecommendationsConfig, recommend } from "recs";
+
+export class customAnchorRecommendation implements CampaignTemplateComponent {
+  // Renders interface for configuring the recommendation
+  recsConfig: RecommendationsConfig = new RecommendationsConfig().restrictItemType("Product");
+
+  run(context: CampaignComponentContext) {
+    // Replaces currently viewed Item anchor context with a custom one
+    this.recsConfig.overrideOnPageAnchor('251422', 'Product');
+
+    return {
+      products: recommend(context, this.recsConfig),
+    };
+  }
+}
+```
+
+:::
+
 #### context.services.recommendations.recommendIdsOnly()
+
+The `recommendIdsOnly()` method works exactly the same as [`recommend()`](#contextservicesrecommendationsrecommend) but instead of returning an array of objects with Item details it returns an array of Item Ids as strings. Just as `recommendIdsOnly` that you can import along with `RecommendationsConfig` from `recs` module.
+
+```ts {9} title="Return IDs of items recommended from a recipe"
+const userId = context.user.id;
+const recommendationsRequest = {
+    currentItemId: '1017847',
+    currentItemType: 'Product',
+    maxResults: 12,
+    recipeId: '7H5OK',
+    userId: userId
+}
+const recommendedItemIds = context.services.recommendations.recommendIdsOnly(recommendationsRequest);
+```
+
+It can be useful if you only need to pass IDs to the e-commerce platform for it to render the campaign experience or when you want to filter out specific IDs returned by a recipe from another recommendation you deploy.
 
 #### context.services.recommendations.smartSearch()
 
+The `smartSearch()` method seems to be currently limited to the MCP backend purposes - I wasn't able to find the proper structure of the `query` argument it requires to make it work. In the Evergage times it enabled personalized search results when interacting with the search box on the website.
+
 #### context.services.recommendations.smartSort()
 
-The `smartSort()` method requires an object with `itemIds` array, `recipeId` and `userId`.
+The `smartSort()` method requires an object with `itemIds` array, `recipeId` and `userId`. It was part of the same Evergage mechanism as [`smartSearch()`](#contextservicesrecommendationssmartsearch) as it sorted the returned search recommendations to best meet the affinities of the user.
 
-```ts {3} title="Return smar- sorted items"
-const itemsToBeSorted = ["1018913", "60365", "1017847", "1105"];
-const smartSortRequest = {itemIds: itemsToBeSorted, recipeId: "7H5OK", userId: "6690fc1c49e87274" }
-const smartSortedItems = context.services.recommendations.smartSort();
+Unfortunately it seems to be unavilable as well. Each time I try to implement it, I get `System service exception` despite having proper structure. Too bad, as it would be a cool feature for [`context.services.catalog`](#servicescatalog) set of functions - ordering Item Ids pulled from a custom attribute or a catalog retrieve based on current user interest.
+
+```ts {4} title="Item sorting that doesn't want to work :("
+const userId = context.user.id;
+const itemsToBeSorted = ['1018913', '60365', '1017847', '1105'];
+const smartSortRequest = {itemIds: itemsToBeSorted, recipeId: '7H5OK', userId: userId }
+const smartSortedItems = context.services.recommendations.smartSort(smartSortRequest);
 ```
 
 ### services.smartTrends
