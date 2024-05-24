@@ -326,6 +326,7 @@ module.exports = {
             indexName: 'mateuszdabrowski',
             placeholder: 'Search Docs & Snipptes',
             contextualSearch: true,
+            insights: true,
         },
     },
     presets: [
