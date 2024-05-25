@@ -153,6 +153,38 @@ function Article({ title, url, description, mainTag }) {
     );
 }
 
+const events = [
+    {
+        title: 'Salesforce World Tour Essentials',
+        date: 'June 19, 2024',
+        place: 'Warszawa, Poland',
+        description: 'A perfect place to discuss how businesses can transform multi-channel marketing with Salesforce Marketing Cloud Engagement and Real-Time Personalization.',
+        url: 'https://invite.salesforce.com/world-tour-essentials-warszawa-2024/pwc',
+    },
+];
+
+function Event({ title, date, place, description, url }) {
+    return (
+        <div className={clsx('col col--4', styles.eventCardWrapper)}>
+            <div className={clsx('card', styles.eventCard)}>
+                <div className='card__header'>
+                    <h3>{title}</h3>
+                    <p className={styles.eventDetail}>{date} — {place}</p>
+                </div>
+                <div className='card__body'>
+                    <p>{description}</p>
+                </div>
+                <div className='card__footer'>
+                    <Link className='button button--outline button--primary' to={url}>
+                        Let's Meet
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
 function Home() {
     const context = useDocusaurusContext();
     const { siteConfig: { customFields = {} } = {} } = context;
@@ -217,6 +249,21 @@ function Home() {
                                 <div className="row">
                                     {features.map((props, idx) => (
                                         <Feature key={idx} {...props} />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    )}
+                    {/* Upcoming Events Section */}
+                    {events && events.length > 0 && (
+                        <section className={styles.events}>
+                            <div className="container">
+                                <h2 className={styles.eventsHeading}>
+                                    Upcoming Events
+                                </h2>
+                                <div className={clsx('row', styles.eventRow)}>
+                                    {events.map((event, idx) => (
+                                        <Event key={idx} {...event} />
                                     ))}
                                 </div>
                             </div>

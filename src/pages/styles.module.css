@@ -162,3 +162,70 @@ html[data-theme='light'] .articlesHeading {
   align-items: center;
   justify-content: center;
 }
+
+/* Styles for the new event cards */
+.events {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+
+}
+
+.eventsHeading {
+  color: var(--ifm-color-primary);
+  font-size: var(--ifm-h3-font-size);
+  font-family: Courier, monospace;
+  text-transform: uppercase;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  text-align: center;
+}
+
+.eventsHeading:before {
+  font-family: Courier, monospace;
+  content: "<";
+  color: var(--ifm-color-secondary);
+}
+
+.eventsHeading:after {
+  font-family: Courier, monospace;
+  content: "/>";
+  color: var(--ifm-color-secondary);
+}
+
+.eventRow {
+  justify-content: center;
+}
+
+.eventCardWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.eventCard {
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  background-color: var(--ifm-card-background-color);
+  box-shadow: var(--ifm-global-shadow-md) !important;
+}
+
+.eventDetail {
+  color: var(--ifm-color-secondary);
+  font-size: var(--ifm-h5-font-size);
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.eventLink {
+  float: right;
+}
+
+@media only screen and (max-width: 768px) {
+  .events {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
