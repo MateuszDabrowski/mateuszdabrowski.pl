@@ -153,6 +153,33 @@ function Article({ title, url, description, mainTag }) {
     );
 }
 
+function Newsletter() {
+    return (
+        <section className={styles.newsletter}>
+            <div className="container">
+                <div className="row">
+                    <div className="col col--8">
+                        <h2 className={styles.newsletterHeading}>Stay in the loop</h2>
+                        <p className={styles.newsletterDescription}>
+                            Get the latest Salesforce Marketing Cloud and Personalization tips, guides, and industry news straight to your inbox.
+                        </p>
+                    </div>
+                    <div className="col col--4">
+                        <div className={styles.newsletterButtonWrapper}>
+                            <Link className={clsx(
+                                    'button button--outline button--block button--primary button--lg shadow--md',
+                                    styles.newsletterButton
+                                )} to="./sites/newsletter/">
+                                Subscribe now
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 const events = [
     {
         title: 'Salesforce World Tour Essentials',
@@ -254,6 +281,8 @@ function Home() {
                             </div>
                         </section>
                     )}
+                    {/* Newsletter Section */}
+                    <Newsletter />
                     {/* Upcoming Events Section */}
                     {events && events.length > 0 && (
                         <section className={styles.events}>
