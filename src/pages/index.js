@@ -211,10 +211,24 @@ function Event({ title, date, place, description, url }) {
     );
 }
 
+/**
+ * Checks if the given date string represents a future date.
+ *
+ * @param {string} dateString - The date string to be checked.
+ * @return {boolean} Returns true if the given date string represents a future date, false otherwise.
+ */
+function isFutureDate(dateString) {
+    const eventDate = new Date(dateString);
+    const currentDate = new Date();
+    return eventDate > currentDate;
+}
+
 
 function Home() {
     const context = useDocusaurusContext();
     const { siteConfig: { customFields = {} } = {} } = context;
+    const futureEvents = events.filter(event => isFutureDate(event.date));
+
     return (
         <>
             <Head>
@@ -284,7 +298,7 @@ function Home() {
                     {/* Newsletter Section */}
                     <Newsletter />
                     {/* Upcoming Events Section */}
-                    {events && events.length > 0 && (
+                    {futureEvents && futureEvents.length > 0 && (
                         <section className={styles.events}>
                             <div className="container">
                                 <h2 className={styles.eventsHeading}>
