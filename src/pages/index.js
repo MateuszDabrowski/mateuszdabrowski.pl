@@ -47,6 +47,16 @@ const features = [
     },
 ];
 
+/**
+ * Renders a feature component.
+ *
+ * @param {string} imageUrl - The URL of the image.
+ * @param {string} title - The title of the feature.
+ * @param {string} description - The description of the feature.
+ * @param {string} url - The URL for the feature.
+ * @param {string} cta - The call to action text.
+ * @return {JSX.Element} The rendered feature component.
+ */
 function Feature({ imageUrl, title, description, url, cta }) {
     const imgUrl = useBaseUrl(imageUrl);
     return (
@@ -132,6 +142,15 @@ const highlightedArticles = [
     },
 ];
 
+/**
+ * Renders an article card based on the provided title, URL, description, and main tag.
+ *
+ * @param {string} title - The title of the article.
+ * @param {string} url - The URL of the article.
+ * @param {string} description - The description of the article.
+ * @param {string} mainTag - The main tag of the article.
+ * @return {JSX.Element} The rendered article card component.
+ */
 function Article({ title, url, description, mainTag }) {
     return (
         <div className='col col--3'>
@@ -153,6 +172,11 @@ function Article({ title, url, description, mainTag }) {
     );
 }
 
+/**
+ * Renders a newsletter section with a heading, description, and a button to subscribe.
+ *
+ * @return {JSX.Element} The rendered newsletter section.
+ */
 function Newsletter() {
     return (
         <section className={styles.newsletter}>
@@ -190,6 +214,17 @@ const events = [
     },
 ];
 
+/**
+ * Renders an event card component.
+ *
+ * @param {Object} props - The properties of the event.
+ * @param {string} props.title - The title of the event.
+ * @param {string} props.date - The date of the event.
+ * @param {string} props.place - The location of the event.
+ * @param {string} props.description - The description of the event.
+ * @param {string} props.url - The URL to navigate to when the event card is clicked.
+ * @return {JSX.Element} The rendered event card component.
+ */
 function Event({ title, date, place, description, url }) {
     return (
         <div className={clsx('col col--4', styles.eventCardWrapper)}>
@@ -224,9 +259,13 @@ function isFutureDate(dateString) {
 }
 
 
+/**
+ * Renders the Home component with various metadata and sections.
+ *
+ * @return {JSX.Element} The rendered Home component.
+ */
 function Home() {
-    const context = useDocusaurusContext();
-    const { siteConfig: { customFields = {} } = {} } = context;
+    const { siteConfig: { customFields = {} } = {} } = useDocusaurusContext();
     const futureEvents = events.filter(event => isFutureDate(event.date));
 
     return (
