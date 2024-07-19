@@ -504,13 +504,15 @@ const recommendedItemsIds = context.services.recommendations.smartSearch(smartSe
 
 #### context.services.recommendations.smartSort()
 
-The `smartSort()` method requires an object with an `itemIds` array, `recipeId`, and `userId`. It was part of the same Evergage mechanism as [`smartSearch()`](#contextservicesrecommendationssmartsearch), as it sorted the returned search recommendations to best meet the user's affinities.
+The `smartSort()` method requires an object with an `itemIds` array, `recipeId`, and `userId`. It is a cool feature for the [`context.services.catalog`](#servicescatalog) set of functions as it can filter and order Item IDs pulled from a custom attribute or a catalog retrieve based on current user interest using a provided Recipe.
 
-Unfortunately, it seems to be unavailable. Each time I try to implement it, I get a `System service exception` despite having the proper structure. Too bad, as it would be a cool feature for the [`context.services.catalog`](#servicescatalog) set of functions—ordering Item IDs pulled from a custom attribute or a catalog retrieve based on current user interest.
-
-```ts {2} title="Item sorting that doesn't want to work :("
+```ts {7} title="Item sorting that doesn't want to work :("
 const itemsToBeSorted = ['1018913', '60365', '1017847', '1105'];
-const smartSortRequest = {itemIds: itemsToBeSorted, recipeId: '7H5OK', userId: context.user.id }
+const smartSortRequest = {
+    itemIds: itemsToBeSorted,
+    recipeId: '7H5OK',
+    userId: context.user.id
+}
 const smartSortedItems = context.services.recommendations.smartSort(smartSortRequest);
 ```
 
