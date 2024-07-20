@@ -462,14 +462,13 @@ export class customAnchorRecommendation implements CampaignTemplateComponent {
 
 The `recommendIdsOnly()` method works like [`recommend()`](#contextservicesrecommendationsrecommend), but instead of returning an array of objects with Item details, it returns an array of Item IDs as strings. Just as `recommendIdsOnly` you can import with `RecommendationsConfig` from the `recs` module.
 
-```ts {9} title="Return IDs of items recommended from a recipe"
-const userId = context.user.id;
+```ts {8} title="Return IDs of items recommended from a recipe"
 const recommendationsRequest = {
     currentItemId: '1017847',
     currentItemType: 'Product',
     maxResults: 12,
     recipeId: '7H5OK',
-    userId: userId
+    userId: context.user.id
 }
 const recommendedItemIds = context.services.recommendations.recommendIdsOnly(recommendationsRequest);
 ```
@@ -478,18 +477,40 @@ It can be helpful if you only need to pass IDs to the e-commerce platform for it
 
 #### context.services.recommendations.smartSearch()
 
-The `smartSearch()` method seems limited to the MCP backend purposes - I couldn't find the proper structure of the `query` argument required to make it work. In the Evergage times it enabled personalized search results when interacting with the search box on the website.
+The `smartSearch()` method allows you to get recommendations based on search query string and a recipe (for example, to recommend items when user interacts with a search box on the page):
+
+```ts {7} title="Return Items recommended using smart search"
+const smartSearchRequest = {
+    query: "blue jacket",
+    maxResults: 1,
+    recipeId: "7H5OK",
+    userId: context.user.id
+}
+const recommendedItems = context.services.recommendations.smartSearch(smartSearchRequest);
+```
+
+The `query` parameter is looking for a match in the name (and description?), then filters and orders found Items using the provided Recipe ID.
+
+:::note You Should Know
+
+`smartSearch()` can return more than 12 recommendations, but as it returns whole Item details, it can impact performance. It might be helpful to filter the outcome just to the information required for your purpose.
+
+
+```ts title="Return only IDs of items recommended using smart search"
+const recommendedItemsIds = context.services.recommendations.smartSearch(smartSearchRequest).map(item => item.id);
+```
+
+:::
 
 #### context.services.recommendations.smartSort()
 
 The `smartSort()` method requires an object with an `itemIds` array, `recipeId`, and `userId`. It was part of the same Evergage mechanism as [`smartSearch()`](#contextservicesrecommendationssmartsearch), as it sorted the returned search recommendations to best meet the user's affinities.
 
-Unfortunately, it is also unavailable. Each time I try to implement it, I get a `System service exception` despite having the proper structure. Too bad, as it would be a cool feature for the [`context.services.catalog`](#servicescatalog) set of functions—ordering Item IDs pulled from a custom attribute or a catalog retrieve based on current user interest.
+Unfortunately, it seems to be unavailable. Each time I try to implement it, I get a `System service exception` despite having the proper structure. Too bad, as it would be a cool feature for the [`context.services.catalog`](#servicescatalog) set of functions—ordering Item IDs pulled from a custom attribute or a catalog retrieve based on current user interest.
 
-```ts {4} title="Item sorting that doesn't want to work :("
-const userId = context.user.id;
+```ts {2} title="Item sorting that doesn't want to work :("
 const itemsToBeSorted = ['1018913', '60365', '1017847', '1105'];
-const smartSortRequest = {itemIds: itemsToBeSorted, recipeId: '7H5OK', userId: userId }
+const smartSortRequest = {itemIds: itemsToBeSorted, recipeId: '7H5OK', userId: context.user.id }
 const smartSortedItems = context.services.recommendations.smartSort(smartSortRequest);
 ```
 
