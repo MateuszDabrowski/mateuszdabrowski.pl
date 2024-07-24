@@ -481,7 +481,7 @@ The `smartSearch()` method allows you to get recommendations based on search que
 
 ```ts {7} title="Return Items recommended using smart search"
 const smartSearchRequest = {
-    query: "blue jacket",
+    query: "blue%20jacket",
     maxResults: 1,
     recipeId: "7H5OK",
     userId: context.user.id
@@ -489,12 +489,11 @@ const smartSearchRequest = {
 const recommendedItems = context.services.recommendations.smartSearch(smartSearchRequest);
 ```
 
-The `query` parameter is looking for a match in the name (and description?), then filters and orders found Items using the provided Recipe ID.
+The `query` parameter is looking for a match in the name (and only name), then filters found Items using the provided Recipe ID. Keep in mind that the Recipe cannot be using Ingredients requiring an Item anchor. It’s best to use the Any Items ingredient and then optionally sort it using [`smartSort()`](#contextservicesrecommendationssmartsort).
 
 :::note You Should Know
 
-`smartSearch()` can return more than 12 recommendations, but as it returns whole Item details, it can impact performance. It might be helpful to filter the outcome just to the information required for your purpose.
-
+`smartSearch()` can return more than 12 recommendations (it can bring back thousands), but as it returns whole Item details, it can impact performance. It might be helpful to filter the outcome just to the information required for your purpose.
 
 ```ts title="Return only IDs of items recommended using smart search"
 const recommendedItemsIds = context.services.recommendations.smartSearch(smartSearchRequest).map(item => item.id);
@@ -506,7 +505,7 @@ const recommendedItemsIds = context.services.recommendations.smartSearch(smartSe
 
 The `smartSort()` method requires an object with an `itemIds` array, `recipeId`, and `userId`. It is a cool feature for the [`context.services.catalog`](#servicescatalog) set of functions as it can filter and order Item IDs pulled from a custom attribute or a catalog retrieve based on current user interest using a provided Recipe.
 
-```ts {7} title="Item sorting that doesn't want to work :("
+```ts {7} title="Return items sorted using a Recipe"
 const itemsToBeSorted = ['1018913', '60365', '1017847', '1105'];
 const smartSortRequest = {
     itemIds: itemsToBeSorted,
@@ -518,15 +517,18 @@ const smartSortedItems = context.services.recommendations.smartSort(smartSortReq
 
 ### services.smartTrends
 
-The `smartTrends()` method is a backend tool for the MCP Trends feature. Unfortunately it doesn't seem to work in the Serverside code with `This expression is not callable` and `Unknown identifier` errors dropping despite proper `SmartTrendsRequest` argument structure (`{itemIds: ['1018913', '60365', '1017847', '1105'], itemType: "Product", lookbackMinutes: 9999 }`).
+The `smartTrends()` method lets you leverage the MCP Trends feature directly in the Serverside code of the Campaign. It requires a special `SmartTrendsRequest` argument structure (`{itemIds: ['1018913'], itemType: "Product", lookbackMinutes: 9999 }`) and returns an array of objects with product engagement details within the provided lookback (`[{itemId: '1018913', visitViews: 1234, purchases: 98}]`).
 
-```js title="Structure of the context.services.smartTrends object"
-{
-     "smartTrends": (request: SmartTrendsRequest): ItemTrends[]
+```js title="Return item engagement details"
+const smartTrendsRequest: SmartTrendsRequest = {
+    itemIds: ['1018913'],
+    itemType: 'Product',
+    lookbackMinutes: 1656
 }
+const smartTrendItemDetails = context.services.smartTrends.smartTrends(smartTrendsRequest);
 ```
 
-For now, if you want to leverage MCP Trends, you need to use the client-side code API approach based on the [Trends Global Template](https://github.com/MateuszDabrowski/mcp-campaign-templates/tree/main/Global%20Templates/SalesforceInteractions/Trends).
+It’s a nice and more powerful alternative to the client-side code API approach based on the [Trends Global Template](https://github.com/MateuszDabrowski/mcp-campaign-templates/tree/main/Global%20Templates/SalesforceInteractions/Trends).
 
 ### services.surveys
 
