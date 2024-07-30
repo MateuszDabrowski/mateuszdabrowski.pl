@@ -2,17 +2,26 @@
 id: sfmc-licence-limits
 title: SFMC Licence Limits
 sidebar_label: Licence Limits
-description: With great flexibility comes great limitations. Learn how SFMC licence limits can make or break your marketing operations.
+description: With great flexibility come great limitations. Learn how SFMC limits can make or break your marketing operations.
 image: img/og/og-image-sfmc-licence-limits.png
 tags: [Marketing Cloud, Best Practice, Automation, API, Data Extensions, Setup]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
 
-<LeadText content="With great flexibility comes great limitations. Learn how SFMC licence limits can make or break your marketing operations." />
+<LeadText content="With great flexibility come great limitations. Learn how SFMC limits can make or break your marketing operations." />
+
+Salesforce Marketing Cloud is an extremly flexibile platform. You can fulfill nearly any marketing dream using the available tools. But it also makes SFMC a complex platform with power that can be easily abused. Especially when best practices are not followed.
+
+That abuse can lead to outstanding solutions (like [Cloud Page Apps](../ssjs/snippets/sfmc-cloud-page-apps.mdx) or [custom processing backends](./sfmc-code-resource.mdx)) but it can also lead to huge performance issues that impact your Salesforce Marketing Cloud and a whole stack (like, for example, triggering hundreds of Filter Activities at the same time - please don’t do it).
+
+Salesforce protects clients and themselves by introducing two types of guardrails:
+
+- Backend guardrails that completly block some forms of abuse (for exmaple, 30 minute auto-kill in Automation Studio, 2 minute auto-kill in Web Studio or 5 MB file size limit in Content Builder)
+- Hard and soft limits that either block you from doing something or might incure additional costs for exceeding them (for example, hard limit for payload size in the REST API that will error out your API call and a soft limit of requests made yearly that may lead to a fun call with Salesforce Account Executive about their usage-based SKUs).
 
 
-Salesforce Marketing Cloud (Enagement, aka Exact Target) is extremly flexibile platform, but it also has its limits. Licence limits that serve as guardrails protecting the stability of the tool and Salesforce's budget.
+
 
 
 Limit | Basic | Pro | Corporate | Enterprise
