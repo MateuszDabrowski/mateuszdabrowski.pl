@@ -11,16 +11,22 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="With great flexibility come great limitations. Learn how SFMC limits can make or break your marketing operations." />
 
+## SFMC Limits and Guardrails
+
 Salesforce Marketing Cloud is an extremly flexibile platform. You can fulfill nearly any marketing dream using the available tools. But it also makes SFMC a complex platform with power that can be easily abused. Especially when best practices are not followed.
 
 That abuse can lead to outstanding solutions (like [Cloud Page Apps](../ssjs/snippets/sfmc-cloud-page-apps.mdx) or [custom processing backends](./sfmc-code-resource.mdx)) but it can also lead to huge performance issues that impact your Salesforce Marketing Cloud and a whole stack (like, for example, triggering hundreds of Filter Activities at the same time - please don’t do it).
 
-Salesforce protects clients and themselves by introducing two types of guardrails:
+Salesforce protects clients and themselves using two methods:
 
-- Backend guardrails that completly block some forms of abuse (for exmaple, 30 minute auto-kill in Automation Studio, 2 minute auto-kill in Web Studio or 5 MB file size limit in Content Builder)
+- Backend guardrails that completly block some forms of platform abuse (for example, 30 minute auto-kill in Automation Studio, 2 minute auto-kill in Web Studio or 5 MB file size limit in Content Builder)
 - Hard and soft limits that either block you from doing something or might incure additional costs for exceeding them (for example, hard limit for payload size in the REST API that will error out your API call and a soft limit of requests made yearly that may lead to a fun call with Salesforce Account Executive about their usage-based SKUs).
 
+Some of those guardrails and limits can be found in the technical documentation (those can be easily changed or extended by Salesforce whenever they feels like it). Some are part of your licence (as an attachment).
 
+## SFMC Licence Limits
+
+Licence limits have enormous impact on every single client. Most of those limits weren't enforced by Salesforce until early 2024. This, of course, impacted solution architectures and day-to-day practices for years. Let's dive into what changed, how painful it can be for your marketing operations on SFMC and what are the options.
 
 
 
@@ -33,16 +39,16 @@ Yearly Automation Executions | 0 | 15K | 45K | 100K
 Yearly API Calls | 0 | 2M | 6M | 200M
 Users | 5 | 15 | 45 | 100
 
-## Super Messages
+### Super Messages
 
-## Contacts
+### Contacts
 
-## Data Extension Storage
+### Data Extension Storage
 
-## Yearly Automation Executions
+### Yearly Automation Executions
 
 "Automations are measured via the number of times a single automation is run, regardless of the number of actual steps or activities within the automation. For example, an automated program that includes five steps with seven activities counts as just one automation each time the program is run."
 
-## Yearly API Calls
+### Yearly API Calls
 
-## Users
+### Users
