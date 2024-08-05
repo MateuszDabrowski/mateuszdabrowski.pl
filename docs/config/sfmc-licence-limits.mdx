@@ -11,7 +11,7 @@ import { LeadText } from '../../src/components/LeadText.js';
 
 <LeadText content="With great flexibility come great limitations. Learn how SFMC limits can make or break your marketing operations." />
 
-## SFMC Limits and Guardrails
+## Limits and Guardrails
 
 Salesforce Marketing Cloud is an extremly flexibile platform. You can fulfill nearly any marketing dream using the available tools. But it also makes SFMC a complex platform with power that can be easily abused. Especially when best practices are not followed.
 
@@ -22,33 +22,64 @@ Salesforce protects clients and themselves using two methods:
 - Backend guardrails that completly block some forms of platform abuse (for example, 30 minute auto-kill in Automation Studio, 2 minute auto-kill in Web Studio or 5 MB file size limit in Content Builder)
 - Hard and soft limits that either block you from doing something or might incure additional costs for exceeding them (for example, hard limit for payload size in the REST API that will error out your API call and a soft limit of requests made yearly that may lead to a fun call with Salesforce Account Executive about their usage-based SKUs).
 
-Some of those guardrails and limits can be found in the technical documentation (those can be easily changed or extended by Salesforce whenever they feels like it). Some are part of your licence (as an attachment).
+Some of those guardrails and limits can be found in the technical documentation (those can be easily changed or extended by Salesforce whenever they feels like it). Some are part of your licence (as not that easy to change attachment).
 
-## SFMC Licence Limits
+## Marketing Cloud Licence Limits
 
-Licence limits have enormous impact on every single client. Most of those limits weren't enforced by Salesforce until early 2024. This, of course, impacted solution architectures and day-to-day practices for years. Let's dive into what changed, how painful it can be for your marketing operations on SFMC and what are the options.
+Licence limits have enormous impact on every single client. And while there was no change in what is in your contract, half of those limits weren't enforced by Salesforce until early 2024. This lax approach impacted solution architectures and day-to-day practices for years. But that peaceful and full of possibilities world is no more. Let's dive into what changed, how painful it can be for marketing operations on SFMC and how we can adapt.
 
-
+There are six licence limits for Salesforce Marketing Cloud. Each with different threshold based on the licence tier you get:
 
 Limit | Basic | Pro | Corporate | Enterprise
 -- | -- | -- | -- | --
-Super Messages | 250K | 2.5M | 10M | 150M
 Contacts | N/A | 15K | 45K | 500K
+Super Messages | 250K | 2.5M | 10M | 150M
 Data Extension Storage | 1GB | 15GB | 45GB | 100GB
 Yearly Automation Executions | 0 | 15K | 45K | 100K
 Yearly API Calls | 0 | 2M | 6M | 200M
 Users | 5 | 15 | 45 | 100
 
-### Super Messages
+All of them can be extended with Entitlements, if you are willing to pay.
 
-### Contacts
+## Marketing Cloud Limit Entitlements
 
-### Data Extension Storage
 
-### Yearly Automation Executions
+:::note You Should Know
+
+Along with new enforcement of the licence limits came new option to increase the threshold. Now, whenever you purchase an additional Contact entitlement, you will also get a bump to all other limits.
+
+Single Contact Entitlement increases:
+- Contacts by 10K
+- Super Messages by 50K
+- Data Extension Storage by 0.01GB
+- Yearly Automation Executions by 25
+- Yearly API Calls by 5K
+
+As an example, let's say you have the Enterprise SFMC licence and plan to have 1M Contacts in your system. This licence tier has 500K Contact limit, so you need to purchase additional 500K to meet the requirement. As Contacts are sold in packages of 10K you need 500K target / 10K per package = 50 Contact Entitlements. What it gives you in total?
+
+Limit | Enterprise | Entitlement Calculation | Entitlement Increase | Total Limit
+-- | -- | -- | -- | --
+Contacts | 500K | 50 * 10K | 500K | 1M
+Super Messages | 150M | 50 * 50K | 2,5M | 152,5M
+Data Extension Storage | 100GB | 50 * 0,01GB | 0,5GB | 100,5GB
+Yearly Automation Executions | 100K | 50 * 25 | 1,25K | 101,25K
+Yearly API Calls | 200M | 50 * 5K | 250K | 200,25M
+Users | 100 | n/a | n/a | 100
+
+As you can see, not much. It's still better than nothing, but probably won't save you from a need for additional entitlements dedicated to your most used aspects of Salesforce Marketing Cloud.
+
+:::
+
+## Super Messages
+
+## Contacts
+
+## Data Extension Storage
+
+## Yearly Automation Executions
 
 "Automations are measured via the number of times a single automation is run, regardless of the number of actual steps or activities within the automation. For example, an automated program that includes five steps with seven activities counts as just one automation each time the program is run."
 
-### Yearly API Calls
+## Yearly API Calls
 
-### Users
+## Users
