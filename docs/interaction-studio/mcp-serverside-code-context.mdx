@@ -493,7 +493,7 @@ The `query` parameter is looking for a match in the name (and only name), then f
 
 :::note You Should Know
 
-`smartSearch()` can return more than 12 recommendations (it can bring back thousands), but as it returns whole Item details, it can impact performance. It might be helpful to filter the outcome just to the information required for your purpose.
+`smartSearch()` can return more than 12 recommendations (it can bring back thousand - and frequently it will need to so that there pool big enough for proper [`smartSort()`](#contextservicesrecommendationssmartsort) results), but as it returns whole Item details, it can impact performance. It might be helpful to filter the outcome just to the information required for your purpose for further processing.
 
 ```ts title="Return only IDs of items recommended using smart search"
 const recommendedItemsIds = context.services.recommendations.smartSearch(smartSearchRequest).map(item => item.id);

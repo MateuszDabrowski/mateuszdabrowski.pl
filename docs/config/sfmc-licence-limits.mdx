@@ -28,7 +28,7 @@ Some of those guardrails and limits can be found in the technical documentation 
 
 Licence limits have enormous impact on every single client. And while there was no change in what is in your contract, half of those limits weren't enforced by Salesforce until early 2024. This lax approach impacted solution architectures and day-to-day practices for years. But that peaceful and full of possibilities world is no more. Let's dive into what changed, how painful it can be for marketing operations on SFMC and how we can adapt.
 
-There are six licence limits for Salesforce Marketing Cloud. Each with different threshold based on the licence tier you get:
+There are six key licence limits for Salesforce Marketing Cloud. Each with different threshold based on the licence tier you get:
 
 Limit | Basic | Pro | Corporate | Enterprise
 -- | -- | -- | -- | --
@@ -39,14 +39,19 @@ Yearly Automation Executions | 0 | 15K | 45K | 100K
 Yearly API Calls | 0 | 2M | 6M | 200M
 Users | 5 | 15 | 45 | 100
 
-All of them can be extended with Entitlements, if you are willing to pay.
+All of them can be extended with entitlements, if you are willing to pay.
 
 ## Marketing Cloud Limit Entitlements
 
+Entitlements are paid add-ons that can extend your limits. They are extremely important as (excluding Users) all those thresholds are soft limits. You can go over them and don't even know about it until Salesforce Account Executive invites you to discuss what it means in the money terms.
+
+The exact costs of the entitlements are a top secret and differs from client to client. You will have to check with your Account Executive how it looks for you.
+
+Of course, it's much better to architect your Marketing Cloud in a way that minimises the usage and monitor it ongoingly - I will be covering how to do it in the [impact & workarounds section](#limit-impact-and-workarounds).
 
 :::note You Should Know
 
-Along with new enforcement of the licence limits came new option to increase the threshold. Now, whenever you purchase an additional Contact entitlement, you will also get a bump to all other limits.
+Along with the enforcement of all the licence limits [Salesforce introduced](https://help.salesforce.com/s/articleView?id=000396093&type=1) additional option to increase the threshold. Now, whenever you purchase additional Contact entitlement, you will also get a small bump to other limits.
 
 Single Contact Entitlement increases:
 - Contacts by 10K
@@ -57,7 +62,7 @@ Single Contact Entitlement increases:
 
 As an example, let's say you have the Enterprise SFMC licence and plan to have 1M Contacts in your system. This licence tier has 500K Contact limit, so you need to purchase additional 500K to meet the requirement. As Contacts are sold in packages of 10K you need 500K target / 10K per package = 50 Contact Entitlements. What it gives you in total?
 
-Limit | Enterprise | Entitlement Calculation | Entitlement Increase | Total Limit
+Limit Type | Enterprise Limit | Entitlement Calculation | Entitlement Increase | Total Limit
 -- | -- | -- | -- | --
 Contacts | 500K | 50 * 10K | 500K | 1M
 Super Messages | 150M | 50 * 50K | 2,5M | 152,5M
@@ -66,20 +71,28 @@ Yearly Automation Executions | 100K | 50 * 25 | 1,25K | 101,25K
 Yearly API Calls | 200M | 50 * 5K | 250K | 200,25M
 Users | 100 | n/a | n/a | 100
 
-As you can see, not much. It's still better than nothing, but probably won't save you from a need for additional entitlements dedicated to your most used aspects of Salesforce Marketing Cloud.
+As you can see - apart from the Contacts - it's not much. Better than nothing, but won't save you from a need for additional entitlements dedicated to most used aspects of your Salesforce Marketing Cloud.
 
 :::
 
-## Super Messages
+Unfortunately, at the moment, there is no increase to licence limits when you purchase additional Business Units. That's especially problematic with low (even for a single Business Unit) Yearly Automation Executions threshold. //TODO IdeaExchagne.
 
-## Contacts
+## Limit Impact and Workarounds
 
-## Data Extension Storage
+We already know that there are multiple licence limits that are enforced now. We also know that you can always pay to solve that issue. But in many cases you can minimise the usage (with smaller or bigger impact on your operations). Let's dive into details, limit by limit.
 
-## Yearly Automation Executions
+### Super Messages
+
+
+
+### Contacts
+
+### Data Extension Storage
+
+### Yearly Automation Executions
 
 "Automations are measured via the number of times a single automation is run, regardless of the number of actual steps or activities within the automation. For example, an automated program that includes five steps with seven activities counts as just one automation each time the program is run."
 
-## Yearly API Calls
+### Yearly API Calls
 
-## Users
+### Users
