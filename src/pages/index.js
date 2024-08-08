@@ -212,6 +212,13 @@ const events = [
         description: 'A perfect place to discuss how businesses can transform multi-channel marketing with Salesforce Marketing Cloud Engagement and Real-Time Personalization.',
         url: 'https://invite.salesforce.com/world-tour-essentials-warszawa-2024/pwc',
     },
+    {
+        title: 'Insider Insights: Why SFMC Experts Share Their Top Content',
+        date: 'September 05, 2024',
+        place: 'Online',
+        description: 'Join to hear multiple Marketing Cloud content creators talk about their tips, tricks and motivations for sharing knowledge via blogs and videos.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketing-cloud-developers-group-presents-insider-insights-why-sfmc-experts-share-their-top-content/',
+    },
 ];
 
 /**
