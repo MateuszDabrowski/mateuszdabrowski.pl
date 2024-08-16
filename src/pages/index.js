@@ -219,6 +219,13 @@ const events = [
         description: 'Join to hear multiple Marketing Cloud content creators talk about their tips, tricks and motivations for sharing knowledge via blogs and videos.',
         url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketing-cloud-developers-group-presents-insider-insights-why-sfmc-experts-share-their-top-content/',
     },
+    {
+        title: 'Salesforce CRM in Journey Builder with Marketing Cloud Connect',
+        date: 'September 10, 2024',
+        place: 'Online',
+        description: 'The Journey Builder Deep Dive series covers the advanced features of the Journey Builder. This session will focus on the JB MCC integration features, use cases and gotchas.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketer-group-marketing-cloud-phoenix-united-states-presents-journey-builder-deep-dive-session-2-salesforce-crm-in-your-journeys-with-mc-connect/',
+    },
 ];
 
 /**
