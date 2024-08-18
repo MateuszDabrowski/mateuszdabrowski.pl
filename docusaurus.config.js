@@ -65,7 +65,7 @@ module.exports = {
             },
             items: [
                 {
-                    label: 'Docs',
+                    label: 'Docs & Snippets',
                     to: 'docs',
                     activeBasePath: 'docs',
                     position: 'left',
@@ -98,34 +98,6 @@ module.exports = {
                         {
                             label: 'MC Personalization',
                             to: 'docs/category/mc-personalization/',
-                        },
-                    ],
-                },
-                {
-                    label: 'Snippets',
-                    to: 'docs',
-                    activeBasePath: 'docs',
-                    position: 'left',
-                    items: [
-                        {
-                            label: 'SSJS',
-                            to: 'docs/category/ssjs-snippets/',
-                        },
-                        {
-                            label: 'JavaScript',
-                            to: 'docs/category/js-snippets/',
-                        },
-                        {
-                            label: 'AMPScript',
-                            to: 'docs/category/ampscript-snippets/',
-                        },
-                        {
-                            label: 'SFMC SQL',
-                            to: 'docs/category/sfmc-sql-snippets/',
-                        },
-                        {
-                            label: 'MC Personalization',
-                            to: 'docs/category/mc-personalization-snippets/',
                         },
                     ],
                 },
@@ -252,31 +224,6 @@ module.exports = {
                         {
                             label: 'MC Personalization',
                             to: 'docs/category/mc-personalization/',
-                        },
-                    ],
-                },
-                {
-                    title: 'Snippets',
-                    items: [
-                        {
-                            label: 'SSJS',
-                            to: 'docs/category/ssjs-snippets/',
-                        },
-                        {
-                            label: 'JavaScript',
-                            to: 'docs/category/js-snippets/',
-                        },
-                        {
-                            label: 'AMPScript',
-                            to: 'docs/category/ampscript-snippets/',
-                        },
-                        {
-                            label: 'SFMC SQL',
-                            to: 'docs/category/sfmc-sql-snippets/',
-                        },
-                        {
-                            label: 'MC Personalization',
-                            to: 'docs/category/mc-personalization-snippets/',
                         },
                     ],
                 },

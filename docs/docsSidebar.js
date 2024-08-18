@@ -21,9 +21,21 @@ module.exports = {
                 'ssjs/ssjs-style-guide',
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
-                    type: 'link',
-                    label: '» SSJS Snippets',
-                    href: '/docs/category/ssjs-snippets/',
+                    type: 'category',
+                    label: 'SSJS Snippets',
+                    link: {
+                        type: 'generated-index',
+                        title: 'SFMC SSJS Snippets',
+                        description: 'Ready-to-use Salesforce Marketing Cloud SSJS Snippets.',
+                        keywords: ['Marketing Cloud', 'SSJS'],
+                        image: 'img/og/og-image-sfmc-ssjs-snippets.png',
+                    },
+                    items: [
+                        'ssjs/snippets/ssjs-script-template',
+                        'ssjs/snippets/sfmc-cloud-page-apps',
+                        'ssjs/snippets/ssjs-mobileconnect-phone-change',
+                        'ssjs/snippets/ampscript-in-ssjs',
+                    ],
                 },
                 {
                     type: 'link',
@@ -47,9 +59,20 @@ module.exports = {
                 'js/js-loops',
                 'js/js-dom',
                 {
-                    type: 'link',
-                    label: '» JS Snippets',
-                    href: '/docs/category/js-snippets/',
+                    type: 'category',
+                    label: 'JS Snippets',
+                    link: {
+                        type: 'generated-index',
+                        title: 'JS Snippets',
+                        description: 'Ready-to-use JavaScript Snippets.',
+                        keywords: ['JavaScript', 'JS'],
+                        image: 'img/og/og-image-js-snippets.png',
+                    },
+                    items: [
+                        'js/snippets/tailor-with-data',
+                        'js/snippets/engage-with-countdown',
+                        'js/snippets/export-import-document-sfmc-roles',
+                    ],
                 },
             ],
         },
@@ -67,9 +90,18 @@ module.exports = {
                 'ampscript/ampscript-style-guide',
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
-                    type: 'link',
-                    label: '» AMPScript Snippets',
-                    href: '/docs/category/ampscript-snippets/',
+                    type: 'category',
+                    label: 'AMPScript Snippets',
+                    link: {
+                        type: 'generated-index',
+                        title: 'SFMC AMPScript Snippets',
+                        description: 'Ready-to-use Salesforce Marketing Cloud AMPScript Snippets.',
+                        keywords: ['Marketing Cloud', 'AMPScript'],
+                        image: 'img/og/og-image-sfmc-ampscript-snippets.png',
+                    },
+                    items: [
+                        'ssjs/snippets/ampscript-in-ssjs',
+                    ],
                 },
                 {
                     type: 'link',
@@ -104,9 +136,19 @@ module.exports = {
                 'sql/sfmc-sql-null-functions',
                 'sql/sfmc-sql-style-guide',
                 {
-                    type: 'link',
-                    label: '» SQL Snippets',
-                    href: '/docs/category/sfmc-sql-snippets/',
+                    type: 'category',
+                    label: 'SFMC SQL Snippets',
+                    link: {
+                        type: 'generated-index',
+                        title: 'SFMC SQL Snippets',
+                        description: 'Ready-to-use Salesforce Marketing Cloud SQL Snippets.',
+                        keywords: ['Marketing Cloud', 'SQL'],
+                        image: 'img/og/og-image-sfmc-sql-snippets.png',
+                    },
+                    items: [
+                        'sql/snippets/sfmc-sql-debugging-email-sends',
+                        'sql/snippets/sfmc-sql-debugging-value-length',
+                    ],
                 },
             ],
         },
@@ -121,7 +163,7 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-config.png',
             },
             items: [
-                'config/sfmc-licence-limits',
+                // 'config/sfmc-licence-limits',
                 'config/sfmc-system-data-views',
                 'config/sfmc-mobile-connect-data-views',
                 'config/sfmc-mcc-integration-patterns',
@@ -164,9 +206,23 @@ module.exports = {
                 },
                 'interaction-studio/mcp-open-time-email',
                 {
+                    type: 'category',
+                    label: 'MC Personalization Snippets',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Marketing Cloud Personalization Snippets',
+                        description: 'Ready-to-use Salesforce Marketing Cloud Personalization (Interaction Studio) Snippets.',
+                        keywords: ['Marketing Cloud', 'Marketing Cloud Personalization', 'Interaction Studio', 'Personalisation'],
+                        image: 'img/og/og-image-mcp-snippets.png',
+                    },
+                    items: [
+                        'interaction-studio/snippets/mcp-catalog-etl-metadata-viewer',
+                    ],
+                },
+                {
                     type: 'link',
-                    label: '» MC Personalization Snippets',
-                    href: '/docs/category/mc-personalization-snippets/',
+                    label: '» MCP Templates Repository',
+                    href: 'https://github.com/MateuszDabrowski/mcp-campaign-templates',
                 },
                 {
                     type: 'link',
@@ -177,114 +233,6 @@ module.exports = {
                     type: 'link',
                     label: '» Official MCP Developer Docs',
                     href: 'https://developer.salesforce.com/docs/marketing/personalization/guide/get-started.html',
-                },
-            ],
-        },
-    ],
-    snippets: [
-        {
-            type: 'category',
-            label: 'SSJS Snippets',
-            link: {
-                type: 'generated-index',
-                title: 'SFMC SSJS Snippets',
-                description: 'Ready-to-use Salesforce Marketing Cloud SSJS Snippets.',
-                keywords: ['Marketing Cloud', 'SSJS'],
-                image: 'img/og/og-image-sfmc-ssjs-snippets.png',
-            },
-            items: [
-                'ssjs/snippets/ssjs-script-template',
-                'ssjs/snippets/sfmc-cloud-page-apps',
-                'ssjs/snippets/ssjs-mobileconnect-phone-change',
-                'ssjs/snippets/ampscript-in-ssjs',
-                {
-                    type: 'link',
-                    label: '» SSJS Docs',
-                    href: '/docs/category/ssjs/',
-                },
-            ],
-        },
-        {
-            type: 'category',
-            label: 'JS Snippets',
-            link: {
-                type: 'generated-index',
-                title: 'JS Snippets',
-                description: 'Ready-to-use JavaScript Snippets.',
-                keywords: ['JavaScript', 'JS'],
-                image: 'img/og/og-image-js-snippets.png',
-            },
-            items: [
-                'js/snippets/tailor-with-data',
-                'js/snippets/engage-with-countdown',
-                'js/snippets/export-import-document-sfmc-roles',
-                {
-                    type: 'link',
-                    label: '» JS Docs',
-                    href: '/docs/category/javascript/',
-                },
-            ],
-        },
-        {
-            type: 'category',
-            label: 'AMPScript Snippets',
-            link: {
-                type: 'generated-index',
-                title: 'SFMC AMPScript Snippets',
-                description: 'Ready-to-use Salesforce Marketing Cloud AMPScript Snippets.',
-                keywords: ['Marketing Cloud', 'AMPScript'],
-                image: 'img/og/og-image-sfmc-ampscript-snippets.png',
-            },
-            items: [
-                'ssjs/snippets/ampscript-in-ssjs',
-                {
-                    type: 'link',
-                    label: '» AMPScript Docs',
-                    href: '/docs/category/ampscript/',
-                },
-            ],
-        },
-        {
-            type: 'category',
-            label: 'SFMC SQL Snippets',
-            link: {
-                type: 'generated-index',
-                title: 'SFMC SQL Snippets',
-                description: 'Ready-to-use Salesforce Marketing Cloud SQL Snippets.',
-                keywords: ['Marketing Cloud', 'SQL'],
-                image: 'img/og/og-image-sfmc-sql-snippets.png',
-            },
-            items: [
-                'sql/snippets/sfmc-sql-debugging-email-sends',
-                'sql/snippets/sfmc-sql-debugging-value-length',
-                {
-                    type: 'link',
-                    label: '» SQL Docs',
-                    href: '/docs/category/sfmc-sql/',
-                },
-            ],
-        },
-        {
-            type: 'category',
-            label: 'MC Personalization Snippets',
-            link: {
-                type: 'generated-index',
-                title: 'Marketing Cloud Personalization Snippets',
-                description: 'Ready-to-use Salesforce Marketing Cloud Personalization (Interaction Studio) Snippets.',
-                keywords: ['Marketing Cloud', 'Marketing Cloud Personalization', 'Interaction Studio', 'Personalisation'],
-                image: 'img/og/og-image-mcp-snippets.png',
-            },
-            items: [
-                'interaction-studio/snippets/mcp-catalog-etl-metadata-viewer',
-                {
-                    type: 'link',
-                    label: '» MC Personalization Docs',
-                    href: '/docs/category/mc-personalization/',
-                },
-                {
-                    type: 'link',
-                    label: '» MCP Templates Repository',
-                    href: 'https://github.com/MateuszDabrowski/mcp-campaign-templates',
                 },
             ],
         },
