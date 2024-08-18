@@ -5,6 +5,7 @@ sidebar_label: Licence Limits
 description: With great flexibility come great limitations. Learn how SFMC limits can make or break your marketing operations.
 image: img/og/og-image-sfmc-licence-limits.png
 tags: [Marketing Cloud, Best Practice, Automation, API, Data Extensions, Setup]
+toc_max_heading_level: 4
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
@@ -48,7 +49,7 @@ Entitlements are paid add-ons that can extend your limits. They are extremely im
 
 The exact costs of the entitlements are a top secret and differs from client to client. You will have to check with your Account Executive how it looks for you.
 
-Of course, it's much better to architect your Marketing Cloud in a way that minimises the usage and monitor it ongoingly - I will be covering how to do it in the [impact & optimisations section](#limit-impact-and-optimisations).
+Of course, it's much better to architect your Marketing Cloud in a way that minimises the usage and monitor it ongoingly - I will be covering how to do it in the [impact & optimisations section](#limit-monitoring-and-optimisation).
 
 :::note You Should Know
 
@@ -78,22 +79,27 @@ As you can see - apart from the Contacts - it's not much. Better than nothing, b
 
 Unfortunately, at the moment, there is no increase to licence limits when you purchase additional Business Units. That's especially problematic with low (even for a single Business Unit) Yearly Automation Executions threshold. //TODO IdeaExchagne.
 
-## Limit Impact and Optimisations
+## Limit Monitoring and Optimisation
 
-We already know that there are multiple licence limits that are enforced now. We also know that you can always pay to solve that issue. But in many cases you can minimise the usage (with smaller or bigger impact on your operations). Let's dive into details, limit by limit.
+We already know that there are multiple SFMC licence limits that are enforced now. We also know that you can always pay to solve that issue. But in many cases you can minimise the usage (with smaller or bigger impact on your operations). Let's dive into details, limit by limit.
 
 ### Super Messages
 
-Super Messages are the base currency you need for SFMC to pay for engagement touchpoints with your customers. Sending an Email? It will cost you Super Message(s). Loading a Cloud Page? Yep, Super Messages. SMS? Tons of Super Messages. Product Recommendation from Einstein on your e-commerce platform? You know the drill. 
+Super Messages are the base currency you need for SFMC to pay for engagement touchpoints with your customers. Sending an Email? It will cost you Super Message(s). Loading a Cloud Page? Yep, Super Messages. SMS? Tons of Super Messages. Product Recommendation from Einstein on your e-commerce platform? You know the drill.
 
 But there are even Super Messages costs in your Super Messages cost with Marketing Cloud. There are features that increase the base costs. Sending an Email with higher priority? Additional 4 Super Messages. Interactive Email Form Block? Another Super Message. Einstein Content Selection? Add 2 more. And yes, it stacks. So sending 100K emails can cost you anything from 100K to nearly 1M Super Messages depending on what you picked for it.
 
- link='https://www.salesforce.com/products/marketing-cloud/sfmc/sms-ratio-updates/'
+<Button link='https://www.salesforce.com/products/marketing-cloud/sfmc/sms-ratio-updates/'
  text='Current Super Message Multipliers'
  newTab='true'
 />
 
-The fun part? There is no way to track it in the system, no Digital Wallet known from Data Cloud. Your only option is to ask your Account Executive for reports on Super Message utilization. And while you could try building a custom solution leveraging the Data Views to calculate the usage:
+#### Super Message Monitoring
+
+The fun part? There is no way to track it in the system. You won't find a Digital Wallet known from the Data Cloud. The only option is to ask your Account Executive for reports on Super Message utilization.
+
+
+While you could try building a custom solution leveraging the Data Views to calculate the usage:
 
 1. You won’t be able to access all the details (like Cloud Pages impressions or the optional configurations of the email).
 2. You won’t have easy time with assigining the correct multipliers for SMS, as it tends to change over time (and sometimes is even a bit different from the official docs based on the deal with Account Executive).
@@ -105,7 +111,7 @@ When requesting the Super Message report you can ask for some specific data poin
 
 :::
 
-#### Super Message Usage Optimizations
+#### Super Message Optimizations
 
 1. Code Resources
 2. High Priority Journeys instead of High Priority Triggered Sends
