@@ -22,7 +22,7 @@ module.exports = {
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
                     type: 'category',
-                    label: 'SSJS Snippets',
+                    label: '› SSJS Snippets',
                     link: {
                         type: 'generated-index',
                         title: 'SFMC SSJS Snippets',
@@ -60,7 +60,7 @@ module.exports = {
                 'js/js-dom',
                 {
                     type: 'category',
-                    label: 'JS Snippets',
+                    label: '› JS Snippets',
                     link: {
                         type: 'generated-index',
                         title: 'JS Snippets',
@@ -91,7 +91,7 @@ module.exports = {
                 'ssjs/ssjs-vs-ampscript-performance',
                 {
                     type: 'category',
-                    label: 'AMPScript Snippets',
+                    label: '› AMPScript Snippets',
                     link: {
                         type: 'generated-index',
                         title: 'SFMC AMPScript Snippets',
@@ -137,7 +137,7 @@ module.exports = {
                 'sql/sfmc-sql-style-guide',
                 {
                     type: 'category',
-                    label: 'SFMC SQL Snippets',
+                    label: '› SQL Snippets',
                     link: {
                         type: 'generated-index',
                         title: 'SFMC SQL Snippets',
@@ -163,7 +163,7 @@ module.exports = {
                 image: 'img/og/og-image-sfmc-config.png',
             },
             items: [
-                // 'config/sfmc-licence-limits',
+                'config/sfmc-licence-limits',
                 'config/sfmc-system-data-views',
                 'config/sfmc-mobile-connect-data-views',
                 'config/sfmc-mcc-integration-patterns',
@@ -173,7 +173,6 @@ module.exports = {
                 'config/sfmc-code-resource',
                 'config/sfmc-appexchange-solutions',
                 'config/sfmc-features-on-demand',
-
             ],
         },
         {
@@ -188,9 +187,10 @@ module.exports = {
             },
             items: [
                 'interaction-studio/mcp-catalog-architecture',
+                'interaction-studio/mcp-open-time-email',
                 {
                     type: 'category',
-                    label: 'Serverside Code',
+                    label: '› Serverside Code',
                     link: {
                         type: 'generated-index',
                         title: 'MCP Serverside Code',
@@ -204,13 +204,12 @@ module.exports = {
                         'interaction-studio/mcp-serverside-code-context',
                     ],
                 },
-                'interaction-studio/mcp-open-time-email',
                 {
                     type: 'category',
-                    label: 'MC Personalization Snippets',
+                    label: '› MC Personalization Snippets',
                     link: {
                         type: 'generated-index',
-                        title: 'Marketing Cloud Personalization Snippets',
+                        title: 'MCP Snippets',
                         description: 'Ready-to-use Salesforce Marketing Cloud Personalization (Interaction Studio) Snippets.',
                         keywords: ['Marketing Cloud', 'Marketing Cloud Personalization', 'Interaction Studio', 'Personalisation'],
                         image: 'img/og/og-image-mcp-snippets.png',
