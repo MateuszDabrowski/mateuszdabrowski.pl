@@ -126,15 +126,20 @@ On top of it, you will either way want to clean up your data to also optimise th
 
 ##### Channel Splitting
 
-Another option to optimise the spend is to optimise channels you are using. SMS channel is extremly costly - in most cases more than 20x the cost of email or push message.
+Another option to lower the Super Message spend is to optimise channels you are using. SMS are extremly costly - in most cases more than 20x the cost of email or push message. 
 
-Of course, there are scenarios where the SMS is the right channel for the message and that cost is worth it. But those are quite rare cases. Frequently you can easily optimise it by selecting the more frugal channel.
+Of course, there are scenarios where the SMS is the right channel for the message and that cost is worth it. But those are rare cases. Frequently you can easily optimise it by prioritizing the more frugal channel.
 
-For example, if a customer has an App installed - send a push message instead of SMS. If a customer (or you) doesn’t have an app, but there is email address available - send an email. And go for SMS only when mobile number is the only point of contact or when the message is crucial and previous methods didn’t trigger expected behaviour.
+For example, if a customer has an App installed - send a push message instead of SMS. If a customer doesn’t have an app, but there is email address available - send an email. And go for SMS only when the message is crucial and previous methods didn’t trigger expected behaviour. Or when mobile number is the only point of contact.
+
+##### Code Resources
+
+If you are using Cloud Pages for form handling or redirects - switch to [Code Resources](sfmc-code-resource.mdx). They have the same support for AMPScript and SSJS but - unlike Cloud Pages - doesn’t cost any Super Messages when opened. You won’t be able to replace the client-facing pages with them, but they are perfect for the logic. I covered more about that pattern in my [Web Studio Architecture webinar](../webinars/sfmc-webinar-architecting-web-solutions.mdx).
+
+##### OOTB Feature Scrutiny
 
 
 
-1. Code Resources
 2. High Priority Journeys instead of High Priority Triggered Sends
 5. Feature scrutiny (Interactive Form Block…)
 
