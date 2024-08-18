@@ -272,7 +272,6 @@ function isFutureDate(dateString) {
     return eventDate > currentDate;
 }
 
-
 /**
  * Renders the Home component with various metadata and sections.
  *
@@ -358,7 +357,7 @@ function Home() {
                                     Upcoming Events
                                 </h2>
                                 <div className={clsx('row', styles.eventRow)}>
-                                    {events.map((event, idx) => (
+                                    {futureEvents.map((event, idx) => (
                                         <Event key={idx} {...event} />
                                     ))}
                                 </div>
