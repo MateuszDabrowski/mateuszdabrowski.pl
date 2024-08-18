@@ -9,7 +9,7 @@ import * as React from 'react';
  * @param {boolean} hoursOnly - Display only hours if true
  * @return {JSX.Element} The countdown display
  */
-export const Countdown = ({ input, inputType = 'time', daysOnly = false, hoursOnly = false }) => {
+const Countdown = ({ input, inputType = 'time', daysOnly = false, hoursOnly = false }) => {
     const [remainingTime, setRemainingTime] = React.useState(
         inputType === 'time' ? input : new Date(input) - Date.now()
     );
@@ -72,3 +72,5 @@ export const Countdown = ({ input, inputType = 'time', daysOnly = false, hoursOn
         </>
     );
 };
+
+export { Countdown }
