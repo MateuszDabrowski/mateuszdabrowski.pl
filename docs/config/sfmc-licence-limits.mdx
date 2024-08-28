@@ -134,14 +134,17 @@ For example, if a customer has an App installed - send a push message instead of
 
 ##### Code Resources
 
-If you are using Cloud Pages for form handling or redirects - switch to [Code Resources](sfmc-code-resource.mdx). They have the same support for AMPScript and SSJS but - unlike Cloud Pages - doesn’t cost any Super Messages when opened. You won’t be able to replace the client-facing pages with them, but they are perfect for the logic. I covered more about that pattern in my [Web Studio Architecture webinar](../webinars/sfmc-webinar-architecting-web-solutions.mdx).
+If you are using Cloud Pages for form handling or redirects - switch to [Code Resources](./sfmc-code-resource.mdx). They have the same support for AMPScript and SSJS but - unlike Cloud Pages - doesn’t cost any Super Messages when opened. You won’t be able to replace the client-facing pages with them, but they are perfect for running the logic - for free. I covered more about that pattern in my [Web Studio Architecture webinar](../webinars/sfmc-webinar-architecting-web-solutions.mdx).
 
 ##### OOTB Feature Scrutiny
 
+Another way to optimise your Super Messages usage it to check if you are paying high multipliers for not really needed features. 
 
+Want to send your transactional messages really quickly? You don’t have to pay 4 Super Messages per email for High Priority Triggered Sends. You can use Transactonal Messaging API that doesn’t add any additional cost and you won’t be able to tell difference in the delivery speed.
 
-2. High Priority Journeys instead of High Priority Triggered Sends
-5. Feature scrutiny (Interactive Form Block…)
+Interactive Emails sounds awesome on paper, but when you consider how extremly limited the support for them is, you might want to instead use either direct link to Cloud Page form (with a query string trick for initial for prefill) or go full AMP for Email. Great thing to A/B test to check the ROI.
+
+Einstein Web and Email Recommendations are fine for small volumes, but for bigger ones it might actually be better to consider Marketing Cloud Personalization with all its additional features.
 
 ### Contacts
 
