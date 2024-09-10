@@ -419,7 +419,7 @@ module.exports = {
                     },
                     {
                         from: ['/docs/category/interaction-studio-snippets/'],
-                        to: '/docs/category/mc-personalization-snippets/',
+                        to: '/docs/category/-mc-personalization-snippets/',
                     },
                     {
                         from: ['/docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/'],
