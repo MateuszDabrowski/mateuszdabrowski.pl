@@ -249,6 +249,7 @@ module.exports = {
             },
             items: [
                 'webinars/sfmc-webinar-account-architecture',
+                'webinars/sfmc-webinar-salesforce-data-in-journey-builder',
                 'webinars/sfmc-webinar-architecting-web-solutions',
                 'webinars/sfmc-webinar-cloud-page-apps',
             ],

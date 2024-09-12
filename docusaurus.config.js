@@ -111,6 +111,10 @@ module.exports = {
                             to: 'docs/webinars/sfmc-webinar-account-architecture',
                         },
                         {
+                            label: 'Salesforce Data in Journey Builder',
+                            to: 'docs/webinars/sfmc-webinar-salesforce-data-in-journey-builder',
+                        },
+                        {
                             label: 'Architecting Web Solutions',
                             to: 'docs/webinars/sfmc-webinar-architecting-web-solutions',
                         },
