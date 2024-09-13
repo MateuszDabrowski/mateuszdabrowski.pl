@@ -25,6 +25,27 @@ import { YouTube } from '../../src/components/VideoEmbed.js';
 
 <YouTube videoId="a8RPRvVOXak" title="Salesforce Data in Journey Builder with MCC Webinar Recording" />
 
+<br/>
+
+
+:::note You Should Know
+
+During the webinar I mentioned the surprising behaviour of Salesforce Data Entry in terms of injection to a Journey based on [this Knowledge Article](https://help.salesforce.com/s/articleView?id=000381146&type=1).
+
+The actual logic for records that are not yet in the Salesforce Marketing Cloud is a bit more complex:
+
+Email Opt Out | Email IS NULL | Email fails List Detective | Result
+-- | -- | -- | --
+False | False | False | Added to Journey, All Contacts and All Subscribers
+False | True | False | Added to Journey and All Contacts (source = unspecified), but not to All Subscribers
+False | False | True |  Added to Journey and All Contacts (source = unspecified), but not to All Subscribers
+True | False | False | Added to Journey, All Contacts and All Subscriber with Unsubscribed Status
+True | True | False | __Not added to SFMC__
+True | False | True | __Not added to SFMC__
+
+:::
+
+
 ## Materials
 
 10 September 2024 | Salesforce Data in Journey Builder with Marketing Cloud Connect
