@@ -148,6 +148,59 @@ Einstein Web and Email Recommendations are fine for small volumes, but for bigge
 
 ### Contacts
 
+Second classic licence limit in Salesforce Marketing Cloud is the Contact Count. It’s also a soft limit - you can go over it, but it will trigger invite from the Account Executive to talk about additional [Entitlement SKUs](#marketing-cloud-limit-entitlements). The key to this limit is to understand what the Contacts are and how you can get way more of them than you expect.
+
+#### Contact Count Sources
+
+Contact in Marketing Cloud is very broad term covering all records that are billable in terms of licence. There are multiple groups used for that calculation:
+
+1. Records engaged through any SFMC channel (Email Studio, MobileConnect, MobilePush, GroupConnect) - including sends from Journey Builder, Automation Studio or API triggered sends.
+2. Records synchronized through Marketing Cloud Connect from Contact, Lead or User Object.
+3. Records injected into a Journey (for example, from [Salesforce Data Entry](../webinars/sfmc-webinar-salesforce-data-in-journey-builder.mdx#video)).
+4. Records manually imported to All Contacts list (either directly or inidrectly through, for example, import to All Subscribers).
+
+All those groups are summed up from all Business Units and all [Populations (legacy feature)](https://help.salesforce.com/s/articleView?id=sf.mc_cab_create_a_population.htm&type=5).
+
+####  Contact Count Monitoring
+
+Monitoring contacts thankfully is strightforward. There is a [dedicated report in Analytics Builder](https://help.salesforce.com/s/articleView?id=sf.mc_re_contacts_counts.htm&type=5) that you can use on your parent Business Unit (EID). It also provides additional data points about the Contacts to facilitate debugging sudden jumps in the count.
+
+:::note You Should Know
+
+Unfortuntaly, there is no way to get a Contact Count per Business Unit. It is because all Contacts are stored on the parent BU (EID) level, even if they are used only on a specific child BU.
+
+There are two, imperfect, workarounds:
+
+1. Whenever you import record to Marketing Cloud through any source, add Business Unit information to a custom Profile Attribute so that you can later retrieve it from [_EnterpriseAttribute Data View](./sfmc-system-data-views.mdx#_enterpriseattribute). Of course, it is easier said than done, as not all Contact sources will make this addition easy. However, if you mostly use [Synchronized Data Extensions in Multi-Org setup](./sfmc-mcc-integration-patterns.mdx) you should be able to leverage Automation Studio for that enrichment - just keep in mind the edge case of Contact injections coming from [Salesforce Data Entry in Journey Builder](../webinars/sfmc-webinar-salesforce-data-in-journey-builder.mdx).
+2. Another option - working even for past data - is to match Contacts against [_Job](./sfmc-system-data-views.mdx#_job_) or [_BusinessUnitUnsubscribes](./sfmc-system-data-views.mdx#_businessunitunsubscribes) Data Views that are Business Unit specific. Unfortunately it will work only for small subset of records that were sent an email within the last 6 months (in case of job). You may also try leveraging the [Send Logs](./sfmc-enhanced-send-log.mdx) if you configured them to be Business Unit Specific. However, it’s still a very limited match if you are using multichannel communication.
+
+:::
+
+#### Contact Count Optimizations
+
+##### Contact Minimalisation
+
+The best way to not hit the Contact Count limit is to not load unnecessary contacts to Salesforce Marketing Cloud. Sounds obvious, but it happens all the time. There are two key sources that frequently are the reason for adding useless records to your system:
+
+1. Marketing Cloud Connect
+
+- mcc checkbox logic
+
+2. Manual Imports
+
+##### Single Subscriber Key
+
+- multiple sources
+- manual imports
+- person accounts
+
+##### Contact Data Retention
+
+<Button link='./sfmc-contact-deletion.mdx'
+ text='SFMC Contact Deletion Guide'
+ newTab='true'
+/>
+
 ### Data Extension Storage
 
 ### Yearly Automation Executions
