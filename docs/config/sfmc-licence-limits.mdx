@@ -184,6 +184,22 @@ The best way to not hit the Contact Count limit is to not load unnecessary conta
 
 1. Marketing Cloud Connect
 
+When you are integrating Salesforce Marketing Cloud with Salesforce CRM you use Marketing Cloud Connect to define the objects and fields that will be synchronized for your marketing purposes. You have a lot of flexibility when it comes to the scope of sync, but due to object dependencies nearly every single implementation uses Contacts, Users and frequently also Leads. 
+
+All three of those objects are automatically impacting your Contact Count licence limit as soon as a record is synchronized. In most cases you don’t need all (or even most) of those records for your marketing. The solution? Marketing Cloud Connect Object Synchronization Configuration where you can configure the Records Collection rules.
+
+The choice is limited to three options: `All records`, `All records created since [date]` and the lifesaving `All records with [checkbox] equal [boolean]`. With that last feature you can pick a checkbox field that will serve as a flag for deciding whether given record will be synchronized.
+
+As long as you can define a business requirements around marketable records (for example, zero Users, records must have email address or mobile phone and leads cannot be converted), you can leverage this feature to manage the amount of billable Contacts, lower the usage of [Data Extension Storage limit](#data-extension-storage) and optimise the performance of all your queries.
+
+:::note You Should Know
+
+not formula
+single checkbox
+
+:::
+
+
 - mcc checkbox logic
 
 2. Manual Imports
