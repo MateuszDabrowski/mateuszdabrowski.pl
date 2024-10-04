@@ -8,6 +8,7 @@ tags: [Marketing Cloud, SQL]
 ---
 
 import { LeadText } from '../../src/components/LeadText.js';
+import { ButtonRow } from '../../src/components/Buttons.js';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import DocCardList from '@theme/DocCardList';
@@ -40,9 +41,23 @@ Finally, the significant limitation you might hit as your Marketing Cloud grows 
 
 Before we start with the real deal, let's cover where to learn to write SQL. I recommend getting a [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio). It's a free AppExchange add-on to Marketing Cloud developed by Salesforce. While it has cons, it's perfect for quickly learning how to query.
 
-If you cannot install this app in your Marketing Cloud, you still can learn using Query Activities in Automation Studio, but it will be much less user-friendly. For each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results.
+If you cannot install this app in your Marketing Cloud, there are still two ways to learn Marketing Cloud SQL:
+
+1. You can use Query Activities in Automation Studio. It will be much less user-friendly. For each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results. But it will let you train using the data you have in your platform.
+2. You can also use [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn Marketing Cloud SQL even if you don’t have access to the SFMC at all. It’s limited to the Data Views (on Pato’s instance) and a Data Extension you can create in the Playground itself, but as you can spin it quickly and have everything in one screen it’s perfect tool for quick experimentation or sharing tested transformations on sample data with colleagues. 
 
 My approach is to always start in [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio), and only once my SQL Query is complete and validated do I move it to Automation Studio.
+
+Once you have the right tool, it’s time to get the right knowledge. There are few formats available. If you like text and small knowledge checks - this page is the right choice. But if you prefer video or a challenge - Cam Roberts and Sabuhi Yahya got you covered:
+
+<ButtonRow
+ linkLeft='https://www.youtube.com/watch?v=g0SZmP3Kl_I&list=PLYjAMqKETE1pc21Q4_cCGq7tGyy-vy8qc'
+ textLeft='Cam’s SQL Playlist'
+ newTabLeft='true'
+ linkRight='https://marketingcloud30.com/challenge/sql30/'
+ textRight='Sabuhi’s SQL30 Challenge'
+ newTabRight='true'
+/>
 
 ## How to learn SFMC SQL
 
