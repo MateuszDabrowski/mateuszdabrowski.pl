@@ -477,11 +477,11 @@ It can be helpful if you only need to pass IDs to the e-commerce platform for it
 
 #### context.services.recommendations.smartSearch()
 
-The `smartSearch()` method allows you to get recommendations based on search query string and a recipe (for example, to recommend items when user interacts with a search box on the page):
+The `smartSearch()` method allows you to get recommendations based on search query string (at least 3 characters long) and a recipe (for example, to recommend items when user interacts with a search box on the page):
 
 ```ts {7} title="Return Items recommended using smart search"
 const smartSearchRequest = {
-    query: "blue%20jacket",
+    query: "jacket",
     maxResults: 1,
     recipeId: "7H5OK",
     userId: context.user.id
@@ -489,7 +489,7 @@ const smartSearchRequest = {
 const recommendedItems = context.services.recommendations.smartSearch(smartSearchRequest);
 ```
 
-The `query` parameter is looking for a match in the name (and only name), then filters found Items using the provided Recipe ID. Keep in mind that the Recipe cannot be using Ingredients requiring an Item anchor. It’s best to use the Any Items ingredient and then optionally sort it using [`smartSort()`](#contextservicesrecommendationssmartsort).
+The `query` parameter is looking for a match in the name and description (only), then filters found Items using the provided Recipe ID. Keep in mind that the Recipe cannot be using Ingredients requiring an Item anchor. It’s best to use the Any Items ingredient and then optionally sort it using [`smartSort()`](#contextservicesrecommendationssmartsort).
 
 :::note You Should Know
 
