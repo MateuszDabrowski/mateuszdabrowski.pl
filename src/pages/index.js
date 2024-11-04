@@ -226,6 +226,13 @@ const events = [
         description: 'The Journey Builder Deep Dive series covers the advanced features of the Journey Builder. This session will focus on the JB MCC integration features, use cases and gotchas.',
         url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketer-group-marketing-cloud-phoenix-united-states-presents-journey-builder-deep-dive-session-2-salesforce-crm-in-your-journeys-with-mc-connect/',
     },
+    {
+        title: 'From Salesforce to Agentforce: New Agentic World',
+        date: 'December 3, 2024',
+        place: 'Warszawa, Poland',
+        description: 'Session covering the Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market?',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-architect-group-warsaw-poland-presents-od-salesforce-do-agentforce-ai-w-praktyce/',
+    },
 ];
 
 /**
