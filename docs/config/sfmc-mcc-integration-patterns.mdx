@@ -77,12 +77,12 @@ The default Salesforce Marketing Cloud configuration allows you to connect all B
 ```mermaid
 graph LR
  crm1[(Salesforce CRM)]:::sfdc
- crmIU((CRM\nIntegration User)):::mcc
- sfmcIU((SFMC\nIntegration User)):::mcc
+ crmIU((CRM<br/>Integration User)):::mcc
+ sfmcIU((SFMC<br/>Integration User)):::mcc
  sfmc1[(Marketing Cloud)]:::sfmc
 
  crm1 --> crmIU
- crmIU -. Marketing Cloud\nConnect .-> sfmcIU
+ crmIU -. Marketing Cloud<br/>Connect .-> sfmcIU
  subgraph sfmc [Salesforce Marketing Cloud]
  sfmcIU --> sfmc1
  end
@@ -104,15 +104,15 @@ Keep it simple and rejoice in straightforward architecture with no limitations.
 ```mermaid
 graph LR
  crm1[(Salesforce CRM)]:::sfdc
- crmIU((CRM\nIntegration User)):::mcc
- sfmcIU((SFMC\nIntegration User)):::mcc
+ crmIU((CRM<br/>Integration User)):::mcc
+ sfmcIU((SFMC<br/>Integration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
  sfmcBUn[("Child Business Unit (n)")]:::sfmc
 
  crm1 --> crmIU
- crmIU -. Marketing Cloud\nConnect .-> sfmcIU
+ crmIU -. Marketing Cloud<br/>Connect .-> sfmcIU
  subgraph sfmc [Salesforce Marketing Cloud]
  sfmcIU --> sfmc1
  sfmc1 -.-> sfmcBU1
@@ -147,9 +147,9 @@ And as going Multi-Org is non-reversible, you should be 110% certain that custom
 ```mermaid
 graph LR
  crm1[(Salesforce CRM)]:::sfdc
- crm2[(Salesforce CRM\nDev Org)]:::sfdc
- crmIU((CRM\nIntegration User)):::mcc
- sfmcIU((SFMC\nIntegration User)):::mcc
+ crm2[(Salesforce CRM<br/>Dev Org)]:::sfdc
+ crmIU((CRM<br/>Integration User)):::mcc
+ sfmcIU((SFMC<br/>Integration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -157,7 +157,7 @@ graph LR
  sfmcBUDev[("Child Dev Business Unit")]:::sfmc
 
  crm1 --> crmIU
- crmIU -. Marketing Cloud\nConnect .-> sfmcIU
+ crmIU -. Marketing Cloud<br/>Connect .-> sfmcIU
  crm2 -. API Integration ....-> sfmcBUDev
  subgraph sfmc [Salesforce Marketing Cloud]
  sfmcIU --> sfmc1
@@ -194,12 +194,12 @@ Additionally, this approach pushes both test and production data to your Dev & T
 
 ```mermaid
 graph LR
- crm1[(Salesforce CRM\nOrg 1)]:::sfdc
- crm2[(Salesforce CRM\nOrg 2)]:::sfdc
- crm3[(Salesforce CRM\nOrg 3)]:::sfdc
- crm4[(Salesforce CRM\nMerge Org)]:::sfdc
- crmIU((CRM Merge Org\nIntegration User)):::mcc
- sfmcIU((SFMC\nIntegration User)):::mcc
+ crm1[(Salesforce CRM<br/>Org 1)]:::sfdc
+ crm2[(Salesforce CRM<br/>Org 2)]:::sfdc
+ crm3[(Salesforce CRM<br/>Org 3)]:::sfdc
+ crm4[(Salesforce CRM<br/>Merge Org)]:::sfdc
+ crmIU((CRM Merge Org<br/>Integration User)):::mcc
+ sfmcIU((SFMC<br/>Integration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -209,7 +209,7 @@ graph LR
  crm2 --> crm4
  crm3 --> crm4
  crm4 --> crmIU
- crmIU -. Marketing Cloud\nConnect .-> sfmcIU
+ crmIU -. Marketing Cloud<br/>Connect .-> sfmcIU
  subgraph sfmc [Salesforce Marketing Cloud]
  sfmcIU --> sfmc1
  sfmc1 -.-> sfmcBU1
@@ -243,12 +243,12 @@ The optional Salesforce Marketing Cloud configuration allows you to connect mult
 
 ```mermaid
 graph LR
- crm1[(Salesforce CRM\nOrg 1)]:::sfdc
- crm2[(Salesforce CRM\nDev Org)]:::sfdc
- crm1IU((CRM Org 1\nIntegration User)):::mcc
- crm2IU((CRM Dev Org\nIntegration User)):::mcc
- sfmc1IU((SFMC\nIntegration User)):::mcc
- sfmc2IU((SFMC\nIntegration User)):::mcc
+ crm1[(Salesforce CRM<br/>Org 1)]:::sfdc
+ crm2[(Salesforce CRM<br/>Dev Org)]:::sfdc
+ crm1IU((CRM Org 1<br/>Integration User)):::mcc
+ crm2IU((CRM Dev Org<br/>Integration User)):::mcc
+ sfmc1IU((SFMC<br/>Integration User)):::mcc
+ sfmc2IU((SFMC<br/>Integration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -256,9 +256,9 @@ graph LR
  sfmcBU4[("Child Dev Business Unit")]:::sfmc
 
  crm1 --> crm1IU
- crm1IU -. Marketing Cloud\nConnect .-> sfmc1IU
+ crm1IU -. Marketing Cloud<br/>Connect .-> sfmc1IU
  crm2 --> crm2IU
- crm2IU -. Marketing Cloud\nConnect .-> sfmc2IU
+ crm2IU -. Marketing Cloud<br/>Connect .-> sfmc2IU
  subgraph sfmc [Salesforce Marketing Cloud]
  sfmc1IU --> sfmc1
  sfmc1IU --> sfmcBU1
@@ -288,15 +288,15 @@ If you have more than five production Business Units or need different data filt
 
 ```mermaid
 graph LR
- crm1[(Salesforce CRM\nOrg 1)]:::sfdc
- crm2[(Salesforce CRM\nOrg 2)]:::sfdc
- crm3[(Salesforce CRM\nDev Org)]:::sfdc
- crm1IU((CRM Org 1\nIntegration User)):::mcc
- crm2IU((CRM Org 2\nIntegration User)):::mcc
- crm3IU((CRM Dev Org\nIntegration User)):::mcc
- sfmc1IU((SFMC\nIntegration User)):::mcc
- sfmc2IU((SFMC\nIntegration User)):::mcc
- sfmc3IU((SFMC\nIntegration User)):::mcc
+ crm1[(Salesforce CRM<br/>Org 1)]:::sfdc
+ crm2[(Salesforce CRM<br/>Org 2)]:::sfdc
+ crm3[(Salesforce CRM<br/>Dev Org)]:::sfdc
+ crm1IU((CRM Org 1<br/>Integration User)):::mcc
+ crm2IU((CRM Org 2<br/>Integration User)):::mcc
+ crm3IU((CRM Dev Org<br/>Integration User)):::mcc
+ sfmc1IU((SFMC<br/>Integration User)):::mcc
+ sfmc2IU((SFMC<br/>Integration User)):::mcc
+ sfmc3IU((SFMC<br/>Integration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
@@ -304,11 +304,11 @@ graph LR
  sfmcBU4[(Child Business Unit 4)]:::sfmc
 
  crm1 --> crm1IU
- crm1IU -. Marketing Cloud\nConnect .-> sfmc1IU
+ crm1IU -. Marketing Cloud<br/>Connect .-> sfmc1IU
  crm2 --> crm2IU
- crm2IU -. Marketing Cloud\nConnect .-> sfmc2IU
+ crm2IU -. Marketing Cloud<br/>Connect .-> sfmc2IU
  crm3 --> crm3IU
- crm3IU -. Marketing Cloud\nConnect .-> sfmc3IU
+ crm3IU -. Marketing Cloud<br/>Connect .-> sfmc3IU
  subgraph sfmc [Salesforce Marketing Cloud]
  sfmc1IU --> sfmc1
  sfmc2IU --> sfmcBU1
@@ -337,29 +337,29 @@ If you want to connect more than five production Business Units to a single CRM 
 
 ```mermaid
 graph LR
- crm1[(Salesforce CRM\nOrg 1)]:::sfdc
- crm2[(Salesforce CRM\nDev Org)]:::sfdc
- crm1IU((CRM Org 1\nIntegration User A)):::mcc
- crm2IU((CRM Org 1\nIntegration User B)):::mcc
- crm3IU((CRM Org 1\nIntegration User C)):::mcc
- crm4IU((CRM Dev Org\nIntegration User)):::mcc
- sfmc1IU((SFMC\nIntegration User)):::mcc
- sfmc2IU((SFMC\nIntegration User)):::mcc
- sfmc3IU((SFMC\nIntegration User)):::mcc
- sfmc4IU((SFMC\nIntegration User)):::mcc
+ crm1[(Salesforce CRM<br/>Org 1)]:::sfdc
+ crm2[(Salesforce CRM<br/>Dev Org)]:::sfdc
+ crm1IU((CRM Org 1<br/>Integration User A)):::mcc
+ crm2IU((CRM Org 1<br/>Integration User B)):::mcc
+ crm3IU((CRM Org 1<br/>Integration User C)):::mcc
+ crm4IU((CRM Dev Org<br/>Integration User)):::mcc
+ sfmc1IU((SFMC<br/>Integration User)):::mcc
+ sfmc2IU((SFMC<br/>Integration User)):::mcc
+ sfmc3IU((SFMC<br/>Integration User)):::mcc
+ sfmc4IU((SFMC<br/>Integration User)):::mcc
  sfmc1[(Parent Business Unit)]:::sfmc
  sfmcBU1[(Child Business Unit 1)]:::sfmc
  sfmcBU2[(Child Business Unit 2)]:::sfmc
  sfmcBU3[(Child Business Unit 3)]:::sfmc
 
  crm1 --> crm1IU
- crm1IU -. Marketing Cloud\nConnect Filter A .-> sfmc1IU
+ crm1IU -. Marketing Cloud<br/>Connect Filter A .-> sfmc1IU
  crm1 --> crm2IU
- crm2IU -. Marketing Cloud\nConnect Filter B .-> sfmc2IU
+ crm2IU -. Marketing Cloud<br/>Connect Filter B .-> sfmc2IU
  crm1 --> crm3IU
- crm3IU -. Marketing Cloud\nConnect Filter C .-> sfmc3IU
+ crm3IU -. Marketing Cloud<br/>Connect Filter C .-> sfmc3IU
  crm2 --> crm4IU
- crm4IU -. Marketing Cloud\nConnect .-> sfmc4IU
+ crm4IU -. Marketing Cloud<br/>Connect .-> sfmc4IU
  subgraph sfmc [Salesforce Marketing Cloud]
  sfmc1IU --> sfmc1
  sfmc2IU --> sfmcBU1
