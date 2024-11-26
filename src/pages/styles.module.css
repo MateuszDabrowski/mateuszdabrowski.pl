@@ -68,6 +68,29 @@
   }
 }
 
+@keyframes scrollDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+/* Animated word style */
+.animatedWord {
+  display: inline-block;
+  animation: scrollDown 1s ease-in-out;
+}
+
 .features {
   display: flex;
   align-items: center;

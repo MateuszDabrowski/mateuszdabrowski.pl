@@ -1,6 +1,6 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 
 import Layout from '@theme/Layout';
@@ -10,6 +10,62 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import styles from './styles.module.css';
+
+const dynamicHeroWords = {
+    headline: ['Marketing', 'Service', 'Sales', 'Commerce', 'Experience'],
+    subline: ['code', 'agent', 'flow'],
+};
+
+/**
+ * Hero Component with dynamic word-switching and scrolling animation.
+ *
+ * @return {JSX.Element} The updated Hero component.
+ */
+function Hero() {
+    const [currentPlatformIndex, setCurrentPlatformIndex] = useState(0);
+    const [currentToolIndex, setCurrentToolIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentPlatformIndex((prevIndex) => (prevIndex + 1) % dynamicHeroWords.headline.length);
+            setCurrentToolIndex((prevIndex) => (prevIndex + 1) % dynamicHeroWords.subline.length);
+        }, 5000); // Change every 3 seconds
+
+        return () => clearInterval(interval); // Cleanup interval on component unmount
+    }, []);
+
+    return (
+        <div className={styles.hero}>
+            <div className={styles.heroInner}>
+                <h1 className={styles.heroProjectTagline}>
+                    Automate{' '}
+                    <span
+                        className={clsx(styles.heroProjectKeywords, styles.fixedWidth)}
+                        aria-live="polite"
+                    >
+                        {dynamicHeroWords.headline[currentPlatformIndex]}
+                        {' '}Cloud
+                    </span>
+
+                </h1>
+                <h2 className={styles.heroProjectSubTagline}>
+                    <span className={styles.heroCodeFunction}>let</span>{' '}
+                    <span
+                        className={clsx(styles.heroCodeVariable, styles.fixedWidth)}
+                        aria-live="polite"
+                    >
+                        {dynamicHeroWords.subline[currentToolIndex]}
+                    </span>{' '}
+                    <span className={styles.heroCodeSymbols}>=</span>{' '}
+                    <span className={styles.heroCodeFunction}>do</span>
+                    <span className={styles.heroCodeSymbols}>(</span>
+                    <span className={styles.heroCodeValue}>'our job'</span>
+                    <span className={styles.heroCodeSymbols}>);</span>
+                </h2>
+            </div>
+        </div>
+    );
+}
 
 const features = [
     {
@@ -325,23 +381,8 @@ function Home() {
 
             <Layout title="Automate Marketing Automation" description={customFields.description} keywords={customFields.keywords}>
                 <main>
-                    {/* Automate Marketing Automation Tagline */}
-                    <div className={styles.hero}>
-                        <div className={styles.heroInner}>
-                            <h1 className={styles.heroProjectTagline}>
-                                Automate <span className={styles.heroProjectKeywords}>Marketing Automation</span>
-                            </h1>
-                            <h2 className={styles.heroProjectSubTagline}>
-                                <span className={styles.heroCodeFunction}>let</span>{' '}
-                                <span className={styles.heroCodeVariable}>code</span>{' '}
-                                <span className={styles.heroCodeSymbols}>=</span>{' '}
-                                <span className={styles.heroCodeFunction}>do</span>
-                                <span className={styles.heroCodeSymbols}>(</span>
-                                <span className={styles.heroCodeValue}>'our job'</span>
-                                <span className={styles.heroCodeSymbols}>);</span>
-                            </h2>
-                        </div>
-                    </div>
+                    {/* Tagline */}
+                    <Hero />
                     {/* Let's Connect, Pick My Brain and Change The Cloud Section */}
                     {features && features.length > 0 && (
                         <section className={styles.features}>
