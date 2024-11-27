@@ -44,7 +44,6 @@ function Hero() {
                         aria-live="polite"
                     >
                         {dynamicHeroWords.headline[currentPlatformIndex]}
-                        {' '}Cloud
                     </span>
 
                 </h1>
@@ -73,7 +72,7 @@ const features = [
         imageUrl: 'img/md_profile_icon.png',
         description: (
             <>
-                Ahoj! My name is Mateusz Dąbrowski. I'm Marketing Cloud Architect and Salesforce MVP. I find joy in telling the code to do my job. Got questions, suggestions or want to get in touch?
+                Ahoj! My name is Mateusz Dąbrowski. I'm Salesforce MVP & Architect. I find joy in deconstructing problems and automating solutions. Got questions, suggestions or want to get in touch?
             </>
         ),
         url: 'https://www.linkedin.com/in/mateusz-dabrowski-pl/',
@@ -84,18 +83,18 @@ const features = [
         imageUrl: 'img/md_brain_icon.png',
         description: (
             <>
-                My notes on AMPScript, SSJS, JavaScript, SQL and Configuration used in Marketing Cloud. Are you craving for more in-depth documentation or looking for tested code snippets? Hop in!
+                My notes on Marketing Cloud, Agentforce and other things Salesforce. Are you craving for more in-depth documentation or looking for tested code snippets, solutions and prompts? Hop in!
             </>
         ),
         url: '/docs/',
         cta: <>Docs & Snippets</>,
     },
     {
-        title: <>Change the Cloud</>,
+        title: <>Change the Clouds</>,
         imageUrl: 'img/md_cloud_icon.png',
         description: (
             <>
-                Salesforce Marketing Cloud is powerful. But it can always be more useful. Here you can find all my Salesforce IdeaExchange contributions. Vote to make Marketing Cloud a better tool.
+                Salesforce ecosystem is powerful. But it can always be more useful. Here you can find all my Salesforce IdeaExchange contributions. Vote to make <code>&#123;InsertCurrentName&#125;</code>&nbsp;Cloud a better tool.
             </>
         ),
         url: '/sites/category/ideas/',
@@ -241,7 +240,7 @@ function Newsletter() {
                     <div className="col col--8">
                         <h2 className={styles.newsletterHeading}>Stay in the loop</h2>
                         <p className={styles.newsletterDescription}>
-                            Get the latest Salesforce Marketing Cloud and Personalization tips, guides, and industry news straight to your inbox.
+                            Get the latest Salesforce Marketing Cloud and Agentforce tips, guides, and industry news straight to your inbox.
                         </p>
                     </div>
                     <div className="col col--4">

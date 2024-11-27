@@ -7,7 +7,7 @@ const darkTheme = themes.vsDark;
 
 module.exports = {
     title: 'Mateusz Dąbrowski',
-    tagline: 'Automate Marketing Automation',
+    tagline: 'Automate Salesforce',
     url: 'https://mateuszdabrowski.pl',
     baseUrl: '/',
     trailingSlash: true,
@@ -28,6 +28,7 @@ module.exports = {
             'SFMC',
             'Interaction Studio',
             'Personalization',
+            'Agentforce',
             'JavaScript',
             'AMPScript',
             'SSJS',
