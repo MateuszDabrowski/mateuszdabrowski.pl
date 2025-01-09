@@ -283,10 +283,17 @@ const events = [
     },
     {
         title: 'From Salesforce to Agentforce: New Agentic World',
-        date: 'December 3, 2024',
+        date: 'December 03, 2024',
         place: 'Warszawa, Poland',
-        description: 'Session covering the Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market?',
+        description: 'Architect Community Group session covering the Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
         url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-architect-group-warsaw-poland-presents-od-salesforce-do-agentforce-ai-w-praktyce/',
+    },
+    {
+        title: 'From Salesforce to Agentforce: The good, the bad, and the future',
+        date: 'March 28, 2025',
+        place: 'Wrocław, Poland',
+        description: 'Polish Dreamin\' session covering Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
+        url: 'https://www.coffeeforce.pl/dreamin',
     },
 ];
 
@@ -378,7 +385,7 @@ function Home() {
                 <meta name="theme-color" content="#212121" />
             </Head>
 
-            <Layout title="Automate Marketing Automation" description={customFields.description} keywords={customFields.keywords}>
+            <Layout title="Automate Salesforce" description={customFields.description} keywords={customFields.keywords}>
                 <main>
                     {/* Tagline */}
                     <Hero />

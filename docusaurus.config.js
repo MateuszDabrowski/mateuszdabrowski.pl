@@ -18,7 +18,7 @@ module.exports = {
     onBrokenAnchors: 'warn',
     onBrokenMarkdownLinks: 'warn',
     customFields: {
-        description: 'Personal website focused on making the most out of Salesforce Marketing Cloud. let code = do("our job").',
+        description: 'Personal website focused on making the most out of Salesforce. let code = do("our job").',
         keywords: [
             'Mateusz Dąbrowski',
             'mateuszdabrowski',
