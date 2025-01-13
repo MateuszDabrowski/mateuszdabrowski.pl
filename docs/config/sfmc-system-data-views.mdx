@@ -1260,7 +1260,7 @@ FROM _AutomationInstance AS automation
 When working with `_AutomationInstance` Data View:
 
 1. This data view stores all Automation __runs__, so you will see here separte row for each execution of the Automation. This is great basic audit tool for logging changes to the automation as well as a nice way to counting the amount of automation executions against licence limits.
-2. Key limitation of `_AutomationInstance` is that it shows data with 24 hours delay. If you need real-time information about Automation Studio status, you will still need an API approach. But for not that urget use cases this new option will be much more performant.
+2. Since Winter '25 Release `_AutomationActivityInstance` no longer shows data with 24 hours delay. Now all information is available in real-time.
 3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_automationactivityinstance) Data View.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationActivityInstance`](#_automationactivityinstance). It lets you find information about execution of each activity within the Automation in the specific run.
@@ -1290,6 +1290,7 @@ Provides historical information about Automation Studio Activity runs.
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
 MemberID | The Account ID for the Business Unit | Number |
+JobID | The job ID number for the email send | Number |
 AutomationName | The name of the automation | Text |
 AutomationCustomerKey | The unique ID of the automation | Text |
 AutomationInstanceID | The unique ID of the specific automation run | Text |
@@ -1355,6 +1356,7 @@ Value | Meaning
 ```sql
 SELECT
       automationActivity.MemberID
+    , automationActivity.JobID
     , automationActivity.AutomationName
     , automationActivity.AutomationCustomerKey
     , automationActivity.AutomationInstanceID
@@ -1377,11 +1379,12 @@ FROM _AutomationActivityInstance AS automationActivity
 When working with `_AutomationActivityInstance` Data View:
 
 1. This data view stores all Automation Activity __runs__, so you will see here separte row for each execution of each Activity. It is awesome tool for checking how optimised our Activities are and what errors are troubling our Automations.
-2. Key limitation of `_AutomationActivityInstance` is that it shows data with 24 hours delay.
+2. Since Winter '25 Release `_AutomationActivityInstance` no longer shows data with 24 hours delay. Now all information is available in real-time.
 3. If activity run errored out due to system or unclassified error, `ActivityInstanceStatusDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the error message.
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. The start and end dates in this data view can be leveraged with [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) and [`AVG`](../sql/sfmc-sql-aggregate-functions.mdx#avg) to calculate average time needed for each activity to finish. This information is crucial to assess whether the current automation Schedule is correct and where the optimisation efforts are required to protect against 30 minutes autokill.
 6. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationInstance`](#_automationinstance). It lets you find information about the Automation using this Activity.
+7. You can also leverage `JobID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) your email sending activities directly with [`_Job_`](#_job) and pull send-specific information from engagement Data Views.
 
 :::note You Should Know
 
