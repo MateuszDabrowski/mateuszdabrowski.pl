@@ -1384,7 +1384,7 @@ When working with `_AutomationActivityInstance` Data View:
 4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](../sql/sfmc-sql-date-functions.mdx) it might be best to use [`GETUTCDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](../sql/sfmc-sql-date-functions.mdx#getdate--getutcdate).
 5. The start and end dates in this data view can be leveraged with [`DATEDIFF`](../sql/sfmc-sql-date-functions.mdx#datediff) and [`AVG`](../sql/sfmc-sql-aggregate-functions.mdx#avg) to calculate average time needed for each activity to finish. This information is crucial to assess whether the current automation Schedule is correct and where the optimisation efforts are required to protect against 30 minutes autokill.
 6. `AutomationInstanceID` field is perfect to [`JOIN`](../sql/sfmc-sql-join.mdx) with [`_AutomationInstance`](#_automationinstance). It lets you find information about the Automation using this Activity.
-7. You can also leverage `JobID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) your email sending activities directly with [`_Job_`](#_job) and pull send-specific information from engagement Data Views.
+7. You can also leverage `JobID` field to [`JOIN`](../sql/sfmc-sql-join.mdx) your email sending activities directly with [`_Job`](#_job) and pull send-specific information from engagement Data Views.
 
 :::note You Should Know
 
