@@ -43,7 +43,7 @@ function Hero() {
                         className={clsx(styles.heroProjectKeywords, styles.fixedWidth)}
                         aria-live="polite"
                     >
-                        {dynamicHeroWords.headline[currentPlatformIndex]}
+                        Marketing Automation{/* {dynamicHeroWords.headline[currentPlatformIndex]} */}
                     </span>
 
                 </h1>
@@ -385,7 +385,7 @@ function Home() {
                 <meta name="theme-color" content="#212121" />
             </Head>
 
-            <Layout title="Automate Salesforce" description={customFields.description} keywords={customFields.keywords}>
+            <Layout title="Automate Marketing Automation" description={customFields.description} keywords={customFields.keywords}>
                 <main>
                     {/* Tagline */}
                     <Hero />
