@@ -69,12 +69,12 @@ But you shouldn't stop at writing code that just works. Apply a beauty-focused m
 ```sql title="Both queries work - which one would you rather read?"
 /* Beauty */
 SELECT
- wel.SubscriberKey AS SubscriberKey
- , wel.EmailAddress AS EmailAddress
- , o.EventDate AS OpenDate
+      wel.SubscriberKey     AS SubscriberKey
+    , wel.EmailAddress      AS EmailAddress
+    , o.EventDate           AS OpenDate
 FROM WelcomeCampaignSegment AS wel
- INNER JOIN _Open AS o
- ON o.SubscriberKey = wel.SubscriberKey
+    INNER JOIN _Open        AS o
+    ON o.SubscriberKey = wel.SubscriberKey
 
 /* and the Beast */
 Select a.subscriberkey, a.emailaddress, b.eventdate
@@ -127,7 +127,7 @@ Of course, it is not always possible - some things are possible only by coding o
  * @param {*} value - The value that needs to be debugged
  */
 function debugValue(description, value) {
- Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
 };
 ```
 
@@ -194,16 +194,16 @@ Think about KISS and YAGNI whenever you are coding, and it will help you deliver
 
 ```sql
 SELECT
- SubscriberKey
- , CASE
- WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE()) THEN 1
- WHEN DateJoined < DATEADD(MONTH, -1, GETDATE()) THEN 0
- END AS IsNewJoiner
+      SubscriberKey
+    , CASE
+        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE()) THEN 1
+        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE()) THEN 0
+    END AS IsNewJoiner
 FROM Ent._Subscribers
 /* When you only need two opposite CASE rules, simple IIF shorthand is better */
 SELECT
- SubscriberKey
- , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
+      SubscriberKey
+    , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
 FROM Ent._Subscribers
 ```
 
@@ -291,11 +291,11 @@ var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'U
 /* Chained ternary operator above might take less lines of code, but it's definitely not readable.
 Making it more sparse and flat is not only easier for the readars but also for future modifications */
 if (country == 'UK' || country == 'PL') {
- var region = 'EMEA';
+    var region = 'EMEA';
 } else if (country == 'US') {
- var region = 'AMER';
+    var region = 'AMER';
 } else {
- var region = 'APAC';
+    var region = 'APAC';
 };
 ```
 
