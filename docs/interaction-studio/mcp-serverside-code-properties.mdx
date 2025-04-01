@@ -188,10 +188,10 @@ Keep in mind that non-numeric values might break the campaign without any error 
 
 :::note You Should Know
 
-You can use `@unit` [decorator](#decorators) to provide a unit description next to the input. It has no impact on the outputted value but gives marketer information about the expected value:
+You can use `@units` [decorator](#decorators) to provide a unit description next to the input. It has no impact on the outputted value but gives marketer information about the expected value:
 
 ```ts {1} title="Unit decorator on number"
-@unit('ms')
+@units('ms')
 delayBeforeDisplay: number;
 ```
 
