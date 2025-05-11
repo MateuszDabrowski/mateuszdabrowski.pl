@@ -175,17 +175,10 @@ const highlightedArticles = [
         mainTag: 'SFMC Config',
     },
     {
-        title: <>Debugging Email Sends</>,
-        url: './docs/sql/snippets/sfmc-sql-debugging-email-sends/',
-        imageUrl: 'img/og/og-image-sql-debugging-email-sends.png',
-        description: 'Step-by-step guide to resolving problems with SFMC email sends.',
-        mainTag: 'SFMC SQL Snippets',
-    },
-    {
-        title: <>Behavioral Triggers</>,
-        url: './docs/config/sfmc-behavioral-triggers/',
-        imageUrl: 'img/og/og-image-sfmc-behavioral-triggers.png',
-        description: 'All you need to know about working with SFMC Behavioral Triggers.',
+        title: <>Mobile Connect Data Views</>,
+        url: './docs/config/sfmc-mobile-connect-data-views/',
+        imageUrl: 'img/og/og-image-sfmc-mobile-connect-data-views.png',
+        description: 'Dive deep into Mobile Connect data goldmine in SMS System Data Views.',
         mainTag: 'SFMC Config',
     },
     {
@@ -195,6 +188,14 @@ const highlightedArticles = [
         description: 'Everything you need to clean up your SFMC from dirty Contacts.',
         mainTag: 'SFMC Config',
     },
+    {
+        title: <>MCP Serverside Code Context</>,
+        url: './docs/interaction-studio/mcp-serverside-code-context/',
+        imageUrl: 'img/og/og-image-mcp-serverside-code-context.png',
+        description: 'Undocumented secrets of coding MCP Campaign Templates.',
+        mainTag: 'MC Personalization',
+    },
+
 ];
 
 /**
