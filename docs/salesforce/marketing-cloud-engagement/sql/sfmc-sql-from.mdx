@@ -1,0 +1,116 @@
+---
+id: sfmc-sql-from
+title: SFMC SQL From
+sidebar_label: From
+description: Tell the SQL query FROM where you need the data.
+image: img/og/og-image-sql-from.png
+tags: [Marketing Cloud, SQL]
+---
+
+import { LeadText } from '../../../../src/components/LeadText.js';
+
+<LeadText content='Tell the SQL query FROM where you need the data' />
+
+## Basic FROM
+
+The [`SELECT`](./sfmc-sql-select.mdx) statement alone won't do much. In most cases, once you have selected data you want to work with, you also need to pick the table (Data Extension or System Data View) `FROM` which the query will take the required columns. The code for this is simple:
+
+```sql {4} title="Get ContactKey and EmailAddress from Data Extension named MasterSubscriberDE"
+SELECT
+      ContactKey
+    , EmailAddress
+FROM MasterSubscriberDE
+```
+
+Just as with column names, if the name of your Data Extension has spaces or hyphens in it, be sure to enclose it in brackets.
+
+```sql {4}
+SELECT
+      ContactKey
+    , EmailAddress
+FROM [Master-Subscriber DE]
+```
+
+There are, however, two cases specific to Salesforce Marketing Cloud that adds a twist. System Data Views and Enterprise Data Extensions.
+
+## System Data Views
+
+Salesforce Marketing Cloud is partially hiding the [System Data Views](../config/sfmc-system-data-views.mdx) Data Extensions that store tracking data. Think about Email Sent history, Opens and Clicks, Bounces and Complaints. You can find there the tracking data for SMS and Social channels. Also, more technical data points, like Jobs and Enterprise Attributes, are available in the System Data Views. You won't find them in the User Interface but can query them with the SQL. The difference related to those tables is in naming convention. When querying them, you must leverage `_` prefix:
+
+```sql {8}
+SELECT
+      JobID
+    , EmailID
+    , EmailName
+    , EmailSubject
+    , EmailSendDefinition
+    , DeliveredTime
+FROM _Job
+```
+
+## Enterprise Data Extension
+
+Here the approach changes depending on where you run your Query. Shared Data Extensions and Synchronized Data Extensions are considered Enterprise and located on the Parent Business Unit level. It means that when you want to query them from the Parent, you need to write it the same way as for [standard Data Extensions](#basic-from).
+
+```sql {4}
+SELECT
+      ContactKey
+    , EmailAddress
+FROM SharedDataExtension
+```
+
+However, if you want to query them from the child Business Unit level, you will have to use a unique prefix - `Ent.`:
+
+```sql {4}
+SELECT
+      ContactKey
+    , EmailAddress
+FROM Ent.SharedDataExtension
+```
+
+The same is true for Synchronized Data Extensions. If you want to pull data from a child Business Unit, you will need the `Ent.` prefix:
+
+```sql {4}
+SELECT
+      Id    AS SubscriberKey
+    , Email AS EmailAddress
+FROM Ent.Contact_Salesforce
+```
+
+Remember that account permissions restrictions may apply.
+
+:::note You Should Know
+
+In the past, the opposite was also available. You could query Data Extension located on child Business Unit from the Parent. To do this, you had to use the MID of the child BU (visible next to BU name on the Business Unit selection drop down) as a prefix:
+
+```sql {4} title="On Parent BU query DataExtensionOnChildBU from Child BU with MID 5123456"
+SELECT
+      ContactKey
+    , EmailAddress
+FROM 5123456.DataExtensionOnChildBU
+```
+
+Since 2020, trying to do so will result in an error: `An error occurred while checking the query syntax. Errors: The 123456.DataExtensionOnChildBU table has a multi-part specification. This is not allowed.` The workaround is to use Shared Data Extensions.
+
+Marketing Cloud legend says that there are still some instances that support this legacy type of querying. You might try it, but even if you are the lucky one, I would recommend using the Shared Data Extensions to worry not about unexpected Automation errors in the future.
+
+:::
+
+## Enterprise System Data Views
+
+Using [`Ent.`](#enterprise-data-extension) prefix on a System Data View might give you different results.
+
+For example, if you query _Subscribers on child Business Unit, you will receive data only for the subscribers stored in this child BU.
+
+By adding the `Ent.` prefix, however, you can query all your subscribers on the Parent BU:
+
+```sql {6}
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , DateJoined
+    , DateUnsubscribed
+FROM Ent._Subscribers
+```
+
+When selecting Data Extensions to pull data from, remember the best practice to avoid ones spanning a cumulative field width greater than 4000 characters. They will badly impact the performance of your query. If needed, consider splitting your query into multiple consecutive queries.

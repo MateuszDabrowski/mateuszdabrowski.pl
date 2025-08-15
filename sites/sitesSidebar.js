@@ -10,8 +10,8 @@ module.exports = {
                 image: 'img/og/og-image-ideas.png',
             },
             items: [
-                'ideas/marketing-cloud-ideas',
-                'ideas/mc-personalization-ideas',
+                'ideas/salesforce/marketing-cloud-engagement-ideas',
+                'ideas/salesforce/marketing-cloud-personalization-ideas',
             ],
         },
     ],

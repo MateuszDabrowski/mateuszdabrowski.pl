@@ -1,0 +1,164 @@
+---
+id: ampscript-in-ssjs
+title: AMPScript in SSJS
+sidebar_label: AMPScript in SSJS
+description: Not all AMPScript functions are available in SSJS. But you still can use them.
+image: img/og/og-image-ampscript-in-ssjs.png
+tags: [Marketing Cloud, SSJS, AMPScript, Snippet]
+---
+
+import { LeadText } from '../../../../../src/components/LeadText.js';
+
+<LeadText content="Not all AMPScript functions are available in SSJS. But you still can use them." />
+
+## Problem with missing SSJS functions
+
+SSJS language has many features missing from AMPScript - [try/catch blocks](../debugging-ssjs.mdx#try-to-catch-the-error), arrays and objects to mention the most used ones. But some things are available only in AMPScript.
+
+Some, like `ProperCase` function, can be recreated in SSJS with a bit of RegEx creativity. Other, like `RetrieveSalesforceObjects`, cannot (unless you decide on building custom wrappers around Salesforce API).
+
+Either way, you are in for a time consuming, error-prone custom coding. Is there a better way?
+
+## Solution
+
+You guessed it - yes, there is a better way. You can run AMPScript code with your SSJS. The simple answer to this problem is `Platform.Function.TreatAsContent()` SSJS function.
+
+But the good answer is few lines longer:
+
+```js
+/**
+ * @function ampScript
+ * @description Executes provided AMPScript code and returns value assigned to @Response variable
+ * @param {string} code - String of AMPScript code without start/end delimiters. Final outcome should be assigned to @Response to enable passing back to SSJS
+ * @return {?string} - Returns value from AMPScript execution if any was assigned to @Response variable
+ */
+function ampScript(code) {
+    var ampBlock = '\%\%[' + code + ']\%\%';
+    Platform.Function.TreatAsContent(ampBlock);
+    return Variable.GetValue('@response');
+};
+```
+
+:::note You Should Know
+
+As we are using `Variable.GetValue` here, you will need to import Salesforce Marketing Cloud SSJS Core library at the top of your script.
+
+Just add `Platform.Load('core', '1')` right after `<script runat="server">` and you are good to go!
+
+:::
+
+Instead of writing your AMPScript execution wrapper every time from scratch, here is a ready-to-use function that you can copy-paste across your scripts that allows you to use ampscript and do it gracefully.
+
+Sure, it still uses the `Platform.Function.TreatAsContent()` at its heart, but there are two additional tricks:
+
+1. `var ampBlock = '\%\%[' + code + ']\%\%'`: allows you to write AMPScript without the block symbols and adds them in the last moment. This way, Marketing Cloud will execute your code once you pass it to the `Platform.Function.TreatAsContent()` function. It is essential when you want to [insert SSJS in your AMPScript](#dynamic-ampscript-code).
+2. `return Variable.GetValue('@response');`: allows you to pull back data from your AMPScript to the SSJS. For it to work, you must `SET` the `@response` variable in your AMPScript. Whatever value you assign to the `@response` in the AMPScript context, will be returned to your SSJS context.
+
+How to use it? Pass the AMPScript code in the function and, if you want to do something with `@response` value, assign it to an SSJS variable.
+
+```js title="As JavaScript lacks native ProperCase, we can use AMPScript for that"
+var properCaseFullName = ampScript("SET @response = ProperCase(AttributeValue('fullName'))");
+```
+
+:::note You Should Know
+
+Be sure only to use this approach if there is no equivalent SSJS solution, as mixing languages will [impact performance](../ssjs-vs-ampscript-performance.mdx). It is crucial for code in the messages that Marketing Cloud will execute on send time.
+
+For example, if you are only planning to use ProperCase, it might be better to go the RegEx path for significant volume messaging.
+
+:::
+
+## Options
+
+You can adapt the above script to suit your needs better.
+
+### Long AMPScript Code
+
+Above example is a short and straightforward AMPScript. However, you will need a bit more code to do the job in many cases. You can write it as a single line if you want, but I recommend you split it into separate lines for readability purposes.
+
+You can do it quickly, by just concatenating strings with `+`.
+
+```js title="Check whether there is a Campaign in Salesforce called 'WelcomeCampaign2021'"
+var response = ampScript("SET @retrieve = RetrieveSalesforceObjects("
+    + "'Campaign', 'Id', 'Name', '=', 'WelcomeCampaign2021') "
+    + "IF RowCount(@retrieve) > 0 THEN SET @response = 'true' "
+    + "ELSE SET @response = 'false' ENDIF");
+```
+
+:::note You Should Know
+
+To use any Salesforce Object functions, you will need to have Marketing Cloud Connect implemented to tie in your Marketing Cloud and Sales or Service Cloud.
+
+:::
+
+Be sure always to check, whether you have space either at the end of the previous line or beginning of the new line. Otherwise, after concatenation, you might end up with incorrect code.
+
+### Dynamic AMPScript Code
+
+Using AMPScript via SSJS not only enables additional features for Server-Side JavaScript. It also allows you to make your AMPScript more dynamic by leveraging variables in the loops:
+
+```js {4} title="Same check as above, but for multiple campaigns and output to an array"
+var availableCampaigns = [];
+for (var campaignName in campaignList) {
+    var response = ampScript("SET @retrieve = RetrieveSalesforceObjects("
+        + "'Campaign', 'Id', 'Name', '=', '" + campaignName + "') "
+        + "IF RowCount(@retrieve) > 0 THEN SET @response = 'true' "
+        + "ELSE SET @response = 'false' ENDIF");
+    if (reponse) availableCampaigns.push(campaignName);
+};
+```
+
+It is even more useful when you have variability in what you want to create. For example, let's consider a use case where you want to create Campaigns in Salesforce from Marketing Cloud, but only some of your campaigns have an End Date known from the beginning.
+
+In `CreateSalesforceObject` AMPScript function, you must pass all fields with their values and a count of fields added to the object. With SSJS, you can use the `length` method to count the Campaign's fields in each loop's run. Then pass the outcome to the call parameters just as in the example above.
+
+### Working with AMPScript on Lists & Objects
+
+Unfortunately, AMPScript doesn't support list or objects. Fortunately, SSJS do. We will need a bit of creativity to pull that off, but it makes life so much easier once done.
+
+The easy example is visible in the [previous section](#dynamic-ampscript-code) - the snippet creates an array of Campaigns available in Salesforce.
+
+But we can go so much farther than that:
+
+```js {8-9,11,14}
+var response = ampScript("SET @retrieve = RetrieveSalesforceObjects("
+    + "'Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True') "
+    + "SET @rowCount = RowCount(@retrieve) SET @response = '' "
+    + "IF @rowCount > 0 THEN FOR @counter = 1 TO @rowCount DO "
+    + "SET @row = Row(@retrieve, @counter) "
+    + "SET @name = Field(@row, 'Name') SET @id = Field(@row, 'Id') "
+    + "SET @startDate = Field(@row, 'StartDate') SET @endDate = Field(@row, 'EndDate') "
+    + "SET @rowData = Concat(@name, ',', @id, ',', @startDate, ',', @endDate) "
+    + "SET @response = Concat(@response, @rowData, ';') "
+    + "NEXT @counter ENDIF");
+response = response.split(';');
+var campaignData = [];
+for (var i = 0; i < response.length - 1; i++) {
+    var responseRowData = response[i].split(',');
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    });
+};
+```
+
+Ok, a lot to unpack. But trust me, it's worth it. Let's go!
+
+The first line is easy - we are using `RetrieveSalesforceObjects` function to get a list of all active Salesforce Campaigns and limit the fields we need about them.
+
+Next, we have a standard AMPScript way of iterating over the function's outcomes.
+
+Now starts the exciting part - we are creating an AMPScript variable for each field, concatenate it using a comma and then adding it to the end of the `@response` variable - semicolon-separated.
+
+```css title="Structure of the AMPScript output"
+Name1,Id1,StartDate1,EndDate1;Name2,Id2,StartDate2,EndDate2;Name3,Id3,StartDate3,EndDate3
+```
+
+As we assigned the final string to `@response`, the function will return it to the SSJS context.
+
+Once it's there, we are leveraging the SSJS by splitting the string on semicolons to create an array of substrings containing each Salesforce Campaign's details.
+
+Then we loop over it and split each Campaign string by comma. With the deconstructed data, we create a nice and clean `campaignData` object that we can use in the rest of our code. Neat.
+

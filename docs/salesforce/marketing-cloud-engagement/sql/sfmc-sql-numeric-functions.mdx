@@ -1,0 +1,178 @@
+---
+id: sfmc-sql-numeric-functions
+title: SFMC SQL Numeric Functions
+sidebar_label: Numeric Functions
+description: Take control over numbers with built-in SQL functions. Let the query do the job.
+image: img/og/og-image-sql-numeric-functions.png
+tags: [Marketing Cloud, SQL]
+---
+
+import { LeadText } from '../../../../src/components/LeadText.js';
+
+<LeadText content='Take control over numbers with built-in SQL functions. Let the query do the job.' />
+
+Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
+
+Here, I will cover only selected numeric functions that I find most useful for Marketing Automation purposes. They will help you do the necessary calculations or format the numbers to match your needs.
+
+## MIN and MAX
+
+`MIN` and `MAX` functions allow you to find the minimum and maximum values of column(s) in the selected data extension.
+
+```sql {1} title="What is your highest subscriber bounce count?"
+SELECT MAX(s.BounceCount) AS HighestBounceCount
+FROM _Subscribers AS s
+```
+
+Will you use it frequently? Probably not. Is it useless? Oh no.
+
+Let's say you have a data extension storing information about a competition - including the number of points that participants gathered. Now it is time to send congratulations to the winner. `MAX` function will make it easy.
+
+```sql {7-8} title="Get a Subscriber Key and Points of all the customers that have the biggest amount of points"
+SELECT
+      comp.SubscriberKey
+    , comp.CompetitionPoints
+FROM CompetitionDataExtension AS comp
+WHERE
+    comp.CompetitionPoints = (
+        SELECT MAX(comp2.CompetitionPoints)
+        FROM CompetitionDataExtension AS comp2
+    )
+```
+
+However, my favourite use case for `MAX` is debugging Data Extensions and their values. Especially useful when working with data imports from external systems — for example, pulling data from Sales Cloud via Marketing Cloud Connect.
+
+You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to standard Data Extensions crashes with cryptic information about truncated data. In most cases, the reason is a value exceeding the maximum length you set for the column in your local Data Extension.
+
+How to find the culprit? With `MAX` and [`LEN`](./sfmc-sql-string-functions.mdx#len) functions:
+
+```sql {2-3} title="For Datetime values, it will output 19 characters"
+SELECT
+      MAX(LEN(c.Id))    AS SubscriberKey
+    , MAX(LEN(c.Email)) AS EmailAddress
+    /* Rest of the Contact fields you synchronized from Contact object */
+FROM Contact_Salesforce AS c
+```
+
+This query can be used _ad hoc_ in [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation.
+
+You can also extend it with [`WHERE`](./sfmc-sql-where.mdx) containing current lengths of fields in that data extension and make it part of your automation. It will find the records too long for the data extension, log them into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
+
+`MAX` and `MIN` are also instrumental as a [part of an aggregate query](./sfmc-sql-aggregate-functions.mdx#min-and-max).
+
+## AVG
+
+The `AVG` function returns the average value in a given column (excluding `NULL` values).
+
+```sql {1} title="What is your average subscriber bounce count?"
+SELECT AVG(s.BounceCount) AS AverageBounceCount
+FROM _Subscribers AS s
+```
+
+The above example might not look like much value, but with the help of [`DATEDIFF`](./sfmc-sql-date-functions.mdx#datediff) and [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) functions you can make it much more interesting:
+
+```sql {1} title="What is the average age of your Subscribers?"
+SELECT DATEDIFF(MONTH, CONVERT(DATETIME, AVG(CONVERT(FLOAT, DateJoined))), GETDATE()) AS SubscribersAverageAgeInMonths
+FROM _Subscribers
+```
+
+However, `AVG` shows its true power with [`WHERE`](./sfmc-sql-where.mdx) filtering:
+
+```sql {3} title="Let's get your above-average spenders for an e-commerce up-sell campaign"
+SELECT SubscriberKey
+FROM Purchases
+WHERE Price > AVG(Price)
+```
+
+You can mix two previous queries to create separate segments for your fresh and old subscribers.
+
+`AVG` function is also beneficial as a [part of an aggregate query](./sfmc-sql-aggregate-functions.mdx#avg).
+
+## SUM
+
+The `SUM` function allows you to calculate the sum of values.
+
+```sql {1} title="What is your total bounce count?"
+SELECT SUM(BounceCount) AS AllBouncesCount
+FROM _Subscribers
+```
+
+It is helpful nearly only as a [part of an aggregate query](./sfmc-sql-aggregate-functions.mdx#sum).
+
+## FORMAT with Numbers
+
+The `FORMAT` works only with datetime and numeric values, outputs a string and requires:
+
+1. Value to be formatted (can be a column, string or function)
+2. Format specifier to be applied
+3. Optionally - ISO culture code
+
+It is a perfect tool to manipulate any numbers (or numeric strings with the help of [conversion](./sfmc-sql-conversion-functions.mdx)) available in your Data Extensions.
+
+### Standard number formats
+
+Standard formats use one required and one optional element.
+
+The required one is the format specifier - which tells what the outcome should be. The optional is precision - it allows you to change the value on the go (for example, round it to two decimal places). If you do not use precision, the value will stay with its current precision.
+
+```sql title="Precision might lead to rounding. Note also the US thousands separator"
+SELECT
+      FORMAT(1234.56, 'N')  AS WithoutCustomPrecision     /* Output: 1,234.56 */
+    , FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
+```
+
+There are nine standard formats available, but only a few are useful on a day-to-day basis in Salesforce Marketing Cloud:
+
+| Format specifier | Description | Example (for US culture) | Comment |
+| -- | -- | -- | -- |
+| 'C'/'c' | Currency | $1,234.56 | You can pass a culture code as a third argument to format the value straight to needed currency (including currency symbol and appropriate separators) |
+| 'D'/'d' | Decimal | 1235 | Support integers only. Precision enforces a minimum number of digits (great for adding leading zeroes) |
+| 'N'/'n' | Number | 1,234.56 | Precision enforces a number of decimal places. You can pass a culture code as a third argument to format the value to country-specific notation |
+| 'P'/'p' | Percent | 12.34 % | Precision enforces a number of decimal places. You can pass a culture code as a third argument to format the value to country-specific notation |
+
+Just as highlighted in the table header - the examples are for the SFMC default US culture formating.
+
+You can find the complete list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings).
+
+### Custom number formats
+
+Of course, the formats shown above are not the limit of what you can do. Whenever you want something different, you can create a custom format by just providing a pattern:
+
+| Format specifier | Description | Comments |
+| -- | -- | -- |
+| '0' | Zero placeholder | Replaces the zero with the digit if available; otherwise, zero appears in the result string. |
+| '#' | Number placeholder | Replaces the zero with the digit if available; otherwise, no number appears in the result string. It also ignores not significant zeroes (like leading ones) |
+| '.' | Leading point | Informs the format function about desired decimal separator place |
+| '%' | Percentage placeholder | Multiplies the number by 100 and inserts per cent sign in the selected place |
+| '\' | Escape character | Allows you to escape any format specifier symbol if you want it literally in the outcome |
+| 'string'/"string" | String literal | Passes the string straight to the outcome |
+| ';' | Section separator | Allows you to pass different custom formats for positive, zero and negative values |
+
+Again, the examples are for the default US culture formatting and might look different for different cultures (for example, hour separator might be changed automatically to `.` for Italy).
+
+You can find the complete list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings).
+
+The custom number formats can do wonders for your personalization needs. Example? Sure!
+
+Let's say you want your customers to validate their phone numbers before you leverage the SMS channel. You have them in Mobile Connect compliant format (only digits, no spaces, country code included). `48520935815` is not a very user-friendly format to validate. Let's fix it:
+
+```sql {3} title="From '48520935815' to '(48) 520 935 815' in one line"
+SELECT
+      s.SubscriberKey
+    , FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone /* Output: (48) 520 935 815 */
+FROM _Subscribers AS s
+    INNER JOIN EnterpriseAttribute AS ea
+        ON ea._SubscriberID = s.SubscriberID
+```
+
+As you can see, we had to use the [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert) function with the `BIGINT` parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it quickly. It could get even better with [`LIKE` in `CASE`](./sfmc-sql-case.mdx#like-in-case) used to create different formats depending on the country code.
+
+Another use case? Let's assume we have a VIPDiscount field. It contains a number between 0.00 and 0.99 that tells what discount is appropriate for the selected user based on their VIP status. You store it in decimal numeric because it is a much more accessible format for SSJS or AMPScript to calculate the final price of items promoted in communication.
+
+However, showing the customer that he has a `0.33` discount is not a good idea. `FORMAT` can help us once more:
+
+```sql title="Depending on your needs you may use Standard format or a Custom one"
+SELECT
+      FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount /* Output: 33.00 % */
+    , FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount   /* Output: -33% */
+```

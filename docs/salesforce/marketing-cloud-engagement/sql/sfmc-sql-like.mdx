@@ -1,0 +1,389 @@
+---
+id: sfmc-sql-like
+title: SFMC SQL Like
+sidebar_label: Like
+description: Get a LIKE and build more flexible SQL queries.
+image: img/og/og-image-sql-like.png
+tags: [Marketing Cloud, SQL]
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { LeadText } from '../../../../src/components/LeadText.js';
+
+<LeadText content='Get a LIKE and build more flexible SQL queries.' />
+
+`LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](./sfmc-sql-case.mdx#like-in-case) and [`WHERE`](./sfmc-sql-where.mdx#like-operator) statements.
+
+In [`SELECT`](./sfmc-sql-case.mdx#like-in-case), think about normalizing and categorizing data. In [`WHERE`](./sfmc-sql-where.mdx#like-operator) - about filtering with just a part of the value (for example email domain in `EmailAddress` field) or with a single element of multi picklist (for instance finding one value within the comma-separated list of all purchased products).
+
+There are two levels of `LIKE` usage. First is focused on two essential character wildcards and is very straightforward — the second use full potential of group operator. Let's go through both with practical examples.
+
+## LIKE with Wildcard
+
+Wildcards available in `LIKE`:
+
+Wildcard | Description
+-- | --
+`%` | Zero, one or more characters
+`_` | Exactly one character
+
+### % Wildcard
+
+The `%` symbol allows you to match zero, one or more characters within your `LIKE` search.
+
+For example, you can search for `%@mateuszdabrowski.pl` domain in `EmailAddress` to get all contacts with an email address ending with `@mateuszdabrowski.pl`.
+
+You can change this filter to `%@mateuszdabrowski.%`. With the second wildcard at the end, it will be looking for any email address that contains `@mateuszdabrowski.` but may have more text on either side of it. It will capture all emails ending with `@mateuszdabrowski.pl` domain just as the previous filter, but also match those with `@mateuszdabrowski.com`, `@mateuszdabrowski.sfmc.eu` and other top-level domains.
+
+<Tabs
+    defaultValue='where'
+    values={[
+        {label: 'WHERE', value: 'where'},
+        {label: 'SELECT', value: 'select'},
+    ]}
+>
+<TabItem value='where'>
+
+
+```sql {4} title="All subscribers that have an email address ending with 'mateuszdabrowski.pl' domain"
+SELECT
+      SubscriberKey
+    , EmailAddress
+  FROM _Subscribers
+ WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
+```
+
+In the above example, I used two wildcards - one before and one just after `@` symbol. It allows not only to catch contacts in `@mateuszdabrowski.pl` domain, but also any subdomain, like `@dev.mateuszdabrowski.pl`.
+
+In the marketing automation world, however, `LIKE` operator is especially useful for selecting contacts based on the multi picklist columns. Consider `ActiveSubscriptions` field that can have any combination of values `Phone`, `TV`, `Internet`.
+
+Suppose you would like to select all contacts with active phone subscription. In that case, you shouldn't use [equality operator](./sfmc-sql-where.mdx#equality-operators) (`WHERE ActiveSubscription = 'Phone'`), as it would return only contacts that have just this one subscription. Some of your customers might, however, have multiple (phone and tv or phone and internet plans). For SQL, a field containing `'Phone'` is not equal with the one having a value of `'Phone', Internet'`. `LIKE` operator is here to save the day.
+
+```sql {5} title="All subscribers that have at least Phone subscription"
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM MasterSubscriberDE
+WHERE ActiveSubscription LIKE '%Phone%'
+```
+
+</TabItem>
+<TabItem value='select'>
+
+```sql {4} title="Categorize your database into either Internal or External records based on email domain"
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN EmailAddress LIKE '%@%mateuszdabrowski.pl' THEN 'Internal'
+        ELSE 'External'
+      END AS ContactType
+FROM _Subscribers
+```
+
+In the above example, I used two wildcards - one before and one just after `@` symbol. It allows not only to catch contacts in `@mateuszdabrowski.pl` domain, but also any subdomain, like `@dev.mateuszdabrowski.pl`.
+
+</TabItem>
+</Tabs>
+
+:::note You Should Know
+
+Always be sure to check whether you apply the wildcards correctly. Popular error is to have either too narrow or too wide scope of your filter. A common issue is lack of `%` operator in the end or beginning of the searched string. For your query, it means that the value should end there.
+
+For example, `WHERE EmailAddress LIKE '@gmail.com'` should provide you zero results, as it would be looking for precisely the `@gmail.com` value in the `EmailAddress` field - without any characters before the `@` symbol.
+
+:::
+
+### _ Wildcard
+
+Another wildcard working with `LIKE` is the underscore `_`. It is much simpler as all it does it pretending to be any single character.
+
+Let's consider a scenario, where you have a multi picklist field containing comma-separated product IDs. For example, a customer with three recommended products might have a value `1,14,27`. The system codes single digit values to subscriptions, and two-digit codes to various product categories. Let's use it in the query.
+
+<Tabs
+    defaultValue='where'
+    values={[
+        {label: 'WHERE', value: 'where'},
+        {label: 'SELECT', value: 'select'},
+    ]}
+>
+<TabItem value='where'>
+
+
+```sql {6-10} title="All subscribers with at least one subscription product in their recommendations"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
+FROM EcommerceUpsellDE
+WHERE
+    RecommendedProducts     LIKE '_'
+    OR RecommendedProducts  LIKE '_,%'
+    OR RecommendedProducts  LIKE '%,_,%'
+    OR RecommendedProducts  LIKE '%,_'
+```
+
+In the query above, we are filtering our database with `RecommendedProducts` field. To add a contact to our segment, in four steps, we check if at least one condition is true:
+
+</TabItem>
+<TabItem value='select'>
+
+```sql {5-8} title="Create boolean field from a multipicklist one to split database on recommendation type"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , CASE
+        WHEN RecommendedProducts LIKE '_'     THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_,%' THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
+        ELSE 'False'
+      END AS IsSubscriptionRecommended
+FROM EcommerceUpsellDE
+```
+
+In the query above, we are creating new boolean field that will tell us whether the contact has at least one subscription product in their recommended lists. Great for personalized communication emphasizing this recommendation. We do this by assigning value `True` if at least one of four steps evaluates to true:
+
+</TabItem>
+</Tabs>
+
+1. If the record has exactly one recommended product that has a single-digit code (subscription)
+2. If the record has multiple recommended products and the first one is a single-digit (subscription)
+3. If the record has multiple recommended products and one in the middle is a single-digit (subscription)
+4. If the record has multiple recommended products and the last one is a single-digit (subscription)
+
+## LIKE with Group
+
+There is also a group operator `[]` for `LIKE` statements. It allows you to create even more complex conditions:
+
+Advanced Operator | Description
+-- | --
+`[]` | Any single character from the list specified inside
+`-` | Range operator for `[]`
+`^` | Exclusion operator for `[]`
+
+### [] Operator
+
+The group operator `[]` allows you to provide a list of characters that you want to find a match.
+
+Consider the previous example with a field containing multiple IDs of your subscription and standard products. The field stores subscriptions in the form of single-digit product IDs. First four IDs are related to Premium subscriptions. IDs from 5 to 9 are Standard subscriptions.
+
+<Tabs
+    defaultValue='where'
+    values={[
+        {label: 'WHERE', value: 'where'},
+        {label: 'SELECT', value: 'select'},
+    ]}
+>
+<TabItem value='where'>
+
+If we would like to output only the Premium subscriptions, we would have to create a separate filter for each ID.
+
+
+```sql {6-15} title="This approach would require 16 lines to cover the use case"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
+FROM EcommerceUpsellDE
+WHERE
+    RecommendedProducts     LIKE '1'
+    OR RecommendedProducts  LIKE '1,%'
+    OR RecommendedProducts  LIKE '%,1,%'
+    OR RecommendedProducts  LIKE '%,1'
+    OR RecommendedProducts  LIKE '2'
+    OR RecommendedProducts  LIKE '2,%'
+    OR RecommendedProducts  LIKE '%,2,%'
+    OR RecommendedProducts  LIKE '%,2'
+    ...
+```
+
+With a group, we can optimize it — a lot.
+
+```sql {6-10} title="Same outcome with just 4 lines"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
+FROM EcommerceUpsellDE
+WHERE
+    RecommendedProducts     LIKE '[1234]'
+    OR RecommendedProducts  LIKE '[1234],%'
+    OR RecommendedProducts  LIKE '%,[1234],%'
+    OR RecommendedProducts  LIKE '%,[1234]'
+```
+
+</TabItem>
+<TabItem value='select'>
+
+If we would like to categorize them using Wildcards, we would have to create a separate WHEN for each ID.
+
+```sql {5-14} title="This approach would require 36 WHEN/THEN lines to cover the use case"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , CASE
+        WHEN RecommendedProducts LIKE '1'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,1,%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2,%'   THEN 'Premium'
+        ...
+        WHEN RecommendedProducts LIKE '5'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5,%'   THEN 'Standard'
+        ...
+        ELSE 'No Subscription'
+      END AS RecommendedSubscriptionType
+FROM EcommerceUpsellDE
+```
+
+With a group, we can optimize it  — a lot.
+
+```sql {5-12} title="Same outcome with just 8 WHEN/THEN lines"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , CASE
+        WHEN RecommendedProducts LIKE '[1234]'      THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1234],%'  THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[56789]'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[56789],%' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
+        ELSE 'No Subscription'
+      END AS RecommendedSubscriptionType
+FROM EcommerceUpsellDE
+```
+
+</TabItem>
+</Tabs>
+
+Thanks to the group operator, instead of covering every single case, we can provide all values within the `[]`. Short, clean and readable. And it can get even better.
+
+:::note You Should Know
+
+Group wildcard (`[]`) is also useful as a way to escape character in the `LIKE` statement. For example, you might want to look for all values, including a per cent sign (`%`).
+
+Writing `LIKE '10%'` is not a good idea, as it would return you all values starting with `10` - as the per cent sign is a wildcard meaning zero, one or more characters. You can, however, obtain what you want by writing:
+
+```sql {4-5} title="If the client has a discount between 1 and 9%, let's bump it up to either 5% or 10%. If he or she has a higher one - leave it as it is. If no discount is available, make it 2%"
+SELECT
+      ContactKey
+    , CASE
+        WHEN Discount LIKE '[56789][%]' THEN '10%'
+        WHEN Discount LIKE '[01234][%]' THEN '5%'
+        WHEN Discount IS NOT NULL       THEN Discount
+        ELSE '2%'
+      END AS NewDiscount
+```
+
+By wrapping the `%` with the grouping sign `[]`, we are telling SQL to look for exactly the per cent sign. Thanks to it `'[1234][%]'` search will look for `1%`, `2%`, `3%` or `4%` values only.
+
+Same works with `_` wildcard.
+
+:::
+
+### - Operator
+
+We can simplify more with the use of range operator `-`. Instead of writing each possible character within our group `[]` (it gets awful when we are looking for any letter - lower or uppercase), we can ask for a range:
+
+<Tabs
+    defaultValue='where'
+    values={[
+        {label: 'WHERE', value: 'where'},
+        {label: 'SELECT', value: 'select'},
+    ]}
+>
+<TabItem value='where'>
+
+```sql {6-10} title="Now with range operator"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , RecommendedProducts
+FROM EcommerceUpsellDE
+WHERE
+    RecommendedProducts     LIKE '[1-4]'
+    OR RecommendedProducts  LIKE '[1-4],%'
+    OR RecommendedProducts  LIKE '%,[1-4],%'
+    OR RecommendedProducts  LIKE '%,[1-4]'
+```
+
+</TabItem>
+<TabItem value='select'>
+
+```sql {5-12} title="Now with range operator"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , CASE
+        WHEN RecommendedProducts LIKE '[1-4]'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4],%' THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[5-9]'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9],%' THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
+        ELSE 'No Subscription'
+      END AS RecommendedSubscriptionType
+FROM EcommerceUpsellDE
+```
+
+</TabItem>
+</Tabs>
+
+As you can see, all we need to do, it to put range operator `-` between the first and last value that we want to catch. For alphabetical searches where we want both lowercase and uppercase letters, you will need to write it like this: `LIKE '[a-zA-Z]'`.
+
+If you want to search for a hyphen '-' within a grouping operator that uses a range, add it in the very beginning. `LIKE '[-0-9]` will look for either `-` or any digit.
+
+:::note You Should Know
+
+You can mix and match groups, ranges and wildcards.
+
+It is an excellent tool to create essential categorization solutions for uncontrolled data. For example, to clean up free text job title coming from web forms.
+
+```sql title="Simplified Job Title categorization"
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'       THEN 'C-Suite'
+        WHEN FreeTextJobTitle LIKE '%[Mm]anager%'    THEN 'Management'
+        WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%' THEN 'Specialists'
+      END AS CorporateJobTitleGroup
+FROM _Subscriber
+```
+
+:::
+
+### ^ Operator
+
+There is one more operator that is sometimes useful - the exclusion operator `^`. Add it to the beginning of your group, and SQL will not look for any of the grouped characters. For example, `LIKE '[^0-9]'` will look for any character that is not a digit.
+
+This operator is especially useful for the use in `WHERE` statement. Best example? SQL for finding contacts with Subscriber Key not being correct Salesforce ID:
+
+```sql {4} title="Find all records in All Subscribers with Subscriber Key other than Salesforce ID"
+SELECT SubscriberKey
+FROM _Subscribers
+WHERE
+    SubscriberKey LIKE '%[^a-zA-Z0-9]%'
+    AND LEN(SubscriberKey) != 18
+```
+
+This short and straightforward query will look into each SubscriberKey and check whether in there is any character other the letter or digit (case-insensitive) or whether the length is not equal to 18. All such records have incorrect value and are eligible for cleanup or investigation. Perfect for Automation with deletion SSJS script or Verification Activity to alert administrator about issues.
+
+## NOT LIKE
+
+Finally, just as with other statements, you can add `NOT` statement before `LIKE` to search for not matching records:
+
+```sql {4} title="Same query as at the beginning of our CASE journey, but flipped"
+SELECT
+      ContactKey
+    , CASE
+        WHEN EmailAddress NOT LIKE '%@mateuszdabrowski.pl' THEN 'External'
+        ELSE 'Internal'
+      END AS ContactType
+```

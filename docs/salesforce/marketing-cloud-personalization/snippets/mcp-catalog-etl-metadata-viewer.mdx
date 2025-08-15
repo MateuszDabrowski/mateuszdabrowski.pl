@@ -1,0 +1,174 @@
+---
+id: mcp-catalog-etl-metadata-viewer
+title: MCP Catalog ETL Metadata Viewer
+sidebar_label: Catalog ETL Metadata Viewer
+description: Debug your Marketing Cloud Personalization (Interaction Studio) Catalog Object Item attributes with the power of Serverside Code.
+image: img/og/og-image-mcp-catalog-etl-metadata-viewer.png
+tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, TypeScript, Data Management]
+---
+
+import { LeadText } from '../../../../src/components/LeadText.js';
+import { Button } from '../../../../src/components/Buttons.js';
+
+<LeadText content="Debug your Marketing Cloud Personalization (Interaction Studio) Catalog Object Item attributes with the power of Serverside Code." />
+
+## Problem with debugging Catalog data
+
+Marketing Cloud Personalization (Interaction Studio) can pull [product, content and related catalog data](../mcp-catalog-architecture.mdx) from multiple sources and does it continuously. That's perfect when all works great, but debugging features are minimal once you see some data discrepancies.
+
+Sure, SFTP stores processed CSV Feed files, but finding the culprit takes work, especially if you push frequently with delta files.
+
+Knowing which exact ETL load introduced problematic attribute values is a tremendous help in finding the root cause of the issue and rectifying the data pipeline. While it is available only for custom attributes (hover over the value to see it), we can:
+
+1. [Vote for IdeaExchange](https://ideas.salesforce.com/s/idea/a0B8W00000NWbmJUAT/full-mcp-catalog-metadata-visibility) to make it perfect out-of-the-box.
+2. Build a more powerful custom solution for it in the meantime.
+
+## Solution
+
+Inspired by the excellent User Metadata Serverside template created by [Christopher Long](https://www.linkedin.com/in/christopherlong/) available [here](https://github.com/christopher-longSFDC/mcp/wiki/Serverside-Templates) I decided to create something similar for the Catalog Object data.
+
+A Serverside Template that leverages built-in Simulated Payload Preview available in Template Editor to display hidden changelog for ETL updates: attribute's current value, timeframe it was first introduced and first CSV that provided it to MCP.
+
+```json title="Example response"
+"item": {
+    "attributes": {
+        "archived": {
+            "value": false,
+            "addedBySource": "ETL",
+            "addedByFile": "product-2022-12-05_08-19-35.csv",
+            "addedDate": "Dec 05 2022 07:25:30"
+        },
+        "brand":{
+            "value":"Apple",
+            "addedBySource":"Not ETL"
+        }
+    }
+}
+```
+
+This approach leverages native features of the platform to access unsurfaced data in a techy but easily transferable format.
+
+Additionally, it's a great way to showcase some [MCP Serverside Code](../mcp-serverside-code-basics.mdx) approaches that can be useful for building standard campaign templates.
+
+### Implementation Guide
+
+Implementation is straightforward, and you can have a working solution within a minute.
+
+1. Go to SFMC » Personalization
+2. On the left pane, hover over Server-Side and click on Server-Side and Triggered Templates
+3. Click New Template
+4. Provide a meaningful name (for example: "Catalog ETL Metadata Viewer")
+5. Copy-paste the code available below
+6. Save
+7. Use :)
+
+You don't need to Publish a template to leverage the Simulated Payload Preview. Keeping it unpublished guarantees no one will use it for a live Campaign.
+
+### Serverside Code
+
+```ts
+export class CatalogETLMetadataViewer implements CampaignTemplateComponent {
+
+    @header(' ')
+
+    @markdown(`
+##### How to use
+
+In the Payload Preview pane on the right:
+
+1. Select catalog object in the Current Item Type
+2. Select item in the Current Item
+3. View the Details in the section below
+
+Optionally, you can modify the scope of returned data in the left Configuration pane.
+`)
+
+    @title('Item attribute metadata to display:')
+    @subtitle('File and Change Date are available only for the ETL Source.')
+    showItemAttributeDetails: ('Value'|'Source'|'File'|'Change Date'|'Locale')[] = ['Value', 'Source', 'File', 'Change Date'];
+
+    @markdown(`Platform displays partially incorrect data when you manually Save Item in the Catalog, learn more [here](https://mateuszdabrowski.pl/docs/interaction-studio/snippets/mcp-catalog-etl-metadata-viewer/).`)
+
+    @title('Item non-attribute values to display:')
+    @subtitle('Only values are available - no Source/File/Change Date/Locale data is exposed by the platform.')
+    showItemContextDetails: ('ID'|'Location'|'Related Catalog Objects'|'Categories'|'SKUs')[];
+
+    run(context: CampaignComponentContext) {
+        // Pulls Catalog Object type from Simulation configuration
+        const itemType = context.event.itemType();
+        // Pulls selected Item ID from Simulation configuration
+        const itemId = JSON.parse(context.event.fields.item as string)._id.value;
+        // Pulls full Item data from the Catalog
+        const itemDetail = context.services.catalog.findItem(itemType, itemId);
+
+        // Prepares the payload response according to Configuration pane
+        function itemProcessor(item, config) {
+            let processedItem = {
+                attributes: {},
+            };
+            const attributes = processedItem.attributes;
+
+            const makeEpochReadableAgain = epoch => String(new Date(epoch)).substring(4, 24);
+
+            // Conditional non-attribute data stuffing
+            if (config.itemContext?.includes('ID')) processedItem['id'] = item.id;
+            if (config.itemContext?.includes('SKUs')) processedItem['skus'] = item.skus;
+            if (config.itemContext?.includes('Categories')) processedItem['categories'] = item.categories;
+            if (config.itemContext?.includes('Related Catalog Objects')) processedItem['relatedCatalogObjects'] = item.dimensions;
+            if (config.itemContext?.includes('Locations')) processedItem['locations'] = item.locations;
+
+            // Conditional attribute data stuffing with processing
+            for (const [attribute, attributeData] of (<any>Object).entries(item.attributes)) {
+                let processedAttributes = {};
+
+                if (config.itemAttributes?.includes('Value')) processedAttributes['value'] = attributeData.value;
+                if (Number.isInteger(attributeData.value) && attributeData.value > 10e10) processedAttributes['readableValue'] = makeEpochReadableAgain(attributeData.value);
+                if (config.itemAttributes?.includes('Source')) processedAttributes['addedBySource'] = attributeData.metadata?.origin || 'Not ETL';
+                if (config.itemAttributes?.includes('File') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['addedByFile'] = attributeData.metadata?.provider.substring(16);
+                if (config.itemAttributes?.includes('Change Date') && attributeData.metadata?.origin === 'ETL' ) processedAttributes['addedDate'] = makeEpochReadableAgain(attributeData.metadata?.lastUpdated);
+                if (config.itemAttributes?.includes('Locale')) processedAttributes['locale'] = attributeData.locale;
+
+                attributes[attribute] = processedAttributes;
+            }
+
+            return processedItem
+        }
+
+        // Outputs final payload to the Payload Preview pane
+        return {
+            item: itemProcessor(itemDetail, {itemAttributes: this.showItemAttributeDetails, itemContext: this.showItemContextDetails}),
+        };
+    }
+}
+```
+
+## Limitations
+
+While this solution can benefit [MCP Catalog Object](../mcp-catalog-architecture.mdx) debugging, there are a few significant limitations.
+
+### Data scope
+
+Unfortunately, at the moment, the platform surfaces metadata only for Catalog Items updated using ETL. Any other source (Manual update, Web or Mobile SDK) provides only current value but no information about the last change or the exact Source (apart from it not being an ETL).
+
+Additionally, the metadata returned for the ETL uploads provides only the file name and timestamp that first introduced the current value. There is no option to check what was the previous value.
+
+It is still very helpful to understand whether the MC Personalization overwrote the attribute using incorrect ETL data and which CSVs you should check to confirm the pipeline issues.
+
+### Data quality
+
+Another huge caveat with the metadata is that Manual changes through the Catalog UI create many issues by silently changing attribute values and/or metadata. Example behaviours:
+
+1. Manual changes to field value retain metadata information of the previous value source (so values marked as coming from both `ETL` and `Not ETL` Sources could be introduced via UI).
+2. `price`, `listPrice`, `margin`, `published`, and `expiration` are being changed from `ETL` to `Not ETL` Source even when manual changes weren't touching those attributes.
+3. if `expiration` was `NULL`, it gets set to timestamp 100 years in the future
+4. if `margin` was `NULL`, it gets set to 0
+
+It is awful, but hopefully, only a few manual changes are happening in the production dataset, and this issue will be minimal. Still, it's worth remembering this when the metadata preview doesn't match data in the CSV.
+
+### Context.event.fields.item
+
+While `context.event.fields.item` is perfect for the use case described here, don't try to use it in standard Campaigns. Unfortunately, it is filled in only in the Simulation Preview and will not be available when deployed to a website. However, for production purposes you can use [`context.event` methods](../mcp-serverside-code-context.mdx#event-methods) to get the same information dynamically from the item viewed by user.
+
+## Options
+
+I created the current version of the solution with an easy-to-use, straightforward interface leveraging out-of-the-box features of the platform. However, you can extend the code with an additional field accepting a list of IDs to return payloads for multiple items in a single run to facilitate faster debugging.

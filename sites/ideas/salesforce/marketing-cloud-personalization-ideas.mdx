@@ -1,0 +1,289 @@
+---
+id: marketing-cloud-personalization-ideas
+title: Marketing Cloud Personalization Ideas
+sidebar_label: Marketing Cloud Personalization
+description: Here you can find all my Marketing Cloud Personalization (Interaction Studio) IdeaExchange contributions. Let's make the change!
+image: img/og/og-image-mcp-ideas.png
+tags: [Marketing Cloud Personalization, Interaction Studio]
+---
+
+import { LeadText } from '../../../src/components/LeadText.js';
+import { Button } from '../../../src/components/Buttons.js';
+
+<LeadText content="Here you can find all my Marketing Cloud Personalization (Interaction Studio) IdeaExchange contributions. Let's make the change!" />
+
+
+## Catalog
+
+### Full MCP Category hierarchy support for ETL
+
+Marketing Cloud Personalization can create a working hierarchy tree of categories with a clean subcategory drill-down view in catalog UI and automatic summing of the views and revenue from the lowest level category up in the hierarchy.
+
+However, this is now possible only under multiple conditions: just one Category per product (for the attribution to work), a specific format of the category ID, and only through Sitemap.
+
+Especially problematic is that last limitation because, in many cases, ETL is the better way to manage it - especially with the format required for that feature.
+
+Category ETL already has a solution that provides the same level of detail to Marketing Cloud Personalization (Interaction Studio) using two out-of-the-box attributes: department and parentCategoryId.
+
+MCP displays the hierarchy built with those fields on the specific Category page under the ID. Unfortunately, it is not replicating the drill-down hierarchy tree UI in the Category list view and does not pass the data from the bottom Category up the hierarchy.
+
+It should change - there should be a feature parity between Sitemap and ETL for such an important feature. Especially considering that all information required for it is already available.
+
+Read about risky workaround [here](../../../docs/interaction-studio/mcp-catalog-architecture/#category-catalog-unique-attributes).
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000MMZ27UAH/full-category-hierarchy-support-for-etl-in-interaction-studio'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Full MCP Catalog Export
+
+Marketing Cloud Personalization (Interaction Studio) already supports Catalog manual export through the Export button on the Catalog listing. However, it exports products only with the limited data set available in the listing view.
+
+The problem with the current state is that the exported file does not contain complete catalog data (like promotable and archived attributes) and cannot be used as an ETL source.
+
+It is a huge issue because it makes it impossible to debug catalog item states outside of MCP (and doing it directly in the platform is not scalable). It also makes it impossible to batch-modify items (for example, for selective archiving or exclusion) for subsequent ETL import.
+
+There should be an option to export the catalog in full scope, matching the ETL schema, including hidden Items that didn't yet get any action (view, cart, purchase).
+
+Bonus points for an option to include (or not) archived Items in the export. It would be a hugely beneficial addition for debugging purposes and Item reintroduction requirements (for example after mistake in archiving).
+
+Read about partial workaround [here](../../../docs/interaction-studio/mcp-catalog-architecture/#export-full-mcp-catalog-data).
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVRj3UAH/full-is-mcp-catalog-export'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Full MCP Catalog Metadata visibility
+
+Marketing Cloud Personalization (Interaction Studio) already supports Catalog Object custom attribute metadata view (open Item in the Catalog and hover over custom attribute value to see the details). However, it is limited only to those custom attributes if the ETL updates them.
+
+We can slightly extend it with a custom [Metadata Viewer solution](../../../docs/interaction-studio/snippets/mcp-catalog-etl-metadata-viewer/) to show that data also for built-in attributes. However, it is still a very limited solution due to product gaps:
+
+1. `origin` and `lastUpdated` values for Sources other than ETL (Sitemap, Mobile App, Manual update in UI, API)
+2. Showing this information for built-in attributes in the Catalog UI
+3. General Item `createdDate` and `lastUpdatedDate` (not attribute-specific)
+
+That scope of information would make debugging Catalog metadata issues significantly easier. Less work for admins/developers. Less downtime for the recommendations. Fewer support tickets for Salesforce.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NWbmJUAT/full-is-mcp-catalog-metadata-visibility'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+## Einstein Recipes
+
+### Multiple Dimensional Variations for Products in Einstein Recipes
+
+Einstein Recipes are a powerful and flexible tool for creating recommendations, but the fourth step - Variations - is not on par with the rest of the options.
+
+You can configure only a single Dimensional Variation. While you can choose from multiple Item Types when configuring it, once you select one, that's the end of the story. You cannot limit recommended products to, for example, only 2 per category and 2 per brand.
+
+It heavily limits control over product recommendations, especially for e-commerce with multiple catalog objects. Currently, there is no real workaround.
+
+At the same time, it is possible to select multiple Boosters or Exclusions of the same type and configure them differently. It would be great to select multiple Dimensional Variations with different configurations.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000LAxE9UAL/multiple-dimensional-variations-for-products-in-einstein-recipes'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Department Variation for Products in Einstein Recipes
+
+Einstein Recipes lets you configure Dimensional Variations on the Category, but unfortunately, it works only on the primary category level. There is no option to select the Department (master category) level.
+
+It is very limiting for e-commerce with broad category trees like:
+
+- monitors (gaming, graphic, office, medical, etc.)
+- computers (laptops, ultrabooks, convertibles, desktops, all-in-ones, etc.)
+- paints (acrylic, enamel, emulsion, etc.).
+
+With such categories, recommendations with Category Variation configured can easily still be dominated by a similar product (like 12 monitor recommendations despite the Category Variation limit set to 3 due to similar primary categories).
+
+There are two possible solutions to this issue:
+
+1. Add Department as another option in the Item Type dropdown (as it is separate from Categories in Exclusions and Boosters) or
+2. When the Item Type Category is selected, add a checkbox on whether Variation should happen on the primary Category or Department level.
+
+Currently, the only workaround is to create a separate Catalog for Departments, but that defeats the purpose of Is Department checkbox on the default Category object.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000LAwlkUAD/department-variation-for-products-in-einstein-recipes'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Price Reduction Ingredient in Einstein Recipes
+
+Triggered Campaigns added a great option of targetting various events for Journey Builder sends. Among them, there are Catalog Triggers. Some of them, like Product Expiring Soon, are also available for Web with Einstein Recipes Ingredients.
+
+However, currently, there is no Ingredient for a popular e-commerce use case - Price Reduction.
+
+Marketing Cloud Personalization (Interaction Studio) has all the required information (the price and listPrice attributes used for the Triggered Campaign).
+
+There is a workaround to make it possible now - calculating whether product price has been reduced externally and passing this information to a Related Catalog Object. However, there are better solutions for something that MCP is already doing out-of-the-box for another channel.
+
+There are two possible solutions to this:
+
+1. Simple ingredient that returns all price-reduced items (similar to Trending).
+2. Configurable ingredient with an option to select minimum price reduction percent.
+
+The solution can further improve it by adding a Recipe Booster on the price reduction percent.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000MMauyUAD/price-reduction-ingredient-in-einstein-recipes'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Rating Count in Recipe's Rating Exclusion
+
+Marketing Cloud Personalization (Interaction Studio) offers many Exclusions/Inclusions on Recipes that allow to hone the recommendations to the exact business needs. Among them there is Rating that allows to exclude/include items based on their rating (with an optional zero rating capture).
+
+It would be great to have additional option in the same exclusion/inclusion to decide on rating count being greater than, less then or between two values. It should be easy, as the rating count is already part of the data model just like rating itself.
+
+This would enable use cases like:
+
+1. Including only products with great rating that have at least 10 ratings.
+2. Excluding products with bad rating if they have more than 3 ratings.
+3. Including products user purchased that have less than 3 ratings for review-request campaign.
+
+Currently such filters can be applied only on the Serverside Code level in the Template, which is not perfect as it can very easily limit the 12 received recommendations to just few or even zero. Having it on recipe level would be much more powerful.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000PjMarUAF/rating-count-in-is-recipes-rating-exclusion'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Abandoned Cart Retention setting
+
+Marketing Cloud Personalization (Interaction Studio) captures the cart information and makes it available for Einstein Recipes recommendation generation & context object in Campaign Template Server-Side Code. Unfortunately, we can only manage the cart content through proactive actions. If a client adds something to the cart and doesn't visit it for long periods, their cart content will remain in the MCP.
+
+Currently, a dirty workaround for that is a Web Campaign launching on the first visit in the session using the context.user object to check whether the user has a cart and its age. Depending on that, it can push clear cart action. But this could be more user and performance friendly.
+
+The better option would be adding an option to MCP settings that would allow each business to configure (or not) the retention of the cart data so that it can be removed from the system automatically after some time.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000OYz84UAD/abandoned-cart-retention-setting'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+## ETL
+
+### External Email Campaign ETL Experience Name & ID
+
+[External Email Campaign ETL](https://help.salesforce.com/s/articleView?id=sf.mc_pers_etl_external_email_campaign_events_data_feed.htm) enables passing behavioural data from Marketing Automation platforms (like Salesforce Marketing Cloud). However, currently, it is limited to a Campaign ID and Campaign Name. It is a problem because to benefit from that data in segmentation fully, it should also allow passing Email ID and Email Name.
+
+The good part - only minimal work is needed, as the groundwork is already laid down. The trick is to leverage it by adding Experience ID and Experience Name columns to the ETL as fields for Email metadata.
+
+When you check the event stream for an outcome from that ETL, you will see it described as `Impression on experience Default in campaign {CAMPAIGN_NAME}`. What is more, the same event will already show (empty) properties `.etl_eeid` (ExternalExperienceID) and `.etl_een` (ExternalExperienceName) that are matching filled in `.etl_ecid` (ExternalCampaignID) and `.etl_ecn` (ExternalCampaignName). Finally, the segmentation is also ready for this extension, as the External Email Campaign ETL is leveraging the same Campaign Stat Count (or Recency) segmentation as Marketing Cloud Personalization (Interaction Studio) built-in campaigns, leveraging both Campaigns and Experiences.
+
+Currently, one has to choose whether to segment only on emails (without any connection to a specific campaign) or only campaigns (without any ties to specific emails within the campaigns). With that ETL change, we could build segments focusing either on whole Campaigns (f.e. SFMC Journeys) or only particular Emails in selected Journeys (f.e. the First email in Welcome Journey). Easy win for truly targeted Personalization!
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVNMuUAP/external-email-campaign-etl-experience-name-id'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### External Email Campaign ETL Send Segmentation
+
+[External Email Campaign ETL](https://help.salesforce.com/s/articleView?id=sf.mc_pers_etl_external_email_campaign_events_data_feed.htm) enables passing Send, Click and Open data from Marketing Automation platforms (like Salesforce Marketing Cloud). However, only segmentation based on Click and Open (View) is currently supported.
+
+Two options are available in the Campaigns - Campaign Stat Count (or Recency) segmentation rule - `Get sent email campaign` and `Qualify to view (control)` - but neither works for the Send event. It renders that event type useless right now.
+
+Enabling one of the above segmentation rules (preferably `Get sent email campaign`) would unlock use cases like targeting Web or Push campaigns to users who we sent an email campaign, but they never opened it. Great way to fully leverage the cross-channel and real-time nature of Personalization.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVNN1UAP/external-email-campaign-etl-send-segmentation'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### External Email Campaign ETL Unsubscription Event Type
+
+[External Email Campaign ETL](https://help.salesforce.com/s/articleView?id=sf.mc_pers_etl_external_email_campaign_events_data_feed.htm) enables passing Send, Click and Open data from Marketing Automation platforms (like Salesforce Marketing Cloud). However, currently, it cannot pass unsubscriptions.
+
+Official documentation mentions this event type in the `eventType` column description but doesn't follow it up in the Example Values section. I also performed tests on my side and found it is impossible - Test Run in Feed returns an error: `Transform error: Invalid eventType 'Unsubscribe'. Valid types are Send, Click, Open`. Unsubscription could be easily segmentable as an already existing `Dismissal` action.
+
+Unsubscribe should be added to unlock a wide range of targeted campaigns like surveys about unsubscription reasons, win-back campaigns or replacing email subscription prompts with other channel recommendations.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVN9DUAX/external-email-campaign-etl-unsubscription-event-type'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+## Segmentation
+
+### MCP Action Name Management
+
+Marketing Cloud Personalization (Interaction Studio) captures actions from multiple sources to enable user segmentation and campaign targeting. Unfortunately, it does not offer any option to manage created actions, meaning everything that was pushed stays on the Dataset forever.
+
+At the very least, there should be an option to view and remove existing Actions that are no longer needed (for example, test or refactored ones). It would significantly improve user experience by providing control over the number of options in the segmentation/targeting picklists.
+
+Even better would be an option to merge existing actions so that we wouldn't lose any behavioural after refactoring the action names.
+
+:::note You Should Know
+
+Partially implemented now - you can view and remove (but not merge or edit) actions by going in the MCP to Settings » Modules » Actions tab.
+
+:::
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000OYyaAUAT/is-action-name-management'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### MCP Hourly-based Segmentation Rules
+
+Currently segmentation rules in the Marketing Cloud Personalization (Interaction Studio)  are based on number of days. This is very limiting for on-the-site campaign targeting.
+
+For example, if we would like to display an infobar or slide-in for abandoned cart basket, current segemntation can only show us users that:
+
+1. Do have Items in cart
+2. Didn't do any Cart Action today
+
+It means we can start abandoned cart Web Campaign only on the next day.
+
+With hourly based segmentation rules we could improve it greatly to show us users that:
+
+1. Do have Items in cart
+2. Didn't do any Cart Action in the last hour
+
+The best way to solve it would be to have additional picklist at the end of rule configuration where we can choose whether it should be day or hour based.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000PjMb6UAF/is-hourlybased-segmentation-rules'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+## Reporting
+
+### Direct Attribution on MCP Campaign level
+
+Marketing Cloud Personalization (Interaction Studio) offers a wide selection of Reports based on Activity, Results and Visits. It lacks, however, clear and detailed reporting on direct attribution from specific campaigns.
+
+Currently, attribution tracking is available in two places:
+
+1. The Main Dashboard (MCP Home Page) displays the Total Stats and Revenue Dashboard at the top. It showcases direct revenue from campaigns (The User clicks a product recommendation and purchases that specific promoted item in the selected timeframe). Unfortunately, it does not offer per campaign (and per experience) data, only a global value split between all Web Recommendations and all Email Recommendations ([OTE](../../../docs/interaction-studio/mcp-open-time-email)).
+2. On the other hand, Specific Campaign Statistics display detailed statistics for each experience. Unfortunately, they don't offer direct attribution. While you can select whether the attribution should be based on click or view and what should be the attribution window, it is much more random data. View attribution means that if a user viewed a campaign and purchased anything (even wholly unrelated to the campaign recommendation) in the specified timeframe - it will be treated as revenue from that campaign. Similarly, click attribution means that if the user clicks on the campaign (for example, on a Laptop recommendation) and makes any purchase (for example, a new Monitor and cable), the whole revenue will still be attributed to the campaign. While it is acceptable for product-less campaigns (like Infobar) where direct attribution might not be possible, it's useless for meaningful analysis of recommendations conversion.
+
+There is no clean workaround for that problem - the Data Warehouse end of sales didn't help either. The only way right now is to append Campaign & Experience IDs to all links in the Campaigns and move the calculation to an external analytics system. That's a huge, complex work with a subpar experience of displaying reports in 3rd party solution, compared to having it directly in the system deploying those campaigns and tracking purchases - the system already calculating it for the existing total results.
+
+There should be an additional option on the Campaign Statistics level (on top of existing ones that are good for product-less campaigns) displaying attribution with the same logic as the Main Dashboard but with the per-experience detail.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000NVTrFUAX/direct-attribution-on-is-campaign-level'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>

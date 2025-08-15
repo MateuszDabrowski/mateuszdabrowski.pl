@@ -1,0 +1,228 @@
+---
+id: licence-limits
+title: MCE Licence Limits
+sidebar_label: Licence Limits
+description: With great flexibility come great limitations. Learn how MCE limits can make or break your marketing operations.
+image: img/og/og-image-sfmc-licence-limits.png
+tags: [Marketing Cloud, Best Practice, Automation, API, Data Extensions, Setup]
+toc_max_heading_level: 4
+unlisted: true
+---
+
+import { LeadText } from '../../../../src/components/LeadText.js';
+import { Button } from '../../../../src/components/Buttons.js';
+
+<LeadText content="With great flexibility come great limitations. Learn how SFMC limits can make or break your marketing operations." />
+
+## Limits and Guardrails
+
+Salesforce Marketing Cloud is an extremly flexibile platform. You can fulfill nearly any marketing dream using the available tools. But it also makes SFMC a complex platform with power that can be easily abused. Especially when best practices are not followed.
+
+That abuse can lead to outstanding solutions (like [Cloud Page Apps](../ssjs/snippets/sfmc-cloud-page-apps.mdx) or [custom processing backends](./sfmc-code-resource.mdx)) but it can also lead to huge performance issues that impact your Salesforce Marketing Cloud and a whole stack (like, for example, triggering hundreds of Filter Activities at the same time - please don’t do it).
+
+Salesforce protects clients and themselves using two methods:
+
+- Backend guardrails that completly block some forms of platform abuse (for example, 30 minute auto-kill in Automation Studio, 2 minute auto-kill in Web Studio or 5 MB file size limit in Content Builder)
+- Hard and soft limits that either block you from doing something or might incure additional costs for exceeding them (for example, hard limit for payload size in the REST API that will error out your API call and a soft limit of requests made yearly that may lead to a fun call with Salesforce Account Executive about their usage-based SKUs).
+
+Some of those guardrails and limits can be found in the technical documentation (those can be easily changed or extended by Salesforce whenever they feels like it). Some are part of your licence (as not that easy to change attachment).
+
+## Marketing Cloud Licence Limits
+
+Licence limits have enormous impact on every single client. And while there was no change in what is in your contract, half of those limits weren't enforced by Salesforce until early 2024. This lax approach impacted solution architectures and day-to-day practices for years. But that peaceful and full of possibilities world is no more. Let's dive into what changed, how painful it can be for marketing operations on SFMC and how we can adapt.
+
+There are six key licence limits for Salesforce Marketing Cloud. Each with different threshold based on the licence tier you get:
+
+Limit | Basic | Pro | Corporate | Enterprise
+-- | -- | -- | -- | --
+Contacts | N/A | 15K | 45K | 500K
+Super Messages | 250K | 2.5M | 10M | 150M
+Data Extension Storage | 1GB | 15GB | 45GB | 100GB
+Yearly Automation Executions | 0 | 15K | 45K | 100K
+Yearly API Calls | 0 | 2M | 6M | 200M
+Users | 5 | 15 | 45 | 100
+
+All of them can be extended with entitlements, if you are willing to pay.
+
+## Marketing Cloud Limit Entitlements
+
+Entitlements are paid add-ons that can extend your limits. They are extremely important as (excluding Users) all those thresholds are soft limits. You can go over them and don't even know about it until Salesforce Account Executive invites you to discuss what it means in the money terms.
+
+The exact costs of the entitlements are a top secret and differs from client to client. You will have to check with your Account Executive how it looks for you.
+
+Of course, it's much better to architect your Marketing Cloud in a way that minimises the usage and monitor it ongoingly - I will be covering how to do it in the [impact & optimisations section](#limit-monitoring-and-optimisation).
+
+:::note You Should Know
+
+Along with the enforcement of all the licence limits [Salesforce introduced](https://help.salesforce.com/s/articleView?id=000396093&type=1) additional option to increase the threshold. Now, whenever you purchase additional Contact entitlement, you will also get a small bump to other limits.
+
+Single Contact Entitlement increases:
+- Contacts by 10K
+- Super Messages by 50K
+- Data Extension Storage by 0.01GB
+- Yearly Automation Executions by 25
+- Yearly API Calls by 5K
+
+As an example, let's say you have the Enterprise SFMC licence and plan to have 1M Contacts in your system. This licence tier has 500K Contact limit, so you need to purchase additional 500K to meet the requirement. As Contacts are sold in packages of 10K you need 500K target / 10K per package = 50 Contact Entitlements. What it gives you in total?
+
+Limit Type | Enterprise Limit | Entitlement Calculation | Entitlement Increase | Total Limit
+-- | -- | -- | -- | --
+Contacts | 500K | 50 * 10K | 500K | 1M
+Super Messages | 150M | 50 * 50K | 2,5M | 152,5M
+Data Extension Storage | 100GB | 50 * 0,01GB | 0,5GB | 100,5GB
+Yearly Automation Executions | 100K | 50 * 25 | 1,25K | 101,25K
+Yearly API Calls | 200M | 50 * 5K | 250K | 200,25M
+Users | 100 | n/a | n/a | 100
+
+As you can see - apart from the Contacts - it's not much. Better than nothing, but won't save you from a need for additional entitlements dedicated to most used aspects of your Salesforce Marketing Cloud.
+
+:::
+
+Unfortunately, at the moment, there is no increase to licence limits when you purchase additional Business Units. That's especially problematic with low (even for a single Business Unit) Yearly Automation Executions threshold. //TODO IdeaExchagne.
+
+## Limit Monitoring and Optimisation
+
+We already know that there are multiple SFMC licence limits that are enforced now. We also know that you can always pay to solve that issue. But in many cases you can minimise the usage (with smaller or bigger impact on your operations). Let's dive into details, limit by limit.
+
+### Super Messages
+
+Super Messages are the base currency you need for SFMC to pay for engagement touchpoints with your customers. Sending an Email? It will cost you Super Message(s). Loading a Cloud Page? Yep, Super Messages. SMS? Tons of Super Messages. Product Recommendation from Einstein on your e-commerce platform? You know the drill.
+
+But there are even Super Messages costs in your Super Messages cost with Marketing Cloud. There are features that increase the base costs. Sending an Email with higher priority? Additional 4 Super Messages. Interactive Email Form Block? Another Super Message. Einstein Content Selection? Add 2 more. And yes, it stacks. So sending 100K emails can cost you anything from 100K to nearly 1M Super Messages depending on what you picked for it.
+
+<Button link='https://www.salesforce.com/products/marketing-cloud/sfmc/sms-ratio-updates/'
+ text='Current Super Message Multipliers'
+ newTab='true'
+/>
+
+#### Super Message Monitoring
+
+The fun part? There is no way to track it in the system. You won't find a Digital Wallet known from the Data Cloud. The only option is to ask your Account Executive for reports on Super Message utilization.
+
+
+While you could try building a custom solution leveraging the Data Views to calculate the usage:
+
+1. You won’t be able to access all the details (like Cloud Pages impressions or the optional configurations of the email).
+2. You won’t have easy time with assigining the correct multipliers for SMS, as it tends to change over time (and sometimes is even a bit different from the official docs based on the deal with Account Executive).
+3. Whatever you do, the Account Executive’s report will be the source of truth for the billing.
+
+:::note You Should Know
+
+When requesting the Super Message report you can ask for some specific data points, like splitting the usage per Business Unit, or per Classification. It can be great help in finding where your money is spilling and whether the ROI stands behind that spend.
+
+:::
+
+#### Super Message Optimizations
+
+##### Data Quality
+
+The best way to optimise the SuperMessage usage is to focus on improving the data and segmentation. Do you really need those contacts that have not opened any email for over a year? Is there really value in pushing emails to temporary email addresses? Are you sure that the segment for that marketing email is „everyone opted in”?
+
+By trimming the data fat and creating more targeted segmentation you can easily lower the amount of contacts that will receive the communication. And that means less Super Messages burned for delivering messages with no ROI.
+
+But there is more! Improving the data quality of your segments will also mean that bigger percentage of the audience will interact with your more targeted message. This will improve your deliverability and help you get the message to the inbox when it really matters - making your Super Message spend work harder for you.
+
+On top of it, you will either way want to clean up your data to also optimise the [Contact](#contacts) licence limit.
+
+##### Channel Splitting
+
+Another option to lower the Super Message spend is to optimise channels you are using. SMS are extremly costly - in most cases more than 20x the cost of email or push message.
+
+Of course, there are scenarios where the SMS is the right channel for the message and that cost is worth it. But those are rare cases. Frequently you can easily optimise it by prioritizing the more frugal channel.
+
+For example, if a customer has an App installed - send a push message instead of SMS. If a customer doesn’t have an app, but there is email address available - send an email. And go for SMS only when the message is crucial and previous methods didn’t trigger expected behaviour. Or when mobile number is the only point of contact.
+
+##### Code Resources
+
+If you are using Cloud Pages for form handling or redirects - switch to [Code Resources](./sfmc-code-resource.mdx). They have the same support for AMPScript and SSJS but - unlike Cloud Pages - doesn’t cost any Super Messages when opened. You won’t be able to replace the client-facing pages with them, but they are perfect for running the logic - for free. I covered more about that pattern in my [Web Studio Architecture webinar](../webinars/sfmc-webinar-architecting-web-solutions.mdx).
+
+##### OOTB Feature Scrutiny
+
+Another way to optimise your Super Messages usage it to check if you are paying high multipliers for not really needed features.
+
+Want to send your transactional messages really quickly? You don’t have to pay 4 Super Messages per email for High Priority Triggered Sends. You can use Transactonal Messaging API that doesn’t add any additional cost and you won’t be able to tell difference in the delivery speed.
+
+Interactive Emails sounds awesome on paper, but when you consider how extremly limited the support for them is, you might want to instead use either direct link to Cloud Page form (with a query string trick for initial for prefill) or go full AMP for Email. Great thing to A/B test to check the ROI.
+
+Einstein Web and Email Recommendations are fine for small volumes, but for bigger ones it might actually be better to consider Marketing Cloud Personalization with all its additional features.
+
+### Contacts
+
+Second classic licence limit in Salesforce Marketing Cloud is the Contact Count. It’s also a soft limit - you can go over it, but it will trigger invite from the Account Executive to talk about additional [Entitlement SKUs](#marketing-cloud-limit-entitlements). The key to this limit is to understand what the Contacts are and how you can get way more of them than you expect.
+
+#### Contact Count Sources
+
+Contact in Marketing Cloud is very broad term covering all records that are billable in terms of licence. There are multiple groups used for that calculation:
+
+1. Records engaged through any SFMC channel (Email Studio, MobileConnect, MobilePush, GroupConnect) - including sends from Journey Builder, Automation Studio or API triggered sends.
+2. Records synchronized through Marketing Cloud Connect from Contact, Lead or User Object.
+3. Records injected into a Journey (for example, from [Salesforce Data Entry](../webinars/sfmc-webinar-salesforce-data-in-journey-builder.mdx#video)).
+4. Records manually imported to All Contacts list (either directly or inidrectly through, for example, import to All Subscribers).
+
+All those groups are summed up from all Business Units and all [Populations (legacy feature)](https://help.salesforce.com/s/articleView?id=sf.mc_cab_create_a_population.htm&type=5).
+
+####  Contact Count Monitoring
+
+Monitoring contacts thankfully is strightforward. There is a [dedicated report in Analytics Builder](https://help.salesforce.com/s/articleView?id=sf.mc_re_contacts_counts.htm&type=5) that you can use on your parent Business Unit (EID). It also provides additional data points about the Contacts to facilitate debugging sudden jumps in the count.
+
+:::note You Should Know
+
+Unfortuntaly, there is no way to get a Contact Count per Business Unit. It is because all Contacts are stored on the parent BU (EID) level, even if they are used only on a specific child BU.
+
+There are two, imperfect, workarounds:
+
+1. Whenever you import record to Marketing Cloud through any source, add Business Unit information to a custom Profile Attribute so that you can later retrieve it from [_EnterpriseAttribute Data View](./sfmc-system-data-views.mdx#_enterpriseattribute). Of course, it is easier said than done, as not all Contact sources will make this addition easy. However, if you mostly use [Synchronized Data Extensions in Multi-Org setup](./sfmc-mcc-integration-patterns.mdx) you should be able to leverage Automation Studio for that enrichment - just keep in mind the edge case of Contact injections coming from [Salesforce Data Entry in Journey Builder](../webinars/sfmc-webinar-salesforce-data-in-journey-builder.mdx).
+2. Another option - working even for past data - is to match Contacts against [_Job](./sfmc-system-data-views.mdx#_job) or [_BusinessUnitUnsubscribes](./sfmc-system-data-views.mdx#_businessunitunsubscribes) Data Views that are Business Unit specific. Unfortunately it will work only for small subset of records that were sent an email within the last 6 months (in case of job). You may also try leveraging the [Send Logs](./sfmc-enhanced-send-log.mdx) if you configured them to be Business Unit Specific. However, it’s still a very limited match if you are using multichannel communication.
+
+:::
+
+#### Contact Count Optimizations
+
+##### Contact Minimalisation
+
+The best way to not hit the Contact Count limit is to not load unnecessary contacts to Salesforce Marketing Cloud. Sounds obvious, but it happens all the time. There are two key sources that frequently are the reason for adding useless records to your system:
+
+1. Marketing Cloud Connect
+
+When you are integrating Salesforce Marketing Cloud with Salesforce CRM you use Marketing Cloud Connect to define the objects and fields that will be synchronized for your marketing purposes. You have a lot of flexibility when it comes to the scope of sync, but due to object dependencies nearly every single implementation uses Contacts, Users and frequently also Leads.
+
+All three of those objects are automatically impacting your Contact Count licence limit as soon as a record is synchronized. In most cases you don’t need all (or even most) of those records for your marketing. The solution? Marketing Cloud Connect Object Synchronization Configuration where you can configure the Records Collection rules.
+
+The choice is limited to three options: `All records`, `All records created since [date]` and the lifesaving `All records with [checkbox] equal [boolean]`. With that last feature you can pick a checkbox field that will serve as a flag for deciding whether given record will be synchronized.
+
+As long as you can define a business requirements around marketable records (for example, zero Users, records must have email address or mobile phone and leads cannot be converted), you can leverage this feature to manage the amount of billable Contacts, lower the usage of [Data Extension Storage limit](#data-extension-storage) and optimise the performance of all your queries.
+
+:::note You Should Know
+
+not formula
+single checkbox
+
+:::
+
+
+- mcc checkbox logic
+
+2. Manual Imports
+
+##### Single Subscriber Key
+
+- multiple sources
+- manual imports
+- person accounts
+
+##### Contact Data Retention
+
+<Button link='./sfmc-contact-deletion.mdx'
+ text='SFMC Contact Deletion Guide'
+ newTab='true'
+/>
+
+### Data Extension Storage
+
+### Yearly Automation Executions
+
+"Automations are measured via the number of times a single automation is run, regardless of the number of actual steps or activities within the automation. For example, an automated program that includes five steps with seven activities counts as just one automation each time the program is run."
+
+### Yearly API Calls
+
+### Users

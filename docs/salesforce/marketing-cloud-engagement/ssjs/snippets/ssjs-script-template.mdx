@@ -1,0 +1,275 @@
+---
+id: ssjs-script-template
+title: SSJS Script Template
+sidebar_label: SSJS Script Template
+description: Jumpstart your coding with best practice fueled SSJS Template.
+image: img/og/og-image-ssjs-script-template.png
+tags: [Marketing Cloud, SSJS, Snippet]
+---
+
+import { LeadText } from '../../../../../src/components/LeadText.js';
+
+<LeadText content='Jumpstart your coding with best practice fueled SSJS Template.' />
+
+Some like to start with a blank slate. Some - from a well-crafted template. I'm in the #TeamTemplate, and here you can see my SSJS one. Check the bottom of this page for a walkthrough.
+
+## SSJS Template Code
+
+```html
+<script runat="server">
+    /* -------------------------------------------------------------------------
+
+    Short description of the purpose of the script.
+
+    1. Global Variables
+    1.1. API Endpoint
+    1.2. Error Handling
+    2. Helper Functions
+    2.1. Debugging
+    2.2. Error handling
+    3. {{Section Name}}
+    ...
+
+    -------------------------------------------------------------------------- */
+
+    Platform.Load('core', '1');
+    // Uncomment below if you will be using SOAP API via WSProxy in the script
+    // var soap = new Script.Util.WSProxy();
+
+    /* ----------------------------------------------------------------------- */
+    /* ---------------------- 1. GLOBAL VARIABLES ---------------------------- */
+    /* ----------------------------------------------------------------------- */
+
+    var endpoint, headerNames, headerValues, payload, response, parsedResponse;
+    var debugging = false;
+
+    /* ---------------------- 1.1. API Endpoint------------------------------- */
+    var clientID = 'CLIENT_ID';
+    var clientSecret = 'CLIENT_SECRET';
+    var clientBase = 'API_BASE_URI';
+
+    /* -------------------- 1.2. Error Handling------------------------------- */
+    var scriptName = 'SCRIPT_NAME';
+    var errorDE = 'ERROR_DATA_EXTENSION';
+    var errorURL = 'ERROR_CLOUD_PAGE_URL';
+
+    /* ----------------------------------------------------------------------- */
+    /* ---------------------- 2. HELPER FUNCTIONS ---------------------------- */
+    /* ----------------------------------------------------------------------- */
+
+    /* ---------------------- 2.1. Debugging --------------------------------- */
+
+    /**
+    * @function debugValue
+    * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+    * @param {string} description - Describes meaning of the second parameter in the output
+    * @param {*} value - The value that needs to be debugged
+    */
+    function debugValue(description, value) {
+        Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+    };
+
+    /* ---------------------- 2.2. Error handling ---------------------------- */
+
+    /**
+    * @function handleError
+    * @description Adds the error with context to error logging Data Extension and redirects to error page.
+    * @param {Object} error - The caught error object. Can come from the try/catch block or be manually created.
+    * @param {string} error.message - First error key stores short error message describing the issue.
+    * @param {string} error.description - Second error key stores detailed error path helping with root cause analysis
+    */
+    function handleError(error) {
+        if (debugging) {
+            debugValue('Found error', error);
+        } else {
+            // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
+            Platform.Function.InsertData(errorDE, ['id', 'scriptName', 'errorMessage', 'errorDescription'], [GUID(), scriptName, error.message, error.description]);
+            Platform.Response.Redirect(errorURL + '?error=' + error.message + '&error_description=' + error.description);
+        };
+    };
+
+    try {
+    /* ----------------------------------------------------------------------- */
+    /* ----------------------- 3. {{SECTION NAME}} --------------------------- */
+    /* ----------------------------------------------------------------------- */
+
+    /**
+    * There can be just one section for simpler scripts, or there can be multiple.
+    * As your code grow, split it into separate numbered sections for easier navigation.
+    * Always try to make each section coherent with code logic to make the split meaningful.
+    */
+
+    // if (debugging) debugValue('{{API Call Name}} Response', response);
+
+    } catch (error) {
+        handleError(error);
+    }
+
+</script>
+```
+
+## SSJS Template Description
+
+### Table of Contents
+
+```js
+    /* -------------------------------------------------------------------------
+
+    Short description of the purpose of the script.
+
+    1. Global Variables
+    1.1. API Endpoint
+    1.2. Error Handling
+    2. Helper Functions
+    2.1. Debugging
+    2.2. Error handling
+    3. {{Section Name}}
+    ...
+
+    -------------------------------------------------------------------------- */
+```
+
+The opening section of the template does two things:
+
+1. Briefly informs everyone what the purpose of this script is
+2. Describes the high-level structure of the script to allow for quick navigation
+
+Read more on that approach in my [SSJS Style Guide](../ssjs-style-guide.mdx#1-table-of-contents-comment).
+
+### Global Variables
+
+```js
+    /* ----------------------------------------------------------------------- */
+    /* ---------------------- 1. GLOBAL VARIABLES ---------------------------- */
+    /* ----------------------------------------------------------------------- */
+
+    var endpoint, headerNames, headerValues, payload, response, parsedResponse;
+    var debugging = false;
+
+    /* ---------------------- 1.1. API Endpoint------------------------------- */
+    var clientID = 'CLIENT_ID';
+    var clientSecret = 'CLIENT_SECRET';
+    var clientBase = 'API_BASE_URI';
+
+    /* -------------------- 1.2. Error Handling------------------------------- */
+    var scriptName = 'SCRIPT_NAME';
+    var errorDE = 'ERROR_DATA_EXTENSION';
+    var errorURL = 'ERROR_CLOUD_PAGE_URL';
+```
+
+This section is responsible for storing all key variables. There are two main types I like to keep here:
+
+#### Multiuse empty variables
+
+```js
+var endpoint, headerNames, headerValues, payload, response, parsedResponse;
+```
+
+In this category, you will find variables used multiple times within various parts of the script, but their specific values have too short lifespan to warrant a separate variable.
+
+By declaring them here, I don't have to use `var` later in the script, and therefore I don't have to worry about the order of the code if I make some changes during the refactoring phase.
+
+There is also a second reason - defining them before the try/catch block, even without any value, will allow accessing its value after that block. Read more about that in [Debugging & Error Handling](../debugging-ssjs.mdx#try-to-catch-the-error).
+
+#### Customizable variables
+
+```js
+    var debugging = false;
+
+    /* ---------------------- 1.1. API Endpoint------------------------------- */
+    var clientID = 'CLIENT_ID';
+    var clientSecret = 'CLIENT_SECRET';
+    var clientBase = 'API_BASE_URI';
+
+    /* -------------------- 1.2. Error Handling------------------------------- */
+    var scriptName = 'SCRIPT_NAME';
+    var errorDE = 'ERROR_DATA_EXTENSION';
+    var errorURL = 'ERROR_CLOUD_PAGE_URL';
+```
+
+The second type I store here are customizable global variables:
+
+- changing from script to script or
+- controlling the script's behaviour (like configurational ones or the `debugging` variable described in detail [here](../debugging-ssjs.mdx#debugging-variable))
+
+The template contains the API Endpoint section that I frequently use, but if your script does not need it - delete it to optimize and simplify the code.
+
+### Helper Functions
+
+```js
+    /* ----------------------------------------------------------------------- */
+    /* ---------------------- 2. HELPER FUNCTIONS ---------------------------- */
+    /* ----------------------------------------------------------------------- */
+
+    /* ---------------------- 2.1. Debugging --------------------------------- */
+
+    /**
+    * @function debugValue
+    * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+    * @param {string} description - Describes meaning of the second parameter in the output
+    * @param {*} value - The value that needs to be debugged
+    */
+    function debugValue(description, value) {
+        Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+    };
+
+    /* ---------------------- 2.2. Error handling ---------------------------- */
+
+    /**
+    * @function handleError
+    * @description Adds the error with context to error logging Data Extension and redirects to error page.
+    * @param {Object} error - The caught error object. Can come from the try/catch block or be manually created.
+    * @param {string} error.message - First error key stores short error message describing the issue.
+    * @param {string} error.description - Second error key stores detailed error path helping with root cause analysis
+    */
+    function handleError(error) {
+        if (debugging) {
+            debugValue('Found error', error);
+        } else {
+            // Remember that if your Logging Data Extension is in Shared Folder, you need to add the "ENT." prefix to name
+            Platform.Function.InsertData(errorDE, ['id', 'scriptName', 'errorMessage', 'errorDescription'], [GUID(), scriptName, error.message, error.description]);
+            Platform.Response.Redirect(errorURL + '?error=' + error.message + '&error_description=' + error.description);
+        };
+    };
+```
+
+In this section, I keep all the helper functions used multiple times in the script or are battle-tested and shared across various scripts.
+
+In the template, you can find my two favourite ones that I use in every single script.
+
+To learn more about them, check out detailed descriptions of [`debugValue`](../debugging-ssjs.mdx#debugging-variable) and [`handleError`](../debugging-ssjs.mdx#error-handler-function) functions.
+
+:::note You Should Know
+
+If the script will be used in [JSON Code Resource backend](../../config/sfmc-code-resource.mdx) I modify those two functions a bit by:
+
+1. Changing the `debugValue` Write to: `Write(' --- ' + description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + ' --- ');` as break line tag will not work.
+
+2. Removing the `Platform.Response.Redirect` from `handleError` as we don't want backend redirects. The `errorURL` variable follows suit.
+
+:::
+
+In many cross-cloud scenarios I also use [AMPScript runner](./ampscript-in-ssjs.mdx), but as it is more use case specific solution, I don't keep it in base template.
+
+I prefix all functions with [documentation comments](../ssjs-style-guide.mdx#3-documentation-comments).
+
+### Script Body
+
+```js
+    try {
+    /* ----------------------------------------------------------------------- */
+    /* ----------------------- 3. {{SECTION NAME}} --------------------------- */
+    /* ----------------------------------------------------------------------- */
+
+    /**
+    * There can be just one section for simpler scripts, or there can be multiple.
+    * As your code grow, split it into separate numbered sections for easier navigation.
+    * Always try to make each section coherent with code logic to make the split meaningful.
+    */
+
+    } catch (error) {
+        handleError(error);
+    }
+```
+
+The final part of the template is where I'm adding the main part of the script. It's wrapped in try/catch (more on that [here](../debugging-ssjs.mdx#try-to-catch-the-error)) and - if the script is long - split into [sections](../ssjs-style-guide.mdx#2-section-comments).

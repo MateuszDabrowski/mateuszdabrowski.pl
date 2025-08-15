@@ -1,0 +1,299 @@
+---
+id: marketing-cloud-engagement-ideas
+title: Marketing Cloud Engagement Ideas
+sidebar_label: Marketing Cloud Engagement
+description: Here you can find all my Salesforce Marketing Cloud Engagement IdeaExchange contributions. Let's make the change!
+image: img/og/og-image-marketing-cloud-ideas.png
+tags: [Marketing Cloud Engagement]
+---
+
+import { LeadText } from '../../../src/components/LeadText.js';
+import { Button } from '../../../src/components/Buttons.js';
+
+<LeadText content="Here you can find all my Salesforce Marketing Cloud Engagement IdeaExchange contributions. Let's make the change!" />
+
+## Mobile Studio
+
+### Locale-based SMS Blackout
+
+SMS Blackout allows blocking SMS sends in the chosen timeframe. Currently, SMS Blackout can be configured based on Account Timezone.
+
+However, it would be much better for multi-country clients to configure the Blackout period based on the recipient's local timezone. MobilePhone locale is perfect for implementing this.
+
+This way, it would be possible to create, for example, a single SMS Blackout for nighttime and apply it for each contact regardless of the timezone. The locale is already there for MobileConnect and can be leveraged for determining timezone offset.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdnAVUAZ/sms-blackout-to-be-based-on-mobile-phone-locale'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+---
+
+## Web Studio
+
+### Cloud Page Favicon & Open Graph Management
+
+Currently the only option to manage `<meta>` elements in Web Studio is to code them manually on each Cloud Page. This is creating a lot of workload and is an error prone process.
+
+While many `<meta>` tags are Cloud Page specific and this is not that big of a problem, there are some that could be shared:
+
+1. Favicon - not only it could be shared by all Cloud Pages, but now it's not even possible to upload one in .ico format to Content Builder.
+2. `og:image`/`twitter:image` - having possibility to set a default one (with possibility to overwrite for a specific page) would greatly improve the UX of social shared Cloud Pages - even just putting a nice company logo would make sharing lead or whitepaper forms look so much nicer and trigger better engagement.
+
+This could be easily improved by Salesforce by implementing one of two options:
+
+1. [__Minimum Valuable Solution__] Global configuration for Web Studio where one can upload a favicon and `og:image`/`twitter:image` and have it applied to all Cloud Pages
+2. [__Solution Deluxe__] Possibility to upload multiple favicons and `og:images`/`twitter:images` and use a picklist option on Cloud Page level to select the one that should be used.
+
+Input field in Cloud Page editor for `og:title` would be cherry on top.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000I8cvPUAR/cloud-page-favicon-open-graph-management'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+---
+
+## Journey Builder
+
+### DeliveredTime for Journey Builder emails
+
+`DeliveredTime` is [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) field that stores timestamp for the email delivery (when it successfully reached the target Email Service Provider). It is currently impossible to get delivery time for emails sent via Journey Builder.
+
+All other engagement data points are available (`EventDate` field for [_Sent](../../../docs/config/sfmc-system-data-views/#_sent), [_Open](../../../docs/config/sfmc-system-data-views/#_open), [_Click](../../../docs/config/sfmc-system-data-views/#_click), [_Bounce](../../../docs/config/sfmc-system-data-views/#_bounce)), but `DeliveredTime` from [`_Job` Data View](../../../docs/config/sfmc-system-data-views/#_job) returns `NULL` for Journey Builder emails.
+
+It is happening, however, only for Journey Builder emails. Sends via any other methods (for example, Send Flow) are correctly displaying the delivery time.
+
+I see it as a massive limitation for automations focused on keeping the database clean and debugging sends.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdWOmUAN/delivered-time-for-journey-builder-emails'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### _DataSourceName for Entry Data Extension in Journey Builder
+
+As per the [documentation](https://help.salesforce.com/articleView?id=mc_es_available_personalization_strings.htm&type=5), `_DataSourceName` personalisation string should show the communication audience's name. It covers lists, data extensions, groups, and filters.
+
+It works when the email is sent via Email Studio -> Email -> Content -> Send flow. However, when we send an Email (or SMS) from Journey Builder, `_DataSourceName` shows "All Subscribers" instead of the Entry Data Extension name. It is true for both Multi-Step Journeys and Single Email Sends.
+
+`_DataSourceName` should show Entry Data Extension Name for Emails in Journey Builder. It is handy to debug from Send Log and create dynamic logic in emails based on the Data Extension naming convention.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdWOiUAN/datasourcename-should-show-entry-data-extension-in-journey-builder'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Journey Builder Script Activity
+
+Salesforce Marketing Cloud Journey Builder offers many out-of-the-box Activities and the possibility to create or download custom ones from AppExchange. However, there is a space between those solutions that Salesforce can cover to empower Marketing Cloud users. An out-of-the-box Script Activity, similar to the one available in Automation Studio.
+
+Flexible enough to offer countless possibilities to SFMC power users without the complexity of creating a custom solution with the whole hosting, scalability and security considerations.
+
+Right now, it requires either:
+
+- Stitching multiple Journeys and Automations with status-capturing Data Extensions to let members flow through the mix or
+- filthy tricks with scripting in emails and, in the end, raising an error to block it from sending (quasi Script Activity with bad impact on reporting, performance, speed and super messages).
+
+Salesforce can solve it. Below are two possible solutions (and a bonus one for even more performance-oriented fun):
+
+1. __Minimum Valuable Solution__: Script Activity with the same features as in Automation Studio. The possibility of executing SSJS (or even AMPScript to optimise performance) against every Journey member would allow for pre-send updates of data from external systems using HTTP functions to ensure that crucial personalisation details are up-to-date.
+2. __Solution Deluxe__: Extension of the previous idea to define various paths based on a predefined value in the script. Think about custom decision splits using out-of-sfmc data that allow you to change the Journey path based on real-time information from external systems.
+3. __Bonus Solution__: There is also a place for a much less system-heavy script activity on the side. One that captures all members that get to that Activity and in predefined cadence (for example, every hour), if there is at least one member available, executes provided script once. Think of it as a mix of Wait and Script Activity that allows executing logic applied to groups. Use cases? Lazy update of the personalisation-source Data Extension that happens only if there are members that would need it. Or performance check of the subsequent communication to decide whether the members should receive it. All with the performance impact of one script execution per hour - regardless of the number of members.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdjPPUAZ/journey-builder-script-activity'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Wait Until Time Range Activity
+
+Salesforce Marketing Cloud offers many different Wait Activities, but one basic is missing - Wait Until Time Range.
+
+__Use Case__
+
+You want to send emails only at a specific time range (like 9 AM - 5 PM).
+For example, Journey is filled at random times with events via API or form submissions, but you don't want the email to be sent in the night.
+
+__Current Options__
+
+Right now, there is no easy workaround:
+
+1. Einstein STO is a blackbox
+2. Wait by Duration is closest to the solution, as it allows you to delay sending to a specific hour (for example, extend the wait duration till 9 AM). Still, unfortunately, it means that if someone enters Journey at 10 AM, they will have to wait a whole day. We want to send emails normally in a given time range.
+3. Update Contact adding Timestamp to Data Extension, and Decision Split deciding what should happen (send or Wait by Duration). Nice, but a lot of steps, configuration, performance penalty and awful Journey readability for longer Journeys.
+4. Custom Journey Builder Activity. Sure, but that's a lot of custom work and worrying about scalability.
+
+Salesforce can solve it.
+
+__Possible solutions__
+
+1. Minimum Valuable Solution: Improve Wait by Duration with "Extend wait duration outside of time range" or create a separate Wait Until Time Range Activity.
+2. Solution Deluxe: Allow both time ranges and days-of-week ranges (with the possibility to mix both) to cover the no-sends-on-weekends use case.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000KrMaMUAV/wait-until-time-range-journey-builder-activity'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+---
+
+## Behavioral Triggers
+
+### Einstein User Attributes in Behavioral Trigger Content Block
+
+The [Behavioral Triggers Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block) for Emails is an excellent tool for easy drag-and-drop creation of Abandoned Engagement communication. But it is missing one powerful feature — the ability to personalise the email with customer data.
+
+It is already available in the form of:
+
+- Einstein User Attributes that we can pass through the `setUserInfo` data layer.
+- The [request](../../../docs/config/sfmc-behavioral-triggers/#5-building-the-api-query) used in the back end of the current Behavioral Triggers Content Block; by adding "&user_attributes=attributeName" to the endpoint.
+- [Code](../../../docs/config/sfmc-behavioral-triggers/#6-response-parsing) of the existing Behavioral Triggers Content Block responsible for creating AMPScript variables based on the Einstein User Attributes data.
+
+However, as the Einstein User Attributes are neither added to the request by default nor configured in the User Integrace of the Content Block, to get this data in the email, one must create yet another, the same call with the above query parameter added. Neither user friendly nor optimal due to expensive `HTTP.Get` function running twice in such a scenario.
+
+Salesforce can fix it. Below are two solution tiers:
+
+1. __Minimum Valuable Solution__: Add the required query string ("&user_attributes=X,Y") with all potential Custom Einsteins User Attributes to the request URL built within the Content Block code.
+2. __Solution Deluxe__: Improve the above with the UI-enabled selection of needed Profile Attributes, just as available with Product Attributes.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GddaZUAR/einstein-user-attributes-available-in-behavioral-trigger-content-block'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Link Tracking in Behavioral Trigger Content Block
+
+[Behavioral Triggers Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block) allows for easy out-of-the-box use of abandoned engagement data in our Emails. It neatly pulls the Catalog items that captivated the customer's attention and displays them for win-back purposes. Of course, each item links back to its e-commerce page.
+
+Its implementation is, however, leading to a problem with tracking. My favourite solution - Parameter Manager with Web Analytics Connector - is not working on the Behavioral Trigger Content Block. Neither can we add the tracking parameters manually, as there is no such option in the UI.
+
+Right now, there are only two ways to add the UTM's:
+1. Add them to the Catalog directly - this adds them for all scenarios connected to Einstein or Behavioral Triggers. Not helpful, as in most cases, we want to differentiate various personalisation placements by using distinct UTM tracking.
+2. Create a Custom Behavioral Trigger Content Block - now we will be able to leverage direct links from `IGO_PRODUCTATTRIBS` add tracking to them in the product's HTML template. Okay, but not easy and make you lose click data for Einstein Recommendations.
+
+Salesforce can fix it. Below are two possible solutions:
+
+1. __Minimum Valuable Solution__: Add a text box to a Behavioral Trigger Content Block configuration menu to add our custom tracking. The Content Block should apply the provided tracking query to each link. AMPScript support included.
+2. __Solution Deluxe__: On top of the above solution, Marketing Cloud should consider the Parameter Management to allow for a mix of global UTM's from Web Analytics Connector and local from the new text box in Behavioral Trigger Content Block configuration.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdhNRUAZ/link-tracking-in-behavioral-trigger-content-block'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Behavioral Trigger Abandoned Cart Custom Attributes
+
+The [Behavioral Triggers](../../../docs/config/sfmc-behavioral-triggers/) are a terrific solution for Abandoned Engagement. The [Abandoned Cart](../../../docs/config/sfmc-behavioral-triggers/#track-cart) scenario already has multiple great features that make it easy to implement.
+
+There is, however, an area for an easy improvement on that idea to make it much more flexible and ready for real-world scenarios. Salesforce can do it with two solutions:
+
+#### Custom Cart Attributes
+
+Just as there are Custom Attributes for the Product Catalog, it would be great to have a similar option on the cart itself. Product Catalog ones are global - shared for all Customers interested in selected products. There is a need for something more unique and customer-specific.
+
+It is already available in the form of an optional `price` attribute of [`trackCart` Collect.js Data Layer](../../../docs/config/sfmc-behavioral-triggers/#track-cart) that contains individual price that does not impact the Product Catalog.  It would be great to have the possibility to add a few more, available in [`trackCart` Collect.js](../../../docs/config/sfmc-behavioral-triggers/#track-cart) and the [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses) from Einstein Backend (IgoDigital).
+
+Use case? Sure. Coupon Code Name, Coupon Code Discount (either integer or float for per cent value), added Personalisation, Voucher ID. All those tools are frequently used in e-commerce and would be perfect for a `trackCart` layer. Suitable for personalisation, perfect for passing data needed for rebuilding the cart.
+
+#### Cart Attributes Visibility in the Content Block
+
+This one is an extension of the above idea. We already have a way to decide which Product Catalog Attributes are displayed in the Behavioral Trigger Content Block. But in many cases, when I use Abandoned Cart, I would like to show `trackCart` individual price (including applied coupons) instead of the global Catalog one. It could also be helpful for some Custom Cart Attributes from the previous solution.
+
+Below are three solution tiers:
+
+1. __Minimum Valuable Solution__: Add `price` `trackCart` attribute (`amount` in the [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses) from the IgoDigital) available for selection when defining fields shown for products in [Behavioral Trigger Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block).
+2. __Nice Solution__: On top of the first point, add two additional (optional) attributes to `trackCart` Collect.js and IgoDigital [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses): `couponCodeName`, `couponCodeDiscount `- and make them also available for selection in [Behavioral Trigger Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block).
+3. __Solution Deluxe__: On top of the first point, add the possibility of defining Custom Cart Attributes in the UI and leveraging them in `trackCart` Collect.js and IgoDigital [response](../../../docs/config/sfmc-behavioral-triggers/#api-responses). Just as with Custom Profile Attributes / Custom Product Attributes. Additionally, make them also available for selection in [Behavioral Trigger Content Block](../../../docs/config/sfmc-behavioral-triggers/#behavioral-trigger-content-block).
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdbvFUAR/behavioral-trigger-abandoned-cart-custom-attributes'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Behavioral Trigger Content Block rendering on Yahoo, AOL, Windows Outlook
+
+The current version of Behavioral Trigger Content Block is not rendering correctly on Yahoo, AOL and Windows Outlook. On those Email Providers, the product text is not displayed, and the customer only sees the images.
+
+The reason for this is using `rem` units font-size for product descriptions - `font-size: 0.8125rem`:
+
+`<td class="mcbt_name" style="padding: 0; font-size: 0.8125rem; padding-top: 10px; text-align: center; width: 100%; max-width: 310px;">--name--</td>`
+
+`rem` units are currently not supported by Yahoo, AOL and Windows Outlook ([Can I Email](https://www.caniemail.com/features/css-unit-rem/)) which leads to those Email Providers ignoring this parameter. When this happens, the font-size value is inherited from the parent that have font-size configured.
+
+And for Behavioral Trigger Content block that parent is a `<td>` parameter within header [`markupFragment`](../../../docs/config/sfmc-behavioral-triggers/#3-settings--markup-fragments). Unfortunately, it has `font-size: 0`:
+
+`<td class="multi-column" style="padding: 0; text-align: center; font-size: 0; padding-top: 10px; padding-bottom: 10px;">`
+
+There should be no `rem` units used in the Behavioral Trigger Content Block code and instead a standard `px` font-size assignment for the Block to render correctly.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdZZBUA3/behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+---
+
+## Content Builder
+
+### Content Builder Shared Folders Permissions
+
+Content Builder is great for creating and neatly organising assets in Marketing Cloud, but it has one huge issue. Folder access management.
+
+There are already great [Ideas on expanding the folder rights](https://trailblazer.salesforce.com/ideaView?id=0873A000000PZ6oQAG), so in this Idea, I want to focus on something different - and much easier to fix for Salesforce.
+
+When settings permissions for a Marketing Cloud User or Role, there are options that control the rights to Shared Folders of Content Builder. As with Shared Data Extensions Folder permissions, you can decide what the user or role can do with Shared Content Folders.
+
+However, there is one huge difference:
+1. With Shared Data Extension Folders, when you remove all permissions, the user or role can no longer see Shared space and effectively loses access to all Shared Data Extensions.
+2. With Shared Content Folders, when you remove all permissions, the user or role will not see the folders, but they will still see the Shared Folder tab and - what's much worse - `All Shared Content` section displaying all the Content assets stored within Shared Folders.
+
+As SFMC applies the permissions to read and edit content to both local and shared assets, every person with edit rights can change assets in a Shared Content Folder - event if they do not have permission to that folder.
+
+This behaviour breaks a prevalent use case of having local folders available to all creators while limiting shared folders only to administrative roles. It is possible (and very useful) for Data Extensions. But not for Content Builder, as everyone can access all administrative-level assets (like master templates or crucial content blocks).
+
+The fix is straightforward - if the current user does not have any permissions to Shared Content Builder Folders, it shouldn't see either the `All Shared Content` section or even the Shared Folders tab. That's it. It would then mirror the Shared Data Extension folder permissions and enable the local/administrative access split use case.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000GdbEjUAJ/content-builder-shared-folder-permissions'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+---
+
+## Setup
+
+### Restore default permissions for SFMC Standard System Roles
+
+While Salesforce updates the Standard Roles (Email Studio and Marketing Cloud ones) during Releases, users can also modify them within the SFMC Setup freely (permissions of those System Roles are not locked).
+
+Unfortunately, there is no option to see whether the Standard Role deviates from the default configuration. It creates problems for new administrators coming to existing implementation or after someone modifies the wrong role by mistake/not following the best practices.
+
+Official documentation only stores high-level information about the out-of-the-box configuration that cannot be used to restore the original state.
+
+It would be of great help to have on the Stnadard System Roles either:
+
+- Button that lets you restore the default (for new orgs) permissions configuration or
+- Information on each permission what is its default state.
+
+Currently, there is no real workaround apart from:
+
+- Checking it against another, unchanged SFMC (which is not an option for most) or
+- Using the manual [backup, I'm currently building](https://github.com/MateuszDabrowski/sfmc-roles-backup) (which is not the best long-term option, especially with all the changes to the permissions happening multiple times a year).
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0B8W00000KSOTSUA5/restore-default-permissions-for-marketing-cloud-system-roles'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
