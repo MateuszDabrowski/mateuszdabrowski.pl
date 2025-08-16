@@ -71,45 +71,20 @@ module.exports = {
             },
             items: [
                 {
-                    label: 'MCE Docs & Snippets',
+                    label: 'Docs & Snippets',
                     to: 'docs',
                     activeBasePath: 'docs',
                     position: 'left',
                     items: [
                         {
-                            label: 'Zen of MCE',
-                            type: 'doc',
-                            docId: 'zen-of-sfmc',
+                            label: 'Salesforce Marketing Cloud Engagement',
+                            to: 'docs/category/salesforce-marketing-cloud-engagement',
                         },
                         {
-                            label: 'MCE Config',
-                            to: 'docs/category/sfmc-config/',
+                            label: 'Salesforce Marketing Cloud Personalization',
+                            to: 'docs/category/salesforce-marketing-cloud-personalization/',
                         },
-                        {
-                            label: 'MCE SQL',
-                            to: 'docs/category/sfmc-sql/',
-                        },
-                        {
-                            label: 'SSJS',
-                            to: 'docs/category/ssjs/',
-                        },
-                        {
-                            label: 'AMPScript',
-                            to: 'docs/category/ampscript/',
-                        },
-                    ],
-                },
-                {
-                    label: 'Other Docs & Snippets',
-                    to: 'docs',
-                    activeBasePath: 'docs',
-                    position: 'left',
-                    items: [
-                        {
-                            label: 'Marketing Cloud Personalization',
-                            to: 'docs/category/mc-personalization/',
-                        },
-                        {
+                      {
                             label: 'JavaScript',
                             to: 'docs/category/javascript/',
                         },
@@ -161,11 +136,11 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'Marketing Cloud Engagement',
+                            label: 'Salesforce Marketing Cloud Engagement',
                             to: 'sites/ideas/salesforce/marketing-cloud-engagement-ideas/',
                         },
                         {
-                            label: 'Marketing Cloud Personalization',
+                            label: 'Salesforce Marketing Cloud Personalization',
                             to: 'sites/ideas/salesforce/marketing-cloud-personalization-ideas/',
                         },
                     ]
@@ -541,7 +516,7 @@ module.exports = {
                     },
                     /* Category pages restructure */
                     {
-                        from: ['/docs/sql/'],
+                        from: ['/docs/sql/', '/docs/category/sfmc-sql/'],
                         to: '/docs/category/sfmc-sql/',
                     },
                     {
@@ -560,10 +535,42 @@ module.exports = {
                         from: ['/docs/interaction-studio/', '/docs/category/interaction-studio/'],
                         to: '/docs/category/mc-personalization/',
                     },
-                      {
+                    {
                         from: ['/docs/category/interaction-studio-snippets/'],
                         to: '/docs/category/-mc-personalization-snippets/',
                     },
+
+//TODO: category redirects
+                        {
+                            label: 'MCE Config',
+                            to: 'docs/category/sfmc-config/',
+                        },
+                        {
+                            label: 'MCE SQL',
+                            to: 'docs/category/sfmc-sql/',
+                        },
+                        {
+                            label: 'SSJS',
+                            to: 'docs/category/ssjs/',
+                        },
+                        {
+                            label: 'AMPScript',
+                            to: 'docs/category/ampscript/',
+                        },
+                    ],
+                },
+                {
+                    title: 'Other Docs',
+                    items: [
+                        {
+                            label: 'MC Personalization',
+                            to: 'docs/category/mc-personalization/',
+                        },
+                        {
+                            label: 'JavaScript',
+                            to: 'docs/category/javascript/',
+                        },
+
                     /* Ideas restructure */
                     {
                         from: ['/ideas/', '/sites/ideas/', '/sites/ideas/marketing-cloud-ideas/'],
