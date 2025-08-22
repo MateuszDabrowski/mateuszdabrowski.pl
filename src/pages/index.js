@@ -11,10 +11,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 import styles from './styles.module.css';
 
-const dynamicHeroWords = {
-    headline: ['Marketing', 'Service', 'Sales', 'Commerce', 'Experience'],
-    subline: ['code', 'agent', 'flow'],
-};
+const dynamicHeroWords = ['code', 'agent', 'flow'];
 
 /**
  * Hero Component with dynamic word-switching and scrolling animation.
@@ -22,13 +19,11 @@ const dynamicHeroWords = {
  * @return {JSX.Element} The updated Hero component.
  */
 function Hero() {
-    const [currentPlatformIndex, setCurrentPlatformIndex] = useState(0);
     const [currentToolIndex, setCurrentToolIndex] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentPlatformIndex((prevIndex) => (prevIndex + 1) % dynamicHeroWords.headline.length);
-            setCurrentToolIndex((prevIndex) => (prevIndex + 1) % dynamicHeroWords.subline.length);
+            setCurrentToolIndex((prevIndex) => (prevIndex + 1) % dynamicHeroWords.length);
         }, 5000); // Change every 3 seconds
 
         return () => clearInterval(interval); // Cleanup interval on component unmount
@@ -43,7 +38,7 @@ function Hero() {
                         className={clsx(styles.heroProjectKeywords, styles.fixedWidth)}
                         aria-live="polite"
                     >
-                        Marketing Automation{/* {dynamicHeroWords.headline[currentPlatformIndex]} */}
+                        Marketing Automation
                     </span>
 
                 </h1>
@@ -53,7 +48,7 @@ function Hero() {
                         className={clsx(styles.heroCodeVariable, styles.fixedWidth)}
                         aria-live="polite"
                     >
-                        {dynamicHeroWords.subline[currentToolIndex]}
+                        {dynamicHeroWords[currentToolIndex]}
                     </span>{' '}
                     <span className={styles.heroCodeSymbols}>=</span>{' '}
                     <span className={styles.heroCodeFunction}>do</span>
