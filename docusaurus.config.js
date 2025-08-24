@@ -418,67 +418,67 @@ module.exports = {
                     /* SF MCE SQL Restructure */
                     {
                         from: ['/docs/sql/sfmc-sql-aggregate-functions/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-aggregate-functions/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-basics/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-basics/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-case/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-case/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-case/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-conversion-functions/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-conversation-functions/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-conversation-functions/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-date-functions/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-date-functions/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-from/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-from/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-from/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-join/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-join/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-join/',
                     },
                      {
                         from: ['/docs/sql/sfmc-sql-like/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-like/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-like/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-null-functions/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-null-functions/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-numeric-functions/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-numeric-functions/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-select/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-select/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-select/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-string-functions/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-string-functions/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-style-guide/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-style-guide/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-where/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-where/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-where/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-snippet-debugging-email-sends/', '/docs/sql/snippets/sfmc-sql-debugging-email-sends/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/snippets/sfmc-sql-debugging-email-sends/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-snippet-debugging-value-length/', '/docs/sql/snippets/sfmc-sql-debugging-value-length/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/snippets/sfmc-sql-debugging-value-length/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/',
                     },
                     /* JS Snippets restructure */
                     {
