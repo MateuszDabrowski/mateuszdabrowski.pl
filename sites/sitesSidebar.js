@@ -26,8 +26,8 @@ module.exports = {
                 image: 'img/og/og-image-faq.png',
             },
             items: [
-                'faq/how-to-get-sfmc-hands-on-experience',
-                'faq/how-to-get-sf-certification-vouchers',
+                'faq/salesforce/how-to-get-sfmc-hands-on-experience',
+                'faq/salesforce/how-to-get-sf-certification-vouchers',
             ],
         },
     ],

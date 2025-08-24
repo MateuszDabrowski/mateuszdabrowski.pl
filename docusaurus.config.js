@@ -59,7 +59,7 @@ module.exports = {
         announcementBar: {
             id: 'announcementBar',
             content:
-                'Big website restructuring ongoing - if you find a broken link <a href="https://www.linkedin.com/in/mateusz-dabrowski-pl/" style="text-decoration: underline">let me know</a>',
+                'Big website restructuring ongoing - if you find a broken link <a href="https://www.linkedin.com/in/mateusz-dabrowski-pl/" style="text-decoration: underline">please let me know</a>',
             backgroundColor: '#0176d3',
             textColor: '#fffffe',
         },
@@ -77,14 +77,14 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'Salesforce Marketing Cloud Engagement',
-                            to: 'docs/category/salesforce-marketing-cloud-engagement',
+                            label: 'Marketing Cloud Engagement',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement',
                         },
                         {
-                            label: 'Salesforce Marketing Cloud Personalization',
-                            to: 'docs/category/salesforce-marketing-cloud-personalization/',
+                            label: 'Marketing Cloud Personalization',
+                            to: 'docs/category/salesforce/marketing-cloud-personalization/',
                         },
-                      {
+                        {
                             label: 'JavaScript',
                             to: 'docs/category/javascript/',
                         },
@@ -120,12 +120,12 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'How to get Salesforce Marketing Cloud Demo Account',
-                            to: 'sites/faq/how-to-get-sfmc-hands-on-experience/',
+                            label: 'How to get Marketing Cloud Demo Account',
+                            to: 'sites/faq/salesforce/how-to-get-sfmc-hands-on-experience/',
                         },
                         {
                             label: 'How to get Salesforce Certification Vouchers',
-                            to: 'sites/faq/how-to-get-sf-certification-vouchers/',
+                            to: 'sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
                         },
                     ]
                 },
@@ -136,11 +136,11 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'Salesforce Marketing Cloud Engagement',
+                            label: 'Marketing Cloud Engagement',
                             to: 'sites/ideas/salesforce/marketing-cloud-engagement-ideas/',
                         },
                         {
-                            label: 'Salesforce Marketing Cloud Personalization',
+                            label: 'Marketing Cloud Personalization',
                             to: 'sites/ideas/salesforce/marketing-cloud-personalization-ideas/',
                         },
                     ]
@@ -192,23 +192,23 @@ module.exports = {
                     items: [
                         {
                             label: 'Zen of MCE',
-                            to: 'docs/zen-of-sfmc',
+                            to: 'docs/salesforce/marketing-cloud-engagement/zen-of-sfmc',
                         },
                         {
                             label: 'MCE Config',
-                            to: 'docs/category/sfmc-config/',
+                            to:  'docs/category/salesforce/marketing-cloud-engagement/config/',
                         },
                         {
                             label: 'MCE SQL',
-                            to: 'docs/category/sfmc-sql/',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/sfmc-sql/',
                         },
                         {
                             label: 'SSJS',
-                            to: 'docs/category/ssjs/',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/ssjs/',
                         },
                         {
                             label: 'AMPScript',
-                            to: 'docs/category/ampscript/',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/ampscript/',
                         },
                     ],
                 },
@@ -217,7 +217,7 @@ module.exports = {
                     items: [
                         {
                             label: 'MC Personalization',
-                            to: 'docs/category/mc-personalization/',
+                            to: 'docs/category/salesforce/marketing-cloud-personalization/',
                         },
                         {
                             label: 'JavaScript',
@@ -234,7 +234,7 @@ module.exports = {
                         },
                         {
                             label: 'Webinars',
-                            to: 'docs/category/sfmc-webinars',
+                            to: 'docs/category/webinars',
                         },
                         {
                             label: 'Toolset',
@@ -328,6 +328,10 @@ module.exports = {
             '@docusaurus/plugin-client-redirects', // Works only on production
             {
                 redirects: [
+                    {
+                        from: ['/docs/zen-of-sfmc/'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/zen-of-sfmc',
+                    },
                     /* SF MCE Config Restructure */
                     {
                         from: ['/docs/sql/sfmc-sql-snippet-enhanced-send-log/', '/docs/usecase/sfmc-enhanced-send-log/', '/docs/config/sfmc-enhanced-send-log/'],
@@ -516,61 +520,41 @@ module.exports = {
                     },
                     /* Category pages restructure */
                     {
-                        from: ['/docs/sql/', '/docs/category/sfmc-sql/'],
-                        to: '/docs/category/sfmc-sql/',
+                        from: ['/docs/category/marketing-cloud-engagement/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/',
                     },
                     {
-                        from: ['/docs/ssjs/'],
-                        to: '/docs/category/ssjs/',
+                        from: ['/docs/sql/', '/docs/category/sfmc-sql/', '/docs/category/sfmc-sql/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/sql/',
                     },
                     {
-                        from: ['/docs/sfmc-webinars/'],
-                        to: '/docs/category/sfmc-webinars/',
+                        from: ['/docs/ssjs/',  '/docs/category/ssjs/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/ssjs/',
                     },
                     {
-                        from: ['/docs/category/sfmc-use-cases/'],
-                        to: '/docs/category/sfmc-config/',
+                        from: ['/docs/category/ampscript/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/ampscript/',
+                    },
+                                        {
+                        from: ['/docs/category/sfmc-use-cases/', '/docs/category/sfmc-config/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/config/',
                     },
                     {
-                        from: ['/docs/interaction-studio/', '/docs/category/interaction-studio/'],
-                        to: '/docs/category/mc-personalization/',
+                        from: ['/docs/sfmc-webinars/', '/docs/category/sfmc-webinars/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/webinars/',
                     },
                     {
-                        from: ['/docs/category/interaction-studio-snippets/'],
-                        to: '/docs/category/-mc-personalization-snippets/',
+                        from: ['/docs/interaction-studio/', '/docs/category/interaction-studio/', '/docs/category/mc-personalization/'],
+                        to: '/docs/category/salesforce/marketing-cloud-personalization/',
                     },
-
-//TODO: category redirects
-                        {
-                            label: 'MCE Config',
-                            to: 'docs/category/sfmc-config/',
-                        },
-                        {
-                            label: 'MCE SQL',
-                            to: 'docs/category/sfmc-sql/',
-                        },
-                        {
-                            label: 'SSJS',
-                            to: 'docs/category/ssjs/',
-                        },
-                        {
-                            label: 'AMPScript',
-                            to: 'docs/category/ampscript/',
-                        },
-                    ],
-                },
-                {
-                    title: 'Other Docs',
-                    items: [
-                        {
-                            label: 'MC Personalization',
-                            to: 'docs/category/mc-personalization/',
-                        },
-                        {
-                            label: 'JavaScript',
-                            to: 'docs/category/javascript/',
-                        },
-
+                    {
+                        from: ['/docs/category/serverside-code/'],
+                        to: '/docs/category/salesforce/marketing-cloud-personalization/serverside-code/',
+                    },
+                    {
+                        from: ['/docs/category/interaction-studio-snippets/', '/docs/category/-mc-personalization-snippets/'],
+                        to: '/docs/category/salesforce/marketing-cloud-personalization/snippets/',
+                    },
                     /* Ideas restructure */
                     {
                         from: ['/ideas/', '/sites/ideas/', '/sites/ideas/marketing-cloud-ideas/'],
@@ -596,6 +580,15 @@ module.exports = {
                     {
                         from: ['/docs/webinars/sfmc-webinar-cloud-page-apps'],
                         to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-cloud-page-apps',
+                    },
+                     /* FAQ pages restructure */
+                     {
+                        from: ['/sites/faq/how-to-get-sfmc-hands-on-experience/'],
+                        to: '/sites/faq/salesforce/how-to-get-sfmc-hands-on-experience/',
+                    },
+                    {
+                        from: ['/sites/faq/how-to-get-sf-certification-vouchers/'],
+                        to:'/sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
                     },
                 ],
             },
