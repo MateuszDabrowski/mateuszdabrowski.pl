@@ -51,7 +51,7 @@ Once you have requirements, it's time to check what already is within your Marke
 
 :::note You Should Know
 
-Not all solutions are available by default - some require a support ticket to be enabled. Check out my [list of features on-demand](./sfmc-features-on-demand.mdx) to see if there is anything hidden that might fulfil your requirements.
+Not all solutions are available by default - some require a support ticket to be enabled. Check out my [list of features on-demand](docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx) to see if there is anything hidden that might fulfil your requirements.
 
 :::
 
@@ -85,7 +85,7 @@ There are four things to consider:
 3. __Will it be cheaper than AppExchange?__ Sure, with enough time and money, you can build something good enough. But will it be more affordable than a similar solution available in the paid section of AppExchange?
 4. __Will you maintain it?__ Even if you answered yes to the previous three points, you must consider maintenance. In most cases, building a custom is just the beginning. Requirements change, new needs happen, platforms get updated and require refactor. With AppExchange solutions, it _should_ be much less of a worry in the long term.
 
-While the list might look like a hard pass for custom solutions, there is a place for them. Especially on the ends of the spectrum. Simple, but lifesaving micro solutions ([Cloud Page Apps](../ssjs/snippets/sfmc-cloud-page-apps.mdx), [Code Resources](./sfmc-code-resource.mdx)) or custom behemoths aligned to all non-negotiable quirks and features of your internal processes.
+While the list might look like a hard pass for custom solutions, there is a place for them. Especially on the ends of the spectrum. Simple, but lifesaving micro solutions ([Cloud Page Apps](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps.mdx), [Code Resources](docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx)) or custom behemoths aligned to all non-negotiable quirks and features of your internal processes.
 
 However, if you hit a hard "no" to any of the above questions, it's time to visit the AppExchange again.
 
@@ -135,7 +135,7 @@ There are two ways to segment contacts in Marketing Cloud core. Filtered Data Ex
 
 Filtered Data Extensions are free, require nearly no implementation (apart from setting Data Relationships), work directly in SFMC, and are a simple drag and drop solution, but... They don't support segmenting on more than two Data Extensions. Not good enough.
 
-SQL Query Activities are free, require no implementation, work directly in SFMC and allow segmenting on multiple data points, but... demand [SQL](../sql/sfmc-sql-basics.mdx) skills. It means training requirements, slower segmentation and a higher risk of errors by inexperienced users. Not easy enough.
+SQL Query Activities are free, require no implementation, work directly in SFMC and allow segmenting on multiple data points, but... demand [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx) skills. It means training requirements, slower segmentation and a higher risk of errors by inexperienced users. Not easy enough.
 
 __3. Free AppExchange__
 
@@ -145,7 +145,7 @@ __4. Custom Solution__
 
 There are two base options for the drag and drop custom solution approach.
 
-First - generator that modifies predefined segments. It's relatively simple to build, but it allows you to make only minor adaptations of the templated query, mostly on filtering ([SQL WHERE](../sql/sfmc-sql-where.mdx). Very limited and requires hard coding for each new segment template. Not good enough and hard to maintain.
+First - generator that modifies predefined segments. It's relatively simple to build, but it allows you to make only minor adaptations of the templated query, mostly on filtering (/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx). Very limited and requires hard coding for each new segment template. Not good enough and hard to maintain.
 
 Second - fully-fledged visual wrapper over SQL queries. Full power with a drag and drop interface. Sounds like a dream? Correct. Such solution requires a lot of work and testing. The cost would skyrocket well above (spoiler alert) what is available in the paid section of AppExchange. Not worth it.
 
@@ -192,7 +192,7 @@ And that's not all - Query Studio lets you save your work as ready-to-use Query 
 
 However, Query Studio is not perfect. The main issue is that it has implemented a different (and not that good) query validation. The outcome?
 
-While every query you write in Query Studio will work in Query Activity, it is not always true the other way round. For example, Query Studio won't let you use comments, parentheses in the first line of the [SELECT](../sql/sfmc-sql-select.mdx) statement, [TOP PERCENT](../sql/sfmc-sql-select.mdx#top-percent), [CAST](../sql/sfmc-sql-conversion-functions.mdx#cast) in [SELECT](../sql/sfmc-sql-select.mdx) and more that are not a problem in Query Activity.
+While every query you write in Query Studio will work in Query Activity, it is not always true the other way round. For example, Query Studio won't let you use comments, parentheses in the first line of the [SELECT](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) statement, [TOP PERCENT](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top-percent), [CAST](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#cast) in [SELECT](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) and more that are not a problem in Query Activity.
 
 It also has very poor error messages making it hard to debug your queries properly. Sometimes it is helpful to copy the SQL to Query Activity and validate there to get a better response.
 
@@ -263,7 +263,7 @@ Well, there are two issues:
 
 To fully leverage Salesforce Marketing Cloud, you need a robust segmentation solution. Filtered Data Extensions ain't it. It leaves you with SQL Query Activity and AppExchange.
 
-While I'm a big fan of [SQL](../sql/sfmc-sql-basics.mdx), I know it's not a tool for everyone. The code-based solutions always make scaling the marketing team much harder. DESelect Segment is currently the best option to solve that problem, and - with ongoing updates - it keeps getting better.
+While I'm a big fan of [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx), I know it's not a tool for everyone. The code-based solutions always make scaling the marketing team much harder. DESelect Segment is currently the best option to solve that problem, and - with ongoing updates - it keeps getting better.
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G0yE1UAJ'

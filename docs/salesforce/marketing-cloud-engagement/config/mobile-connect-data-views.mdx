@@ -15,7 +15,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 ## System Data Views
 
-Learn about SFMC [System Data Views Basics](./sfmc-system-data-views.mdx#data-views-basics) and specific backend tables covering [Email Studio](./sfmc-system-data-views.mdx#subscriber-data-views), [Journey Builder](./sfmc-system-data-views.mdx#journey-data-views) & [Automation Studio](./sfmc-system-data-views.mdx#automation-data-views) data [here](./sfmc-system-data-views.mdx).
+Learn about SFMC [System Data Views Basics](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#data-views-basics) and specific backend tables covering [Email Studio](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#subscriber-data-views), [Journey Builder](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#journey-data-views) & [Automation Studio](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#automation-data-views) data [here](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx).
 
 ## MobileConnect Data Views
 
@@ -137,7 +137,7 @@ When working with `_MobileAddress` Data View:
 
 1. There is no guarantee of how long it will work and how long the data will be correct. Be sure you are checking it periodically or - even better - have validation in your code.
 2. The rule of thumb when working with MobileConnect is to use the official, supported solutions. Only when they cannot deliver - check whether `_MobileAddress` can help.
-3. Do not use the User Interface editor in MobileConnect Demographics part of the Contact to edit information in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](../ssjs/snippets/ssjs-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. It is the most significant selling point of this Data View.
+3. Do not use the User Interface editor in MobileConnect Demographics part of the Contact to edit information in this Data View. It is broken and overwrites all connected Mobile Numbers with a change made to just one. However, the changes are possible with [SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change.mdx) - including ContactID and MobileNumber changes and limited merging. It is the most significant selling point of this Data View.
 4. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
 5. Whenever creating a MobileConnect Contact, be sure to provide the `_MobileNumber` with the dialling code prefix (without the `+` or `00`). For example, Poland has a `+48` dialling code and nine-digit numbers, so the correct format is 48123456789. Double-check whether `_CountryCode` is an appropriate two-letter code (for example, `PL`).
 6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with the highest `_Priority`.
@@ -448,8 +448,8 @@ When working with `_SMSSubscriptionLog` Data View:
 1. SFMC assigns subscription data to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
 2. SubscriberKey will be correctly populated if there is one (and only one) Subscriber with the same Mobile Number. Otherwise, it will have either have a `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
 3. `SubscriptionDefinitionID` is a GUID, and there is no apparent connection to a specific Keyword. But there are two tricks.
-   - [`JOIN`](../sql/sfmc-sql-join.mdx) [`_SMSMessageTracking`](#_smsmessagetracking) Data View and use `KeywordID` and `SharedKeyword` columns to map the GUID to readable Keyword name. If you cannot find this information there, there is a second option:
-   - Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click the Attributes tab and scroll to MobileConnect Data. Click on the `Carrier ID` value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check the Keyword column, you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click `Edit`. Now you will see the same data, but with Keyword GUID. With those two values, you can use a SQL [`CASE`](../sql/sfmc-sql-case.mdx#conditional-values-with-case) statement to convert this Data View to a more readable format.
+   - [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) [`_SMSMessageTracking`](#_smsmessagetracking) Data View and use `KeywordID` and `SharedKeyword` columns to map the GUID to readable Keyword name. If you cannot find this information there, there is a second option:
+   - Go to MobileConnect Contacts, open your test contact and make sure he is subscribed to all your Keywords. Click the Attributes tab and scroll to MobileConnect Data. Click on the `Carrier ID` value. It will open a MobileConnect Subscriptions view - the above Data View in User Interface format. If you check the Keyword column, you will see your MobileConnect Short or Long Code along with Keyword in a readable format. Write it down and click `Edit`. Now you will see the same data, but with Keyword GUID. With those two values, you can use a SQL [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#conditional-values-with-case) statement to convert this Data View to a more readable format.
 
 ---
 
@@ -492,8 +492,8 @@ MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. C
 ResponseToMobileMessageTrackingID | The tracking ID of the response to the message | Number | X |
 IsValid | Populates to 1 for inbound message and 0 for Outbound message | Number | X |
 InvalidationCode | Invalidation code for the message. Currently always null. | Number | X |
-SMSJobID | GUID with JobID matching value in [SMS Send Log](./sfmc-enhanced-send-log.mdx). Filled only for sends since Spring 2023. | String | X
-SMSBatchID | BatchID matching value in [SMS Send Log](./sfmc-enhanced-send-log.mdx). Filled only for sends since Spring 2023. | Number | X
+SMSJobID | GUID with JobID matching value in [SMS Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx). Filled only for sends since Spring 2023. | String | X
+SMSBatchID | BatchID matching value in [SMS Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx). Filled only for sends since Spring 2023. | Number | X
 SendID | The send ID number for the SMS send | Number | X |
 SendSplitID | If the message was split, the ID of the split | Number | X |
 SendSegmentID | The ID of the segment tied to the message | Number | X |
@@ -574,16 +574,16 @@ When working with `_SMSMessageTracking` Data View:
 2. `KeywordID` and `CodeID` are GUIDs, but the same table also has the readable versions of those columns - `ShortCode` and `SharedKeyword`. `ShortCode`, despite the name, also displays Long Codes.
 3. The fields marked above as boolean (like `Sent`, `Delivered`, `IsTest`, `Outbound`) have the value in the form of a number: `0` = false, `1` = true. Some might also be `null` - for example, if a message was outbound, `Outbound` will have the value of `1`, whereas `Inbound` will be `null`.
 4. `MessageText` will not only show you the text you sent in your SMS - it will also display it after personalisation is applied. On the one hand, it is great for debugging, as it allows you to check the final content the user received. On the other hand, you won't be able to assess personalisations used across your messaging.
-5. `ResponseToMobileMessageTrackingID` is an excellent way to check customer response. You can make [Self-Join](../sql/sfmc-sql-join.mdx#self-join) between inbound `ResponseToMobileMessageTrackingID` and outbound `MobileMessageTrackingID` to output response data in the same line.
+5. `ResponseToMobileMessageTrackingID` is an excellent way to check customer response. You can make [Self-Join](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#self-join) between inbound `ResponseToMobileMessageTrackingID` and outbound `MobileMessageTrackingID` to output response data in the same line.
 6. Some fields in this Data View are filled only under specific conditions:
     - `CampaignID` is populated only when an SMS is sent to Data Extension as Audience or send type is Send to Data Extension. SMS must be connected to a Campaign for the field to be populated.
     - `SendID`, `SendJobID` are populated only for SMS messages sent via Automation Studio's Send SMS Activity or when an SMS is sent to Data Extension as Audience.
     - `SendSplitID`, `SendSegmentID`, `SendGroupID`, `SendPersonID` are populated only when SMS is sent to Data Extension as Audience.
     - `ConversationID` is populated only when a conversation is created with a MO user using AMPScript [`CreateSMSConversation`](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/CreateSmsConversation.htm).
 7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. You should pull that data from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
-8. `JBDefinitionID` and `JBActivityID` let you cleanly match SMS data to [`Journey`](./sfmc-system-data-views.mdx#_journey) and [`_JourneyActivity`](./sfmc-system-data-views.mdx#_journeyactivity) Data Views using `VersionID` and `ActivityID` respectively. However, it won't work for old (created before October 2020) SMS Activities - for those you can make a [`JOIN`](../sql/sfmc-sql-join.mdx) using `Name` field: `ON smsTracking.Name = journeyActivity.ActivityName`.
+8. `JBDefinitionID` and `JBActivityID` let you cleanly match SMS data to [`Journey`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) using `Name` field: `ON smsTracking.Name = journeyActivity.ActivityName`.
 9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
-10. `SMSJobID` and `SMSBatchID` are the only way to connect _SMSMessageTracking Data View to [SMS Send Log](./sfmc-enhanced-send-log.mdx). You can [`JOIN`](../sql/sfmc-sql-join.mdx) `ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SMSJobID AND smsTracking.SMSBatchID = sendLog.BatchID`.
+10. `SMSJobID` and `SMSBatchID` are the only way to connect _SMSMessageTracking Data View to [SMS Send Log](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SMSJobID AND smsTracking.SMSBatchID = sendLog.BatchID`.
 
 #### SMS Status Codes
 

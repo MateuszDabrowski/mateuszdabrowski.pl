@@ -17,7 +17,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 `GROUP BY` allows you to create aggregation by grouping the input data on selected column(s).
 
-It limits the data you can [`SELECT`](./sfmc-sql-select.mdx) to either `GROUP BY` column(s) or aggregate functions.
+It limits the data you can [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) to either `GROUP BY` column(s) or aggregate functions.
 
 Let's say you want to check which email domains are most popular in your database.
 
@@ -54,7 +54,7 @@ GROUP BY Domain
 
 With this simple query, you have all subscribers grouped by their domain with the number of matching rows thanks to the [`COUNT`](#count) function.
 
-You can quickly improve this query by limiting the records with [`TOP`](./sfmc-sql-select.mdx#top) and sorting [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by) to leverage Pareto's principle and pick 20% of the records responsible for 80% of the results. In this case - 20% domains covering approximately 80% subscribers.
+You can quickly improve this query by limiting the records with [`TOP`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top) and sorting [`ORDER BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top-with-order-by) to leverage Pareto's principle and pick 20% of the records responsible for 80% of the results. In this case - 20% domains covering approximately 80% subscribers.
 
 <Tabs
     defaultValue='query'
@@ -90,7 +90,7 @@ With such data, you can assess your mailing list and decide, for example, whethe
 
 It is, however, just the beginning of what you can do with `GROUP BY`. The real magic happens with multiple columns used for the grouping.
 
-Let's check how the domain numbers are changing in years with the help of the [`DATEPART` function](./sfmc-sql-date-functions.mdx#datepart) and [`DateJoined` field](../config/sfmc-system-data-views.mdx#_subscribers).
+Let's check how the domain numbers are changing in years with the help of the [`DATEPART` function](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_subscribers).
 
 <Tabs
     defaultValue='query'
@@ -132,7 +132,7 @@ As you can see, by just adding more columns after a comma (order is irrelevant),
 
 :::note You Should Know
 
-`GROUP BY` will group [`NULL`](./sfmc-sql-null-functions.mdx#null) values as if they are equal.
+`GROUP BY` will group [`NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values as if they are equal.
 
 :::
 
@@ -296,7 +296,7 @@ FROM ContactMasterDE
 
 Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So, where is the added value?
 
-For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function argument to the specific column to count only its [non-`NULL`](./sfmc-sql-null-functions.mdx#null) values.
+For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values.
 
 ```sql {3,6} title="This query will show you which Email Addresses exists on more than one subscriber"
 SELECT
@@ -340,9 +340,9 @@ Pack it into Automation with Verification Activity on top and keep your database
 
 There are three approaches to using `COUNT` that differ slightly from each other.
 
-- `COUNT(*)` will return the number of items, including [`NULL`](./sfmc-sql-null-functions.mdx#null) values and duplicates.
-- `COUNT(FieldName)` / `COUNT(ALL FieldName)` will return the number on [non-`NULL`](./sfmc-sql-null-functions.mdx#null) values including duplicates.
-- `COUNT(DISTINCT FieldName)` will return the number of [non-`NULL`](./sfmc-sql-null-functions.mdx#null) and non-duplicate values.
+- `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values and duplicates.
+- `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values including duplicates.
+- `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) and non-duplicate values.
 
 ```sql {2-4} title="Let's find out whether we have multiple Subscribers with the same Email Address"
 SELECT
@@ -353,7 +353,7 @@ FROM _Subscribers
 
 ## HAVING
 
-`HAVING` works nearly the same as [`WHERE`](./sfmc-sql-where.mdx) and allows you to filter outcomes of your [`GROUP BY`](#group-by).
+`HAVING` works nearly the same as [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) and allows you to filter outcomes of your [`GROUP BY`](#group-by).
 
 ```sql {6} title="This query will show you which Email Addresses exists on more than one subscriber"
 SELECT
@@ -364,11 +364,11 @@ GROUP BY EmailAddress
 HAVING COUNT(EmailAddress) > 1
 ```
 
-You can leverage all filtering tricks from [`WHERE`](./sfmc-sql-where.mdx). In practice, I mostly use it along with aggregate functions like [`COUNT`](#count).
+You can leverage all filtering tricks from [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx). In practice, I mostly use it along with aggregate functions like [`COUNT`](#count).
 
 ### HAVING vs WHERE
 
-I just wrote that `HAVING` and [`WHERE`](./sfmc-sql-where.mdx) work similarly, and both filter the outcomes. What is the difference?
+I just wrote that `HAVING` and [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) work similarly, and both filter the outcomes. What is the difference?
 
 1. `WHERE` filters individual data (rows before [`GROUP BY`](#group-by) is applied)
 2. `HAVING` filters aggregated data (rows after [`GROUP BY`](#group-by) is applied)
@@ -387,11 +387,11 @@ Thanks to using both `WHERE` and `HAVING` in this query, we will look only for d
 
 :::note You Should Know
 
-You can use both in the same query and even mix it with [`DISTINCT`](./sfmc-sql-select.mdx#distinct).
+You can use both in the same query and even mix it with [`DISTINCT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#distinct).
 
 However, when building such layered filters, keep in mind the SQL's order of execution for clauses:
 
-[`FROM`](./sfmc-sql-from.mdx) > [`WHERE`](./sfmc-sql-where.mdx) > [`GROUP BY`](#group-by) > [`HAVING`](#having) > [`DISTINCT`](./sfmc-sql-select.mdx#distinct) > [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by)
+[`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) > [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) > [`GROUP BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#distinct) > [`ORDER BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top-with-order-by)
 
 It means that rows filtered with `WHERE` will not be taken into consideration for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
 
@@ -401,7 +401,7 @@ It means that rows filtered with `WHERE` will not be taken into consideration fo
 
 `MIN` and `MAX` functions can help you find the minimum and maximum values within a group.
 
-As they are aggregate functions, we can use them in both the [`SELECT`](./sfmc-sql-select.mdx) part of the query and for filtering with [`WHERE`](./sfmc-sql-where.mdx) or [`HAVING`](#having).
+As they are aggregate functions, we can use them in both the [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) part of the query and for filtering with [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) or [`HAVING`](#having).
 
 <Tabs
     defaultValue='query'
@@ -435,13 +435,13 @@ ORDER BY MIN(DATEDIFF(DAY, DateJoined, GETDATE())) DESC
 </TabItem>
 </Tabs>
 
-Learn more about `MIN` and `MAX` in [Numeric Functions documentation](./sfmc-sql-numeric-functions.mdx#min-and-max).
+Learn more about `MIN` and `MAX` in [Numeric Functions documentation](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx#min-and-max).
 
 ## AVG
 
 `AVG` function allows you to find the average of values within the group.
 
-It ignores `NULL` values for the calculation and we can use it in [`SELECT`](./sfmc-sql-select.mdx), [`WHERE`](./sfmc-sql-where.mdx) or [`HAVING`](#having) part of the query.
+It ignores `NULL` values for the calculation and we can use it in [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx), [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) or [`HAVING`](#having) part of the query.
 
 <Tabs
     defaultValue='query'
@@ -476,11 +476,11 @@ ORDER BY AVG(BounceCount) DESC
 </TabItem>
 </Tabs>
 
-Learn more about `AVG` in [Numeric Functions documentation](./sfmc-sql-numeric-functions.mdx#avg).
+Learn more about `AVG` in [Numeric Functions documentation](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx#avg).
 
 :::note You Should Know
 
-`AVG` will ignore rows with [`NULL`](./sfmc-sql-null-functions.mdx), which can skew your results. [`COALESCE`](./sfmc-sql-null-functions.mdx#coalesce) will be your best friend to make sense out of imperfect data.
+`AVG` will ignore rows with [`NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx), which can skew your results. [`COALESCE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#coalesce) will be your best friend to make sense out of imperfect data.
 
 :::
 
@@ -488,7 +488,7 @@ Learn more about `AVG` in [Numeric Functions documentation](./sfmc-sql-numeric-f
 
 `SUM` function allows you to find the sum of values within the group.
 
-It ignores `NULL` values for the calculation and we can use it in [`SELECT`](./sfmc-sql-select.mdx), [`WHERE`](./sfmc-sql-where.mdx) or [`HAVING`](#having) part of the query.
+It ignores `NULL` values for the calculation and we can use it in [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx), [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) or [`HAVING`](#having) part of the query.
 
 <Tabs
     defaultValue='query'

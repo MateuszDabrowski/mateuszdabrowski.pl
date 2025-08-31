@@ -13,7 +13,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 The `SELECT` statement opens each query. It picks the columns from the source data extensions and system data views and allows you to create entirely new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As Salesforce Marketing Cloud caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio) does not support this shortcut. Don't use `*`.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As Salesforce Marketing Cloud caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) does not support this shortcut. Don't use `*`.
 
 The prefered method is targeting columns explicitly by their names:
 
@@ -32,7 +32,7 @@ SELECT
     , [External Contact Id]
 ```
 
-There are also some exceptional cases related to selected [System Data Views](../config/sfmc-system-data-views.mdx) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example, when taking Subscriber ID from Enterprise Attributes):
+There are also some exceptional cases related to selected [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example, when taking Subscriber ID from Enterprise Attributes):
 
 ```sql title="There are some special column names with an underscore prefix"
 SELECT _SubscriberId
@@ -75,7 +75,7 @@ SELECT
     , FirstName + ' ' + LastName AS FullName
 ```
 
-It becomes mighty with the [SQL String functions](./sfmc-sql-string-functions.mdx).
+It becomes mighty with the [SQL String functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx).
 
 :::
 
@@ -135,7 +135,7 @@ ORDER BY QuizScore DESC
 
 `ORDER BY` sorts Text fields alphabetically. It might surprise you if you store numbers in such field type, as it will order `10` before `2`.
 
-The best solution is to use the appropriate field type for numbers. However, if for whatever reason you cannot do it, leverage [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert):
+The best solution is to use the appropriate field type for numbers. However, if for whatever reason you cannot do it, leverage [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert):
 
 ```sql {4} title="Top 10% with highest Quiz Score if QuizScore is a Text field"
 SELECT TOP 10 PERCENT
@@ -144,13 +144,13 @@ SELECT TOP 10 PERCENT
 ORDER BY CONVERT(INT, QuizScore) DESC
 ```
 
-For example, it will be needed when you `ORDER BY` [`COUNT`](./sfmc-sql-aggregate-functions.mdx#count) within [`GROUP BY`](./sfmc-sql-aggregate-functions.mdx#group-by).
+For example, it will be needed when you `ORDER BY` [`COUNT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#count) within [`GROUP BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#group-by).
 
-`ORDER BY` will also sort dates in Marketing Cloud alphabetically using month(start with `Apr`, follow up with `Aug` and so on). You can fix it by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) to `DATE` (if you to order only by date) or `DATETIME2` (if time is important for ordering as well), just as in previous example.
+`ORDER BY` will also sort dates in Marketing Cloud alphabetically using month(/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) to `DATE` (if you to order only by date) or `DATETIME2` (if time is important for ordering as well), just as in previous example.
 
 :::
 
-`ORDER BY` can operate not only on the selected column. You already saw above that you can use expression (even [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case)!) to calculate the sorting value, but it's much more flexible.
+`ORDER BY` can operate not only on the selected column. You already saw above that you can use expression (/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#conditional-values-with-case)!) to calculate the sorting value, but it's much more flexible.
 
 You can sort using a column not picked in `SELECT`:
 
@@ -281,7 +281,7 @@ SELECT
     , _EnterpriseAttribute.LastName
 ```
 
-I'm covering this topic in-depth in [`JOIN` statement documentation](./sfmc-sql-join.mdx#table-name-prefix).
+I'm covering this topic in-depth in [`JOIN` statement documentation](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#table-name-prefix).
 
 ## Flow control
 
@@ -291,4 +291,4 @@ Despite official [SFMC SQL documentation](https://help.salesforce.com/articleVie
 
 Unfortunately, SFMC SQL does not support variables.
 
-Fortunately, it does support (selected) functions. Learn more about them in SFMC SQL Functions documentation pages related to [Strings](./sfmc-sql-string-functions.mdx), [Dates](./sfmc-sql-date-functions.mdx), [Numbers](./sfmc-sql-numeric-functions.mdx), [Conversion](./sfmc-sql-conversion-functions.mdx), [Aggregation](./sfmc-sql-aggregate-functions.mdx), [`CASE`](./sfmc-sql-case.mdx) and [`LIKE`](./sfmc-sql-like.mdx).
+Fortunately, it does support (/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx), [Dates](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx), [Numbers](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx), [Conversion](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx), [Aggregation](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx), [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) and [`LIKE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx).

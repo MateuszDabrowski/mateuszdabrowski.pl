@@ -25,7 +25,7 @@ This is why you are looking to learn about SFMC SQL. Along with Automation Studi
 
 There is also a third way - paid AppExchange solutions that offer you a way to eat a cookie and have a cookie: the full power of SQL with a drag-and-drop interface. For a price.
 
-You can check my comparison of all the above options in my [here](../config/sfmc-appexchange-solutions.mdx#sfmc-segmentation-solutions). This article will focus only on the most powerful and free option - SFMC SQL.
+You can check my comparison of all the above options in my [here](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#sfmc-segmentation-solutions). This article will focus only on the most powerful and free option - SFMC SQL.
 
 ## SQL in Salesforce Marketing Cloud
 
@@ -39,14 +39,14 @@ Finally, the significant limitation you might hit as your Marketing Cloud grows 
 
 ## Where to learn SFMC SQL
 
-Before we start with the real deal, let's cover where to learn to write SQL. I recommend getting a [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio). It's a free AppExchange add-on to Marketing Cloud developed by Salesforce. While it has cons, it's perfect for quickly learning how to query.
+Before we start with the real deal, let's cover where to learn to write SQL. I recommend getting a [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio). It's a free AppExchange add-on to Marketing Cloud developed by Salesforce. While it has cons, it's perfect for quickly learning how to query.
 
 If you cannot install this app in your Marketing Cloud, there are still two ways to learn Marketing Cloud SQL:
 
 1. Query Activities in Automation Studio. It will be much less user-friendly because for each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results. But it will let you train using the data you have in your platform.
 2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn Marketing Cloud SQL even if you don’t have access to SFMC. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
 
-I always start in [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio), and only once my SQL Query is complete and validated do I move it to Automation Studio.
+I always start in [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio), and only once my SQL Query is complete and validated do I move it to Automation Studio.
 
 Once you have the right tool, it’s time to get the right knowledge. There are few formats available. If you like reading followed by small knowledge checks - this page is the right choice. But if you prefer watching a video or a doing a challenge - Cameron Roberts and Sabuhi Yahya got you covered:
 
@@ -78,10 +78,10 @@ Learn the three essential SQL statements for all queries. They will give you sim
 
 #### Learning materials
 
-- [SELECT](./sfmc-sql-select.mdx) - just the first part, before the aliasing section.
-- [FROM](./sfmc-sql-from.mdx) - whole article.
-- [WHERE](./sfmc-sql-where.mdx) - the first part, before the Basic Operators, plus [Equality Operators](./sfmc-sql-where.mdx#equality-operators) and [Logical Operators](./sfmc-sql-where.mdx#logical-operators). Don't worry about Comparison operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple values like status.
-- [System Data Views](../config/sfmc-system-data-views.mdx) - the basics and [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View.
+- [SELECT](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) - just the first part, before the aliasing section.
+- [FROM](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) - whole article.
+- [WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) - the first part, before the Basic Operators, plus [Equality Operators](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#equality-operators) and [Logical Operators](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#logical-operators). Don't worry about Comparison operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple values like status.
+- [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) - the basics and [_Subscribers](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_subscribers) Data View.
 
 #### Check your skills
 
@@ -100,10 +100,10 @@ Write a query that will find Subscriber Key for all Active (opted-in) Subscriber
 </TabItem>
 <TabItem value='hints'>
 
-1. All Subscribers List data is stored in [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View.
-2. If you are running your query on a child Business Unit, you will need to use [`Ent.` prefix](./sfmc-sql-from.mdx#enterprise-system-data-views).
-3. You don't have to [SELECT](./sfmc-sql-select.mdx) any columns but the SubscriberKey. You can use [WHERE](./sfmc-sql-where.mdx) on not selected columns.
-4. Current status of a Subscriber is saved in the `Status` column of [_Subscribers](../config/sfmc-system-data-views.mdx#_subscribers) Data View as a string. You can use it for filtering with [WHERE](./sfmc-sql-where.mdx).
+1. All Subscribers List data is stored in [_Subscribers](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_subscribers) Data View.
+2. If you are running your query on a child Business Unit, you will need to use [`Ent.` prefix](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx#enterprise-system-data-views).
+3. You don't have to [SELECT](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) any columns but the SubscriberKey. You can use [WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) on not selected columns.
+4. Current status of a Subscriber is saved in the `Status` column of [_Subscribers](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
 
 </TabItem>
 <TabItem value='solution'>
@@ -127,10 +127,10 @@ Learn how to leverage a second Data Extension or Data View, change the output's 
 
 #### Learning materials
 
-- [JOIN](./sfmc-sql-join.mdx) - [JOIN Types](./sfmc-sql-join.mdx#join-types), [Joining ON](./sfmc-sql-join.mdx#joining-on) and [Table Name Prefixes](./sfmc-sql-join.mdx#table-name-prefix) sections. It might be helpful to check out the [visual cheatsheet](./sfmc-sql-join.mdx#sfmc-sql-join-cheat-sheet).
-- [Aliasing](./sfmc-sql-select.mdx#aliasing-with-as) - just the Aliasing with AS and Custom values sections.
-- [NULL functions](./sfmc-sql-null-functions.mdx) - just the first three paragraphs and [IS NULL](./sfmc-sql-null-functions.mdx#is-null) section.
-- [_Sent](../config/sfmc-system-data-views.mdx#_sent), [_Open](../config/sfmc-system-data-views.mdx#_open) and [_Click](../config/sfmc-system-data-views.mdx#_click) Data Views.
+- [JOIN](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) - [JOIN Types](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#join-types), [Joining ON](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on) and [Table Name Prefixes](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#table-name-prefix) sections. It might be helpful to check out the [visual cheatsheet](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#sfmc-sql-join-cheat-sheet).
+- [Aliasing](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as) - just the Aliasing with AS and Custom values sections.
+- [NULL functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx) - just the first three paragraphs and [IS NULL](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#is-null) section.
+- [_Sent](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_sent), [_Open](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_open) and [_Click](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_click) Data Views.
 
 #### Check your skills
 
@@ -150,12 +150,12 @@ Write a query that will find Subscriber Key for all Active (opted-in) Subscriber
 <TabItem value='hints'>
 
 1. Don't write SQL from scratch. Leverage what you already have.
-2. Sent data is stored in [_Sent](../config/sfmc-system-data-views.mdx#_sent) Data View.
+2. Sent data is stored in [_Sent](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_sent) Data View.
 3. You don't have to worry about the 6-month requirement because _Sent Data View stores only six months of data.
-4. You can chain multiple filters using [`WHERE` Logical Operators](./sfmc-sql-where.mdx#logical-operators).
-5. [LEFT JOIN](./sfmc-sql-join.mdx#left-and-right-joins) will add columns even if there is no data in the second table.
-6. You can find those records without data in the second table using [`IS NULL`](./sfmc-sql-null-functions.mdx#is-null).
-7. You need to join tables [`ON`](./sfmc-sql-join.mdx#joining-on) a common value.
+4. You can chain multiple filters using [`WHERE` Logical Operators](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#logical-operators).
+5. [LEFT JOIN](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#left-and-right-joins) will add columns even if there is no data in the second table.
+6. You can find those records without data in the second table using [`IS NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#is-null).
+7. You need to join tables [`ON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on) a common value.
 
 </TabItem>
 <TabItem value='solution'>
@@ -185,9 +185,9 @@ Learn how to deal with string values, how to implement SQL version of if/else lo
 
 #### Learning materials
 
-- [LIKE](./sfmc-sql-like.mdx) - whole article, but focus on [LIKE with Wildcard](./sfmc-sql-like.mdx#like-with-wildcard), you will use it more. Check out also the [LIKE operator in WHERE](./sfmc-sql-where.mdx#like-operator) section.
-- [CASE](./sfmc-sql-case.mdx) - whole article plus [CASE operator in WHERE](./sfmc-sql-where.mdx#case-operator) section.
-- [String functions](./sfmc-sql-string-functions.mdx) - check out all, but focus on most frequently used [LEFT & RIGHT](./sfmc-sql-string-functions.mdx#left--right), [LEN](./sfmc-sql-string-functions.mdx#len) and [CHARINDEX](./sfmc-sql-string-functions.mdx#charindex).
+- [LIKE](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx) - whole article, but focus on [LIKE with Wildcard](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx#like-with-wildcard), you will use it more. Check out also the [LIKE operator in WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#like-operator) section.
+- [CASE](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) - whole article plus [CASE operator in WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#case-operator) section.
+- [String functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx) - check out all, but focus on most frequently used [LEFT & RIGHT](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#left--right), [LEN](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#len) and [CHARINDEX](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#charindex).
 
 #### Check your skills
 
@@ -217,10 +217,10 @@ For our need here, if the Subscriber Key has 18 characters, no `@`, and starts w
 </TabItem>
 <TabItem value='hints'>
 
-1. The easiest way to find an email is to use [LIKE with Wildcard](./sfmc-sql-like.mdx#like-with-wildcard) looking for `{something}@{domain}.{tld}`.
-2. [CASE](./sfmc-sql-case.mdx) returns the value assigned to the first matched scenario, so the order of `WHEN`s makes a difference.
-3. You can use multiple conditions and [String functions](./sfmc-sql-string-functions.mdx) in the `WHEN` checks.
-4. [CASE](./sfmc-sql-case.mdx) can create a new column when you use it in [SELECT with an alias](./sfmc-sql-select.mdx#aliasing-with-as).
+1. The easiest way to find an email is to use [LIKE with Wildcard](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx#like-with-wildcard) looking for `{something}@{domain}.{tld}`.
+2. [CASE](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) returns the value assigned to the first matched scenario, so the order of `WHEN`s makes a difference.
+3. You can use multiple conditions and [String functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx) in the `WHEN` checks.
+4. [CASE](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) can create a new column when you use it in [SELECT with an alias](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as).
 
 </TabItem>
 <TabItem value='solution'>
@@ -254,10 +254,10 @@ Learn how to use the most important filter of all - date filtering. Read about e
 
 #### Learning materials
 
-- [Date functions](./sfmc-sql-date-functions.mdx) - [GETDATE](./sfmc-sql-date-functions.mdx#getdate--getutcdate) and [DATEADD](./sfmc-sql-date-functions.mdx#dateadd) are the most important sections.
-- [WHERE](./sfmc-sql-where.mdx) - while we already covered parts of where, this is time to make a deeper dive into [Comparison operators](./sfmc-sql-where.mdx#comparison-operators), [BETWEEN shorthand](./sfmc-sql-where.mdx#between-shorthand) and [IN shorthand](./sfmc-sql-where.mdx#in-shorthand).
-- [Conversion functions](./sfmc-sql-conversion-functions.mdx) - the whole article, but treat Data Types and Data Style Codes more as reference material.
-- [_Bounce](../config/sfmc-system-data-views.mdx#_bounce) Data View.
+- [Date functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx) - [GETDATE](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate) and [DATEADD](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#dateadd) are the most important sections.
+- [WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) - while we already covered parts of where, this is time to make a deeper dive into [Comparison operators](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#comparison-operators), [BETWEEN shorthand](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#between-shorthand) and [IN shorthand](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#in-shorthand).
+- [Conversion functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx) - the whole article, but treat Data Types and Data Style Codes more as reference material.
+- [_Bounce](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_bounce) Data View.
 
 #### Check your skills
 
@@ -278,7 +278,7 @@ For this exercise, we will assume that Google users have emails like `something@
 </TabItem>
 <TabItem value='hints'>
 
-1. Consider impact of the [JOIN type](./sfmc-sql-join.mdx#join-types) on the query output. Can you leverage it to minimise the data you are working on?
+1. Consider impact of the [JOIN type](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#join-types) on the query output. Can you leverage it to minimise the data you are working on?
 2. When writing the date comparison, take a pen and paper and draw a timeline with the part you want to capture. Seeing it makes it much easier to write it correctly.
 3. When deciding whether to use shorthands - go with the most readable option.
 
@@ -309,8 +309,8 @@ Learn to leverage data from multiple tables - the only limitations will be creat
 
 #### Learning materials
 
-- [JOINs](./sfmc-sql-join.mdx#multiple-joins) - yup, everything. The Cheat Sheet at the end should be useful to visualise multi-JOIN fun better.
-- [Journey Builder Data Views](../config/sfmc-system-data-views.mdx#journey-data-views) - both _Journey and _JourneyActivity.
+- [JOINs](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#multiple-joins) - yup, everything. The Cheat Sheet at the end should be useful to visualise multi-JOIN fun better.
+- [Journey Builder Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#journey-data-views) - both _Journey and _JourneyActivity.
 
 #### Check your skills
 
@@ -334,9 +334,9 @@ Append a proof record with Subscriber Key equal to `level5exercise` and your ema
 <TabItem value='hints'>
 
 1. Think about which tables you need for the task. The less, the better.
-2. Think what [types of JOINs](./sfmc-sql-join.mdx#join-types) will be needed. To make it easier - take a pen and paper and draw a diagram. Seriously, it's super helpful as the number of tables grows.
+2. Think what [types of JOINs](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#join-types) will be needed. To make it easier - take a pen and paper and draw a diagram. Seriously, it's super helpful as the number of tables grows.
 3. Think about what columns you can join the tables in a way that will protect you from the fan out (a one-to-many relationship that results in more rows than needed in the output).
-4. [UNION](./sfmc-sql-join.mdx#union) with [aliases](./sfmc-sql-select.mdx#aliasing-with-as) is great for arbitrary added records in SQL.
+4. [UNION](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#union) with [aliases](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as) is great for arbitrary added records in SQL.
 
 
 </TabItem>
@@ -365,7 +365,7 @@ SELECT
     , 'your@email.address'  AS EmailAddress
 ```
 
-Bonus: the fun with multiple joins [never ends](./snippets/sfmc-sql-debugging-email-sends.mdx#solution).
+Bonus: the fun with multiple joins [never ends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 
 </TabItem>
 </Tabs>
@@ -378,9 +378,9 @@ Graduate from just playing with rows and start calculating the data to see patte
 
 #### Learning materials
 
-- [Aggregate functions](./sfmc-sql-aggregate-functions.mdx) - focus on [GROUP BY](./sfmc-sql-aggregate-functions.mdx#group-by), [COUNT](./sfmc-sql-aggregate-functions.mdx#count) and [HAVING](./sfmc-sql-aggregate-functions.mdx#having).
+- [Aggregate functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx) - focus on [GROUP BY](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#group-by), [COUNT](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#count) and [HAVING](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#having).
 - [Order of operations](#order-of-operations) - this is when it becomes tricky.
-- [TOP](./sfmc-sql-select.mdx#top) - focus on how to use it with [ORDER BY](./sfmc-sql-select.mdx#top-with-order-by)
+- [TOP](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top) - focus on how to use it with [ORDER BY](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top-with-order-by)
 
 #### Check your skills
 
@@ -402,8 +402,8 @@ If you send huge volumes, feel free to change the timeframe from last month to l
 <TabItem value='hints'>
 
 1. Build query step by step and validate the output. In this case, it might be easiest to write SELECT for just the Domain with the suitable tables and date filter, then add the GROUP BY to validate aggregation and then go with additional aggregate functions.
-2. All calculated values require an [alias](./sfmc-sql-select.mdx#aliasing-with-as).
-3. Pick the right [type of JOIN](./sfmc-sql-join.mdx#join-types) and correct set of joining rules so that you get precisely those rows that you need (limit the fan-out created by the possibility of many bounces per single send).
+2. All calculated values require an [alias](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as).
+3. Pick the right [type of JOIN](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#join-types) and correct set of joining rules so that you get precisely those rows that you need (limit the fan-out created by the possibility of many bounces per single send).
 4. When building the date filter, the output will be completely different depending on which date you use (hopefully, not every send will have a bounce).
 5. Unfortunately, in SFMC, you cannot use alias in WHERE/HAVING/ORDER BY and similar places - you have to use the function/calculation.
 6. When calculating Bounce Rate, do it so that the outcome is an integer equal to a percent.
@@ -447,13 +447,13 @@ I will add more levels once I finish writing supporting learning materials :)
 
 ## Writing with style
 
-Knowing the available functions is one thing. Writing good and readable queries - another. Salesforce Marketing Cloud is always a team sport, so be sure to leverage the power of a [Style Guide](./sfmc-sql-style-guide.mdx) to improve the quality of your SQL.
+Knowing the available functions is one thing. Writing good and readable queries - another. Salesforce Marketing Cloud is always a team sport, so be sure to leverage the power of a [Style Guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx) to improve the quality of your SQL.
 
 ## Order of operations
 
 One of the key things to remember when building more complex queries is the order of operations, as it will decide what is in the output:
 
-[`FROM`](./sfmc-sql-from.mdx) > [`WHERE`](./sfmc-sql-where.mdx) > [`GROUP BY`](./sfmc-sql-aggregate-functions.mdx#group-by) > [`HAVING`](./sfmc-sql-aggregate-functions.mdx#having) > [`DISTINCT`](./sfmc-sql-select.mdx#distinct) > [`ORDER BY`](./sfmc-sql-select.mdx#top-with-order-by)
+[`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) > [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) > [`GROUP BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#group-by) > [`HAVING`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#having) > [`DISTINCT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#distinct) > [`ORDER BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top-with-order-by)
 
 It means that rows filtered with `WHERE` will not be considered for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
 

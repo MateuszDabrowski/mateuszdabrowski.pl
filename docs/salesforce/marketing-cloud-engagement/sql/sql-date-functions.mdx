@@ -43,7 +43,7 @@ SELECT GETUTCDATE() AS CurrentUTCDate
 
 Both return a datetime object (for example, `Oct 30 2020 1:15AM`), so no conversion is needed to use other Date Functions on the outcome of this function.
 
-However, you can limit its output to either date or time part by using [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert) or [`FORMAT`](#format-with-dates) Functions.
+However, you can limit its output to either date or time part by using [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#cast--convert) or [`FORMAT`](#format-with-dates) Functions.
 
 ## DATEPART
 
@@ -177,7 +177,7 @@ However, if you change the date with the 31st day of the month by some months an
 
 :::
 
-`DATEADD` is especially useful when used with the [`WHERE`](./sfmc-sql-where.mdx) statement, as it allows to filter records dynamically:
+`DATEADD` is especially useful when used with the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) statement, as it allows to filter records dynamically:
 
 ```sql {5} title="Find all Subscribers that joined within the last month"
 SELECT
@@ -203,7 +203,7 @@ A similar date calculation is also available with the `DATEADD()` AMPScript func
 
 :::
 
-If the date field is nullable, be sure to use [`COALESCE`](./sfmc-sql-null-functions.mdx#coalesce) or add a [`NULL` checking condition](./sfmc-sql-null-functions.mdx#null).
+If the date field is nullable, be sure to use [`COALESCE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#coalesce) or add a [`NULL` checking condition](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null).
 
 ## DATEDIFF
 
@@ -211,7 +211,7 @@ The `DATEDIFF` function calculates the difference between two dates.
 
 You need to provide the [date part](#date-parts) used for the calculation and two dates (start and end order).
 
-You may use it in the [`SELECT`](./sfmc-sql-select.mdx) statement:
+You may use it in the [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) statement:
 
 ```sql {3} title="Check how long someone was a subscriber"
 SELECT
@@ -220,7 +220,7 @@ SELECT
 FROM Ent._Subscribers
 ```
 
-You may use it in the [`WHERE`](./sfmc-sql-where.mdx) statement:
+You may use it in the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) statement:
 
 ```sql {3} title="Get everyone that hit one year on the subscription list"
 SELECT SubscriberKey
@@ -238,7 +238,7 @@ SELECT
     , DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative /* Output: -1 */
 ```
 
-It is crucial for creating correct comparisons within [`WHERE`](./sfmc-sql-where.mdx).
+It is crucial for creating correct comparisons within [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
 
 :::
 
@@ -272,7 +272,7 @@ There is a limit to how big the difference can be. If you go down to the `SECOND
 
 :::
 
-If the date field is nullable, be sure to use [`COALESCE`](./sfmc-sql-null-functions.mdx#coalesce) or add a [`NULL` checking condition](./sfmc-sql-null-functions.mdx#null).
+If the date field is nullable, be sure to use [`COALESCE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#coalesce) or add a [`NULL` checking condition](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null).
 
 ## AT TIME ZONE
 
@@ -285,7 +285,7 @@ It's a must-have for multi-country senders and beneficial for others planning to
 
 :::note You Should Know
 
-`AT TIME ZONE` always outputs `DATETIMEOFFSET` data type. If you need it in another type/format, use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) or [`FORMAT`](#format-with-dates).
+`AT TIME ZONE` always outputs `DATETIMEOFFSET` data type. If you need it in another type/format, use [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) or [`FORMAT`](#format-with-dates).
 
 :::
 
@@ -301,7 +301,7 @@ SELECT
     , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT /* Output: 2020-07-01 18:00:00 -05:00 */
 ```
 
-In the above snippet, we [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function adds the offset and calculates the Daylight Saving Time offset change for you.
+In the above snippet, we [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function adds the offset and calculates the Daylight Saving Time offset change for you.
 
 :::note You Should Know
 
@@ -384,7 +384,7 @@ The `FORMAT` works only with datetime and numeric values, outputs a string and r
 2. Format specifier to be applied
 3. Optionally - ISO culture code
 
-It is a perfect tool to manipulate any dates (or date-like strings with the help of [conversion](./sfmc-sql-conversion-functions.mdx)) available in your Data Extensions. For personalization. For comparison between system and imported dates outside of the query. For preparing data to export it to an external system with specific format requirements.
+It is a perfect tool to manipulate any dates (/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx)) available in your Data Extensions. For personalization. For comparison between system and imported dates outside of the query. For preparing data to export it to an external system with specific format requirements.
 
 ```sql title="Instead of creating complex AMPScript logic to adapt dates, format them"
 SELECT
@@ -395,7 +395,7 @@ SELECT
 
 In the example above, the first two `FORMAT` functions return the date in the same format - `30/10/2020` - one by using manually provided value, another by taking the current UTC date from the function.
 
-The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) to change your short date into an extended date personalized on user language.
+The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#conditional-values-with-case) to change your short date into an extended date personalized on user language.
 
 ### Standard date formats
 

@@ -82,7 +82,7 @@ From welcomecampaignsegment a join _open b on a.subscriberkey = b.subscriberkey
 
 ```
 
-Check my Style Guides for [AMPScript](./ampscript/ampscript-style-guide.mdx), [SSJS](./ssjs/ssjs-style-guide.mdx), [SQL](./sql/sfmc-sql-style-guide.mdx) to see more guides on making your code beautiful.
+Check my Style Guides for [AMPScript](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx), [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx) to see more guides on making your code beautiful.
 
 </TabItem>
 <TabItem value='ui'>
@@ -131,7 +131,7 @@ function debugValue(description, value) {
 };
 ```
 
-Read more on using comments in [SSJS](./ssjs/ssjs-style-guide.mdx#comments) and [AMPScript](./ampscript/ampscript-style-guide.mdx#comments).
+Read more on using comments in [SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx#comments) and [AMPScript](./ampscript/ampscript-style-guide.mdx#comments).
 
 :::note You Should Know
 
@@ -186,9 +186,9 @@ Another popular acronym connected to the simplicity principle is __YAGNI__ (You 
 >
 <TabItem value='code'>
 
-The simplicity focus is useful already when you select the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](./ssjs/ssjs-vs-ampscript-performance.mdx#ampscript-vs-ssjs)).
+The simplicity focus is useful already when you select the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx#ampscript-vs-ssjs)).
 
-Once you select the best language for the job, you will have to code the solution. And here again, simplicity will be a helpful guideline. For example, yes, you can create a universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](./ssjs/snippets/ampscript-in-ssjs.mdx) will be enough (YAGNI) and much simpler (KISS).
+Once you select the best language for the job, you will have to code the solution. And here again, simplicity will be a helpful guideline. For example, yes, you can create a universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx) will be enough (YAGNI) and much simpler (KISS).
 
 Think about KISS and YAGNI whenever you are coding, and it will help you deliver more straightforward and better solutions.
 
@@ -248,14 +248,14 @@ Another application of the DRY principle is related not to a specific solution b
 
 I have seen many (too many) Subscription Preference Centers in SFMC built with AMPScript. Yes, it's a simple language and capable enough to deliver such a solution. But because of its simplicity, for this use case, it quickly gets full of repeating script lines (DRY violation), multiple purposes (SOC violation) and endless lines of code (readability suffers).
 
-My recommendation for most of the Preference Centers is to go with SSJS. Yes, it's a more complex language than AMPScript, but with a set of tools dedicated to delivering complex use cases. Implement SOC and make it DRY with functions & [loops](./ssjs/ssjs-loops.mdx). Bring it to the next level by splitting Front-End (Cloud Page) and Back-End (Code Resource). Compared to a single Cloud Page with AMPScript, this solution will be more complex but much less complicated. Thus easier to debug and maintain.
+My recommendation for most of the Preference Centers is to go with SSJS. Yes, it's a more complex language than AMPScript, but with a set of tools dedicated to delivering complex use cases. Implement SOC and make it DRY with functions & [loops](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops.mdx). Bring it to the next level by splitting Front-End (Cloud Page) and Back-End (Code Resource). Compared to a single Cloud Page with AMPScript, this solution will be more complex but much less complicated. Thus easier to debug and maintain.
 
 </TabItem>
 <TabItem value='ui'>
 
 The same rules apply to Marketing Cloud no-code solutions. Filtered Data Extensions with Data Relationships are excellent for simple segmentation. Still, when the segment requirements get more complicated, it's better to move to more complex SQL Queries in Automation Studio.
 
-Similarly, you can leverage Marketing Cloud Connect and Journey Builder to update data in Salesforce CRM without any code. Still, when you get to the point of creating journeys with only such updates in mind - its better to go for more complex but less complicated [AMPScript SalesforceObject](./ssjs/snippets/ampscript-in-ssjs.mdx#long-ampscript-code) functions.
+Similarly, you can leverage Marketing Cloud Connect and Journey Builder to update data in Salesforce CRM without any code. Still, when you get to the point of creating journeys with only such updates in mind - its better to go for more complex but less complicated [AMPScript SalesforceObject](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx#long-ampscript-code) functions.
 
 </TabItem>
 </Tabs>
@@ -264,7 +264,7 @@ Similarly, you can leverage Marketing Cloud Connect and Journey Builder to updat
 
 ### Flat is better than nested. Sparse is better than dense.
 
-When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](./ssjs/ssjs-if-and-switch.mdx) in the code or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? The 4-column layout is here! KPIs for leads, sales, loyalty and brand are not yet met? Let's pack them in a just-being-built welcome Journey.
+When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.mdx) in the code or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? The 4-column layout is here! KPIs for leads, sales, loyalty and brand are not yet met? Let's pack them in a just-being-built welcome Journey.
 
 This turn of events is natural during development, but it quickly leads to a complicated outcome. There are two ways to solve it:
 
@@ -318,7 +318,7 @@ The same is true for Emails that frequently grow due to applying multiple KPIs. 
 
 Readability is key. In code, it limits bugs, simplifies debugging, improves future development and saves tons of time. In content, it's key to drive the message to the recipient. In short, without readability, there is no value.
 
-I have already written a lot about readability of Marketing Cloud programmatic langauges: [AMPScript](./ampscript/ampscript-style-guide.mdx), [SSJS](./ssjs/ssjs-style-guide.mdx), [SQL](./sql/sfmc-sql-style-guide.mdx).
+I have already written a lot about readability of Marketing Cloud programmatic langauges: [AMPScript](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx), [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx).
 
 As for the readability of content:
 
@@ -355,7 +355,7 @@ if (ts && !tsd) tsd = new Date();
 if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
 ```
 
-Looking for more examples of good naming? Check Style Guide recommendations for [AMPScript](./ampscript/ampscript-style-guide.mdx#naming-convention), [SSJS](./ssjs/ssjs-style-guide.mdx#naming-convention) and [SQL](./sql/sfmc-sql-style-guide.mdx#explicit-vs-implicit).
+Looking for more examples of good naming? Check Style Guide recommendations for [AMPScript](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx#naming-convention) and [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx#explicit-vs-implicit).
 
 </TabItem>
 <TabItem value='ui'>
@@ -425,7 +425,7 @@ So follow the rules as a default, break them only when there is no other option,
 
 Every solution can encounter some problems or edge cases. You can even be hit with something outside of your control, like server issues. It is why capturing and analysing the errors is so essential.
 
-In terms of code it means proper [debugging and error handling](./ssjs/debugging-ssjs.mdx). Especially [error logging](./ssjs/debugging-ssjs.mdx#error-logging) is good idea to keep up with the potential issues in matured Marketing Cloud solution. You can also protect your solution by creating last resort checks in messaging with the `RaiseError` function.
+In terms of code it means proper [debugging and error handling](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx). Especially [error logging](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx#error-logging) is good idea to keep up with the potential issues in matured Marketing Cloud solution. You can also protect your solution by creating last resort checks in messaging with the `RaiseError` function.
 
 But there are also platform-based features that capture issues. Journey pre-launch validation, Verification Activity for Automation Studio and its built-in error logging, Send Logs, and Audit Trail. Salesforce Marketing Cloud offers many tools to make sure you are up to speed with the state of your platform, so make sure you use all of them.
 
@@ -443,7 +443,7 @@ And - considering the quality of out-of-the-box SFMC errors - always provide cus
 
 With the complexity of Marketing Cloud, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the SFMC is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
 
-There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2016 with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](../../sites/ideas/marketing-cloud-ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](../../sites/ideas/marketing-cloud-ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
+There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2016 with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](/sites/ideas/marketing-cloud-ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](/sites/ideas/marketing-cloud-ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
 
 With all this ambiguity in the system, always check during development and always check again before go-live.
 
@@ -455,7 +455,7 @@ When you see an opportunity for improvement or encounter a helpful recommendatio
 
 Using previous examples:
 
-1. If you are not yet using proper [debugging and error handling](./ssjs/debugging-ssjs.mdx), you definitely should implement it. Should you do it *right* now? Well, there are some quirks that you should test beforehand; otherwise, your script might error out and break the existing process.
+1. If you are not yet using proper [debugging and error handling](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx), you definitely should implement it. Should you do it *right* now? Well, there are some quirks that you should test beforehand; otherwise, your script might error out and break the existing process.
 
 2. If you want to implement the asset [naming convention](#naming-conventions-count-twice), definitely start with discovery and cross-department alignment to have a complete picture of needs before creating the naming template. I believe everyone should use the naming convention, but it will be counterproductive if you start using it too fast and later have to update it based on late feedback.
 

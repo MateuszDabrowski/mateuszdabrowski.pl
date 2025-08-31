@@ -228,7 +228,7 @@ You don't need anything but the Subscriber Key for essential contact deletion. H
 
 Below you can find ready-to-use SSJS snippet for Script Activity. Change `clientSecret`, `clientID` and `clientBase` variables to data you saved during [Installed Package configuration](#sfmc-api-contact-deletion). If needed, change also the `contactDeletionDEKey`, `errorDE` and `automationName` variables to reflect your configuration.
 
-To learn more about `errorDE` check my [debugging guide](../ssjs/debugging-ssjs.mdx#error-logging). You will find there also details about [helper functions](../ssjs/debugging-ssjs.mdx#error-handler-function) from the script.
+To learn more about `errorDE` check my [debugging guide](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx#error-logging). You will find there also details about [helper functions](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx#error-handler-function) from the script.
 
 ```html title="Contact Deletion Script Activity SSJS Snippet"
 <script runat="server">
@@ -370,7 +370,7 @@ You should always align this question with the specific business needs of your c
 
 You can add them within the same Automation as the [Contact Deletion Script Activity](#contact-deletion-script-activity) to ensure they are captured right before cleanup. You may also create separate Automations on your child Business Unit to capture BU-specific candidates for cleanup using data available only there.
 
-Remember to test those recommendations and queries (for example, using [Query Studio](./sfmc-appexchange-solutions.mdx#query-studio)) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
+Remember to test those recommendations and queries (for example, using [Query Studio](docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio)) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
 
 ### Contacts deleted in Salesforce CRM
 
@@ -388,7 +388,7 @@ FROM _Subscribers                   AS subscriber
 WHERE contact.Id IS NULL
 ```
 
-If you are also using other channels, you can include their [System Data Views](./sfmc-system-data-views.mdx) to the query.
+If you are also using other channels, you can include their [System Data Views](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) to the query.
 
 ### Leads and Users deleted or filtered in Salesforce CRM
 
@@ -417,7 +417,7 @@ All Contacts view shows many cool data fields, but unfortunately, most are no lo
 
 Mobile List fields are: `SubscriberKey`, `CustomerKey`, `AudienceID`, `TrackingCode`, `AudienceCode`, `SegmentCode`, `SegmentName`, `Priority`, `SegmentID`, `SplitID`.
 
-So in nearly every case you will have to take the Subscriber Key and enrich it with [`JOIN`](../sql/sfmc-sql-join.mdx) to other more interesting Data Extensions or [System Data Views](./sfmc-system-data-views.mdx).
+So in nearly every case you will have to take the Subscriber Key and enrich it with [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) to other more interesting Data Extensions or [System Data Views](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx).
 
 :::
 
@@ -435,7 +435,7 @@ WHERE
 
 :::note You Should Know
 
-You might wonder what is happening within the [`WHERE`](../sql/sfmc-sql-where.mdx) filter above - this is magic that is possible thanks to Salesforce ID structure. The ID is not entirely random. Instead, it has a specific format.
+You might wonder what is happening within the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) filter above - this is magic that is possible thanks to Salesforce ID structure. The ID is not entirely random. Instead, it has a specific format.
 
 For our need here, the key is the three-character prefix that point to a specific Salesforce Object:
 

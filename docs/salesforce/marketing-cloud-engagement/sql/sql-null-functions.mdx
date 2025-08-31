@@ -21,7 +21,7 @@ Also, unlike in some other languages, SQL doesn't support a _default_ nullish co
 
 ### NULL with standard SQL Functions
 
-Because `NULL` is unknown, if you try to do any standard operation on the NULL (like adding an integer, or [concatenating](./sfmc-sql-string-functions.mdx#concat) it with a string), it will return unknown (`NULL`):
+Because `NULL` is unknown, if you try to do any standard operation on the NULL (/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#concat) it with a string), it will return unknown (`NULL`):
 
 ```sql {2-3} title="❌ Functions with NULLs"
 SELECT
@@ -31,7 +31,7 @@ SELECT
 
 ### NULL with relational operators
 
-The fun doesn't stop there - When you try to make any [comparision](./sfmc-sql-where.mdx#basic-operators) with `NULL`, it will fail, because it is a check against an unknown value. Or, to be more specific, the comparison will evaluate to `FALSE`, impacting your output.
+The fun doesn't stop there - When you try to make any [comparision](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#basic-operators) with `NULL`, it will fail, because it is a check against an unknown value. Or, to be more specific, the comparison will evaluate to `FALSE`, impacting your output.
 
 ```sql {4-6} title="❌ Comparisons with NULLs"
 SELECT SubscriberKey
@@ -42,7 +42,7 @@ WHERE
     AND EmailAddress != NULL
 ```
 
-In the example above, all three comparisons in the [`WHERE`](./sfmc-sql-where.mdx) statement will return `FALSE` for `NULL`s and the query will not output any rows.
+In the example above, all three comparisons in the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) statement will return `FALSE` for `NULL`s and the query will not output any rows.
 
 Let's check why, step by step:
 
@@ -52,7 +52,7 @@ Let's check why, step by step:
 
 ### NULL with conditional operators
 
-`NULL` gets even more problematic when you want to work with [`IN`/`NOT IN`](./sfmc-sql-where.mdx#in-shorthand) or [`BETWEEN`/`NOT IN BETWEEN`](./sfmc-sql-where.mdx#between-shorthand).
+`NULL` gets even more problematic when you want to work with [`IN`/`NOT IN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#in-shorthand) or [`BETWEEN`/`NOT IN BETWEEN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#between-shorthand).
 
 When you use `NULL` as one of the values searched by `IN` shorthand, it will be ignored, and no rows with `NULL` in the checked column will be outputted for this condition.
 
@@ -60,7 +60,7 @@ When you use `NULL` with the other shorthands (`NOT IN`, `BETWEEN` and `NOT IN B
 
 ### NULL with logical operators
 
-When you are building a boolean logic with `AND`/`OR` operators (be it in [`WHERE`](./sfmc-sql-where.mdx) or in [`CASE`](./sfmc-sql-case.mdx)) treat `NULL` as `FALSE`.
+When you are building a boolean logic with `AND`/`OR` operators (/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) or in [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)) treat `NULL` as `FALSE`.
 
 #### AND operator
 
@@ -96,9 +96,9 @@ NULL | NULL | NULL
 
 ### NULL with aggregate functions
 
-[Aggregate functions](./sfmc-sql-aggregate-functions.mdx) just ignore `NULL` values. Calculating average? `NULL` will not be taken into consideration at all - which can scew your output a lot.
+[Aggregate functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx) just ignore `NULL` values. Calculating average? `NULL` will not be taken into consideration at all - which can scew your output a lot.
 
-The only exception is [`COUNT`](./sfmc-sql-aggregate-functions.mdx#count) that has specific `*` argument for counting rows with `NULL`.
+The only exception is [`COUNT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#count) that has specific `*` argument for counting rows with `NULL`.
 
 Ok, we discussed a lot of `NULL` problems. Now it's time to solve them with dedicated `NULL` functions.
 
@@ -124,7 +124,7 @@ WHERE
 
 Assuming `PurchaseCount` is a nullable field, should you use only `PurchaseCount < 5`, you wouldn't see the rows with the `NULL` in that column. Adding another condition that checks explicitly for `NULL` solves that.
 
-However, there are other methods - dedicated shorthands of the universally helpful [`CASE`](./sfmc-sql-case.mdx) statement. Let's check them.
+However, there are other methods - dedicated shorthands of the universally helpful [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) statement. Let's check them.
 
 ## ISNULL
 
@@ -173,7 +173,7 @@ SELECT
     , NULLIF(WorkEmailAddress, EmailAddress) AS WorkEmailAddress
 ```
 
-I personally find the standard [`IIF`](./sfmc-sql-case.mdx#iif-shorthand) shorthand much more readable and user-friendly, despite being slightly longer than dedicated `NULLIF`:
+I personally find the standard [`IIF`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#iif-shorthand) shorthand much more readable and user-friendly, despite being slightly longer than dedicated `NULLIF`:
 
 ```sql {4} title="Pulls WorkEmailAddress value only if it is different from general Email Address with IIF"
 SELECT

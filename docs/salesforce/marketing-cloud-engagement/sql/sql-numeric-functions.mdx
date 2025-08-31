@@ -44,7 +44,7 @@ However, my favourite use case for `MAX` is debugging Data Extensions and their 
 
 You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to standard Data Extensions crashes with cryptic information about truncated data. In most cases, the reason is a value exceeding the maximum length you set for the column in your local Data Extension.
 
-How to find the culprit? With `MAX` and [`LEN`](./sfmc-sql-string-functions.mdx#len) functions:
+How to find the culprit? With `MAX` and [`LEN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#len) functions:
 
 ```sql {2-3} title="For Datetime values, it will output 19 characters"
 SELECT
@@ -54,11 +54,11 @@ SELECT
 FROM Contact_Salesforce AS c
 ```
 
-This query can be used _ad hoc_ in [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation.
+This query can be used _ad hoc_ in [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation.
 
-You can also extend it with [`WHERE`](./sfmc-sql-where.mdx) containing current lengths of fields in that data extension and make it part of your automation. It will find the records too long for the data extension, log them into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
+You can also extend it with [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) containing current lengths of fields in that data extension and make it part of your automation. It will find the records too long for the data extension, log them into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
 
-`MAX` and `MIN` are also instrumental as a [part of an aggregate query](./sfmc-sql-aggregate-functions.mdx#min-and-max).
+`MAX` and `MIN` are also instrumental as a [part of an aggregate query](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#min-and-max).
 
 ## AVG
 
@@ -69,14 +69,14 @@ SELECT AVG(s.BounceCount) AS AverageBounceCount
 FROM _Subscribers AS s
 ```
 
-The above example might not look like much value, but with the help of [`DATEDIFF`](./sfmc-sql-date-functions.mdx#datediff) and [`CONVERT`](./sfmc-sql-conversion-functions.mdx#convert) functions you can make it much more interesting:
+The above example might not look like much value, but with the help of [`DATEDIFF`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#datediff) and [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) functions you can make it much more interesting:
 
 ```sql {1} title="What is the average age of your Subscribers?"
 SELECT DATEDIFF(MONTH, CONVERT(DATETIME, AVG(CONVERT(FLOAT, DateJoined))), GETDATE()) AS SubscribersAverageAgeInMonths
 FROM _Subscribers
 ```
 
-However, `AVG` shows its true power with [`WHERE`](./sfmc-sql-where.mdx) filtering:
+However, `AVG` shows its true power with [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) filtering:
 
 ```sql {3} title="Let's get your above-average spenders for an e-commerce up-sell campaign"
 SELECT SubscriberKey
@@ -86,7 +86,7 @@ WHERE Price > AVG(Price)
 
 You can mix two previous queries to create separate segments for your fresh and old subscribers.
 
-`AVG` function is also beneficial as a [part of an aggregate query](./sfmc-sql-aggregate-functions.mdx#avg).
+`AVG` function is also beneficial as a [part of an aggregate query](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#avg).
 
 ## SUM
 
@@ -97,7 +97,7 @@ SELECT SUM(BounceCount) AS AllBouncesCount
 FROM _Subscribers
 ```
 
-It is helpful nearly only as a [part of an aggregate query](./sfmc-sql-aggregate-functions.mdx#sum).
+It is helpful nearly only as a [part of an aggregate query](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#sum).
 
 ## FORMAT with Numbers
 
@@ -107,7 +107,7 @@ The `FORMAT` works only with datetime and numeric values, outputs a string and r
 2. Format specifier to be applied
 3. Optionally - ISO culture code
 
-It is a perfect tool to manipulate any numbers (or numeric strings with the help of [conversion](./sfmc-sql-conversion-functions.mdx)) available in your Data Extensions.
+It is a perfect tool to manipulate any numbers (/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx)) available in your Data Extensions.
 
 ### Standard number formats
 
@@ -165,7 +165,7 @@ FROM _Subscribers AS s
         ON ea._SubscriberID = s.SubscriberID
 ```
 
-As you can see, we had to use the [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert) function with the `BIGINT` parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it quickly. It could get even better with [`LIKE` in `CASE`](./sfmc-sql-case.mdx#like-in-case) used to create different formats depending on the country code.
+As you can see, we had to use the [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#cast--convert) function with the `BIGINT` parameter, as the MobileNumber is a Text field. Thanks to conversion, we can use numeric functions to format it quickly. It could get even better with [`LIKE` in `CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#like-in-case) used to create different formats depending on the country code.
 
 Another use case? Let's assume we have a VIPDiscount field. It contains a number between 0.00 and 0.99 that tells what discount is appropriate for the selected user based on their VIP status. You store it in decimal numeric because it is a much more accessible format for SSJS or AMPScript to calculate the final price of items promoted in communication.
 

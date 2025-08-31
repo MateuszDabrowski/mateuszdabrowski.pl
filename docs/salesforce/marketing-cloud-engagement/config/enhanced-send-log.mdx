@@ -15,7 +15,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 Send Log is a table that captures relevant data about sends happening in the platform. In the case of Salesforce Marketing Cloud, it is a unique Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
 
-SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](./sfmc-features-on-demand.mdx).
+SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx).
 
 Once you create it, it will automatically populate with each attempted send originating from its Business Unit.
 
@@ -44,17 +44,17 @@ The Send Log template comes with six default fields:
 
 :::note You Should Know
 
-If your send was not delivered, but you can see it in the Send Log without any `ErrorCode`, leverage [Email Sends Debugging Query](../sql/snippets/sfmc-sql-debugging-email-sends.mdx) to learn what happened with the message.
+If your send was not delivered, but you can see it in the Send Log without any `ErrorCode`, leverage [Email Sends Debugging Query](/docs/salesforce/marketing-cloud-engagement/sql//snippets/sql-debugging-email-sends.mdx) to learn what happened with the message.
 
 :::
 
 ### Send Log vs _Sent System Data View
 
-You might wonder - why use email Send Log when [_Sent Data View](./sfmc-system-data-views.mdx#_sent) captures the same data out of the box? There are two reasons.
+You might wonder - why use email Send Log when [_Sent Data View](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_sent) captures the same data out of the box? There are two reasons.
 
 #### 1. Captured data is not precisely the same.
 
-It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log, and multiple additional fields in the [_Sent Data View](./sfmc-system-data-views.mdx#_sent). It's also about when the data is captured.
+It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log, and multiple additional fields in the [_Sent Data View](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_sent). It's also about when the data is captured.
 
 Send Log is populated when SFMC prepares the send. That's why it can log [ErrorCode](#send-log-errorcode-values) if the send fails. The Data View is populated later when SFMC pushes a correctly constructed email out to the Email Service Providers.
 
@@ -62,7 +62,7 @@ It means that Send Log is an incredible tool to check why some emails did not go
 
 #### 2. You can customise the Send Log
 
-Data Views are set in stone (unless you purchase a [custom one](./sfmc-system-data-views.mdx#custom-data-views)), but you can add fields to the Send Log to align it better with your business needs. Let's dive into how it works and why you should use it.
+Data Views are set in stone (unless you purchase a [custom one](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#custom-data-views)), but you can add fields to the Send Log to align it better with your business needs. Let's dive into how it works and why you should use it.
 
 ## Custom Send Log
 
@@ -115,7 +115,7 @@ Another handy field that I would love to capture in the Send Log would be the na
 
 You can add the `DataSourceName` field to Send Log and `SET @DataSourceName = AttributeValue('_datasourcename')` snippet to the email. However, it will work correctly only for the Send Flow.
 
-Unfortunately, it currently does not support Journey Builder Sends. Learn more and vote for a fix [here](../../../sites/ideas/marketing-cloud-ideas/#_datasourcename-for-entry-data-extension-in-journey-builder).
+Unfortunately, it currently does not support Journey Builder Sends. Learn more and vote for a fix [here](/sites/ideas/marketing-cloud-ideas/#_datasourcename-for-entry-data-extension-in-journey-builder).
 
 :::
 
@@ -153,7 +153,7 @@ Create standard Data Extension with more user-friendly names and extend it with 
 
 ### Enhanced Send Log SQL Query Activity
 
-Create Automation with Query Activity that will take data from your technical [template-based Send Log](#send-log-data-extension-template) and [System Data Views](./sfmc-system-data-views.mdx) to populate your Enhanced Send Log DE with actionable data.
+Create Automation with Query Activity that will take data from your technical [template-based Send Log](#send-log-data-extension-template) and [System Data Views](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) to populate your Enhanced Send Log DE with actionable data.
 
 ```sql
 SELECT
@@ -223,7 +223,7 @@ WHERE
 
 In the above query, we pull Journey Builder information and Sent, Delivered, Open, Click, Bounce information. We are also adding a custom logic that will provide more real Delivery and Open data using the fundamental assumption that if the recipient clicked something - the email had to be delivered and opened.
 
-In the [`WHERE`](../sql/sfmc-sql-where.mdx) section, we filter the data to pull only updates for sends from the last month to optimise the query performance.
+In the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) section, we filter the data to pull only updates for sends from the last month to optimise the query performance.
 
 Schedule that Automation nightly and share the Enhanced Send Log with your users.
 

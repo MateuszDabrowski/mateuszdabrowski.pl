@@ -11,7 +11,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content="Build your marketers' dream campaign configuration UI in Marketing Cloud Personalization (Interaction Studio). All the input magic in one place." />
 
-Once you learn the [very basics of Serverside Code](./mcp-serverside-code-basics.mdx) in Marketing Cloud Personalization (Interaction Studio), it is time to start writing code. The easiest way is, to begin with creating the campaign creation UI for the marketer - defining all the inputs they will need to fill in to drive the experience. It will be our focus in this article.
+Once you learn the [very basics of Serverside Code](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx) in Marketing Cloud Personalization (Interaction Studio), it is time to start writing code. The easiest way is, to begin with creating the campaign creation UI for the marketer - defining all the inputs they will need to fill in to drive the experience. It will be our focus in this article.
 
 MCP Serverside Code offers five basic property data types: [Boolean](#boolean), [String](#string), [Number](#number), [Color](#color) and [DateTime](#datetime). Those, their combinations into [complex properties](#complex-property) and modifications through [decorators](#decorators) enable you to build nearly anything you need for your campaign configuration screen.
 
@@ -382,7 +382,7 @@ With the dynamic readonly property, you can transform string inputs, concatenate
 
 :::note You Should Know
 
-You can do the same things later in the [run() block](./mcp-serverside-code-basics.mdx#2-run-block). It will be even more powerful there, as you can use the context object. However, you must manually add those calculated values to the [return statement](./mcp-serverside-code-basics.mdx#3-return-statement) to see it in the payload.
+You can do the same things later in the [run() block](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx#2-run-block). It will be even more powerful there, as you can use the context object. However, you must manually add those calculated values to the [return statement](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx#3-return-statement) to see it in the payload.
 
 For simple use cases, the readonly property will be more straightforward and provide a nifty real-time preview of the calculated value for the marketer.
 
@@ -737,7 +737,7 @@ The `@header` will be in the same font size as the input labels, and `@headerSub
 
 There are two ways to use them.
 
-First, with a basic `true` boolean argument, it makes sense only for `@hidden`. It is perfect for data you will calculate in the [run() block](./mcp-serverside-code-basics.mdx#2-run-block) or don't want to show to the marketer.
+First, with a basic `true` boolean argument, it makes sense only for `@hidden`. It is perfect for data you will calculate in the [run() block](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx#2-run-block) or don't want to show to the marketer.
 
 ```ts title="Example use of simple boolean @hidden decorator"
 @hidden(true)

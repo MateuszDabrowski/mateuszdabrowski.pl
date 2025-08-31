@@ -11,11 +11,11 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content="Context is king. Also when coding MCP Campaign Templates. Read about all its undocumented tricks." />
 
-Marketing Cloud Personalization offers flexible campaign template creation tooling with multiple [properties](./mcp-serverside-code-properties.mdx) and imports that help you fulfil business needs while providing a pleasant user experience for the marketer. There is also one more—undocumented—feature that can change your template from good to outstanding: the CampaignComponentContext object.
+Marketing Cloud Personalization offers flexible campaign template creation tooling with multiple [properties](/docs/salesforce/marketing-cloud-personalization/serverside-code-properties.mdx) and imports that help you fulfil business needs while providing a pleasant user experience for the marketer. There is also one more—undocumented—feature that can change your template from good to outstanding: the CampaignComponentContext object.
 
 :::note You Should Know
 
-In this article, I'm covering the main `CampaignComponentContext` object that is passed as a `context` argument to the [`run` block](./mcp-serverside-code-basics.mdx#writing-serverside-code) in the Serverside Code of every campaign template.
+In this article, I'm covering the main `CampaignComponentContext` object that is passed as a `context` argument to the [`run` block](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx#writing-serverside-code) in the Serverside Code of every campaign template.
 
 Some other contexts (like `GearLifecycleContext` passed to search methods) have different structures and are out of the scope of this article.
 
@@ -97,7 +97,7 @@ In Template Preview, you will only be able to use [`context.event.fields.item`](
 ```
 "{\"type\":\"ITEM_TYPE\",\"_id\":{\"label\":\"ITEM_LABEL\",\"value\":\"ITEM_ID\"}}"
 ```
-My [MCP Catalog ETL Metadata Viewer](./snippets/mcp-catalog-etl-metadata-viewer.mdx) provides an example of its usage.
+My [MCP Catalog ETL Metadata Viewer](/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer.mdx) provides an example of its usage.
 
 :::
 
@@ -436,7 +436,7 @@ It's a great feature for deploying recommendations that shouldn't be changed dur
 
 The `recommend()` method works just as the `recommend` that you can import in the template along with `RecommendationsConfig` from the `recs` module. The imported one is better suited for the user-friendly module that the marketer can set up according to the business needs during the campaign configuration phase. The context method is better for deploying hardcoded logic programmatically without any input from the marketer—the key value being the possibility of providing a custom Item anchor that might be different from the currently viewed one.
 
-However, forcing a custom anchor Item is also possible with the imported `recommend` thanks to the `overrideOnPageAnchor()` method (requiring `itemId` and `itemType` string arguments) that can be deployed both along with RecommendationsConfig as well as within the [`run` block](./mcp-serverside-code-basics.mdx#writing-serverside-code):
+However, forcing a custom anchor Item is also possible with the imported `recommend` thanks to the `overrideOnPageAnchor()` method (requiring `itemId` and `itemType` string arguments) that can be deployed both along with RecommendationsConfig as well as within the [`run` block](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx#writing-serverside-code):
 
 ```ts {9} title="Changing Item anchor for recommendation"
 import { RecommendationsConfig, recommend } from "recs";
@@ -698,7 +698,7 @@ It also has the same payload limitation as [`getDimensionActivity`](#contextuser
 
 #### context.user.getEmailSendHistory()
 
-Requires either nothing or start/end data boundary and returns... nothing. At least I couldn't get it to work with the [OTE Campaign](./mcp-open-time-email.mdx) data. It may leverage the barely working [External Email Campaign ETL](../../../sites/ideas/mc-personalization-ideas#external-email-campaign-etl-send-segmentation).
+Requires either nothing or start/end data boundary and returns... nothing. At least I couldn't get it to work with the [OTE Campaign](/docs/salesforce/marketing-cloud-personalization/open-time-email.mdx) data. It may leverage the barely working [External Email Campaign ETL](/sites/ideas/mc-personalization-ideas#external-email-campaign-etl-send-segmentation).
 
 #### context.user.getLatestOrderByStatus()
 

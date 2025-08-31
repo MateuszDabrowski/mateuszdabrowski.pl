@@ -131,10 +131,10 @@ __Limit information per line to one.__
 
 I recommend keeping one information per line, as it allows for much easier scanning. The four most important examples of this approach are:
 
-1. Each [`SELECT`](./sfmc-sql-select.mdx) Column in a separate line
-2. Each [`WHERE`](./sfmc-sql-where.mdx) condition in a separate line
-3. Each [`CASE`](./sfmc-sql-case.mdx) condition in a separate line
-4. Each [`JOIN`](./sfmc-sql-join.mdx) and [`ON`](./sfmc-sql-join.mdx#joining-on) relationship in a separate line
+1. Each [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) Column in a separate line
+2. Each [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) condition in a separate line
+3. Each [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) condition in a separate line
+4. Each [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) and [`ON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on) relationship in a separate line
 
 ```sql
 /* ✅ Single information per line  */
@@ -168,7 +168,7 @@ FROM _Sent AS s
 WHERE 1 = CASE WHEN j.EmailName LIKE 'UPS_%' THEN 1 WHEN j.EmailName LIKE 'CRS_%' THEN 1 ELSE 0 END
 ```
 
-As you can see, the [`SELECT`](./sfmc-sql-select.mdx) and [`WHERE`](./sfmc-sql-where.mdx) keywords have their separate line to mark respective block starting. For readability reasons, I make an exception if there is only one Column or condition to be used:
+As you can see, the [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) and [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) keywords have their separate line to mark respective block starting. For readability reasons, I make an exception if there is only one Column or condition to be used:
 
 ```sql
 /* ✅ Single Column in SELECT and single condition in WHERE lines */
@@ -186,7 +186,7 @@ WHERE
 
 :::note You Should Know
 
-If you are using `DISTINCT` or `TOP`, put it into the same line as [`SELECT`](./sfmc-sql-select.mdx). In such a case, even if you work on a single Column, move it to a separate row for better readability.
+If you are using `DISTINCT` or `TOP`, put it into the same line as [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx). In such a case, even if you work on a single Column, move it to a separate row for better readability.
 
 ```sql
 /* ✅ Single Column in SELECT and single condition in WHERE lines */
@@ -228,11 +228,11 @@ __Use indentation to highlight SQL keyword relationships.__
 
 This rule focuses on readability. The logic, in short, is to indent whenever the line is dependent on the previous line (child line), for example:
 
-- Selected Column Names are children of [`SELECT`](./sfmc-sql-select.mdx)
-- [`JOIN`](./sfmc-sql-join.mdx) keywords are children of the initial Table referenced with [`FROM`](./sfmc-sql-from.mdx)
-- Joining relationships ([`ON`](./sfmc-sql-join.mdx#joining-on)) are children of [`JOIN`](./sfmc-sql-join.mdx)
-- Case conditions are children of the [`CASE`](./sfmc-sql-case.mdx)
-- Where conditions are children of the [`WHERE`](./sfmc-sql-where.mdx)
+- Selected Column Names are children of [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx)
+- [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) keywords are children of the initial Table referenced with [`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx)
+- Joining relationships (/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on)) are children of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx)
+- Case conditions are children of the [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)
+- Where conditions are children of the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx)
 - Sub-queries follow the same rules in respective indentation level.
 
 For simplicity I use 4-spaces indent, as it is both standard and can be added in Marketing Cloud Query with a single click of the Tab key.
@@ -286,11 +286,11 @@ END
 
 __Use spaces wherever it makes the query more readable.__
 
-The must-have is spacing around any [operators](./sfmc-sql-where.mdx#basic-operators) (equality or comparison) and after commas.
+The must-have is spacing around any [operators](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#basic-operators) (equality or comparison) and after commas.
 
-However, there is another place where spacing is beneficial for readability but might require an exception in some scenarios. Spacing for [aliases](./sfmc-sql-select.mdx#aliasing-with-as) and `THEN` keywords of the [`CASE`](./sfmc-sql-case.mdx) statement.
+However, there is another place where spacing is beneficial for readability but might require an exception in some scenarios. Spacing for [aliases](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as) and `THEN` keywords of the [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) statement.
 
-I try to use it whenever possible, but when there is huge imbalance in length (for example one Column requires multi-function calculation or there is a single complex `WHEN` in [`CASE`](./sfmc-sql-case.mdx)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
+I try to use it whenever possible, but when there is huge imbalance in length (/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
 
 ```sql
 /* ✅ Spacing around operators plus equalizing aliases and THEN */
@@ -375,10 +375,10 @@ There are few approaches related to comma placement. Initially, I favoured comma
 
 1. Adding or deleting a Column requires a change in only one line. It's easier, faster and minimises the risk of a crash due to the trailing comma.
 2. Above is also very beneficial during difference checking and when leveraging git for query version control. With a comma at the beginning of the line, the Column addition or deletion is displayed correctly as a single line change.
-3. Having a comma in the beginning makes it easier to assess where a new Column definition starts quickly. It is a vast readability improvement when you are using more complex structures, like [`CASE` in `SELECT`](./sfmc-sql-case.mdx#conditional-values-with-case).
+3. Having a comma in the beginning makes it easier to assess where a new Column definition starts quickly. It is a vast readability improvement when you are using more complex structures, like [`CASE` in `SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#conditional-values-with-case).
 4. It's also easier to quickly assess whether you have a comma for each Column. With lines of various length, it is much harder with the comma at the end.
 
-For the sake of readability, I indent the first Column by two spaces so that it is in line with the following ones. Similarly, I indent `END` after [`CASE` in `SELECT`](./sfmc-sql-case.mdx#conditional-values-with-case) by two spaces for the same reason.
+For the sake of readability, I indent the first Column by two spaces so that it is in line with the following ones. Similarly, I indent `END` after [`CASE` in `SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#conditional-values-with-case) by two spaces for the same reason.
 
 ```sql {3-5,10-12}
 /* ✅ Commas at the beginning */
@@ -404,7 +404,7 @@ Many things in SQL can be done in multiple ways - using various functions, symbo
 
 ### Date Parts
 
-__Use full [Date Parts](./sfmc-sql-date-functions.mdx#date-parts) names.__
+__Use full [Date Parts](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#date-parts) names.__
 
 Yes, abbreviations let you save few characters, but they kill the readability unless someone is fluent in those shortcuts. For Marketing Cloud purposes, the time saved during writing is not worth the time lost when reading. Go with the full version.
 
@@ -426,11 +426,11 @@ WHERE DateJoined >= DATEADD(M, -1, GETDATE())
 
 ### JOIN and ON
 
-__Use [`INNER JOIN`](./sfmc-sql-join.mdx) name and reference Column from the new Table first after [`ON`](./sfmc-sql-join.mdx#joining-on).__
+__Use [`INNER JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) name and reference Column from the new Table first after [`ON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on).__
 
-Instead of just [`JOIN`](./sfmc-sql-join.mdx), write [`INNER JOIN`](./sfmc-sql-join.mdx#inner-join) - it's longer but explicit and in line with the rest of [`JOIN`](./sfmc-sql-join.mdx) keywords. It makes it easier to scan queries with [multiple various `JOIN`](./sfmc-sql-join.mdx#multiple-various-joins) statements.
+Instead of just [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx), write [`INNER JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#inner-join) - it's longer but explicit and in line with the rest of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) keywords. It makes it easier to scan queries with [multiple various `JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#multiple-various-joins) statements.
 
-Additionally, when defining [`JOIN`](./sfmc-sql-join.mdx) relationships after [`ON`](./sfmc-sql-join.mdx#joining-on), firstly reference the Column from the joined Table. The previous Table should be on the right side. It will improve consistency and reading speed.
+Additionally, when defining [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) relationships after [`ON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on), firstly reference the Column from the joined Table. The previous Table should be on the right side. It will improve consistency and reading speed.
 
 ```sql {7-8,16-17}
 /* ✅ Explicit Inner Join and Column from new Table on the left side of the ON condition */
@@ -458,8 +458,8 @@ __When using `JOIN`, add meaningful aliases for Tables and prefix all Columns wi
 
 There are a few points:
 
-1. If you are working on only one Table without [`JOIN`](./sfmc-sql-join.mdx) - don't use [aliases](./sfmc-sql-join.mdx#table-name-prefix) at all. They are not needed and would make the query less readable.
-2. If you have any [`JOIN`](./sfmc-sql-join.mdx) - always use [aliases and prefixes](./sfmc-sql-join.mdx#table-name-prefix). SQL doesn't always require it, but it is much easier to read the query when the Columns have an explicit Table mention in the prefix.
+1. If you are working on only one Table without [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) - don't use [aliases](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#table-name-prefix) at all. They are not needed and would make the query less readable.
+2. If you have any [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) - always use [aliases and prefixes](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#table-name-prefix). SQL doesn't always require it, but it is much easier to read the query when the Columns have an explicit Table mention in the prefix.
 3. When you create an alias for a Table, make it meaningful. Using subsequent letters of the alphabet is not a good idea. Instead, use something that will remind the reader of the full name - for example, abbreviation using the first letter of each word in the Table. It will allow for much easier reading.
 4. Always use `AS` keyword between the Table name and the alias.
 
@@ -588,5 +588,5 @@ If you want to share something I'm missing or have arguments for a different rec
 
 Looking for more Marketing Cloud style? Check out my:
 
-- [SSJS Style Guide](../ssjs/ssjs-style-guide.mdx)
+- [SSJS Style Guide](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx)
 - [AMPScript Style Guide](../ampscript/ampscript-style-guide.mdx)

@@ -31,7 +31,7 @@ WHERE DateJoined > CAST('2020-10-30' AS DATE)
 
 It takes a value and expected datatype with `AS` operator in between.
 
-However, in Salesforce Marketing Cloud, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](../config/sfmc-appexchange-solutions.mdx#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there).
+However, in Salesforce Marketing Cloud, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there).
 
 ### CONVERT
 
@@ -71,7 +71,7 @@ It is not possible with `CAST`.
 
 :::note You Should Know
 
-You can also leverage [style codes](#convert-date-style-codes) to format your dates during conversion to string, without the need to use [`FORMAT`](./sfmc-sql-date-functions.mdx#format-with-dates) function on top.
+You can also leverage [style codes](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates) function on top.
 
 ```sql
 SELECT
@@ -103,7 +103,7 @@ There are over 30 data types available for conversion, but there are only a few 
 
 :::note You Should Know
 
-There are also two more data types: `FLOAT` and `REAL`. Don't use them. Both are __Approximate__ Numeric Data Types and can lead to unpredicted behaviour, especially when used for equality-based conditions in [`WHERE`](./sfmc-sql-where.mdx). `DECIMAL`/`NUMERIC` is the way to go.
+There are also two more data types: `FLOAT` and `REAL`. Don't use them. Both are __Approximate__ Numeric Data Types and can lead to unpredicted behaviour, especially when used for equality-based conditions in [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx). `DECIMAL`/`NUMERIC` is the way to go.
 
 :::
 
@@ -145,7 +145,7 @@ It is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are trunc
 
 ### CONVERT Date Style Codes
 
-Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](./sfmc-sql-date-functions.mdx#custom-date-formats)):
+Just as with data types - there are many style codes available. Here I will cover just the most popular ones (/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#custom-date-formats)):
 
 | Date format | Style code |
 | -- | -- |
@@ -182,7 +182,7 @@ Date style codes should cover most scenarios, but it is possible to encounter a 
 1. __Change the format in the source__ - if possible, aligning the format to one of the supported date styles will be the best solution from the performance point of view.
 2. __Split conversion trick__ - if changing the format in the source is not possible, you can still enforce the conversion by splitting the string date and converting its parts.
 
-For the second option, you have to find Date Style Codes within your string date and convert each separately. This can be easily done with [LEFT & RIGHT](./sfmc-sql-string-functions.mdx#left--right) functions.
+For the second option, you have to find Date Style Codes within your string date and convert each separately. This can be easily done with [LEFT & RIGHT](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#left--right) functions.
 
 For example, the `27/12/2021 07:31:01` string does not have a matching Date Style Code, but we can see that the date part matches Style Code 103 and the time part fits 108. With that, we can do the conversion:
 
@@ -190,9 +190,9 @@ For example, the `27/12/2021 07:31:01` string does not have a matching Date Styl
 CONVERT(DATETIME, LEFT('27/12/2021 07:31:01', 10), 103) + CONVERT(DATETIME, RIGHT('27/12/2021 07:31:01', 8), 108) AS ConvertedDate
 ```
 
-With [LEFT & RIGHT](./sfmc-sql-string-functions.mdx#left--right) functions we split the datetime on the space, then [CONVERT](#convert) each part to finally sum it into a single date that is equal to our original string.
+With [LEFT & RIGHT](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#left--right) functions we split the datetime on the space, then [CONVERT](#convert) each part to finally sum it into a single date that is equal to our original string.
 
-If you have specific parts of your date stored in separte fields, you can leverage [`DATETIMEFROMPARTS`](./sfmc-sql-date-functions.mdx#datefromparts--datetimefromparts) function as well.
+If you have specific parts of your date stored in separte fields, you can leverage [`DATETIMEFROMPARTS`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#datefromparts--datetimefromparts) function as well.
 
 :::
 

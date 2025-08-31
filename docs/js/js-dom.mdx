@@ -395,7 +395,7 @@ document.querySelector('form').addEventListener('submit',
 );
 ```
 
-This approach allows you to implement custom validation or data processing while benefiting from the HTML5 form backbone. Perfect when you want to push your form submission to a [Code Resource](../config/sfmc-code-resource.mdx#good-form-backend-with-code-resource) asynchronously.
+This approach allows you to implement custom validation or data processing while benefiting from the HTML5 form backbone. Perfect when you want to push your form submission to a [Code Resource](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx#good-form-backend-with-code-resource) asynchronously.
 
 ##### focus & blur
 
@@ -406,7 +406,7 @@ const logInputValue = event => console.log(event.target.value);
 document.querySelector('input[type="email"]').addEventListener('blur', logInputValue);
 ```
 
-Using `blur` events can be great for triggering asynchronous checks on the provided data. For example, when the user finishes writing the email and goes to the following field, the Event Listener can then make an asynchronous call to the [Code Resource backend](../config/sfmc-code-resource.mdx#good-form-backend-with-code-resource). It will look up whether the email is used by an existing contact or new record needs to be created in Salesforce Sales Cloud to generate the Contact ID and return it back to the form's hidden field.
+Using `blur` events can be great for triggering asynchronous checks on the provided data. For example, when the user finishes writing the email and goes to the following field, the Event Listener can then make an asynchronous call to the [Code Resource backend](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx#good-form-backend-with-code-resource). It will look up whether the email is used by an existing contact or new record needs to be created in Salesforce Sales Cloud to generate the Contact ID and return it back to the form's hidden field.
 
 ##### mouseenter & mouseleave
 
@@ -473,5 +473,5 @@ Document Object Model can be used to adapt your website in real-time, fill in hi
 
 ## Marketing Cloud Use Cases
 
-1. [Tailor with Data](./snippets/tailor-with-data.mdx) - leverage DOM manipulation and personalisation strings to create dynamic experiences for your customers.
-2. [Export, Import & Document SFMC Roles](./snippets/export-import-document-sfmc-roles.mdx) - Backup, clone and move cross-account the Salesforce Marketing Cloud roles. In seconds, thanks to DOM.
+1. [Tailor with Data](/docs/js/snippets/tailor-with-data.mdx) - leverage DOM manipulation and personalisation strings to create dynamic experiences for your customers.
+2. [Export, Import & Document SFMC Roles](/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles.mdx) - Backup, clone and move cross-account the Salesforce Marketing Cloud roles. In seconds, thanks to DOM.

@@ -16,7 +16,7 @@ import innerLeftJoinReversed from '/static/img/article/article-image-sql-join-in
 
 <LeadText content='Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.' />
 
-There are cases where all you need is to pull (and maybe transform) data [`FROM`](./sfmc-sql-from.mdx) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
+There are cases where all you need is to pull (/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
 
 ```sql {6-7} title="Check who opened the email and when by querying the _Open System Data View"
 SELECT
@@ -32,7 +32,7 @@ Let's dive in the details of what you see above.
 
 ## JOIN Types
 
-In the example above, you can see the `JOIN` word. There are many `JOIN` statement types available in SQL. The appropriate joining will allow you to segment your records precisely the way you want and without the need for extensive [`WHERE`](./sfmc-sql-where.mdx) clauses. Understanding differences between various types and using the correct one for the task at hand will make your code shorter, easier to read and optimised. Let's check what is in the quiver:
+In the example above, you can see the `JOIN` word. There are many `JOIN` statement types available in SQL. The appropriate joining will allow you to segment your records precisely the way you want and without the need for extensive [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) clauses. Understanding differences between various types and using the correct one for the task at hand will make your code shorter, easier to read and optimised. Let's check what is in the quiver:
 
 ### Inner Join
 
@@ -91,7 +91,7 @@ FROM WelcomeCampaignSegment AS wel
 WHERE o.SubscriberKey IS NULL
 ```
 
-Find more about it in the [WHERE statement guide](./sfmc-sql-where.mdx).
+Find more about it in the [WHERE statement guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
 
 :::
 
@@ -313,13 +313,13 @@ In the example above, we took the same query as for the Multiple Left Joins, but
 
 This approach might be better for our needs, as we would be sure that all contacts have available data for Product Name and Product Price. A great way to make our content better and more comfortable to create.
 
-How complex can a `JOIN` can get? Very. You will encounter such monstrosities, especially in the world of reporting queries that require information from multiple System Data Views - for example, when you want to [debug your email sends](./snippets/sfmc-sql-debugging-email-sends.mdx).
+How complex can a `JOIN` can get? Very. You will encounter such monstrosities, especially in the world of reporting queries that require information from multiple System Data Views - for example, when you want to [debug your email sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx).
 
 One thing to remember - the more complex query you create, the more error-prone it is and the closer you are to the 30 minutes AutoKill limit for the query execution. Always minimise your query to only the data you truly need.
 
 ## UNION
 
-Apart from the `JOIN`, a `UNION` operator also serves a similar purpose. It concatenates the outcomes of multiple [`SELECT`](./sfmc-sql-select.mdx) statements.
+Apart from the `JOIN`, a `UNION` operator also serves a similar purpose. It concatenates the outcomes of multiple [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) statements.
 
 ```sql {6} title="Group subscribers from two Data Extensions"
 SELECT
@@ -401,7 +401,7 @@ In the example above, we add the Seedlist to the master segment and provide stat
 
 :::note You Should Know
 
-You can mix and match `JOIN` and `UNION` to create your perfect segment. And even add arbitrary data without a [`FROM`](./sfmc-sql-from.mdx).
+You can mix and match `JOIN` and `UNION` to create your perfect segment. And even add arbitrary data without a [`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx).
 
 ```sql {10,19} title="AutoKill is the limit of your imagination"
 SELECT
@@ -455,7 +455,7 @@ As with [`UNION`](#union), `INTERSECT` works only if:
 
 The check for rows existing in both queries is done considering data in all provided columns.
 
-You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](#join-types) and [`WHERE`](./sfmc-sql-where.mdx).
+You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
 
 ## EXCEPT
 
@@ -479,7 +479,7 @@ As with [`UNION`](#union), `EXCEPT` works only if:
 
 The check for rows existing in both queries is done considering data in all provided columns.
 
-You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](#join-types) and [`WHERE`](./sfmc-sql-where.mdx).
+You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
 
 ## SFMC SQL JOIN Cheat Sheet
 

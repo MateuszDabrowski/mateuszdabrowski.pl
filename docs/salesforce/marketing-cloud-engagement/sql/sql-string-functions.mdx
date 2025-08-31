@@ -46,7 +46,7 @@ FROM _Subscribers
 WHERE LEN(SubscriberKey) != 18
 ```
 
-It is less useful for segmentation but awesome for various administrative purposes. Apart from the example above, I highly recommend checking how this function combines with [`MAX` function](./sfmc-sql-numeric-functions.mdx#min-and-max).
+It is less useful for segmentation but awesome for various administrative purposes. Apart from the example above, I highly recommend checking how this function combines with [`MAX` function](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx#min-and-max).
 
 ## CHARINDEX
 
@@ -72,7 +72,7 @@ CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
 
 :::note You Should Know
 
-`CHARINDEX` is especially useful when combined with [`CASE`](./sfmc-sql-case.mdx#conditional-values-with-case) and [`LEFT`](#left--right)/[`RIGHT`](#left--right) functions, as it allows for smart string operations:
+`CHARINDEX` is especially useful when combined with [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#conditional-values-with-case) and [`LEFT`](#left--right)/[`RIGHT`](#left--right) functions, as it allows for smart string operations:
 
 ```sql {3} title="Dynamically pull part of the Institution Name value"
 SELECT
@@ -89,7 +89,7 @@ The above query checks whether there is a space within the `InstitutionName` val
 
 ## PATINDEX
 
-While [`CHARINDEX`](#charindex) is great for searching the position of a specific string in a value, `PATINDEX` gives you even more power by supporting the wildcard patterns used with [`LIKE`](./sfmc-sql-like.mdx) operator:
+While [`CHARINDEX`](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx) operator:
 
 Wildcards & Operators | Description
 -- | --
@@ -99,7 +99,7 @@ Wildcards & Operators | Description
 `-` | Range operator for `[]`
 `^` | Exclusion operator for `[]`
 
-To learn more about specific wildcards and advanced operators, check out the [`LIKE` guide](./sfmc-sql-like.mdx).
+To learn more about specific wildcards and advanced operators, check out the [`LIKE` guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx).
 
 ```sql title="Broad C-Suite hunt with PATINDEX"
 PATINDEX('%C_O%', JobTitle)
@@ -135,7 +135,7 @@ SELECT
 
 It might seem cleaner, but there are two downsides to this method:
 1. With the plus notation, if at least one provided value is `NULL`, the outcome becomes `NULL`. `CONCAT` function treats such values as empty strings.
-2. If you want to join a string with a date type value, you need to use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert), but `CONCAT` will do the implicit conversion for you.
+2. If you want to join a string with a date type value, you need to use [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#cast--convert), but `CONCAT` will do the implicit conversion for you.
 
 :::
 
@@ -189,4 +189,4 @@ Recommended approach? Either clean the data before ingestion to SFMC or do it di
 
 `FORMAT` function lets you quickly change the data into a different format. In Salesforce Marketing Cloud, it is especially useful, as you cannot create your functions. `FORMAT` might save you massive headaches.
 
-The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](./sfmc-sql-conversion-functions.mdx#cast--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](./sfmc-sql-date-functions.mdx#format-with-dates) and [`FORMAT` with Numbers](./sfmc-sql-numeric-functions.mdx#format-with-numbers) for more information. The outcome of formatting both number and date types with this function is a string.
+The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#cast--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates) and [`FORMAT` with Numbers](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx#format-with-numbers) for more information. The outcome of formatting both number and date types with this function is a string.

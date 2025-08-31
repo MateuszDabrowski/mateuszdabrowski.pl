@@ -3,7 +3,7 @@ id: sql-debugging-email-sends
 title: SFMC SQL Debugging Email Sends
 sidebar_label: Debugging Email Sends
 description: Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with Query Studio to the rescue.
-image: img/og/og-image-sql-debugging-email-sends.png
+image: img/og/og-image-/sql-debugging-email-sends.png
 tags: [Marketing Cloud, SQL, Snippet, Email, Debugging, Analytics]
 ---
 
@@ -93,29 +93,29 @@ You can even adapt the above query to better suit your needs.
 
 ### Change timeframe
 
-My default is checking the sends from the last day. You can change it by modifying the [`DATEADD` function](../sfmc-sql-date-functions.mdx#dateadd).
+My default is checking the sends from the last day. You can change it by modifying the [`DATEADD` function](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#dateadd).
 
 ### Limit to a single subscriber
 
-If you are looking for a problem related to only one specific subscriber, you can add `s.SubscriberKey = 'SubscriberKeyOfThatContact'` or `sub.EmailAddress = 'specific@email.address'` to the [`WHERE` statement](../sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+If you are looking for a problem related to only one specific subscriber, you can add `s.SubscriberKey = 'SubscriberKeyOfThatContact'` or `sub.EmailAddress = 'specific@email.address'` to the [`WHERE` statement](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
 
 ### Limit to a single domain
 
-If you see problems with deliverability for a particular user, I highly recommend checking whether other users from the same domain also have such issues. Maybe it is related to corporate server policy? Add `sub.Domain = 'Recipients.Domain'` to the [`WHERE` statement](../sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+If you see problems with deliverability for a particular user, I highly recommend checking whether other users from the same domain also have such issues. Maybe it is related to corporate server policy? Add `sub.Domain = 'Recipients.Domain'` to the [`WHERE` statement](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
 
 ### Limit to a single email
 
-If the problem is related to just one email asset, you can limit your outcomes by adding `job.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](../sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
+If the problem is related to just one email asset, you can limit your outcomes by adding `job.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe.
 
 ### Limit to a single Journey
 
-If you want to focus on a single Journey, you can limit your outcomes by adding `j.JourneyName = 'ProblematicJourneyName'` to the [`WHERE` statement](../sfmc-sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe. You can also pinpoint it further by filtering on `j.JourneyVersion`.
+If you want to focus on a single Journey, you can limit your outcomes by adding `j.JourneyName = 'ProblematicJourneyName'` to the [`WHERE` statement](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#logical-operators). Or replace the current one not to be limited by the timeframe. You can also pinpoint it further by filtering on `j.JourneyVersion`.
 
 ### Limit to single engagement type
 
-If you are interested only in bounces and do not need any other sends, add `b.IsUnique = 1` to the [`WHERE` statement](../sfmc-sql-where.mdx#logical-operators).
+If you are interested only in bounces and do not need any other sends, add `b.IsUnique = 1` to the [`WHERE` statement](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#logical-operators).
 
-You can use the same approach to output only opens or clicks by changing the prefix from `b` to the [alias](../sfmc-sql-join.mdx#table-name-prefix) representing the needed [System Data View](../../config/sfmc-system-data-views.mdx).
+You can use the same approach to output only opens or clicks by changing the prefix from `b` to the [alias](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx).
 
 ## Email Send Debugging Step-by-Step
 
@@ -133,7 +133,7 @@ I personally debug in that order because, while I wait for the Query Studio to r
 
 ### 1. Query System Data Views
 
-I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. Free Salesforce [Query Studio](../../config/sfmc-appexchange-solutions.mdx#query-studio) is the best place to execute that little exploratory analysis.
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. Free Salesforce [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) is the best place to execute that little exploratory analysis.
 
 Once you see the outcome, there are few possibilities:
 
@@ -145,13 +145,13 @@ Once you see the outcome, there are few possibilities:
 
 ### 2. Check Send Log
 
-If System Data Views don't have the data or the DeliveryDate is not filled, the email hasn't reached the recipient's inbox. Time to investigate the [Send Log](../../config/sfmc-enhanced-send-log.mdx).
+If System Data Views don't have the data or the DeliveryDate is not filled, the email hasn't reached the recipient's inbox. Time to investigate the [Send Log](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx).
 
 Check whether an ErrorCode column value is filled for the send and subscriber you are debugging.
 
 - __There is no data for that subscriber/send__ » It's time go to to the [next step](#3-check-all-subscribers-list).
-- __ErrorCode is filled__ » Check the [Error Code value meaning](../../config/sfmc-enhanced-send-log.mdx#send-log-errorcode-values) to find the root cause.
-- __ErrorCode is not filled__ » The email was sent but not delivered to the recipient - you have deliverability issues. Check your configuration (From Address Management in SFMC + SPF/DKIM/DMARC in DNS) and deliverability metrics (Salesforce offers Reputation Audit Test and Sender Rating as [features-on-demand](../../config/sfmc-features-on-demand.mdx#deliverability-features)).
+- __ErrorCode is filled__ » Check the [Error Code value meaning](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx#send-log-errorcode-values) to find the root cause.
+- __ErrorCode is not filled__ » The email was sent but not delivered to the recipient - you have deliverability issues. Check your configuration (From Address Management in SFMC + SPF/DKIM/DMARC in DNS) and deliverability metrics (Salesforce offers Reputation Audit Test and Sender Rating as [features-on-demand](/docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx#deliverability-features)).
 
 ### 3. Check All Subscribers List
 
