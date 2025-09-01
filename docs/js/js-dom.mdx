@@ -82,7 +82,7 @@ As always, the devil lies in the details. While chained `getElement` selectors w
 
 1. Readability: after two or three chained selectors, the `getElement` chain gets really hard to read and debug; the natural CSS3 style of `querySelector` is straightforward.
 2. Flexibility: you can only chain `getElements` on single element. Refering to the previous code sample, while the `.getElementsByClassName('DataCell')` called on single outcome of `.getElementById('attributes-repeater')` works, the collection it will return would crash the `.getElementsByTagName('tr')` as the chaining works only on single element scope.
-3. Loopability: outcomes of `getElements` selection cannot be looped using [`forEach()`](./js-loops.mdx#foreach).
+3. Loopability: outcomes of `getElements` selection cannot be looped using [`forEach()`](/docs/js/js-loops.mdx#foreach).
 
 My approach is to use the more flexible and readable `querySelector` whenever performance is not a dealbreaker and switch where possible to the `getElement` toolset for use cases where the performance is crucial.
 
@@ -145,9 +145,9 @@ Those methods are helpful for non-standard attributes that don't have a dedicate
 
 ### classList and className
 
-The `.classList` property lets you directly list all classes assigned to the selected element (in the form of DOMTokenList). It is excellent when you want to [loop](./js-loops.mdx) through to find a specific class or [manipulate the DOM](#manipulating-the-dom).
+The `.classList` property lets you directly list all classes assigned to the selected element (in the form of DOMTokenList). It is excellent when you want to [loop](/docs/js/js-loops.mdx) through to find a specific class or [manipulate the DOM](#manipulating-the-dom).
 
-On the other hand, when you want to do a simple [check or condition](./js-if-and-switch.mdx), `.className` is a great shorthand returning all classes as a string.
+On the other hand, when you want to do a simple [check or condition](/docs/js/js-if-and-switch.mdx), `.className` is a great shorthand returning all classes as a string.
 
 ```js
 /* <div class="page-wrapper category-api document-page">…</div> */
@@ -273,7 +273,7 @@ When you want to go down in the hierarchy, you can use `.children` to get a coll
 document.querySelector('article.main-page-content > div').children; // returns collection of two <p> tags
 ```
 
-You can either [loop](./js-loops.mdx) through those or pick a specific child with an index. Helpful here can be `.childElementCount`, which will show you the number of elements selected.
+You can either [loop](/docs/js/js-loops.mdx) through those or pick a specific child with an index. Helpful here can be `.childElementCount`, which will show you the number of elements selected.
 
 ```js
 document.querySelector('article.main-page-content > div').childElementCount; // returns 2

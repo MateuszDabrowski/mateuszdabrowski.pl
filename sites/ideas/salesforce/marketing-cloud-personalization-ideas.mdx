@@ -29,7 +29,7 @@ MCP displays the hierarchy built with those fields on the specific Category page
 
 It should change - there should be a feature parity between Sitemap and ETL for such an important feature. Especially considering that all information required for it is already available.
 
-Read about risky workaround [here](../../../docs/interaction-studio/mcp-catalog-architecture/#category-catalog-unique-attributes).
+Read about risky workaround [here](/docs/salesforce/marketing-cloud-personalization/catalog-architecture/#category-catalog-unique-attributes).
 
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000MMZ27UAH/full-category-hierarchy-support-for-etl-in-interaction-studio'
@@ -49,7 +49,7 @@ There should be an option to export the catalog in full scope, matching the ETL 
 
 Bonus points for an option to include (or not) archived Items in the export. It would be a hugely beneficial addition for debugging purposes and Item reintroduction requirements (for example after mistake in archiving).
 
-Read about partial workaround [here](../../../docs/interaction-studio/mcp-catalog-architecture/#export-full-mcp-catalog-data).
+Read about partial workaround [here](/docs/salesforce/marketing-cloud-personalization/catalog-architecture/#export-full-mcp-catalog-data).
 
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000NVRj3UAH/full-is-mcp-catalog-export'
@@ -61,7 +61,7 @@ Read about partial workaround [here](../../../docs/interaction-studio/mcp-catalo
 
 Marketing Cloud Personalization (Interaction Studio) already supports Catalog Object custom attribute metadata view (open Item in the Catalog and hover over custom attribute value to see the details). However, it is limited only to those custom attributes if the ETL updates them.
 
-We can slightly extend it with a custom [Metadata Viewer solution](../../../docs/interaction-studio/snippets/mcp-catalog-etl-metadata-viewer/) to show that data also for built-in attributes. However, it is still a very limited solution due to product gaps:
+We can slightly extend it with a custom [Metadata Viewer solution](/docs/salesforce/marketing-cloud-personalization/catalog-etl-metadata-viewer/) to show that data also for built-in attributes. However, it is still a very limited solution due to product gaps:
 
 1. `origin` and `lastUpdated` values for Sources other than ETL (Sitemap, Mobile App, Manual update in UI, API)
 2. Showing this information for built-in attributes in the Catalog UI
@@ -275,7 +275,7 @@ Marketing Cloud Personalization (Interaction Studio) offers a wide selection of 
 
 Currently, attribution tracking is available in two places:
 
-1. The Main Dashboard (MCP Home Page) displays the Total Stats and Revenue Dashboard at the top. It showcases direct revenue from campaigns (The User clicks a product recommendation and purchases that specific promoted item in the selected timeframe). Unfortunately, it does not offer per campaign (and per experience) data, only a global value split between all Web Recommendations and all Email Recommendations ([OTE](../../../docs/interaction-studio/mcp-open-time-email)).
+1. The Main Dashboard (MCP Home Page) displays the Total Stats and Revenue Dashboard at the top. It showcases direct revenue from campaigns (The User clicks a product recommendation and purchases that specific promoted item in the selected timeframe). Unfortunately, it does not offer per campaign (and per experience) data, only a global value split between all Web Recommendations and all Email Recommendations ([OTE](/docs/salesforce/marketing-cloud-personalization/open-time-email)).
 2. On the other hand, Specific Campaign Statistics display detailed statistics for each experience. Unfortunately, they don't offer direct attribution. While you can select whether the attribution should be based on click or view and what should be the attribution window, it is much more random data. View attribution means that if a user viewed a campaign and purchased anything (even wholly unrelated to the campaign recommendation) in the specified timeframe - it will be treated as revenue from that campaign. Similarly, click attribution means that if the user clicks on the campaign (for example, on a Laptop recommendation) and makes any purchase (for example, a new Monitor and cable), the whole revenue will still be attributed to the campaign. While it is acceptable for product-less campaigns (like Infobar) where direct attribution might not be possible, it's useless for meaningful analysis of recommendations conversion.
 
 There is no clean workaround for that problem - the Data Warehouse end of sales didn't help either. The only way right now is to append Campaign & Experience IDs to all links in the Campaigns and move the calculation to an external analytics system. That's a huge, complex work with a subpar experience of displaying reports in 3rd party solution, compared to having it directly in the system deploying those campaigns and tracking purchases - the system already calculating it for the existing total results.

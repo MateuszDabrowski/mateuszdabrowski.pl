@@ -183,7 +183,7 @@ If the variable you want to pass to JavaScript is an SSJS Object, you will need 
 1. In SSJS create `var parsedResponse = Stringify(response);`
 2. In JS change the personalization to `console.log(<ctrl:var name=parsedResponse />)` (notice different `name` value and lack of quotes around personalization string)
 
-Alternatively use [ternary](./ssjs-if-and-switch.mdx#ternary) to cover all scenarios:
+Alternatively use [ternary](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.mdx#ternary) to cover all scenarios:
 
 ```js
 var parsedResponse = typeof response == 'object' ? Stringify(response) : response
