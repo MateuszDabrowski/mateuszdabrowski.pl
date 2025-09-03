@@ -22,6 +22,7 @@ module.exports = {
         keywords: [
             'Mateusz Dąbrowski',
             'mateuszdabrowski',
+            'Marketing Automation',
             'Salesforce',
             'Marketing Cloud',
             'Marketing Cloud Engagement',
@@ -195,11 +196,11 @@ module.exports = {
                             to: 'docs/salesforce/marketing-cloud-engagement/zen-of-sfmc',
                         },
                         {
-                            label: 'MCE Config',
+                            label: 'Config',
                             to:  'docs/category/salesforce/marketing-cloud-engagement/config/',
                         },
                         {
-                            label: 'MCE SQL',
+                            label: 'SQL',
                             to: 'docs/category/salesforce/marketing-cloud-engagement/sfmc-sql/',
                         },
                         {

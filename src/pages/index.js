@@ -133,62 +133,111 @@ function Feature({ imageUrl, title, description, url, cta }) {
     );
 }
 
+const highlightedCategories = [
+    {
+        title: <>SQL</>,
+        url: './docs/category/salesforce/marketing-cloud-engagement/sql/',
+        description: 'SQL basics, not-so-basics and snippets to learn or copy-paste.',
+        mainTag: 'Marketing Cloud Engagement',
+    },
+    {
+        title: <>Config</>,
+        url: './docs/category/salesforce/marketing-cloud-engagement/config/',
+        description: 'MCE setup and architecture tricks and best practices for everyone.',
+        mainTag: 'Marketing Cloud Engagement',
+    },
+    {
+        title: <>SSJS</>,
+        url: './docs/category/salesforce/marketing-cloud-engagement/ssjs/',
+        description: 'Writing, styling, debugging and abusing SSJS. Everywhere.',
+        mainTag: 'Marketing Cloud Engagement',
+    },
+    {
+        title: <>Serverside Code</>,
+        url: './docs/category/salesforce/marketing-cloud-personalization/serverside-code/',
+        description: 'Undocumented magic for creating amazing MCP campaign templates.',
+        mainTag: 'Marketing Cloud Personalization',
+    },
+];
+
+/**
+ * Renders an article card based on the provided title, URL, description, and main tag.
+ *
+ * @param {string} title - The title of the article.
+ * @param {string} url - The URL of the article.
+ * @param {string} description - The description of the article.
+ * @param {string} mainTag - The main tag of the article.
+ * @return {JSX.Element} The rendered article card component.
+ */
+function Category({ title, url, description, mainTag }) {
+    return (
+        <div className='col col--3'>
+            <div className={clsx('card', styles.categoryCard)}>
+                <div className='card__header'>
+                    <Link className={styles.categoryTitle} to={url}>
+                        <strong>{title}</strong>
+                    </Link>
+                    <p className={styles.categoryTag}>#{mainTag}</p>
+                </div>
+                <div className='card__body'>{description}</div>
+                <div className='card__footer'>
+                    <Link className={styles.categoryLink} to={url}>
+                        Read more »
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 const highlightedArticles = [
     {
         title: <>SQL Basics</>,
         url: './docs/salesforce/marketing-cloud-engagement/sql/sql-basics/',
-        imageUrl: 'img/og/og-image-sql-basics.png',
-        description: 'Best place to start your journey with writing SQL Queries in SFMC.',
-        mainTag: 'SFMC SQL',
-    },
-    {
-        title: <>SQL Select</>,
-        url: './docs/salesforce/marketing-cloud-engagement/sql/sql-select/',
-        imageUrl: 'img/og/og-image-sql-select.png',
-        description: 'Learn how to SELECT the data and how to limit it with TOP & DISTINCT.',
-        mainTag: 'SFMC SQL',
+        description: 'Best place to start your journey with writing SQL Queries in MCE.',
+        mainTag: 'Marketing Cloud Engagement',
     },
     {
         title: <>SQL Join</>,
         url: './docs/salesforce/marketing-cloud-engagement/sql/sql-join/',
-        imageUrl: 'img/og/og-image-sql-join.png',
         description: 'Check how to work with more than one Data Extension or Data View.',
-        mainTag: 'SFMC SQL',
+        mainTag: 'Marketing Cloud Engagement',
     },
     {
         title: <>SQL Date Functions</>,
         url: './docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/',
-        imageUrl: 'img/og/og-image-sql-date-functions.png',
         description: 'Create, calculate and format date, time and timezone with SQL.',
-        mainTag: 'SFMC SQL',
-    },
-    {
-        title: <>System Data Views</>,
-        url: './docs/salesforce/marketing-cloud-engagement/config/system-data-views/',
-        imageUrl: 'img/og/og-image-sfmc-system-data-views.png',
-        description: 'Learn about hidden Data Views storing key data about your SFMC.',
-        mainTag: 'SFMC Config',
-    },
-    {
-        title: <>Mobile Connect Data Views</>,
-        url: './docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/',
-        imageUrl: 'img/og/og-image-sfmc-mobile-connect-data-views.png',
-        description: 'View Mobile Connect data goldmine in SMS System Data Views.',
-        mainTag: 'SFMC Config',
+        mainTag: 'Marketing Cloud Engagement',
     },
     {
         title: <>Contact Deletion</>,
         url: './docs/salesforce/marketing-cloud-engagement/config/contact-deletion/',
-        imageUrl: 'img/og/og-image-sfmc-contact-deletion.png',
         description: 'Everything you need to clean up your SFMC from dirty Contacts.',
-        mainTag: 'SFMC Config',
+        mainTag: 'Marketing Cloud Engagement',
+    },
+    {
+        title: <>System Data Views</>,
+        url: './docs/salesforce/marketing-cloud-engagement/config/system-data-views/',
+        description: 'Learn about hidden Data Views storing key data about your SFMC.',
+        mainTag: 'Marketing Cloud Engagement',
+    },
+    {
+        title: <>Mobile Connect Data Views</>,
+        url: './docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/',
+        description: 'View Mobile Connect data goldmine in SMS System Data Views.',
+        mainTag: 'Marketing Cloud Engagement',
+    },
+    {
+        title: <>Cloud Page Apps</>,
+        url: './docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/',
+        description: 'Build custom and secure applications directly in the MCE.',
+        mainTag: 'Marketing Cloud Engagement',
     },
     {
         title: <>MCP Serverside Code Context</>,
         url: './docs/salesforce/marketing-cloud-personalization/serverside-code-context/',
-        imageUrl: 'img/og/og-image-mcp-serverside-code-context.png',
         description: 'Undocumented secrets of coding MCP Campaign Templates.',
-        mainTag: 'MC Personalization',
+        mainTag: 'Marketing Cloud Personalization',
     },
 
 ];
@@ -397,8 +446,6 @@ function Home() {
                             </div>
                         </section>
                     )}
-                    {/* Newsletter Section */}
-                    <Newsletter />
                     {/* Upcoming Events Section */}
                     {futureEvents && futureEvents.length > 0 && (
                         <section className={styles.events}>
@@ -414,6 +461,23 @@ function Home() {
                             </div>
                         </section>
                     )}
+                    {/* Highlighted Categories Section */}
+                    {highlightedCategories && highlightedCategories.length > 0 && (
+                        <section className={styles.categories}>
+                            <div className="container">
+                                <h2 className={styles.categoriesHeading}>
+                                    Most popular topics
+                                </h2>
+                                <div className='row'>
+                                    {highlightedCategories.map((props, idx) => (
+                                        <Category key={idx} {...props} />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    )}
+                    {/* Newsletter Section */}
+                    <Newsletter />
                     {/* Highlighted Articles Section */}
                     {highlightedArticles && highlightedArticles.length > 0 && (
                         <section className={styles.articles}>

@@ -17,7 +17,7 @@ module.exports = {
                     link: {
                         type: 'generated-index',
                         title: 'Salesforce Marketing Cloud Engagement',
-                        description: 'MCE WIP',
+                        description: 'Learn about code and configuration best practices in Salesforce Marketing Cloud Engagement (formerly ExactTarget). From SQL and SSJS to AMPScript and configuration options that everyone should know. All-in-one, all for free.',
                         slug: 'category/salesforce/marketing-cloud-engagement',
                         keywords: ['Salesforce', 'Marketing Cloud Engagement'],
                         image: 'img/og/og-image-sf-mce.png',
