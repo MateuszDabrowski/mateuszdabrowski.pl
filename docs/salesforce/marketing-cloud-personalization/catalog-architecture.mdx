@@ -4,7 +4,7 @@ title: MCP Catalog Architecture
 sidebar_label: Catalog Architecture
 description: Marketing Cloud Personalization (Interaction Studio) Catalog Objects architecture, data ingestion, limitations, tricks and tips. Build right from the start.
 image: img/og/og-image-mcp-catalog-architecture.png
-tags: [Marketing Cloud, Marketing Cloud Personalization, Interaction Studio, Setup, Data Management]
+tags: [Salesforce, Marketing Cloud Personalization, Personalization, Interaction Studio, Setup, Data Management]
 toc_max_heading_level: 4
 ---
 
@@ -169,7 +169,7 @@ Archived | Boolean | Marks whether Item should be Archived | Archived Items are 
 
 Published and Expiration fields (as all Interacton Studio date type fields) use ISO-8601 datetime formar. You must pass them as `2022-04-12T10:23:37Z`.
 
-If you want to push a datetime to MCP using [ETL](#2-mc-personalization-with-etl), you can prepare the data with SQL using clean [FORMAT](/docs/salesforce/marketing-cloud-engagement/sql/sfmc-sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking SFMC Data Extension).
+If you want to push a datetime to MCP using [ETL](#2-mc-personalization-with-etl), you can prepare the data with SQL using clean [FORMAT](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking SFMC Data Extension).
 
 :::
 
