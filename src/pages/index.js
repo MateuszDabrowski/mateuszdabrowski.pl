@@ -182,7 +182,7 @@ function Category({ title, url, description, mainTag }) {
                 <div className='card__body'>{description}</div>
                 <div className='card__footer'>
                     <Link className={styles.categoryLink} to={url}>
-                        Read more »
+                        View articles »
                     </Link>
                 </div>
             </div>

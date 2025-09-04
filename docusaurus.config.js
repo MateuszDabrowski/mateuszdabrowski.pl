@@ -189,10 +189,10 @@ module.exports = {
             style: 'dark',
             links: [
                 {
-                    title: 'MCE Docs',
+                    title: 'MC Engagement Docs',
                     items: [
                         {
-                            label: 'Zen of MCE',
+                            label: 'Zen of SFMC',
                             to: 'docs/salesforce/marketing-cloud-engagement/zen-of-sfmc',
                         },
                         {

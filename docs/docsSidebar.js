@@ -17,7 +17,7 @@ module.exports = {
                     link: {
                         type: 'generated-index',
                         title: 'Salesforce Marketing Cloud Engagement',
-                        description: 'Learn about code and configuration best practices in Salesforce Marketing Cloud Engagement (formerly ExactTarget). From SQL and SSJS to AMPScript and configuration options that everyone should know. All-in-one, all for free.',
+                        description: 'Learn about code and configuration best practices in Salesforce Marketing Cloud Engagement (formerly ExactTarget). From SQL and SSJS to AMPScript and configuration options that everyone should know.',
                         slug: 'category/salesforce/marketing-cloud-engagement',
                         keywords: ['Salesforce', 'Marketing Cloud Engagement'],
                         image: 'img/og/og-image-sf-mce.png',
@@ -36,7 +36,7 @@ module.exports = {
                                 description: 'To fully leverage the Salesforce Marketing Cloud Engagement Data Extensions and Automation Studio, SQL is a must-have. Here I gathered both the language basics and some of the most valuable snippets to copy and paste shamelessly.',
                                 slug: 'category/salesforce/marketing-cloud-engagement/sql',
                                 keywords: ['Salesforce', 'Marketing Cloud Engagement', 'SQL'],
-                                image: 'img/og/og-image-sql.png',
+                                image: 'img/og/og-image-sf-mce-sql.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-engagement/sql/sql-basics',
@@ -62,7 +62,7 @@ module.exports = {
                                         description: 'Ready-to-use Salesforce Marketing Cloud Engagement SQL Snippets.',
                                         slug: 'category/salesforce/marketing-cloud-engagement/sql/snippets',
                                         keywords: ['Salesforce', 'Marketing Cloud Engagement', 'SQL'],
-                                        image: 'img/og/og-image-sfmc-sql-snippets.png',
+                                        image: 'img/og/og-image-sf-mce-sql-snippets.png',
                                     },
                                     items: [
                                         'salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends',
@@ -80,7 +80,7 @@ module.exports = {
                                 description: 'SSJS is an XX-century version of JavaScript paired with proprietary libraries created by Salesforce. It is one of the programmatic tools useful to leverage Marketing Cloud to its fullest potential. I am creating this documentation to make my (and hopefully also yours) work easier.',
                                 slug: 'category/salesforce/marketing-cloud-engagement/ssjs',
                                 keywords: ['Salesforce', 'Marketing Cloud Engagement', 'SSJS'],
-                                image: 'img/og/og-image-ssjs.png',
+                                image: 'img/og/og-image-sf-mce-ssjs.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch',
@@ -97,7 +97,7 @@ module.exports = {
                                         description: 'Ready-to-use Salesforce Marketing Cloud Engagement SSJS Snippets.',
                                         slug: 'category/salesforce/marketing-cloud-engagement/ssjs/snippets',
                                         keywords: ['Salesforce', 'Marketing Cloud Engagement', 'SSJS'],
-                                        image: 'img/og/og-image-sfmc-ssjs-snippets.png',
+                                        image: 'img/og/og-image-sf-mce-ssjs-snippets.png',
                                     },
                                     items: [
                                         'salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-script-template',
@@ -122,7 +122,7 @@ module.exports = {
                                 description: 'AMPScript is a proprietary scripting language in Salesforce Marketing Cloud Engagement along with SSJS. Out of the two, it is simpler and more performant, but too limited for complex solutions. Good starting point for marketers without development experience. Best option for scripting in messaging.',
                                 slug: 'category/salesforce/marketing-cloud-engagement/ampscript',
                                 keywords: ['Salesforce', 'Marketing Cloud Engagement', 'AMPScript'],
-                                image: 'img/og/og-image-ampscript.png',
+                                image: 'img/og/og-image-sf-mce-ampscript.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide',
@@ -136,7 +136,7 @@ module.exports = {
                                         description: 'Ready-to-use Salesforce Marketing Cloud Engagement AMPScript Snippets.',
                                         slug: 'category/salesforce/marketing-cloud-engagement/ampscript/snippets',
                                         keywords: ['Salesforce', 'Marketing Cloud Engagement', 'AMPScript'],
-                                        image: 'img/og/og-image-sfmc-ampscript-snippets.png',
+                                        image: 'img/og/og-image-sf-mce-ampscript-snippets.png',
                                     },
                                     items: [
                                         'salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs',
@@ -158,7 +158,7 @@ module.exports = {
                                 description: 'Many things in Salesforce Marketing Cloud Engagement aren\'t coding but have a massive impact on the code. Permissions. System Data Views. Configuration options. Here I focus on the most important ones that are crucial for Marketing Cloud developers.',
                                 slug: 'category/salesforce/marketing-cloud-engagement/config',
                                 keywords: ['Salesforce', 'Marketing Cloud Engagement', 'Configuration'],
-                                image: 'img/og/og-image-sfmc-config.png',
+                                image: 'img/og/og-image-sf-mce-config.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-engagement/config/licence-limits',
@@ -183,7 +183,7 @@ module.exports = {
                                 description: 'My sessions on various aspects of Salesforce Marketing Cloud Engagement with summary, recordings, slides, snippets and articles. All-in-one, all for free.',
                                 slug: 'category/salesforce/marketing-cloud-engagement/webinars',
                                 keywords: ['Salesforce', 'Marketing Cloud Engagement', 'Webinar'],
-                                image: 'img/og/og-image-sfmc-webinars.png',
+                                image: 'img/og/og-imag-sf-mce-webinars.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-account-architecture',
@@ -203,7 +203,7 @@ module.exports = {
                         description: 'Salesforce Marketing Cloud Personalization (Interaction Studio) is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud Engagement. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!',
                         slug: 'category/salesforce/marketing-cloud-personalization',
                         keywords: ['Salesforce', 'Marketing Cloud Personalization', 'Interaction Studio', 'Personalisation'],
-                        image: 'img/og/og-image-mcp.png',
+                        image: 'img/og/og-image-sf-mcp.png',
                     },
                     items: [
                         'salesforce/marketing-cloud-personalization/catalog-architecture',
@@ -217,7 +217,7 @@ module.exports = {
                                 description: 'Guides focused on various aspects of Salesforce Marketing Cloud Personalization (Interaction Studio) Serverside Code.',
                                 slug: 'category/salesforce/marketing-cloud-personalization/serverside-code',
                                 keywords: ['Salesforce', 'Marketing Cloud Personalization', 'Interaction Studio', 'Personalisation', 'TypeScript'],
-                                image: 'img/og/og-image-mcp-serverside-code.png',
+                                image: 'img/og/og-image-sf-mcp-serverside-code.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-personalization/serverside-code-basics',
@@ -234,7 +234,7 @@ module.exports = {
                                 description: 'Ready-to-use Salesforce Marketing Cloud Personalization (Interaction Studio) Snippets.',
                                 slug: 'category/salesforce/marketing-cloud-personalization/snippets',
                                 keywords: ['Salesforce', 'Marketing Cloud Personalization', 'Interaction Studio', 'Personalisation'],
-                                image: 'img/og/og-image-mcp-snippets.png',
+                                image: 'img/og/og-image-sf-mcp-snippets.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer',
@@ -299,9 +299,9 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Webinars',
-                description: 'My sessions on various aspects of Salesforce Marketing Cloud with summary, recordings, slides, snippets and articles. All-in-one, all for free.',
+                description: 'My sessions on various aspects of Salesforce Marketing Cloud with summary, recordings, slides, snippets and articles.',
                 keywords: ['Salesforce', 'Marketing Cloud Engagement', 'Webinar'],
-                image: 'img/og/og-image-webinars.png',
+                image: 'img/og/og-image-sf-mce-webinars.png',
             },
             items: [
                 'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-account-architecture',
