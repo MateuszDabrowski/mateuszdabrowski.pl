@@ -201,7 +201,7 @@ module.exports = {
                         },
                         {
                             label: 'SQL',
-                            to: 'docs/category/salesforce/marketing-cloud-engagement/sfmc-sql/',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/sql/',
                         },
                         {
                             label: 'SSJS',
@@ -431,7 +431,7 @@ module.exports = {
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-conversion-functions/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-conversation-functions/',
+                        to: '/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/',
                     },
                     {
                         from: ['/docs/sql/sfmc-sql-date-functions/'],
@@ -493,31 +493,27 @@ module.exports = {
                     /* Interaction Studio rename */
                     {
                         from: ['/docs/interaction-studio/is-catalog-architecture/', '/docs/interaction-studio/mcp-catalog-architecture/'],
-                        to: '/docs/salesforce/marketing-cloud-personalization/mcp-catalog-architecture/',
+                        to: '/docs/salesforce/marketing-cloud-personalization/catalog-architecture/',
                     },
                     {
                         from: ['/docs/interaction-studio/is-open-time-email/', '/docs/interaction-studio/mcp-open-time-email/'],
-                        to: '/docs/salesforce/marketing-cloud-personalization/mcp-open-time-email/',
+                        to: '/docs/salesforce/marketing-cloud-personalization/open-time-email/',
                     },
                     {
                         from: ['/docs/interaction-studio/snippets/is-catalog-etl-metadata-viewer/', '/docs/interaction-studio/snippets/mcp-catalog-etl-metadata-viewer/'],
-                        to: '/docs/salesforce/marketing-cloud-personalization/snippets/mcp-catalog-etl-metadata-viewer/',
+                        to: '/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer/',
                     },
                     {
                         from: ['/docs/interaction-studio/mcp-serverside-code-basics/'],
-                        to: '/docs/salesforce/marketing-cloud-personalization/mcp-serverside-code-basics/',
+                        to: '/docs/salesforce/marketing-cloud-personalization/serverside-code-basics/',
                     },
                     {
                         from: ['/docs/interaction-studio/mcp-serverside-code-context/'],
-                        to: '/docs/salesforce/marketing-cloud-personalization/mcp-serverside-code-context/',
+                        to: '/docs/salesforce/marketing-cloud-personalization/serverside-code-context/',
                     },
                     {
                         from: ['/docs/interaction-studio/mcp-serverside-code-properties/'],
-                        to: '/docs/salesforce/marketing-cloud-personalization/mcp-serverside-code-properties/',
-                    },
-                    {
-                        from: ['/sites/ideas/interaction-studio-ideas/'],
-                        to: '/sites/ideas/mc-personalization-ideas/',
+                        to: '/docs/salesforce/marketing-cloud-personalization/serverside-code-properties/',
                     },
                     /* Category pages restructure */
                     {
@@ -525,7 +521,7 @@ module.exports = {
                         to: '/docs/category/salesforce/marketing-cloud-engagement/',
                     },
                     {
-                        from: ['/docs/sql/', '/docs/category/sfmc-sql/', '/docs/category/sfmc-sql/'],
+                        from: ['/docs/sql/', '/docs/category/sfmc-sql/'],
                         to: '/docs/category/salesforce/marketing-cloud-engagement/sql/',
                     },
                     {
@@ -562,7 +558,7 @@ module.exports = {
                         to: '/sites/ideas/salesforce/marketing-cloud-engagement-ideas/',
                     },
                     {
-                        from: ['/sites/ideas/mc-personalization-ideas/'],
+                        from: ['/sites/ideas/mc-personalization-ideas/', '/sites/ideas/interaction-studio-ideas/'],
                         to: '/sites/ideas/salesforce/marketing-cloud-personalization-ideas/',
                     },
                     /* Webinars restructure */
