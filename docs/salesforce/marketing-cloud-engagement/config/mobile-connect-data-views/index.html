@@ -11,8 +11,8 @@
 
 
 <link rel="search" type="application/opensearchdescription+xml" title="Mateusz Dąbrowski" href="/opensearch.xml"><link rel="stylesheet" href="/assets/css/styles.4b8eff0d.css">
-<script src="/assets/js/runtime~main.22f99be6.js" defer="defer"></script>
-<script src="/assets/js/main.0ab7ce24.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.d6cb23c1.js" defer="defer"></script>
+<script src="/assets/js/main.59b9e4eb.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><defs>
@@ -84,7 +84,7 @@
 </ul>
 </li>
 <li><code>Unsub</code>, <code>OptIn</code>, <code>OptOut</code> are currently not populated at all. You should pull that data from <a href="#_smssubscriptionlog"><code>_SMSSubscriptionLog</code></a>.</li>
-<li><code>JBDefinitionID</code> and <code>JBActivityID</code> let you cleanly match SMS data to <a href="/docs/salesforce/marketing-cloud-engagement/sql/sql-join/"><code>Journey</code></a> using <code>Name</code> field: <code>ON smsTracking.Name = journeyActivity.ActivityName</code>.</li>
+<li><code>JBDefinitionID</code> and <code>JBActivityID</code> let you cleanly match SMS data to <a href="/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journey"><code>Journey</code></a> and <a href="/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journeyactivity"><code>_JourneyActivity</code></a> Data Views using <code>VersionID</code> and <code>ActivityID</code> respectively. However, it won&#x27;t work for old (created before October 2020) SMS Activities - for those you can make a <a href="/docs/salesforce/marketing-cloud-engagement/sql/sql-join/"><code>JOIN</code></a> using <code>Name</code> field: <code>ON smsTracking.Name = journeyActivity.ActivityName</code>.</li>
 <li><code>SMSStandardStatusCodeId</code> and <code>Description</code> are great for understanding your SMS send&#x27;s current status.</li>
 <li><code>SMSJobID</code> and <code>SMSBatchID</code> are the only way to connect _SMSMessageTracking Data View to <a href="/docs/salesforce/marketing-cloud-engagement/sql/sql-join/">SMS Send Log</a> <code>ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SMSJobID AND smsTracking.SMSBatchID = sendLog.BatchID</code>.</li>
 </ol>
