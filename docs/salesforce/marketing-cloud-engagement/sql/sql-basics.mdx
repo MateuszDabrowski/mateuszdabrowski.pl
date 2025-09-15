@@ -103,7 +103,7 @@ Write a query that will find Subscriber Key for all Active (opted-in) Subscriber
 1. All Subscribers List data is stored in [_Subscribers](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_subscribers) Data View.
 2. If you are running your query on a child Business Unit, you will need to use [`Ent.` prefix](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx#enterprise-system-data-views).
 3. You don't have to [SELECT](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) any columns but the SubscriberKey. You can use [WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) on not selected columns.
-4. Current status of a Subscriber is saved in the `Status` column of [_Subscribers](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
+4. Current status of a Subscriber is saved in the `Status` column of [_Subscribers](/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View as a string. You can use it for filtering with [WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
 
 </TabItem>
 <TabItem value='solution'>

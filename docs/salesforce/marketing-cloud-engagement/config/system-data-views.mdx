@@ -22,13 +22,13 @@ Data Views have **data retention settings set to 6 months**. If you want to stor
 
 Be careful, however, as some of the System Data Views can get absurdly big quick, and making copies within your Marketing Cloud Instance may lead to performance issues. In such cases, a much better idea might be to export that data on a scheduled basis to an external Data Warehouse.
 
-Another important point related to Data Views is always knowing which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx#enterprise-data-extension) prefix in your query.
+Another important point related to Data Views is always knowing which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](#_subscribers) Data View, which means you will need to use the [`Ent.`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx#enterprise-data-extension) prefix in your query.
 
 :::note You Should Know
 
 Below you can find selected Salesforce Marketing Cloud Data Views focused on Subscribers, Journeys, Email and SMS Channel. I plan to cover the rest of them in the future.
 
-Be sure to check the excellent [Dataviews.io](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx).
+Be sure to check the excellent [Dataviews.io](https://dataviews.io) - an interactive system tables relationship diagram created by [Zuzanna Jarczyńska](https://sfmarketing.cloud/author/zjarczynska/). It will for sure help you with multi-view [`JOIN`s](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx).
 
 There is also a more detailed [System Tables relationship diagram](https://dbdiagram.io/d/5ff259ed80d742080a34e3c3) created by [Cameron Roberts](https://cameronrobert.com.au) that contains SQL Database structure along with field lengths.
 
@@ -117,7 +117,7 @@ FROM _Subscribers AS sub
 When working with `_Subscribers` Data View:
 
 1. If you are using the query in the child Business Unit, use [`Ent.`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx#enterprise-data-extension) prefix, as the data is stored on Parent BU level.
-2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) other Data Views.
+2. If you need high-level data on your subscribers, this Data View might be enough. If you want to learn more (for example, why a subscriber bounced, where did he unsubscribe), you will need to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) other Data Views.
 3. Use `SubscriberID` to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) data from different engagement-based Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) or [`_Bounce`](#_bounce).
 4. The `Status` field is excellent for a quick check of your database quality. It is also nice to manage multiple records. Pull the selection of your subscribers with SQL Query, add a new status with [custom value](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#custom-values) (for example, `'unsubscribed' AS Status`) and leverage Automation to export-transfer-import the Data Extension to All Subscribers.
 5. This Data View, along with [`_EnterpriseAttribute`](#_enterpriseattribute), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers), does not have six-month data retention.
@@ -371,7 +371,7 @@ FROM _Sent AS sent
 
 When working with `_Sent` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 2. The most valuable data here is the `EventDate` field that lets you know when the email was sent (and whether that happened at all).
 3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left Marketing Cloud. Check [enhanced Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx), applied personalisation, data source, `RaiseError` scripts.
 
@@ -430,7 +430,7 @@ FROM _Open AS opened
 
 When working with `_Open` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 2. Use `_open.IsUnique = 1` in [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) or [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) to focus on the the first occurence of each event. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 3. The most valuable data here is the `EventDate` field that lets you know when the email was opened (and whether that happened at all). But with email opens, it's not that easy. In many cases, the lack of open data in this Data View doesn't mean that your recipient for sure did not open the email. And in some instances, tracked open might not mean he did.
 
@@ -511,7 +511,7 @@ FROM _Click AS click
 
 When working with `_Click` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 2. Use `_click.IsUnique = 1` in [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) or [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 3. The most valuable data here is the `EventDate` field that lets you know when the email was clicked (and whether that happened at all).
 4. You can significantly improve the value of that information by checking the `LinkName` and `LinkContent` fields to understand which links proved interesting for your customers.
@@ -669,7 +669,7 @@ FROM _Bounce AS bounce
 
 When working with `_Bounce` Data View:
 
-1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
+1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Sent`](#_sent), [`_Open`](#_open), [`_Click`](#_click) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 2. Use `_bounce.IsUnique = 1` in [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) or [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) to focus on the first occurence of each event. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 3. The `Domain` helps aggregate the bounce data to see any domain-specific problem with deliverability.
 4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
@@ -678,7 +678,7 @@ When working with `_Bounce` Data View:
 
 :::note You Should Know
 
-`SMTPBounceReason` field is `nvarchar(/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#left--right).
+`SMTPBounceReason` field is `nvarchar(max)` SQL type, and due to that might be longer than the 4000 characters limit for the Data Extension string length in Salesforce Marketing Cloud. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#left--right).
 
 :::
 
@@ -1075,7 +1075,7 @@ FROM _Journey AS journey
 When working with `_Journey` Data View:
 
 1. `VersionID` field is perfect to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) with [`_JourneyActivity`](#_journeyactivity). It lets you map multi-channel engagement to a particular Journey (visible in `JourneyName`) and its specific version (as shown in `VersionNumber`).
-2. You can also connect it to SMS channel using [_SMSMessageTracking](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON journey.VersionID = smsTracking.JBDefinitionID`.
+2. You can also connect it to SMS channel using [_SMSMessageTracking](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smsmessagetracking) Data View by making a [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON journey.VersionID = smsTracking.JBDefinitionID`.
 3. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found, it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
 4. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and, based on the send volume or performance, stop them and notify you about that.
 5. You can query only Journeys that currently exists in your Business Unit.
@@ -1160,8 +1160,8 @@ FROM _JourneyActivity AS journeyActivity
 
 When working with `_JourneyActivity` Data View:
 
-1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Use `TriggererSendDefinitionObjectID` available on either [`_Job`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
-2. You can also connect it to SMS channel using [_SMSMessageTracking](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON journeyActivity.ActivityID = smsTracking.JBActivityID`.
+1. There are two key fields here: `VersionID` and `JourneyActivityObjectID`. `JourneyActivityObjectID` lets you match Journey Activity with specific Email Send. Use `TriggererSendDefinitionObjectID` available on either [`_Job`](#_job), [`_Sent`](#_sent), [`_Open`](#_open), [`_Click` ](#_click) or [`_Bounce`](#_bounce) Data View. It is handy when you later use the `VersionID` field to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) [`_Journey`](#_journey) Data View and with this connect specific Email engagement with particular Journey and its exact version. Fantastic for full scope reporting.
+2. You can also connect it to SMS channel using [_SMSMessageTracking](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smsmessagetracking) Data View by making a [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON journeyActivity.ActivityID = smsTracking.JBActivityID`.
 3. With the help of [`_Journey`](#_journey) Data View, you can use the `ActivityType` field for an excellent little report created with SQL that will show which Journeys use which channels and what types of logic. For a more in-depth understanding of what happens in Journey, you need to use Script Activity with REST API instead, but SQL is perfect for glancing at the multi-channel use.
 4. `_JourneyActivity` Data View holds data about activities from deleted Journeys and Journey Versions, so if you want to see only activities currently in use, [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) [`_Journey`](#_journey) Data View.
 
@@ -1262,7 +1262,7 @@ When working with `_AutomationInstance` Data View:
 1. This data view stores all Automation __runs__, so you will see here separte row for each execution of the Automation. This is great basic audit tool for logging changes to the automation as well as a nice way to counting the amount of automation executions against licence limits.
 2. Since Winter '25 Release `_AutomationActivityInstance` no longer shows data with 24 hours delay. Now all information is available in real-time.
 3. If automation run errored out due to system or unclassified error, `AutomationInstanceActivityErrorDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the first error message. If there are more and you want to find them, you will need to leverage [`_AutomationActivityInstance`](#_automationactivityinstance) Data View.
-4. All date fields in this data view are UTC based (/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx) it might be best to use [`GETUTCDATE(/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE(/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate).
+4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/) it might be best to use [`GETUTCDATE()`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate).
 5. `AutomationInstanceID` field is perfect to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) with [`_AutomationActivityInstance`](#_automationactivityinstance). It lets you find information about execution of each activity within the Automation in the specific run.
 
 :::note You Should Know
@@ -1381,7 +1381,7 @@ When working with `_AutomationActivityInstance` Data View:
 1. This data view stores all Automation Activity __runs__, so you will see here separte row for each execution of each Activity. It is awesome tool for checking how optimised our Activities are and what errors are troubling our Automations.
 2. Since Winter '25 Release `_AutomationActivityInstance` no longer shows data with 24 hours delay. Now all information is available in real-time.
 3. If activity run errored out due to system or unclassified error, `ActivityInstanceStatusDetails` will show "System Error occurred. Please contact support for details.". In other cases it will store the error message.
-4. All date fields in this data view are UTC based (/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx) it might be best to use [`GETUTCDATE(/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE(/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate).
+4. All date fields in this data view are UTC based (unlike most other Data Views) so when manipulating them with [SQL Date Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/) it might be best to use [`GETUTCDATE()`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate) instead of system date from [`GETDATE()`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#getdate--getutcdate).
 5. The start and end dates in this data view can be leveraged with [`DATEDIFF`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#datediff) and [`AVG`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#avg) to calculate average time needed for each activity to finish. This information is crucial to assess whether the current automation Schedule is correct and where the optimisation efforts are required to protect against 30 minutes autokill.
 6. `AutomationInstanceID` field is perfect to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) with [`_AutomationInstance`](#_automationinstance). It lets you find information about the Automation using this Activity.
 7. You can also leverage `JobID` field to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) your email sending activities directly with [`_Job`](#_job) and pull send-specific information from engagement Data Views.

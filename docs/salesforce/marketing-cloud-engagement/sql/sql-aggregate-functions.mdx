@@ -296,7 +296,7 @@ FROM ContactMasterDE
 
 Nice, but it does not give us any information that we couldn't find more comfortable in the User Interface. So, where is the added value?
 
-For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values.
+For example, in seeing whether you have potential duplicate contacts. Instead of looking for all rows with `COUNT(*)`, we will change the function argument to the specific column to count only its [non-`NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values.
 
 ```sql {3,6} title="This query will show you which Email Addresses exists on more than one subscriber"
 SELECT
@@ -340,9 +340,9 @@ Pack it into Automation with Verification Activity on top and keep your database
 
 There are three approaches to using `COUNT` that differ slightly from each other.
 
-- `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values and duplicates.
-- `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values including duplicates.
-- `COUNT(/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) and non-duplicate values.
+- `COUNT(*)` will return the number of items, including [`NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values and duplicates.
+- `COUNT(FieldName)` / `COUNT(ALL FieldName)` will return the number on [non-`NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) values including duplicates.
+- `COUNT(DISTINCT FieldName)` will return the number of [non-`NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null) and non-duplicate values.
 
 ```sql {2-4} title="Let's find out whether we have multiple Subscribers with the same Email Address"
 SELECT
@@ -391,7 +391,7 @@ You can use both in the same query and even mix it with [`DISTINCT`](/docs/sales
 
 However, when building such layered filters, keep in mind the SQL's order of execution for clauses:
 
-[`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) > [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) > [`GROUP BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#distinct) > [`ORDER BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top-with-order-by)
+[`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) > [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) > [`GROUP BY`](#group-by) > [`HAVING`](#having) > [`DISTINCT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#distinct) > [`ORDER BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#top-with-order-by)
 
 It means that rows filtered with `WHERE` will not be taken into consideration for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
 

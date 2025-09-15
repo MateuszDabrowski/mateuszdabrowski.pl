@@ -78,7 +78,7 @@ Pros:
 Cons:
 - Require you to export data in a particularly formatted .csv to MCP SFTP.
 - Not real-time (but every 15 minutes is pretty damn close, come on!).
-- Doesn't support [drill-down Category hierarchy](/sites/ideas/mc-personalization-ideas#full-mcp-category-hierarchy-support-for-etl) in the UI<sup>[*](#category-catalog-unique-attributes)</sup>.
+- Doesn't support [drill-down Category hierarchy](/sites/ideas/salesforce/marketing-cloud-personalization-ideas#full-mcp-category-hierarchy-support-for-etl) in the UI<sup>[*](#category-catalog-unique-attributes)</sup>.
 
 ### Recommended MCP Catalog Data Source
 
@@ -195,7 +195,7 @@ Attribute | Data Type | Purpose | Comment
 Units in Stock | Integer | Provides products Inventory Count | If the Product is available, but the exact stock is unknown, provide 1. Otherwise, it will not get recommended.
 Alternate ID | Multistring | Pipe-separated SKUs for the Product | As there is no option to provide separate details for each SKU, it's pretty useless now.
 Price | Decimal | Current price of the product | Used for personalization and Einstein Recipe price-based filtering. A price equal to 0 will block the Product from recommendations.
-List Price | Decimal | Full sticker price of the product | Useful for price drop personalization and Product Price Reduction Triggered Campaigns. Unfortunately, there is no Price Reduction Recipe [yet](/sites/ideas/mc-personalization-ideas#price-reduction-ingredient-in-einstein-recipes).
+List Price | Decimal | Full sticker price of the product | Useful for price drop personalization and Product Price Reduction Triggered Campaigns. Unfortunately, there is no Price Reduction Recipe [yet](/sites/ideas/salesforce/marketing-cloud-personalization-ideas#price-reduction-ingredient-in-einstein-recipes).
 Price Description | String | Information about the current Price | You can pass here the promotion name that resulted in a lower Price for personalisation purposes.
 Currency | String | ISO-4217 Currency Code | Required when you enable Product Localization and capture Product price in multiple currencies. To pass Currency, you need to pass it along with Locale.
 Margin | Decimal | Profit margin on the Product | Useless.
@@ -220,7 +220,7 @@ Is Department | Boolean | Marks root (top-level) Category | Used in Einstein Rec
 Dedicated Category Catalog attributes focus on the hierarchical relationship between the Categories. This area is a bit of a mess in the MC Personalization because it works differently depending on whether you use [ETL](#2-mc-personalization-with-etl) or [Sitemap](#1-mc-personalization-with-sitemap).
 
 1. **Sitemap-based hierarchy** is using the [basic ID attribute](#basic-catalog-attributes). It expects pipe-delimited IDs providing a full hierarchy path, so `Electronics` (single ID) for root Category, `Electronics|Computers` (two IDs pipe-delimited) for first-level child Category and so on for further levels (it can get quite long for deeper structures: `Electronics|Computers|Laptops|Ultrabooks`). It will unlock the visual hierarchy with tracking data rollups in the Category Catalog UI.
-2. **ETL-based hierarchy** uses the ID Path and Is Department attributes unique to Category Catalog. Each Category has a single ID, passes a single Parent ID (if it has a parent) or Is Department as True (if it doesn't have a parent) and based on the above, MCP generates the ID Path. It's cleaner, but it won't provide the nice visual hierarchy with tracking data rollups in the Category Catalog UI as the Sitemap option offers. I created an [Idea to fix that](/sites/ideas/mc-personalization-ideas#full-mcp-category-hierarchy-support-for-etl).
+2. **ETL-based hierarchy** uses the ID Path and Is Department attributes unique to Category Catalog. Each Category has a single ID, passes a single Parent ID (if it has a parent) or Is Department as True (if it doesn't have a parent) and based on the above, MCP generates the ID Path. It's cleaner, but it won't provide the nice visual hierarchy with tracking data rollups in the Category Catalog UI as the Sitemap option offers. I created an [Idea to fix that](/sites/ideas/salesforce/marketing-cloud-personalization-ideas#full-mcp-category-hierarchy-support-for-etl).
 
 :::note You Should Know
 
@@ -400,7 +400,7 @@ fullDataPlease,,,,,,,,,,,,,,,,,,,,,
 7. Open it, and you will see three key row types: labels in the first row and then rows starting with either Original or Change value. You don't need any of the Change ones. Filter them out with the tool of your choice. I like to do it in VSCode with `^Change.*(\n|)` regex replacement to nothing.
 8. Here you have it; the full MCP Catalog exported to a .csv file. Two notes: fields you pushed with the `relatedCatalogObject` prefix will return with the `dimensions` prefix, and Multistring fields will return as Arrays instead of being pipe-delimited.
 
-That's dirty, but there is currently no other option for that. I created an [Idea to change that](/sites/ideas/mc-personalization-ideas#full-mcp-catalog-export).
+That's dirty, but there is currently no other option for that. I created an [Idea to change that](/sites/ideas/salesforce/marketing-cloud-personalization-ideas#full-mcp-catalog-export).
 
 ### View archived Items in the MCP Catalog
 
@@ -414,4 +414,4 @@ There are, however, two ways to do it:
 2. **All-at-Once** - Great when you know all possible Item IDs and need to find which are archived:
     - Perform [Full MCP Catalog data export](#export-full-mcp-catalog-data) using full list of IDs from your source system. It will return the archived status for each one. Then you can leverage it for mass update with reupload via [ETL](#2-mc-personalization-with-etl).
 
-As you can see, in both cases, you need to know the IDs (either exact or all possible). If you don't know what IDs could have been archived because there is no backup of all possible options - you are out of luck. Currently, there is no option to view such Items. I created an [Idea to change that](/sites/ideas/mc-personalization-ideas#full-mcp-catalog-export).
+As you can see, in both cases, you need to know the IDs (either exact or all possible). If you don't know what IDs could have been archived because there is no backup of all possible options - you are out of luck. Currently, there is no option to view such Items. I created an [Idea to change that](/sites/ideas/salesforce/marketing-cloud-personalization-ideas#full-mcp-catalog-export).

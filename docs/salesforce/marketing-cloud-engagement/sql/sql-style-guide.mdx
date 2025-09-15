@@ -230,7 +230,7 @@ This rule focuses on readability. The logic, in short, is to indent whenever the
 
 - Selected Column Names are children of [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx)
 - [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) keywords are children of the initial Table referenced with [`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx)
-- Joining relationships (/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on)) are children of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx)
+- Joining relationships ([`ON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on)) are children of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx)
 - Case conditions are children of the [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)
 - Where conditions are children of the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx)
 - Sub-queries follow the same rules in respective indentation level.
@@ -290,7 +290,7 @@ The must-have is spacing around any [operators](/docs/salesforce/marketing-cloud
 
 However, there is another place where spacing is beneficial for readability but might require an exception in some scenarios. Spacing for [aliases](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as) and `THEN` keywords of the [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) statement.
 
-I try to use it whenever possible, but when there is huge imbalance in length (/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
+I try to use it whenever possible, but when there is huge imbalance in length (for example one Column requires multi-function calculation or there is a single complex `WHEN` in [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
 
 ```sql
 /* ✅ Spacing around operators plus equalizing aliases and THEN */

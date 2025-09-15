@@ -71,7 +71,7 @@ It is not possible with `CAST`.
 
 :::note You Should Know
 
-You can also leverage [style codes](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates) function on top.
+You can also leverage [style codes](#convert-date-style-codes) to format your dates during conversion to string, without the need to use [`FORMAT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates) function on top.
 
 ```sql
 SELECT
@@ -145,7 +145,7 @@ It is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are trunc
 
 ### CONVERT Date Style Codes
 
-Just as with data types - there are many style codes available. Here I will cover just the most popular ones (/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#custom-date-formats)):
+Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#custom-date-formats)):
 
 | Date format | Style code |
 | -- | -- |

@@ -82,7 +82,7 @@ From welcomecampaignsegment a join _open b on a.subscriberkey = b.subscriberkey
 
 ```
 
-Check my Style Guides for [AMPScript](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx), [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx) to see more guides on making your code beautiful.
+Check my Style Guides for [AMPScript](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/), [SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx), [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx) to see more guides on making your code beautiful.
 
 </TabItem>
 <TabItem value='ui'>
@@ -318,7 +318,7 @@ The same is true for Emails that frequently grow due to applying multiple KPIs. 
 
 Readability is key. In code, it limits bugs, simplifies debugging, improves future development and saves tons of time. In content, it's key to drive the message to the recipient. In short, without readability, there is no value.
 
-I have already written a lot about readability of Marketing Cloud programmatic langauges: [AMPScript](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx), [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx).
+I have already written a lot about readability of Marketing Cloud programmatic langauges: [AMPScript](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/), [SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx), [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx).
 
 As for the readability of content:
 
@@ -355,7 +355,7 @@ if (ts && !tsd) tsd = new Date();
 if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
 ```
 
-Looking for more examples of good naming? Check Style Guide recommendations for [AMPScript](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx#naming-convention) and [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx#explicit-vs-implicit).
+Looking for more examples of good naming? Check Style Guide recommendations for [AMPScript](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#naming-convention), [SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx#naming-convention) and [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx#explicit-vs-implicit).
 
 </TabItem>
 <TabItem value='ui'>
@@ -443,7 +443,7 @@ And - considering the quality of out-of-the-box SFMC errors - always provide cus
 
 With the complexity of Marketing Cloud, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the SFMC is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
 
-There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2016 with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](/sites/ideas/marketing-cloud-ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](/sites/ideas/marketing-cloud-ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
+There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2016 with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](/sites/ideas/salesforce/marketing-cloud-engagement-ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](/sites/ideas/salesforce/marketing-cloud-engagement-ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
 
 With all this ambiguity in the system, always check during development and always check again before go-live.
 

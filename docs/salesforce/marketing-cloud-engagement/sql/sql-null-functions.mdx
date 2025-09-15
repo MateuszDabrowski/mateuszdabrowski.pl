@@ -21,7 +21,7 @@ Also, unlike in some other languages, SQL doesn't support a _default_ nullish co
 
 ### NULL with standard SQL Functions
 
-Because `NULL` is unknown, if you try to do any standard operation on the NULL (/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#concat) it with a string), it will return unknown (`NULL`):
+Because `NULL` is unknown, if you try to do any standard operation on the NULL (like adding an integer, or [concatenating](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#concat) it with a string), it will return unknown (`NULL`):
 
 ```sql {2-3} title="❌ Functions with NULLs"
 SELECT
@@ -31,7 +31,7 @@ SELECT
 
 ### NULL with relational operators
 
-The fun doesn't stop there - When you try to make any [comparision](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#basic-operators) with `NULL`, it will fail, because it is a check against an unknown value. Or, to be more specific, the comparison will evaluate to `FALSE`, impacting your output.
+The fun doesn't stop there - When you try to make any [comparison](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx#basic-operators) with `NULL`, it will fail, because it is a check against an unknown value. Or, to be more specific, the comparison will evaluate to `FALSE`, impacting your output.
 
 ```sql {4-6} title="❌ Comparisons with NULLs"
 SELECT SubscriberKey
@@ -60,7 +60,7 @@ When you use `NULL` with the other shorthands (`NOT IN`, `BETWEEN` and `NOT IN B
 
 ### NULL with logical operators
 
-When you are building a boolean logic with `AND`/`OR` operators (/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) or in [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)) treat `NULL` as `FALSE`.
+When you are building a boolean logic with `AND`/`OR` operators (be it in [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) or in [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)) treat `NULL` as `FALSE`.
 
 #### AND operator
 
