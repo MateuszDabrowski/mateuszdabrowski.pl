@@ -144,7 +144,7 @@ For example, if a customer has an App installed - send a push message instead of
 
 ##### Code Resources
 
-If you are using Cloud Pages for form handling or redirects - switch to [Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource/). They have the same support for AMPScript and SSJS but - unlike Cloud Pages - don't cost any Super Messages when opened. You won’t be able to replace the client-facing pages with them, but they are perfect for running the logic - for free. I covered more about that pattern in my [Web Studio Architecture webinar](/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-architecting-web-solutions.mdx).
+If you are using Cloud Pages for form handling or redirects - switch to [Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource/). They have the same support for AMPScript and SSJS but - unlike Cloud Pages - don't cost any Super Messages when opened. You won’t be able to replace the client-facing pages with them, but they are perfect for running the logic - for free. I covered more about that pattern in my [Web Studio Architecture webinar](/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions.mdx).
 
 ##### OOTB Feature Scrutiny
 
@@ -170,7 +170,7 @@ The second classic licence limit in Salesforce Marketing Cloud Engagement is the
 
 1.  Records engaged through any MCE channel (Email Studio, MobileConnect, MobilePush, GroupConnect) - including sends from Journey Builder, Automation Studio, or API-triggered sends.
 2.  Records synchronized through Marketing Cloud Connect from Contact, Lead, or User Objects.
-3.  Records injected into a Journey (for example, from [Salesforce Data Entry](/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-salesforce-data-in-journey-builder.mdx#video)).
+3.  Records injected into a Journey (for example, from [Salesforce Data Entry](/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder.mdx#video)).
 4.  Records manually imported to the All Contacts list (either directly or indirectly through, for example, an import to All Subscribers).
 5.  Records added through an SMS opt-in keyword.
 6.  Records created as Contacts through a form submission handling process.
@@ -187,7 +187,7 @@ Unfortunately, there is no way to get a Contact Count per Business Unit. This is
 
 There are two, imperfect, workarounds:
 
-1.  Whenever you import a record to Marketing Cloud Engagement through any source, add Business Unit information to a custom Profile Attribute so that you can later retrieve it from the [_EnterpriseAttribute Data View](/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_enterpriseattribute). Of course, this is easier said than done, as not all Contact sources will make this addition easy. However, if you mostly use [Synchronized Data Extensions in a Multi-Org setup](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/) you should be able to leverage Automation Studio for that enrichment - just keep in mind the edge case of Contact injections coming from [Salesforce Data Entry in Journey Builder](/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-salesforce-data-in-journey-builder.mdx).
+1.  Whenever you import a record to Marketing Cloud Engagement through any source, add Business Unit information to a custom Profile Attribute so that you can later retrieve it from the [_EnterpriseAttribute Data View](/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_enterpriseattribute). Of course, this is easier said than done, as not all Contact sources will make this addition easy. However, if you mostly use [Synchronized Data Extensions in a Multi-Org setup](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/) you should be able to leverage Automation Studio for that enrichment - just keep in mind the edge case of Contact injections coming from [Salesforce Data Entry in Journey Builder](/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder.mdx).
 2.  Another option - working even for past data - is to match Contacts against [_Job](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_job) or [_BusinessUnitUnsubscribes](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_businessunitunsubscribes) Data Views that are Business Unit-specific. Unfortunately, it will work only for a small subset of records that were sent an email within the last 6 months (in the case of Job). You may also try leveraging the [Send Logs](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx) if you configured them to be Business Unit-specific. However, it’s still a very limited match if you are using multichannel communication.
 
 :::
@@ -266,7 +266,21 @@ Data Extension Storage | 1GB | 15GB | 45GB | 100GB
 
 Another important license limit in Marketing Cloud Engagement is Data Extension Storage. It's also a soft limit, meaning that you can exceed it, but it may incur additional costs. There are a couple of things you can do to manage this limit.
 
-#### Data Extension Design
+#### Data Extension Storage Monitoring
+
+Salesforce provided a great tool to help you with that - the [Data Extension Storage Usage Report](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_extension_storage.htm&type=5). It provides you with a sneak peek into your current Data Extension usage in Setup » Administration » Data Management » Data Extension Storage and a detailed downloadable report in CSV format directly in Setup Home.
+
+That report is extremely useful as it will help you identify the largest data extensions in your system (Data Extension Name and Customer Key along with its Business Unit details). It provides both the actual size of the data stored as well as information about the Data Retention Policy (if any) configured on the data extension. It's a perfect way to identify data extensions that are not following best practices and are the best candidates for optimisation - ordered by impact on your Data Extension Storage limit.
+
+:::note You Should Know
+
+The same report also shows you whether the Data Extension was set as Sendable or not. This is crucial information for the [Contact Deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/) as only Contacts in sendable Data Extension are removed with it. Contact data in non-sendable Data Extensions will stay in the system and impact both Data Extension Storage and your compliance. Data Retention Policy to the rescue!
+
+:::
+
+#### Data Extension Storage Optimisation
+
+##### Data Extension Design
 
 Start with proper Data Extension design. Avoid using unnecessary fields, especially large text fields.
 
@@ -279,23 +293,32 @@ For every field in your Data Extension, ask yourself:
 
 The best way to protect your Marketing Cloud Engagement from storage bloat is to not create space to store that data in the first place.
 
-#### Data Extension Data Retention
+##### Data Extension Data Retention
 
 Once you define the data that is necessary, manage its storage by implementing a data retention policy on (nearly) all your data extensions. Make configuring it a must-have step in your data extension creation process. There are very few use cases that will require you to keep data longer than 2 years. Most of the time you can go for a 6-month or even 3-month retention period, even for segmentation purposes.
 
 Not only will it help you with the Data Extension Storage limit, but it will also improve the performance of your queries and other operations on those data extensions. It's also a great way to ensure compliance with data protection regulations.
 
-Salesforce provided a great tool to help you with that - the [Data Extension Storage Usage Report](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_extension_storage.htm&type=5). It provides you with a sneak peek into your current Data Extension usage in Setup » Administration » Data Management » Data Extension Storage and a detailed downloadable report in CSV format directly in Setup Home.
+Leverage the [Data Extension Storage Usage Report](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_extension_storage.htm&type=5) to find data extensions without a retention policy or with a very long one and fix them. It's a quick win with a big impact.
 
-That report is extremely useful as it will help you identify the largest data extensions in your system (Data Extension Name and Customer Key along with its Business Unit details). It provides both the actual size of the data stored as well as information about the Data Retention Policy (if any) configured on the data extension. It's a perfect way to identify data extensions that are not following best practices and are the best candidates for optimisation - ordered by impact on your Data Extension Storage limit.
+You can now add the most popular Row-Based Retention after the creation of a new Data Extension as long as there are less than 1 billion records contained in the Data Extension and apply it to past records. So don't wait with optimising your data storage monsters.
 
 :::note You Should Know
 
-The same report also shows you whether the Data Extension was set as Sendable or not. This is crucial information for the [Contact Deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/) as only Contacts in sendable Data Extension are removed with it. Contact data in non-sendable Data Extensions will stay in the system and impact both Data Extension Storage and your compliance. Data Retention Policy to the rescue!
+There is also a secret bonus for using Data Retention on your Data Extensions - hidden out-of-the-box field with row creation date that you can access with SQL:
+
+```sql
+SELECT
+      SubscriberKey
+    , [_CreatedDate] AS HiddenCreatedDate
+FROM DataExtensionWithDataRetention
+```
+
+Keep in mind that if you add Data Retention after DE creation, this field will show the date of the Data Retention configuration, not the actual row creation date for the old rows.
 
 :::
 
-#### Data Extension Export & Archive
+##### Data Extension Export & Archive
 
 Most companies are very attached to the data they collect. And rightly so - data is the new oil. But not all data is needed in the marketing platform all the time. Frequently you can archive older data that you still see as valuable but is not needed for day-to-day operations and keep it in a cheaper storage (like your Data Warehouse of choice).
 
@@ -399,7 +422,7 @@ The good part about this limit is that it's quite high for most use cases. Even 
 
 #### API Call Monitoring
 
-Currently, there is no way to monitor the API call usage directly in Marketing Cloud Engagement. You will need to ask your Account Executive for reports on API call usage (or just wait for them to come to you with the invoice).
+Currently, there is no way to monitor the API call usage directly in Marketing Cloud Engagement. You will need to ask your Account Executive for [report on API call usage](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/api_call_volume_history_and_health.html) (or just wait for them to come to you with the invoice).
 
 #### API Call Optimizations
 
