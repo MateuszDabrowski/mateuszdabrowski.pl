@@ -1,8 +1,8 @@
 ---
-id: zen-of-sfmc
-title: Zen of SFMC
+id: zen-of-marketing-cloud
+title: Zen of Marketing Cloud
 description: Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and detail.
-image: img/og/og-image-sf-zen-of-sfmc.png
+image: img/og/og-image-sf-zen-of-marketing-cloud.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, Best Practice]
 toc_max_heading_level: 4
 ---
@@ -15,9 +15,9 @@ import { LeadText } from '/src/components/LeadText.js';
 
 I'm a massive fan of Tim Peters' [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
 
-In this article, I share my Salesforce Marting Cloud adaptation and interpretation of this pearl. Expect some modifications to the original text (minimal, as most of the recommendations are perfectly valid for our Marketing Automation world), followed by my comments on how particular lines can benefit SFMC practice.
+In this article, I share my Salesforce Marting Cloud adaptation and interpretation of this pearl. Expect some modifications to the original text (minimal, as most of the recommendations are perfectly valid for our Marketing Automation world), followed by my comments on how particular lines can benefit MCE practice.
 
-## Zen of SFMC
+## Zen of Marketing Cloud
 
 ```txt
 Beautiful is better than ugly.
@@ -56,8 +56,8 @@ It makes working on the tool more motivating and pleasant and supports many othe
 <Tabs
  defaultValue={null}
  values={[
- {label: 'SFMC Code Example', value: 'code'},
- {label: 'SFMC UI Example', value: 'ui'},
+ {label: 'MCE Code Example', value: 'code'},
+ {label: 'MCE UI Example', value: 'ui'},
  ]}
 >
 <TabItem value='code'>
@@ -102,13 +102,13 @@ Both approaches deliver the Email Template, but the second one keeps beauty in m
 
 Salesforce Marketing Cloud enables you to decide whether you want to create things implicitly or explicitly. Implicit is faster and easier. Explicit is sturdier and better.
 
-As the SFMC is long term commitment used by many people, it's always worth spending a bit more effort and going for the explicit whenever possible. It will save you and your organisation much time in the long run, so consider it an investment.
+As the MCE is long term commitment used by many people, it's always worth spending a bit more effort and going for the explicit whenever possible. It will save you and your organisation much time in the long run, so consider it an investment.
 
 <Tabs
  defaultValue={null}
  values={[
- {label: 'SFMC Code Example', value: 'code'},
- {label: 'SFMC UI Example', value: 'ui'},
+ {label: 'MCE Code Example', value: 'code'},
+ {label: 'MCE UI Example', value: 'ui'},
  ]}
 >
 <TabItem value='code'>
@@ -154,7 +154,7 @@ Explicit Content Block Key and `ContentBlockByKey` function can help:
 </TabItem>
 <TabItem value='ui'>
 
-Being explicit is not limited to the code. When working with the SFMC no-code features, you will have many places to improve your solution by adding information.
+Being explicit is not limited to the code. When working with the MCE no-code features, you will have many places to improve your solution by adding information.
 
 Many assets offer one or more places to add details: Data Extensions, Installed Packages, Automations - or even Activity-grouping steps. Neither of those places _requires_ a description, but each and single one will benefit from explicitly stating its purpose and business/technical context.
 
@@ -167,7 +167,7 @@ There are also places where Salesforce Marketing Cloud lets you add smaller piec
 
 ### Simple is better than complex.
 
-Marketing Cloud is a complex tool within a complex Salesforce ecosystem focused on solving complex business needs. But how you operate and develop SFMC should be as straightforward as possible. It will make your solution robust, agile and easily understandable.
+Marketing Cloud is a complex tool within a complex Salesforce ecosystem focused on solving complex business needs. But how you operate and develop MCE should be as straightforward as possible. It will make your solution robust, agile and easily understandable.
 
 #### KISS
 
@@ -180,8 +180,8 @@ Another popular acronym connected to the simplicity principle is __YAGNI__ (You 
 <Tabs
  defaultValue={null}
  values={[
- {label: 'SFMC Code Example', value: 'code'},
- {label: 'SFMC UI Example', value: 'ui'},
+ {label: 'MCE Code Example', value: 'code'},
+ {label: 'MCE UI Example', value: 'ui'},
  ]}
 >
 <TabItem value='code'>
@@ -240,13 +240,13 @@ Another application of the DRY principle is related not to a specific solution b
 <Tabs
  defaultValue={null}
  values={[
- {label: 'SFMC Code Example', value: 'code'},
- {label: 'SFMC UI Example', value: 'ui'},
+ {label: 'MCE Code Example', value: 'code'},
+ {label: 'MCE UI Example', value: 'ui'},
  ]}
 >
 <TabItem value='code'>
 
-I have seen many (too many) Subscription Preference Centers in SFMC built with AMPScript. Yes, it's a simple language and capable enough to deliver such a solution. But because of its simplicity, for this use case, it quickly gets full of repeating script lines (DRY violation), multiple purposes (SOC violation) and endless lines of code (readability suffers).
+I have seen many (too many) Subscription Preference Centers in MCE built with AMPScript. Yes, it's a simple language and capable enough to deliver such a solution. But because of its simplicity, for this use case, it quickly gets full of repeating script lines (DRY violation), multiple purposes (SOC violation) and endless lines of code (readability suffers).
 
 My recommendation for most of the Preference Centers is to go with SSJS. Yes, it's a more complex language than AMPScript, but with a set of tools dedicated to delivering complex use cases. Implement SOC and make it DRY with functions & [loops](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops.mdx). Bring it to the next level by splitting Front-End (Cloud Page) and Back-End (Code Resource). Compared to a single Cloud Page with AMPScript, this solution will be more complex but much less complicated. Thus easier to debug and maintain.
 
@@ -276,8 +276,8 @@ Following those steps will help you create simpler, lighter and better solutions
 <Tabs
  defaultValue={null}
  values={[
- {label: 'SFMC Code Example', value: 'code'},
- {label: 'SFMC UI Example', value: 'ui'},
+ {label: 'MCE Code Example', value: 'code'},
+ {label: 'MCE UI Example', value: 'ui'},
  ]}
 >
 <TabItem value='code'>
@@ -302,7 +302,7 @@ if (country == 'UK' || country == 'PL') {
 </TabItem>
 <TabItem value='ui'>
 
-When building in Journey Builder, it is easy to nest Decision Splits to send various communication based on some criteria, but this approach will quickly become [complicated](#complex-is-better-than-complicated) and (with how SFMC renders multiple splits) [ugly](#beautiful-is-better-than-ugly).
+When building in Journey Builder, it is easy to nest Decision Splits to send various communication based on some criteria, but this approach will quickly become [complicated](#complex-is-better-than-complicated) and (with how MCE renders multiple splits) [ugly](#beautiful-is-better-than-ugly).
 
 - If you want to add the splits to cover more appropriate personalisation - make your Journey flat by leveraging Dynamic Content instead.
 - If you want to add the splits to cover different campaign goals - make your Journey flat by splitting each goal into separate Journey ([SOC principle](#soc)).
@@ -339,13 +339,13 @@ What is unique about them is that they provide the most value when implemented f
 <Tabs
  defaultValue={null}
  values={[
- {label: 'SFMC Code Example', value: 'code'},
- {label: 'SFMC UI Example', value: 'ui'},
+ {label: 'MCE Code Example', value: 'code'},
+ {label: 'MCE UI Example', value: 'ui'},
  ]}
 >
 <TabItem value='code'>
 
-You can benefit from implementing a naming convention in all SFMC programming languages. Strive for variable, function, column names that are obvious even for someone who sees the code for the first time. Saving a few characters for a shorter name is not worth the time lost for deciphering the meaning later.
+You can benefit from implementing a naming convention in all MCE programming languages. Strive for variable, function, column names that are obvious even for someone who sees the code for the first time. Saving a few characters for a shorter name is not worth the time lost for deciphering the meaning later.
 
 ```js
 /* You may know what it means when you write the code... */
@@ -435,13 +435,13 @@ When sending a personalised email, you might find some contacts with missing dat
 
 Such workarounds are even more critical for errors on client-facing assets like Cloud Pages. When coding the user experience, check the possible errors and consider which should be visible to the end-user.
 
-And - considering the quality of out-of-the-box SFMC errors - always provide custom error messages.
+And - considering the quality of out-of-the-box MCE errors - always provide custom error messages.
 
 ---
 
 ### In the face of ambiguity, refuse the temptation to guess. Even when certain, test.
 
-With the complexity of Marketing Cloud, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the SFMC is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
+With the complexity of Marketing Cloud, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the MCE is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
 
 There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2016 with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](/sites/ideas/salesforce/marketing-cloud-engagement-ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](/sites/ideas/salesforce/marketing-cloud-engagement-ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
 
@@ -480,7 +480,7 @@ In the long run, good documentation saves much more time than it takes to create
 
 ## Sum Up
 
-There is a lot of contradictory recommendations above. It's intentional. Zen of SFMC is not a list of rigid rules - it would be impossible with the number of differences between Marketing Cloud customers. Instead, it's a set of flexible guidelines. Treat them as friendly best practices, not absolute rules and adapt them to improve your work.
+There is a lot of contradictory recommendations above. It's intentional. Zen of Marketing Cloud is not a list of rigid rules - it would be impossible with the number of differences between Marketing Cloud customers. Instead, it's a set of flexible guidelines. Treat them as friendly best practices, not absolute rules and adapt them to improve your work.
 
 Across all those recommendations, you can see some key recurring ideas:
 
@@ -490,4 +490,4 @@ Across all those recommendations, you can see some key recurring ideas:
 4. Make it maintainable
 5. Make it practical
 
-However, I still love to check the full text of the [zen of SFMC](#zen-of-sfmc) to see how well I aligned my solution with it.
+However, I still love to check the full text of the [Zen of Marketing Cloud](#zen-of-marketing-cloud) to see how well I aligned my solution with it.

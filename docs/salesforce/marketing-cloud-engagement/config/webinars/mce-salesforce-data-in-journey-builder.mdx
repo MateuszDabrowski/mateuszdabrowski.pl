@@ -1,8 +1,8 @@
 ---
-id: sfmc-webinar-salesforce-data-in-journey-builder
-title: Salesforce Data in SFMC Journey Builder
+id: mce-salesforce-data-in-journey-builder
+title: Salesforce Data in MCE Journey Builder
 sidebar_label: SF Data in Journey Builder
-description: Learn how to integrate and use Salesforce CRM data with SFMC Journey Builder. In both ways. The right way.
+description: Learn how to integrate and use Salesforce CRM data with MCE Journey Builder. In both ways. The right way.
 image: img/og/og-image-webinar-sf-data-in-journey-builder.png
 tags: [Webinar, Salesforce, Marketing Cloud Engagement, Marketing Automation, Best Practice, AMPScript, CRM, Configuration, Data Management, Integration, Journey]
 ---
@@ -10,7 +10,7 @@ tags: [Webinar, Salesforce, Marketing Cloud Engagement, Marketing Automation, Be
 import { LeadText } from '/src/components/LeadText.js';
 import { YouTube } from '/src/components/VideoEmbed.js';
 
-<LeadText content="Learn how to integrate and use Salesforce CRM data with SFMC Journey Builder. In both ways. The right way." />
+<LeadText content="Learn how to integrate and use Salesforce CRM data with MCE Journey Builder. In both ways. The right way." />
 
 ## Table of Contents
 
@@ -31,7 +31,7 @@ import { YouTube } from '/src/components/VideoEmbed.js';
 
 During the webinar I mentioned the surprising behaviour of Salesforce Data Entry in terms of injection to a Journey based on [this Knowledge Article](https://help.salesforce.com/s/articleView?id=000381146&type=1).
 
-The actual logic for records that are not yet in the Salesforce Marketing Cloud is a bit more complex:
+The actual logic for records that are not yet in the Salesforce Marketing Cloud Engagement is a bit more complex:
 
 Email Opt Out | Email IS NULL | Email fails List Detective | Result
 -- | -- | -- | --
@@ -39,8 +39,8 @@ False | False | False | Added to Journey, All Contacts and All Subscribers
 False | True | False | Added to Journey and All Contacts (source = unspecified), but not to All Subscribers
 False | False | True |  Added to Journey and All Contacts (source = unspecified), but not to All Subscribers
 True | False | False | Added to Journey, All Contacts and All Subscriber with Unsubscribed Status
-True | True | False | __Not added to SFMC__
-True | False | True | __Not added to SFMC__
+True | True | False | __Not added to MCE__
+True | False | True | __Not added to MCE__
 
 :::
 
@@ -50,6 +50,6 @@ True | False | True | __Not added to SFMC__
 -- | --
 Recording | [YouTube](https://www.youtube.com/watch?v=Ru4Qh__3xdA&list=PL_o00w2Z5LYHVcq56BLpBfJHRAghLhHkI)
 Slides | [PDF](https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/pdf/%5B2024-09%5D%20SF%20CRM%20in%20Journey%20Builder%20with%20MCC.pdf)
-Articles | [SFMC MCC Integration Patterns](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx) <br/> Tim Ziter on [Salesforce Data Entry](https://handsonsfmc.com/how-to-create-a-salesforce-data-entry-event/) <br/> Salesforce on [Salesforce Journey Builder Activities](https://help.salesforce.com/s/articleView?id=sf.mc_jb_sales_service_cloud_best_practices.htm&type=5) <br/> Rafał Wolsztyniak on [Data Bindings](https://sfmc.quest/data-binding-with-the-update-contact-activity/)
+Articles | [MCE MCC Integration Patterns](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx) <br/> Tim Ziter on [Salesforce Data Entry](https://handsonsfmc.com/how-to-create-a-salesforce-data-entry-event/) <br/> Salesforce on [Salesforce Journey Builder Activities](https://help.salesforce.com/s/articleView?id=sf.mc_jb_sales_service_cloud_best_practices.htm&type=5) <br/> Rafał Wolsztyniak on [Data Bindings](https://sfmc.quest/data-binding-with-the-update-contact-activity/)
 
 

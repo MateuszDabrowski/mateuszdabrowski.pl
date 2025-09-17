@@ -97,20 +97,20 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'SFMC Account Architecture',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-account-architecture',
+                            label: 'MCE Account Architecture',
+                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture',
                         },
                         {
                             label: 'Salesforce Data in Journey Builder',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-salesforce-data-in-journey-builder',
+                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder',
                         },
                         {
-                            label: 'Architecting SFMC Web Solutions',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-architecting-web-solutions',
+                            label: 'Architecting MCE Web Solutions',
+                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions',
                         },
                         {
-                            label: 'SFMC Cloud Page Apps',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-cloud-page-apps',
+                            label: 'MCE Cloud Page Apps',
+                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps',
                         },
                     ],
                 },
@@ -193,7 +193,7 @@ module.exports = {
                     items: [
                         {
                             label: 'Zen of SFMC',
-                            to: 'docs/salesforce/marketing-cloud-engagement/zen-of-sfmc',
+                            to: 'docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud',
                         },
                         {
                             label: 'Config',
@@ -330,8 +330,8 @@ module.exports = {
             {
                 redirects: [
                     {
-                        from: ['/docs/zen-of-sfmc/'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/zen-of-sfmc',
+                        from: ['/docs/zen-of-sfmc/', '/docs/salesforce/marketing-cloud-engagement/zen-of-sfmc'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud',
                     },
                     /* SF MCE Config Restructure */
                     {
@@ -525,8 +525,16 @@ module.exports = {
                         to: '/docs/category/salesforce/marketing-cloud-engagement/sql/',
                     },
                     {
+                        from: ['/docs/category/-sql-snippets/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/sql/snippets/',
+                    },
+                    {
                         from: ['/docs/ssjs/',  '/docs/category/ssjs/'],
                         to: '/docs/category/salesforce/marketing-cloud-engagement/ssjs/',
+                    },
+                    {
+                        from: ['/docs/category/-ssjs-snippets/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/ssjs/snippets/',
                     },
                     {
                         from: ['/docs/category/ampscript/'],
@@ -545,7 +553,7 @@ module.exports = {
                         to: '/docs/category/salesforce/marketing-cloud-personalization/',
                     },
                     {
-                        from: ['/docs/category/serverside-code/'],
+                        from: ['/docs/category/serverside-code/', '/docs/category/-serverside-code/'],
                         to: '/docs/category/salesforce/marketing-cloud-personalization/serverside-code/',
                     },
                     {
@@ -563,20 +571,20 @@ module.exports = {
                     },
                     /* Webinars restructure */
                     {
-                        from: ['/docs/webinars/sfmc-webinar-account-architecture'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-account-architecture',
+                        from: ['/docs/webinars/sfmc-webinar-account-architecture', '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-account-architecture'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture',
                     },
                     {
-                        from: ['/docs/webinars/sfmc-webinar-salesforce-data-in-journey-builder'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-salesforce-data-in-journey-builder',
+                        from: ['/docs/webinars/sfmc-webinar-salesforce-data-in-journey-builder', '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-salesforce-data-in-journey-builder'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder',
                     },
                     {
-                        from: ['/docs/webinars/sfmc-webinar-architecting-web-solutions'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-architecting-web-solutions',
+                        from: ['/docs/webinars/sfmc-webinar-architecting-web-solutions', '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-architecting-web-solutions'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions',
                     },
                     {
-                        from: ['/docs/webinars/sfmc-webinar-cloud-page-apps'],
-                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-cloud-page-apps',
+                        from: ['/docs/webinars/sfmc-webinar-cloud-page-apps', '/docs/salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-cloud-page-apps'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps',
                     },
                      /* FAQ pages restructure */
                      {

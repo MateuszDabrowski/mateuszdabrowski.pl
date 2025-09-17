@@ -25,7 +25,7 @@ module.exports = {
                     items: [
                         {
                             type: 'doc',
-                            id: 'salesforce/marketing-cloud-engagement/zen-of-sfmc',
+                            id: 'salesforce/marketing-cloud-engagement/zen-of-marketing-cloud',
                         },
                         {
                             type: 'category',
@@ -186,10 +186,10 @@ module.exports = {
                                 image: 'img/og/og-imag-sf-mce-webinars.png',
                             },
                             items: [
-                                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-account-architecture',
-                                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-salesforce-data-in-journey-builder',
-                                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-architecting-web-solutions',
-                                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-cloud-page-apps',
+                                'salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture',
+                                'salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder',
+                                'salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions',
+                                'salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps',
                             ],
                         },
                     ],
@@ -304,10 +304,10 @@ module.exports = {
                 image: 'img/og/og-image-sf-mce-webinars.png',
             },
             items: [
-                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-account-architecture',
-                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-salesforce-data-in-journey-builder',
-                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-architecting-web-solutions',
-                'salesforce/marketing-cloud-engagement/config/webinars/sfmc-webinar-cloud-page-apps',
+                'salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture',
+                'salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder',
+                'salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions',
+                'salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps',
             ],
         },
     ],

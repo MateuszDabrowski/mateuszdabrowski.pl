@@ -1,8 +1,8 @@
 ---
-id: sfmc-webinar-account-architecture
-title: SFMC Account Architecture
+id: mce-account-architecture
+title: MCE Account Architecture
 sidebar_label: Account Architecture
-description: Learn how to structure your Marketing Cloud Account to make the most of the Business Units, Marketing Cloud Connect and deliverability features.
+description: Learn how to structure your Marketing Cloud Engagement account to make the most of the Business Units, Marketing Cloud Connect and deliverability features.
 image: img/og/og-image-webinar-sf-mce-account-architecture.png
 tags: [Webinar, Salesforce, Marketing Cloud Engagement, Marketing Automation, Setup, Configuration, Deliverability]
 ---
@@ -10,11 +10,11 @@ tags: [Webinar, Salesforce, Marketing Cloud Engagement, Marketing Automation, Se
 import { LeadText } from '/src/components/LeadText.js';
 import { YouTube } from '/src/components/VideoEmbed.js';
 
-<LeadText content="Learn how to structure your Marketing Cloud Account to make the most of the Business Units, Marketing Cloud Connect and deliverability features." />
+<LeadText content="Learn how to structure your Marketing Cloud Engagement account to make the most of the Business Units, Marketing Cloud Connect and deliverability features." />
 
 ## Table of Contents
 
-1. SFMC Business Units ([5:53](https://youtu.be/dRxcbwIA1K0?t=353))
+1. MCE Business Units ([5:53](https://youtu.be/dRxcbwIA1K0?t=353))
 2. Business Units Setup Patterns ([21:02](https://youtu.be/dRxcbwIA1K0?t=1262))
 3. Single-Org vs Multi-Org ([27:31](https://youtu.be/dRxcbwIA1K0?t=1651))
 4. Marketing Cloud Connect Patterns ([41:36](https://youtu.be/dRxcbwIA1K0?t=2496))
@@ -23,7 +23,7 @@ import { YouTube } from '/src/components/VideoEmbed.js';
 
 ## Video
 
-<YouTube videoId="dRxcbwIA1K0" title="SFMC Account Architecture Webinar Recording" />
+<YouTube videoId="dRxcbwIA1K0" title="MCE Account Architecture Webinar Recording" />
 
 <br/>
 
@@ -35,7 +35,7 @@ While one SF Org can have only one integration to a single Marketing Cloud Accou
 
 1. The [recommended limit of up to 5 Business Units per integration in Multi-Org](https://youtu.be/dRxcbwIA1K0?t=2639) is applied to the SF Integration User, not Marketing Cloud Connect itself. It enables you to use multiple SF Integration Users in a single SF Org to connect dozens of Business Units (up to 5 per User).
 2. The [shared Synchronized Objects configuration per SF Org](https://youtu.be/dRxcbwIA1K0?t=2037) is applied to SF Integration User. It enables you to set distinct configurations per each SF Integration User (shared across Business Units connected using the same User).
-3. While you still cannot control the [Synchronized DEs visibility](https://youtu.be/dRxcbwIA1K0?t=2173) of SFMC Users, you can control which Objects and Records are being synchronized to each Business Unit by applying appropriate Permissions to each SF Integration User. It enables use cases like syncing different Contact Record Types to each Business Unit.
+3. While you still cannot control the [Synchronized DEs visibility](https://youtu.be/dRxcbwIA1K0?t=2173) of MCE Users, you can control which Objects and Records are being synchronized to each Business Unit by applying appropriate Permissions to each SF Integration User. It enables use cases like syncing different Contact Record Types to each Business Unit.
 
 Using the above approach requires additional User licences on the SF CRM side and adds complexity to your implementation. However, it can significantly expand possible use cases in Multi-Org configurations. Full details in the [Marketing Cloud Connect Integration Patterns deep dive](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx).
 
@@ -43,7 +43,7 @@ Using the above approach requires additional User licences on the SF CRM side an
 
 ## Materials
 
-28 January 2023 | Salesforce Marketing Cloud Infrastructure Setup -  Org Setup
+28 January 2023 | Salesforce Marketing Cloud Engagement Infrastructure Setup -  Org Setup
 -- | --
 Recording | [YouTube](https://www.youtube.com/watch?v=dRxcbwIA1K0&list=PLOWi4YJyd0lTtKyr72NHpOawIsoGjbuwr&index=6)
-Articles | [SFMC MCC Integration Patterns](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx) <br/> Salesforce Architects blog on [Business Units](https://medium.com/salesforce-architects/adopting-business-units-in-marketing-cloud-98eac8eda216) and [Marketing Cloud Connect](https://medium.com/salesforce-architects/implementing-marketing-cloud-with-multiple-salesforce-orgs-part-1-cf8637cf0985)<br/>Salesforce Documentation on [Multi-Org Considerations](https://help.salesforce.com/s/articleView?id=sf.mc_co_faqs_for_multi_org.htm)
+Articles | [MCE MCC Integration Patterns](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx) <br/> Salesforce Architects blog on [Business Units](https://medium.com/salesforce-architects/adopting-business-units-in-marketing-cloud-98eac8eda216) and [Marketing Cloud Connect](https://medium.com/salesforce-architects/implementing-marketing-cloud-with-multiple-salesforce-orgs-part-1-cf8637cf0985)<br/>Salesforce Documentation on [Multi-Org Considerations](https://help.salesforce.com/s/articleView?id=sf.mc_co_faqs_for_multi_org.htm)
