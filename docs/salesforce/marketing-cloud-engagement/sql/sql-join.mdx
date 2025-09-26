@@ -369,6 +369,8 @@ SELECT
 FROM FebruaryEventParticipantsSegment AS feb
 ```
 
+Keep in mind that you will see the duplicates only if the target Data Extension doesn't have Primary Key defined on the duplicated value. Otherwise, the duplicates will be removed during the insert due to Subscriber Key uniquness violation.
+
 :::
 
 The obvious use case for `UNION` is gathering subscribers from multiple Data Extensions to build a master segment.
