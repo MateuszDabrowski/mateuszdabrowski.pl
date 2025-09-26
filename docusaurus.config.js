@@ -16,7 +16,6 @@ module.exports = {
     projectName: 'mateuszdabrowski.pl',
     onBrokenLinks: 'warn',
     onBrokenAnchors: 'warn',
-    onBrokenMarkdownLinks: 'warn',
     customFields: {
         description: 'Personal website focused on making the most out of Marketing Automation. let code = do("our job").',
         keywords: [
@@ -43,7 +42,12 @@ module.exports = {
         ],
     },
     markdown: {
+        format: 'mdx',
         mermaid: true,
+        hooks: {
+            onBrokenMarkdownLinks: 'warn',
+            onBrokenMarkdownImages: 'warn',
+        }
     },
     themeConfig: {
         image: 'img/og/og-image-base.png', // Default image for meta tag
