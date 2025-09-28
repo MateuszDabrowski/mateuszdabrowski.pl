@@ -26,6 +26,7 @@ module.exports = {
                 image: 'img/og/og-image-faq.png',
             },
             items: [
+                'faq/salesforce/what-is-the-difference-between-sf-marketing-clouds',
                 'faq/salesforce/how-to-get-sfmc-hands-on-experience',
                 'faq/salesforce/how-to-get-sf-certification-vouchers',
             ],
