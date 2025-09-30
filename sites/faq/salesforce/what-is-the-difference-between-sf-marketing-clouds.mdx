@@ -3,7 +3,7 @@ id: what-is-the-difference-between-sf-marketing-clouds
 title: What is the difference between SF Marketing Clouds?
 sidebar_label: SFMC Product Names
 description: "WIP"
-image: img/og/og-image-faq-sf-mc-hands-on-experience.png // TODO
+image: img/og/og-image-faq-sf-marketing-cloud-glossary.png
 tags: [Salesforce, Marketing Cloud, Marketing Cloud Engagement, Marketing Automation, FAQ]
 unlisted: true
 ---
@@ -14,9 +14,93 @@ import { LeadText } from '/src/components/LeadText.js';
 
 ## Salesforce Marketing Cloud Landscape
 
+### Salesforce Marketing Automation Products
 
+Salesforce currently offers three different Marketing Automation products under the Marketing Cloud umbrella, each targeting different audiences and use cases:
+
+### Marketing Cloud Engagement (MCE)
+
+- Mature and feature-rich Marketing Automation platform
+- Extremely customisable and flexible but complex
+- Require technical skills to fully leverage its power
+- Vast ecosystem of third-party apps and integrations
+- Strong community and resources
+- Can work as standalone or integrated with Salesforce CRM
+
+- B2C focused features
+- Enterprise & large businessnes
+- Large marketing teams with IT support
+
+### Marketing Cloud Account Engagement (MCAE)
+
+- B2B focused Marketing Automation platform
+- Available as a part of Salesforce CRM
+- Seamless integration with Salesforce CRM
+- User-friendly for marketers
+- Strong community and resources
+- Soon to be replaced by Marketing Cloud on Core
+
+- B2B focused features
+- Large & medium businessnes
+- Small to medium marketing teams
+
+#### Marketing Cloud [on Core] (MC)
+
+- Next generation Marketing Automation platform
+- Built from scratch on Data Cloud
+- Rapidly evolving with new features but still very limited
+- Drag & drop focused interface with minimal customization
+- Agentic AI built-in
+- Not yet fully production ready
+
+- Small businessnes
+- Small marketing teams
+- Both B2C and B2B
+
+
+```mermaid
+---
+title: Salesforce Marketing Cloud Platform Positioning
+---
+classDiagram
+
+    %% Platform Classes
+    class MCE {
+      Marketing Cloud Engagement
+    }
+    class MCAE {
+      Marketing Cloud Account Engagement
+    }
+    class MC {
+      Marketing Cloud [on Core]
+    }
+
+    %% Target Audience Classes
+    class B2C {
+      - B2C focused features
+      - Enterprise & large businessnes
+      - Large teams with IT support
+    }
+    class B2B {
+      - B2B focused features
+      - Large & medium businessnes
+      - Small to medium teams
+    }
+    class SMB {
+      - Small businessnes
+      - Small marketing teams
+      - Both B2C and B2B
+    }
+
+    %% Define Relationships between Platforms and their Audiences
+    MCE --> B2C : targets
+    MCAE --> B2B : targets
+    MC --> SMB : targets
+```
 
 ## Salesforce Marketing Cloud Glossary
+
+Three things in life are certain; death, taxes, and Salesforce changing product names. To help you with this mess, I gathered here the most common names used in the Salesforce Marketing Cloud ecosystem, their shortcuts and how they relate to each other on the timeline.
 
 ### Salesforce Marketing Cloud (SFMC)
 
