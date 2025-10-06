@@ -2,7 +2,7 @@
 id: what-is-the-difference-between-sf-marketing-clouds
 title: What is the difference between SF Marketing Clouds?
 sidebar_label: SFMC Product Names
-description: "WIP"
+description: "The past, the present and the future of Marketing Automation platforms from Salesforce. Learn about positioning, strengths, weaknesses and what's Next for Marketing Cloud products."
 image: img/og/og-image-faq-sf-marketing-cloud-glossary.png
 tags: [Salesforce, Marketing Cloud, Marketing Cloud Engagement, Marketing Automation, FAQ]
 unlisted: true
@@ -10,7 +10,7 @@ unlisted: true
 
 import { LeadText } from '/src/components/LeadText.js';
 
-<LeadText content="WIP" />
+<LeadText content="The past, the present and the future of Marketing Automation platforms from Salesforce. Learn about positioning, strengths, weaknesses and what's Next for Marketing Cloud products." />
 
 ## Salesforce Marketing Cloud Landscape
 
@@ -19,48 +19,6 @@ We are living in interesting times. Also when it comes to the Salesforce Marketi
 ### Salesforce Marketing Automation Products
 
 Salesforce currently offers three different Marketing Automation products under the Marketing Cloud umbrella, each targeting different audiences and use cases:
-
-### Marketing Cloud Engagement (MCE)
-
-Marketing Cloud engagement is the oldest and most established of the three products. It is a robust and feature-rich platform that has been around for 25 years. It is designed for large enterprises and B2C companies with complex marketing needs.
-
-It's main unqiue selling point - not only among the Salesforce Marketing Automation products, but also in the broader Marketing Automation landscape - is its flexibility and customisability. It can be tailored to fit the specific needs of any business, no matter how complex.
-
-However, this flexibility comes at a cost - it can be challenging to set up and use, especially for non-technical users, and there are tons of (first party and third party) add-ons that bring various features and capabilities to the platform.
-
-
-
-
-- Strong community and resources
-- Can work as standalone or integrated with Salesforce CRM
-- Large marketing teams with IT support
-
-### Marketing Cloud Account Engagement (MCAE)
-
-- B2B focused Marketing Automation platform
-- Available as a part of Salesforce CRM
-- Seamless integration with Salesforce CRM
-- User-friendly for marketers
-- Strong community and resources
-- Soon to be replaced by Marketing Cloud on Core
-
-- B2B focused features
-- Large & medium businessnes
-- Small to medium marketing teams
-
-#### Marketing Cloud [on Core] (MC)
-
-- Next generation Marketing Automation platform
-- Built from scratch on Data Cloud
-- Rapidly evolving with new features but still very limited
-- Drag & drop focused interface with minimal customization
-- Agentic AI built-in
-- Not yet fully production ready
-
-- Small businessnes
-- Small marketing teams
-- Both B2C and B2B
-
 
 ```mermaid
 ---
@@ -91,9 +49,9 @@ classDiagram
       - Small to medium teams
     }
     class SMB {
+      - Both B2C and B2B
       - Small businessnes
       - Small marketing teams
-      - Both B2C and B2B
     }
 
     %% Define Relationships between Platforms and their Audiences
@@ -101,6 +59,48 @@ classDiagram
     MCAE --> B2B : targets
     MC --> SMB : targets
 ```
+
+#### Marketing Cloud Engagement (MCE)
+
+Marketing Cloud Engagement (formerly known as ExactTarget) is the oldest and most established of the three products. It is a robust and feature-rich platform that has been around for 25 years. It is designed for large enterprises and B2C companies with complex marketing needs. And, as the only of the three, it can work as a __standalone__ Marketing Automation platform, without the need for Salesforce CRM.
+
+Its main unqiue selling point - not only among the Salesforce Marketing Automation products, but also in the broader Marketing Automation landscape - is its __flexibility__ and __customisability__. It can be tailored to fit the specific needs of any business, no matter how complex.
+
+This flexibility comes at a cost - it can be __challenging__ to set up and use to its fullest, especially for non-technical users, and there are tons of (first party and third party) add-ons that bring various features and capabilities to the platform. It's not IT driven tool like Adobe Campaign Classic, but definitely not a no-code tool like Oracle Eloqua. To make the full use of its capabilities, you need a mixed team of skilled marketers, developers and administrators.
+
+However, you are not left alone with that complexity - Salesforce has one of the strongest __communities__ and broadest pool of easily available resources in the Marketing Automation space. It's easy to find help when you need it - both in form of free materials and paid people.
+
+#### Marketing Cloud Account Engagement (MCAE)
+
+Marketing Cloud Account Engagement (formerly known as Pardot) is the second Marketing Automation Platform owned by Salesforce. It is 20-year-old B2B focused solution that few years ago has been tightly integrated with Salesforce CRM. It's no longer available as a standalone product, and you need Salesforce CRM licence to use it.
+
+It is designed for medium to large B2B companies with relatively straightforward marketing needs. Lead scoring and grading, prospect tracking, lead nurturing and connection to Salesforce Sales Cloud are key strengths of the platform. It is user-friendly and easy to set up, making it a good choice for small to medium marketing teams without dedicated IT support.
+
+It offers many drag-and-drop features that either require or at least greadly beneift from pro-code approach in Marketing Cloud Engagement. However, it is not as flexible or customisable as Marketing Cloud Engagement, and it lacks some advanced features.
+
+Just like Marketing Cloud Engagement, it has a strong community and a broad pool of resources available. Being available directly on the Salesforce Lightning Platform, you can even leverage your existing Salesforce CRM people to support it.
+
+:::note You Should Know
+
+WIP
+
+:::
+
+##### Marketing Cloud [on Core] (MC)
+
+- Next generation Marketing Automation platform
+- Built from scratch on Data Cloud
+- Rapidly evolving with new features but still very limited
+- Drag & drop focused interface with minimal customization
+- Agentic AI built-in
+- Not yet fully production ready
+
+- Small businessnes
+- Small marketing teams
+- Both B2C and B2B
+
+
+
 
 ## Salesforce Marketing Cloud Glossary
 
