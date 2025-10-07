@@ -16,8 +16,6 @@ import { LeadText } from '/src/components/LeadText.js';
 
 We are living in interesting times. Also when it comes to the Salesforce Marketing Cloud. The platform landscape is rapidly evolving, with new products being launched, old ones being retired, and all of them being renamed (multiple times). It can be hard to keep up with the changes and understand the differences between the various products. In this article, I will try to explain the current state of the Salesforce Marketing Cloud ecosystem, its main products, and their positioning and guesstimate the future.
 
-### Salesforce Marketing Automation Products
-
 Salesforce currently offers three different Marketing Automation products under the Marketing Cloud umbrella, each targeting different audiences and use cases:
 
 ```mermaid
@@ -60,7 +58,7 @@ classDiagram
     MC --> SMB : targets
 ```
 
-#### Marketing Cloud Engagement (MCE)
+### Salesforce Marketing Cloud Engagement
 
 Marketing Cloud Engagement (formerly known as ExactTarget) is the oldest and most established of the three products. It is a robust and feature-rich platform that has been around for 25 years. It is designed for large enterprises and B2C companies with complex marketing needs. And, as the only of the three, it can work as a __standalone__ Marketing Automation platform, without the need for Salesforce CRM.
 
@@ -70,7 +68,7 @@ This flexibility comes at a cost - it can be __challenging__ to set up and use t
 
 However, you are not left alone with that complexity - Salesforce has one of the strongest __communities__ and broadest pool of easily available resources in the Marketing Automation space. It's easy to find help when you need it - both in form of free materials and paid people.
 
-#### Marketing Cloud Account Engagement (MCAE)
+### Salesforce Marketing Cloud Account Engagement
 
 Marketing Cloud Account Engagement (formerly known as Pardot) is the second Marketing Automation Platform owned by Salesforce. It is 20-year-old B2B focused solution that few years ago has been tightly integrated with Salesforce CRM. It's no longer available as a standalone product, and you need Salesforce CRM licence to use it.
 
@@ -86,7 +84,9 @@ WIP
 
 :::
 
-##### Marketing Cloud [on Core] (MC)
+### Salesforce Marketing Cloud
+
+
 
 - Next generation Marketing Automation platform
 - Built from scratch on Data Cloud
@@ -99,8 +99,21 @@ WIP
 - Small marketing teams
 - Both B2C and B2B
 
+## Marketing Clouds Comparison
 
-
+| Feature/Aspect | Marketing Cloud Engagement (MCE) | Marketing Cloud Account Engagement (MCAE) | Marketing Cloud (SFMC) |
+|--|--|--|--|
+| **Target Audience** | Large & Enterprise B2C | Medium & Large B2B | Small B2C & B2B |
+| **Use Case** | Complex and business-specific marketing | Lead focused and sales aligned marketing | Agentic supported simple marketing |
+| **Salesforce CRM** | Optional | Required | Required |
+| **Flexibility & Customisability** | High | Moderate | Low |
+| **Ease of Use** | Moderate | High |  High |
+| **Setup Complexity** | High | Low | Moderate |
+| **Key Features** | Advanced segmentation, complex journeys, and heavy customization | Lead scoring, grading and prospect tracking | Drag & drop interface, agentic support and newest features |
+| **Community & Resources** | Strong | Strong | Growing |
+| **Pricing** | Higher | Moderate | Lower |
+| **Ideal For** | Businesses with complex needs and IT support | B2B companies with straightforward needs | Small businesses with basic needs |
+| **State** | Well established product | Looming end of life | Publicly available beta |
 
 ## Salesforce Marketing Cloud Glossary
 
@@ -110,9 +123,9 @@ Three things in life are certain; death, taxes, and Salesforce changing product 
 
 The original use of Salesforce Marketing Cloud name, between 2012 and 2014, was for Salesforce's social media management platform created from the merge of two acquired products - Radian6 and Buddy Media.
 
-With the acquisition of [ExactTarget](#exacttarget) in 2013, Salesforce decided that the Marketing Cloud name will be reused for this new flagship Marketing Automation product, which led to renaming the social media platform to [Social Studio](#salesforce-marketing-cloud-social-studio) in 2014. It stayed that way till 2022, when the flagship product was renamed to [Marketing Cloud Engagement](#salesforce-marketing-cloud-engagement-mce).
+With the acquisition of [ExactTarget](#exacttarget) in 2013, Salesforce reused the Marketing Cloud name for this new flagship Marketing Automation product. Previous social media platform became just part of this new solution as a [Social Studio](#salesforce-marketing-cloud-social-studio). This naming convention held till 2022, when that flagship product was renamed to [Marketing Cloud Engagement](#salesforce-marketing-cloud-engagement-mce).
 
-Salesforce did it to once more reuse the Marketing Cloud name, this time for their new Marketing Automation solution created from the ground up on the [Data Cloud](#salesforce-data-cloud) platform, known also as Marketing Cloud on Core, [Marketing Cloud Growth](#salesforce-marketing-cloud-growth) and [Marketing Cloud Advanced](#salesforce-marketing-cloud-advanced).
+Salesforce did it to once more reuse the Marketing Cloud name, this time for their new Marketing Automation solution created from the ground up on the [Data Cloud](#salesforce-data-cloud) platform, known also as [Marketing Cloud on Core](#salesforce-marketing-cloud), [Marketing Cloud Growth](#salesforce-marketing-cloud-growth) and [Marketing Cloud Advanced](#salesforce-marketing-cloud-advanced).
 
 Currently the Marketing Cloud name is used frequently for both products (especially in the community), which frequently leads to confusion.
 
