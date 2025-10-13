@@ -10,12 +10,19 @@ unlisted: true
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
+import { Button } from '/src/components/Buttons.js';
 
 <LeadText content="The past, the present and the future of Marketing Automation platforms from Salesforce. Learn about positioning, strengths, weaknesses and what's Next for Marketing Cloud products." />
 
 ## Salesforce Marketing Cloud Landscape
 
-We are living in interesting times. Also when it comes to the Salesforce Marketing Cloud. The platform landscape is rapidly evolving, with new products being launched, old ones being retired, and all of them being renamed (multiple times). It can be hard to keep up with the changes and understand the differences between the various products. In this article, I will try to explain the current state of the Salesforce Marketing Cloud ecosystem, its main products, and their positioning and guesstimate the future.
+We are living in interesting times. Also when it comes to the Salesforce Marketing Cloud. The platform landscape is rapidly evolving, with new products being launched, old ones being retired, and all of them being renamed (multiple times). It can be hard to keep up with the changes and understand the differences between the various products. In this article, I will try to explain the current state of the Salesforce Marketing Cloud ecosystem, its main products (or Editions as they are called by Salesforce), and their positioning and guesstimate the future.
+
+:::note You Should Know
+
+Salesforce is introducing new product names more frequently than ever before (and the bar was already set high). To keep up to speed with all the renames, check [Renameforce](https://renameforce.com/) - community-driven sanity check for Salesforce product names.
+
+:::
 
 ### Marketing Automation Platforms
 
@@ -34,8 +41,8 @@ classDiagram
     class MCAE {
       Marketing Cloud Account Engagement
     }
-    class MC {
-      Marketing Cloud [on Core]
+    class MCN {
+      Marketing Cloud Next
     }
 
     %% Target Audience Classes
@@ -58,12 +65,14 @@ classDiagram
     %% Define Relationships between Platforms and their Audiences
     MCE --> B2C : targets
     MCAE --> B2B : targets
-    MC --> SMB : targets
+    MCN --> SMB : targets
 ```
 
 #### Salesforce Marketing Cloud Engagement
 
-Marketing Cloud Engagement (formerly known as ExactTarget) is the oldest and most established of the three products. It is a robust and feature-rich platform that has been around for 25 years. It is designed for large enterprises and B2C companies with complex marketing needs. And, as the only of the three, it can work as a __standalone__ Marketing Automation platform, without the need for Salesforce CRM.
+__Name history__: ExactTarget (ET) » Marketing Cloud (SFMC) » Marketing Cloud Engagement (MCE)
+
+Marketing Cloud Engagement (acquired by Salesforce in 2013) is the oldest and most established of the three products. It is a robust and feature-rich platform that has been around for 25 years. It is designed for large enterprises and B2C companies with complex marketing needs. And, as the only of the three, it can work as a __standalone__ Marketing Automation platform, without the need for Salesforce CRM.
 
 Its main unqiue selling point - not only among the Salesforce Marketing Automation products, but also in the broader Marketing Automation landscape - is its __flexibility__ and __customisability__. It can be tailored to fit the specific needs of any business, no matter how complex.
 
@@ -75,13 +84,21 @@ However, you are not left alone with that complexity - Salesforce has one of the
 
 I don't see Marketing Cloud Engagement being replaced or retired anytime soon. It is a mature and well-established product with a large customer base and a strong community. Salesforce is definitely slowing down investment in it, focusing more on integrations rather than net new features, but it is still being actively developed and supported.
 
-This is also proven by the new Marketign Cloud Engagment Plus licences offering synergy between MCE and the new Marketing Cloud product.
+This is also proven by the new Marketing Cloud Engagment Plus licences offering synergy between MCE and the new Marketing Cloud product.
 
 :::
 
+<Button
+ link='/docs/category/salesforce/marketing-cloud-engagement/'
+ text='Read my MCE Docs'
+ newTab='true'
+/>
+
 #### Salesforce Marketing Cloud Account Engagement
 
-Marketing Cloud Account Engagement (formerly known as Pardot) is the second Marketing Automation Platform owned by Salesforce. It is 20-year-old B2B focused solution that few years ago has been tightly integrated with Salesforce CRM. It's no longer available as a standalone product, and you need Salesforce CRM licence to use it.
+__Name history__: Pardot » Marketing Cloud Account Engagement (MCAE)
+
+Marketing Cloud Account Engagement (acquired by Salesforce in 2013) is the second Marketing Automation Platform owned by Salesforce. It is 20-year-old B2B focused solution that few years ago has been tightly integrated with Salesforce CRM. It's no longer available as a standalone product, and you need Salesforce CRM licence to use it.
 
 It is designed for medium to large B2B companies with relatively straightforward marketing needs. Lead scoring and grading, prospect tracking, lead nurturing and connection to Salesforce Sales Cloud are key strengths of the platform. It is user-friendly and easy to set up, making it a good choice for small to medium marketing teams without dedicated IT support.
 
@@ -97,25 +114,27 @@ All Marketing Cloud Account Engagement customers already receive access to the n
 
 :::
 
-#### Salesforce Marketing Cloud
+#### Salesforce Marketing Cloud Next
 
-The newest of the three products, simply called Marketing Cloud (known also as Marketing Cloud on Core, Marketing Cloud Growth, Marketing Cloud Advanced or Marketing Cloud Next) is a fresh take on Marketing Automation. Announced in 2024, it is built from scratch on the Data Cloud platform, leveraging its capabilities and integrations with other Salesforce products (especially the new hype champion - Agentforce).
+__Name history__: Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud [on Core] (MCoC)» Marketing Cloud Next (MCN) » Agentforce Marketing (AFM)
+
+The newest of the three products, Marketing Cloud Next, is a fresh take on Marketing Automation. Announced in 2024, it is built from scratch on the Data Cloud (now Data 360) platform, leveraging its capabilities and integrations with other Salesforce products (especially the new hype champion - Agentforce).
 
 Based on it's current features, it is designed for small businesses and small marketing teams, both B2C and B2B, with basic marketing needs. It's not that clear however, when you consider the pre-requisite of having at least Enterprise tier Salesforce CRM licence to use it. It is not a standalone Marketing Automation platform like Marketing Cloud Engagement, but rather a complementary product.
 
- Marketing Cloud focuses a drag-and-drop interface, rich segmentation with Data Cloud and automated marketing operations with Agentforce for Marketing that can automatically create briefs, emails and customer journeys in Flows. On the other hand the tool currently offers limited features and minimal customization options. It's heavily developed and rapidly catching up to Marketing Cloud Account Engagement with B2B focused features, but still not a perfect match and not even close in terms of stability.
+ Marketing Cloud Next focuses a drag-and-drop interface, rich segmentation with Data Cloud and automated marketing operations with Agentforce for Marketing that can automatically create briefs, emails and customer journeys in Flows. On the other hand the tool currently offers limited features and minimal customization options. It's heavily developed and rapidly catching up to Marketing Cloud Account Engagement with B2B focused features, but still not a perfect match and not even close in terms of stability.
 
 :::note You Should Know
 
-Salesforce Marketing Cloud is definitely the future of Marketing Automation on the Salesforce platform. It has great ideas and massive potential - definitely needed to compete with other modern Marketing Automation platforms on the market.
+Salesforce Marketing Cloud Next is definitely the future of Marketing Automation on the Salesforce platform. It has great ideas and massive potential - definitely needed to compete with other modern Marketing Automation platforms on the market.
 
 However, right now it's a very immature product with numerous bugs, limited features and heavily layered usage-based pricing. It's great as a complimentary product for existing MCE & MCAE customers to experiment with new features, but not ready yet to confidently stand on its own.
 
 :::
 
-#### Marketing Automation Comparison
+#### Marketing Automation Platforms Comparison
 
-| Feature/Aspect | Marketing Cloud Engagement (MCE) | Marketing Cloud Account Engagement (MCAE) | Marketing Cloud (SFMC) |
+| Feature/Aspect | Marketing Cloud Engagement (MCE) | Marketing Cloud Account Engagement (MCAE) | Marketing Cloud Next(MCN) |
 |--|--|--|--|
 | **Target Audience** | Large & Enterprise B2C | Medium & Large B2B | Small B2C & B2B |
 | **Use Case** | Complex and business-specific marketing | Lead focused and sales aligned marketing | Agentic supported simple marketing |
@@ -130,6 +149,64 @@ However, right now it's a very immature product with numerous bugs, limited feat
 | **State** | Well established product | Looming end of life | Publicly available beta |
 
 ### Real-Time Personalization Platforms
+
+Salesforce currently offers two different Real-Time Personalization products, each targeting different audiences and use cases - the legacy-but-still-best Marketing Cloud Personalization and the new Salesforce Personalization.
+
+#### Marketing Cloud Personalization
+
+__Name history__: Evergage (EVG) » Interaction Studio (IS) » Marketing Cloud Personalization (MCP)
+
+Marketing Cloud Personalization (acquired by Salesforce in 2020) is mature and powerful real-time personalization platform. Multichannel-enabled, drag-and-drop-focused, AI-driven, MCP has it all.
+
+Before the acquisition by Salesforce, Evergage was a standalone platform, but since then it has been integrated with Marketing Cloud Engagement and cannot be purchased separately (unless you smile to your Account Executive really hard to get it for your Marketing Cloud Account Engagement).
+
+It is designed for medium to large B2C companies with complex personalization needs. It offers a wide range of features, including web, app, email and API-based personalization, product recommendations, A/B testing, and analytics. It is highly flexible and customizable, allowing businesses to tailor the platform to their specific needs.
+
+:::note You Should Know
+
+While there is no official end-of-life annoucement for Marketing Cloud Personalization available yet, Salesforce is not investing in it anymore and focusing on the new Salesforce Personalization product instead. The product hasn't seen any major updates in the last two years, and there is no roadmap for future development. What's more, Salesforce is quitely introducing new limits and restrictions to the existing MCP customers through documentation, making it less attractive.
+
+However, if you are using Marketing Cloud Engagement, it is still the best option for real-time personalization. It is a mature and powerful platform with strightforward pricing that can deliver results.
+
+:::
+
+#### Salesforce Personalization
+
+__Name history__: Einstein Personalization (EP) » Salesforce Personalization (SP)
+
+Salesforce Personalization is one of the newest products in the Salesforce Marketing Cloud ecosystem. Announced in 2024, it is built from scratch on the Data Cloud (now Data 360) platform, leveraging its capabilities and integrations with other Salesforce products.
+
+It is designed to work in tandem with Marketing Cloud Next and other Salesforce products, providing real-time personalization capabilities that utilize your entire Salesforce ecosystem. It also leverages Agentforce and Lightning Platform to provide a no-code, drag-and-drop interface that is easy to use and set up.
+
+:::note You Should Know
+
+Similarly to Marketing Cloud Next, Salesforce Personalization seems to be the future of real-time personalization on the Salesforce platform. However, it's only selling point is the tight integration with Data Cloud and easy usage in the new suite of Salesforce Products.
+
+On the other hand:
+1. It is a very immature product with limited features, nowhere near the capabilities of Marketing Cloud Personalization. 2. There is no migration path from MCP to SP.
+3. There is no clear indication if SP will ever reach feature parity with MCP.
+4. Due to it being built on Data Cloud, it is using Sub-Second Real-Time Event Credits - second most expensive credit type after Profile Unification Credits (that are also required) - making it a very costly alternative to more powerful MCP.
+
+:::
+
+#### Real-Time Personalization Platforms Comparison
+
+| Feature/Aspect | Marketing Cloud Personalization (MCP) | Salesforce Personalization (SP) |
+|--|--|--|
+| **Target Audience** | Medium & Large | Small & Medium |
+| **Use Case** | Complex and business-specific personalization | Basic personalization leveraging Data Cloud information |
+| **Salesforce CRM** | Optional | Required |
+| **Flexibility & Customisability** | High | Low |
+| **Ease of Use** | Moderate | Low |
+| **Setup Complexity** | Moderate | High |
+| **Key Features** | Multichannel personalization, AI-driven recommendations, and heavy customization | Drag & drop interface, agentic support and Data Cloud integration |
+| **Community & Resources** | Strong | Growing |
+| **Pricing** | Moderate | It's complicated |
+| **Ideal For** | Businesses with personalization and recommendation needs | Businesses with small volumes and huge margins |
+| **State** | Well established product | Publicly available beta |
+
+
+
 
 {/*
 ## Salesforce Marketing Cloud Glossary
