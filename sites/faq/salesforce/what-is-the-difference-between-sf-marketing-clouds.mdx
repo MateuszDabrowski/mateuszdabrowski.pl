@@ -11,12 +11,26 @@ unlisted: true
 
 import { LeadText } from '/src/components/LeadText.js';
 import { Button } from '/src/components/Buttons.js';
+import Image from '@theme/IdealImage';
+import landscape from '/static/img/article/article-image-salesforce-marketing-landscape.png';
 
 <LeadText content="The past, the present and the future of Marketing Automation platforms from Salesforce. Learn about positioning, strengths, weaknesses and what's Next for Marketing Cloud products." />
 
-## Salesforce Marketing Cloud Landscape
+## Salesforce Marketing Landscape
 
 We are living in interesting times. Also when it comes to the Salesforce Marketing Cloud. The platform landscape is rapidly evolving, with new products being launched, old ones being retired, and all of them being renamed (multiple times). It can be hard to keep up with the changes and understand the differences between the various products. In this article, I will try to explain the current state of the Salesforce Marketing Cloud ecosystem, its main products (or Editions as they are called by Salesforce), and their positioning and guesstimate the future.
+
+<Image img={landscape} alt='Salesforce Marketing Product Landscape' />
+
+First thing to cover is the difference between solutions, products and licences in the Salesforce ecosystem. From the marketing perspective, the broadest solution is Salesforce Marketing - it's an umbrella term for all marketing-related products offered by Salesforce (and frequently, apart from marketing automation, real-time personalization and marketing intelligence, it also includes loyalty management through Salesforce Loyalty Cloud).
+
+Next solution area is Agentforce Marketing introduced on Dreamforce 2025 - it encompasses all marketing-related products that leverage Agentforce AI capabilities to assist marketers in their daily tasks. The new Marketing Cloud product (more on that later) is part of this solution, but it includes also old Marketing Cloud Engagement and Marketing Cloud Account Engagement products once they get access to Agentforce features through new licences called Marketing Cloud Engagement Plus and Marketing Cloud Account Engagement Plus.
+
+Final solution is Marketing Cloud Next - it includes only the new Marketing Cloud products (across marketing automation, real-time personalization and marketing intelligence) built on Data 360 platform.
+
+Within those solutions there are multiple products (or Editions) available, each targeting different audiences and use cases. On the diagram above you could see that two of those - Agentforce 360 and Data 360 got renamed to join the 360 team along with the classic Customer 360. This change highlights how those two products evolved from standard function-oriented products to platform-wide technology supporting every facet of Salesforce ecosystem.
+
+The rest of the products are Marketing Automation platforms (Marketing Cloud Engagement, Marketing Cloud Account Engagement and the new Marketing Cloud), Real-Time Personalization platforms (Marketing Cloud Personalization and Salesforce Personalization) and Marketing Intelligence platforms (Marketing Cloud Intelligence and Salesforce Marketing Intelligence). Let's dive deeper into each of those categories.
 
 :::note You Should Know
 
@@ -41,8 +55,8 @@ classDiagram
     class MCAE {
       Marketing Cloud Account Engagement
     }
-    class MCN {
-      Marketing Cloud Next
+    class MC {
+      Marketing Cloud
     }
 
     %% Target Audience Classes
@@ -65,7 +79,7 @@ classDiagram
     %% Define Relationships between Platforms and their Audiences
     MCE --> B2C : targets
     MCAE --> B2B : targets
-    MCN --> SMB : targets
+    MC --> SMB : targets
 ```
 
 #### Salesforce Marketing Cloud Engagement
@@ -114,27 +128,27 @@ All Marketing Cloud Account Engagement customers already receive access to the n
 
 :::
 
-#### Salesforce Marketing Cloud Next
+#### Salesforce Marketing Cloud
 
-__Name history__: Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud [on Core] (MCoC)» Marketing Cloud Next (MCN) » Agentforce Marketing (AFM)
+__Name history__: Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud [on Core] (MCoC)» Marketing Cloud Next (MCN) » Marketing Cloud (MC)
 
-The newest of the three products, Marketing Cloud Next, is a fresh take on Marketing Automation. Announced in 2024, it is built from scratch on the Data Cloud (now Data 360) platform, leveraging its capabilities and integrations with other Salesforce products (especially the new hype champion - Agentforce).
+The newest of the three products, Marketing Cloud, is a fresh take on Marketing Automation. Announced in 2024, it is built from scratch on the Data Cloud (now Data 360) platform, leveraging its capabilities and integrations with other Salesforce products (especially the new hype champion - Agentforce).
 
 Based on it's current features, it is designed for small businesses and small marketing teams, both B2C and B2B, with basic marketing needs. It's not that clear however, when you consider the pre-requisite of having at least Enterprise tier Salesforce CRM licence to use it. It is not a standalone Marketing Automation platform like Marketing Cloud Engagement, but rather a complementary product.
 
- Marketing Cloud Next focuses a drag-and-drop interface, rich segmentation with Data Cloud and automated marketing operations with Agentforce for Marketing that can automatically create briefs, emails and customer journeys in Flows. On the other hand the tool currently offers limited features and minimal customization options. It's heavily developed and rapidly catching up to Marketing Cloud Account Engagement with B2B focused features, but still not a perfect match and not even close in terms of stability.
+ Marketing Cloud focuses a drag-and-drop interface, rich segmentation with Data Cloud and automated marketing operations with Agentforce for Marketing that can automatically create briefs, emails and customer journeys in Flows. On the other hand the tool currently offers limited features and minimal customization options. It's heavily developed and rapidly catching up to Marketing Cloud Account Engagement with B2B focused features, but still not a perfect match and not even close in terms of stability.
 
 :::note You Should Know
 
-Salesforce Marketing Cloud Next is definitely the future of Marketing Automation on the Salesforce platform. It has great ideas and massive potential - definitely needed to compete with other modern Marketing Automation platforms on the market.
+Salesforce Marketing Cloud is definitely the future of Marketing Automation on the Salesforce platform. It has great ideas and massive potential - definitely needed to compete with other modern Marketing Automation platforms on the market.
 
-However, right now it's a very immature product with numerous bugs, limited features and heavily layered usage-based pricing. It's great as a complimentary product for existing MCE & MCAE customers to experiment with new features, but not ready yet to confidently stand on its own.
+However, right now it's a very immature product with numerous bugs, limited features and heavily layered usage-based pricing. It's great as a complimentary product for existing MCE & MCAE customers to experiment with new features, but not ready yet to confidently stand on its own (unless you are existing Data Cloud customer with very basic email needs).
 
 :::
 
 #### Marketing Automation Platforms Comparison
 
-| Feature/Aspect | Marketing Cloud Engagement (MCE) | Marketing Cloud Account Engagement (MCAE) | Marketing Cloud Next(MCN) |
+| Feature/Aspect | Marketing Cloud Engagement (MCE) | Marketing Cloud Account Engagement (MCAE) | Marketing Cloud (MC) |
 |--|--|--|--|
 | **Target Audience** | Large & Enterprise B2C | Medium & Large B2B | Small B2C & B2B |
 | **Use Case** | Complex and business-specific marketing | Lead focused and sales aligned marketing | Agentic supported simple marketing |
@@ -182,11 +196,11 @@ __Name history__: Einstein Personalization (EP) » Salesforce Personalization (S
 
 Salesforce Personalization is one of the newest products in the Salesforce Marketing Cloud ecosystem. Announced in 2024, it is built from scratch on the Data Cloud (now Data 360) platform, leveraging its capabilities and integrations with other Salesforce products.
 
-It is designed to work in tandem with Marketing Cloud Next and other Salesforce products, providing real-time personalization capabilities that utilize your entire Salesforce ecosystem. It also leverages Agentforce and Lightning Platform to provide a no-code, drag-and-drop interface that is easy to use and set up.
+It is designed to work in tandem with Marketing Cloud and other Salesforce products, providing real-time personalization capabilities that utilize your entire Salesforce ecosystem. It also leverages Agentforce and Lightning Platform to provide a no-code, drag-and-drop interface that is easy to use and set up.
 
 :::note You Should Know
 
-Similarly to Marketing Cloud Next, Salesforce Personalization seems to be the future of real-time personalization on the Salesforce platform. However, it's only selling point is the tight integration with Data Cloud and easy usage in the new suite of Salesforce Products.
+Similarly to Marketing Cloud, Salesforce Personalization seems to be the future of real-time personalization on the Salesforce platform. However, it's only selling point is the tight integration with Data Cloud and easy usage in the new suite of Salesforce Products.
 
 On the other hand:
 1. It is a very immature product with limited features, nowhere near the capabilities of Marketing Cloud Personalization. 2. There is no migration path from MCP to SP.
@@ -219,7 +233,13 @@ Similarly to the Real-Time Personalization products, the old one is a mature and
 
 As I don't have much experience with neither of them, I won't go into details here.
 
+## Salesforce Marketing Future
 
+
+
+### For Customers
+
+### For Implementation Partners
 
 {/*
 ## Salesforce Marketing Cloud Glossary
