@@ -12,6 +12,11 @@ module.exports = {
             },
             items: [
                 {
+                    type: 'link',
+                    label: '» Marketing Cloud Landscape FAQ',
+                    href: '/sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/',
+                },
+                {
                     type: 'category',
                     label: 'Marketing Cloud Engagement',
                     link: {
@@ -196,7 +201,7 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'Salesforce Marketing Cloud Personalization',
+                    label: 'Marketing Cloud Personalization',
                     link: {
                         type: 'generated-index',
                         title: 'Salesforce Marketing Cloud Personalization',

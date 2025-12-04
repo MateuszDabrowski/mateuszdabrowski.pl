@@ -61,13 +61,13 @@ module.exports = {
         docs: {
             sidebar: { autoCollapseCategories: true, },
         },
-        announcementBar: {
-            id: 'announcementBar',
-            content:
-                'Big website restructuring ongoing - if you find a broken link <a href="https://www.linkedin.com/in/mateusz-dabrowski-pl/" style="text-decoration: underline">please let me know</a>',
-            backgroundColor: '#0176d3',
-            textColor: '#fffffe',
-        },
+        // announcementBar: {
+        //     id: 'announcementBar',
+        //     content:
+        //         'Big website restructuring ongoing - if you find a broken link <a href="https://www.linkedin.com/in/mateusz-dabrowski-pl/" style="text-decoration: underline">please let me know</a>',
+        //     backgroundColor: '#0176d3',
+        //     textColor: '#fffffe',
+        // },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
@@ -125,11 +125,15 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'How to get Marketing Cloud Demo Account',
+                            label: 'What is the difference between SF Marketing Clouds?',
+                            to: 'sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/#implementation-challenges/',
+                        },
+                        {
+                            label: 'How to get Marketing Cloud Demo Account?',
                             to: 'sites/faq/salesforce/how-to-get-sfmc-hands-on-experience/',
                         },
                         {
-                            label: 'How to get Salesforce Certification Vouchers',
+                            label: 'How to get Salesforce Certification Vouchers?',
                             to: 'sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
                         },
                     ]
