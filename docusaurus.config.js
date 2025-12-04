@@ -126,7 +126,7 @@ module.exports = {
                     items: [
                         {
                             label: 'What is the difference between SF Marketing Clouds?',
-                            to: 'sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/#implementation-challenges/',
+                            to: 'sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/',
                         },
                         {
                             label: 'How to get Marketing Cloud Demo Account?',
