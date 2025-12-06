@@ -13,7 +13,7 @@ module.exports = {
             items: [
                 {
                     type: 'link',
-                    label: '» Marketing Cloud Landscape FAQ',
+                    label: '» SFMC Product Names Explained',
                     href: '/sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/',
                 },
                 {

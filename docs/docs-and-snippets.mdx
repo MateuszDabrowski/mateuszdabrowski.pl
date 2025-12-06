@@ -3,91 +3,50 @@ id: docs-and-snippets
 title: Docs & Snippets
 displayed_sidebar: docs
 slug: /
-description: SSJS + JS + AMPScript + SQL + Marketing Cloud Config documentation and code snippets that I find useful for developing Salesforce Marketing Cloud.
+description: SSJS + JS + AMPScript + SQL + MCE Config documentation and code snippets that I find useful for developing Salesforce Marketing Cloud.
 image: img/og/og-image-docs-and-snippets.png
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
 import { Button } from '/src/components/Buttons.js';
 
-<LeadText content="SSJS + JS + AMPScript + SQL + Marketing Cloud Config documentation and code snippets that I find useful for developing Salesforce Marketing Cloud." />
+<LeadText content="SSJS + JS + AMPScript + SQL + MCE Config documentation and code snippets that I find useful for developing Salesforce Marketing Cloud." />
 
 ## Marketing Cloud Engagement
 
 ### Zen of Marketing Cloud
 
-Salesforce Marketing Cloud is a complex and flexible tool. This combination is a dream-come-true set for enterprise Marketing Automation tools, but on the other hand, it enables mistakes and messy solutions. Find the right path to success through a best-practice fuelled checklist full of tool-based explanations and examples.
+Salesforce Marketing Cloud Engagement is a complex and flexible tool. This combination is a dream-come-true set for enterprise Marketing Automation tools, but on the other hand, it enables mistakes and messy solutions. Find the right path to success through a best-practice fuelled checklist full of tool-based explanations and examples.
 
 <Button
     link='/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/'
     text='Read about Zen of Marketing Cloud'
 />
 
-### Server-Side JavaScript
+### MCE Config
 
-SSJS is an XX-century version of JavaScript paired with proprietary libraries created by Salesforce. It is one of the programmatic tools useful to leverage Marketing Cloud to its fullest potential. I am creating this documentation to make my (and hopefully also yours) work easier.
+Many things in Salesforce Marketing Cloud Engagement aren't code-based but have a massive impact on the code. Permissions. System Data Views. Configuration options. Here I focus on the most important ones that are crucial for Marketing Cloud developers.
 
-#### SSJS Documentation
-
-- [If & Switch](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.mdx)
-- [Loops](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops.mdx)
-- [Debugging](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx)
-- [Style Guide](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx)
-- [Performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx)
-
-#### SSJS Snippets
-
-- [AMPScript in SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx)
-- [MobileConnect Phone Change](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change.mdx)
-- [SSJS Script Template](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-script-template.mdx)
-- [Solve with Cloud Page Apps](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps.mdx)
+{/* - [Licence Limits](/docs/salesforce/marketing-cloud-engagement/config/licence-limits.mdx) */}
+- [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx)
+- [Mobile Connect Data Views](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx)
+- [MCC Integration Patterns](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx)
+- [Contact Deletion Process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx)
+- [Enhanced Send Log](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx)
+- [Behavioral Triggers](/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers.mdx)
+- [Power of Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx)
+- [AppExchange Solutions](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx)
+- [Features On Demand](/docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx)
+- [Export, Import & Document Roles in Salesforce Marketing Cloud](/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles.mdx)
 
 <Button
-    link='/docs/category/salesforce/marketing-cloud-engagement/ssjs/'
-    text='Read about SSJS'
-/>
-
-### JavaScript
-
-In this part, I am gathering selected elements of modern vanilla JavaScript that I find helpful for marketing technologists. Expect guides on asynchronous calls to API and backend resources, form-focused DOM manipulation and playing with data objects.
-
-#### JS Documentation
-
-- [If & Switch](/docs/js/js-if-and-switch.mdx)
-- [Loops](/docs/js/js-loops.mdx)
-- [Document Object Model (DOM)](/docs/js/js-dom.mdx)
-
-#### JS Snippets
-
-- [Tailor with Data](/docs/js/snippets/tailor-with-data.mdx)
-- [Engage with Countdown](/docs/js/snippets/engage-with-countdown.mdx)
-
-<Button
-    link='/docs/category/javascript/'
-    text='Read about JavaScript'
-/>
-
-### AMPScript
-
-AMPScript is a proprietary scripting language in Salesforce Marketing Cloud along with [SSJS](#server-side-javascript). Out of the two, it is simpler and more performant, but too limited for complex solutions. Good starting point for marketers without development experience. Best option for scripting in messaging.
-
-#### AMPScript Documentation
-
-- [Style Guide](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.mdx)
-- [Performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx)
-
-#### AMPScript Snippets
-
-- [AMPScript in SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx)
-
-<Button
-    link='/docs/category/salesforce/marketing-cloud-engagement/ampscript/'
-    text='Read about AMPScript'
+    link='/docs/category/salesforce/marketing-cloud-engagement/config/'
+    text='Read about MCE Config'
 />
 
 ### SFMC SQL
 
-To fully leverage the Salesforce Marketing Cloud Data Extensions and Automation Studio, SQL is a must-have. Here I gathered both the language basics and some of the most valuable snippets to copy and paste shamelessly.
+To fully leverage the Salesforce Marketing Cloud Engagement Data Extensions and Automation Studio, SQL is a must-have. Here I gathered both the language basics and some of the most valuable snippets to copy and paste shamelessly.
 
 #### SQL Documentation
 
@@ -113,33 +72,54 @@ To fully leverage the Salesforce Marketing Cloud Data Extensions and Automation 
 
 <Button
     link='/docs/category/salesforce/marketing-cloud-engagement/sql/'
-    text='Read about SFMC SQL'
+    text='Read about MCE SQL'
 />
 
-### SFMC Config
+### Server-Side JavaScript
 
-Many things in Salesforce Marketing Cloud aren't coding but have a massive impact on the code. Permissions. System Data Views. Configuration options. Here I focus on the most important ones that are crucial for Marketing Cloud developers.
+SSJS is an XX-century version of JavaScript paired with proprietary libraries created by Salesforce. It is one of the programmatic tools useful to leverage Marketing Cloud Engagement to its fullest potential. I am creating this documentation to make my (and hopefully also yours) work easier.
 
-{/* - [Licence Limits](/docs/salesforce/marketing-cloud-engagement/config/licence-limits.mdx) */}
-- [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx)
-- [Mobile Connect Data Views](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx)
-- [MCC Integration Patterns](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx)
-- [Contact Deletion Process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx)
-- [Enhanced Send Log](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx)
-- [Behavioral Triggers](/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers.mdx)
-- [Power of Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx)
-- [AppExchange Solutions](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx)
-- [Features On Demand](/docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx)
-- [Export, Import & Document Roles in Salesforce Marketing Cloud](/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles.mdx)
+#### SSJS Documentation
+
+- [If & Switch](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.mdx)
+- [Loops](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops.mdx)
+- [Debugging](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx)
+- [Style Guide](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx)
+- [Performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx)
+
+#### SSJS Snippets
+
+- [AMPScript in SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx)
+- [MobileConnect Phone Change](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change.mdx)
+- [SSJS Script Template](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-script-template.mdx)
+- [Solve with Cloud Page Apps](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps.mdx)
 
 <Button
-    link='/docs/category/salesforce/marketing-cloud-engagement/config/'
-    text='Read about SFMC Config'
+    link='/docs/category/salesforce/marketing-cloud-engagement/ssjs/'
+    text='Read about SSJS'
+/>
+
+### AMPScript
+
+AMPScript is a proprietary scripting language in Salesforce Marketing Cloud Engagement along with [SSJS](#server-side-javascript). Out of the two, it is simpler and more performant, but too limited for complex solutions. Good starting point for marketers without development experience. Best option for scripting in messaging.
+
+#### AMPScript Documentation
+
+- [Style Guide](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.mdx)
+- [Performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx)
+
+#### AMPScript Snippets
+
+- [AMPScript in SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx)
+
+<Button
+    link='/docs/category/salesforce/marketing-cloud-engagement/ampscript/'
+    text='Read about AMPScript'
 />
 
 ## Marketing Cloud Personalization
 
-Salesforce Marketing Cloud Personalization (Interaction Studio) is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!
+Salesforce Marketing Cloud Personalization is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud Engagement. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!
 
 ### MC Personalization Documentation
 
@@ -156,6 +136,26 @@ Salesforce Marketing Cloud Personalization (Interaction Studio) is a cross-chann
 <Button
     link='/docs/category/salesforce/marketing-cloud-personalization/'
     text='Read about MC Personalization'
+/>
+
+## JavaScript
+
+In this part, I am gathering selected elements of modern vanilla JavaScript that I find helpful for marketing technologists. Expect guides on asynchronous calls to API and backend resources, form-focused DOM manipulation and playing with data objects.
+
+### JS Documentation
+
+- [If & Switch](/docs/js/js-if-and-switch.mdx)
+- [Loops](/docs/js/js-loops.mdx)
+- [Document Object Model (DOM)](/docs/js/js-dom.mdx)
+
+### JS Snippets
+
+- [Tailor with Data](/docs/js/snippets/tailor-with-data.mdx)
+- [Engage with Countdown](/docs/js/snippets/engage-with-countdown.mdx)
+
+<Button
+    link='/docs/category/javascript/'
+    text='Read about JavaScript'
 />
 
 ## Changes
