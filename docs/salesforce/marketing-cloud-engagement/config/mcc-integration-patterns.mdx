@@ -63,6 +63,7 @@ On top of the differences showcased above, there are a few other things that you
 4. You can only partially limit access to data between Business Units. There are some options to make data belonging to other BUs harder to see (like All Subscribers List filters or denied Shared Data Extensions permissions). Still, in the end, someone determined will be able to access the data, for example, through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce Marketing Cloud Accounts.
 5. You cannot connect multiple Salesforce CRM Orgs to a single Marketing Cloud Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
 6. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts (separate SFMCs) using Marketing Cloud Connect.
+7. You cannot use the free API-only Salesforce CRM Integration Users - Marketing Cloud Connect requires full Salesforce System Administrator licences for the Integration Users.
 
 ## Marketing Cloud Connect Patterns
 
