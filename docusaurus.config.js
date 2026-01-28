@@ -273,6 +273,7 @@ module.exports = {
                     ],
                 },
             ],
+            copyright: `All views expressed here are my own and are not affiliated with, sponsored, or endorsed by the clients or companies I work for.`,
         },
         algolia: {
             appId: 'F4XVDD6BM8',

@@ -84,6 +84,11 @@ html[data-theme='dark'] .header-salesforce-link:before {
   color: var(--ifm-color-white);
 }
 
+.footer__copyright {
+  color: var(--ifm-color-white);
+  margin-top: 2rem;
+}
+
 /* ------------------------------- NAVBAR MENU ------------------------------ */
 
 .navbar__item>.dropdown__menu a.navbar__link--active {
