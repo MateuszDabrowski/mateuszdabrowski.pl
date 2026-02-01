@@ -1,4 +1,19 @@
 module.exports = {
+    tools: [
+        {
+            type: 'category',
+            label: 'Tools',
+            link: {
+                type: 'generated-index',
+                title: 'Tools',
+                description: 'Here you can find all my Salesforce tools and apps.',
+                image: 'img/og/og-image-tools.png',
+            },
+            items: [
+                'tools/salesforce/mce-world-clock',
+            ],
+        },
+    ],
     ideas: [
         {
             type: 'category',

@@ -119,6 +119,17 @@ module.exports = {
                     ],
                 },
                 {
+                    label: 'Tools',
+                    to: 'sites/category/tools/',
+                    position: 'left',
+                    items: [
+                        {
+                            label: 'MCE World Clock',
+                            to: 'https://clock.mateuszdabrowski.pl',
+                        },
+                    ],
+                },
+                {
                     label: 'FAQ',
                     to: 'sites/category/faq',
                     activeBasePath: 'sites/faq',
