@@ -11,7 +11,7 @@ import { Button, ButtonRow } from '/src/components/Buttons.js';
 
 <LeadText content="World Clock that helps you with Salesforce Marketing Cloud Engagement (MCE) system dates. Let it handle the timezone math so you can focus on building your automations." />
 
-Salesforce Marketing Cloud Engagement (MCE) operates on a fixed server time (UTC-6), which can complicate date and time handling, especially when dealing with audiences across various timezones. To simplify this, I've created the **MCE World Clock** — a free, browser-based tool designed to assist marketers and developers in managing date and time conversions effortlessly.
+Salesforce Marketing Cloud Engagement (MCE) operates on a fixed server time (UTC-6), which can complicate date and time handling, especially when dealing with audiences across various timezones. To simplify this, I've created the **MCE World Clock** - a free, browser-based tool designed to assist marketers and developers in managing date and time conversions effortlessly.
 
 And the best part? It generates production-ready code snippets in SQL, AMPScript, and SSJS to help you implement timezone-aware logic in your Marketing Cloud Engagement automations.
 
@@ -35,6 +35,8 @@ This app allows you to paste a raw system date from Query Studio or Data Extensi
 
 One of the standout features of this tool is the ability to generate production-ready SQL, AMPScript, and SSJS code snippets for your Marketing Automation needs.
 
+The generated codes adapts to selected timezones and handles DST logic, so you can implement it directly into your automations without worrying about the underlying complexity. It also provides option to set custom DST boundaries for accurate conversions regardless of your target timezone DST timeframe.
+
 ### MCE SQL
 
 The generator leverages the [AT TIME ZONE function](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#at-time-zone) to handle offset information. It specifically uses the Central America Standard Time workaround to account for MCE's lack of DST.
@@ -45,7 +47,7 @@ The tool provides dynamic datetime conversion logic. Since AMPScript & SSJS do n
 
 1. __Simple DateAdd__: When you convert to UTC (no DST).
 2. __SystemDateToLocalDate__: When you convert to your local time (assuming you have the same timezone selected on your user in MCE).
-3. __Manual Summer Time (DST)__: Boundary variables that you can update to ensure accuracy throughout the year for all other timezones.
+3. __Manual Summer Time (DST)__: DST boundary variables that you can update to ensure accuracy throughout the year for all other timezones.
 
 ## Key Features
 
