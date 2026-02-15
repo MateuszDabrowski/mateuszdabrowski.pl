@@ -377,6 +377,87 @@ When working with `_Sent` Data View:
 
 ---
 
+### _ReconcilableDispositionView
+
+Stores infomation about your Email and SMS final delivery status for transactional sends.
+
+<Tabs
+    defaultValue='fields'
+    values={[
+        { label: 'Fields', value: 'fields' },
+        { label: 'Field Picklist Values', value: 'values' },
+        { label: 'SQL Query', value: 'sql' },
+    ]}
+>
+<TabItem value='fields'>
+
+Name | Description | Data Type | Nullable
+-- | -- | -- | --
+JobId | The job ID number for the email or SMS send | Number |
+Channel | Identifies the channel of the send, either Email or SMS | Number |
+Disposition | Stores final delivery status for the transactional message | Number |
+MessageKey | Stores unique message key for the send | Text |
+SubscriberKey | The subscriber key for the affected subscriber | Text |
+SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record. | Number | X
+ErrorCodeID | The error code ID for the send | Number | X
+ErrorName | The error name for the send | Text | X
+StartTime | The datetime of transactional message trigger | Date |
+
+</TabItem>
+<TabItem value='values'>
+
+`Channel` possible values:
+- 0 (for Email channel)
+- 1 (for SMS channel)
+
+`Disposition` possible values:
+- 0 (for Queued)
+- 1 (for Sent)
+- 2 (for NotSent)
+
+---
+
+</TabItem>
+<TabItem value='sql'>
+
+```sql
+SELECT
+      delivery.JobId
+    , delivery.Channel
+    , delivery.Disposition
+    , delivery.MessageKey
+    , delivery.SubscriberKey
+    , delivery.SubscriberID
+    , delivery.ErrorCodeID
+    , delivery.ErrorName
+    , delivery.ErrorDescription
+    , delivery.StartTime
+FROM _ReconcilableDispositionView AS delivery
+```
+
+</TabItem>
+</Tabs>
+
+When working with `_ReconcilableDispositionView` Data View:
+
+1. Understand what that name actually means:
+    - It's reconcilable, because using this feature allows you to reconcile (match) your transactional sends in MCE with the source system (e.g. e-commerce platform) based on the MessageKey and limit duplicate sends in case there is retriggering issue.
+    - It's disposition view, because it shows the final disposition (status) of your transactional messages - whether they were delivered, are still in queue or were not sent at all. Remember that delivered doesn't mean delivered to the main inbox. Spam placement technically is also successful delivery.
+3. To leverage this Data View you first need to send transactional message using a Sendable Reconcilable Data Extension:
+    - Create a new Data Extension, use `Create from Template` Creation Method and select `Sendable_Reconcilable_Data_Extension` template.
+    - Add any additional fields you need for your transactional send.
+    - Use this Data Extension as a sendable data source for your transactional sends.
+    - Configure Transactional Reconciliation expiration window to wait between 1 and 72 hours for the final delivery status of your messages. Messages still in queue after that time will be expired and marked as NotSent.
+    - Only after that you will be able to see this Data View and the delivery status of your transactional messages in it.
+4. When triggering transactional message provide a MessageKey (up to 100 characters) along with other data to allow for matching with your transactional source system (e.g. e-commerce platform). Thanks to the reconciliation feature, even if source system triggers multiple messages with the same MessageKey, MCE will only process the first one protecting recipients from duplicate messaging. If you do not provide a MessageKey, MCE will generate the MessageKey for you.
+5. Extend [Email and SMS Send Logs](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx) with the MessageKey to simplify the process of matching transactional sends delivery status with various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce).
+6. `ErrorCodeID`, `ErrorName`, and `ErrorDescription` will be populated only if `Disposition` is equal to `2` (NotSent). If your transactional messages are not being delivered, check these fields to understand why.
+7. `StartTime` field allows you to track trigger time for transactional messages. For Data Extension sends, it will be the time when the job started. For API sends, it will be the time when the API call was received. It's fun data point to compare against [`_Sent`](#_sent) `EventDate` to check the time it took for the message to be sent after the trigger.
+8. `SubscriberID` field might be null if there are issues with the subscriber record.
+9. Data retention for this Data View is only 7 days.
+
+---
+
 ### _Open
 
 Stores information about your Email Opens. For when you need to know when someone opened your email. Kind of.
