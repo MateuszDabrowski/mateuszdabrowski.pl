@@ -10,3 +10,38 @@ tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SQL, Snippe
 import { LeadText } from '/src/components/LeadText.js';
 import { Button, ButtonRow } from '/src/components/Buttons.js';
 
+
+<Button link='https://www.youtube.com/watch?v=YjMfveB5Ass'
+ text='Create All Contacts Data Extension'
+ newTab='true'
+/>
+
+
+```sql
+SELECT
+      COUNT(SubscriberKey)                                                          AS Total_Count
+    , SUM(IIF(SubscriberKey LIKE '%@%', 1, 0))                                      AS Email_Format
+    , SUM(IIF(SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7, 1, 0)) AS MobileConnect_Format
+    , SUM(IIF(SubscriberKey LIKE '001%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_Account
+    , SUM(IIF(SubscriberKey LIKE '003%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_Contact
+    , SUM(IIF(SubscriberKey LIKE '005%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_User
+    , SUM(IIF(SubscriberKey LIKE '00Q%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_Lead
+    , SUM(IIF(SubscriberKey LIKE '%test%', 1, 0))                                   AS Test_Records
+    , SUM(IIF(SubscriberKey LIKE '%@%'
+        OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
+        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
+        OR SubscriberKey LIKE '%test%', 0, 1)
+      )                                                                             AS Other_Format
+FROM Ent._Subscribers
+```
+
+
+```sql
+SELECT TOP 100
+  SubscriberKey
+FROM Ent._Subscribers
+WHERE SubscriberKey NOT LIKE '%@%'
+  AND NOT (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
+  AND NOT (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
+  AND SubscriberKey NOT LIKE '%test%'
+```
