@@ -27,38 +27,13 @@ SELECT
     , SUM(IIF(SubscriberKey LIKE '005%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_User
     , SUM(IIF(SubscriberKey LIKE '00Q%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_Lead
     , SUM(IIF(SubscriberKey LIKE '%test%', 1, 0))                                   AS Test_Records
-    , SUM(IIF(
-        LEN(SubscriberKey) = 36
-        AND SUBSTRING(SubscriberKey,  9, 1) = '-'
-        AND SUBSTRING(SubscriberKey, 14, 1) = '-'
-        AND SUBSTRING(SubscriberKey, 19, 1) = '-'
-        AND SUBSTRING(SubscriberKey, 24, 1) = '-'
-        AND SubscriberKey LIKE
-          '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-          '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-          '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-          '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-          '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]'
-        , 1, 0)
-      )                                                                             AS GUID_Format
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL, 1, 0))      AS GUID_Format
     , SUM(IIF(
         SubscriberKey LIKE '%@%'
         OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
         OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
         OR SubscriberKey LIKE '%test%'
-        OR (
-            LEN(SubscriberKey) = 36
-            AND SUBSTRING(SubscriberKey,  9, 1) = '-'
-            AND SUBSTRING(SubscriberKey, 14, 1) = '-'
-            AND SUBSTRING(SubscriberKey, 19, 1) = '-'
-            AND SUBSTRING(SubscriberKey, 24, 1) = '-'
-            AND SubscriberKey LIKE
-                '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-                '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-                '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-                '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-                '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]'
-            )
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
         , 0, 1)
       )                                                                             AS Other_Format
 FROM All_Contacts
@@ -83,22 +58,9 @@ SELECT TOP 100
 FROM All_Contacts               AS all
     LEFT JOIN Ent._Subscribers  AS sub
         ON sub.SubscriberKey = all.SubscriberKey
-WHERE
-    LEN(all.SubscriberKey) = 36
-    AND SUBSTRING(all.SubscriberKey,  9, 1) = '-'
-    AND SUBSTRING(all.SubscriberKey, 14, 1) = '-'
-    AND SUBSTRING(all.SubscriberKey, 19, 1) = '-'
-    AND SUBSTRING(all.SubscriberKey, 24, 1) = '-'
-    AND all.SubscriberKey LIKE
-        '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-        '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-        '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-        '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]-' +
-        '[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]'
-GROUP BY
-    LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1))
-ORDER BY
-    COUNT(all.SubscriberKey) DESC
+WHERE TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
+GROUP BY LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1))
+ORDER BY COUNT(all.SubscriberKey) DESC
 ```
 
 
@@ -109,9 +71,9 @@ SELECT TOP 100
 FROM (
     SELECT
         CASE
-            /* 1. Check for 1-Digit Calling Codes */
-            WHEN SubscriberKey LIKE '1%' THEN LEFT(SubscriberKey, 1) -- USA, Canada, and other NANP countries
-            WHEN SubscriberKey LIKE '7%' THEN LEFT(SubscriberKey, 1) -- Russia and Kazakhstan
+            /* 1. Check for 1-Digit Calling Codes - 1 contains USA, Canada, and other NANP countries */
+            WHEN SubscriberKey LIKE '1%' THEN LEFT(SubscriberKey, 1)
+            WHEN SubscriberKey LIKE '7%' THEN LEFT(SubscriberKey, 1)
             /* 2. Check for 2-Digit Calling Codes */
             WHEN SubscriberKey LIKE '20%' OR SubscriberKey LIKE '27%' THEN LEFT(SubscriberKey, 2)
             WHEN SubscriberKey LIKE '3[0-4,6,9]%' THEN LEFT(SubscriberKey, 2)
@@ -125,10 +87,10 @@ FROM (
         END AS CallingCode
     FROM Ent._Subscribers
     WHERE
-        SubscriberKey NOT LIKE '%[^0-9]%'   -- Numeric Only
-        AND SubscriberKey NOT LIKE '0%'     -- No leading zeros
-        AND LEN(SubscriberKey) >= 7         -- Minimum viable phone length
+        SubscriberKey NOT LIKE '%[^0-9]%'
+        AND SubscriberKey NOT LIKE '0%'
+        AND LEN(SubscriberKey) >= 7
 ) AS MobileFormat
 GROUP BY CallingCode
-ORDER BY Subscriber_Count DESC
+ORDER BY COUNT(*) DESC
 ```
