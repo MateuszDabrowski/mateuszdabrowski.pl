@@ -72,6 +72,7 @@ module.exports = {
                                     items: [
                                         'salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends',
                                         'salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length',
+                                        'salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts',
                                     ],
                                 },
                             ],
