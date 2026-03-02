@@ -8,7 +8,7 @@ tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SQL, Snippe
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
-import { Button, ButtonRow } from '/src/components/Buttons.js';
+import { ButtonRow } from '/src/components/Buttons.js';
 
 <LeadText content="Clean up your MCE Contacts before they clean up your wallet. Step-by-step guide to identifying subscriber issues." />
 
@@ -57,7 +57,7 @@ So in nearly every case you will have to take the Subscriber Key and enrich it w
 :::
 
 2. If you **don't have Mobile Connect** licence you will need to stitch that information from two sources:
-    1. You can access all your email channel Contacts via [`_Subscribers` System Data View](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#subscribers).
+    1. You can access all your email channel Contacts via [`_Subscribers` System Data View](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_subscribers).
     2. However, you might still have some records in All Contacts list that are not in `_Subscribers` (e.g. test records, Synchronized Data Extension records, hidden records). To access those, you can use a ["Contacts Wihout Channel Address" Data Extract Activity](https://help.salesforce.com/s/articleView?id=mktg.mc_cab_contacts_without_channel_address.htm&type=5), which will export Contacts not assigned to any channel to a provided Data Extension. You can then query that Data Extension to get the list of those Contacts.
     3. You can either create a Data Extension with just one field `SubscriberKey` and [`UNION`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#union) those two sources together in SQL to get a single "AllContactsList" Data Extension with full list of Contacts similar to the one available with Mobile Connect workaround, or you can just use [`UNION`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#union) directly in the queries from this guide.
 
@@ -269,10 +269,10 @@ Once you have identified the issues with your All Contacts list, fixed the proce
 Update the initial query to capture all the scenarios that you cleaned up and no longer need in your All Contacts list, and use it to create a Data Extension with all the naughty Contacts you can now happily delete. Then set it on fire:
 
 <ButtonRow
- linkLeft='/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx#delete-all-contacts-from-list-or-data-extension'
+ linkLeft='/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#delete-all-contacts-from-list-or-data-extension'
  textLeft="Manual Contact Deletion"
  newTabLeft='true'
- linkRight='/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx#contact-deletion-with-automation-studio'
+ linkRight='/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio'
  textRight="Automated Contact Deletion"
  newTabRight='true'
 />
