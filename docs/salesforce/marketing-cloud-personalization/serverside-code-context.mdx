@@ -377,6 +377,12 @@ const itemsDetails = context.services.catalog.findItems(catalogFilter);
 
 It can be further extended that custom-catalog-based approach by passing an ItemSort as a second argument. However, despite trying my luck with the `sortByActivity` and `sortByPublishedDate` properties, I haven't been able to make it work. That's too bad, as sorting by activity could have been interesting when working with custom Catalog Items.
 
+:::note You Should Know
+
+As of 2026, Salesforce silently limited the `findItems()` method to return a maximum of 30 items instead of beautiful unlimited of the past.
+
+:::
+
 #### context.services.catalog.findClosestItems()
 
 If you are using location details for your Items, the `findClosestItems()` method will work wonders for you as it allows you to get items based on the provided longitude and latitude within a defined distance:
