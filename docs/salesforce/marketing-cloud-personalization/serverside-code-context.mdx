@@ -363,7 +363,7 @@ Of course, making so many `findItem()` calls is not optimal, and MCP offers anot
 The `findItems()` method allows you to request details for multiple Items in a single call, which is cleaner and more performant. The baseline way of calling this function works just as [`findItem()`](#contextservicescatalogfinditem), but it requires an array of IDs instead of a single ID and returns an array of Item detail objects instead of a single Item object.
 
 ```ts title="Return multiple Items details"
-const itemsDetails = context.services.catalog.findItem('Product', ['19542', '12524', '91324']);
+const itemsDetails = context.services.catalog.findItems('Product', ['19542', '12524', '91324']);
 ```
 
 A neat use case for that method is pulling currently viewed Item details with [`findItem()`](#contextservicescatalogfinditem) to get values from a custom attribute containing alternative product IDs or dedicated accessories for it. Then, pass all those found product IDs into `findItems()` to get the full detail required for a personalization showcasing those related items.
@@ -379,7 +379,7 @@ It can be further extended that custom-catalog-based approach by passing an Item
 
 :::note You Should Know
 
-As of 2026, Salesforce silently limited the `findItems()` method to return a maximum of 30 items instead of beautiful unlimited of the past.
+As of 2026, Salesforce silently limited the `findItems()` method to return a maximum of 30 items instead of the beautiful unlimited of the past.
 
 :::
 
