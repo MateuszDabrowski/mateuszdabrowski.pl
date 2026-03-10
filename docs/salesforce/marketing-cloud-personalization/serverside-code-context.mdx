@@ -379,7 +379,7 @@ It can be further extended that custom-catalog-based approach by passing an Item
 
 :::note You Should Know
 
-As of 2026, Salesforce silently limited the `findItems()` method to return a maximum of 30 items instead of the beautiful unlimited of the past.
+As of 2026, Salesforce silently limited the `findItems()` method to return a maximum of 30 items instead of the beautiful unlimited of the past. Partial replacement for that feature is [`context.services.catalog.findClosestItems()`](#contextservicescatalogfindclosestitems) that allows you to pull items based on the location data. And if you are not using longitude and latitude, you can consider adding a single one for all your products and leveraging it with that location-based function as a workaround.
 
 :::
 
