@@ -1,0 +1,120 @@
+---
+id: about-me
+title: About Me
+description: Learn more about me and my journey in the world of Salesforce and marketing.
+image: img/og/og-image-about-me.png
+---
+
+import { LeadText } from '/src/components/LeadText.js';
+import { Timeline } from '/src/components/Timeline.jsx';
+
+<LeadText content="Draft" />
+
+export const timelineEvents = [
+  // --- Projects (Left Side: Work Experience & Major Engagements) ---
+  {
+    id: "proj-pwc",
+    type: "period",
+    title: "Acting Marketing Automation Practice Leader",
+    organisation: "PwC",
+    startDate: "2020-02",
+    endDate: "Present",
+    description: "Leading the Marketing Automation Practice with 30+ experts. Rising from Consultant to Architect and Leader. Architected and implemented SFMC, Adobe RT-CDP, and Agentforce globally.",
+    icon: "Project",
+    tags: ["Team Leadership", "Salesforce Marketing Cloud", "Agentforce"]
+  },
+  {
+    id: "proj-1",
+    type: "period",
+    title: "Global Campaign Service Manager & MA Consultant",
+    organisation: "Sanofi",
+    startDate: "2019-01",
+    endDate: "2020-01",
+    description: "Managed Global Campaign Demand, Deliverability Strategy, Education, SAFe adoption, and MarTech capability assessment. Worked heavily with Adobe Campaign Classic and 250ok.",
+    icon: "Project",
+    tags: ["Adobe Campaign", "Jira", "Strategy", "SAFe"]
+  },
+  {
+    id: "proj-2",
+    type: "period",
+    title: "Marketing Automation Consultant",
+    organisation: "Mateusz Dąbrowski",
+    startDate: "2016-10",
+    endDate: "Present",
+    description: "Self-Employed. Sharing passion for Salesforce Marketing Cloud, Marketing Automation, E-Mail Marketing, MarTech Process Automation and APIs.",
+    icon: "Project",
+    tags: ["Salesforce Marketing Cloud", "APIs", "MarTech"]
+  },
+  {
+    id: "proj-3",
+    type: "period",
+    title: "Local Administrator & Marketing Automation Specialist",
+    organisation: "Wolters Kluwer",
+    startDate: "2016-10",
+    endDate: "2018-12",
+    description: "Supervised MA best practices, engineered lead scoring models, managed GDPR flows, customized Python OBIEE reports, developed full lifecycle email campaigns and landing pages. CoE Lead.",
+    icon: "Project",
+    tags: ["Oracle Eloqua", "Python", "A/B Testing", "HTML/CSS"]
+  },
+  {
+    id: "proj-4",
+    type: "period",
+    title: "E-commerce & Digital Marketing Specialist",
+    organisation: "Wolters Kluwer",
+    startDate: "2014-01",
+    endDate: "2016-09",
+    description: "Drove digital marketing on legal and educational markets. Spearheaded cross-division omnichannel marketing, LP editorial content, and project management for e-commerce implementations.",
+    icon: "Project",
+    tags: ["Omnichannel", "E-commerce", "Project Management"]
+  },
+  // --- Single Events (Right Side: Certs, Speaking, Awards, Edu) ---
+
+  // Promotions
+  { id: "promo-1", type: "single", title: "Promoted to Marketing Automation Manager", organisation: "PwC", date: "2023-03", description: "Recognized for architecting complex multi-cloud deployments and driving Agentforce innovation.", icon: "Promotion" },
+  // Salesforce Certifications
+  { id: "cert-0", type: "single", title: "Salesforce Platform Administrator", organisation: "Salesforce", date: "2026-01", description: "Certification", icon: "Certification" },
+  { id: "cert-1", type: "single", title: "Salesforce Agentforce Specialist", organisation: "Salesforce", date: "2025-03", description: "Certification", icon: "Certification" },
+  { id: "cert-2", type: "single", title: "Salesforce Data Cloud Consultant", organisation: "Salesforce", date: "2024-11", description: "Certification", icon: "Certification" },
+  { id: "cert-3", type: "single", title: "Salesforce Mulesoft Associate", organisation: "Salesforce", date: "2024-05", description: "Certification", icon: "Certification" },
+  { id: "cert-4", type: "single", title: "Salesforce Marketing Associate", organisation: "Salesforce", date: "2024-01", description: "Certification", icon: "Certification" },
+  { id: "cert-5", type: "single", title: "Salesforce Business Analyst", organisation: "Salesforce", date: "2023-12", description: "Certification", icon: "Certification" },
+  { id: "cert-6", type: "single", title: "Salesforce AI Associate", organisation: "Salesforce", date: "2023-09", description: "Certification", icon: "Certification" },
+  { id: "cert-7", type: "single", title: "Salesforce MC Advanced Cross Channel", organisation: "Salesforce", date: "2023-01", description: "Certification", icon: "Certification" },
+  { id: "cert-8", type: "single", title: "Salesforce JavaScript Developer", organisation: "Salesforce", date: "2022-12", description: "Certification", icon: "Certification" },
+  { id: "cert-9", type: "single", title: "Salesforce Platform Foundations", organisation: "Salesforce", date: "2022-12", description: "Certification", icon: "Certification" },
+  { id: "cert-10", type: "single", title: "Salesforce Slack Consultant", organisation: "Salesforce", date: "2022-12", description: "Certification", icon: "Certification" },
+  { id: "cert-11", type: "single", title: "Salesforce Strategy Designer", organisation: "Salesforce", date: "2022-11", description: "Certification", icon: "Certification" },
+  { id: "cert-12", type: "single", title: "Salesforce User Experience Designer", organisation: "Salesforce", date: "2022-01", description: "Certification", icon: "Certification" },
+  { id: "cert-13", type: "single", title: "Salesforce MC Personalization", organisation: "Salesforce", date: "2021-07", description: "Certification", icon: "Certification" },
+  { id: "cert-14", type: "single", title: "Salesforce MC Engagement Consultant", organisation: "Salesforce", date: "2020-09", description: "Certification", icon: "Certification" },
+  { id: "cert-15", type: "single", title: "Salesforce MC Engagement Developer", organisation: "Salesforce", date: "2020-05", description: "Certification", icon: "Certification" },
+  { id: "cert-16", type: "single", title: "Salesforce MC Engagement Email Specialist", organisation: "Salesforce", date: "2020-03", description: "Certification", icon: "Certification" },
+  { id: "cert-17", type: "single", title: "Oracle Eloqua B2B Luminary 2018", organisation: "Oracle", date: "2018-10", description: "Certification", icon: "Certification" },
+  { id: "cert-18", type: "single", title: "Oracle Content Marketing Master 2018", organisation: "Oracle", date: "2018-09", description: "Certification", icon: "Certification" },
+  { id: "cert-19", type: "single", title: "Oracle Eloqua B2B Master 2018", organisation: "Oracle", date: "2018-06", description: "Certification", icon: "Certification" },
+  { id: "cert-20", type: "single", title: "SAFe 5 Agilist", organisation: "Scaled Agile", date: "2020-06", description: "Scaled Agile Certification", icon: "Certification" },
+  // Speaking Events
+  { id: "spk-1", type: "single", title: "From Salesforce to Agentforce: The good, the bad, the future", organisation: "Polish Dreamin’", date: "2025-03", description: "Session at Polish Dreamin’ 2025 Conference. In-Person Session with Agentforce quick start.", icon: "SpeakingEvent" },
+  { id: "spk-2", type: "single", title: "From Salesforce to Agentforce: New Agentic World", organisation: "Salesforce Trailblazer Community", date: "2024-12", description: "Session at Warsaw Salesforce Architect Trailblazer Community Group Meetup.", icon: "SpeakingEvent" },
+  { id: "spk-3", type: "single", title: "Salesforce Data in SFMC Journey Builder", organisation: "Salesforce Trailblazer Community", date: "2024-09", description: "Webinar focused on pros, cons and best practices of using Salesforce Data in SFMC Journey Builder.", icon: "SpeakingEvent" },
+  { id: "spk-4", type: "single", title: "Explore Interaction Studio: Server-Side Code Tips and Tricks", organisation: "Salesforce Connections", date: "2023-06", description: "Session at Salesforce Connections ’23 Conference in Chicago.", icon: "SpeakingEvent" },
+  { id: "spk-5", type: "single", title: "Salesforce Marketing Cloud Account Architecture", organisation: "Webinar", date: "2023-01", description: "Webinar on Business Unit architecture, Single-Org vs Multi-Org patterns and deliverability 101.", icon: "SpeakingEvent" },
+  { id: "spk-6", type: "single", title: "When AppExchange is right and what to do when it's wrong", organisation: "Webinar", date: "2022-10", description: "Webinar focused on building Cloud Page Apps.", icon: "SpeakingEvent" },
+  { id: "spk-7", type: "single", title: "Architecting Web Solutions in Salesforce Marketing Cloud", organisation: "Webinar", date: "2022-06", description: "Webinar focused on Web Studio Architectural Patterns.", icon: "SpeakingEvent" },
+  { id: "spk-8", type: "single", title: "Debugging Salesforce Marketing Cloud: SSJS & AMPScript", organisation: "SForce Summit", date: "2022-04", description: "Session at SForce Summit Poland 2022 Conference.", icon: "SpeakingEvent" },
+  { id: "spk-9", type: "single", title: "Code Resource – Power of Possibilities", organisation: "SForce Summit", date: "2021-11", description: "Session at SForce Summit Poland 2021 Conference.", icon: "SpeakingEvent" },
+  // Education
+  { id: "edu-1", type: "period", title: "Agile Project Management Professional Certificate", organisation: "University of Maryland", startDate: "2018-11", endDate: "2019-07", description: "Applied Scrum, Agile Planning and Leadership.", icon: "Education", tags: ["Project Management", "Agile"] },
+  { id: "edu-2", type: "period", title: "Data Science Professional Certificate", organisation: "UC Berkeley", startDate: "2018-04", endDate: "2018-10", description: "Computational Thinking with Python, Prediction and Machine Learning.", icon: "Education", tags: ["Data Science", "Python"] },
+  { id: "edu-3", type: "period", title: "Master of Law", organisation: "University of Warsaw", startDate: "2011-10", endDate: "2017-09", description: "Thesis: Protection of personal data in e-marketing under GDPR.", icon: "Education", tags: ["Law", "GDPR"] },
+  { id: "edu-4", type: "period", title: "Bachelor of Journalism", organisation: "University of Warsaw", startDate: "2009-10", endDate: "2012-09", description: "Thesis: Blog and the legal definition of the term press.", icon: "Education", tags: ["Journalism"] },
+  // Organisations, Memberships & Awards
+  { id: "org-1", type: "period", title: "Salesforce Trailblazer Community Forum Ambassadors", organisation: "Salesforce", startDate: "2024-03", endDate: "Present", description: "Salesforce Ambassador Role.", icon: "Organisation" },
+  { id: "org-2", type: "period", title: "Salesforce MVP", organisation: "Salesforce", startDate: "2022-02", endDate: "Present", description: "Salesforce MVP Recognition.", icon: "Promotion" },
+  { id: "org-3", type: "period", title: "Salesforce Marketing Champions", organisation: "Salesforce", startDate: "2021-05", endDate: "Present", description: "Salesforce Marketing Champion.", icon: "Promotion" },
+  { id: "org-4", type: "period", title: "Salesforce Credentials Ambassadors", organisation: "Salesforce", startDate: "2022-08", endDate: "Present", description: "Salesforce Ambassador Role.", icon: "Organisation" },
+  { id: "org-5", type: "period", title: "MC Personalization Technical Advisory Board", organisation: "Salesforce", startDate: "2022-10", endDate: "2024-02", description: "Salesforce MC Personalization Advisory.", icon: "Organisation" }
+];
+
+
+<Timeline events={timelineEvents} />

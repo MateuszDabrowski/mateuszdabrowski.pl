@@ -1,0 +1,153 @@
+.timelineWrapper {
+  overflow: hidden;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.timelineContainer {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+/* Vertical line */
+.timelineContainer::before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  background-color: var(--ifm-color-primary);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -2px;
+  border-radius: 4px;
+  z-index: -1;
+}
+
+.itemContainer {
+  padding: 10px 40px;
+  position: relative;
+  background-color: transparent;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.leftSide {
+  align-self: flex-start;
+}
+
+.rightSide {
+  align-self: flex-end;
+}
+
+.cardContent {
+  background-color: var(--ifm-card-background-color) !important;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid var(--ifm-color-emphasis-200); /* Adds a subtle border for contrast in dark/light mode */
+}
+
+.cardContent:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--ifm-global-shadow-lw) !important;
+}
+
+.iconContainer {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background-color: #ffffff !important;
+  border: 4px solid var(--ifm-color-primary) !important;
+  color: var(--ifm-color-primary) !important;
+  top: 15px; /* Offset to align with the card title reasonably well */
+  border-radius: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 0 0 4px #ffffff; /* Cut out effect */
+}
+
+:global([data-theme='dark']) .iconContainer {
+  background-color: var(--ifm-background-color) !important;
+  box-shadow: 0 0 0 4px var(--ifm-background-color);
+}
+
+/* Fix baseline offset for SVG to ensure perfect pixel centering */
+.iconContainer svg {
+  display: block;
+  margin: auto;
+}
+
+/* Positioning the icon for the left side (project) */
+.leftSide .iconContainer {
+  right: -24px;
+}
+
+/* Positioning the icon for the right side (single event) */
+.rightSide .iconContainer {
+  left: -24px;
+}
+
+.organisation {
+  font-size: 0.95rem;
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 500;
+  margin-top: 0.2rem;
+  margin-bottom: 0;
+}
+
+.eventDate {
+  font-size: 0.9em;
+  color: var(--ifm-color-emphasis-600);
+  font-weight: 600;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Mobile responsive styling */
+@media screen and (max-width: 768px) {
+  .timelineContainer::before {
+    left: 24px; /* Move vertical line to the left on mobile */
+  }
+
+  .itemContainer {
+    width: 100%;
+    padding-left: 60px;
+    padding-right: 0px;
+    align-self: stretch !important;
+  }
+
+  .iconContainer {
+    left: 0 !important;
+    right: auto !important;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    background-color: #ffffff !important;
+  }
+
+  :global([data-theme='dark']) .iconContainer {
+    background-color: var(--ifm-background-color) !important;
+  }
+
+  /* Adjust clipping mask for mobile */
+  .leftSide .iconContainer,
+  .rightSide .iconContainer {
+    left: 4px !important;
+  }
+  
+  .timelineContainer::before {
+    left: 24px; /* 4px (icon offset) + 20px (half icon width) */
+  }
+}
