@@ -1,21 +1,78 @@
+/* ============================================================
+   Timeline Component Styles
+   ============================================================ */
+
+/* --- Outer wrapper --- */
 .timelineWrapper {
   overflow: hidden;
   padding: 2rem 0;
   width: 100%;
 }
 
+/* --- Filter bar --- */
+.filterContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.filterButton {
+  background-color: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  color: var(--ifm-color-emphasis-700);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.filterButton:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  transform: translateY(-2px);
+}
+
+.filterButtonActive {
+  background-color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+  color: #ffffff;
+}
+
+.filterButtonActive:hover {
+  background-color: var(--ifm-color-primary-dark);
+  color: #ffffff;
+}
+
+.noEventsMsg {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-top: 3rem;
+}
+
+/* --- Timeline container --- */
 .timelineContainer {
   position: relative;
   max-width: 1000px;
   margin: 0 auto;
   padding: 0;
   list-style-type: none;
-  display: flex;
-  flex-direction: column;
+  display: block;
   z-index: 1;
 }
 
-/* Vertical line */
+/* Clearfix for floated children */
+.timelineContainer::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Central vertical line */
 .timelineContainer::before {
   content: '';
   position: absolute;
@@ -29,6 +86,7 @@
   z-index: -1;
 }
 
+/* --- Individual timeline item --- */
 .itemContainer {
   padding: 10px 40px;
   position: relative;
@@ -37,18 +95,26 @@
   box-sizing: border-box;
 }
 
+/*
+ * Float-based parallel layout:
+ * Each side only clears itself, allowing left and right items
+ * to pack tightly in parallel and reduce vertical whitespace.
+ */
 .leftSide {
-  align-self: flex-start;
+  float: left;
+  clear: left;
 }
 
 .rightSide {
-  align-self: flex-end;
+  float: right;
+  clear: right;
 }
 
+/* --- Card --- */
 .cardContent {
   background-color: var(--ifm-card-background-color) !important;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  border: 1px solid var(--ifm-color-emphasis-200); /* Adds a subtle border for contrast in dark/light mode */
+  border: 1px solid var(--ifm-color-emphasis-200);
 }
 
 .cardContent:hover {
@@ -56,44 +122,47 @@
   box-shadow: var(--ifm-global-shadow-lw) !important;
 }
 
+/* --- Icon (circular badge beside the timeline line) --- */
 .iconContainer {
   position: absolute;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   background-color: #ffffff !important;
-  border: 4px solid var(--ifm-color-primary) !important;
+  border: 3px solid var(--ifm-color-primary) !important;
   color: var(--ifm-color-primary) !important;
-  top: 15px; /* Offset to align with the card title reasonably well */
+  top: 15px;
   border-radius: 50%;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  box-shadow: 0 0 0 4px #ffffff; /* Cut out effect */
+  font-size: 1.2rem;
+  box-shadow: 0 0 0 3px #ffffff;
 }
 
 :global([data-theme='dark']) .iconContainer {
   background-color: var(--ifm-background-color) !important;
-  box-shadow: 0 0 0 4px var(--ifm-background-color);
+  box-shadow: 0 0 0 3px var(--ifm-background-color);
 }
 
-/* Fix baseline offset for SVG to ensure perfect pixel centering */
 .iconContainer svg {
   display: block;
   margin: auto;
 }
 
-/* Positioning the icon for the left side (project) */
+/*
+ * Icons sit on opposite sides of the central line so they
+ * never overlap, regardless of how tightly cards pack vertically.
+ */
 .leftSide .iconContainer {
-  right: -24px;
+  right: 6px;
 }
 
-/* Positioning the icon for the right side (single event) */
 .rightSide .iconContainer {
-  left: -24px;
+  left: 6px;
 }
 
+/* --- Card content --- */
 .organisation {
   font-size: 0.95rem;
   color: var(--ifm-color-emphasis-700);
@@ -115,21 +184,23 @@
   flex-wrap: wrap;
 }
 
-/* Mobile responsive styling */
+/* ============================================================
+   Mobile: single-column layout
+   ============================================================ */
 @media screen and (max-width: 768px) {
   .timelineContainer::before {
-    left: 24px; /* Move vertical line to the left on mobile */
+    left: 24px;
   }
 
   .itemContainer {
     width: 100%;
     padding-left: 60px;
-    padding-right: 0px;
-    align-self: stretch !important;
+    padding-right: 0;
+    float: none !important;
+    clear: both !important;
   }
 
   .iconContainer {
-    left: 0 !important;
     right: auto !important;
     width: 40px;
     height: 40px;
@@ -141,13 +212,8 @@
     background-color: var(--ifm-background-color) !important;
   }
 
-  /* Adjust clipping mask for mobile */
   .leftSide .iconContainer,
   .rightSide .iconContainer {
     left: 4px !important;
-  }
-  
-  .timelineContainer::before {
-    left: 24px; /* 4px (icon offset) + 20px (half icon width) */
   }
 }
