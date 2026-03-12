@@ -110,6 +110,12 @@
   clear: right;
 }
 
+/* Force a fresh baseline when the date changes,
+   so same-date items on opposite sides start at the same height. */
+.newRow {
+  clear: both !important;
+}
+
 /* --- Card --- */
 .cardContent {
   background-color: var(--ifm-card-background-color) !important;
@@ -122,37 +128,29 @@
   box-shadow: var(--ifm-global-shadow-lw) !important;
 }
 
-/* --- Icon (circular badge beside the timeline line) --- */
+/* --- Icon (bare SVG beside the timeline line) --- */
 .iconContainer {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  background-color: #ffffff !important;
-  border: 3px solid var(--ifm-color-primary) !important;
-  color: var(--ifm-color-primary) !important;
-  top: 15px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  color: var(--ifm-color-primary);
+  top: 18px;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  box-shadow: 0 0 0 3px #ffffff;
-}
-
-:global([data-theme='dark']) .iconContainer {
-  background-color: var(--ifm-background-color) !important;
-  box-shadow: 0 0 0 3px var(--ifm-background-color);
 }
 
 .iconContainer svg {
   display: block;
-  margin: auto;
+  width: 20px;
+  height: 20px;
 }
 
 /*
  * Icons sit on opposite sides of the central line so they
  * never overlap, regardless of how tightly cards pack vertically.
+ * A small horizontal connector line bridges from the main line to the icon.
  */
 .leftSide .iconContainer {
   right: 6px;
@@ -160,6 +158,28 @@
 
 .rightSide .iconContainer {
   left: 6px;
+}
+
+/* Horizontal connector: icon → timeline line (stays on icon's side only) */
+.leftSide .iconContainer::before,
+.rightSide .iconContainer::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 2.5px;
+  margin-top: -1.25px;
+  background-color: var(--ifm-color-primary);
+  z-index: -1;
+}
+
+.leftSide .iconContainer::before {
+  left: 100%;
+  width: 4px;
+}
+
+.rightSide .iconContainer::before {
+  right: 100%;
+  width: 4px;
 }
 
 /* --- Card content --- */
@@ -202,18 +222,17 @@
 
   .iconContainer {
     right: auto !important;
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    background-color: #ffffff !important;
-  }
-
-  :global([data-theme='dark']) .iconContainer {
-    background-color: var(--ifm-background-color) !important;
+    width: 24px;
+    height: 24px;
   }
 
   .leftSide .iconContainer,
   .rightSide .iconContainer {
-    left: 4px !important;
+    left: 12px !important;
+  }
+
+  .leftSide .iconContainer::before,
+  .rightSide .iconContainer::before {
+    display: none;
   }
 }

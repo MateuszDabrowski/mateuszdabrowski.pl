@@ -2,15 +2,12 @@ import React, { useState, useMemo } from 'react';
 import TimelineItem from './TimelineItem';
 import styles from './Timeline.module.css';
 
-/** Human-readable labels for icon-based filter buttons. */
-const FILTER_LABELS = {
-  Project: 'Project',
-  Position: 'Position',
-  Certification: 'Certification',
-  SpeakingEvent: 'Public Speaking',
-  Education: 'Education',
-  Organisation: 'Organisation',
-};
+import { FILTER_LABELS } from './constants';
+
+/** Extract YYYY-MM date string used for sorting and row grouping. */
+function getEffectiveDate(event) {
+  return (event.date || event.startDate || '').slice(0, 7);
+}
 
 function Timeline({ events = [] }) {
   /* Derive unique event types (by icon) for the filter bar. */
@@ -70,9 +67,21 @@ function Timeline({ events = [] }) {
           className={styles.timelineContainer}
           aria-label="Professional Experience Timeline"
         >
-          {visibleEvents.map((event, index) => (
-            <TimelineItem key={event.id || index} event={event} />
-          ))}
+          {visibleEvents.map((event, index) => {
+            /* Force a fresh row (clear:both) when the date changes,
+               so same-date items on opposite sides align vertically. */
+            const prevDate = index > 0 ? getEffectiveDate(visibleEvents[index - 1]) : null;
+            const currDate = getEffectiveDate(event);
+            const newRow = index === 0 || currDate !== prevDate;
+
+            return (
+              <TimelineItem
+                key={event.id || index}
+                event={event}
+                newRow={newRow}
+              />
+            );
+          })}
         </ol>
       ) : (
         <p className={styles.noEventsMsg}>

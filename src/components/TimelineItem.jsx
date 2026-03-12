@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Timeline.module.css';
 import { Icons } from './Icons';
+import { FILTER_LABELS } from './constants';
 
 /**
  * Calculate a human-readable duration string between two dates.
@@ -44,13 +45,14 @@ function formatDate(event, isPeriod) {
   return event.date || '';
 }
 
-function TimelineItem({ event }) {
+function TimelineItem({ event, newRow }) {
   const isPeriod = event.type === 'period';
   const sideClass = isPeriod ? styles.leftSide : styles.rightSide;
   const IconComponent = Icons[event.icon] || Icons.Default;
+  const typeLabel = FILTER_LABELS[event.icon] || event.icon;
 
   return (
-    <li className={`${styles.itemContainer} ${sideClass}`}>
+    <li className={`${styles.itemContainer} ${sideClass} ${newRow ? styles.newRow : ''}`}>
       {/* Icon beside the central timeline line */}
       <div className={styles.iconContainer} aria-hidden="true">
         <IconComponent />
@@ -80,20 +82,21 @@ function TimelineItem({ event }) {
           <p>{event.description}</p>
         </div>
 
-        {event.tags?.length > 0 && (
-          <div className="card__footer">
-            <div className={styles.tagsContainer}>
-              {event.tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="badge badge--secondary margin-right--sm margin-bottom--sm"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+        <div className="card__footer">
+          <div className={styles.tagsContainer}>
+            <span className="badge badge--primary margin-right--sm margin-bottom--sm">
+              {typeLabel}
+            </span>
+            {event.tags?.map((tag, idx) => (
+              <span
+                key={idx}
+                className="badge badge--secondary margin-right--sm margin-bottom--sm"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
-        )}
+        </div>
       </article>
     </li>
   );
