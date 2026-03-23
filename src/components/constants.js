@@ -7,3 +7,6 @@ export const FILTER_LABELS = {
   Education: 'Education',
   Organisation: 'Organisation',
 };
+
+/** Icon types hidden by default in the filter bar. */
+export const HIDDEN_BY_DEFAULT = ['Certification', 'Education'];

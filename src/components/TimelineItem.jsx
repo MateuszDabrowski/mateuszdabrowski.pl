@@ -84,13 +84,21 @@ function TimelineItem({ event, newRow }) {
 
         <div className="card__footer">
           <div className={styles.tagsContainer}>
-            <span className="badge badge--primary margin-right--sm margin-bottom--sm">
+            <span className={`${styles.tagBadge} ${styles.tagType} margin-right--sm margin-bottom--sm`}>
               {typeLabel}
             </span>
+            {event.technology?.map((tech, idx) => (
+              <span
+                key={`tech-${idx}`}
+                className={`${styles.tagBadge} ${styles.tagTech} margin-right--sm margin-bottom--sm`}
+              >
+                {tech}
+              </span>
+            ))}
             {event.tags?.map((tag, idx) => (
               <span
                 key={idx}
-                className="badge badge--secondary margin-right--sm margin-bottom--sm"
+                className={`${styles.tagBadge} ${styles.tagSkill} margin-right--sm margin-bottom--sm`}
               >
                 {tag}
               </span>
