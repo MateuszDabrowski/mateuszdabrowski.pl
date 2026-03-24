@@ -3,6 +3,7 @@ id: about-me
 title: About Me
 description: Learn more about me and my journey in the world of Salesforce and marketing.
 image: img/og/og-image-about-me.png
+unlisted: true
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
@@ -18,59 +19,124 @@ export const timelineEvents = [
   // ──────────────────────────────────────────────────────────
   // PwC — individual role entries
   {
-    id: "pwc-4",
+    id: "pwc-rtcdp-non-profit",
     type: "period",
-    title: "Acting Marketing Automation Practice Leader",
+    title: "Implemented Adobe RT-CDP for Non-Profit Industry",
     organisation: "PwC",
-    startDate: "2025-08",
+    startDate: "2025-11",
     endDate: "Present",
-    description: "Leading the Marketing Automation Practice with 30+ Salesforce & Adobe experts. Managing sales pipeline, recruitment, staffing, escalations, and delivering coding & AI best practices.",
+    description: "Coordinated Adobe RT-CDP development for personalized Use Cases as a Tech Lead. Configured Sources, Data Distiller Queries, Schemas, Audiences, and Destinations to activate data to Adobe Campaign. Leveraged Adobe Journey Optimizer to establish behavioral data feedback loops.",
     icon: "Project",
-    tags: ["Team Leadership", "Salesforce", "Adobe", "Agentforce"],
+    tags: ["Tech Lead", "Architecture", "Data Activation"],
+    technology: ["Adobe RT-CDP", "Adobe Campaign", "Adobe Journey Optimizer"]
   },
   {
-    id: "pwc-3",
+    id: "pwc-agentforce-knowledge",
     type: "period",
-    title: "Marketing Automation Manager",
+    title: "Shared Agentforce knowledge for PwC Firms",
     organisation: "PwC",
-    startDate: "2023-03",
-    endDate: "2025-07",
-    description: "Architected SFMC for Manufacturing (multi-stream, Marketing Cloud Connect, Web Studio). Led global Agentforce discovery & enablement. Implemented Adobe RT-CDP for Non-Profit industry.",
+    startDate: "2024-09",
+    endDate: "2025-10",
+    description: "Led discovery and enablement of Salesforce Agentforce for global teams, focusing on Knowledge-based Agents. Supported Agentforce World Tour demos and facilitated offerings that secured initial global implementations. Delivered hackathons and led a cross-platform Agentforce x Workday PoC.",
     icon: "Project",
-    tags: ["SFMC Architect", "Agentforce", "Adobe RT-CDP"],
+    tags: ["Enablement", "AI & Automation", "PoC"],
+    technology: ["Salesforce Agentforce", "Workday"]
   },
   {
-    id: "pwc-2",
+    id: "pwc-sfmc-manufacturing",
     type: "period",
-    title: "Marketing Cloud Architect & Tech Lead",
+    title: "Implemented Salesforce Marketing Cloud for Manufacturing Industry",
+    organisation: "PwC",
+    startDate: "2023-09",
+    endDate: "2024-11",
+    description: "Managed data model requirements and dependencies across multiple Build Streams. Architected cross-cloud data flows for profile and consent models using Marketing Cloud Connect with Sales and Service Clouds. Designed a closed-loop, real-time consent management process to maintain a golden record in Salesforce CRM.",
+    icon: "Project",
+    tags: ["Architecture", "Data Privacy", "Implementation"],
+    technology: ["Salesforce Marketing Cloud", "Marketing Cloud Connect", "Sales Cloud", "Service Cloud", "Web Studio"]
+  },
+  {
+    id: "pwc-is-consumer-electronics",
+    type: "period",
+    title: "Improved and extended implementation of Interaction Studio for a Consumer Electronics Retailer",
+    organisation: "PwC",
+    startDate: "2022-08",
+    endDate: "2023-09",
+    description: "Audited and refactored the existing implementations of Interaction Studio and Marketing Cloud. Optimized Sitemaps, Web Campaigns, and Einstein Recipes. Extended the Catalog with custom objects to unlock advanced features for Machine Learning models.",
+    icon: "Project",
+    tags: ["Audit & Refactoring", "Machine Learning", "Personalization"],
+    technology: ["Interaction Studio", "Salesforce Marketing Cloud", "Einstein Recipes"]
+  },
+  {
+    id: "pwc-sfmc-pharmaceutical",
+    type: "period",
+    title: "Implemented two Salesforce Marketing Clouds from scratch for Pharmaceutical Industry",
+    organisation: "PwC",
+    startDate: "2021-07",
+    endDate: "2022-08",
+    description: "Served as Tech Lead coordinating SFMC development for a 50+ Business Units project. Architected multi-level consent and contact data models connected to Health Cloud via Marketing Cloud Connect. Delivered 50+ Preference Centres, a privacy-first contact deletion process, and a custom multi-country deployer solution.",
+    icon: "Project",
+    tags: ["Tech Lead", "Architecture", "Data Privacy"],
+    technology: ["Salesforce Marketing Cloud", "Marketing Cloud Connect", "Health Cloud"]
+  },
+  {
+    id: "pwc-is-personal-care",
+    type: "period",
+    title: "Implemented Interaction Studio for Personal Care Industry",
     organisation: "PwC",
     startDate: "2021-05",
-    endDate: "2023-03",
-    description: "Built custom Email Translation App (SFMC + Smartling APIs). Implemented Interaction Studio for Personal Care. Tech Led 50+ BU SFMC implementation for Pharma with cross-cloud consent management.",
+    endDate: "2021-07",
+    description: "Engineered a hybrid Sitemap using ETL and GTM. Developed Overlay Web Templates with custom engagement triggers and Einstein Decisions Web Templates featuring text-based ML experiences. Created Notification Server-Side Templates and a custom Interaction Cookie Expiry solution.",
     icon: "Project",
-    tags: ["SFMC", "Interaction Studio", "Cloud Apps"],
+    tags: ["Implementation", "Machine Learning", "Personalization"],
+    technology: ["Interaction Studio", "ETL", "Google Tag Manager"]
   },
   {
-    id: "pwc-1",
+    id: "pwc-email-app-travel",
     type: "period",
-    title: "Senior Marketing Cloud Consultant & Developer",
+    title: "Implemented a custom Email Translation App for the Travel Industry",
     organisation: "PwC",
-    startDate: "2020-05",
+    startDate: "2021-05",
+    endDate: "2021-07",
+    description: "Developed a custom Cloud App using the MVC pattern and SLDS to manage email translations. Integrated the SFMC Content Builder REST API to retrieve email content and the Smartling REST API to process translations. Automated the generation of translated and secured email copies within a minute of approval.",
+    icon: "Project",
+    tags: ["Custom App Development", "API Integration", "Automation"],
+    technology: ["Salesforce Marketing Cloud", "Content Builder API", "Smartling API", "SLDS"]
+  },
+  {
+    id: "pwc-behavioral-personal-care",
+    type: "period",
+    title: "Implemented Behavioral Triggers from scratch for Personal Care Industry",
+    organisation: "PwC",
+    startDate: "2020-10",
+    endDate: "2021-02",
+    description: "Configured Salesforce Marketing Cloud and deployed Collect.js scripts. Engineered a custom Behavioral Trigger Content Block for email. Shared best practices for data layer implementation and custom content blocks across teams.",
+    icon: "Project",
+    tags: ["Implementation", "Enablement", "Email Marketing"],
+    technology: ["Salesforce Marketing Cloud", "Collect.js"]
+  },
+  {
+    id: "pwc-sfmc-education",
+    type: "period",
+    title: "Implemented Salesforce Marketing Cloud from scratch for Education Industry",
+    organisation: "PwC",
+    startDate: "2020-08",
     endDate: "2021-05",
-    description: "Implemented SFMC from scratch for Education (multi-org, Mobile Studio, Preference Center). Built Behavioral Triggers for Personal Care. Improved Salesforce Digital Enablement App.",
+    description: "Implemented an end-to-end multi-org SFMC environment connected to Education Cloud. Designed automated data synchronization and deduplication using SQL and SSJS in Automation Studio. Built custom keyword-specific subscription management in Mobile Studio and developed a unified Preference Center with a custom segmentation app.",
     icon: "Project",
-    tags: ["SFMC", "Mobile Studio", "SQL", "SSJS"],
+    tags: ["Implementation", "Architecture", "Mobile Marketing"],
+    technology: ["Salesforce Marketing Cloud", "Marketing Cloud Connect", "Education Cloud", "Automation Studio", "Mobile Studio", "SQL", "SSJS"]
   },
   {
-    id: "pwc-0",
+    id: "pwc-sfmc-energy",
     type: "period",
-    title: "Marketing Cloud Consultant & Developer",
+    title: "Extended existing SFMC implementation for Energy Industry client",
     organisation: "PwC",
-    startDate: "2020-02",
-    endDate: "2020-04",
-    description: "Extended SFMC for Energy industry (Forms, Double Opt-In, Error Logging). Built SFMC Apps: Form Generator and Campaign Manager. Created MobilePush analysis tool (Python).",
+    startDate: "2020-04",
+    endDate: "2020-09",
+    description: "Developed Form Assets in Web Studio and engineered a Universal Form Processing solution using SSJS to significantly reduce implementation time. Designed a robust, GDPR-compliant Double Opt-In process across Web and Email Studios. Implemented Automation Error Logging using SSJS to streamline troubleshooting.",
     icon: "Project",
-    tags: ["SFMC", "SSJS", "Python", "Cloud Apps"],
+    tags: ["Process Optimization", "Data Privacy", "Custom App Development"],
+    technology: ["Salesforce Marketing Cloud", "Web Studio", "Email Studio", "Journey Builder", "Automation Studio", "SSJS", "AMPScript", "HTML", "CSS", "JS", "SQL"]
   },
   // Sanofi
   {
@@ -80,9 +146,10 @@ export const timelineEvents = [
     organisation: "Sanofi",
     startDate: "2019-01",
     endDate: "2020-01",
-    description: "Managed Global Campaign Demand & Blueprint Process, Deliverability Strategy, SAFe adoption, MarTech capability assessment, and cross-team collaboration.",
+    description: "Managed Global Campaign Demand and Blueprint Processes. Designed, piloted, and maintained comprehensive deliverability strategies. Led SAFe adoption, assessed MarTech capabilities, and optimized business processes using Atlassian Jira and Microsoft Sharepoint.",
     icon: "Project",
-    tags: ["Adobe Campaign Classic", "Jira", "SAFe", "Strategy"],
+    tags: ["Deliverability", "Agile & SAFe", "Enablement"],
+    technology: ["Adobe Campaign Classic", "Atlassian Jira", "Atlassian Confluence", "250ok", "Microsoft Sharepoint"]
   },
   // Self-employed
   {
@@ -92,9 +159,10 @@ export const timelineEvents = [
     organisation: "Mateusz Dąbrowski (Self-employed)",
     startDate: "2019-01",
     endDate: "Present",
-    description: "Sharing passion for Salesforce Marketing Cloud, Marketing Automation, E-Mail Marketing, Lead Generation, MarTech Process Automation and APIs.",
+    description: "Delivered independent consulting focused on Marketing Automation, lead generation, and email marketing strategies. Shared deep technical expertise regarding Salesforce Marketing Cloud, MarTech process automation, and complex API integrations.",
     icon: "Project",
-    tags: ["SFMC", "MarTech", "APIs"],
+    tags: ["Consulting", "Process Optimization", "API Integration"],
+    technology: ["Salesforce Marketing Cloud", "APIs"]
   },
   {
     id: "self-1",
@@ -103,9 +171,10 @@ export const timelineEvents = [
     organisation: "Mateusz Dąbrowski (Self-employed)",
     startDate: "2016-10",
     endDate: "2018-12",
-    description: "Supervised MA best practices (CoE), lead scoring models, A/B testing, GDPR subscription flows, custom OBIEE + Python reports, and full lifecycle email campaigns.",
+    description: "Supervised Marketing Automation Centre of Excellence best practices and cross-departmental projects. Engineered custom lead scoring models, full lifecycle campaigns, and rigorous A/B testing methodologies. Developed GDPR-compliant subscription flows and built custom reports using OBIEE and Python.",
     icon: "Project",
-    tags: ["Oracle Eloqua", "Python", "A/B Testing", "GDPR"],
+    tags: ["CoE Leadership", "Analytics & Reporting", "Data Privacy"],
+    technology: ["Oracle Eloqua", "Oracle Profiler", "Oracle OBIEE Analyzer", "Python", "HTML", "CSS", "JS", "MJML", "Sketch"]
   },
   // Wolters Kluwer
   {
@@ -115,16 +184,17 @@ export const timelineEvents = [
     organisation: "Wolters Kluwer S.A.",
     startDate: "2014-01",
     endDate: "2016-09",
-    description: "Digital marketing on legal and educational markets. Cross-division omnichannel marketing, LP editorial content, e-commerce project management, and webinar support.",
+    description: "Executed comprehensive digital marketing campaigns across legal and educational markets. Managed e-commerce projects and collaborated cross-divisionally to drive omnichannel marketing initiatives. Authored editorial content for landing pages and emails, and provided technical support for webinars.",
     icon: "Project",
     tags: ["Digital Marketing", "E-commerce", "Omnichannel"],
+    technology: ["Google Marketing Platform", "Webinars", "E-commerce"]
   },
   // ──────────────────────────────────────────────────────────
   // Positions / Awards (single → right side)
   // ──────────────────────────────────────────────────────────
-  { id: "pos-pwc-leader", type: "single", title: "Added Acting Marketing Automation Practice Leader role", organisation: "PwC", date: "2025-08", icon: "Position" },
+  { id: "pos-pwc-leader", type: "single", title: "Acting Marketing Automation Practice Leader role", organisation: "PwC", date: "2025-08", icon: "Position" },
   { id: "pos-pwc-manager", type: "single", title: "Promoted to Marketing Automation Manager", organisation: "PwC", date: "2023-03", icon: "Position" },
-  { id: "pos-pwc-team-lead", type: "single", title: "Added Team Lead role", organisation: "PwC", date: "2021-12", icon: "Position" },
+  { id: "pos-pwc-team-lead", type: "single", title: "Team Lead role", organisation: "PwC", date: "2021-12", icon: "Position" },
   { id: "pos-pwc-architect", type: "single", title: "Promoted to Marketing Cloud Architect", organisation: "PwC", date: "2021-05", icon: "Position" },
   { id: "pos-pwc-senior", type: "single", title: "Promoted to Senior Marketing Cloud Consultant", organisation: "PwC", date: "2020-05", icon: "Position" },
   { id: "pos-pwc-mid", type: "single", title: "Started as Marketing Cloud Consultant", organisation: "PwC", date: "2020-02", icon: "Position" },
@@ -221,7 +291,7 @@ export const timelineEvents = [
   {
     id: "org-1",
     type: "period",
-    title: "Salesforce Trailblazer Community Forum Ambassadors",
+    title: "Joined Salesforce Trailblazer Community Forum Ambassadors",
     organisation: "Salesforce",
     startDate: "2024-03",
     endDate: "Present",
@@ -231,7 +301,7 @@ export const timelineEvents = [
   {
     id: "org-2",
     type: "period",
-    title: "Salesforce Credentials Ambassadors",
+    title: "Joined Salesforce Credentials Ambassadors",
     organisation: "Salesforce",
     startDate: "2022-08",
     endDate: "Present",
@@ -241,7 +311,7 @@ export const timelineEvents = [
   {
     id: "org-3",
     type: "period",
-    title: "MC Personalization Technical Advisory Board",
+    title: "Joined MC Personalization Technical Advisory Board",
     organisation: "Salesforce",
     startDate: "2022-10",
     endDate: "2024-02",
@@ -251,7 +321,7 @@ export const timelineEvents = [
   {
     id: "org-4",
     type: "period",
-    title: "Salesforce MVP",
+    title: "Became Salesforce MVP",
     organisation: "Salesforce",
     startDate: "2022-02",
     endDate: "Present",
@@ -261,7 +331,7 @@ export const timelineEvents = [
   {
     id: "org-5",
     type: "period",
-    title: "Salesforce Marketing Champions",
+    title: "Became Salesforce Marketing Champion",
     organisation: "Salesforce",
     startDate: "2021-05",
     endDate: "Present",
@@ -271,7 +341,7 @@ export const timelineEvents = [
   {
     id: "org-6",
     type: "period",
-    title: "Marketing Automation Centre of Excellence (Lead)",
+    title: "Became Marketing Automation Centre of Excellence Lead",
     organisation: "Wolters Kluwer",
     startDate: "2018-05",
     endDate: "2018-12",
