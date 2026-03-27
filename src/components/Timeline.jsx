@@ -54,6 +54,47 @@ function Timeline({ events = [] }) {
     return <p>No events to display on the timeline.</p>;
   }
 
+  /*
+   * Build timeline elements: floated event items with year markers.
+   * Year markers appear AFTER all events of that year (marking the
+   * chronological start of the year in this reverse-chronological display).
+   */
+  const timelineElements = [];
+  let currentYear = null;
+
+  for (let i = 0; i < visibleEvents.length; i++) {
+    const event = visibleEvents[i];
+    const year = getEffectiveDate(event).slice(0, 4);
+
+    /* Track the current year — we'll insert its marker when we leave it. */
+    if (currentYear === null) {
+      currentYear = year;
+    }
+
+    /* When the year changes, insert a marker for the year we just finished. */
+    if (year !== currentYear) {
+      timelineElements.push(
+        <div key={`year-${currentYear}`} className={styles.yearMarker}>
+          <span className={styles.yearLabel}>{currentYear}</span>
+        </div>,
+      );
+      currentYear = year;
+    }
+
+    timelineElements.push(
+      <TimelineItem key={event.id || i} event={event} />,
+    );
+  }
+
+  /* Insert the final year marker at the very bottom. */
+  if (currentYear !== null) {
+    timelineElements.push(
+      <div key={`year-${currentYear}`} className={styles.yearMarker}>
+        <span className={styles.yearLabel}>{currentYear}</span>
+      </div>,
+    );
+  }
+
   return (
     <div className={styles.timelineWrapper}>
       {/* Filter bar */}
@@ -63,13 +104,11 @@ function Timeline({ events = [] }) {
           const n = eventTypes.length;
           if (n <= 3) return n;
           const maxCols = 5;
-          // Find column count (2..maxCols) that gives the most balanced rows
-          // (no single orphan, prefer equal row sizes)
           let best = Math.ceil(n / 2);
-          let bestDiff = n; // difference between full-row size and last-row size
+          let bestDiff = n;
           for (let cols = 2; cols <= Math.min(n, maxCols); cols++) {
             const remainder = n % cols;
-            if (remainder === 1) continue; // skip: would leave a single orphan
+            if (remainder === 1) continue;
             const diff = remainder === 0 ? 0 : cols - remainder;
             if (diff < bestDiff) {
               bestDiff = diff;
@@ -98,26 +137,13 @@ function Timeline({ events = [] }) {
 
       {/* Timeline */}
       {visibleEvents.length > 0 ? (
-        <ol
+        <div
           className={styles.timelineContainer}
+          role="list"
           aria-label="Professional Experience Timeline"
         >
-          {visibleEvents.map((event, index) => {
-            /* Force a fresh row (clear:both) when the date changes,
-               so same-date items on opposite sides align vertically. */
-            const prevDate = index > 0 ? getEffectiveDate(visibleEvents[index - 1]) : null;
-            const currDate = getEffectiveDate(event);
-            const newRow = index === 0 || currDate !== prevDate;
-
-            return (
-              <TimelineItem
-                key={event.id || index}
-                event={event}
-                newRow={newRow}
-              />
-            );
-          })}
-        </ol>
+          {timelineElements}
+        </div>
       ) : (
         <p className={styles.noEventsMsg}>
           No events match the selected filters.

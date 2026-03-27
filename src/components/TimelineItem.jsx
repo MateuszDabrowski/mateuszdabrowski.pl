@@ -45,14 +45,14 @@ function formatDate(event, isPeriod) {
   return event.date || '';
 }
 
-function TimelineItem({ event, newRow }) {
+function TimelineItem({ event }) {
   const isPeriod = event.type === 'period';
   const sideClass = isPeriod ? styles.leftSide : styles.rightSide;
   const IconComponent = Icons[event.icon] || Icons.Default;
   const typeLabel = FILTER_LABELS[event.icon] || event.icon;
 
   return (
-    <li className={`${styles.itemContainer} ${sideClass} ${newRow ? styles.newRow : ''}`}>
+    <div className={`${styles.itemContainer} ${sideClass}`} role="listitem">
       {/* Icon beside the central timeline line */}
       <div className={styles.iconContainer} aria-hidden="true">
         <IconComponent />
@@ -87,6 +87,14 @@ function TimelineItem({ event, newRow }) {
             <span className={`${styles.tagBadge} ${styles.tagType} margin-right--sm margin-bottom--sm`}>
               {typeLabel}
             </span>
+            {event.industry?.map((ind, idx) => (
+              <span
+                key={`ind-${idx}`}
+                className={`${styles.tagBadge} ${styles.tagIndustry} margin-right--sm margin-bottom--sm`}
+              >
+                {ind}
+              </span>
+            ))}
             {event.technology?.map((tech, idx) => (
               <span
                 key={`tech-${idx}`}
@@ -106,7 +114,7 @@ function TimelineItem({ event, newRow }) {
           </div>
         </div>
       </article>
-    </li>
+    </div>
   );
 }
 

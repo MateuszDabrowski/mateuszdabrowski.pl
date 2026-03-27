@@ -129,10 +129,25 @@
   clear: right;
 }
 
-/* Force a fresh baseline when the date changes,
-   so same-date items on opposite sides start at the same height. */
-.newRow {
-  clear: both !important;
+/* --- Year marker (clears both columns, acts as a sync point) --- */
+.yearMarker {
+  clear: both;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem 0;
+  position: relative;
+  z-index: 2;
+}
+
+.yearLabel {
+  background-color: var(--ifm-color-primary);
+  color: #ffffff;
+  padding: 4px 24px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
 }
 
 /* --- Card --- */
@@ -153,7 +168,7 @@
   width: 28px;
   height: 28px;
   color: var(--ifm-color-primary);
-  top: 18px;
+  bottom: 18px;
   z-index: 2;
   display: flex;
   align-items: center;
@@ -248,6 +263,18 @@
 .tagSkill {
   background-color: var(--ifm-color-secondary);
   border-color: var(--ifm-color-secondary);
+  color: var(--ifm-color-gray);
+}
+
+.tagIndustry {
+  background-color: var(--ifm-color-gray);
+  border-color: var(--ifm-color-gray);
+  color: var(--ifm-color-white);
+}
+
+:global(html[data-theme='dark']) .tagIndustry {
+  background-color: var(--ifm-color-white);
+  border-color: var(--ifm-color-white);
   color: var(--ifm-color-gray);
 }
 
