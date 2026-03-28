@@ -95,20 +95,20 @@ function TimelineItem({ event }) {
                 {ind}
               </span>
             ))}
+            {event.platform?.map((plat, idx) => (
+              <span
+                key={`plat-${idx}`}
+                className={`${styles.tagBadge} ${styles.tagPlatform} margin-right--sm margin-bottom--sm`}
+              >
+                {plat}
+              </span>
+            ))}
             {event.technology?.map((tech, idx) => (
               <span
                 key={`tech-${idx}`}
                 className={`${styles.tagBadge} ${styles.tagTech} margin-right--sm margin-bottom--sm`}
               >
                 {tech}
-              </span>
-            ))}
-            {event.tags?.map((tag, idx) => (
-              <span
-                key={idx}
-                className={`${styles.tagBadge} ${styles.tagSkill} margin-right--sm margin-bottom--sm`}
-              >
-                {tag}
               </span>
             ))}
           </div>
