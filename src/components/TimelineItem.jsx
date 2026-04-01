@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './Timeline.module.css';
+import styles from './AboutMe.module.css';
 import { Icons } from './Icons';
-import { FILTER_LABELS } from './constants';
+import { FILTER_LABELS } from './timelineUtils';
 
 /**
  * Calculate a human-readable duration string between two dates.
@@ -47,29 +47,28 @@ function formatDate(event, isPeriod) {
 
 function TimelineItem({ event }) {
   const isPeriod = event.type === 'period';
-  const sideClass = isPeriod ? styles.leftSide : styles.rightSide;
   const IconComponent = Icons[event.icon] || Icons.Default;
   const typeLabel = FILTER_LABELS[event.icon] || event.icon;
 
   return (
-    <div className={`${styles.itemContainer} ${sideClass}`} role="listitem">
-      {/* Icon beside the central timeline line */}
-      <div className={styles.iconContainer} aria-hidden="true">
-        <IconComponent />
-      </div>
-
+    <div className={styles.itemContainer} role="listitem">
       {/* Card */}
       <article className={`${styles.cardContent} card shadow--md`}>
         <div className="card__header">
-          <h3>
-            {event.url ? (
-              <a href={event.url} target="_blank" rel="noopener noreferrer">
-                {event.title}
-              </a>
-            ) : (
-              event.title
-            )}
-          </h3>
+          <div className={styles.cardTitleRow}>
+            <span className={styles.inlineIcon} aria-hidden="true">
+              <IconComponent />
+            </span>
+            <h3 id={event.id || undefined}>
+              {event.url ? (
+                <a href={event.url} target="_blank" rel="noopener noreferrer">
+                  {event.title}
+                </a>
+              ) : (
+                event.title
+              )}
+            </h3>
+          </div>
           {event.organisation && (
             <h4 className={styles.organisation}>{event.organisation}</h4>
           )}
@@ -79,7 +78,7 @@ function TimelineItem({ event }) {
         </div>
 
         <div className="card__body">
-          <p>{event.description}</p>
+          <p className={styles.descriptionText}>{event.description}</p>
         </div>
 
         <div className="card__footer">

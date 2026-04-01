@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import TimelineItem from './TimelineItem';
-import styles from './Timeline.module.css';
+import styles from './AboutMe.module.css';
 
 import { FILTER_LABELS } from './timelineUtils';
 
@@ -10,6 +10,8 @@ function getEffectiveDate(event) {
 }
 
 function Timeline({ events = [] }) {
+  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
+
   /* Derive unique event types (by icon) for the filter bar. */
   const eventTypes = useMemo(
     () => [...new Set(events.map((e) => e.icon).filter(Boolean))],
@@ -47,6 +49,16 @@ function Timeline({ events = [] }) {
         return acc;
       }, {}),
     [events],
+  );
+
+  const sortedIndustryTags = useMemo(
+    () => [...industryTags].sort((a, b) => (tagCounts[b] || 0) - (tagCounts[a] || 0)),
+    [industryTags, tagCounts]
+  );
+
+  const sortedPlatformTags = useMemo(
+    () => [...platformTags].sort((a, b) => (tagCounts[b] || 0) - (tagCounts[a] || 0)),
+    [platformTags, tagCounts]
   );
 
   /* All event types are selected by default. */
@@ -111,7 +123,7 @@ function Timeline({ events = [] }) {
    * Year markers appear AFTER all events of that year (marking the
    * chronological start of the year in this reverse-chronological display).
    */
-  const timelineElements = [];
+   const timelineElements = [];
   let currentYear = null;
 
   for (let i = 0; i < visibleEvents.length; i++) {
@@ -150,8 +162,16 @@ function Timeline({ events = [] }) {
   return (
     <div className={styles.timelineWrapper}>
       {/* Filter bar inside Accordion */}
-      <details className={styles.filtersAccordion}>
-        <summary>Filter Timeline</summary>
+      <details 
+        className={styles.filtersAccordion} 
+        open 
+        onToggle={(e) => setIsFiltersOpen(e.currentTarget.open)}
+      >
+        <summary className={styles.filtersSummary}>
+          <span className={styles.hideLabel}>
+            {isFiltersOpen ? 'Hide filters' : 'Show filters'}
+          </span>
+        </summary>
         
         <h4 className={styles.filterHeading}>Type</h4>
         <div
@@ -196,7 +216,7 @@ function Timeline({ events = [] }) {
           <>
             <h4 className={styles.filterHeading}>Industry</h4>
             <div className={styles.tagFilterContainer}>
-              {industryTags.map((tag) => {
+              {sortedIndustryTags.map((tag) => {
                 const isActive = activeTags.includes(tag);
                 return (
                   <button
@@ -220,7 +240,7 @@ function Timeline({ events = [] }) {
           <>
             <h4 className={styles.filterHeading}>Platform</h4>
             <div className={styles.tagFilterContainer}>
-              {platformTags.map((tag) => {
+              {sortedPlatformTags.map((tag) => {
                 const isActive = activeTags.includes(tag);
                 return (
                   <button

@@ -1,5 +1,10 @@
 /* ============================================================
-   Timeline Component Styles
+   About Me Page Styles
+   Timeline · IndustryExperience · PlatformExperience
+   ============================================================ */
+
+/* ============================================================
+   Timeline Component
    ============================================================ */
 
 /* --- Outer wrapper --- */
@@ -18,18 +23,43 @@
   border: 1px solid var(--ifm-color-emphasis-200);
 }
 
-.filtersAccordion summary {
-  font-weight: 700;
-  cursor: pointer;
-  margin-bottom: 0;
-  color: var(--ifm-color-emphasis-800);
-  user-select: none;
+.filtersSummary {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  color: var(--ifm-color-emphasis-800) !important;
+  user-select: none !important;
+  list-style: none !important;
+  padding: 0.5rem 0 !important;
 }
 
-.filtersAccordion[open] summary {
+/* Hide default markers more aggressively */
+.filtersSummary::marker,
+.filtersSummary::-webkit-details-marker {
+  display: none !important;
+}
+
+.hideLabel {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filtersAccordion[open] .filtersSummary {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* Ensure the label is always visible as it's our only toggle text now */
+.hideLabel {
+  display: inline-block !important;
 }
 
 .filterContainer {
@@ -203,17 +233,11 @@
   position: relative;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0;
+  padding: 40px 0 0; /* Space for the arrow at the top */
   list-style-type: none;
-  display: block;
+  display: flex;
+  flex-direction: column;
   z-index: 1;
-}
-
-/* Clearfix for floated children */
-.timelineContainer::after {
-  content: "";
-  display: table;
-  clear: both;
 }
 
 /* Central vertical line */
@@ -222,41 +246,56 @@
   position: absolute;
   width: 4px;
   background-color: var(--ifm-color-primary);
-  top: 0;
+  top: 15px; /* Start below the arrow head */
   bottom: 0;
   left: 50%;
   margin-left: -2px;
   border-radius: 4px;
-  z-index: -1;
+  z-index: 0;
+}
+
+/* Arrowhead pointing up at the very top */
+.timelineContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -10px; /* Center 20px wide arrow */
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid var(--ifm-color-primary);
+  z-index: 0;
 }
 
 /* --- Individual timeline item --- */
 .itemContainer {
-  padding: 10px 40px;
+  padding: 20px 0;
   position: relative;
   background-color: transparent;
-  width: 50%;
+  width: 100%;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
 /*
- * Float-based parallel layout:
- * Each side only clears itself, allowing left and right items
- * to pack tightly in parallel and reduce vertical whitespace.
+ * Full-width overlay layout:
+ * Items are strictly chronological and centered over the line.
  */
-.leftSide {
-  float: left;
-  clear: left;
+.leftSide, .rightSide {
+  padding: 0;
 }
 
-.rightSide {
-  float: right;
-  clear: right;
+.cardContent {
+  width: 90%;
+  max-width: 800px;
+  z-index: 1;
 }
 
 /* --- Year marker (clears both columns, acts as a sync point) --- */
 .yearMarker {
-  clear: both;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -287,58 +326,55 @@
   box-shadow: var(--ifm-global-shadow-lw) !important;
 }
 
-/* --- Icon (bare SVG beside the timeline line) --- */
-.iconContainer {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  color: var(--ifm-color-primary);
-  bottom: 18px;
-  z-index: 2;
+/* --- Inline Icon in Card Header --- */
+.cardTitleRow {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start; /* Better for multi-line titles */
+  gap: 16px;
+  margin-bottom: 0.75rem;
 }
 
-.iconContainer svg {
-  display: block;
+.cardTitleRow h3 {
+  margin: 0;
+  line-height: 1.3;
+  padding-top: 2px; /* Align with icon top */
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+}
+
+.inlineIcon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  background-color: transparent !important; /* Transparent as requested */
+  opacity: 1 !important;
+  border: 1.5px solid var(--ifm-color-primary-lighter) !important; /* Slightly thicker border to compensate for lack of BG */
+  color: var(--ifm-color-primary) !important;
+  border-radius: 8px !important;
+  flex-shrink: 0 !important;
+  box-shadow: none !important;
+  z-index: 2;
+}
+
+:global(html[data-theme='dark']) .inlineIcon {
+  border-color: rgba(var(--ifm-color-primary-rgb), 0.4) !important;
+}
+
+.inlineIcon svg {
   width: 20px;
   height: 20px;
 }
 
-/*
- * Icons sit on opposite sides of the central line so they
- * never overlap, regardless of how tightly cards pack vertically.
- * A small horizontal connector line bridges from the main line to the icon.
- */
-.leftSide .iconContainer {
-  right: 6px;
+/* Remove old icon container styles */
+.iconContainer {
+  display: none;
 }
 
+/* Remove old connector styles as cards now overlay the line directly */
+.leftSide .iconContainer,
 .rightSide .iconContainer {
-  left: 6px;
-}
-
-/* Horizontal connector: icon → timeline line (stays on icon's side only) */
-.leftSide .iconContainer::before,
-.rightSide .iconContainer::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  height: 2.5px;
-  margin-top: -1.25px;
-  background-color: var(--ifm-color-primary);
-  z-index: -1;
-}
-
-.leftSide .iconContainer::before {
-  left: 100%;
-  width: 4px;
-}
-
-.rightSide .iconContainer::before {
-  right: 100%;
-  width: 4px;
+  display: none;
 }
 
 /* --- Card content --- */
@@ -348,6 +384,10 @@
   font-weight: 500;
   margin-top: 0.2rem;
   margin-bottom: 0;
+}
+
+.descriptionText {
+  white-space: pre-line;
 }
 
 .eventDate {
@@ -411,31 +451,128 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .timelineContainer::before {
-    left: 24px;
+  .cardContent {
+    width: 95%;
   }
 
   .itemContainer {
-    width: 100%;
-    padding-left: 60px;
-    padding-right: 0;
-    float: none !important;
-    clear: both !important;
+    padding: 15px 0;
   }
+}
 
-  .iconContainer {
-    right: auto !important;
-    width: 24px;
-    height: 24px;
-  }
+/* ============================================================
+   Experience Cards (IndustryExperience & PlatformExperience)
+   ============================================================ */
 
-  .leftSide .iconContainer,
-  .rightSide .iconContainer {
-    left: 12px !important;
-  }
+.experienceContainer {
+  margin: 2rem 0;
+}
 
-  .leftSide .iconContainer::before,
-  .rightSide .iconContainer::before {
-    display: none;
+@media (min-width: 768px) {
+  .experienceContainer {
+    columns: 2;
+    column-gap: 1.5rem;
   }
+}
+
+.experienceCard {
+  background-color: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  padding: 1.5rem;
+  box-shadow: var(--ifm-global-shadow-lw);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+}
+
+.experienceCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+.experienceTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+}
+
+.metricsRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--ifm-color-emphasis-50);
+  padding: 1rem 0.5rem;
+  border-radius: 8px;
+  flex: 1;
+  text-align: center;
+}
+
+.metricValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--ifm-color-emphasis-900);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.metricLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tagsSection {
+  margin-top: auto;
+}
+
+.tagsLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.projectsContainer {
+  margin-bottom: 1.25rem;
+}
+
+.projectsList {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-800);
+  line-height: 1.4;
+}
+
+.projectItem {
+  margin-bottom: 0.25rem;
+}
+
+.cardTagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+.cardTagsContainer:last-child {
+  margin-bottom: 0;
 }

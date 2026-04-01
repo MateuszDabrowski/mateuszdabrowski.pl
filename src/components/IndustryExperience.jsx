@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import styles from './IndustryExperience.module.css';
+import styles from './AboutMe.module.css';
 
-import { calculateMergedDurationInYears } from './timelineUtils';
+import { calculateMergedDurationInYears, slugify } from './timelineUtils';
 
 export function IndustryExperience({ events = [] }) {
   const industryData = useMemo(() => {
@@ -12,9 +12,6 @@ export function IndustryExperience({ events = [] }) {
       if (!event.industry || !Array.isArray(event.industry)) return;
 
       event.industry.forEach((ind) => {
-        // Specifically filter out Professional Services
-        if (ind === 'Professional Services') return;
-
         if (!map.has(ind)) {
           map.set(ind, {
             name: ind,
@@ -35,14 +32,18 @@ export function IndustryExperience({ events = [] }) {
     // Compile into final calculated arrays
     return Array.from(map.values())
       .map((bucket) => {
-        let projectEvents = bucket.events.filter(e => e.icon === 'Project');
-        if (projectEvents.length === 0) projectEvents = bucket.events; // Fallback if no specific 'Project' icons
+        const projectsOnly = bucket.events.filter(e => e.icon === 'Project');
+        const certEvents = bucket.events.filter(e => e.icon === 'Certification');
 
-        const projects = projectEvents
+        const projects = projectsOnly
           .filter(e => e.title)
           .map(e => ({ title: e.title, date: new Date(e.startDate || 0).getTime() }))
           .sort((a, b) => b.date - a.date)
           .map(p => p.title);
+
+        const certifications = certEvents
+          .filter(e => e.title)
+          .map(e => e.title);
 
         const platformOrder = (p) => {
           const lower = p.toLowerCase();
@@ -61,15 +62,16 @@ export function IndustryExperience({ events = [] }) {
 
         return {
           name: bucket.name,
-          // Only count distinct "project" items for the Project count metric
-          totalProjects: bucket.events.filter(e => e.icon === 'Project').length || bucket.events.length,
-          yearsExperience: calculateMergedDurationInYears(bucket.events),
-          projects: [...new Set(projects)], // Deduplicate project titles
+          totalProjects: projectsOnly.length,
+          yearsExperience: calculateMergedDurationInYears(projectsOnly),
+          projects: [...new Set(projects)],
+          certifications,
           platforms: sortedPlatforms,
           technologies: Array.from(bucket.technologies).sort()
         };
       })
-      .sort((a, b) => b.yearsExperience - a.yearsExperience); // Sort by highest experience first
+      .filter(d => d.totalProjects > 0) // Only show industries with actual projects
+      .sort((a, b) => b.yearsExperience - a.yearsExperience);
   }, [events]);
 
   if (!industryData || industryData.length === 0) {
@@ -77,8 +79,8 @@ export function IndustryExperience({ events = [] }) {
   }
 
   const renderCard = (data) => (
-    <div key={data.name} className={styles.card}>
-      <h3 className={styles.title}>{data.name}</h3>
+    <div key={data.name} className={styles.experienceCard}>
+      <h3 id={slugify(data.name)} className={styles.experienceTitle}>{data.name}</h3>
       
       <div className={styles.metricsRow}>
         <div className={styles.metric}>
@@ -103,12 +105,23 @@ export function IndustryExperience({ events = [] }) {
           </div>
         )}
 
+        {data.certifications.length > 0 && (
+          <div className={styles.projectsContainer}>
+            <span className={styles.tagsLabel}>Certifications</span>
+            <ul className={styles.projectsList}>
+              {data.certifications.map((cert, idx) => (
+                <li key={idx} className={styles.projectItem}>{cert}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {data.platforms.length > 0 && (
           <>
             <span className={styles.tagsLabel}>Platforms</span>
-            <div className={styles.tagsContainer}>
+            <div className={styles.cardTagsContainer}>
               {data.platforms.map(plat => (
-                <span key={plat} className={styles.tagPlatform}>{plat}</span>
+                <span key={plat} className={`${styles.tagBadge} ${styles.tagPlatform}`}>{plat}</span>
               ))}
             </div>
           </>
@@ -117,9 +130,9 @@ export function IndustryExperience({ events = [] }) {
         {data.technologies.length > 0 && (
           <>
             <span className={styles.tagsLabel}>Technologies</span>
-            <div className={styles.tagsContainer}>
+            <div className={styles.cardTagsContainer}>
               {data.technologies.map(tech => (
-                <span key={tech} className={styles.tagTech}>{tech}</span>
+                <span key={tech} className={`${styles.tagBadge} ${styles.tagTech}`}>{tech}</span>
               ))}
             </div>
           </>
@@ -128,23 +141,10 @@ export function IndustryExperience({ events = [] }) {
     </div>
   );
 
-  const col1 = industryData.filter((_, i) => i % 2 === 0);
-  const col2 = industryData.filter((_, i) => i % 2 === 1);
-
   return (
-    <>
-      <div className={styles.container}>
-        {industryData.map(renderCard)}
-      </div>
-      <div className={styles.desktopMasonry}>
-        <div className={styles.masonryColumn}>
-          {col1.map(renderCard)}
-        </div>
-        <div className={styles.masonryColumn}>
-          {col2.map(renderCard)}
-        </div>
-      </div>
-    </>
+    <div className={styles.experienceContainer}>
+      {industryData.map(renderCard)}
+    </div>
   );
 }
 
