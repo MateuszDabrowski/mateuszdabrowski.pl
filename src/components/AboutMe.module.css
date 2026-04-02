@@ -1,20 +1,25 @@
-/* ============================================================
-   About Me Page Styles
-   Timeline · IndustryExperience · PlatformExperience
-   ============================================================ */
+/* ================================================================
+   AboutMe.module.css
+   Unified styles for the About Me page:
+     1. Timeline — filter bar, vertical line, event cards
+     2. Shared tag badges — used by both timeline and experience cards
+     3. Experience cards — IndustryExperience & PlatformExperience
+   ================================================================ */
 
-/* ============================================================
-   Timeline Component
-   ============================================================ */
+/* ================================================================
+   1. TIMELINE
+   ================================================================ */
 
-/* --- Outer wrapper --- */
+/* ── Outer wrapper ────────────────────────────────────────────── */
+
 .timelineWrapper {
   overflow: hidden;
   padding: 2rem 0;
   width: 100%;
 }
 
-/* --- Filter bar --- */
+/* ── Filter accordion ─────────────────────────────────────────── */
+
 .filtersAccordion {
   margin-bottom: 2rem;
   padding: 1rem;
@@ -23,6 +28,7 @@
   border: 1px solid var(--ifm-color-emphasis-200);
 }
 
+/* Summary row — acts as the open/close toggle */
 .filtersSummary {
   display: flex !important;
   justify-content: center !important;
@@ -30,20 +36,20 @@
   font-weight: 700 !important;
   cursor: pointer !important;
   margin: 0 !important;
+  padding: 0.5rem 0 !important;
   color: var(--ifm-color-emphasis-800) !important;
   user-select: none !important;
-  list-style: none !important;
-  padding: 0.5rem 0 !important;
+  list-style: none !important; /* remove default <details> marker */
 }
 
-/* Hide default markers more aggressively */
 .filtersSummary::marker,
 .filtersSummary::-webkit-details-marker {
   display: none !important;
 }
 
+/* Show/Hide label inside the summary */
 .hideLabel {
-  display: inline-block;
+  display: inline-block !important;
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--ifm-color-primary);
@@ -51,17 +57,16 @@
   letter-spacing: 0.05em;
 }
 
+/* When open, add a bottom border below the summary */
 .filtersAccordion[open] .filtersSummary {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
-/* Ensure the label is always visible as it's our only toggle text now */
-.hideLabel {
-  display: inline-block !important;
-}
+/* ── Filter grids & groups ────────────────────────────────────── */
 
+/* Event-type buttons: CSS-grid with dynamic column count */
 .filterContainer {
   display: grid;
   grid-template-columns: repeat(var(--filter-columns, 3), 1fr);
@@ -70,6 +75,7 @@
   padding: 0 1rem;
 }
 
+/* Industry / Platform buttons: flex-wrap row, centered */
 .tagFilterContainer {
   display: flex;
   flex-wrap: wrap;
@@ -79,42 +85,21 @@
   padding: 0 1rem;
 }
 
+/* Section heading inside the filter bar (TYPE, INDUSTRY, PLATFORM) */
 .filterHeading {
   font-size: 0.85rem;
+  font-weight: 700;
   color: var(--ifm-color-emphasis-700);
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   text-align: center;
-  font-weight: 700;
 }
 
-.resetContainer {
-  display: flex;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
-  padding: 0 1rem;
-}
+/* ── Filter buttons ───────────────────────────────────────────── */
 
-.resetButton {
-  width: 100%;
-  font-size: 0.95rem;
-  padding: 10px 16px;
-  border-radius: var(--ifm-global-radius, 8px);
-  background-color: var(--ifm-color-secondary);
-  color: var(--ifm-color-gray);
-  border: none;
-  cursor: pointer;
-  transition: filter 0.2s ease;
-  font-weight: 700;
-  text-align: center;
-}
-
-.resetButton:hover {
-  filter: brightness(0.9);
-}
-
+/* Base button (pill shape) */
 .filterButton {
   background-color: var(--ifm-color-emphasis-100);
   border: 1px solid var(--ifm-color-emphasis-300);
@@ -128,6 +113,11 @@
   text-align: center;
 }
 
+.filterButton:hover {
+  transform: translateY(-2px);
+}
+
+/* Smaller variant for industry/platform tag buttons */
 .filterButtonSmall {
   font-size: 0.8rem;
   padding: 6px 14px;
@@ -135,27 +125,16 @@
   flex: 0 1 auto;
 }
 
-/* Inactive borders matching active colors */
-.filterButtonType {
-  border-color: var(--ifm-color-primary);
-}
-
-.filterButtonIndustry {
-  border-color: var(--ifm-color-gray);
-}
+/* Inactive border colours — hint at the active colour */
+.filterButtonType     { border-color: var(--ifm-color-primary); }
+.filterButtonPlatform { border-color: var(--ifm-color-tertiary); }
+.filterButtonIndustry { border-color: var(--ifm-color-gray); }
 
 :global(html[data-theme='dark']) .filterButtonIndustry {
   border-color: var(--ifm-color-white);
 }
 
-.filterButtonPlatform {
-  border-color: var(--ifm-color-tertiary);
-}
-
-.filterButton:hover {
-  transform: translateY(-2px);
-}
-
+/* Active state: type (primary blue) */
 .filterButtonActive {
   background-color: var(--ifm-color-primary);
   border-color: var(--ifm-color-primary);
@@ -166,6 +145,27 @@
   color: #ffffff;
 }
 
+/* Active state: platform (tertiary red/blue) */
+.filterButtonPlatformActive {
+  background-color: var(--ifm-color-tertiary);
+  border-color: var(--ifm-color-tertiary);
+  color: #ffffff;
+}
+
+/* Active state: industry (gray / white in dark mode) */
+.filterButtonIndustryActive {
+  background-color: var(--ifm-color-gray);
+  border-color: var(--ifm-color-gray);
+  color: var(--ifm-color-white);
+}
+
+:global(html[data-theme='dark']) .filterButtonIndustryActive {
+  background-color: var(--ifm-color-white);
+  border-color: var(--ifm-color-white);
+  color: var(--ifm-color-gray);
+}
+
+/* Count badge inside filter buttons */
 .filterCount {
   display: inline-flex;
   align-items: center;
@@ -182,27 +182,11 @@
   color: var(--ifm-color-emphasis-700);
 }
 
-.filterButtonActive .filterCount {
-  background-color: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-}
-
-/* Color-coded active states for secondary filters */
-.filterButtonPlatformActive {
-  background-color: var(--ifm-color-tertiary);
-  border-color: var(--ifm-color-tertiary);
-  color: #ffffff;
-}
-
+/* Count badge turns translucent-white on any active button */
+.filterButtonActive .filterCount,
 .filterButtonPlatformActive .filterCount {
   background-color: rgba(255, 255, 255, 0.25);
   color: #ffffff;
-}
-
-.filterButtonIndustryActive {
-  background-color: var(--ifm-color-gray);
-  border-color: var(--ifm-color-gray);
-  color: var(--ifm-color-white);
 }
 
 .filterButtonIndustryActive .filterCount {
@@ -210,16 +194,39 @@
   color: var(--ifm-color-white);
 }
 
-:global(html[data-theme='dark']) .filterButtonIndustryActive {
-  background-color: var(--ifm-color-white);
-  border-color: var(--ifm-color-white);
-  color: var(--ifm-color-gray);
-}
-
 :global(html[data-theme='dark']) .filterButtonIndustryActive .filterCount {
   background-color: rgba(0, 0, 0, 0.1);
   color: var(--ifm-color-gray);
 }
+
+/* ── Reset button ─────────────────────────────────────────────── */
+
+.resetContainer {
+  display: flex;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  padding: 0 1rem;
+}
+
+.resetButton {
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--ifm-global-radius, 8px);
+  background-color: var(--ifm-color-secondary);
+  color: var(--ifm-color-gray);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.resetButton:hover {
+  filter: brightness(0.9);
+}
+
+/* ── No-results message ───────────────────────────────────────── */
 
 .noEventsMsg {
   text-align: center;
@@ -228,12 +235,13 @@
   margin-top: 3rem;
 }
 
-/* --- Timeline container --- */
+/* ── Timeline vertical line & arrow ───────────────────────────── */
+
 .timelineContainer {
   position: relative;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 0 0; /* Space for the arrow at the top */
+  padding: 40px 0 0; /* room for the arrowhead */
   list-style-type: none;
   display: flex;
   flex-direction: column;
@@ -246,7 +254,7 @@
   position: absolute;
   width: 4px;
   background-color: var(--ifm-color-primary);
-  top: 15px; /* Start below the arrow head */
+  top: 15px; /* start below the arrowhead */
   bottom: 0;
   left: 50%;
   margin-left: -2px;
@@ -254,13 +262,13 @@
   z-index: 0;
 }
 
-/* Arrowhead pointing up at the very top */
+/* Arrowhead at the top */
 .timelineContainer::after {
   content: '';
   position: absolute;
   top: 0;
   left: 50%;
-  margin-left: -10px; /* Center 20px wide arrow */
+  margin-left: -10px; /* centre the 20px-wide arrow */
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
@@ -269,32 +277,8 @@
   z-index: 0;
 }
 
-/* --- Individual timeline item --- */
-.itemContainer {
-  padding: 20px 0;
-  position: relative;
-  background-color: transparent;
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-}
+/* ── Year marker ──────────────────────────────────────────────── */
 
-/*
- * Full-width overlay layout:
- * Items are strictly chronological and centered over the line.
- */
-.leftSide, .rightSide {
-  padding: 0;
-}
-
-.cardContent {
-  width: 90%;
-  max-width: 800px;
-  z-index: 1;
-}
-
-/* --- Year marker (clears both columns, acts as a sync point) --- */
 .yearMarker {
   display: flex;
   justify-content: center;
@@ -314,11 +298,25 @@
   letter-spacing: 0.05em;
 }
 
-/* --- Card --- */
+/* ── Timeline event card ──────────────────────────────────────── */
+
+.itemContainer {
+  padding: 20px 0;
+  position: relative;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
 .cardContent {
+  width: 90%;
+  max-width: 800px;
+  z-index: 1;
   background-color: var(--ifm-card-background-color) !important;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   border: 1px solid var(--ifm-color-emphasis-200);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .cardContent:hover {
@@ -326,10 +324,11 @@
   box-shadow: var(--ifm-global-shadow-lw) !important;
 }
 
-/* --- Inline Icon in Card Header --- */
+/* ── Card header: icon + title row ────────────────────────────── */
+
 .cardTitleRow {
   display: flex;
-  align-items: flex-start; /* Better for multi-line titles */
+  align-items: flex-start; /* handles multi-line titles */
   gap: 16px;
   margin-bottom: 0.75rem;
 }
@@ -337,23 +336,24 @@
 .cardTitleRow h3 {
   margin: 0;
   line-height: 1.3;
-  padding-top: 2px; /* Align with icon top */
+  padding-top: 2px; /* align baseline with icon top */
   scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
 }
 
+/* Inline icon box next to the title */
 .inlineIcon {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   width: 36px !important;
   height: 36px !important;
-  background-color: transparent !important; /* Transparent as requested */
-  opacity: 1 !important;
-  border: 1.5px solid var(--ifm-color-primary-lighter) !important; /* Slightly thicker border to compensate for lack of BG */
+  flex-shrink: 0 !important;
+  background-color: transparent !important;
+  border: 1.5px solid var(--ifm-color-primary-lighter) !important;
   color: var(--ifm-color-primary) !important;
   border-radius: 8px !important;
-  flex-shrink: 0 !important;
   box-shadow: none !important;
+  opacity: 1 !important;
   z-index: 2;
 }
 
@@ -366,44 +366,57 @@
   height: 20px;
 }
 
-/* Remove old icon container styles */
-.iconContainer {
-  display: none;
-}
+/* ── Card body fields ─────────────────────────────────────────── */
 
-/* Remove old connector styles as cards now overlay the line directly */
-.leftSide .iconContainer,
-.rightSide .iconContainer {
-  display: none;
-}
-
-/* --- Card content --- */
 .organisation {
   font-size: 0.95rem;
-  color: var(--ifm-color-emphasis-700);
   font-weight: 500;
+  color: var(--ifm-color-emphasis-700);
   margin-top: 0.2rem;
   margin-bottom: 0;
 }
 
-.descriptionText {
-  white-space: pre-line;
-}
-
 .eventDate {
-  font-size: 0.9em;
-  color: var(--ifm-color-emphasis-600);
-  font-weight: 600;
   display: block;
   margin-top: 0.25rem;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-600);
 }
+
+.descriptionText {
+  white-space: pre-line; /* preserve \n from event descriptions */
+}
+
+/* ── Timeline tag container (footer) ──────────────────────────── */
 
 .tagsContainer {
   display: flex;
   flex-wrap: wrap;
 }
 
-/* --- Tag badges (uniform shape, three color variants) --- */
+/* ── Timeline mobile breakpoint ───────────────────────────────── */
+
+@media screen and (max-width: 768px) {
+  .filterContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cardContent {
+    width: 95%;
+  }
+
+  .itemContainer {
+    padding: 15px 0;
+  }
+}
+
+/* ================================================================
+   2. SHARED TAG BADGES
+   Used by TimelineItem (with .tagBadge base) and ExperienceCard.
+   ================================================================ */
+
+/* Base shape (applied explicitly as a class) */
 .tagBadge {
   display: inline-block;
   padding: 2px 10px;
@@ -413,6 +426,7 @@
   border: 1px solid;
 }
 
+/* Colour variants */
 .tagType {
   background-color: var(--ifm-color-primary);
   border-color: var(--ifm-color-primary);
@@ -443,26 +457,11 @@
   color: var(--ifm-color-gray);
 }
 
-/* ============================================================
-   Mobile: single-column layout
-   ============================================================ */
-@media screen and (max-width: 768px) {
-  .filterContainer {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* ================================================================
+   3. EXPERIENCE CARDS  (IndustryExperience & PlatformExperience)
+   ================================================================ */
 
-  .cardContent {
-    width: 95%;
-  }
-
-  .itemContainer {
-    padding: 15px 0;
-  }
-}
-
-/* ============================================================
-   Experience Cards (IndustryExperience & PlatformExperience)
-   ============================================================ */
+/* ── Container: single-column mobile, CSS-columns masonry desktop ── */
 
 .experienceContainer {
   margin: 2rem 0;
@@ -475,6 +474,8 @@
   }
 }
 
+/* ── Card ──────────────────────────────────────────────────────── */
+
 .experienceCard {
   background-color: var(--ifm-card-background-color);
   border: 1px solid var(--ifm-color-emphasis-200);
@@ -484,7 +485,7 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
-  break-inside: avoid;
+  break-inside: avoid; /* prevent card from splitting across columns */
   margin-bottom: 1.5rem;
 }
 
@@ -493,6 +494,7 @@
   box-shadow: var(--ifm-global-shadow-md);
 }
 
+/* Card title — also serves as a TOC scroll anchor */
 .experienceTitle {
   font-size: 1.4rem;
   font-weight: 700;
@@ -503,6 +505,8 @@
   border-bottom: 2px solid var(--ifm-color-emphasis-200);
   scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
 }
+
+/* ── Metrics row (years + project count) ──────────────────────── */
 
 .metricsRow {
   display: flex;
@@ -538,17 +542,21 @@
   letter-spacing: 0.05em;
 }
 
+/* ── Tags section (pushed to bottom via auto margin) ──────────── */
+
 .tagsSection {
   margin-top: auto;
 }
 
 .tagsLabel {
+  display: block;
+  margin-bottom: 0.5rem;
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--ifm-color-emphasis-700);
-  margin-bottom: 0.5rem;
-  display: block;
 }
+
+/* ── Bullet lists (projects / certifications) ─────────────────── */
 
 .projectsContainer {
   margin-bottom: 1.25rem;
@@ -565,6 +573,8 @@
 .projectItem {
   margin-bottom: 0.25rem;
 }
+
+/* ── Card tag container (with gap instead of margin utilities) ── */
 
 .cardTagsContainer {
   display: flex;
