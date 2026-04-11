@@ -461,17 +461,27 @@
    3. EXPERIENCE CARDS  (IndustryExperience & PlatformExperience)
    ================================================================ */
 
-/* ── Container: single-column mobile, CSS-columns masonry desktop ── */
+/* ── Container: two-column layout, left-to-right order, masonry-fit ── */
 
 .experienceContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   margin: 2rem 0;
 }
 
 @media (min-width: 768px) {
   .experienceContainer {
-    columns: 2;
-    column-gap: 1.5rem;
+    flex-direction: row;
   }
+}
+
+.experienceColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 0;
 }
 
 /* ── Card ──────────────────────────────────────────────────────── */
@@ -485,8 +495,6 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
-  break-inside: avoid; /* prevent card from splitting across columns */
-  margin-bottom: 1.5rem;
 }
 
 .experienceCard:hover {

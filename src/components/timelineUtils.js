@@ -129,6 +129,129 @@ export function formatDate(event) {
   return event.date || '';
 }
 
+// ─── Column balancing ─────────────────────────────────────────
+
+/**
+ * Estimate relative card height from content counts.
+ * Weights are rough proportions: each project/cert bullet ≈ 1 line,
+ * each tag ≈ 0.3 lines, plus a fixed base for title + metrics.
+ */
+function estimateCardWeight(card) {
+  return (
+    3 + // title + metrics row baseline
+    (card.projects?.length || 0) +
+    (card.certifications?.length || 0) +
+    (card.crossTags?.length || 0) * 0.3 +
+    (card.technologies?.length || 0) * 0.3
+  );
+}
+
+/**
+ * Split an array of cards into two columns using a greedy
+ * shortest-column-first algorithm.  Cards stay in their original
+ * (experience-sorted) order within each column, and each card is
+ * placed into whichever column currently has the least estimated
+ * content height.
+ *
+ * @param {Array} cards - Sorted experience data objects.
+ * @returns {[Array, Array]} [leftColumn, rightColumn]
+ */
+export function balanceColumns(cards) {
+  const left = [];
+  const right = [];
+  let leftWeight = 0;
+  let rightWeight = 0;
+
+  for (const card of cards) {
+    const w = estimateCardWeight(card);
+    if (leftWeight <= rightWeight) {
+      left.push(card);
+      leftWeight += w;
+    } else {
+      right.push(card);
+      rightWeight += w;
+    }
+  }
+
+  return [left, right];
+}
+
+// ─── Experience data builder ──────────────────────────────────
+
+/**
+ * Preferred vendor sort: Salesforce → Adobe → Oracle → others.
+ * @param {string} name - Platform name.
+ * @returns {number} Sort priority (lower = higher).
+ */
+function platformSortKey(name) {
+  const lower = name.toLowerCase();
+  if (lower.includes('salesforce')) return 1;
+  if (lower.includes('adobe')) return 2;
+  if (lower.includes('oracle')) return 3;
+  return 4;
+}
+
+/**
+ * Build aggregated experience data by bucketing events on a given tag field.
+ *
+ * Used by both IndustryExperience (groupBy='industry', crossTag='platform')
+ * and PlatformExperience (groupBy='platform', crossTag='industry').
+ *
+ * @param {Array}  events   - The full timelineEvents array.
+ * @param {string} groupBy  - Tag field to bucket on ('industry' or 'platform').
+ * @param {string} crossTag - The other tag field to aggregate ('platform' or 'industry').
+ * @returns {Array<Object>} Sorted array of experience data objects.
+ */
+export function buildExperienceData(events, groupBy, crossTag) {
+  const buckets = new Map();
+
+  events.forEach((event) => {
+    event[groupBy]?.forEach((tag) => {
+      if (!buckets.has(tag)) {
+        buckets.set(tag, { name: tag, events: [], crossTags: new Set(), technologies: new Set() });
+      }
+      const bucket = buckets.get(tag);
+      bucket.events.push(event);
+      event[crossTag]?.forEach((ct) => bucket.crossTags.add(ct));
+      event.technology?.forEach((t) => bucket.technologies.add(t));
+    });
+  });
+
+  return Array.from(buckets.values())
+    .map((bucket) => {
+      const projectEvents = bucket.events.filter((e) => e.icon === 'Project');
+      const certEvents = bucket.events.filter((e) => e.icon === 'Certification');
+
+      const projects = [
+        ...new Set(
+          projectEvents
+            .filter((e) => e.title)
+            .sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0))
+            .map((e) => e.title),
+        ),
+      ];
+
+      const crossTagsSorted = groupBy === 'industry'
+        ? Array.from(bucket.crossTags).sort((a, b) => {
+            const order = platformSortKey(a) - platformSortKey(b);
+            return order !== 0 ? order : a.localeCompare(b);
+          })
+        : Array.from(bucket.crossTags).sort();
+
+      return {
+        name: bucket.name,
+        totalProjects: projectEvents.length,
+        yearsExperience: calculateMergedDurationInYears(projectEvents),
+        projects,
+        certifications: certEvents.filter((e) => e.title).map((e) => e.title),
+        crossTags: crossTagsSorted,
+        technologies: Array.from(bucket.technologies).sort(),
+      };
+    })
+    .filter((d) => d.totalProjects > 0)
+    .sort((a, b) => b.yearsExperience - a.yearsExperience);
+}
+
 // ─── Experience calculation ────────────────────────────────────
 
 /**

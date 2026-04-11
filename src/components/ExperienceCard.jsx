@@ -77,7 +77,7 @@ function TagGroup({ label, items, className }) {
  * @param {Array<{label: string, items: string[], className: string}>} props.tagGroups
  *   Ordered list of tag sections to render (platforms, industries, technologies).
  */
-export function ExperienceCard({
+export const ExperienceCard = React.memo(function ExperienceCard({
   name,
   yearsExperience,
   totalProjects,
@@ -113,6 +113,6 @@ export function ExperienceCard({
       </div>
     </div>
   );
-}
+});
 
 export default ExperienceCard;
