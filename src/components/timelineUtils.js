@@ -6,64 +6,13 @@
  *   - Docusaurus TOC builder from timeline event data
  *   - Human-readable date formatting and duration calculations
  *   - Merged-interval experience calculator
+ *   - Vendor grouping and column balancing for experience cards
  */
 
-// ─── Slugs & TOC ──────────────────────────────────────────────
+// ─── Constants ────────────────────────────────────────────────
 
-/**
- * Convert text to a URL-friendly slug for anchor ids.
- * @param {string} text - Raw display text.
- * @returns {string} Lowercase, hyphen-separated slug.
- * @example slugify("E-commerce") // "e-commerce"
- */
-export function slugify(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
-}
-
-/**
- * Build a Docusaurus-compatible TOC array from timeline events.
- *
- * Produces a flat list of `{ value, id, level }` objects for the sidebar
- * Table of Contents. Includes:
- *   - h2: Timeline, Industries, Platforms (static page sections)
- *   - h3 under Timeline: "Joined ..." position events (career milestones)
- *   - h3 under Industries: each unique industry from Project events
- *   - h3 under Platforms: each unique platform from Project events
- *
- * @param {Array} events - The full `timelineEvents` array from the MDX page.
- * @returns {Array<{value: string, id: string, level: number}>}
- */
-export function buildToc(events) {
-  /* Career milestones — Position events whose title starts with "Joined" */
-  const careerEntries = events
-    .filter((e) => e.icon === 'Position' && e.title?.startsWith('Joined'))
-    .sort((a, b) => (b.date || b.startDate || '').localeCompare(a.date || a.startDate || ''))
-    .map((e) => ({ value: e.organisation, id: e.id, level: 3 }));
-
-  /* Collect unique industries and platforms from Project events only */
-  const industries = new Set();
-  const platforms = new Set();
-
-  events.forEach((e) => {
-    if (e.icon !== 'Project') return;
-    e.industry?.forEach((i) => industries.add(i));
-    e.platform?.forEach((p) => platforms.add(p));
-  });
-
-  return [
-    { value: 'Timeline', id: 'timeline', level: 2 },
-    ...careerEntries,
-    { value: 'Industries', id: 'industries', level: 2 },
-    ...[...industries].sort().map((name) => ({ value: name, id: slugify(name), level: 3 })),
-    { value: 'Platforms', id: 'platforms', level: 2 },
-    ...[...platforms].sort().map((name) => ({ value: name, id: slugify(name), level: 3 })),
-  ];
-}
-
-// ─── Labels ────────────────────────────────────────────────────
+/** Ordered list of known platform vendors for grouping and sorting. */
+export const VENDOR_ORDER = ['Salesforce', 'Adobe', 'Oracle'];
 
 /** Human-readable labels for event-type filter buttons and tag badges. */
 export const FILTER_LABELS = {
@@ -75,17 +24,126 @@ export const FILTER_LABELS = {
   Organisation: 'Organisation',
 };
 
+// ─── Slugs & TOC ──────────────────────────────────────────────
+
+/**
+ * Convert text to a URL-friendly slug for anchor ids.
+ * @param {string} text
+ * @returns {string} Lowercase, hyphen-separated slug.
+ */
+export function slugify(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+/**
+ * Build a Docusaurus-compatible TOC array from timeline events.
+ * @param {Array} events - The full `timelineEvents` array from the MDX page.
+ * @returns {Array<{value: string, id: string, level: number}>}
+ */
+export function buildToc(events) {
+  const careerEntries = events
+    .filter((e) => e.icon === 'Position' && e.title?.startsWith('Joined'))
+    .sort((a, b) => (b.date || b.startDate || '').localeCompare(a.date || a.startDate || ''))
+    .map((e) => ({ value: e.organisation, id: e.id, level: 3 }));
+
+  const industries = new Set();
+  const platforms = new Set();
+
+  events.forEach((e) => {
+    if (e.icon !== 'Project') return;
+    e.industry?.forEach((i) => industries.add(i));
+    e.platform?.forEach((p) => platforms.add(p));
+  });
+
+  const platformEntries = buildVendorSections(
+    [...platforms],
+    (name) => name,
+    (name) => ({ value: name, id: slugify(name), level: 4 }),
+    (vendor) => ({ value: vendor, id: slugify(vendor), level: 3 }),
+  );
+
+  return [
+    { value: 'Timeline', id: 'timeline', level: 2 },
+    ...careerEntries,
+    { value: 'Industries', id: 'industries', level: 2 },
+    ...[...industries].sort().map((name) => ({ value: name, id: slugify(name), level: 3 })),
+    { value: 'Platforms', id: 'platforms', level: 2 },
+    ...platformEntries,
+  ];
+}
+
+// ─── Vendor grouping ─────────────────────────────────────────
+
+/**
+ * Map a platform name to its vendor group.
+ * @param {string} name - Platform name.
+ * @returns {string} Vendor group name or the original name for standalone platforms.
+ */
+export function platformVendorGroup(name) {
+  for (const vendor of VENDOR_ORDER) {
+    if (name.startsWith(vendor)) return vendor;
+  }
+  return name;
+}
+
+/**
+ * Sort priority for vendor-aware ordering. Lower = higher priority.
+ * Delegates to platformVendorGroup so matching logic stays in one place.
+ */
+function platformSortKey(name) {
+  const vendor = platformVendorGroup(name);
+  const idx = VENDOR_ORDER.indexOf(vendor);
+  return idx >= 0 ? idx + 1 : VENDOR_ORDER.length + 1;
+}
+
+/**
+ * Group items into ordered vendor sections.
+ *
+ * @param {Array}    items       - Items to group.
+ * @param {Function} getName     - Extract the platform name from an item.
+ * @param {Function} mapItem     - Transform an item for inclusion in a section.
+ * @param {Function} mapHeader   - Create a section header from a vendor name.
+ * @returns {Array} Flat array of headers interleaved with mapped items.
+ */
+export function buildVendorSections(items, getName, mapItem, mapHeader) {
+  const groups = new Map();
+  for (const item of items) {
+    const vendor = platformVendorGroup(getName(item));
+    if (!groups.has(vendor)) groups.set(vendor, []);
+    groups.get(vendor).push(item);
+  }
+
+  const result = [];
+  for (const vendor of VENDOR_ORDER) {
+    if (!groups.has(vendor)) continue;
+    const vendorItems = groups.get(vendor).sort((a, b) => getName(a).localeCompare(getName(b)));
+    result.push(mapHeader(vendor));
+    vendorItems.forEach((item) => result.push(mapItem(item)));
+    groups.delete(vendor);
+  }
+
+  const remaining = Array.from(groups.values()).flat();
+  if (remaining.length) {
+    remaining.sort((a, b) => getName(a).localeCompare(getName(b)));
+    result.push(mapHeader('Other'));
+    remaining.forEach((item) => result.push(mapItem(item)));
+  }
+
+  return result;
+}
+
 // ─── Date helpers ──────────────────────────────────────────────
 
 /**
  * Calculate a human-readable duration between two YYYY-MM date strings.
- *
  * Treats "Present" (case-insensitive) as the current date.
- * Includes the start month in the count (+1 month).
  *
  * @param {string} start - Start date, e.g. "2023-01".
  * @param {string} [end]  - End date or "Present".
- * @returns {string} e.g. " (2 yrs 3 mos)" or "" if invalid.
+ * @returns {string} e.g. " (2 years 3 months)" or "" if invalid.
  */
 export function calculateDuration(start, end) {
   if (!start) return '';
@@ -99,15 +157,15 @@ export function calculateDuration(start, end) {
   const totalMonths =
     (endDate.getFullYear() - startDate.getFullYear()) * 12 +
     (endDate.getMonth() - startDate.getMonth()) +
-    1; // +1 to include the starting month
+    1; // include the starting month
 
   if (totalMonths <= 0) return '';
 
   const years = Math.floor(totalMonths / 12);
   const months = totalMonths % 12;
   const parts = [];
-  if (years > 0) parts.push(`${years} yr${years > 1 ? 's' : ''}`);
-  if (months > 0) parts.push(`${months} mo${months > 1 ? 's' : ''}`);
+  if (years > 0) parts.push(`${years} year${years > 1 ? 's' : ''}`);
+  if (months > 0) parts.push(`${months} month${months > 1 ? 's' : ''}`);
 
   return ` (${parts.join(' ')})`;
 }
@@ -115,11 +173,8 @@ export function calculateDuration(start, end) {
 /**
  * Format the display date for a timeline event.
  *
- * Period events → "2023-01 – 2024-06 (1 yr 6 mos)"
+ * Period events → "2023-01 – 2024-06 (1 year 6 months)"
  * Single events → "2023-01"
- *
- * @param {Object} event - A timeline event object.
- * @returns {string}
  */
 export function formatDate(event) {
   if (event.type === 'period' && event.startDate) {
@@ -132,26 +187,42 @@ export function formatDate(event) {
 // ─── Column balancing ─────────────────────────────────────────
 
 /**
- * Estimate relative card height from content counts.
- * Weights are rough proportions: each project/cert bullet ≈ 1 line,
- * each tag ≈ 0.3 lines, plus a fixed base for title + metrics.
+ * Estimate the number of visual lines a bullet item occupies.
+ * A half-column is roughly 40 characters wide; longer titles wrap.
  */
+function bulletWeight(item) {
+  const len = (typeof item === 'string' ? item : item?.title || '').length;
+  return Math.max(1, Math.ceil(len / 40));
+}
+
+/** Estimate relative card height for column balancing. */
 function estimateCardWeight(card) {
+  const allBullets = [
+    ...(card.projects || []),
+    ...(card.certifications || []),
+    ...(card.speakingEngagements || []),
+  ];
+  const bulletLines = allBullets.reduce((sum, item) => sum + bulletWeight(item), 0);
+
+  const sectionCount =
+    (card.projects?.length ? 1 : 0) +
+    (card.certifications?.length ? 1 : 0) +
+    (card.speakingEngagements?.length ? 1 : 0) +
+    (card.crossTags?.length ? 1 : 0) +
+    (card.technologies?.length ? 1 : 0);
+
   return (
-    3 + // title + metrics row baseline
-    (card.projects?.length || 0) +
-    (card.certifications?.length || 0) +
+    3 + // title + metrics baseline
+    sectionCount +
+    bulletLines +
     (card.crossTags?.length || 0) * 0.3 +
     (card.technologies?.length || 0) * 0.3
   );
 }
 
 /**
- * Split an array of cards into two columns using a greedy
- * shortest-column-first algorithm.  Cards stay in their original
- * (experience-sorted) order within each column, and each card is
- * placed into whichever column currently has the least estimated
- * content height.
+ * Split cards into two balanced columns using a greedy shortest-column-first
+ * algorithm, preserving the original sort order within each column.
  *
  * @param {Array} cards - Sorted experience data objects.
  * @returns {[Array, Array]} [leftColumn, rightColumn]
@@ -179,16 +250,12 @@ export function balanceColumns(cards) {
 // ─── Experience data builder ──────────────────────────────────
 
 /**
- * Preferred vendor sort: Salesforce → Adobe → Oracle → others.
- * @param {string} name - Platform name.
- * @returns {number} Sort priority (lower = higher).
+ * Extract {id, title} from events that have a title.
+ * @param {Array} events
+ * @returns {Array<{id: string, title: string}>}
  */
-function platformSortKey(name) {
-  const lower = name.toLowerCase();
-  if (lower.includes('salesforce')) return 1;
-  if (lower.includes('adobe')) return 2;
-  if (lower.includes('oracle')) return 3;
-  return 4;
+function pickIdTitle(events) {
+  return events.filter((e) => e.title).map((e) => ({ id: e.id, title: e.title }));
 }
 
 /**
@@ -219,17 +286,27 @@ export function buildExperienceData(events, groupBy, crossTag) {
 
   return Array.from(buckets.values())
     .map((bucket) => {
-      const projectEvents = bucket.events.filter((e) => e.icon === 'Project');
-      const certEvents = bucket.events.filter((e) => e.icon === 'Certification');
+      // Single-pass classification by event type
+      const projectEvents = [];
+      const certEvents = [];
+      const speakingEvents = [];
+      for (const e of bucket.events) {
+        if (e.icon === 'Project') projectEvents.push(e);
+        else if (e.icon === 'Certification') certEvents.push(e);
+        else if (e.icon === 'SpeakingEvent') speakingEvents.push(e);
+      }
 
-      const projects = [
-        ...new Set(
-          projectEvents
-            .filter((e) => e.title)
-            .sort((a, b) => new Date(b.startDate || 0) - new Date(a.startDate || 0))
-            .map((e) => e.title),
-        ),
-      ];
+      const seenProjectTitles = new Set();
+      const projects = projectEvents
+        .filter((e) => e.title)
+        .sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''))
+        .reduce((acc, e) => {
+          if (!seenProjectTitles.has(e.title)) {
+            seenProjectTitles.add(e.title);
+            acc.push({ id: e.id, title: e.title });
+          }
+          return acc;
+        }, []);
 
       const crossTagsSorted = groupBy === 'industry'
         ? Array.from(bucket.crossTags).sort((a, b) => {
@@ -243,13 +320,18 @@ export function buildExperienceData(events, groupBy, crossTag) {
         totalProjects: projectEvents.length,
         yearsExperience: calculateMergedDurationInYears(projectEvents),
         projects,
-        certifications: certEvents.filter((e) => e.title).map((e) => e.title),
+        certifications: pickIdTitle(certEvents),
+        speakingEngagements: pickIdTitle(speakingEvents),
         crossTags: crossTagsSorted,
         technologies: Array.from(bucket.technologies).sort(),
       };
     })
     .filter((d) => d.totalProjects > 0)
-    .sort((a, b) => b.yearsExperience - a.yearsExperience);
+    .sort((a, b) => {
+      const expDiff = b.yearsExperience - a.yearsExperience;
+      if (expDiff !== 0) return expDiff;
+      return platformSortKey(a.name) - platformSortKey(b.name);
+    });
 }
 
 // ─── Experience calculation ────────────────────────────────────
@@ -258,14 +340,10 @@ export function buildExperienceData(events, groupBy, crossTag) {
  * Calculate total years of experience from an array of events,
  * merging overlapping date intervals to avoid double-counting.
  *
- * Returns a number rounded to the nearest 0.5 (minimum 0.5 for
- * any non-zero duration, 0 when no valid intervals exist).
- *
  * @param {Array} events - Events with `startDate` and optional `endDate`.
- * @returns {number}
+ * @returns {number} Years rounded to nearest 0.5 (min 0.5 for non-zero).
  */
 export function calculateMergedDurationInYears(events) {
-  /* Convert each event into a [start, end] millisecond interval */
   const intervals = events
     .map((e) => {
       if (!e.startDate) return null;
@@ -273,7 +351,7 @@ export function calculateMergedDurationInYears(events) {
       let end;
       if (e.endDate && String(e.endDate).toLowerCase() !== 'present') {
         const d = new Date(e.endDate);
-        d.setMonth(d.getMonth() + 1); // include the end month
+        d.setMonth(d.getMonth() + 1);
         end = d.getTime();
       } else {
         end = Date.now();
@@ -284,25 +362,22 @@ export function calculateMergedDurationInYears(events) {
 
   if (intervals.length === 0) return 0;
 
-  /* Sort by start date, then merge overlapping intervals */
   intervals.sort((a, b) => a[0] - b[0]);
   const merged = [intervals[0]];
   for (let i = 1; i < intervals.length; i++) {
     const prev = merged[merged.length - 1];
     const curr = intervals[i];
     if (curr[0] <= prev[1]) {
-      prev[1] = Math.max(prev[1], curr[1]); // extend overlap
+      prev[1] = Math.max(prev[1], curr[1]);
     } else {
       merged.push(curr);
     }
   }
 
-  /* Sum merged intervals and convert to years */
   const totalMs = merged.reduce((sum, [s, e]) => sum + (e - s), 0);
   const years = totalMs / (1000 * 60 * 60 * 24 * 365.25);
 
   if (years === 0) return 0;
-
-  const rounded = Math.round(years * 2) / 2; // snap to 0.5
+  const rounded = Math.round(years * 2) / 2;
   return rounded === 0 && years > 0 ? 0.5 : rounded;
 }

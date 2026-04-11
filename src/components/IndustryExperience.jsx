@@ -2,30 +2,12 @@
  * IndustryExperience.jsx
  *
  * Groups timeline events by industry tag and renders a summary card
- * for each industry that has at least one Project event.
- *
- * Cards display: years of merged experience, project count,
- * project / certification lists, and platform / technology tags.
- * Sorted by years of experience (descending).
+ * for each industry, with a balanced two-column layout.
  */
 import React, { useMemo } from 'react';
 import styles from './AboutMe.module.css';
 import { ExperienceCard } from './ExperienceCard';
 import { buildExperienceData, balanceColumns } from './timelineUtils';
-
-function renderCard(data, tagGroups) {
-  return (
-    <ExperienceCard
-      key={data.name}
-      name={data.name}
-      yearsExperience={data.yearsExperience}
-      totalProjects={data.totalProjects}
-      projects={data.projects}
-      certifications={data.certifications}
-      tagGroups={tagGroups}
-    />
-  );
-}
 
 export function IndustryExperience({ events = [] }) {
   const industryData = useMemo(
@@ -33,22 +15,38 @@ export function IndustryExperience({ events = [] }) {
     [events],
   );
 
+  const [left, right] = useMemo(
+    () => balanceColumns(industryData),
+    [industryData],
+  );
+
   if (!industryData.length) return null;
 
-  const [left, right] = balanceColumns(industryData);
-
-  const tagGroups = (data) => [
-    { label: 'Platforms', items: data.crossTags, className: styles.tagPlatform },
-    { label: 'Technologies', items: data.technologies, className: styles.tagTech },
-  ];
+  const renderCard = (data) => (
+    <ExperienceCard
+      key={data.name}
+      name={data.name}
+      yearsExperience={data.yearsExperience}
+      totalProjects={data.totalProjects}
+      bulletSections={[
+        { label: 'Projects', items: data.projects },
+        { label: 'Certifications', items: data.certifications },
+        { label: 'Speaking Engagements', items: data.speakingEngagements },
+      ]}
+      tagGroups={[
+        { label: 'Platforms', items: data.crossTags, className: styles.tagPlatform },
+        { label: 'Technologies', items: data.technologies, className: styles.tagTech },
+      ]}
+    />
+  );
 
   return (
     <div className={styles.experienceContainer}>
       <div className={styles.experienceColumn}>
-        {left.map((data) => renderCard(data, tagGroups(data)))}
+        {left.map(renderCard)}
       </div>
       <div className={styles.experienceColumn}>
-        {right.map((data) => renderCard(data, tagGroups(data)))}
+        {right.map(renderCard)}
       </div>
     </div>
   );

@@ -5,11 +5,10 @@
  * PlatformExperience.  Displays:
  *   - Title (with slugified anchor id for TOC scrolling)
  *   - Metrics row (years of experience, project count)
- *   - Bullet lists (projects, certifications)
+ *   - Linked bullet lists (projects, certifications, speaking engagements)
  *   - Categorised tag badges (platform, industry, technology)
  *
- * Each card is rendered once; the parent container handles the
- * responsive masonry layout via CSS `columns`.
+ * The parent container handles the two-column layout via flex + balanceColumns.
  */
 import React from 'react';
 import styles from './AboutMe.module.css';
@@ -17,7 +16,6 @@ import { slugify } from './timelineUtils';
 
 // ─── Sub-components ────────────────────────────────────────────
 
-/** Key-value metric box (e.g. "4.5 / Years Exp"). */
 function Metric({ value, label }) {
   return (
     <div className={styles.metric}>
@@ -27,7 +25,7 @@ function Metric({ value, label }) {
   );
 }
 
-/** Bulleted list section (projects or certifications). */
+/** Bulleted list section with items linking to timeline anchors. */
 function BulletList({ label, items }) {
   if (!items?.length) return null;
   return (
@@ -35,20 +33,19 @@ function BulletList({ label, items }) {
       <span className={styles.tagsLabel}>{label}</span>
       <ul className={styles.projectsList}>
         {items.map((item, i) => (
-          <li key={i} className={styles.projectItem}>{item}</li>
+          <li key={item.id || i} className={styles.projectItem}>
+            {item.id ? (
+              <a href={`#${item.id}`}>{item.title}</a>
+            ) : (
+              item.title || item
+            )}
+          </li>
         ))}
       </ul>
     </div>
   );
 }
 
-/**
- * A labelled row of tag badges.
- *
- * @param {string}   label     - Section heading, e.g. "Platforms".
- * @param {string[]} items     - Tag labels to display.
- * @param {string}   className - CSS module class for the colour variant.
- */
 function TagGroup({ label, items, className }) {
   if (!items?.length) return null;
   return (
@@ -72,17 +69,16 @@ function TagGroup({ label, items, className }) {
  * @param {string}   props.name            - Card title (also used for the anchor id).
  * @param {number}   props.yearsExperience - Total merged years.
  * @param {number}   props.totalProjects   - Project count.
- * @param {string[]} props.projects        - Deduplicated project titles.
- * @param {string[]} props.certifications  - Certification titles.
+ * @param {Array<{label: string, items: Array<{id: string, title: string}>}>} props.bulletSections
+ *   Ordered list of linked bullet-list sections (projects, certifications, speaking engagements).
  * @param {Array<{label: string, items: string[], className: string}>} props.tagGroups
- *   Ordered list of tag sections to render (platforms, industries, technologies).
+ *   Ordered list of tag badge sections (platforms, industries, technologies).
  */
 export const ExperienceCard = React.memo(function ExperienceCard({
   name,
   yearsExperience,
   totalProjects,
-  projects,
-  certifications,
+  bulletSections,
   tagGroups,
 }) {
   return (
@@ -91,24 +87,18 @@ export const ExperienceCard = React.memo(function ExperienceCard({
         {name}
       </h3>
 
-      {/* ── Metrics ── */}
       <div className={styles.metricsRow}>
         <Metric value={yearsExperience} label="Years Exp" />
         <Metric value={totalProjects} label="Projects" />
       </div>
 
-      {/* ── Detail sections ── */}
       <div className={styles.tagsSection}>
-        <BulletList label="Projects" items={projects} />
-        <BulletList label="Certifications" items={certifications} />
+        {bulletSections.map(({ label, items }) => (
+          <BulletList key={label} label={label} items={items} />
+        ))}
 
         {tagGroups.map(({ label, items, className }) => (
-          <TagGroup
-            key={label}
-            label={label}
-            items={items}
-            className={className}
-          />
+          <TagGroup key={label} label={label} items={items} className={className} />
         ))}
       </div>
     </div>

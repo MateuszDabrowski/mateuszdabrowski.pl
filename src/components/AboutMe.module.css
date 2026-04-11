@@ -484,6 +484,17 @@
   min-width: 0;
 }
 
+/* ── Vendor section header ─────────────────────────────────────── */
+
+.vendorSectionTitle {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  margin: 2rem 0 0.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+}
+
 /* ── Card ──────────────────────────────────────────────────────── */
 
 .experienceCard {

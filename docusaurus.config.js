@@ -31,6 +31,7 @@ module.exports = {
             'Interaction Studio',
             'Marketing Cloud Personalization',
             'Salesforce Personalization',
+            'Salesforce Agentforce',
             'SFMC',
             'MCE',
             'Agentforce',
@@ -61,13 +62,13 @@ module.exports = {
         docs: {
             sidebar: { autoCollapseCategories: true, },
         },
-        // announcementBar: {
-        //     id: 'announcementBar',
-        //     content:
-        //         'Big website restructuring ongoing - if you find a broken link <a href="https://www.linkedin.com/in/mateusz-dabrowski-pl/" style="text-decoration: underline">please let me know</a>',
-        //     backgroundColor: '#0176d3',
-        //     textColor: '#fffffe',
-        // },
+        announcementBar: {
+            id: 'announcementBar',
+            content:
+                'Looking for payment-free, hassle-free diagramming solution? My <a href="https://diagramforce.mateuszdabrowski.pl" style="text-decoration: underline">Diagramforce</a> got you covered ;)',
+            backgroundColor: '#0176d3',
+            textColor: '#fffffe',
+        },
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
@@ -94,6 +95,26 @@ module.exports = {
                             to: 'docs/category/javascript/',
                         },
                     ],
+                },
+                {
+                    label: 'FAQ',
+                    to: 'sites/category/faq',
+                    activeBasePath: 'sites/faq',
+                    position: 'left',
+                    items: [
+                        {
+                            label: 'What is the difference between SF Marketing Clouds?',
+                            to: 'sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/',
+                        },
+                        {
+                            label: 'How to get Marketing Cloud Demo Account?',
+                            to: 'sites/faq/salesforce/how-to-get-sfmc-hands-on-experience/',
+                        },
+                        {
+                            label: 'How to get Salesforce Certification Vouchers?',
+                            to: 'sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
+                        },
+                    ]
                 },
                 {
                     label: 'Webinars',
@@ -124,30 +145,14 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
+                            label: 'Diagramforce',
+                            to: 'https://diagramforce.mateuszdabrowski.pl',
+                        },
+                        {
                             label: 'MCE World Clock',
                             to: 'https://clock.mateuszdabrowski.pl',
                         },
                     ],
-                },
-                {
-                    label: 'FAQ',
-                    to: 'sites/category/faq',
-                    activeBasePath: 'sites/faq',
-                    position: 'left',
-                    items: [
-                        {
-                            label: 'What is the difference between SF Marketing Clouds?',
-                            to: 'sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/',
-                        },
-                        {
-                            label: 'How to get Marketing Cloud Demo Account?',
-                            to: 'sites/faq/salesforce/how-to-get-sfmc-hands-on-experience/',
-                        },
-                        {
-                            label: 'How to get Salesforce Certification Vouchers?',
-                            to: 'sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
-                        },
-                    ]
                 },
                 {
                     label: 'Ideas',
@@ -166,13 +171,13 @@ module.exports = {
                     ]
                 },
                 {
-                    label: 'Tags',
-                    to: 'docs/tags',
+                    label: 'Newsletter',
+                    to: 'sites/newsletter',
                     position: 'left',
                 },
                 {
-                    label: 'Newsletter',
-                    to: 'sites/newsletter',
+                    label: 'About Me',
+                    to: 'sites/about-me',
                     position: 'left',
                 },
                 {

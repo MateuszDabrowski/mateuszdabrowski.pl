@@ -2,28 +2,63 @@
  * PlatformExperience.jsx
  *
  * Groups timeline events by platform tag and renders a summary card
- * for each platform that has at least one Project event.
- *
- * Cards display: years of merged experience, project count,
- * project / certification lists, and industry / technology tags.
- * Sorted by years of experience (descending).
+ * for each platform, organised into vendor sections (Salesforce, Adobe,
+ * Oracle, Other) with balanced two-column layouts within each section.
  */
 import React, { useMemo } from 'react';
 import styles from './AboutMe.module.css';
 import { ExperienceCard } from './ExperienceCard';
-import { buildExperienceData, balanceColumns } from './timelineUtils';
+import {
+  buildExperienceData,
+  buildVendorSections,
+  balanceColumns,
+  slugify,
+} from './timelineUtils';
 
-function renderCard(data, tagGroups) {
+function buildBulletSections(data) {
+  return [
+    { label: 'Projects', items: data.projects },
+    { label: 'Certifications', items: data.certifications },
+    { label: 'Speaking Engagements', items: data.speakingEngagements },
+  ];
+}
+
+function buildTagGroups(data) {
+  return [
+    { label: 'Industries', items: data.crossTags, className: styles.tagIndustry },
+    { label: 'Technologies', items: data.technologies, className: styles.tagTech },
+  ];
+}
+
+function BalancedCardGrid({ cards }) {
+  const [left, right] = useMemo(() => balanceColumns(cards), [cards]);
   return (
-    <ExperienceCard
-      key={data.name}
-      name={data.name}
-      yearsExperience={data.yearsExperience}
-      totalProjects={data.totalProjects}
-      projects={data.projects}
-      certifications={data.certifications}
-      tagGroups={tagGroups}
-    />
+    <div className={styles.experienceContainer}>
+      <div className={styles.experienceColumn}>
+        {left.map((data) => (
+          <ExperienceCard
+            key={data.name}
+            name={data.name}
+            yearsExperience={data.yearsExperience}
+            totalProjects={data.totalProjects}
+            bulletSections={buildBulletSections(data)}
+            tagGroups={buildTagGroups(data)}
+          />
+        ))}
+      </div>
+      <div className={styles.experienceColumn}>
+        {right.map((data) => (
+          <ExperienceCard
+            key={data.name}
+            name={data.name}
+            yearsExperience={data.yearsExperience}
+            totalProjects={data.totalProjects}
+            bulletSections={buildBulletSections(data)}
+            tagGroups={buildTagGroups(data)}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -33,24 +68,45 @@ export function PlatformExperience({ events = [] }) {
     [events],
   );
 
+  const sections = useMemo(
+    () =>
+      buildVendorSections(
+        platformData,
+        (card) => card.name,
+        (card) => card,
+        (vendor) => vendor,
+      ),
+    [platformData],
+  );
+
   if (!platformData.length) return null;
 
-  const [left, right] = balanceColumns(platformData);
-
-  const tagGroups = (data) => [
-    { label: 'Industries', items: data.crossTags, className: styles.tagIndustry },
-    { label: 'Technologies', items: data.technologies, className: styles.tagTech },
-  ];
+  // Group flat sections array back into { vendor, cards[] } pairs
+  const vendorGroups = useMemo(() => {
+    const groups = [];
+    let current = null;
+    for (const item of sections) {
+      if (typeof item === 'string') {
+        current = { vendor: item, cards: [] };
+        groups.push(current);
+      } else {
+        current.cards.push(item);
+      }
+    }
+    return groups;
+  }, [sections]);
 
   return (
-    <div className={styles.experienceContainer}>
-      <div className={styles.experienceColumn}>
-        {left.map((data) => renderCard(data, tagGroups(data)))}
-      </div>
-      <div className={styles.experienceColumn}>
-        {right.map((data) => renderCard(data, tagGroups(data)))}
-      </div>
-    </div>
+    <>
+      {vendorGroups.map(({ vendor, cards }) => (
+        <div key={vendor}>
+          <h3 id={slugify(vendor)} className={styles.vendorSectionTitle}>
+            {vendor}
+          </h3>
+          <BalancedCardGrid cards={cards} />
+        </div>
+      ))}
+    </>
   );
 }
 
