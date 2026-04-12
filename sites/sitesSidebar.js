@@ -10,6 +10,7 @@ module.exports = {
                 image: 'img/og/og-image-tools.png',
             },
             items: [
+                'tools/salesforce/diagramforce',
                 'tools/salesforce/mce-world-clock',
             ],
         },

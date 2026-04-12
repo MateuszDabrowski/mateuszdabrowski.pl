@@ -1,0 +1,71 @@
+---
+id: diagramforce
+title: Diagramforce
+description: Browser-based Salesforce architecture diagram editor. Create professional diagrams for your Salesforce org without leaving your browser - no account, no backend, no payment.
+image: img/og/og-image-diagramforce.png
+tags: [Salesforce, Diagramming, Architecture, Data Model, Tools]
+---
+
+import { LeadText } from '/src/components/LeadText.js';
+import { Button, ButtonRow } from '/src/components/Buttons.js';
+
+<LeadText content="Browser-based Salesforce architecture diagram editor. Create professional diagrams for your Salesforce org without leaving your browser - no account, no backend, no payment." />
+
+Salesforce projects involve complex architectures spanning multiple clouds, integrations, and data flows. Communicating these structures clearly to stakeholders, developers, and admins is essential - but general-purpose diagramming tools often lack Salesforce-specific context or include hefty licensing fees, and platform-native options can be limiting.
+
+**Diagramforce** is a free, browser-based editor purpose-built for Salesforce diagrams covering all project needs. It ships with Salesforce icons, BPMN process shapes, data model objects, org charts, and Gantt timelines - all styled with the Salesforce Lightning Design System (SLDS) for a native look and feel.
+
+Everything runs locally in your browser. No sign-up, no server, no data leaves your machine.
+
+:::note You Should Know
+
+The app code is 100% AI generated as a part of my exploration of AI capabilities in software development. If you find any issues or have suggestions, please feel free to contribute on [GitHub](https://github.com/MateuszDabrowski/diagramforce) or let me know on [LinkedIn](https://www.linkedin.com/in/mateusz-dabrowski-pl/).
+
+:::
+
+<Button link="https://diagramforce.mateuszdabrowski.pl/" text="Open App" newTab="true" />
+
+## Five Diagram Types in One Tool
+
+Instead of switching between different tools for different needs, Diagramforce offers five specialized diagram types - each with its own shape palette, stencil categories, and sensible defaults:
+
+### Architecture Diagrams
+
+The core diagram type. Drag and drop Salesforce cloud and product nodes (Sales Cloud, Service Cloud, Marketing Cloud, MuleSoft, Tableau, etc.), group them into containers and zones, and connect them with labelled links. Perfect for solution architecture overviews, integration landscapes, and technical design documents.
+
+### Process Diagrams (BPMN)
+
+Full BPMN 2.0 shape support - events, tasks, gateways, subprocesses, and pools - alongside flowchart shapes. Use these to map out automation flows, approval processes, or cross-system orchestrations.
+
+### Data Model Diagrams
+
+Purpose-built data objects with an inline field editor. Add fields with all details, mark them as keys, required or decomissioned, connect objects with ER notation (one-to-many, many-to-many, etc.), and visualize your Salesforce data model or Marketing Cloud data extensions at a glance. Includes pre-built templates for common Marketing Cloud data views.
+
+### Organisation Charts
+
+Map out your Salesforce team structure with person cards that include avatars, roles, and detail lines. Group people into teams (containers) and departments (zones) to visualize reporting lines and responsibilities across your org.
+
+### Gantt Charts
+
+Plan and communicate Salesforce project timelines with tasks, milestones, groups, and a timeline ruler. Useful for implementation roadmaps, release planning, and stakeholder updates.
+
+## Key Features
+
+- __Drag & Drop Stencil__: Searchable shape palette with Salesforce-specific icons and templates - just drag onto the canvas.
+- __Smart Connections__: Custom connectors links offers flexible joins with automatic obstacle avoidance.
+- __Multi-Select & Alignment__: Cmd/Ctrl+click or Shift+drag to select multiple elements, then align, distribute, or resize them together.
+- __Undo/Redo__: Full command-pattern history with batching - undo even complex multi-step operations.
+- __Multi-Tab Diagrams__: Work on multiple diagrams simultaneously, each with its own type, canvas state, and undo history.
+- __Auto-Layout__: One-click force-directed layout that intelligently handles connected components and layering.
+- __Dark & Light Themes__: Toggle between themes - diagrams adapt automatically with SLDS-consistent styling.
+- __Multiple Export Options__: Save to browser storage, export as JSON for version control, or as PNG for presentations.
+- __URL Sharing__: Generate a shareable link that encodes your entire diagram in the URL and shares a copy - no server needed.
+- __LLM Spec__: On GitHub you can also find a [Diagram JSON specification](https://github.com/MateuszDabrowski/diagramforce/blob/main/DIAGRAM_JSON_SPEC.md) that allows you to generate diagrams with AI or code - the possibilities are endless.
+
+## Built on Solid Foundations
+
+Diagramforce is built with [JointJS v4](https://www.jointjs.com/) and styled with the [Salesforce Lightning Design System (SLDS)](https://www.lightningdesignsystem.com/). The entire app is static HTML, CSS, and vanilla JavaScript served directly from GitHub Pages.
+
+This architecture means the tool loads fast, runs anywhere, and can be forked or extended without any toolchain setup.
+
+<ButtonRow linkLeft="https://diagramforce.mateuszdabrowski.pl/" textLeft="Open App" newTabLeft="true" linkRight="https://github.com/MateuszDabrowski/diagramforce" textRight="Open GitHub" newTabRight="true" />

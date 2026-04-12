@@ -24,9 +24,9 @@ function Hero() {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentToolIndex((prevIndex) => (prevIndex + 1) % dynamicHeroWords.length);
-        }, 5000); // Change every 3 seconds
+        }, 5000);
 
-        return () => clearInterval(interval); // Cleanup interval on component unmount
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -133,139 +133,170 @@ function Feature({ imageUrl, title, description, url, cta }) {
     );
 }
 
+const freeTools = [
+    {
+        title: <>Diagramforce</>,
+        url: 'https://diagramforce.mateuszdabrowski.pl',
+        githubUrl: 'https://github.com/MateuszDabrowski/diagramforce',
+        imageUrl: 'img/article/index-image-tool-diagramforce.png',
+        description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally to your browser\'s storage, export as JSON, PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',
+        tags: ['Salesforce', 'Diagrams', 'Architecture', 'Data Model'],
+        cta: 'Check it out',
+    },
+    {
+        title: <>MCE World Clock</>,
+        url: 'https://clock.mateuszdabrowski.pl',
+        githubUrl: 'https://github.com/MateuszDabrowski/mce-world-clock',
+        imageUrl: 'img/article/index-image-tool-mce-world-clock.png',
+        description: 'World Clock Web App for Salesforce Marketing Cloud Engagement users. Manage timezone conversions around MCE\'s fixed Central Standard Time server, auto-detect DST, and generate production-ready SQL, AMPScript and SSJS snippets with proper timezone handling. And yes, you can easily check when in your timezone your colleagues from the other side of the world want to have that call ;)',
+        tags: ['Marketing Cloud Engagement', 'Timezones', 'SQL', 'AMPScript', 'SSJS'],
+        cta: 'Check it out',
+    },
+];
+
 const highlightedCategories = [
     {
         title: <>SQL</>,
         url: './docs/category/salesforce/marketing-cloud-engagement/sql/',
         description: 'SQL basics, not-so-basics and snippets to learn or copy-paste.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'View articles »',
     },
     {
         title: <>Config</>,
         url: './docs/category/salesforce/marketing-cloud-engagement/config/',
         description: 'MCE setup and architecture tricks and best practices for everyone.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'View articles »',
     },
     {
         title: <>SSJS</>,
         url: './docs/category/salesforce/marketing-cloud-engagement/ssjs/',
         description: 'Writing, styling, debugging and abusing SSJS. Everywhere.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'View articles »',
     },
     {
         title: <>Serverside Code</>,
         url: './docs/category/salesforce/marketing-cloud-personalization/serverside-code/',
         description: 'Undocumented magic for creating amazing MCP campaign templates.',
-        mainTag: 'Marketing Cloud Personalization',
+        tags: ['Marketing Cloud Personalization'],
+        cta: 'View articles »',
     },
 ];
-
-/**
- * Renders an article card based on the provided title, URL, description, and main tag.
- *
- * @param {string} title - The title of the article.
- * @param {string} url - The URL of the article.
- * @param {string} description - The description of the article.
- * @param {string} mainTag - The main tag of the article.
- * @return {JSX.Element} The rendered article card component.
- */
-function Category({ title, url, description, mainTag }) {
-    return (
-        <div className='col col--3'>
-            <div className={clsx('card', styles.categoryCard)}>
-                <div className='card__header'>
-                    <Link className={styles.categoryTitle} to={url}>
-                        <strong>{title}</strong>
-                    </Link>
-                    <p className={styles.categoryTag}>#{mainTag}</p>
-                </div>
-                <div className='card__body'>{description}</div>
-                <div className='card__footer'>
-                    <Link className={styles.categoryLink} to={url}>
-                        View articles »
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
-}
 
 const highlightedArticles = [
     {
         title: <>SQL Basics</>,
         url: './docs/salesforce/marketing-cloud-engagement/sql/sql-basics/',
         description: 'Best place to start your journey with writing SQL Queries in MCE.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
     },
     {
         title: <>SQL Join</>,
         url: './docs/salesforce/marketing-cloud-engagement/sql/sql-join/',
         description: 'Check how to work with more than one Data Extension or Data View.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
     },
     {
         title: <>SQL Date Functions</>,
         url: './docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/',
         description: 'Create, calculate and format date, time and timezone with SQL.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
     },
     {
         title: <>Contact Deletion</>,
         url: './docs/salesforce/marketing-cloud-engagement/config/contact-deletion/',
         description: 'Everything you need to clean up your SFMC from dirty Contacts.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
     },
     {
         title: <>System Data Views</>,
         url: './docs/salesforce/marketing-cloud-engagement/config/system-data-views/',
         description: 'Learn about hidden Data Views storing key data about your SFMC.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
     },
     {
         title: <>Mobile Connect Data Views</>,
         url: './docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/',
         description: 'View Mobile Connect data goldmine in SMS System Data Views.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
     },
     {
         title: <>Cloud Page Apps</>,
         url: './docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/',
         description: 'Build custom and secure applications directly in the MCE.',
-        mainTag: 'Marketing Cloud Engagement',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
     },
     {
         title: <>MCP Serverside Code Context</>,
         url: './docs/salesforce/marketing-cloud-personalization/serverside-code-context/',
         description: 'Undocumented secrets of coding MCP Campaign Templates.',
-        mainTag: 'Marketing Cloud Personalization',
+        tags: ['Marketing Cloud Personalization'],
+        cta: 'Read more »',
     },
-
 ];
 
 /**
- * Renders an article card based on the provided title, URL, description, and main tag.
+ * Renders a card component used for tools, categories and articles.
  *
- * @param {string} title - The title of the article.
- * @param {string} url - The URL of the article.
- * @param {string} description - The description of the article.
- * @param {string} mainTag - The main tag of the article.
- * @return {JSX.Element} The rendered article card component.
+ * @param {string} title - The title of the card.
+ * @param {string} url - The URL of the card.
+ * @param {string} description - The description of the card.
+ * @param {Array} tags - The tags for the card.
+ * @param {string} cta - The call to action text.
+ * @param {string} colSize - The column size class (e.g. 'col--3', 'col--6').
+ * @param {string} variant - Style variant ('card' for default, 'tool' for tool cards).
+ * @return {JSX.Element} The rendered card component.
  */
-function Article({ title, url, description, mainTag }) {
+function Card({ title, url, description, tags, cta, imageUrl, githubUrl, colSize = 'col--3', variant = 'card' }) {
+    const isToolVariant = variant === 'tool';
+    const imgUrl = useBaseUrl(imageUrl);
     return (
-        <div className='col col--3'>
-            <div className={clsx('card', styles.articleCard)}>
+        <div className={clsx('col', colSize)}>
+            <div className={clsx('card', styles.card, isToolVariant && styles.toolCard)}>
+                {isToolVariant && imgUrl && (
+                    <div className={styles.toolImageWrapper}>
+                        <Link to={url}>
+                            <img className={styles.toolImage} src={imgUrl} alt={title} />
+                        </Link>
+                    </div>
+                )}
                 <div className='card__header'>
-                    <Link className={styles.articleTitle} to={url}>
+                    <Link className={styles.cardTitle} to={url}>
                         <strong>{title}</strong>
                     </Link>
-                    <p className={styles.articleTag}>#{mainTag}</p>
+                    <p className={styles.cardTags}>
+                        {tags.map((tag, idx) => (
+                            <span key={idx}>#{tag}{idx < tags.length - 1 ? ' ' : ''}</span>
+                        ))}
+                    </p>
                 </div>
                 <div className='card__body'>{description}</div>
                 <div className='card__footer'>
-                    <Link className={styles.articleLink} to={url}>
-                        Read more »
-                    </Link>
+                    {isToolVariant ? (
+                        <div className={styles.toolFooter}>
+                            <Link className='button button--outline button--primary' to={url}>
+                                {cta}
+                            </Link>
+                            {githubUrl && (
+                                <Link className={styles.toolGithubLink} to={githubUrl}>
+                                    View on GitHub »
+                                </Link>
+                            )}
+                        </div>
+                    ) : (
+                        <Link className={styles.cardLink} to={url}>
+                            {cta}
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>
@@ -345,12 +376,11 @@ const events = [
 /**
  * Renders an event card component.
  *
- * @param {Object} props - The properties of the event.
- * @param {string} props.title - The title of the event.
- * @param {string} props.date - The date of the event.
- * @param {string} props.place - The location of the event.
- * @param {string} props.description - The description of the event.
- * @param {string} props.url - The URL to navigate to when the event card is clicked.
+ * @param {string} title - The title of the event.
+ * @param {string} date - The date of the event.
+ * @param {string} place - The location of the event.
+ * @param {string} description - The description of the event.
+ * @param {string} url - The URL for the event.
  * @return {JSX.Element} The rendered event card component.
  */
 function Event({ title, date, place, description, url }) {
@@ -432,9 +462,8 @@ function Home() {
 
             <Layout title="Automate Marketing Automation" description={customFields.description} keywords={customFields.keywords}>
                 <main>
-                    {/* Tagline */}
                     <Hero />
-                    {/* Let's Connect, Pick My Brain and Change The Cloud Section */}
+
                     {features && features.length > 0 && (
                         <section className={styles.features}>
                             <div className="container">
@@ -446,14 +475,29 @@ function Home() {
                             </div>
                         </section>
                     )}
-                    {/* Upcoming Events Section */}
-                    {futureEvents && futureEvents.length > 0 && (
-                        <section className={styles.events}>
+
+                    {freeTools && freeTools.length > 0 && (
+                        <section className={clsx(styles.section, styles.sectionAlt)}>
                             <div className="container">
-                                <h2 className={styles.eventsHeading}>
+                                <h2 className={styles.sectionHeading}>
+                                    Free Tools
+                                </h2>
+                                <div className={clsx('row', styles.centeredRow)}>
+                                    {freeTools.map((props, idx) => (
+                                        <Card key={idx} colSize='col--6' variant='tool' {...props} />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    )}
+
+                    {futureEvents && futureEvents.length > 0 && (
+                        <section className={clsx(styles.section, styles.sectionAlt)}>
+                            <div className="container">
+                                <h2 className={styles.sectionHeading}>
                                     Upcoming Events
                                 </h2>
-                                <div className={clsx('row', styles.eventRow)}>
+                                <div className={clsx('row', styles.centeredRow)}>
                                     {futureEvents.map((event, idx) => (
                                         <Event key={idx} {...event} />
                                     ))}
@@ -461,33 +505,33 @@ function Home() {
                             </div>
                         </section>
                     )}
-                    {/* Highlighted Categories Section */}
+
                     {highlightedCategories && highlightedCategories.length > 0 && (
-                        <section className={styles.categories}>
+                        <section className={clsx(styles.section, styles.sectionDark)}>
                             <div className="container">
-                                <h2 className={styles.categoriesHeading}>
+                                <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>
                                     Most popular topics
                                 </h2>
                                 <div className='row'>
                                     {highlightedCategories.map((props, idx) => (
-                                        <Category key={idx} {...props} />
+                                        <Card key={idx} {...props} />
                                     ))}
                                 </div>
                             </div>
                         </section>
                     )}
-                    {/* Newsletter Section */}
+
                     <Newsletter />
-                    {/* Highlighted Articles Section */}
+
                     {highlightedArticles && highlightedArticles.length > 0 && (
-                        <section className={styles.articles}>
+                        <section className={clsx(styles.section, styles.sectionDark)}>
                             <div className="container">
-                                <h2 className={styles.articlesHeading}>
+                                <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>
                                     Most popular docs & snippets
                                 </h2>
                                 <div className='row'>
                                     {highlightedArticles.map((props, idx) => (
-                                        <Article key={idx} {...props} />
+                                        <Card key={idx} {...props} />
                                     ))}
                                 </div>
                             </div>

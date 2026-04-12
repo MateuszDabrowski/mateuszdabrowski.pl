@@ -1,3 +1,4 @@
+/* Hero */
 .hero {
   background-color: #212121;
   padding: 48px;
@@ -85,12 +86,12 @@
   }
 }
 
-/* Animated word style */
 .animatedWord {
   display: inline-block;
   animation: scrollDown 1s ease-in-out;
 }
 
+/* Features */
 .features {
   display: flex;
   align-items: center;
@@ -126,90 +127,38 @@
   color: var(--ifm-color-secondary);
 }
 
-.articles,
-.categories {
-  display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
-}
-
-html[data-theme='light'] .articles,
-html[data-theme='light'] .categories {
-  background-color: #212121;
-}
-
-
-.articlesHeading,
-.categoriesHeading {
-  color: var(--ifm-color-primary);
-  font-size: var(--ifm-h3-font-size);
-  font-family: Courier, monospace;
-  text-transform: uppercase;
-  padding-top: 1rem;
-  padding-bottom: 2rem;
-  text-align: center;
-}
-
-html[data-theme='light'] .articlesHeading,
-html[data-theme='light'] .categoriesHeading {
-  color: var(--ifm-color-tertiary);
-}
-
-.articlesHeading:before,
-.categoriesHeading:before {
-  font-family: Courier, monospace;
-  content: "<";
-  color: var(--ifm-color-secondary);
-}
-
-.articlesHeading:after,
-.categoriesHeading:after {
-  font-family: Courier, monospace;
-  content: "/>";
-  color: var(--ifm-color-secondary);
-}
-
-.articleCard,
-.categoryCard {
-  margin-bottom: 2rem;
-}
-
-.articleTitle,
-.categoryTitle {
-  color: var(--ifm-color-primary);
-}
-
-.articleTag,
-.categoryTag {
-  color: var(--ifm-color-secondary);
-  font-size: var(--ifm-h5-font-size);
-}
-
-.articleLink,
-.categoryLink {
-  float: right;
-}
-
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Styles for the new event cards */
-.events {
+/* Shared section layout */
+.section {
   display: flex;
   align-items: center;
   padding: 2rem 0;
   width: 100%;
 }
 
-html[data-theme='dark'] .events {
+.sectionAlt {
+  composes: section;
+}
+
+html[data-theme='dark'] .sectionAlt {
   background-color: var(--ifm-card-background-color);
 }
 
-.eventsHeading {
+.sectionDark {
+  composes: section;
+}
+
+html[data-theme='light'] .sectionDark {
+  background-color: #212121;
+}
+
+/* Shared section heading */
+.sectionHeading {
   color: var(--ifm-color-primary);
   font-size: var(--ifm-h3-font-size);
   font-family: Courier, monospace;
@@ -219,22 +168,105 @@ html[data-theme='dark'] .events {
   text-align: center;
 }
 
-.eventsHeading:before {
+.sectionHeading:before {
   font-family: Courier, monospace;
   content: "<";
   color: var(--ifm-color-secondary);
 }
 
-.eventsHeading:after {
+.sectionHeading:after {
   font-family: Courier, monospace;
   content: "/>";
   color: var(--ifm-color-secondary);
 }
 
-.eventRow {
+html[data-theme='light'] .sectionHeadingDark {
+  color: var(--ifm-color-tertiary);
+}
+
+.centeredRow {
   justify-content: center;
 }
 
+/* Shared card styles */
+.card {
+  margin-bottom: 2rem;
+}
+
+.cardTitle {
+  color: var(--ifm-color-primary);
+}
+
+.cardTags {
+  color: var(--ifm-color-secondary);
+  font-size: var(--ifm-h5-font-size);
+}
+
+.cardLink {
+  float: right;
+}
+
+/* Tool card variant */
+.toolCard {
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--ifm-card-background-color);
+  box-shadow: var(--ifm-global-shadow-md) !important;
+}
+
+.toolCard .cardTitle {
+  font-size: var(--ifm-h4-font-size);
+}
+
+html[data-theme='dark'] .toolCard {
+  background-color: #212121;
+}
+
+.toolImageWrapper {
+  overflow: hidden;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.toolImage {
+  width: 100%;
+  height: 330px;
+  display: block;
+  object-fit: cover;
+  object-position: top left;
+  transition: transform 0.3s ease;
+}
+
+.toolImage:hover {
+  transform: scale(1.03);
+}
+
+.toolCard > .card__header,
+.toolCard > .card__body,
+.toolCard > .card__footer {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.toolCard > .card__footer {
+  padding-bottom: 16px;
+}
+
+.toolFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toolGithubLink {
+  color: var(--ifm-color-secondary);
+  font-size: var(--ifm-h5-font-size);
+}
+
+.toolGithubLink:hover {
+  color: var(--ifm-color-primary);
+}
+
+/* Event cards */
 .eventCardWrapper {
   display: flex;
   justify-content: center;
@@ -261,13 +293,13 @@ html[data-theme='dark'] .eventCard {
 }
 
 @media only screen and (max-width: 768px) {
-  .events {
+  .sectionAlt {
     padding-left: 20px;
     padding-right: 20px;
   }
 }
 
-/* Styles for the new newsletter section */
+/* Newsletter */
 .newsletter {
   display: flex;
   align-items: center;
