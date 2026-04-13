@@ -302,6 +302,30 @@ html[data-theme='dark'] .eventCard {
     padding-left: 20px;
     padding-right: 20px;
   }
+
+  .toolImage {
+    height: auto;
+    max-height: 250px;
+  }
+
+  .toolFooter {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .toolButtons {
+    width: 100%;
+    display: flex;
+  }
+
+  .toolButtons > a {
+    flex: 1;
+  }
+
+  .toolGithubLink {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 /* Newsletter */
