@@ -11,7 +11,7 @@ module.exports = {
             },
             items: [
                 'tools/salesforce/diagramforce',
-                'tools/salesforce/mce-world-clock',
+                'tools/salesforce/clockforce',
             ],
         },
     ],

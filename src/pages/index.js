@@ -142,15 +142,17 @@ const freeTools = [
         description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally to your browser\'s storage, export as JSON, PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',
         tags: ['Salesforce', 'Diagrams', 'Architecture', 'Data Model'],
         cta: 'Check it out',
+        articleUrl: './sites/tools/salesforce/diagramforce/',
     },
     {
-        title: <>MCE World Clock</>,
-        url: 'https://clock.mateuszdabrowski.pl',
-        githubUrl: 'https://github.com/MateuszDabrowski/mce-world-clock',
-        imageUrl: 'img/article/index-image-tool-mce-world-clock.png',
-        description: 'World Clock Web App for Salesforce Marketing Cloud Engagement users. Manage timezone conversions around MCE\'s fixed Central Standard Time server, auto-detect DST, and generate production-ready SQL, AMPScript and SSJS snippets with proper timezone handling. And yes, you can easily check when in your timezone your colleagues from the other side of the world want to have that call ;)',
+        title: <>Clockforce</>,
+        url: 'https://clockforce.mateuszdabrowski.pl',
+        githubUrl: 'https://github.com/MateuszDabrowski/clockforce',
+        imageUrl: 'img/article/index-image-tool-clockforce.png',
+        description: 'Timezone collaboration tool for global teams and Marketing Cloud Engagement users. Compare timezones on a visual timeline, save Time Blocks and share them via URL for easy cross-organization meeting planning - no calendar access needed. Plus, generate production-ready SQL, AMPScript and SSJS snippets with proper timezone handling around MCE\'s fixed UTC-6 server time.',
         tags: ['Marketing Cloud Engagement', 'Timezones', 'SQL', 'AMPScript', 'SSJS'],
         cta: 'Check it out',
+        articleUrl: './sites/tools/salesforce/clockforce/',
     },
 ];
 
@@ -256,16 +258,27 @@ const highlightedArticles = [
  * @param {string} variant - Style variant ('card' for default, 'tool' for tool cards).
  * @return {JSX.Element} The rendered card component.
  */
-function Card({ title, url, description, tags, cta, imageUrl, githubUrl, colSize = 'col--3', variant = 'card' }) {
+function Card({ title, url, description, tags, cta, imageUrl, githubUrl, articleUrl, colSize = 'col--3', variant = 'card' }) {
     const isToolVariant = variant === 'tool';
-    const imgUrl = useBaseUrl(imageUrl);
+    const imgPng = useBaseUrl(imageUrl);
+    const imgWebp = useBaseUrl(imageUrl?.replace(/\.png$/, '.webp'));
     return (
         <div className={clsx('col', colSize)}>
             <div className={clsx('card', styles.card, isToolVariant && styles.toolCard)}>
-                {isToolVariant && imgUrl && (
+                {isToolVariant && imgPng && (
                     <div className={styles.toolImageWrapper}>
                         <Link to={url}>
-                            <img className={styles.toolImage} src={imgUrl} alt={title} />
+                            <picture>
+                                <source srcSet={imgWebp} type="image/webp" />
+                                <img
+                                    className={styles.toolImage}
+                                    src={imgPng}
+                                    alt={title}
+                                    loading="lazy"
+                                    width={1200}
+                                    height={675}
+                                />
+                            </picture>
                         </Link>
                     </div>
                 )}
@@ -283,9 +296,16 @@ function Card({ title, url, description, tags, cta, imageUrl, githubUrl, colSize
                 <div className='card__footer'>
                     {isToolVariant ? (
                         <div className={styles.toolFooter}>
-                            <Link className='button button--outline button--primary' to={url}>
-                                {cta}
-                            </Link>
+                            <div className={styles.toolButtons}>
+                                <Link className='button button--outline button--primary' to={url}>
+                                    {cta}
+                                </Link>
+                                {articleUrl && (
+                                    <Link className='button button--outline button--secondary' to={articleUrl}>
+                                        Learn more
+                                    </Link>
+                                )}
+                            </div>
                             {githubUrl && (
                                 <Link className={styles.toolGithubLink} to={githubUrl}>
                                     View on GitHub »

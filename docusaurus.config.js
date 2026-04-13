@@ -149,8 +149,8 @@ module.exports = {
                             to: 'https://diagramforce.mateuszdabrowski.pl',
                         },
                         {
-                            label: 'MCE World Clock',
-                            to: 'https://clock.mateuszdabrowski.pl',
+                            label: 'Clockforce',
+                            to: 'https://clockforce.mateuszdabrowski.pl',
                         },
                     ],
                 },

@@ -257,6 +257,11 @@ html[data-theme='dark'] .toolCard {
   justify-content: space-between;
 }
 
+.toolButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .toolGithubLink {
   color: var(--ifm-color-secondary);
   font-size: var(--ifm-h5-font-size);
