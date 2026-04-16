@@ -11,8 +11,8 @@
 
 
 <link rel="search" type="application/opensearchdescription+xml" title="Mateusz Dąbrowski" href="/opensearch.xml"><link rel="stylesheet" href="/assets/css/styles.34be50e2.css">
-<script src="/assets/js/runtime~main.14a19adf.js" defer="defer"></script>
-<script src="/assets/js/main.e9564e03.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.de90ba6f.js" defer="defer"></script>
+<script src="/assets/js/main.19683869.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -128,6 +128,7 @@ In most cases you will see only <code>Exact Target</code> in your database.</li>
 <li class="">Only after that you will be able to see this Data View and the delivery status of your transactional messages in it.</li>
 </ul>
 </li>
+<li class="">Alternatively just use Transactional Journey and set its Email/SMS to use Reconciliation to skip all that mess.</li>
 <li class="">When triggering transactional message provide a MessageKey (up to 100 characters) along with other data to allow for matching with your transactional source system (e.g. e-commerce platform). Thanks to the reconciliation feature, even if source system triggers multiple messages with the same MessageKey, MCE will only process the first one protecting recipients from duplicate messaging. If you do not provide a MessageKey, MCE will generate the MessageKey for you.</li>
 <li class="">Extend <a class="" href="/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/">Email and SMS Send Logs</a> with the MessageKey to simplify the process of matching transactional sends delivery status with various events from multiple Data Views like <a href="#_open" class=""><code>_Open</code></a>, <a href="#_click" class=""><code>_Click</code></a>, <a href="#_bounce" class=""><code>_Bounce</code></a>.</li>
 <li class="">The message will get Disposition <code>0</code> (Queued) when it is triggered and stay in this state until it is processed for delivery and left Marketing Cloud (then it will get updated to <code>1</code> (Sent)) or if it was not sent at all or is still in queue after the expiration window (then it will get updated to <code>2</code> (NotSent)).</li>
