@@ -450,13 +450,14 @@ When working with `_ReconcilableDispositionView` Data View:
     - Use this Data Extension as a sendable data source for your transactional sends.
     - Configure Transactional Reconciliation expiration window to wait between 1 and 72 hours for the final delivery status of your messages. Messages still in queue after that time will be expired and marked as NotSent.
     - Only after that you will be able to see this Data View and the delivery status of your transactional messages in it.
-2. When triggering transactional message provide a MessageKey (up to 100 characters) along with other data to allow for matching with your transactional source system (e.g. e-commerce platform). Thanks to the reconciliation feature, even if source system triggers multiple messages with the same MessageKey, MCE will only process the first one protecting recipients from duplicate messaging. If you do not provide a MessageKey, MCE will generate the MessageKey for you.
-3. Extend [Email and SMS Send Logs](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx) with the MessageKey to simplify the process of matching transactional sends delivery status with various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce).
-4. The message will get Disposition `0` (Queued) when it is triggered and stay in this state until it is processed for delivery and left Marketing Cloud (then it will get updated to `1` (Sent)) or if it was not sent at all or is still in queue after the expiration window (then it will get updated to `2` (NotSent)).
-4. `ErrorCodeID`, `ErrorName`, and `ErrorDescription` will be populated only if `Disposition` is equal to `2` (NotSent). If your transactional messages are not being delivered, check these fields to understand why.
-5. `StartTime` field allows you to track trigger time for transactional messages. For Data Extension sends, it will be the time when the job started. For API sends, it will be the time when the API call was received. It's fun data point to compare against [`_Sent`](#_sent) `EventDate` to check the time it took for the message to be sent after the trigger.
-6. `SubscriberID` field might be null if there are issues with the subscriber record.
-7. Data retention for this Data View is only 7 days.
+2. Alternatively just use Transactional Journey and set its Email/SMS to use Reconciliation to skip all that mess.
+3. When triggering transactional message provide a MessageKey (up to 100 characters) along with other data to allow for matching with your transactional source system (e.g. e-commerce platform). Thanks to the reconciliation feature, even if source system triggers multiple messages with the same MessageKey, MCE will only process the first one protecting recipients from duplicate messaging. If you do not provide a MessageKey, MCE will generate the MessageKey for you.
+4. Extend [Email and SMS Send Logs](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx) with the MessageKey to simplify the process of matching transactional sends delivery status with various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce).
+5. The message will get Disposition `0` (Queued) when it is triggered and stay in this state until it is processed for delivery and left Marketing Cloud (then it will get updated to `1` (Sent)) or if it was not sent at all or is still in queue after the expiration window (then it will get updated to `2` (NotSent)).
+6. `ErrorCodeID`, `ErrorName`, and `ErrorDescription` will be populated only if `Disposition` is equal to `2` (NotSent). If your transactional messages are not being delivered, check these fields to understand why.
+7. `StartTime` field allows you to track trigger time for transactional messages. For Data Extension sends, it will be the time when the job started. For API sends, it will be the time when the API call was received. It's fun data point to compare against [`_Sent`](#_sent) `EventDate` to check the time it took for the message to be sent after the trigger.
+8. `SubscriberID` field might be null if there are issues with the subscriber record.
+9. Data retention for this Data View is only 7 days.
 
 ---
 
