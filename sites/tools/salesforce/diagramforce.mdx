@@ -13,7 +13,7 @@ import { Button, ButtonRow } from '/src/components/Buttons.js';
 
 Salesforce projects involve complex architectures spanning multiple clouds, integrations, and data flows. Communicating these structures clearly to stakeholders, developers, and admins is essential - but general-purpose diagramming tools often lack Salesforce-specific context or include hefty licensing fees, and platform-native options can be limiting.
 
-**Diagramforce** is a free, browser-based editor purpose-built for Salesforce diagrams covering all project needs. It ships with Salesforce icons, BPMN process shapes, data model objects, org charts, and Gantt timelines - all styled with the Salesforce Lightning Design System (SLDS) for a native look and feel.
+**Diagramforce** is a free, browser-based editor purpose-built for Salesforce diagrams covering all project needs. It ships with Salesforce icons, BPMN process shapes, data model objects, org charts, Gantt timelines, and UML sequence diagrams - all styled with the Salesforce Lightning Design System (SLDS) for a native look and feel.
 
 Everything runs locally in your browser. No sign-up, no server, no data leaves your machine.
 
@@ -25,9 +25,9 @@ The app code is 100% AI generated as a part of my exploration of AI capabilities
 
 <Button link="https://diagramforce.mateuszdabrowski.pl/" text="Open App" newTab="true" />
 
-## Five Diagram Types in One Tool
+## Six Diagram Types in One Tool
 
-Instead of switching between different tools for different needs, Diagramforce offers five specialized diagram types - each with its own shape palette, stencil categories, and sensible defaults:
+Instead of switching between different tools for different needs, Diagramforce offers six specialized diagram types - each with its own shape palette, stencil categories, and sensible defaults:
 
 ### Architecture Diagrams
 
@@ -49,6 +49,10 @@ Map out your Salesforce team structure with person cards that include avatars, r
 
 Plan and communicate Salesforce project timelines with tasks, milestones, groups, and a timeline ruler. Useful for implementation roadmaps, release planning, and stakeholder updates.
 
+### Sequence Diagrams
+
+UML sequence diagrams with participants, actors, activation boxes, and alt/loop fragments - perfect for documenting integration flows, authentication handshakes, and asynchronous API conversations. Reply-direction messages default to dashed lines to match UML convention, self-messages are drawn on one side of the lifeline, and participant headers are mirrored at the foot of long lifelines so the reader never loses track of who is who.
+
 ## Key Features
 
 - __Drag & Drop Stencil__: Searchable shape palette with Salesforce-specific icons and templates - just drag onto the canvas.
@@ -60,7 +64,7 @@ Plan and communicate Salesforce project timelines with tasks, milestones, groups
 - __Dark & Light Themes__: Toggle between themes - diagrams adapt automatically with SLDS-consistent styling.
 - __Multiple Export Options__: Save to browser storage, export as JSON for version control, or as PNG for presentations.
 - __URL Sharing__: Generate a shareable link that encodes your entire diagram in the URL and shares a copy - no server needed.
-- __Mermaid Import (beta)__: Paste mermaid.js source - `graph`, `flowchart`, `stateDiagram`, or `erDiagram` - and Diagramforce converts it into a native, fully-editable diagram with auto-layout applied.
+- __Mermaid Import (beta)__: Paste mermaid.js source - `graph`, `flowchart`, `stateDiagram`, `erDiagram`, or `sequenceDiagram` - and Diagramforce converts it into a native, fully-editable diagram with auto-layout applied.
 - __LLM Spec__: On GitHub you can also find a [Diagram JSON specification](https://github.com/MateuszDabrowski/diagramforce/blob/main/DIAGRAM_JSON_SPEC.md) that allows you to generate diagrams with AI or code - the possibilities are endless.
 
 ## Built on Solid Foundations
