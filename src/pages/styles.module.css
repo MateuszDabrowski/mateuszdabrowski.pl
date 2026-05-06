@@ -240,14 +240,14 @@ html[data-theme='dark'] .toolCard {
   transform: scale(1.03);
 }
 
-.toolCard > .card__header,
-.toolCard > .card__body,
-.toolCard > .card__footer {
+.toolCard>.card__header,
+.toolCard>.card__body,
+.toolCard>.card__footer {
   padding-left: 16px;
   padding-right: 16px;
 }
 
-.toolCard > .card__footer {
+.toolCard>.card__footer {
   padding-bottom: 16px;
 }
 
@@ -318,7 +318,7 @@ html[data-theme='dark'] .eventCard {
     display: flex;
   }
 
-  .toolButtons > a {
+  .toolButtons>a {
     flex: 1;
   }
 
@@ -402,4 +402,10 @@ html[data-theme='dark'] .eventCard {
     justify-content: flex-start;
     margin-top: 1rem;
   }
+}
+
+/* FAQ Details - Admonition Note Grey */
+.faqDetails {
+  --ifm-alert-background-color: var(--ifm-color-secondary-contrast-background);
+  --ifm-alert-border-color: var(--ifm-color-secondary-dark);
 }

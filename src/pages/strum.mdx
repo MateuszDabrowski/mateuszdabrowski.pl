@@ -1,0 +1,470 @@
+---
+title: Strum - Tabs Made Easy
+description: Tablature, chord and strum-pattern editor for ukulele and guitar - for iPhone, iPad, and Mac.
+keywords: [strum, ukulele, guitar, tablature, tab editor, chord editor, ios app, ipad app, mac app, mateusz dąbrowski]
+slug: /strum
+hide_table_of_contents: false
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+import clsx from 'clsx';
+import styles from './styles.module.css';
+
+<Head>
+  <link rel="canonical" href="https://mateuszdabrowski.pl/strum/" />
+  <meta property="og:url" content="https://mateuszdabrowski.pl/strum/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Strum - Ukulele & Guitar Tabs Made Easy" />
+  <meta property="og:description" content="Tab, chords and strum patterns for ukulele and guitar. iPhone, iPad, and Mac." />
+  <meta property="og:image" content="https://mateuszdabrowski.pl/img/og/og-image-strum.png" />
+</Head>
+
+{/* Hero section */}
+<header className={styles.hero} style={{ borderRadius: '44px', marginTop: '1rem', marginBottom: '2rem' }}>
+  <div className={styles.heroInner}>
+    <div style={{textAlign: 'center', paddingBottom: '2rem'}}>
+      <img
+        src="/img/apple/strum/Strum_light.png"
+        alt="Strum app icon"
+        width={128}
+        height={128}
+        style={{
+          width: 128,
+          height: 128,
+          borderRadius: '22.37%',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+          marginBottom: '1rem'
+        }}
+      />
+
+      <h1 className={styles.heroProjectTagline} style={{marginBottom: '0.5rem'}}>
+        Strum
+      </h1>
+
+      <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--ifm-color-primary)', margin: '0 0 1.5rem' }}>
+        Write. Tune. Play.
+      </p>
+
+      <p
+        style={{
+          fontSize: '1.15rem',
+          maxWidth: '640px',
+          margin: '0 auto 2rem',
+          lineHeight: 1.55,
+          color: '#ffffff',
+          opacity: 0.9
+        }}
+      >
+        A clean, focused tablature editor for ukulele and guitar. Quickly write tabs, simulate playback to check your timing, tune your instrument and play the songs with metronome auto-scrolling the tab.
+      </p>
+
+      <p style={{margin: '0 0 1.5rem'}}>
+        <a
+          href="https://apps.apple.com/app/id0000000000"
+          aria-label="Download Strum on the App Store"
+          style={{display: 'inline-block', lineHeight: 0}}
+        >
+          <img
+            src="/img/apple/appstore.svg"
+            alt="Download on the App Store"
+            height={48}
+            style={{height: 48, width: 'auto'}}
+          />
+        </a>
+      </p>
+
+      <p
+        style={{
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: '0.9rem',
+          lineHeight: 1.5,
+          margin: 0,
+        }}
+      >
+        iPhone · iPad · Mac (Apple Silicon)<br/>
+        Requires iOS / iPadOS / macOS 26 or later
+      </p>
+    </div>
+  </div>
+</header>
+
+{/* Main Device Showcase */}
+<section className={styles.section}>
+  <div className="container">
+    <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
+      <div className="col col--7" style={{textAlign: 'center'}}>
+        <a href="/img/apple/strum/Strum13Read.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
+          <img
+            src="/img/apple/strum/Strum13Read.png"
+            alt="Strum running on iPad"
+            style={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '8px'}}
+          />
+        </a>
+      </div>
+      <div className="col col--5" style={{textAlign: 'center'}}>
+        <a href="/img/apple/strum/Strum6EditBeat.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
+          <img
+            src="/img/apple/strum/Strum6EditBeat.png"
+            alt="Strum running on iPhone"
+            style={{maxWidth: '100%', height: 'auto', maxHeight: '520px', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '24px'}}
+          />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Why Strum */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 2rem' }}>
+
+    <div className="text--center" style={{marginBottom: '2.5rem'}}>
+
+## <span style={{fontSize: '2.5rem'}}>Why Strum</span>
+
+    </div>
+
+    <div className="row">
+      <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Write at the Speed of Thought</span>
+
+        <p>
+          Combine staff, tabs, chords, and lyrics unified on a single screen. Effortlessly configure song sections and quickly duplicate measures to build arrangements fast.
+        </p>
+      </div>
+      <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Hear It, Hands-Free</span>
+
+        <p>
+          Simulate playback instantly to check your timing. With a built-in metronome, precise subdivision control, and follow-tab auto-scrolling, your hands never have to leave the instrument.
+        </p>
+      </div>
+      <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Total Customization</span>
+
+        <p>
+          Your sound, your rules. Build exact finger placements with the multi-fret chord editor, and design intricate custom strum patterns from strokes, mutes, and rests.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* What's inside Header */}
+<div className="container">
+  <div className="text--center" style={{marginTop: '4rem', marginBottom: '1rem'}}>
+
+## <span style={{fontSize: '2.5rem'}}>What's inside</span>
+
+  </div>
+</div>
+
+{/* Feature 1: Tab-first Editing */}
+<section className={styles.section}>
+  <div className="container">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{padding: '2rem'}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Tab-first Editing</span>
+
+        <p style={{fontSize: '1.1rem'}}>
+          Tap a beat to add notes; long-press for finger overrides, ties, and rests. Effortlessly arrange longer pieces by configuring custom song sections, adding repeat barlines, and quickly duplicating entire measures or sections. Supports Ukulele (high-G/low-G) and guitar (standard EADGBe).
+        </p>
+      </div>
+      <div className="col col--6" style={{textAlign: 'center'}}>
+        <a href="/img/apple/strum/Strum13EditBeat.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
+          <img
+            src="/img/apple/strum/Strum13EditBeat.png"
+            alt="Tab first editing interface"
+            style={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature 2: Chord & Strum Libraries */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{textAlign: 'center', order: 1}}>
+        <a href="/img/apple/strum/Strum6EditFingers.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
+          <img
+            src="/img/apple/strum/Strum6EditFingers.png"
+            alt="Custom chords and strum library"
+            style={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          />
+        </a>
+      </div>
+      <div className="col col--6" style={{padding: '2rem', order: 2}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Chord & Strum Libraries</span>
+
+        <p style={{fontSize: '1.1rem'}}>
+          Go beyond the defaults. Use standard shapes or build your own with the multi-fret finger editor to specify exact custom finger placements. Design intricate custom strum patterns from strokes, mutes, and rests. Save any custom shape or strum pattern to your global library to reuse it everywhere, or keep it specific to just one song.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature 3: Built-in Tuner */}
+<section className={styles.section}>
+  <div className="container">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{padding: '2rem'}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Built-in Tuner</span>
+
+        <p style={{fontSize: '1.1rem'}}>
+          Pluck a string, see flat/sharp/in-tune feedback in real time. Audio is processed entirely on-device and never recorded or transmitted. Perfect for quick adjustments before you start playing.
+        </p>
+      </div>
+      <div className="col col--6" style={{textAlign: 'center'}}>
+        <a href="/img/apple/strum/Strum6Tuner.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
+          <img
+            src="/img/apple/strum/Strum6Tuner.png"
+            alt="Tuner interface on iPhone"
+            style={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature 4: Playback & Metronome */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{textAlign: 'center', order: 1}}>
+        <a href="/img/apple/strum/Strum13Metronome.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
+          <img
+            src="/img/apple/strum/Strum13Metronome.png"
+            alt="Playback and metronome on iPad"
+            style={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          />
+        </a>
+      </div>
+      <div className="col col--6" style={{padding: '2rem', order: 2}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Playback & Metronome</span>
+
+        <p style={{fontSize: '1.1rem'}}>
+          Tempo wheel for live BPM changes and granular subdivision control. The follow-tab automatically scrolls the song along with the metronome for a completely hands-free practice experience. Simulated playback seamlessly respects all your configured repeats and section markers.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature 5: Sync & Export */}
+<section className={styles.section} style={{ margin: '4rem 0' }}>
+  <div className="container" style={{ backgroundColor: '#212121', borderRadius: '16px', padding: '4rem 3rem' }}>
+    <div className="row">
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>Private iCloud Sync</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          Songs, folders, and preferences sync automatically through your private CloudKit database. No accounts. No analytics. No third-party servers.
+        </p>
+      </div>
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>Export & Share</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          Export any song as a clean vector PDF or image to print and share. You can also send the native <code style={{color: '#212121', backgroundColor: '#f5f6f7', padding: '0.2rem 0.4rem', borderRadius: '4px'}}>.strum</code> file directly to other users for seamless app-to-app collaboration.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section className={styles.section}>
+  <div className="container">
+
+## Support {#support}
+
+<p>
+  Need help, found a bug, or want to suggest a feature? Email
+  **[strum_support@mateuszdabrowski.pl](mailto:strum_support@mateuszdabrowski.pl)**.
+  Include your device model and OS version — it makes most issues quicker to diagnose. I read every email.
+</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Frequently asked questions
+
+    </div>
+
+<details className={styles.faqDetails}>
+  <summary>Where are my songs stored?</summary>
+
+  On your device, and synced to your private iCloud account. Nothing is stored on a server I control. See the [privacy policy](#privacy-policy) below for details.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>A song I made on iPad isn't showing up on iPhone.</summary>
+
+  Both devices need to be signed into the same iCloud account, with iCloud Drive on. Open Strum's **Settings → About** tab — if it says "Local-only fallback", iCloud isn't reachable; sign into iCloud in the system Settings app and re-launch Strum. Sync usually catches up within 30 seconds.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>I deleted a song by accident.</summary>
+
+  Songs go to **Trash** for 7 days before they're permanently removed. Open the Trash section in the sidebar, swipe the song, and tap **Restore**.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>The tuner says my strings are wildly out of tune.</summary>
+
+  Make sure you've selected the right tuning in **Song header → Tuning** (high-G, low-G, or guitar standard). The tuner expects the notes for the active tuning.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Can I print or share a song as PDF?</summary>
+
+  Yes — open the song, tap the share icon, and choose to export as a **PDF**, an **Image**, or a native **.strum** file (perfect for sending to other Strum users). When exporting a PDF or Image, the output will exactly match what is currently configured in your view—if you toggle off the staff or lyrics in the app, they will be hidden in the export too. To export many songs at once, use **Settings → Export library**.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Does Strum support [feature X]?</summary>
+
+  The current scope is described above. If the feature you need isn't there, write in — I read every email and feature requests inform what ships next.
+
+</details>
+
+<br/>
+
+:::note Reporting a bug
+**Useful details to include:**
+* A short description of what happened.
+* What you expected to happen.
+* The Strum build number (visible in **Settings → About**).
+* Your device and OS version.
+* A screenshot, if relevant.
+* For song-specific bugs: the exported `.strum` file (Editor → ⋯ → Export Song).
+:::
+
+  </div>
+</section>
+
+{/* Visual separator for Privacy Policy */}
+<section className={styles.section} style={{ marginBottom: '4rem' }}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 3rem' }}>
+
+## Privacy Policy {#privacy-policy}
+
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: May 4, 2026</p>
+
+<p>Strum is built by Mateusz Dąbrowski. This policy explains what data the Strum app handles and how. It is short because Strum collects very little.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Data Strum stores
+
+    </div>
+
+<p>When you create a song, folder, chord shape, strum pattern, or preference inside Strum, that data is saved to your device and synced to **your private iCloud account** through Apple's CloudKit service. Specifically:</p>
+
+<ul>
+  <li>Songs and their sections, measures, beats, tab notes, and lyrics.</li>
+  <li>Folders and the songs contained in them.</li>
+  <li>Custom chord shapes you create.</li>
+  <li>Custom strum patterns you create.</li>
+  <li>App preferences (default tempo, tuning, time signature, default fingerings, metronome settings, follow-tab options).</li>
+</ul>
+
+<p>This data never reaches a server controlled by me. It is stored in your iCloud private database and is visible only to you, on devices signed into the same Apple ID. I — the developer — cannot see it.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Data Strum does not collect
+
+    </div>
+
+<p>Strum does **not** collect, transmit, or store any of the following:</p>
+
+<ul>
+  <li>Personal information (name, address, phone, email).</li>
+  <li>Account credentials.</li>
+  <li>Analytics, telemetry, crash reports, or usage data.</li>
+  <li>Advertising identifiers.</li>
+  <li>Location data.</li>
+  <li>Contacts, photos, calendars, or other system data.</li>
+</ul>
+
+<p>There are no third-party SDKs in the app and no external servers the app talks to.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Microphone
+
+    </div>
+
+<p>Strum requests microphone permission only when you open the **in-app tuner**. The tuner listens to a string you pluck and tells you whether it's in tune. Audio is processed entirely on-device, in real time, and is **never recorded, saved, or transmitted**. If you deny microphone permission, every other part of Strum continues to work normally — only the tuner is affected.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### iCloud
+
+    </div>
+
+<p>Strum's sync uses your iCloud account. Apple's privacy policy governs how iCloud handles your data: [apple.com/legal/privacy](https://www.apple.com/legal/privacy/). If you sign out of iCloud, or disable iCloud for Strum in Settings, the app continues to work — your library is stored locally on the device. New changes simply stop syncing to other devices.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Children's privacy
+
+    </div>
+
+<p>Strum is rated 4+ and is suitable for all ages. Because Strum does not collect any personal information, it complies with COPPA and similar laws by design.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Deleting your data
+
+    </div>
+
+<p>Songs you delete in Strum go to a **Trash** folder for 7 days, then are permanently removed from your iCloud private database. You can also empty the Trash manually from the sidebar.</p>
+
+<p>To remove all Strum data from iCloud at once: delete the app from each of your devices, then go to **Settings → [Your Name] → iCloud → Manage Account Storage → Strum** on iOS, or **System Settings → Apple Account → iCloud → Manage → Strum** on macOS, and tap **Delete Data**.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Changes to this policy
+
+    </div>
+
+<p>If the policy changes, I'll update the "Last updated" date above and post the new version at the same URL. Material changes will be called out in the app's release notes.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Contact
+
+    </div>
+
+<p>Questions about this policy or about Strum's data handling: **[strum_support@mateuszdabrowski.pl](mailto:strum_support@mateuszdabrowski.pl)**.</p>
+
+  </div>
+</section>

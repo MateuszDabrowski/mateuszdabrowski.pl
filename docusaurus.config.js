@@ -140,8 +140,8 @@ module.exports = {
                     ],
                 },
                 {
-                    label: 'Tools',
-                    to: 'sites/category/tools/',
+                    label: 'Apps',
+                    to: 'sites/category/apps/',
                     position: 'left',
                     items: [
                         {
@@ -151,6 +151,10 @@ module.exports = {
                         {
                             label: 'Clockforce',
                             to: 'https://clockforce.mateuszdabrowski.pl',
+                        },
+                        {
+                            label: 'Strum',
+                            to: 'strum',
                         },
                     ],
                 },
@@ -619,6 +623,19 @@ module.exports = {
                     {
                         from: ['/sites/faq/how-to-get-sf-certification-vouchers/'],
                         to:'/sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
+                    },
+                    /* Tools pages restructure */
+                    {
+                        from: ['/sites/category/tools/'],
+                        to: '/sites/category/apps/'
+                    },
+                    {
+                        from: ['/sites/tools/salesforce/diagramforce/'],
+                        to: '/sites/apps/salesforce/diagramforce/',
+                    },
+                    {
+                        from: ['/sites/tools/salesforce/clockforce/'],
+                        to:'/sites/apps/salesforce/clockforce/',
                     },
                 ],
             },

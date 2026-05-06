@@ -2,16 +2,16 @@ module.exports = {
     tools: [
         {
             type: 'category',
-            label: 'Tools',
+            label: 'Apps',
             link: {
                 type: 'generated-index',
-                title: 'Tools',
+                title: 'Apps',
                 description: 'Here you can find all my Salesforce tools and apps.',
                 image: 'img/og/og-image-tools.png',
             },
             items: [
-                'tools/salesforce/diagramforce',
-                'tools/salesforce/clockforce',
+                'apps/salesforce/diagramforce',
+                'apps/salesforce/clockforce',
             ],
         },
     ],

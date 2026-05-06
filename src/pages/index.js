@@ -133,7 +133,7 @@ function Feature({ imageUrl, title, description, url, cta }) {
     );
 }
 
-const freeTools = [
+const freeApps = [
     {
         title: <>Diagramforce</>,
         url: 'https://diagramforce.mateuszdabrowski.pl',
@@ -142,7 +142,7 @@ const freeTools = [
         description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally to your browser\'s storage, export as JSON, PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',
         tags: ['Salesforce', 'Diagrams', 'Architecture', 'Data Model'],
         cta: 'Check it out',
-        articleUrl: './sites/tools/salesforce/diagramforce/',
+        articleUrl: './sites/apps/salesforce/diagramforce/',
     },
     {
         title: <>Clockforce</>,
@@ -152,7 +152,7 @@ const freeTools = [
         description: 'Timezone collaboration tool for global teams and Marketing Cloud Engagement users. Compare timezones on a visual timeline, save Time Blocks and share them via URL for easy cross-organization meeting planning - no calendar access needed. Plus, generate production-ready SQL, AMPScript and SSJS snippets with proper timezone handling around MCE\'s fixed UTC-6 server time.',
         tags: ['Marketing Cloud Engagement', 'Timezones', 'SQL', 'AMPScript', 'SSJS'],
         cta: 'Check it out',
-        articleUrl: './sites/tools/salesforce/clockforce/',
+        articleUrl: './sites/apps/salesforce/clockforce/',
     },
 ];
 
@@ -496,14 +496,14 @@ function Home() {
                         </section>
                     )}
 
-                    {freeTools && freeTools.length > 0 && (
+                    {freeApps && freeApps.length > 0 && (
                         <section className={clsx(styles.section, styles.sectionAlt)}>
                             <div className="container">
                                 <h2 className={styles.sectionHeading}>
-                                    Free Tools
+                                    Free Apps
                                 </h2>
                                 <div className={clsx('row', styles.centeredRow)}>
-                                    {freeTools.map((props, idx) => (
+                                    {freeApps.map((props, idx) => (
                                         <Card key={idx} colSize='col--6' variant='tool' {...props} />
                                     ))}
                                 </div>
