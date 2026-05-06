@@ -8,8 +8,52 @@ hide_table_of_contents: false
 
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import styles from './styles.module.css';
+
+{/* Custom Inline React Component for Image Lightbox Overlay */}
+export const ZoomImage = ({ src, alt, imgStyle }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <img
+        src={src}
+        alt={alt}
+        style={{ cursor: 'zoom-in', ...imgStyle }}
+        onClick={() => setIsOpen(true)}
+      />
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 99999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'zoom-out',
+            backdropFilter: 'blur(5px)',
+            margin: 0,
+            padding: 0
+          }}
+          onClick={() => setIsOpen(false)}
+        >
+          <div style={{ position: 'absolute', top: '24px', right: '32px', color: '#ffffff', fontSize: '3rem', fontWeight: '300', lineHeight: 1 }}>&times;</div>
+          <img
+            src={src}
+            alt={alt}
+            style={{ maxHeight: '90vh', maxWidth: '90vw', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
+          />
+        </div>
+      )}
+    </>
+  );
+};
 
 <Head>
   <link rel="canonical" href="https://mateuszdabrowski.pl/strum/" />
@@ -94,22 +138,18 @@ import styles from './styles.module.css';
   <div className="container">
     <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
       <div className="col col--7" style={{textAlign: 'center'}}>
-        <a href="/img/apple/strum/Strum13Read.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
-          <img
-            src="/img/apple/strum/Strum13Read.png"
-            alt="Strum running on iPad"
-            style={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '8px'}}
-          />
-        </a>
+        <ZoomImage
+          src="/img/apple/strum/Strum13Read.webp"
+          alt="Strum running on iPad"
+          imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '8px'}}
+        />
       </div>
       <div className="col col--5" style={{textAlign: 'center'}}>
-        <a href="/img/apple/strum/Strum6EditBeat.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
-          <img
-            src="/img/apple/strum/Strum6EditBeat.png"
-            alt="Strum running on iPhone"
-            style={{maxWidth: '100%', height: 'auto', maxHeight: '520px', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '24px'}}
-          />
-        </a>
+        <ZoomImage
+          src="/img/apple/strum/Strum6EditBeat.webp"
+          alt="Strum running on iPhone"
+          imgStyle={{maxWidth: '100%', height: 'auto', maxHeight: '520px', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '24px'}}
+        />
       </div>
     </div>
   </div>
@@ -176,13 +216,11 @@ import styles from './styles.module.css';
         </p>
       </div>
       <div className="col col--6" style={{textAlign: 'center'}}>
-        <a href="/img/apple/strum/Strum13EditBeat.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
-          <img
-            src="/img/apple/strum/Strum13EditBeat.png"
-            alt="Tab first editing interface"
-            style={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-          />
-        </a>
+        <ZoomImage
+          src="/img/apple/strum/Strum13EditBeat.webp"
+          alt="Tab first editing interface"
+          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
       </div>
     </div>
   </div>
@@ -193,13 +231,11 @@ import styles from './styles.module.css';
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
     <div className="row" style={{alignItems: 'center'}}>
       <div className="col col--6" style={{textAlign: 'center', order: 1}}>
-        <a href="/img/apple/strum/Strum6EditFingers.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
-          <img
-            src="/img/apple/strum/Strum6EditFingers.png"
-            alt="Custom chords and strum library"
-            style={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-          />
-        </a>
+        <ZoomImage
+          src="/img/apple/strum/Strum6EditFingers.webp"
+          alt="Custom chords and strum library"
+          imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
       </div>
       <div className="col col--6" style={{padding: '2rem', order: 2}}>
 
@@ -226,13 +262,11 @@ import styles from './styles.module.css';
         </p>
       </div>
       <div className="col col--6" style={{textAlign: 'center'}}>
-        <a href="/img/apple/strum/Strum6Tuner.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
-          <img
-            src="/img/apple/strum/Strum6Tuner.png"
-            alt="Tuner interface on iPhone"
-            style={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-          />
-        </a>
+        <ZoomImage
+          src="/img/apple/strum/Strum6Tuner.webp"
+          alt="Tuner interface on iPhone"
+          imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
       </div>
     </div>
   </div>
@@ -243,13 +277,11 @@ import styles from './styles.module.css';
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
     <div className="row" style={{alignItems: 'center'}}>
       <div className="col col--6" style={{textAlign: 'center', order: 1}}>
-        <a href="/img/apple/strum/Strum13Metronome.png" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', cursor: 'zoom-in' }}>
-          <img
-            src="/img/apple/strum/Strum13Metronome.png"
-            alt="Playback and metronome on iPad"
-            style={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-          />
-        </a>
+        <ZoomImage
+          src="/img/apple/strum/Strum13Metronome.webp"
+          alt="Playback and metronome on iPad"
+          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
       </div>
       <div className="col col--6" style={{padding: '2rem', order: 2}}>
 
