@@ -100,7 +100,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
           opacity: 0.9
         }}
       >
-        A clean, focused tablature editor for ukulele and guitar. Quickly write tabs, simulate playback to check your timing, tune your instrument and play the songs with metronome auto-scrolling the tab.
+        A clean, focused tablature editor for ukulele and guitar. Quickly write tabs, simulate playback to check your timing, tune your instrument, and practice with a metronome that auto-scrolls the tab and ramps the tempo to build muscle memory.
       </p>
 
       <p style={{margin: '0 0 1.5rem'}}>
@@ -139,14 +139,14 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
     <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
       <div className="col col--7" style={{textAlign: 'center'}}>
         <ZoomImage
-          src="/img/apple/strum/Strum13Read.webp"
+          src="/img/apple/strum/Strum-Pad-Read.webp"
           alt="Strum running on iPad"
           imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '8px'}}
         />
       </div>
       <div className="col col--5" style={{textAlign: 'center'}}>
         <ZoomImage
-          src="/img/apple/strum/Strum6EditBeat.webp"
+          src="/img/apple/strum/Strum-Phone-AddBeat.webp"
           alt="Strum running on iPhone"
           imgStyle={{maxWidth: '100%', height: 'auto', maxHeight: '520px', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '24px'}}
         />
@@ -176,10 +176,10 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
       </div>
       <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
 
-### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Hear It, Hands-Free</span>
+### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Hear It,<br/>Hands-Free</span>
 
         <p>
-          Simulate playback instantly to check your timing. With a built-in metronome, precise subdivision control, and follow-tab auto-scrolling, your hands never have to leave the instrument.
+          Simulate playback instantly to check your timing. With a built-in metronome, precise subdivision control, and follow-tab auto-scrolling, your hands never leave the instrument. The Practice Hub adds tempo speed-ups, drop-out training, and count-ins to build real muscle memory.
         </p>
       </div>
       <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
@@ -187,7 +187,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 ### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Total Customization</span>
 
         <p>
-          Your sound, your rules. Build exact finger placements with the multi-fret chord editor, and design intricate custom strum patterns from strokes, mutes, and rests.
+          Your sound, your rules. Build exact finger placements with the multi-fret chord editor, and design intricate custom strum patterns from strokes, mutes, and rests. Browse and tweak every chord shape from the global library — no song required.
         </p>
       </div>
     </div>
@@ -212,12 +212,12 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Tab-first Editing</span>
 
         <p style={{fontSize: '1.1rem'}}>
-          Tap a beat to add notes; long-press for finger overrides, ties, and rests. Effortlessly arrange longer pieces by configuring custom song sections, adding repeat barlines, and quickly duplicating entire measures or sections. Supports Ukulele (high-G/low-G) and guitar (standard EADGBe).
+          Tap any beat to open a focused editor. Dial in notes on per-string fret wheels, pick a chord from a filterable grid, or drop a rest, mute, or drum hit. Long-press any chord to customize its shape or fingering. Effortlessly arrange longer pieces by configuring custom song sections, adding repeat barlines, and quickly duplicating entire measures or sections. Supports Ukulele (high-G/low-G/baritone) and guitar (standard EADGBe).
         </p>
       </div>
       <div className="col col--6" style={{textAlign: 'center'}}>
         <ZoomImage
-          src="/img/apple/strum/Strum13EditBeat.webp"
+          src="/img/apple/strum/Strum-Pad-AddBeat.webp"
           alt="Tab first editing interface"
           imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
@@ -232,7 +232,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
     <div className="row" style={{alignItems: 'center'}}>
       <div className="col col--6" style={{textAlign: 'center', order: 1}}>
         <ZoomImage
-          src="/img/apple/strum/Strum6EditFingers.webp"
+          src="/img/apple/strum/Strum-Phone-Fingerings.webp"
           alt="Custom chords and strum library"
           imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
@@ -242,7 +242,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Chord & Strum Libraries</span>
 
         <p style={{fontSize: '1.1rem'}}>
-          Go beyond the defaults. Use standard shapes or build your own with the multi-fret finger editor to specify exact custom finger placements. Design intricate custom strum patterns from strokes, mutes, and rests. Save any custom shape or strum pattern to your global library to reuse it everywhere, or keep it specific to just one song.
+          Go beyond the defaults. Use standard shapes or build your own with the multi-fret finger editor to specify exact custom finger placements. Design intricate custom strum patterns from strokes, mutes, and rests. Save any custom shape or strum pattern to your global library to reuse it everywhere, or keep it specific to just one song. Browse and filter every chord in your tuning straight from the library.
         </p>
       </div>
     </div>
@@ -258,14 +258,14 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Built-in Tuner</span>
 
         <p style={{fontSize: '1.1rem'}}>
-          Pluck a string, see flat/sharp/in-tune feedback in real time. Audio is processed entirely on-device and never recorded or transmitted. Perfect for quick adjustments before you start playing.
+          Pluck a string, see flat/sharp/in-tune feedback in real time. An adaptive noise gate ignores room sound so the needle stays steady. Audio is processed entirely on-device and never recorded or transmitted. Reach it any time from the library - tune up before you even open a song.
         </p>
       </div>
       <div className="col col--6" style={{textAlign: 'center'}}>
         <ZoomImage
-          src="/img/apple/strum/Strum6Tuner.webp"
-          alt="Tuner interface on iPhone"
-          imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          src="/img/apple/strum/Strum-Pad-Tuner.webp"
+          alt="Tuner interface on iPad"
+          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
       </div>
     </div>
@@ -278,9 +278,9 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
     <div className="row" style={{alignItems: 'center'}}>
       <div className="col col--6" style={{textAlign: 'center', order: 1}}>
         <ZoomImage
-          src="/img/apple/strum/Strum13Metronome.webp"
-          alt="Playback and metronome on iPad"
-          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          src="/img/apple/strum/Strum-Phone-Metronome.webp"
+          alt="Playback and metronome on iPhone"
+          imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
       </div>
       <div className="col col--6" style={{padding: '2rem', order: 2}}>
@@ -288,14 +288,37 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Playback & Metronome</span>
 
         <p style={{fontSize: '1.1rem'}}>
-          Tempo wheel for live BPM changes and granular subdivision control. The follow-tab automatically scrolls the song along with the metronome for a completely hands-free practice experience. Simulated playback seamlessly respects all your configured repeats and section markers.
+          Tempo wheel for live BPM changes and granular subdivision control. The follow-tab automatically scrolls the song along with the metronome for a completely hands-free practice experience. Simulated playback seamlessly respects all your configured repeats and section markers. The metronome also lives in the library for a quick standalone click.
         </p>
       </div>
     </div>
   </div>
 </section>
 
-{/* Feature 5: Sync & Export */}
+{/* Feature 5: Practice & Training Lab */}
+<section className={styles.section}>
+  <div className="container">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{padding: '2rem'}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Practice & Training Lab</span>
+
+        <p style={{fontSize: '1.1rem'}}>
+          Open the Practice Hub in Read mode from the metronome icon or by long-pressing any measure or section. Loop a passage while the Rhythm Training Lab ramps the tempo up step by step to build muscle memory at speed. Drop-out training mutes the click for a few measures at a time so you learn to hold time on your own, and count-ins give you a beat to catch before playback begins. Scope any of it to a single measure, a section, or the whole song.
+        </p>
+      </div>
+      <div className="col col--6" style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/strum/Strum-Pad-Training.webp"
+          alt="Rhythm Training Lab on iPad"
+          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature 6: Sync & Export */}
 <section className={styles.section} style={{ margin: '4rem 0' }}>
   <div className="container" style={{ backgroundColor: '#212121', borderRadius: '16px', padding: '4rem 3rem' }}>
     <div className="row">

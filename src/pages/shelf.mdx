@@ -1,0 +1,400 @@
+---
+title: Shelf - Your Digital Pocket
+description: A cross-platform, end-to-end encrypted digital pocket for the tiny, important details you constantly need but can never remember.
+keywords: [shelf, snippet manager, encrypted clipboard, digital stuff, mac menu bar app, ios app, watchos app, mateusz dąbrowski]
+slug: /shelf
+hide_table_of_contents: false
+draft: true
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+import React, { useState } from 'react';
+import clsx from 'clsx';
+import styles from './styles.module.css';
+
+{/* Custom Inline React Component for Image Lightbox Overlay */}
+export const ZoomImage = ({ src, alt, imgStyle }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <img
+        src={src}
+        alt={alt}
+        style={{ cursor: 'zoom-in', ...imgStyle }}
+        onClick={() => setIsOpen(true)}
+      />
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 99999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'zoom-out',
+            backdropFilter: 'blur(5px)',
+            margin: 0,
+            padding: 0
+          }}
+          onClick={() => setIsOpen(false)}
+        >
+          <div style={{ position: 'absolute', top: '24px', right: '32px', color: '#ffffff', fontSize: '3rem', fontWeight: '300', lineHeight: 1 }}>&times;</div>
+          <img
+            src={src}
+            alt={alt}
+            style={{ maxHeight: '90vh', maxWidth: '90vw', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
+<Head>
+  <link rel="canonical" href="https://mateuszdabrowski.pl/shelf/" />
+  <meta property="og:url" content="https://mateuszdabrowski.pl/shelf/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Shelf - Your Digital Pocket" />
+  <meta property="og:description" content="A fast, end-to-end encrypted stash for the things you constantly need but can never remember. iPhone, iPad, Mac, and Apple Watch." />
+  <meta property="og:image" content="https://mateuszdabrowski.pl/img/og/og-image-shelf.png" />
+</Head>
+
+{/* Hero section */}
+<header className={styles.hero} style={{ borderRadius: '44px', marginTop: '1rem', marginBottom: '2rem' }}>
+  <div className={styles.heroInner}>
+    <div style={{textAlign: 'center', paddingBottom: '2rem'}}>
+      <img
+        src="/img/apple/shelf/Shelf_icon.png"
+        alt="Shelf app icon"
+        width={128}
+        height={128}
+        style={{
+          width: 128,
+          height: 128,
+          borderRadius: '22.37%',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+          marginBottom: '1rem'
+        }}
+      />
+
+      <h1 className={styles.heroProjectTagline} style={{marginBottom: '0.5rem'}}>
+        Shelf
+      </h1>
+
+      <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--ifm-color-primary)', margin: '0 0 1.5rem' }}>
+        Your digital pocket for the tiny, important details.
+      </p>
+
+      <p
+        style={{
+          fontSize: '1.15rem',
+          maxWidth: '640px',
+          margin: '0 auto 2rem',
+          lineHeight: 1.55,
+          color: '#ffffff',
+          opacity: 0.9
+        }}
+      >
+        A fast, end-to-end encrypted stash for the things you constantly need but can never remember. Store addresses, Wi-Fi passwords, hex codes, IDs, and IBANs, and retrieve them with a single tap.
+      </p>
+
+      <p style={{margin: '0 0 1.5rem'}}>
+        <a
+          href="https://apps.apple.com/app/id6762406443"
+          aria-label="Download Shelf on the App Store"
+          style={{display: 'inline-block', lineHeight: 0}}
+        >
+          <img
+            src="/img/apple/appstore.svg"
+            alt="Download on the App Store"
+            height={48}
+            style={{height: 48, width: 'auto'}}
+          />
+        </a>
+      </p>
+
+      <p
+        style={{
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: '0.9rem',
+          lineHeight: 1.5,
+          margin: 0,
+        }}
+      >
+        iPhone · iPad · Mac · Apple Watch<br/>
+        Requires iOS / iPadOS / macOS / watchOS 26 or later
+      </p>
+    </div>
+  </div>
+</header>
+
+{/* Main Device Showcase */}
+<section className={styles.section}>
+  <div className="container">
+    <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
+      <div className="col col--7" style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/shelf/ShelfMacPopover.webp"
+          alt="Shelf menu bar popover on Mac"
+          imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '8px'}}
+        />
+      </div>
+      <div className="col col--5" style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/shelf/ShelfIOSHome.webp"
+          alt="Shelf running on iPhone"
+          imgStyle={{maxWidth: '100%', height: 'auto', maxHeight: '520px', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '24px'}}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Why Shelf */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 2rem' }}>
+
+    <div className="text--center" style={{marginBottom: '2.5rem'}}>
+      ## <span style={{fontSize: '2.5rem'}}>Why Shelf</span>
+    </div>
+
+    <div className="row">
+      <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
+        ### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Never Type It Twice</span>
+        <p>
+          Shelf is the ultimate stash for your annoying micro-data. If you type an IBAN, Wi-Fi password, email template, or terminal command more than once a month, it belongs in your digital pocket.
+        </p>
+      </div>
+      <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
+        ### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Instant Retrieval</span>
+        <p>
+          Speed is everything. Hit a custom global shortcut to drop down the macOS menu bar, tap a Home Screen widget on iOS, or search via Spotlight to get your data on your clipboard in less than a second.
+        </p>
+      </div>
+      <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
+        ### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Secrets Stay Secret</span>
+        <p>
+          Get the security of a password manager with the speed of a sticky note. Everything is end-to-end encrypted on-device. Mark sensitive values as "Hidden" to blur them on screen and auto-clear your clipboard.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* What's inside Header */}
+<div className="container">
+  <div className="text--center" style={{marginTop: '4rem', marginBottom: '1rem'}}>
+    ## <span style={{fontSize: '2.5rem'}}>What's inside</span>
+  </div>
+</div>
+
+{/* Feature 1: Fast Access & Smart Actions */}
+<section className={styles.section}>
+  <div className="container">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{padding: '2rem'}}>
+        ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>It Understands What You Paste</span>
+        <p style={{fontSize: '1.1rem'}}>
+          Shelf doesn't just store dumb text—it actively recognizes what you give it. Paste a link, and it gives you a button to open it. Paste an address or phone number, and you get one-tap contextual buttons to map or call it.
+        </p>
+        <p style={{fontSize: '1.1rem'}}>
+          Developers and designers get visual perks too: code snippets feature beautiful syntax highlighting, and color codes (HEX, RGB, HSL) display a real visual color preview.
+        </p>
+      </div>
+      <div className="col col--6" style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/shelf/ShelfSmartActions.webp"
+          alt="Shelf smart actions for different data types"
+          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature 2: Privacy First */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{textAlign: 'center', order: 1}}>
+        <ZoomImage
+          src="/img/apple/shelf/ShelfAppLock.webp"
+          alt="App Lock and Hidden Values feature"
+          imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+      </div>
+      <div className="col col--6" style={{padding: '2rem', order: 2}}>
+        ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Out of Sight, Built for Privacy</span>
+        <p style={{fontSize: '1.1rem'}}>
+          Unlike a cluttered notes app, Shelf stays completely out of your way until the exact millisecond you need it. Add things instantly from anywhere using the iOS Share Sheet or Mac Right-Click menu.
+        </p>
+        <p style={{fontSize: '1.1rem'}}>
+          When dealing with sensitive data, Shelf has your back. Lock the iOS app behind Face ID, and mark specific items as "Hidden." When you copy hidden stuff, Shelf marks it so other clipboard managers ignore it, and automatically clears it from your clipboard after 60 seconds.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature 3: Sync & Export */}
+<section className={styles.section} style={{ margin: '4rem 0' }}>
+  <div className="container" style={{ backgroundColor: '#212121', borderRadius: '16px', padding: '4rem 3rem' }}>
+    <div className="row">
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+        <div style={{marginBottom: '1rem'}}>
+          ### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>Seamless Apple Ecosystem</span>
+        </div>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          Zero accounts to create. Your folders, preferences, and encrypted stuff sync instantly and automatically across your Mac, iPhone, iPad, and Apple Watch through your private iCloud database.
+        </p>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          Leave your phone in your pocket and copy your most important data straight from your wrist, or customize folder visibility per-device (e.g., hide your "Work" folder on your personal iPhone). Works perfectly offline, too!
+        </p>
+      </div>
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+        <div style={{marginBottom: '1rem'}}>
+          ### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>No Lock-In</span>
+        </div>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          Your data is yours. Easily import existing data via CSV to get started fast, and export your entire unencrypted library to a CSV file at any time right from the settings menu.
+        </p>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          No analytics. No third-party servers. No subscriptions required to access your own data.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section className={styles.section}>
+  <div className="container">
+
+## Support {#support}
+
+<p>
+  Need help, found a bug, or want to suggest a feature? Email
+  **[shelf_support@mateuszdabrowski.pl](mailto:shelf_support@mateuszdabrowski.pl)**.
+  Include your device model and OS version — it makes most issues quicker to diagnose.
+  I read every email.
+</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Frequently asked questions
+    </div>
+
+<details className={styles.faqDetails}>
+  <summary>Where is my data stored?</summary>
+
+  On your device, and synced automatically to your private iCloud account via Apple's CloudKit. Nothing is stored on any server I control. See the [privacy policy](#privacy-policy) below for full details.
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>How secure is my Stuff?</summary>
+
+  Very. The labels (names) and values of your Stuff are encrypted locally on your device using AES-256-GCM before they are ever sent to iCloud. The encryption key is stored securely in your iCloud Keychain, meaning only your signed-in devices can read your data.
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Can I search for my Stuff using macOS/iOS Spotlight?</summary>
+
+  Yes, but it is turned off by default. If you enable Spotlight Search in Settings, your Stuff *names* (labels) will be stored unencrypted in your device's local search index so the OS can find them instantly. Your Stuff *values* remain fully encrypted and are never indexed.
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Why isn't a folder I made on my Mac showing up on my iPhone?</summary>
+
+  Shelf allows you to customize visibility per platform. Check the folder's settings to ensure "Visible on iOS" is toggled on. If it is, ensure both devices are signed into the same iCloud account and check the Sync Status in Shelf's Settings menu.
+</details>
+
+<br/>
+
+:::note Reporting a bug
+**Useful details to include:**
+* A short description of what happened and what you expected to happen.
+* The Shelf build number (visible in **Settings → About**).
+* Your device and OS version.
+* A screenshot, if relevant.
+:::
+
+  </div>
+</section>
+
+{/* Visual separator for Privacy Policy */}
+<section className={styles.section} style={{ marginBottom: '4rem' }}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 3rem' }}>
+
+## Privacy Policy {#privacy-policy}
+
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: May 6, 2026</p>
+
+<p>Shelf is built by Mateusz Dąbrowski. This policy explains what data the Shelf app handles and how. It is short because Shelf is built from the ground up for privacy.</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Data Shelf stores
+    </div>
+
+<p>When you use Shelf, your data is saved to your device and synced to **your private iCloud account** through Apple's CloudKit service. Specifically:</p>
+
+<ul>
+  <li><strong>Stuff Labels and Values:</strong> Fully end-to-end encrypted (AES-256-GCM) on your device before syncing.</li>
+  <li><strong>Folder Names and Stuff Types:</strong> Synced securely via iCloud but are not locally encrypted.</li>
+  <li><strong>Preferences:</strong> Your sort order, platform visibility toggles, and other app settings.</li>
+</ul>
+
+<p>This data never reaches a server controlled by me. It is stored in your iCloud private database and is visible only to you, on devices signed into the same Apple ID. I — the developer — cannot see it.</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Data Shelf does not collect
+    </div>
+
+<p>Shelf does **not** collect, transmit, or store any of the following:</p>
+
+<ul>
+  <li>Personal information (name, address, phone, email).</li>
+  <li>Account credentials.</li>
+  <li>Analytics, telemetry, crash reports, or usage data.</li>
+  <li>Advertising identifiers.</li>
+  <li>Location data.</li>
+</ul>
+
+<p>There are no third-party SDKs in the app and no external servers the app talks to.</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Clipboard Access
+    </div>
+
+<p>Shelf only reads text from your clipboard when you explicitly paste data into the Add/Edit form. The app's auto-detection features (guessing if text is a URL, email, etc.) run strictly on the text you are actively editing. Shelf **never** monitors or reads your system clipboard in the background.</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Spotlight Search
+    </div>
+
+<p>By default, Shelf does not share any data with the system search. If you explicitly enable Spotlight Search in the app's Security settings, the names (labels) of your Stuff will be stored unencrypted in your device's local system index so you can search for them. The actual contents (values) of your Stuff remain encrypted and are never shared with Spotlight.</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Security & iCloud
+    </div>
+
+<p>The master encryption key used to secure your Stuff is generated locally and stored securely in your iCloud Keychain. Apple's privacy policy governs how iCloud handles your data: <a href="https://www.apple.com/legal/privacy/">apple.com/legal/privacy</a>. If you sign out of iCloud, the app continues to work — your library is stored locally on the device, but changes will stop syncing to other devices.</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Changes to this policy
+    </div>
+
+<p>If the policy changes, I'll update the "Last updated" date above and post the new version at the same URL. Material changes will be called out in the app's release notes.</p>
+
+    <div style={{marginTop: '2rem'}}>
+### Contact
+    </div>
+
+<p>Questions about this policy or about Shelf's data handling: **[shelf_support@mateuszdabrowski.pl](mailto:shelf_support@mateuszdabrowski.pl)**.</p>
+
+  </div>
+</section>
