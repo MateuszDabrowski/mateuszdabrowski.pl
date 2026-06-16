@@ -630,12 +630,12 @@ module.exports = {
                         to: '/sites/category/apps/'
                     },
                     {
-                        from: ['/sites/tools/salesforce/diagramforce/'],
-                        to: '/sites/apps/salesforce/diagramforce/',
+                        from: ['/sites/tools/salesforce/diagramforce/', '/sites/apps/salesforce/diagramforce/'],
+                        to: 'https://diagramforce.mateuszdabrowski.pl/',
                     },
                     {
-                        from: ['/sites/tools/salesforce/clockforce/'],
-                        to:'/sites/apps/salesforce/clockforce/',
+                        from: ['/sites/tools/salesforce/clockforce/', '/sites/apps/salesforce/clockforce/'],
+                        to:'https://clockforce.mateuszdabrowski.pl/',
                     },
                 ],
             },

@@ -142,7 +142,6 @@ const freeApps = [
         description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally to your browser\'s storage, export as JSON, PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',
         tags: ['Salesforce', 'Diagrams', 'Architecture', 'Data Model'],
         cta: 'Check it out',
-        articleUrl: './sites/apps/salesforce/diagramforce/',
     },
     {
         title: <>Clockforce</>,
@@ -152,7 +151,6 @@ const freeApps = [
         description: 'Timezone collaboration tool for global teams and Marketing Cloud Engagement users. Compare timezones on a visual timeline, save Time Blocks and share them via URL for easy cross-organization meeting planning - no calendar access needed. Plus, generate production-ready SQL, AMPScript and SSJS snippets with proper timezone handling around MCE\'s fixed UTC-6 server time.',
         tags: ['Marketing Cloud Engagement', 'Timezones', 'SQL', 'AMPScript', 'SSJS'],
         cta: 'Check it out',
-        articleUrl: './sites/apps/salesforce/clockforce/',
     },
 ];
 
