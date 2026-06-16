@@ -626,10 +626,6 @@ module.exports = {
                     },
                     /* Tools pages restructure */
                     {
-                        from: ['/sites/category/tools/'],
-                        to: '/sites/category/apps/'
-                    },
-                    {
                         from: ['/sites/tools/salesforce/diagramforce/', '/sites/apps/salesforce/diagramforce/'],
                         to: 'https://diagramforce.mateuszdabrowski.pl/',
                     },
