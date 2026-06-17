@@ -1,5 +1,5 @@
 ---
-id: export-import-document-sfmc-roles
+id: export-import-document-MCE-roles
 title: Export, Import & Document MCE Roles
 sidebar_label: Export, Import & Document MCE Roles
 description: Backup, clone, and move cross-account the Salesforce Marketing Cloud Engagement roles. In seconds.
@@ -12,17 +12,17 @@ import { Button } from '/src/components/Buttons.js';
 
 <LeadText content="Backup, clone, and move cross-account the Salesforce Marketing Cloud Engagement roles. In seconds." />
 
-While you get a set of standard user Roles in Salesforce Marketing Cloud, those are rarely enough. Instead, they are the base on which you can create custom-tailored solutions that align with your business architecture.
+While you get a set of standard user Roles in Salesforce Marketing Cloud Engagement, those are rarely enough. Instead, they are the base on which you can create custom-tailored solutions that align with your business architecture.
 
 :::note You Should Know
 
-The best way to work with Roles and Permissions in Salesforce Marketing Cloud is to leverage standard roles and build on top of them with custom permissions/roles.
+The best way to work with Roles and Permissions in Salesforce Marketing Cloud Engagement is to leverage standard roles and build on top of them with custom permissions/roles.
 
 :::
 
 On top of that, standard Roles are silently changing from release to release as permissions come and go, so keeping track of them is crucial to have a clear picture of what your users can do.
 
-Marketing Cloud doesn't make it easy. There is no option to clone existing Roles to serve as a starting point for a new custom one. There is no option to export and import them between SFMC accounts. There is no option to create good documentation on them (unless you have a kink for super long print screens).
+Marketing Cloud Engagementdoesn't make it easy. There is no option to clone existing Roles to serve as a starting point for a new custom one. There is no option to export and import them between MCE accounts. There is no option to create good documentation on them (unless you have a kink for super long print screens).
 
 Here comes JavaScript and [Document Object Model (DOM)](/docs/js/js-dom.mdx) to unlock all those scenarios.
 
@@ -32,7 +32,7 @@ Fear not - you don't have to be a developer to leverage it. I will describe ever
 
 When working with multiple roles or overlapping permissions, be sure to check what is the outcome on the user.
 
-Marketing Cloud goes with the most restrictive resulting permission possible:
+Marketing Cloud Engagement goes with the most restrictive resulting permission possible:
 
 1. If at least one permission (role-based or individual) is set to Deny - the user will __not__ be able to use the feature.
 2. If there is neither Allow nor Deny permission - the user will __not__ be able to use the feature.
@@ -44,7 +44,7 @@ You can check the outcome by going to Setup > Users > Users > clicking checkbox 
 
 ## Where the magic happens
 
-To start using those SFMC Role-related, [DOM](/docs/js/js-dom.mdx)-fueled solutions:
+To start using those MCE Role-related, [DOM](/docs/js/js-dom.mdx)-fueled solutions:
 
 1. Go to Marketing Cloud Setup » Users » Roles.
 2. Click on the name of the Role you want to work with.
@@ -63,17 +63,208 @@ If any of the solutions described later in this article doesn't work:
 
 :::
 
-## Export & Import SFMC Roles
+## Export & Import MCE Roles
 
-The export and import solution is super helpful when you want to either clone an existing Role and make some changes or move your perfect, tried and tested custom Role to yet another Salesforce Marketing Cloud Account.
+Documenting Roles and Permissions is not easy. You cannot just copy-paste what you see, the HTML is a mess, and the indented names are not unique. Sure, you can print screen it, but that's a lot of checkboxes. And such images aren't accessible documentation. There is a better way.
 
-It will require a two-step approach.
+I created a JavaScript snippet that will [loop](/docs/js/js-loops.mdx) through all the checkboxes that you can see next to the permissions and:
 
-### Exporting an SFMC Role
+- Save the permission name (for example, `View All Contacts`).
+- Prefix it with all the parent permissions to get a full path (for example, `Contacts - Contact Builder - View All Contacts`).
+- Capture the identifier of Allow and Deny (for import).
+- Capture the state of Allow and Deny (as a boolean).
+- Output it to the Console as a single long CSV text.
+
+To use it, go to the Role in Marketing Cloud Engagement setup and:
+
+### Export MCE Role
 
 [Access the Console](#where-the-magic-happens) and paste the below code:
 
-```js title="Export SFMC role"
+```js
+/**
+ * MCE Roles V2 CSV Exporter
+ * Pulls both human-readable permission path and the state of Allow/Deny checkboxes.
+ * Outputs directly to the console for easy copying.
+ */
+function exportMergedV2ToConsole() {
+    let csvRows = [['Index', 'PermissionPath', 'AllowID', 'DenyID', 'AllowValue', 'DenyValue']];
+
+    // Use the Allow checkboxes as the anchor point
+    let checkboxes = Array.from(document.querySelectorAll('input[id^="a_"]'));
+
+    if (checkboxes.length === 0) {
+        console.error("❌ No checkboxes found. Make sure you inspected element on the permissions page.");
+        return;
+    }
+
+    // Sort logically by ID (a_1, a_2, etc.)
+    checkboxes.sort((a, b) => parseInt(a.id.replace('a_', ''), 10) - parseInt(b.id.replace('a_', ''), 10));
+
+    for (const allowInput of checkboxes) {
+        const a_id = allowInput.id;
+        const index = a_id.replace('a_', '');
+        const d_id = `d_${index}`;
+        const denyInput = document.getElementById(d_id);
+
+        // --- ORIGINAL PATH TRAVERSAL LOGIC ---
+        let nameElement = allowInput.closest('tr').querySelector('div.PermissionNameText');
+
+        // Changed to textContent so it works on collapsed UI
+        let permissionName = nameElement ? nameElement.textContent.trim() : "Unknown";
+
+        let permissionContainer = allowInput.closest('table');
+        do {
+            permissionContainer = permissionContainer.parentElement.previousElementSibling;
+            let permissionParentName = permissionContainer?.querySelector('div.PermissionNameText')?.textContent;
+            if (permissionParentName) {
+                permissionName = `${permissionParentName.trim()} - ${permissionName}`;
+            }
+        } while (permissionContainer && permissionContainer.id !== 'RolePanel');
+
+        // Clean up whitespace and escape quotes for CSV
+        permissionName = permissionName.replace(/[\n\r]+/g, ' ').replace(/\s{2,}/g, ' ');
+        const escapedPath = permissionName.replace(/"/g, '""');
+
+        csvRows.push([
+            index,
+            `"${escapedPath}"`,
+            a_id,
+            d_id,
+            allowInput.checked.toString().toUpperCase(),
+            (denyInput ? denyInput.checked : false).toString().toUpperCase()
+        ]);
+    }
+
+    // --- CONSOLE OUTPUT ---
+    const csvContent = csvRows.map(row => row.join(',')).join('\n');
+
+    console.log(`✅ Success! Exported ${checkboxes.length} permissions.\n\n👇 Copy the CSV content below 👇\n\n`);
+    console.log(csvContent);
+}
+
+exportMergedV2ToConsole();
+```
+
+Click enter to run it.
+
+Save this long text in its entirety (either by clicking the Copy button below that block of text or by highlighting and copy-pasting all its content) - I recommend pushing it straight to a .csv file. You can than open it in Excel or Google Sheets to leverage the autoformatting and filtering capabilities.
+
+Export to documentation done.
+
+### Import MCE Role
+
+Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different MCE account).
+
+[Access the Console](#where-the-magic-happens) and paste the below code - be sure to update `const csvData` with your CSV output from the export script:
+
+```js
+/**
+ * MCE Roles V2 CSV Importer
+ * Takes the CSV text generated by the exporter and applies the exact Allow/Deny states.
+ */
+// 👇 1. PASTE YOUR ENTIRE CSV OUTPUT BETWEEN THE BACKTICKS BELOW 👇
+const csvData = `PASTE_YOUR_CSV_OUTPUT_HERE`;
+
+// 👇 2. DO NOT CHANGE ANYTHING BELOW THIS LINE. PASTE IT ALL INTO THE CONSOLE. 👇
+function importMergedV2Console(csvText) {
+    if (csvText === 'PASTE_YOUR_CSV_OUTPUT_HERE' || csvText.trim() === '') {
+        console.error("❌ You forgot to paste your CSV data into the 'csvData' variable!");
+        return;
+    }
+
+    console.log("🚀 Starting Import...");
+
+    const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
+
+    if (!lines[0].includes('AllowID')) {
+        console.error("❌ Invalid data format. Make sure you included the header row from the export.");
+        return;
+    }
+
+    const dataLines = lines.slice(1);
+
+    let appliedCount = 0;
+    let missingPermissions = []; // Array to track the details of missing items
+
+    dataLines.forEach((line) => {
+        const columns = parseCSVLine(line);
+        if (columns.length < 6) return;
+
+        const path = columns[1]; // Grab the human-readable path
+        const a_id = columns[2].trim();
+        const d_id = columns[3].trim();
+        const targetAllow = columns[4].trim().toUpperCase() === 'TRUE';
+        const targetDeny = columns[5].trim().toUpperCase() === 'TRUE';
+
+        const allowCheckbox = document.getElementById(a_id);
+        const denyCheckbox = document.getElementById(d_id);
+
+        if (allowCheckbox) {
+            // Apply ALLOW state
+            if (allowCheckbox.checked !== targetAllow) {
+                allowCheckbox.click();
+            }
+            appliedCount++;
+        } else {
+            // Log missing permission details
+            missingPermissions.push({ ID: a_id, Path: path });
+        }
+
+        if (denyCheckbox) {
+            // Apply DENY state
+            if (denyCheckbox.checked !== targetDeny) {
+                denyCheckbox.click();
+            }
+        }
+    });
+
+    console.log(`✅ Import Complete! Successfully processed ${appliedCount} permissions.`);
+
+    if (missingPermissions.length > 0) {
+        console.warn(`⚠️ ${missingPermissions.length} permissions from your CSV could not be found on this page.`);
+        console.log("👇 List of Missing Permissions 👇");
+        // Output a clean table in the console so it's easy to read
+        console.table(missingPermissions);
+    }
+}
+
+// Helper to safely parse CSV rows that contain commas inside quotes
+function parseCSVLine(text) {
+    let ret = [''], i = 0, inQuotes = false;
+    for (let l = text.length; i < l; i++) {
+        let c = text[i];
+        if (c === '"') {
+            inQuotes = !inQuotes;
+        } else if (c === ',' && !inQuotes) {
+            ret.push('');
+        } else {
+            ret[ret.length - 1] += c;
+        }
+    }
+    // Clean up outer quotes and handle double-escaped quotes from CSVs
+    return ret.map(col => col.replace(/^"|"$/g, '').trim().replace(/""/g, '"'));
+}
+
+// Execute the importer
+importMergedV2Console(csvData);
+```
+
+It will [loop](/docs/js/js-loops.mdx) through all the saved checkboxes and update their state to the one from your export.
+
+If some new checkboxes don't exist in the export (for example, you did your export before Marketing Cloud Release that added some new permissions), those new ones will stay unchanged. If some names were updated or removed - you will get informaton about that in the Console along with the full path to those permissions.
+
+That's it. You cloned a Role.
+
+:::note Legacy Importer
+
+This is legacy export/import approach with cryptic .json files that - while not really readable - enabled you to revert your Standard Roles to their out-of-the-box version. Now done by new [Roles Backup v2](#export--import-MCE-roles).
+
+### [Legacy] Export MCE Role
+
+[Access the Console](#where-the-magic-happens) and paste the below code:
+
+```js title="Export MCE role"
 let permissionsExport = {};
 for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
     permissionsExport[permission.id] = permission.checked;
@@ -81,95 +272,31 @@ for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
 console.log(JSON.stringify(permissionsExport));
 ```
 
-Click enter to run it.
+Click enter to run it and save the output text (either by highlighting and copy-pasting or by right-clicking in an empty space within the Console row and clicking `Copy Selected`). It should start with `{` and end with `}`.
 
-It will [loop](/docs/js/js-loops.mdx) through all the checkboxes that you can see next to the permissions, save them in a single JavaScript object and output them to the Console. Yeah, it looks awful, but that's all you need - list of checkboxes along with their status.
+### [Legacy] Import MCE Role
 
-Save this long text (either by highlighting and copy-pasting or by right-clicking in an empty space within the Console row and clicking `Copy Selected`). It should start with `{` and end with `}`.
-
-### Importing a SFMC Role
-
-Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different SFMC account).
+Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different MCE account).
 
 [Access the Console](#where-the-magic-happens) and paste the below code:
 
-```js {1} title="Import SFMC role"
+```js {1} title="Import MCE role"
 let permissionsImport = {}; // replace {} with the object copied from Export script output
 for (const [permissionId, permissionStatus] of Object.entries(permissionsImport)) {
     document.getElementById(permissionId).checked = permissionStatus;
 }
 ```
 
-Change the `{}` in the first line with the export text you saved and click enter to run it.
+Change the `{}` in the first line with the export text you saved and click enter to run it. That's it. You cloned a Role.
 
-It will [loop](/docs/js/js-loops.mdx) through all the saved checkboxes and update their state to the one from your export. If some new checkboxes don't exist in the export (for example, you did your export before Marketing Cloud Release that added some new permissions), those new ones will stay unchanged.
-
-That's it. You cloned a Role.
-
-Now, as you can see, the export text was not readable. If you don't want to clone a Role but rather create documentation for it, there is yet another script that is just as easy to use.
-
-## Document SFMC Roles
-
-Documenting Roles and Permissions is not easy. You cannot just copy-paste what you see, the HTML is a mess, and the indented names are not unique. Sure, you can print screen it, but that's a lot of checkboxes. And such images aren't accessible documentation. There must be a better way.
-
-And there is, so [access the Console](#where-the-magic-happens) and paste the below code:
-
-```js {24} title="Create documentation of your SFMC role"
-let permissions = {};
-/* Loop through all permission checkboxes to get their name and state */
-for (const permission of document.querySelectorAll('input[type="checkbox"]')) {
-    /* Get the lowest-level permission name */
-    let permissionName = permission.closest('tr').querySelector('div.PermissionNameText').innerText;
-
-    /* Loop through all levels of permissions to build full path for each permission */
-    let permissionContainer = permission.closest('table');
-    do {
-        permissionContainer = permissionContainer.parentElement.previousElementSibling;
-        let permissionParentName = permissionContainer?.querySelector('div.PermissionNameText')?.innerText;
-        if (permissionParentName) permissionName = `${permissionParentName} - ${permissionName}`;
-    } while (permissionContainer && permissionContainer.id !== 'RolePanel');
-
-    /* Differentiate between Allowed and Denied checkboxes */
-    let permissionType = permission.id.startsWith('a') ? 'Allowed' : 'Denied';
-
-    /* Insert permission state into permissions object */
-    if (!permissions[permissionName]) permissions[permissionName] = {};
-    permissions[permissionName][permissionType] = permission.checked;
-};
-
-/* Output permissions in documentation-friendly format (CSV) */
-const delimiter = '\t'; // Configure prefered CSV delimiter (tab, comma, pipe, etc.)
-let csv = `Permission${delimiter}Allowed${delimiter}Denied\n`; // Headers
-/* Loop through permissions object to build a single string for easy copying from console to table */
-for (const [permissionName, permissionStatus] of Object.entries(permissions)) {
-    csv += `${permissionName}${delimiter}${permissionStatus.Allowed}${delimiter}${permissionStatus.Denied}\n`;
-};
-/* Clean up uneeded whitespace */
-csv = csv.replace(/\n\t/g, '\t').replace(/\n /g, ' ');
-console.log(csv);
-```
-
-Click enter to run it.
-
-It will [loop](/docs/js/js-loops.mdx) through all the checkboxes that you can see next to the permissions and:
-
-- Save the permission name (for example, `View All Contacts`).
-- Prefix it with all the parent permissions to get a full path (for example, `Contacts - Contact Builder - View All Contacts`).
-- Capture the state of Allow and Deny (as a boolean).
-- Output it to the Console as a single long text with Headers and delimiter of your choice.
-
-The default delimiter is a tab (`\t`) because it allows you to copy-paste the outcome from Console to a spreadsheet and have it automatically populate the columns. However, depending on your needs, you can change the `delimiter` variable to something else, like a comma (`,`)  or pipe (`|`).
-
-Save this long text in its entirety (either by highlighting and copy-pasting or by right-clicking in empty space within the Console row and clicking `Copy Selected`) - I recommend pushing it straight to a spreadsheet to leverage the autoformatting and filtering capabilities.
-
-Add the Name of the Role and its purpose stored in the Description field, and that's it. You are good to go.
+:::
 
 ## Backup of Standard Roles
 
 As the default System Roles permissions in Salesforce Marketing Cloud can be edited freely and [currently there is no easy way to revert those changes](/sites/ideas/salesforce/marketing-cloud-engagement-ideas/#restore-default-permissions-for-sfmc-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
 
 <Button
- link='https://github.com/MateuszDabrowski/sfmc-roles-backup'
- text='SFMC Roles Backup'
+ link='https://github.com/MateuszDabrowski/SFMC-roles-backup'
+ text='MCE Roles Backup'
  newTab='true'
 />
