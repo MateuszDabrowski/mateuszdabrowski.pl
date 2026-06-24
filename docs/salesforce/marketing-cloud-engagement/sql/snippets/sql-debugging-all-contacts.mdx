@@ -139,7 +139,24 @@ Check your integration setup, fix it to leverage a Person Contact ID, and clean 
 2. If the number is matching, but is very high - you might check whether you truly need all those Leads in your MCE instance, and consider [filtering out](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#manage-the-data) those that do not support your marketing use cases.
 3. If the number is higher in the `SF_Lead` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx) in place, which means that all the Leads that were ever created in your MCE instance are still there, even if they are no longer synchronized.
 
-Special points here for checking how you are managing Lead-to-Contact transition in Salesforce CRM and how it should be reflected in your MCE instance.
+:::note
+
+Special points here for checking how are you managing Lead-to-Contact transition in Salesforce CRM and how it should be reflected in your MCE instance. You can open the following query to check how the post-conversion clean-up of Leads look like in your All Contacts list:
+
+```sql
+SELECT
+      IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')                     AS Account_Conversion_Status
+    , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')                     AS Contact_Conversion_Status
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))   AS SF_Lead
+FROM AllContactsList            AS allC
+INNER JOIN Ent.Lead_Salesforce  AS l
+    ON allC.SubscriberKey = l.Id
+GROUP BY
+      IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')
+    , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')
+```
+
+:::
 
 ### SF_User
 
@@ -166,13 +183,13 @@ In big multi-country implementations it might be hard to pinpoint the root cause
 ```sql
 SELECT TOP 100
       LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1)) AS TLD
-    , COUNT(all.SubscriberKey)                                                      AS Subscriber_Count
-FROM AllContactsList            AS all
-    LEFT JOIN Ent._Subscribers  AS sub
-        ON sub.SubscriberKey = all.SubscriberKey
-WHERE SubscriberKey LIKE '%@%'
+    , COUNT(allC.SubscriberKey)                                                     AS Subscriber_Count
+FROM AllContactsList        AS allC
+    LEFT JOIN _Subscribers  AS sub
+        ON sub.SubscriberKey = allC.SubscriberKey
+WHERE allC.SubscriberKey LIKE '%@%'
 GROUP BY LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1))
-ORDER BY COUNT(all.SubscriberKey) DESC
+ORDER BY COUNT(allC.SubscriberKey) DESC
 ```
 
 If the query above is not returning many results, it means that most of the email addresses in your All Contacts list are not in `_Subscribers` System Data View. This happens when the subscribers are added to All Contacts but have not been attempted for any email sends yet and just pollute your instance without any engagement.
@@ -261,6 +278,143 @@ WHERE NOT (
 If you see a specific recurring pattern in those Subscriber Keys, you can then adjust the initial query to add another column with a count of that specific pattern to understand how many records are affected and whether it is worth creating a specific scenario in your [automated contact deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx#contact-deletion-with-automation-studio) to remove such records on an ongoing basis.
 
 You can also check the Source and Modified column in All Contacts view in Contact Builder for those specific Subscriber Key patterns to understand how they got there and fix the process.
+
+### Activity and Engagement
+
+Once you have identified the Subscriber Key formats, you can also verify whether those records are being used for actual sends:
+
+```sql
+SELECT
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Count
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
+    , SUM(IIF(
+          allC.SubscriberKey LIKE '%@%'
+          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
+          OR allC.SubscriberKey LIKE '%test%'
+          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+          , 0, 1)
+      )                                                                                         AS Other_Format
+FROM AllContactsList AS allC
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM _Sent AS sent
+    WHERE allC.SubscriberKey = sent.SubscriberKey
+)
+```
+
+By using this query, you can identify how many records in your All Contacts list have not been sent any emails in the last 6 months and potentially just bloat your list (be sure to check against other channels as well, such as MobileConnect, Push, etc. if you are using them).
+
+### Duplicates
+
+Finally, you can check for duplicate Subscribers in your All Contacts list to identify any potential issues with data quality and management. The easiest way to start is to check how many records have the same email address:
+
+```sql
+SELECT TOP 50
+      Records_Per_Email
+    , COUNT(EmailAddress)           AS Unique_Emails
+    , SUM(Records_Per_Email)        AS Total_Subscriber_Records
+FROM (
+    SELECT
+          sub.EmailAddress
+        , COUNT(allC.SubscriberKey) AS Records_Per_Email
+    FROM AllContactsList            AS allC
+    INNER JOIN Ent._Subscribers         AS sub
+        ON allC.SubscriberKey = sub.SubscriberKey
+    WHERE sub.EmailAddress IS NOT NULL
+      AND sub.EmailAddress != ''
+    GROUP BY sub.EmailAddress
+) AS EmailCounts
+WHERE Records_Per_Email > 1
+GROUP BY Records_Per_Email
+ORDER BY CAST(Records_Per_Email AS INT) DESC
+```
+
+If you find duplicates, the next good step is to see where those duplicates appear in your data:
+
+```sql
+SELECT
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Duplicate_Records
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
+    , SUM(IIF(
+          allC.SubscriberKey LIKE '%@%'
+          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
+          OR allC.SubscriberKey LIKE '%test%'
+          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+          , 0, 1)
+      )                                                                                         AS Other_Format
+FROM AllContactsList        AS allC
+INNER JOIN Ent._Subscribers AS sub
+    ON allC.SubscriberKey = sub.SubscriberKey
+INNER JOIN (
+    SELECT EmailAddress
+    FROM Ent._Subscribers
+    WHERE EmailAddress IS NOT NULL
+      AND EmailAddress != ''
+    GROUP BY EmailAddress
+    HAVING COUNT(SubscriberKey) > 1
+)                           AS Duplicates
+    ON sub.EmailAddress = Duplicates.EmailAddress
+```
+
+This way, you can identify whether it's isolated issue with, for example, duplicate Leads, or a more systemic issue with your integration or data management processes that is creating duplicates across multiple channels.
+
+And if you encounter systemic issue and wonder which type of Subscriber Key should be kept as the primary, you can check which types are being used for email sends. This might help you decide which duplicates to keep and which ones to remove:
+
+```sql
+SELECT
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Sent_Duplicates
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
+    , SUM(IIF(
+          allC.SubscriberKey LIKE '%@%'
+          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
+          OR allC.SubscriberKey LIKE '%test%'
+          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+          , 0, 1)
+      )                                                                                         AS Other_Format
+FROM AllContactsList                AS allC
+INNER JOIN Ent._Subscribers         AS sub
+    ON allC.SubscriberKey = sub.SubscriberKey
+INNER JOIN (
+    SELECT EmailAddress
+    FROM Ent._Subscribers
+    WHERE EmailAddress IS NOT NULL
+      AND EmailAddress != ''
+    GROUP BY EmailAddress
+    HAVING COUNT(SubscriberKey) > 1
+)                                   AS Duplicates
+    ON sub.EmailAddress = Duplicates.EmailAddress
+WHERE EXISTS (
+    SELECT 1
+    FROM Ent._Sent                  AS sent
+    WHERE allC.SubscriberKey = sent.SubscriberKey
+)
+```
+
+Remember that you shouldn't just delete duplicates without understanding the root cause of why they were created in the first place. Make sure to fix the processes that led to those duplicates, and set up ongoing monitoring and automated deletion for any recurring issues. Otherwise, you will just end up with the same problem again in the future.
 
 ## Step 3: Clean Up All Contacts List
 
