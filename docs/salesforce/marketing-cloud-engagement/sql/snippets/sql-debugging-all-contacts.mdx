@@ -279,7 +279,7 @@ If you see a specific recurring pattern in those Subscriber Keys, you can then a
 
 You can also check the Source and Modified column in All Contacts view in Contact Builder for those specific Subscriber Key patterns to understand how they got there and fix the process.
 
-### Activity and Engagement
+### Activity Check
 
 Once you have identified the Subscriber Key formats, you can also verify whether those records are being used for actual sends:
 
@@ -312,7 +312,7 @@ WHERE NOT EXISTS (
 
 By using this query, you can identify how many records in your All Contacts list have not been sent any emails in the last 6 months and potentially just bloat your list (be sure to check against other channels as well, such as MobileConnect, Push, etc. if you are using them).
 
-### Duplicates
+### Duplicate Check
 
 Finally, you can check for duplicate Subscribers in your All Contacts list to identify any potential issues with data quality and management. The easiest way to start is to check how many records have the same email address:
 
@@ -374,7 +374,9 @@ INNER JOIN (
 
 This way, you can identify whether it's isolated issue with, for example, duplicate Leads, or a more systemic issue with your integration or data management processes that is creating duplicates across multiple channels.
 
-And if you encounter systemic issue and wonder which type of Subscriber Key should be kept as the primary, you can check which types are being used for email sends. This might help you decide which duplicates to keep and which ones to remove:
+:::note You Should Know
+
+If you encounter systemic issue and wonder which type of Subscriber Key should be kept as the primary, you can check which types are being used for email sends. This might help you decide which duplicates to keep and which ones to remove:
 
 ```sql
 SELECT
@@ -413,6 +415,8 @@ WHERE EXISTS (
     WHERE allC.SubscriberKey = sent.SubscriberKey
 )
 ```
+
+:::
 
 Remember that you shouldn't just delete duplicates without understanding the root cause of why they were created in the first place. Make sure to fix the processes that led to those duplicates, and set up ongoing monitoring and automated deletion for any recurring issues. Otherwise, you will just end up with the same problem again in the future.
 
