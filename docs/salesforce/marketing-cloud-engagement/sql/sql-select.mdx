@@ -1,19 +1,19 @@
 ---
 id: sql-select
-title: SFMC SQL Select
+title: MCE SQL Select
 sidebar_label: Select
-description: Selected information on the SELECT statement in SFMC SQL.
+description: Selected information on the SELECT statement in Marketing Cloud Engagement SQL.
 image: img/og/og-image-sf-mce-sql-select.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SQL]
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
 
-<LeadText content='Selected information on the SELECT statement in SFMC SQL' />
+<LeadText content='Selected information on the SELECT statement in Marketing Cloud Engagement SQL' />
 
 The `SELECT` statement opens each query. It picks the columns from the source data extensions and system data views and allows you to create entirely new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As Salesforce Marketing Cloud caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) does not support this shortcut. Don't use `*`.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As MCE caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) does not support this shortcut. Don't use `*`.
 
 The prefered method is targeting columns explicitly by their names:
 
@@ -32,7 +32,7 @@ SELECT
     , [External Contact Id]
 ```
 
-There are also some exceptional cases related to selected [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) in Salesforce Marketing Cloud, where you need to use an underscore prefix before a name (for example, when taking Subscriber ID from Enterprise Attributes):
+There are also some exceptional cases related to selected [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) in MCE, where you need to use an underscore prefix before a name (for example, when taking Subscriber ID from Enterprise Attributes):
 
 ```sql title="There are some special column names with an underscore prefix"
 SELECT _SubscriberId
@@ -146,7 +146,7 @@ ORDER BY CONVERT(INT, QuizScore) DESC
 
 For example, it will be needed when you `ORDER BY` [`COUNT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#count) within [`GROUP BY`](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx#group-by).
 
-`ORDER BY` will also sort dates in Marketing Cloud alphabetically using month (start with `Apr`, follow up with `Aug` and so on). You can fix it by using [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) to `DATE` (if you to order only by date) or `DATETIME2` (if time is important for ordering as well), just as in previous example.
+`ORDER BY` will also sort dates in MCE alphabetically using month (start with `Apr`, follow up with `Aug` and so on). You can fix it by using [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) to `DATE` (if you to order only by date) or `DATETIME2` (if time is important for ordering as well), just as in previous example.
 
 :::
 
@@ -285,10 +285,10 @@ I'm covering this topic in-depth in [`JOIN` statement documentation](/docs/sales
 
 ## Flow control
 
-Despite official [SFMC SQL documentation](https://help.salesforce.com/articleView?id=mc_as_sql_reference.htm&type=5) stating that it supports the `IF` constructs, I could not make it work.
+Despite official [MCE SQL documentation](https://help.salesforce.com/articleView?id=mc_as_sql_reference.htm&type=5) stating that it supports the `IF` constructs, I could not make it work.
 
 ## Variables & Functions
 
-Unfortunately, SFMC SQL does not support variables.
+Unfortunately, MCE SQL does not support variables.
 
-Fortunately, it does support (selected) functions. Learn more about them in SFMC SQL Functions documentation pages related to [Strings](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx), [Dates](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx), [Numbers](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx), [Conversion](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx), [Aggregation](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx), [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) and [`LIKE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx).
+Fortunately, it does support (selected) functions. Learn more about them in MCE SQL Functions documentation pages related to [Strings](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx), [Dates](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx), [Numbers](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx), [Conversion](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx), [Aggregation](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx), [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx) and [`LIKE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx).

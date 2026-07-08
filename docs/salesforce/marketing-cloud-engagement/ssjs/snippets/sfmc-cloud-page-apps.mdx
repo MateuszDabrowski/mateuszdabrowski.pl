@@ -1,7 +1,7 @@
 ---
 id: sfmc-cloud-page-apps
 title: Solve with Cloud Page Apps
-description: Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud features.
+description: Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud Engagement features.
 image: img/og/og-image-sf-mce-solve-with-cloud-page-apps.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SSJS, AMPScript, Snippet, Cloud Page, App, API]
 ---
@@ -10,27 +10,27 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '/src/components/LeadText.js';
 
-<LeadText content="Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud features." />
+<LeadText content="Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud Engagement features." />
 
 ## Cloud Page Apps: what and why
 
 ### When out-of-the-box features are not enough
 
-Salesforce Marketing Cloud offers a multitude of options. With all the Studios, Builders, and other Salesforce-ecosystem cross-sells, you can deliver nearly anything. Nearly.
+Salesforce MCE offers a multitude of options. With all the Studios, Builders, and other Salesforce-ecosystem cross-sells, you can deliver nearly anything. Nearly.
 
 There will always be some business processes or requirements that are too niche or too unique to be covered out-of-the-box. Sometimes they can be delivered with what is available after some compromises. Sometimes only custom development can help.
 
-Depending on the use case and company resources, you can overcome such challenges in two ways. By shopping at AppExchange - Salesforce App Store with 3rd Party solutions - or by building a custom application connected to Marketing Cloud with APIs (for example, leveraging yet another Salesforce product - Heroku).
+Depending on the use case and company resources, you can overcome such challenges in two ways. By shopping at AppExchange - Salesforce App Store with 3rd Party solutions - or by building a custom application connected to MCE with APIs (for example, leveraging yet another Salesforce product - Heroku).
 
 AppExchange might be a great idea if you can find a product solving your problem, but it will add a recurring cost to your budget. On the other hand, a fully-fledged custom application might deliver precisely what you need but create considerable up-front cost (in either money for external developers or time for an in-house team) and require maintenance.
 
-There is, however, the third path. One that can be perfect if you have a necessary but relatively small requirement for internally used power-up and would instead go lean on both budget and time — Marketing Cloud micro application.
+There is, however, the third path. One that can be perfect if you have a necessary but relatively small requirement for internally used power-up and would instead go lean on both budget and time — MCE micro application.
 
 ### Out-of-the-box approach to out-of-the-box feature
 
-Marketing Cloud micro application offers AppExchange-style deep integration with Marketing Cloud platform and solution flexibility of custom development. In short, it is an application hosted on a Cloud Page and available via the main menu of Marketing Cloud. A Cloud Page App.
+Marketing Cloud Engagement micro application offers AppExchange-style deep integration with MCE platform and solution flexibility of custom development. In short, it is an application hosted on a Cloud Page and available via the main menu of MCE. A Cloud Page App.
 
-The good? You can use Marketing Cloud programmatic languages (SSJS and AMPScript) with all their nifty built-in functions to control the assets and behaviours of the SFMC platform and connected Sales & Service Clouds. You can also leverage the APIs to gather even more power and pull external logic and data. All this without having to care about hosting, scaling and integration. Available directly from the Marketing Cloud menu. And cost? Just a super message for loading a Cloud Page.
+The good? You can use MCE programmatic languages (SSJS and AMPScript) with all their nifty built-in functions to control the assets and behaviours of the MCE platform and connected Sales & Service Clouds. You can also leverage the APIs to gather even more power and pull external logic and data. All this without having to care about hosting, scaling and integration. Available directly from the MCE menu. And cost? Just a super message for loading a Cloud Page.
 
 The bad? It is suitable for relatively simple apps. Think about a single front-end page powered by an SSJS or AMPScript backend on a [Code Resource](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx). Of course, you can try to build something more complex, but you may quickly get into a place where the whole endeavour would have been easier with an outside-hosted application.
 
@@ -38,31 +38,31 @@ The bad? It is suitable for relatively simple apps. Think about a single front-e
 
 So what can you do with such a solution? Possibilities are endless, but to share a few use cases:
 
-- Marketing Cloud Asset Viewer that allows you to quickly locate, for example, a Data Extension or Content asset.
+- MCE Asset Viewer that allows you to quickly locate, for example, a Data Extension or Content asset.
 - Data Extension Analyzer for quick data analysis or even visualisation of values from a selected Data Extension.
 - KPI Dashboard displaying the most critical data for understanding your communication's current state - or even related data from Sales or Service Cloud imported using functions enabled by Marketing Cloud Connect.
-- Deliverability Dashboard pulling data from Marketing Cloud and external deliverability monitoring and alerting tools.
-- Documentation or FAQ related to your company processes and best practices that everyone should follow when building customer experience through Marketing Cloud.
+- Deliverability Dashboard pulling data from MCE and external deliverability monitoring and alerting tools.
+- Documentation or FAQ related to your company processes and best practices that everyone should follow when building customer experience through MCE.
 - Templated Journey creator to deploy tested flows for most used campaigns in a single click.
 
-Anything related to Marketing Cloud that you wish could be a bit more automated or easy can be a good idea for a micro application approach.
+Anything related to MCE that you wish could be a bit more automated or easy can be a good idea for a micro application approach.
 
 ## Cloud Page Apps step by step
 
-### Create your first Marketing Cloud micro application
+### Create your first MCE micro application
 
 Implementation is very straightforward, and you can do it in few minutes:
 
 1. Create a simple Cloud Page (blank page with a "Hello World" will do the job for now).
 2. Publish it and copy the URL of the Cloud Page.
-3. Go to Marketing Cloud Setup -> Apps -> Installed Packages and create a New Package.
+3. Go to MCE Setup -> Apps -> Installed Packages and create a New Package.
 4. Add a `Marketing Cloud App` Component to the Package and paste the Cloud Page URL in both Endpoint fields and Save.
 
-That's all. You just created your first Marketing Cloud micro application. Refresh Marketing Cloud to see it available in the main menu under the AppExchange icon. Now it's time to build up your solution to solve the business need.
+That's all. You just created your first Marketing Cloud Engagement micro application. Refresh MCE to see it available in the main menu under the AppExchange icon. Now it's time to build up your solution to solve the business need.
 
 ### A Good application is a secure application
 
-Your micro application is now available from the Marketing Cloud menu. But unfortunately, it can also be accessed from any other place, as it is still just a simple Cloud Page. It is, of course, not ideal. You don't want random people to access your API-fueled solution.
+Your micro application is now available from the MCE menu. But unfortunately, it can also be accessed from any other place, as it is still just a simple Cloud Page. It is, of course, not ideal. You don't want random people to access your API-fueled solution.
 
 #### API Integration Component
 
@@ -74,7 +74,7 @@ Once you save the Component, you will see that your Installed Package API Compon
 
 :::note You Should Know
 
-After you create your Installed Package, three base URI's are available - Authentication, REST and SOAP. After the `https://`, all of them have a common alphanumeric string with hyphens unique to your SFMC. I copy only this part to build any endpoint necessary for the application.
+After you create your Installed Package, three base URI's are available - Authentication, REST and SOAP. After the `https://`, all of them have a common alphanumeric string with hyphens unique to your MCE. I copy only this part to build any endpoint necessary for the application.
 
 For example, for `https://abcdefghi-jklmnoprst-123456.auth.marketingcloudapis.com/`, the `API Base URI` is `abcdefghi-jklmnoprst-123456`.
 
@@ -82,7 +82,7 @@ For example, for `https://abcdefghi-jklmnoprst-123456.auth.marketingcloudapis.co
 
 #### API Authorisation
 
-With the above pre-work completed, you can use SSJS or AMPScript on your Cloud Page to redirect to the `v2/authorize` endpoint of your Authentication Base URI before loading. It will require any visitor to log into your Marketing Cloud to load your micro application. What's even better, it will automatically load it for users already logged in (micro Single Sign-On).
+With the above pre-work completed, you can use SSJS or AMPScript on your Cloud Page to redirect to the `v2/authorize` endpoint of your Authentication Base URI before loading. It will require any visitor to log into your MCE to load your micro application. What's even better, it will automatically load it for users already logged in (micro Single Sign-On).
 
 You will need to pass `Client Id` and `Cloud Page URL` (for redirect after successful login) as query parameters to your authorisation redirect. Another necessary thing is Response Type equal to code. Finally, you can pass a State. The value of this parameter will be available after the redirect. It is excellent for recognising whether someone opened your micro application before (no state) or after (available state) logging in.
 
@@ -209,9 +209,9 @@ If you want to use the token for API in the context of a specific Business Unit,
 </TabItem>
 </Tabs>
 
-This way, you just added a micro Single Sign-On feature that is as secure as your Marketing Cloud. And that's not all! As now only your Marketing Cloud users can access the application, you can leverage the Installed Package Access tab to control who will see your solution in the main menu.
+This way, you just added a micro Single Sign-On feature that is as secure as your MCE. And that's not all! As now only your MCE users can access the application, you can leverage the Installed Package Access tab to control who will see your solution in the main menu.
 
-Now you have a secure, SSO-enabled micro application deeply integrated with Marketing Cloud ready to solve your business needs and power up your Marketing Team.
+Now you have a secure, SSO-enabled micro application deeply integrated with MCE ready to solve your business needs and power up your Marketing Team.
 
 :::note You Should Know
 
@@ -575,8 +575,8 @@ There was much information to digest, so it's time for a streamlined step by ste
         5. Add Scope of the App (should be minimal, can be extended later) and click `Save`.
     6. Copy `Client Id`, `Client Secret` and `Client Base URI`.
 4. __Menu Unlock__
-    1. Refresh tab with Marketing Cloud.
-    2. On the main menu pane of Marketing Cloud, hover over AppExchange to see your application.
+    1. Refresh tab with MCE.
+    2. On the main menu pane of MCE, hover over AppExchange to see your application.
 5. __Secured Template__
     1. Copy the [template](#secured-cloud-page-app-template) in the prefered language to the Cloud Page from step 2.i.
     2. Update the unique values in the variables at the top part of the template (CAPS_LOCK placeholders).
@@ -587,7 +587,7 @@ There was much information to digest, so it's time for a streamlined step by ste
 Looking for more? Check out follow up materials for added context and deeper dive:
 
 1. Webinar recording on [Cloud Page Apps](/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps.mdx).
-2. Webinar recording on [Architecting Web Solutions in SFMC](/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions.mdx).
-3. Article on [Power of SFMC Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx).
-4. Article on [SFMC AppExchange Solutions](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx).
+2. Webinar recording on [Architecting Web Solutions in MCE](/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions.mdx).
+3. Article on [Power of MCE Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx).
+4. Article on [MCE AppExchange Solutions](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx).
 5. Code Snippets on [my GitHub](https://github.com/MateuszDabrowski/sfmc-cloud-page-app-template).

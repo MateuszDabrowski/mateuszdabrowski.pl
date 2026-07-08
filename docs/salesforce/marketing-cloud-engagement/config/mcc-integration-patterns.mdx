@@ -2,7 +2,7 @@
 id: mcc-integration-patterns
 title: MCC Integration Patterns
 sidebar_label: MCC Integration Patterns
-description: "Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud the right way."
+description: "Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud Engagement the right way."
 image: img/og/og-image-sf-mce-mcc-integration-patterns.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, CRM, Configuration, Setup, Integration]
 toc_max_heading_level: 4
@@ -10,25 +10,25 @@ toc_max_heading_level: 4
 
 import { LeadText } from '/src/components/LeadText.js';
 
-<LeadText content="Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud the right way." />
+<LeadText content="Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud Engagement the right way." />
 
 ## Marketing Cloud Connect Basics
 
-So you have Salesforce CRM & Marketing Cloud and want to integrate them to create data-driven, personalised customer engagement. Perfect idea, but don't start without thorough planning.
+So you have Salesforce CRM & Marketing Cloud Engagement (MCE) and want to integrate them to create data-driven, personalised customer engagement. Perfect idea, but don't start without thorough planning.
 
-Unfortunately, Marketing Cloud is not (yet?) on the same Lightning Platform as the Salesforce CRM (be it Sales Cloud, Service Cloud, Health Cloud or what-have-you). It means that the data from one tool is not available out-of-the-box in the other for instant use.
+Unfortunately, MCE is not (yet?) on the same Lightning Platform as the Salesforce CRM (be it Sales Cloud, Service Cloud, Health Cloud or what-have-you). It means that the data from one tool is not available out-of-the-box in the other for instant use.
 
 Fortunately, an out-of-the-box integration suite made by Salesforce called Marketing Cloud Connect (MCC) lets you use those tools in tandem. It offers many features ranging from simple data sync between the platforms, through dedicated Journey Builder activities and AMPScript functions, to reporting feedback loop and extended marketing features for the CRM. Using it also means no need for custom API calls eating up the licence limits.
 
-The connector is flexible and provides a wide range of configuration options to meet your organisation's needs. That's perfect, but it also means you must architect how you want the connection to work. It is especially true for the very initial step of deciding on the integration approach between the CRM(s) and SFMC(s), as configuration won't be (easily or even at all) reversible after the initial choice is made.
+The connector is flexible and provides a wide range of configuration options to meet your organisation's needs. That's perfect, but it also means you must architect how you want the connection to work. It is especially true for the very initial step of deciding on the integration approach between the CRM(s) and MCE(s), as configuration won't be (easily or even at all) reversible after the initial choice is made.
 
 In this article, I will share quirks and features of possible integration patterns and help you make the right choice from the start. Let's dive in.
 
 ### Single-Org vs Multi-Org
 
-When discussing Marketing Cloud Connect, the key thing to understand is the difference between Single-Org and Multi-Org SFMC configuration and their limits.
+When discussing Marketing Cloud Connect, the key thing to understand is the difference between Single-Org and Multi-Org Marketing Cloud Engagement configuration and their limits.
 
-By default, each Marketing Cloud instance is configured as a Single-Org. It means it can connect to only one Salesforce CRM Org. The integration is done on SFMC's Parent Business Unit level, and benefits are shared across all available Business Units. It's a straightforward setup with two fundamental limitations: only one CRM Org can be integrated, and all Business Units have access to the same integration scope (data, permissions, features).
+By default, each MCE instance is configured as a Single-Org. It means it can connect to only one Salesforce CRM Org. The integration is done on MCE's Parent Business Unit level, and benefits are shared across all available Business Units. It's a straightforward setup with two fundamental limitations: only one CRM Org can be integrated, and all Business Units have access to the same integration scope (data, permissions, features).
 
 :::note You Should Know
 
@@ -36,14 +36,14 @@ If you don't see some MCC features on Child Business Units on integrated Single-
 
 :::
 
-In most cases, when one of those limitations is against the business needs, the solution is to go Multi-Org. However, take that decision seriously - Multi-Org configuration can be enabled only by Salesforce Support, and __it is not reversible__ (it is so important, I will repeat it few times in this article). Multi-Org has some limitations, and the only way to return to Single-Org is to get a completely new Salesforce Marketing Cloud Account.
+In most cases, when one of those limitations is against the business needs, the solution is to go Multi-Org. However, take that decision seriously - Multi-Org configuration can be enabled only by Salesforce Support, and __it is not reversible__ (it is so important, I will repeat it few times in this article). Multi-Org has some limitations, and the only way to return to Single-Org is to get a completely new Salesforce MCE Account.
 
 Key differences | Single-Org | Multi-Org
 -- | -- | --
 Integrated SF CRM Orgs | 1 | 1 or many
-Integrated SFMC Business Units | All | Any or All
+Integrated MCE Business Units | All | Any or All
 Connected SF Integration Users | 1 | 1 or many
-Integrated SFMC Business Units<br/>per single SF Integration User | All | Up to 5
+Integrated MCE Business Units<br/>per single SF Integration User | All | Up to 5
 Synchronised Data Extension<br/>Configuration and Filtering | Shared | Shared per Integration User
 Synchronised Data Extension Visibility | Parent only or All | All integrated
 Shared Data Extension | Supported | Supported
@@ -51,7 +51,7 @@ Shared Salesforce Data Extension | Supported | Not Supported
 Profile/Preference Center | Standard or Custom | Custom only
 Profile Attributes CRM Sync | Automatic | Custom Automation only
 Web Collect | Supported | Not Supported
-Disconnecting MCC Integration | On Parent for whole SFMC | On per Business Unit basis
+Disconnecting MCC Integration | On Parent for whole MCE | On per Business Unit basis
 
 ### Additional MCC Considerations
 
@@ -59,10 +59,10 @@ On top of the differences showcased above, there are a few other things that you
 
 1. You can change Single-Org to Multi-Org anytime (existing integration will stay at Parent BU). You cannot change Multi-Org to Single-Org.
 2. All Contact, Lead and User Synchronized Data Extensions records will be automatically added to the All Contacts list and counted against your licence limit.
-3. With Multi-Org, you need to manage the duplicate Subscribers risk. If the same Contact, Lead or User exists in multiple integrated SF Orgs, it will have a different Contact ID in each of them and thus will be created as a separate Contact in SFMC.
-4. You can only partially limit access to data between Business Units. There are some options to make data belonging to other BUs harder to see (like All Subscribers List filters or denied Shared Data Extensions permissions). Still, in the end, someone determined will be able to access the data, for example, through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce Marketing Cloud Accounts.
-5. You cannot connect multiple Salesforce CRM Orgs to a single Marketing Cloud Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
-6. You cannot connect one Salesforce CRM Org to multiple Marketing Cloud Accounts (separate SFMCs) using Marketing Cloud Connect.
+3. With Multi-Org, you need to manage the duplicate Subscribers risk. If the same Contact, Lead or User exists in multiple integrated SF Orgs, it will have a different Contact ID in each of them and thus will be created as a separate Contact in MCE.
+4. You can only partially limit access to data between Business Units. There are some options to make data belonging to other BUs harder to see (like All Subscribers List filters or denied Shared Data Extensions permissions). Still, in the end, someone determined will be able to access the data, for example, through AMPScript/SSJS/SQL. The only currently available approach to fully silo the data is to have separate Salesforce MCE Accounts.
+5. You cannot connect multiple Salesforce CRM Orgs to a single MCE Business Unit (unless you do it partially via the [API](#api-extended-single-org-setup) or using [merge org pattern](#merge-org-setup)).
+6. You cannot connect one Salesforce CRM Org to multiple MCE Accounts (separate MCEs) using Marketing Cloud Connect.
 7. You cannot use the free API-only Salesforce CRM Integration Users - Marketing Cloud Connect requires full Salesforce System Administrator licences for the Integration Users.
 
 ## Marketing Cloud Connect Patterns
@@ -71,7 +71,7 @@ With a high-level overview and fundamental limitations covered, let's discuss va
 
 ### Single-Org Patterns
 
-The default Salesforce Marketing Cloud configuration allows you to connect all Business Units to a single Salesforce CRM Org using the official Marketing Cloud Connect integration tool.
+The default Salesforce MCE configuration allows you to connect all Business Units to a single Salesforce CRM Org using the official Marketing Cloud Connect integration tool.
 
 #### Single Business Unit Single-Org Setup
 
@@ -96,7 +96,7 @@ graph LR
 It is your choice if you have:
 
 - one Salesforce CRM Org and
-- one SFMC Business Unit
+- one MCE Business Unit
 
 Keep it simple and rejoice in straightforward architecture with no limitations.
 
@@ -129,7 +129,7 @@ graph LR
 It might be your choice if you have:
 
 - one Salesforce CRM Org and
-- multiple SFMC Business Units
+- multiple MCE Business Units
 
 It is perfect if you are ok with all Business Units having the same configuration and filters applied. It brings simplicity and unlimited Business Unit scaling.
 
@@ -177,13 +177,13 @@ It might (but shouldn't) be your choice if you have:
 
 - one production Salesforce CRM Org and
 - one developer Salesforce CRM Org and
-- multiple SFMC Business Units
+- multiple MCE Business Units
 
 I wouldn't recommend this approach. In most cases, it is much better to either go with [Basic Multi-Org Setup](#basic-multi-org-setup) or [Multiple BU Single-Org Setup](#multiple-business-units-single-org-setup) and have test data in production CRM.
 
 When might this pattern be the right one for you?
 
-1. You have dozens of SFMC Business Units.
+1. You have dozens of MCE Business Units.
 2. You want to use only one Integration User.
 3. You want to avoid having dev/test data on production SF CRM.
 
@@ -226,7 +226,7 @@ graph LR
 It might be your choice if you have:
 
 - multiple Salesforce CRM Orgs and
-- single SFMC with one or many Business Units
+- single MCE with one or many Business Units
 
 This approach moves the complexity from Marketing Cloud Connect to Salesforce CRM. Using one SF Org as a Merge Org where the data from multiple other Orgs is synchronised, we can create simple MCC Single-Org integration covering all available Business Units.
 
@@ -238,7 +238,7 @@ Due to the above, I would only consider this approach when you need data from mu
 
 ### Multi-Org Patterns
 
-The optional Salesforce Marketing Cloud configuration allows you to connect multiple Salesforce CRM Orgs to various Business Units or differentiate synchronised data filters on each Business Unit. You can enable it with a Support request but keep in mind it is not reversible - once it's switched on, there is no going back to Single-Org.
+The optional Salesforce MCE configuration allows you to connect multiple Salesforce CRM Orgs to various Business Units or differentiate synchronised data filters on each Business Unit. You can enable it with a Support request but keep in mind it is not reversible - once it's switched on, there is no going back to Single-Org.
 
 #### Basic Multi-Org Setup
 
@@ -277,9 +277,9 @@ It might be your choice if you have:
 
 - one production Salesforce CRM Org and
 - one developer Salesforce CRM Org and
-- multiple SFMC Business Units
+- multiple MCE Business Units
 
-This pattern covers one of the most popular Multi-Org setups where you have between one and five production Business Units connected to the production Salesforce CRM Org and want a complete testing suite with dedicated Dev & Test Business Unit connected to a SF CRM Dev Org. It is the closest you can get to CI/CD due to the lack of a true SFMC sandbox offering.
+This pattern covers one of the most popular Multi-Org setups where you have between one and five production Business Units connected to the production Salesforce CRM Org and want a complete testing suite with dedicated Dev & Test Business Unit connected to a SF CRM Dev Org. It is the closest you can get to CI/CD due to the lack of a true MCE sandbox offering.
 
 It is a much cleaner approach than the [API Extended Single-Org Setup](#api-extended-single-org-setup), and it doesn't have significant cons other than standard [Multi-Org limitations](#single-org-vs-multi-org).
 
@@ -326,9 +326,9 @@ graph LR
 It might be your choice if you have:
 
 - multiple Salesforce CRM Orgs and
-- multiple SFMC Business Units
+- multiple MCE Business Units
 
-This pattern is where Multi-Org truly shines. Multiple CRMs (production, sandbox or dev) and multiple Business Units connected in various configurations - a prevalent approach for enterprises where each country or brand can have a separate CRM and dedicated SFMC Business Unit.
+This pattern is where Multi-Org truly shines. Multiple CRMs (production, sandbox or dev) and multiple Business Units connected in various configurations - a prevalent approach for enterprises where each country or brand can have a separate CRM and dedicated MCE Business Unit.
 
 You can plan 1 CRM to 1 BU integrations, 1 CRM to multiple Business Units integrations and even keep some Business Units not integrated (for example, for markets using non-SF CRMs). This flexibility results in complexity, as each integration will require a separate configuration, connection and data pipeline.
 
@@ -376,14 +376,14 @@ graph LR
 It might be your choice if you have:
 
 - multiple Salesforce CRM Orgs and
-- multiple SFMC Business Units
+- multiple MCE Business Units
 
 This pattern leverages multiple CRM Integration Users per single CRM to get around two limitations of Marketing Cloud Connect:
 
 1. One CRM Integration User share Object synchronisation configuration and filters across all integrated Business Units.
 2. One CRM Integration User in Multi-Org Setup can integrate up to five Business Units before the integration performance and stability are impacted.
 
-As you can see, both cases are per one CRM Integration User. And while you are limited to only one Marketing Cloud Connect in a single Salesforce CRM, you can have multiple Integration Users connecting to the target Marketing Cloud Account. It allows you to go around both those issues. Unfortunately freshly introduced free CRM integration users [cannot be used for this purpose](https://help.salesforce.com/s/articleView?id=000395036&type=1).
+As you can see, both cases are per one CRM Integration User. And while you are limited to only one Marketing Cloud Connect in a single Salesforce CRM, you can have multiple Integration Users connecting to the target MCE Account. It allows you to go around both those issues. Unfortunately freshly introduced free CRM integration users [cannot be used for this purpose](https://help.salesforce.com/s/articleView?id=000395036&type=1).
 
 :::note You Should Know
 
@@ -405,7 +405,7 @@ Additionally, you can leverage Integration User permissions for scope limitation
 
 ### Plan before you do
 
-Abraham Lincoln once said "give me six hours to chop down a tree, and I will spend the first four sharpening the axe". While this is an excellent maxim for most Marketing Cloud work, it is especially true for Marketing Cloud Connect configuration. In the best case, the wrong decision can add you hours of work. In worst - it locks you with a suboptimal setup you can change only by purchasing a fresh Marketing Cloud Account. Plan, read up, check and recheck before you commit to the work.
+Abraham Lincoln once said "give me six hours to chop down a tree, and I will spend the first four sharpening the axe". While this is an excellent maxim for most MCE work, it is especially true for Marketing Cloud Connect configuration. In the best case, the wrong decision can add you hours of work. In worst - it locks you with a suboptimal setup you can change only by purchasing a fresh MCE Account. Plan, read up, check and recheck before you commit to the work.
 
 ### Document what you do
 
@@ -424,7 +424,7 @@ Marketing Cloud Connect lets you move the data between the clouds. A lot of data
 3. Don't synchronise all fields - pick only those truly needed.
 4. If you go Multi-Org, consider using different filters per Business Unit as suggested in [Filtered Multi-Org Setup](#filtered-multi-org-setup).
 5. If you go Multi-Org, make the Parent Business Unit an administrative BU, not a production one. Parent will have visibility over data from all the integrations, which can lead to compliance issues in many setups.
-6. If you go Multi-Org, be wary of duplicates - if you have the same Contact in two CRMs, those will have different Salesforce IDs and, therefore, will be created as two separate Contacts in SFMC (and eat up your licence contact count limit appropriately).
+6. If you go Multi-Org, be wary of duplicates - if you have the same Contact in two CRMs, those will have different Salesforce IDs and, therefore, will be created as two separate Contacts in MCE (and eat up your licence contact count limit appropriately).
 
 ### Don't use Synchronized Data Extensions directly
 

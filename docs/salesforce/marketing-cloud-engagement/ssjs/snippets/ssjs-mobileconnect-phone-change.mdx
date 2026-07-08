@@ -13,7 +13,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 ## Problem with changing MobileConnect Mobile Number
 
-There is a lot to like about the Salesforce Marketing Cloud Mobile Connect, but Contact management is not the one.
+There is a lot to like about the Salesforce Marketing Cloud Engagement Mobile Connect, but Contact management is not the one.
 
 One of the problems is managing the Mobile Phone Number. It is a crucial data point because we are using it to send the SMS and because it is the key value for many of the [MobileConnect Data Views](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx#mobileconnect-data-views).
 
@@ -21,7 +21,7 @@ There are many scenarios when we might want to update the user's Mobile Number. 
 
 The official approach is to import the contact with the new Mobile Number. It, however, won't overwrite the previous phone. It will merely add a new one to the record with higher [priority](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx#_mobileaddress). Not perfect.
 
-So what you can do? Leverage the [`_MobileAddress` Data View](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx#_mobileaddress) along with simple SSJS snippet and force Marketing Cloud to do what you want it to do.
+So what you can do? Leverage the [`_MobileAddress` Data View](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx#_mobileaddress) along with simple SSJS snippet and force MCE to do what you want it to do.
 
 :::note You Should Know
 
@@ -74,7 +74,7 @@ You are not limited to Mobile Number change in MobileConnect with this solution.
 
 Use cases?
 - You might have two contacts with different phone numbers that you have identified to be the same person (one tied to personal and second to work number). To optimize the contact count, you can make a merge.
-- Your client opted-in for Keyword using SMS. It created a Contact with the phone number as Contact Key. Later your CRM pushed this contact to Marketing Cloud with proper Contact Key. Merge it to have the engagement data adequately allocated.
+- Your client opted-in for Keyword using SMS. It created a Contact with the phone number as Contact Key. Later your CRM pushed this contact to MCE with proper Contact Key. Merge it to have the engagement data adequately allocated.
 
 To do this, you search by Contact ID of the to-be-merged record and update it to the one you want to use after the merge.
 

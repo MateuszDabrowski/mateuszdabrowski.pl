@@ -41,7 +41,7 @@ function ampScript(code) {
 
 :::note You Should Know
 
-As we are using `Variable.GetValue` here, you will need to import Salesforce Marketing Cloud SSJS Core library at the top of your script.
+As we are using `Variable.GetValue` here, you will need to import Salesforce Marketing Cloud Engagement SSJS Core library at the top of your script.
 
 Just add `Platform.Load('core', '1')` right after `<script runat="server">` and you are good to go!
 
@@ -51,7 +51,7 @@ Instead of writing your AMPScript execution wrapper every time from scratch, her
 
 Sure, it still uses the `Platform.Function.TreatAsContent()` at its heart, but there are two additional tricks:
 
-1. `var ampBlock = '\%\%[' + code + ']\%\%'`: allows you to write AMPScript without the block symbols and adds them in the last moment. This way, Marketing Cloud will execute your code once you pass it to the `Platform.Function.TreatAsContent()` function. It is essential when you want to [insert SSJS in your AMPScript](#dynamic-ampscript-code).
+1. `var ampBlock = '\%\%[' + code + ']\%\%'`: allows you to write AMPScript without the block symbols and adds them in the last moment. This way, Marketing Cloud Engagement will execute your code once you pass it to the `Platform.Function.TreatAsContent()` function. It is essential when you want to [insert SSJS in your AMPScript](#dynamic-ampscript-code).
 2. `return Variable.GetValue('@response');`: allows you to pull back data from your AMPScript to the SSJS. For it to work, you must `SET` the `@response` variable in your AMPScript. Whatever value you assign to the `@response` in the AMPScript context, will be returned to your SSJS context.
 
 How to use it? Pass the AMPScript code in the function and, if you want to do something with `@response` value, assign it to an SSJS variable.
@@ -62,7 +62,7 @@ var properCaseFullName = ampScript("SET @response = ProperCase(AttributeValue('f
 
 :::note You Should Know
 
-Be sure only to use this approach if there is no equivalent SSJS solution, as mixing languages will [impact performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx). It is crucial for code in the messages that Marketing Cloud will execute on send time.
+Be sure only to use this approach if there is no equivalent SSJS solution, as mixing languages will [impact performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx). It is crucial for code in the messages that MCE will execute on send time.
 
 For example, if you are only planning to use ProperCase, it might be better to go the RegEx path for significant volume messaging.
 
@@ -87,7 +87,7 @@ var response = ampScript("SET @retrieve = RetrieveSalesforceObjects("
 
 :::note You Should Know
 
-To use any Salesforce Object functions, you will need to have Marketing Cloud Connect implemented to tie in your Marketing Cloud and Sales or Service Cloud.
+To use any Salesforce Object functions, you will need to have Marketing Cloud Connect implemented to tie in your MCE and Sales or Service Cloud.
 
 :::
 
@@ -108,7 +108,7 @@ for (var campaignName in campaignList) {
 };
 ```
 
-It is even more useful when you have variability in what you want to create. For example, let's consider a use case where you want to create Campaigns in Salesforce from Marketing Cloud, but only some of your campaigns have an End Date known from the beginning.
+It is even more useful when you have variability in what you want to create. For example, let's consider a use case where you want to create Campaigns in Salesforce from MCE, but only some of your campaigns have an End Date known from the beginning.
 
 In `CreateSalesforceObject` AMPScript function, you must pass all fields with their values and a count of fields added to the object. With SSJS, you can use the `length` method to count the Campaign's fields in each loop's run. Then pass the outcome to the call parameters just as in the example above.
 

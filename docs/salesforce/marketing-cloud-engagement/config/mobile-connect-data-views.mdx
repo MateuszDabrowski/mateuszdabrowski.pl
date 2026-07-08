@@ -2,7 +2,7 @@
 id: mobile-connect-data-views
 title: MCE Mobile Connect Data Views
 sidebar_label: Mobile Connect Data Views
-description: Dive deep into SMS System Data Views - the backend Marketing Cloud data. Actionable pearls await.
+description: Dive deep into SMS System Data Views - the backend Marketing Cloud Engagement (MCE) data. Actionable pearls await.
 image: img/og/og-image-sf-mce-mobile-connect-data-views.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, Configuration, SQL, Analytics, Data Extensions, SMS]
 ---
@@ -11,11 +11,11 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '/src/components/LeadText.js';
 
-<LeadText content='Dive deep into SMS System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
+<LeadText content='Dive deep into SMS System Data Views - the backend Marketing Cloud Engagement (MCE) data. Actionable pearls await.' />
 
 ## System Data Views
 
-Learn about SFMC [System Data Views Basics](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#data-views-basics) and specific backend tables covering [Email Studio](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#subscriber-data-views), [Journey Builder](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#journey-data-views) & [Automation Studio](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#automation-data-views) data [here](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx).
+Learn about MCE [System Data Views Basics](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#data-views-basics) and specific backend tables covering [Email Studio](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#subscriber-data-views), [Journey Builder](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#journey-data-views) & [Automation Studio](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#automation-data-views) data [here](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx).
 
 ## MobileConnect Data Views
 
@@ -35,7 +35,7 @@ When working with Mobile Number history of engagement and subscription, take thi
 
 ### _MobileAddress
 
-`_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is no replacement for it. Why? Because Marketing Cloud still uses this Data View as a backend data source for the MobileConnect Demographics Data.
+`_MobileAddress` Data View is officially not supported by Salesforce. But it's too good not to use it. And there is no replacement for it. Why? Because Marketing Cloud Engagement still uses this Data View as a backend data source for the MobileConnect Demographics Data.
 
 <Tabs
     defaultValue='fields'
@@ -141,14 +141,14 @@ When working with `_MobileAddress` Data View:
 4. `_MobileAddress` Data View is available in Data Designer within MobileConnect Attribute Group. It allows you to add custom fields to it that you can later leverage in sends.
 5. Whenever creating a MobileConnect Contact, be sure to provide the `_MobileNumber` with the dialling code prefix (without the `+` or `00`). For example, Poland has a `+48` dialling code and nine-digit numbers, so the correct format is 48123456789. Double-check whether `_CountryCode` is an appropriate two-letter code (for example, `PL`).
 6. The Contact may have multiple Mobile Numbers assigned, but it will receive communication only to the one with the highest `_Priority`.
-7. Whenever you add a Mobile Number to a new Contact, for all other Contacts with this number, it gets lower `_Priority` (SFMC assumes that it was transferred).
+7. Whenever you add a Mobile Number to a new Contact, for all other Contacts with this number, it gets lower `_Priority` (MCE assumes that it was transferred).
 8. `_ContactID` makes this Data View useful for cross-channel applications. New Data Views ([`_SMSSubscriptionLog`](#_smssubscriptionlog) and [`_SMSMessageTracking`](#_smsmessagetracking)) have Subscriber Key information, but if the Mobile Number is shared, it won't provide the data.
 
 ---
 
 ### _MobileSubscription
 
-`_MobileSubscription` Data View is officially unsupported by Salesforce. Marketing Cloud still fills it with data, but there is no guarantee of how long it will persist or whether it will be correct.
+`_MobileSubscription` Data View is officially unsupported by Salesforce. MCE still fills it with data, but there is no guarantee of how long it will persist or whether it will be correct.
 
 Worry not, there is a nearly identical Data View available and supported - [`_SMSSubscriptionLog`](#_smssubscriptionlog).
 
@@ -274,7 +274,7 @@ You shouldn't be working with `_MobileSubscription` Data View. Use [`_SMSSubscri
 
 ### _SubscriberSMS
 
-`_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated, and you won't have records there. Marketing Cloud used it in pre-MobileConnect times, so I do not recommend using it for any projects.
+`_SubscriberSMS` Data View is a __legacy table__. It is neither supported nor updated, and you won't have records there. MCE used it in pre-MobileConnect times, so I do not recommend using it for any projects.
 
 <Tabs
     defaultValue='fields'
@@ -445,7 +445,7 @@ FROM _SMSSubscriptionLog AS smsSubLog
 
 When working with `_SMSSubscriptionLog` Data View:
 
-1. SFMC assigns subscription data to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
+1. MCE assigns subscription data to Mobile Number, not particular SubscriberKey or Contact. If you reassign the Phone Number to a different contact - Subscriptions will follow.
 2. SubscriberKey will be correctly populated if there is one (and only one) Subscriber with the same Mobile Number. Otherwise, it will have either have a `No MobileAddress record has been found or this mobile number` or `Multiple subscriber keys found for this mobile number` as a value.
 3. `SubscriptionDefinitionID` is a GUID, and there is no apparent connection to a specific Keyword. But there are two tricks.
    - [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) [`_SMSMessageTracking`](#_smsmessagetracking) Data View and use `KeywordID` and `SharedKeyword` columns to map the GUID to readable Keyword name. If you cannot find this information there, there is a second option:
@@ -485,7 +485,7 @@ Outbound | If the message was outgoing | Boolean | X |
 Inbound | If the message was incoming | Boolean | X |
 CreateDateTime | The date and time the tracking record was created | Date |
 ModifiedDateTime | The date and CST time the tracking record was modified | Date |
-ActionDateTime | The actual date/time the Marketing Cloud received a delivery or non-delivery event. Timestamps for delivery receipts are not indicative of when a message was received on a handset. The SMS industry does not support read receipts, and the data returned in this view are based on when a delivery receipt is returned to our system. | Date |
+ActionDateTime | The actual date/time the MCE received a delivery or non-delivery event. Timestamps for delivery receipts are not indicative of when a message was received on a handset. The SMS industry does not support read receipts, and the data returned in this view are based on when a delivery receipt is returned to our system. | Date |
 MessageText | The text of the message | Text | X |
 IsTest | If the message was a test message | Number | X |
 MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. Can be used for troubleshooting send issues. | Number | X |
@@ -502,7 +502,7 @@ SendGroupID | The group ID for the SMS send | Number | X |
 SendPersonID | The sendperson ID for the SMS send | Number | X |
 SubscriberID | The subscriber ID for the affected subscriber. This number represents the unique ID for each subscriber record | Number | X |
 SubscriberKey | The subscriber key for the affected subscriber | Text | X |
-SMSStandardStatusCodeId | SFMC delivery status code | Number | X |
+SMSStandardStatusCodeId | MCE delivery status code | Number | X |
 Description | Detailed description of the status code | Text | X |
 Name | The SMS Message or Journey Activity name | Text | X |
 ShortCode | The short code or long code used to send your message | Text | X |
@@ -655,4 +655,4 @@ When working with `_JourneyActivity` Data View:
 
 1. If `Undeliverable` is `TRUE`, check `HoldDate` to know when the number will be reachable again.
 2. Monitor this data view and blocklist numbers with significant `BounceCount` values to clean up your database, save money and protect from spamming potential future owners of the recycled phone number.
-3. It's impossible to know the actual delivery status for SMS sends - Marketing Cloud reports only whether the SMS carrier accepted the message. It does not know what happens with it after the carrier takes over. However, most of the SMS messages accepted by carriers are delivered.
+3. It's impossible to know the actual delivery status for SMS sends - MCE reports only whether the SMS carrier accepted the message. It does not know what happens with it after the carrier takes over. However, most of the SMS messages accepted by carriers are delivered.

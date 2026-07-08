@@ -1,6 +1,6 @@
 ---
 id: sql-style-guide
-title: SFMC SQL Style Guide
+title: MCE SQL Style Guide
 sidebar_label: Style Guide
 description: Query with style. Readable, bug-free code is a few shifts & spaces away.
 image: img/og/og-image-sf-mce-sql-style-guide.png
@@ -11,7 +11,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='Query with style. Readable, bug-free code is a few shifts & spaces away.' />
 
-First things first: this Salesforce Marketing Cloud SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
+First things first: this Salesforce Marketing Cloud Engagement SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
 
 1. Be consistent across your codebase.
 2. Strive for good readability.
@@ -20,7 +20,7 @@ Everything else is preference. And you are just about to learn about mine.
 
 ## Letter Case
 
-SQL gives you much freedom regarding the type of letter case you will be using for parts of your query. Let's use this freedom to create queries that are readable and aligned in convention to other Marketing Cloud programmatic languages operating on the same data.
+SQL gives you much freedom regarding the type of letter case you will be using for parts of your query. Let's use this freedom to create queries that are readable and aligned in convention to other MCE programmatic languages operating on the same data.
 
 ### SQL Syntax Case
 
@@ -55,13 +55,13 @@ where DateJoined >= dateadd(month, -1, getdate())
 
 __Use `PascalCase` for all Table and Column names.__
 
-Treat it as a soft recommendation, as it is highly connected to your organisation's conventions. If other connected systems are using a different style, it might be best to follow it in Marketing Cloud.
+Treat it as a soft recommendation, as it is highly connected to your organisation's conventions. If other connected systems are using a different style, it might be best to follow it in MCE.
 
 It is especially true for Tables, as you might be using mixed convention leveraging lowercase, uppercase and underscores for Data Extension names. However, try not to use hyphens, as those will require you to use square brackets around the name and might interfere in query syntax highlighting, leading to worse readability.
 
-The most popular SQL convention for Table and Column names is `snake_case`. However, in Marketing Cloud, the Table and Column names will share the case between your queries and the User Interface. It is essential to make them as readable and human friendly as possible. Additionally, in many cases, you will also leverage those names in AMPScript and SSJS.
+The most popular SQL convention for Table and Column names is `snake_case`. However, in MCE, the Table and Column names will share the case between your queries and the User Interface. It is essential to make them as readable and human friendly as possible. Additionally, in many cases, you will also leverage those names in AMPScript and SSJS.
 
-Due to the above, I believe `PascalCase` - especially for Column names - is the best choice for Marketing Cloud SQL.
+Due to the above, I believe `PascalCase` - especially for Column names - is the best choice for MCE SQL.
 
 ```sql
 /* ✅ Pascal Case for Table and Column names */
@@ -103,7 +103,7 @@ FROM WELCOMECAMPAIGNSEGMENT AS WEL
 
 :::note You Should Know
 
-If you want to make your Style Guide even safer, you can decide on writing all Columns and Table names in square brackets. As Marketing Cloud is not checking whether you use SQL's reserved keywords, this approach will protect you from potential silent issue. The cost, however, is much more characters and less readable queries.
+If you want to make your Style Guide even safer, you can decide on writing all Columns and Table names in square brackets. As MCE is not checking whether you use SQL's reserved keywords, this approach will protect you from potential silent issue. The cost, however, is much more characters and less readable queries.
 
 ```sql title="You need to decide how hard you want to leverage the square brackets"
 SELECT
@@ -205,7 +205,7 @@ FROM ContenstSubmissions
 
 __Align main SQL keywords to the left.__
 
-This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in Marketing Cloud is a pain, as there is no autoformatter supporting it in the Query Studio or Query Activity. We would have to add all those additional spaces manually. It's just not worth it.
+This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in MCE is a pain, as there is no autoformatter supporting it in the Query Studio or Query Activity. We would have to add all those additional spaces manually. It's just not worth it.
 
 ```sql
 /* ✅ Left Aligned Keywords */
@@ -235,7 +235,7 @@ This rule focuses on readability. The logic, in short, is to indent whenever the
 - Where conditions are children of the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx)
 - Sub-queries follow the same rules in respective indentation level.
 
-For simplicity I use 4-spaces indent, as it is both standard and can be added in Marketing Cloud Query with a single click of the Tab key.
+For simplicity I use 4-spaces indent, as it is both standard and can be added in MCE Query with a single click of the Tab key.
 
 ```sql
 /* ✅ Dependency based indentation */
@@ -406,7 +406,7 @@ Many things in SQL can be done in multiple ways - using various functions, symbo
 
 __Use full [Date Parts](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#date-parts) names.__
 
-Yes, abbreviations let you save few characters, but they kill the readability unless someone is fluent in those shortcuts. For Marketing Cloud purposes, the time saved during writing is not worth the time lost when reading. Go with the full version.
+Yes, abbreviations let you save few characters, but they kill the readability unless someone is fluent in those shortcuts. For MCE purposes, the time saved during writing is not worth the time lost when reading. Go with the full version.
 
 ```sql {6,13}
 /* ✅ Full Date Part */
@@ -586,7 +586,7 @@ It is a long article, so let's gather all the recommendations in one place:
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-pl/).
 
-Looking for more Marketing Cloud style? Check out my:
+Looking for more MCE style? Check out my:
 
 - [SSJS Style Guide](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx)
 - [AMPScript Style Guide](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.mdx)

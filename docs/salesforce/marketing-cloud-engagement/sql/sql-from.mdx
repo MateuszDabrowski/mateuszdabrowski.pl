@@ -1,6 +1,6 @@
 ---
 id: sql-from
-title: SFMC SQL From
+title: MCE SQL From
 sidebar_label: From
 description: Tell the SQL query FROM where you need the data.
 image: img/og/og-image-sf-mce-sql-from.png
@@ -31,11 +31,11 @@ SELECT
 FROM [Master-Subscriber DE]
 ```
 
-There are, however, two cases specific to Salesforce Marketing Cloud that adds a twist. System Data Views and Enterprise Data Extensions.
+There are, however, two cases specific to Salesforce Marketing Cloud Engagement that adds a twist. System Data Views and Enterprise Data Extensions.
 
 ## System Data Views
 
-Salesforce Marketing Cloud is partially hiding the [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) Data Extensions that store tracking data. Think about Email Sent history, Opens and Clicks, Bounces and Complaints. You can find there the tracking data for SMS and Social channels. Also, more technical data points, like Jobs and Enterprise Attributes, are available in the System Data Views. You won't find them in the User Interface but can query them with the SQL. The difference related to those tables is in naming convention. When querying them, you must leverage `_` prefix:
+Marketing Cloud Engagement is partially hiding the [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx) Data Extensions that store tracking data. Think about Email Sent history, Opens and Clicks, Bounces and Complaints. You can find there the tracking data for SMS and Social channels. Also, more technical data points, like Jobs and Enterprise Attributes, are available in the System Data Views. You won't find them in the User Interface but can query them with the SQL. The difference related to those tables is in naming convention. When querying them, you must leverage `_` prefix:
 
 ```sql {8}
 SELECT
@@ -92,7 +92,7 @@ FROM 5123456.DataExtensionOnChildBU
 
 Since 2020, trying to do so will result in an error: `An error occurred while checking the query syntax. Errors: The 123456.DataExtensionOnChildBU table has a multi-part specification. This is not allowed.` The workaround is to use Shared Data Extensions.
 
-Marketing Cloud legend says that there are still some instances that support this legacy type of querying. You might try it, but even if you are the lucky one, I would recommend using the Shared Data Extensions to worry not about unexpected Automation errors in the future.
+MCE legend says that there are still some instances that support this legacy type of querying. You might try it, but even if you are the lucky one, I would recommend using the Shared Data Extensions to worry not about unexpected Automation errors in the future.
 
 :::
 

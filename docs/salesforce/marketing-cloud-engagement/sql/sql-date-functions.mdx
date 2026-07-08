@@ -1,6 +1,6 @@
 ---
 id: sql-date-functions
-title: SFMC SQL Date Functions
+title: MCE SQL Date Functions
 sidebar_label: Date Functions
 description: Take control over dates with built-in SQL functions. Let the query do the job.
 image: img/og/og-image-sf-mce-sql-date-functions.png
@@ -11,7 +11,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='Take control over dates with built-in SQL functions. Let the query do the job.' />
 
-Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
+Salesforce Marketing Cloud Engagement SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
 Here, I will cover only selected date functions that I find most useful for Marketing Automation purposes. They will help you find the current date, calculate a new one or format it to match your needs.
 
@@ -25,7 +25,7 @@ SELECT GETDATE() AS CurrentDate
 
 :::note You Should Know
 
-`GETDATE()` gets server time. For Salesforce Marketing Cloud, it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. It cannot be changed, even with timezone and culture settings in Setup.
+`GETDATE()` gets server time. For MCE, it means Central Standard Time (UTC-6) without changes between standard and daylight savings time. It cannot be changed, even with timezone and culture settings in Setup.
 
 You can get the datetime with appropriate offset information using the `SYSDATETIMEOFFSET()` function. It will return the same datetime as `GETDATE()` but in a format showcasing the timezone offset: `2020-12-28 15:08:01.7239173 -06:00`.
 
@@ -97,7 +97,7 @@ You can reference date parts both by their full name and an abbreviation.
 
 `DAYOFYEAR`, `DAY`, and `WEEKDAY` sounds similar to each other, but they return a bit different value. `DAYOFYEAR` will tell you which day of the year it is (f.e. `257`). `DAY` returns number of the day within the month (f.e. `14`). `WEEKDAY` returns number of the day within a week (f.e. `2` for Monday).
 
-For 99% of SFMC needs, you will be fine with `YEAR`, `MONTH`, `DAY`, `HOUR` and `MINUTE`. Using only those with the full name will make your queries readable and straightforward for everyone.
+For 99% of MCE needs, you will be fine with `YEAR`, `MONTH`, `DAY`, `HOUR` and `MINUTE`. Using only those with the full name will make your queries readable and straightforward for everyone.
 
 ## DATENAME
 
@@ -135,7 +135,7 @@ SELECT
     , DATEFROMPARTS(2022, 01, 31) AS DateValue
 ```
 
-`DATETIMEFROMEPARTS` is a sibling function that requires more data but outputs a fully-fledged datetime value. On top of the year, month and day, add an hour, minute, seconds and milliseconds. You won't be able to see the time part in the Salesforce Marketing Cloud UI (Contact Builder or Email Studio), but it will be available for calculations.
+`DATETIMEFROMEPARTS` is a sibling function that requires more data but outputs a fully-fledged datetime value. On top of the year, month and day, add an hour, minute, seconds and milliseconds. You won't be able to see the time part in the MCE UI (Contact Builder or Email Studio), but it will be available for calculations.
 
 ```sql {3}
 SELECT
@@ -143,7 +143,7 @@ SELECT
     , DATETIMEFROMPARTS(2022, 01, 31, 23, 59, 59, 0) AS DatetimeValue
 ```
 
-There is also a third function: `TIMEFROMEPARTS`. It requires an hour, minute, seconds, fraction and precision as arguments. Its usefulness in Marketing Cloud is close to none.
+There is also a third function: `TIMEFROMEPARTS`. It requires an hour, minute, seconds, fraction and precision as arguments. Its usefulness in MCE is close to none.
 
 :::note You Should Know
 
@@ -268,7 +268,7 @@ Depending on the use case, it might be good or bad, so be sure to select the cor
 
 :::note You Should Know
 
-There is a limit to how big the difference can be. If you go down to the `SECOND` [date part](#date-parts), the query's maximum time difference is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. It shouldn't be an issue in Marketing Cloud for most use cases.
+There is a limit to how big the difference can be. If you go down to the `SECOND` [date part](#date-parts), the query's maximum time difference is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. It shouldn't be an issue in MCE for most use cases.
 
 :::
 
@@ -291,7 +291,7 @@ It's a must-have for multi-country senders and beneficial for others planning to
 
 ### Add offset with AT TIME ZONE
 
-When you work with timezones, you want to have offset for the datetime fields you are using. Unfortunately, in most cases, it is missing. Neither Salesforce Marketing Cloud system timestamps nor the popular [`GETDATE`](#getdate--getutcdate) function provides offset information.
+When you work with timezones, you want to have offset for the datetime fields you are using. Unfortunately, in most cases, it is missing. Neither MCE system timestamps nor the popular [`GETDATE`](#getdate--getutcdate) function provides offset information.
 
 You can quickly fix it with `AT TIME ZONE`. When you apply this function to a timezone-less datetime, it will assume that you are defining it and return value with an appropriate offset.
 
@@ -311,9 +311,9 @@ Not all available [timezones](#available-timezones) observe Daylight Saving Time
 
 ### AT TIME ZONE vs TODATETIMEOFFSET
 
-As astonishing as it might seem, taking Daylight Saving Time into consideration is a problem when working with Salesforce Marketing Cloud system dates (including the [`GETDATE`](#getdate--getutcdate)).
+As astonishing as it might seem, taking Daylight Saving Time into consideration is a problem when working with Marketing Cloud Engagement system dates (including the [`GETDATE`](#getdate--getutcdate)).
 
-Salesforce Marketing Cloud uses Central Standard Time (UTC-6) __without__ changes between standard and daylight savings time. It means that `AT TIME ZONE`'s excellent feature is working against us.
+MCE uses Central Standard Time (UTC-6) __without__ changes between standard and daylight savings time. It means that `AT TIME ZONE`'s excellent feature is working against us.
 
 There are, however, two workarounds:
 
@@ -325,7 +325,7 @@ SELECT
     , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central America Standard Time' AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
 ```
 
-2. `TODATETIMEOFFSET`. It is a simplified version of the `AT TIME ZONE` that adds arbitrary offset without any logic on Daylight Saving Time. Just as we would like for the SFMC system dates.
+2. `TODATETIMEOFFSET`. It is a simplified version of the `AT TIME ZONE` that adds arbitrary offset without any logic on Daylight Saving Time. Just as we would like for the MCE system dates.
 
 To use it, provide a datetime and an offset (for example, `'-06:00'` or `'+01:00'`):
 
@@ -359,7 +359,7 @@ SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standa
 
 It works because the function's first execution [adds the offset with `AT TIME ZONE`](#add-offset-with-at-time-zone). The second uses the output with an offset applied and [change the timezone](#change-timezone-with-at-time-zone).
 
-Of course, for Salesforce Marketing Cloud system dates, we still need either of the [workarounds](#at-time-zone-vs-todatetimeoffset):
+Of course, for MCE system dates, we still need either of the [workarounds](#at-time-zone-vs-todatetimeoffset):
 
 ```sql title="No Daylight Saving Time magic but still changing the timezone"
 SELECT
@@ -415,7 +415,7 @@ Above, you have seen three different format specifiers used to manipulate the da
 | 'F' | Full long time | Friday, October 30, 2020 2:15:30 PM |
 | 'r'/'R' | RFC1123 | Fri, 30 Oct 2020 14:15:30 GMT |
 
-As highlighted in the table header - the examples are for the SFMC default US culture formating. If you add a specific culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order and separator style.
+As highlighted in the table header - the examples are for the MCE default US culture formating. If you add a specific culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order and separator style.
 
 You can find the complete list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings).
 

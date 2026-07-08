@@ -1,6 +1,6 @@
 ---
 id: sql-numeric-functions
-title: SFMC SQL Numeric Functions
+title: Marketing Cloud Engagement SQL Numeric Functions
 sidebar_label: Numeric Functions
 description: Take control over numbers with built-in SQL functions. Let the query do the job.
 image: img/og/og-image-sf-mce-sql-numeric-functions.png
@@ -11,7 +11,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='Take control over numbers with built-in SQL functions. Let the query do the job.' />
 
-Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
+Salesforce Marketing Cloud Engagement SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
 Here, I will cover only selected numeric functions that I find most useful for Marketing Automation purposes. They will help you do the necessary calculations or format the numbers to match your needs.
 
@@ -121,7 +121,7 @@ SELECT
     , FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
 ```
 
-There are nine standard formats available, but only a few are useful on a day-to-day basis in Salesforce Marketing Cloud:
+There are nine standard formats available, but only a few are useful on a day-to-day basis in MCE:
 
 | Format specifier | Description | Example (for US culture) | Comment |
 | -- | -- | -- | -- |
@@ -130,7 +130,7 @@ There are nine standard formats available, but only a few are useful on a day-to
 | 'N'/'n' | Number | 1,234.56 | Precision enforces a number of decimal places. You can pass a culture code as a third argument to format the value to country-specific notation |
 | 'P'/'p' | Percent | 12.34 % | Precision enforces a number of decimal places. You can pass a culture code as a third argument to format the value to country-specific notation |
 
-Just as highlighted in the table header - the examples are for the SFMC default US culture formating.
+Just as highlighted in the table header - the examples are for the MCE default US culture formating.
 
 You can find the complete list of standard date format specifiers on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings).
 

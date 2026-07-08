@@ -90,7 +90,7 @@ For example, due to swift changes in the price based on demand. Or due to having
 
 2. You cannot schedule a correctly prepared .csv file to MC Personalization SFTP.
 
-In most cases, your systems already use flat files and FTPs for communication, and you can extend the architecture to cover MCP. If not, many tools can help you transform your data cleanly into a nice .csv and add it to Marketing Cloud Personalization Feed with the correct naming convention. You can even leverage Marketing Cloud's Automation Studio to prepare and deliver the files in the proper format! But sometimes data is just not there - and then, ETL is a no-go.
+In most cases, your systems already use flat files and FTPs for communication, and you can extend the architecture to cover MCP. If not, many tools can help you transform your data cleanly into a nice .csv and add it to Marketing Cloud Personalization Feed with the correct naming convention. You can even leverage Marketing Cloud Engagement's Automation Studio to prepare and deliver the files in the proper format! But sometimes data is just not there - and then, ETL is a no-go.
 
 While you can begin with Sitemap and then migrate to the ETL approach, the transitory period may be problematic due to issues described in the [Why not both?](#why-not-both) section above. I recommend finding a workaround and starting with the better option.
 
@@ -167,9 +167,9 @@ Archived | Boolean | Marks whether Item should be Archived | Archived Items are 
 
 :::note You Should Know
 
-Published and Expiration fields (as all Interacton Studio date type fields) use ISO-8601 datetime formar. You must pass them as `2022-04-12T10:23:37Z`.
+Published and Expiration fields (as all Interaction Studio date type fields) use ISO-8601 datetime format. You must pass them as `2022-04-12T10:23:37Z`.
 
-If you want to push a datetime to MCP using [ETL](#2-mc-personalization-with-etl), you can prepare the data with SQL using clean [FORMAT](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking SFMC Data Extension).
+If you want to push a datetime to MCP using [ETL](#2-mc-personalization-with-etl), you can prepare the data with SQL using clean [FORMAT](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking MCE Data Extension).
 
 :::
 

@@ -2,20 +2,20 @@
 id: enhanced-send-log
 title: MCE Enhanced Send Log
 sidebar_label: Enhanced Send Log
-description: Create, customise and enhance SFMC Send Log for debugging and reporting.
+description: Create, customise and enhance Marketing Cloud Engagement Send Log for debugging and reporting.
 image: img/og/og-image-sf-mce-enhanced-send-log.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SQL, Snippet, Email, Debugging, Analytics]
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
 
-<LeadText content='Create, customise and enhance SFMC Send Log for debugging and reporting.' />
+<LeadText content='Create, customise and enhance Marketing Cloud Engagement Send Log for debugging and reporting.' />
 
 ## What is Send Log
 
-Send Log is a table that captures relevant data about sends happening in the platform. In the case of Salesforce Marketing Cloud, it is a unique Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
+Send Log is a table that captures relevant data about sends happening in the platform. In the case of Marketing Cloud Engagement, it is a unique Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
 
-SFMC doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx).
+MCE doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx).
 
 Once you create it, it will automatically populate with each attempted send originating from its Business Unit.
 
@@ -56,9 +56,9 @@ You might wonder - why use email Send Log when [_Sent Data View](docs/salesforce
 
 It's not only about the [`ErrorCode` field](#send-log-errorcode-values) in the Send Log, and multiple additional fields in the [_Sent Data View](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_sent). It's also about when the data is captured.
 
-Send Log is populated when SFMC prepares the send. That's why it can log [ErrorCode](#send-log-errorcode-values) if the send fails. The Data View is populated later when SFMC pushes a correctly constructed email out to the Email Service Providers.
+Send Log is populated when MCE prepares the send. That's why it can log [ErrorCode](#send-log-errorcode-values) if the send fails. The Data View is populated later when MCE pushes a correctly constructed email out to the Email Service Providers.
 
-It means that Send Log is an incredible tool to check why some emails did not go out of SFMC.
+It means that Send Log is an incredible tool to check why some emails did not go out of MCE.
 
 #### 2. You can customise the Send Log
 
@@ -70,7 +70,7 @@ The true power of Send Log lies in the possibility to customise it. The default 
 
 Columns added to Send Log are unique because you can make them fill in automatically. How does it work?
 
-When Marketing Cloud prepares the email for sending, Send Log evaluates all available [personalisation strings](https://help.salesforce.com/s/articleView?language=en_US&type=5&id=sf.mc_es_available_personalization_strings.htm), Sendable Data Extension fields and AMPScript variables. Each value that shares a name with Send Log column is automatically filled. Examples?
+When MCE prepares the email for sending, Send Log evaluates all available [personalisation strings](https://help.salesforce.com/s/articleView?language=en_US&type=5&id=sf.mc_es_available_personalization_strings.htm), Sendable Data Extension fields and AMPScript variables. Each value that shares a name with Send Log column is automatically filled. Examples?
 
 1. If you want to capture the recipient's Email Address in the SendLog, you can add the `EmailAddr` field, and it will be automatically filled thanks to `%%emailaddr%%` personalisation string.
 
@@ -80,7 +80,7 @@ When Marketing Cloud prepares the email for sending, Send Log evaluates all avai
 
 :::note You Should Know
 
-In most cases, you can dry-test automatic filling by adding `%%[Output(Concat('SendLogColumnName: ', @SendLogColumnName))]%%` to the bottom of the email (where `SendLogColumnName` is equal to the Send Log field you want to test). This AMPScript one-liner should output `SendLogColumnName: ` along with the value that SFMC would add to the Send Log. If it doesn't - there might not be an appropriate variable, or it is not assigned a value.
+In most cases, you can dry-test automatic filling by adding `%%[Output(Concat('SendLogColumnName: ', @SendLogColumnName))]%%` to the bottom of the email (where `SendLogColumnName` is equal to the Send Log field you want to test). This AMPScript one-liner should output `SendLogColumnName: ` along with the value that MCE would add to the Send Log. If it doesn't - there might not be an appropriate variable, or it is not assigned a value.
 
 :::
 
@@ -121,7 +121,7 @@ Unfortunately, it currently does not support Journey Builder Sends. Learn more a
 
 ## Enhanced Send Log
 
-Custom Send Log is already a fantastic tool, but it's more suited for administrators with its technical field names and lack of post-send data. However, you can easily leverage it to create something perfect for your more business-oriented SFMC users.
+Custom Send Log is already a fantastic tool, but it's more suited for administrators with its technical field names and lack of post-send data. However, you can easily leverage it to create something perfect for your more business-oriented MCE users.
 
 To do it, you will need additional Data Extension and simple Automation with single Query Activity.
 
@@ -229,7 +229,7 @@ Schedule that Automation nightly and share the Enhanced Send Log with your users
 
 ## Send Log ErrorCode Values
 
-List of email Send Log errorCode values from the [official SFMC Documentation](https://help.salesforce.com/s/articleView?language=en_US&type=5&id=sf.mc_es_email_send_error_codes.htm):
+List of email Send Log errorCode values from the [official MCE Documentation](https://help.salesforce.com/s/articleView?language=en_US&type=5&id=sf.mc_es_email_send_error_codes.htm):
 
 | Error Code | Name | Description |
 | -- | -- | -- |
@@ -247,7 +247,7 @@ List of email Send Log errorCode values from the [official SFMC Documentation](h
 | 12 | Invalid Owner ID Provided | The child client account isn't a member of the enterprise account. |
 | 13 | Subscriber Key Mismatch | The subscriber key in the system doesn't match the subscriber key provided. |
 | 14 | Email Address Mismatch | The email address in the system doesn't match the email address provided for this subscriber. |
-| 15 | Unspecified Error | The subscriber didn't pass validation. Contact your Marketing Cloud account representative for more information. |
+| 15 | Unspecified Error | The subscriber didn't pass validation. Contact your MCE account representative for more information. |
 | 16 | Invalid Attribute Value | The value specified for a subscriber attribute doesn't match the attribute's data type. |
 | 17 | Attribute Value Max Length Err | The value specified for a subscriber attribute is over the maximum length allowed for the attribute. |
 | 18 | Invalid Attribute Value Count | The number of subscriber attribute values doesn't match the expected count. |
@@ -257,7 +257,7 @@ List of email Send Log errorCode values from the [official SFMC Documentation](h
 | 22 | Data Extension Insert Failed | The send failed to insert a row into the triggered send data extension. |
 | 23 | Domain Exclusion | A domain exclusion list excluded the subscriber. |
 | 24 | List Detective Exclusion | List Detective excluded the subscriber. |
-| 25 | Subscriber Blacked Out | The subscriber is ineligible to receive the email. Marketing Cloud reschedules the triggered send. |
+| 25 | Subscriber Blacked Out | The subscriber is ineligible to receive the email. MCE reschedules the triggered send. |
 | 26 | Build Email Error | An error occurred when attempting to build an email for the subscriber. |
 | 27 | Suppression List Exclusion | The subscriber is on a suppression list and is ineligible to receive the email.  |
 | 28 | Opt Out List Exclusion | The subscriber is on an opt-out list and ineligible to receive the email. |
@@ -265,5 +265,5 @@ List of email Send Log errorCode values from the [official SFMC Documentation](h
 | 30 | Subscriber Key Too Long | The subscriber key value exceeds the character limit. |
 | 37 | Queued Transaction Deleted | The queued email subscriber was deleted from the Triggered Send Queue using Clear Queue |
 | 39 | Subscriber Queue Cleared | The queued SMS subscriber was deleted from the Triggered Send Queue. |
-| 40 | Subscriber Deleted | Subscriber or contact is deleted and can't be added to Marketing Cloud. |
+| 40 | Subscriber Deleted | Subscriber or contact is deleted and can't be added to MCE. |
 | 138 | Exceeded Expiration Policy | Paused triggered sends that were later resumed without clearing the queue sent old messages that were no longer relevant. |

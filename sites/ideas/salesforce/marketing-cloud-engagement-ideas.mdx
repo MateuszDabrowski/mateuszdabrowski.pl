@@ -90,9 +90,9 @@ It works when the email is sent via Email Studio -> Email -> Content -> Send flo
 
 ### Journey Builder Script Activity
 
-Salesforce Marketing Cloud Journey Builder offers many out-of-the-box Activities and the possibility to create or download custom ones from AppExchange. However, there is a space between those solutions that Salesforce can cover to empower Marketing Cloud users. An out-of-the-box Script Activity, similar to the one available in Automation Studio.
+Salesforce Marketing Cloud Engagement Journey Builder offers many out-of-the-box Activities and the possibility to create or download custom ones from AppExchange. However, there is a space between those solutions that Salesforce can cover to empower MCE users. An out-of-the-box Script Activity, similar to the one available in Automation Studio.
 
-Flexible enough to offer countless possibilities to SFMC power users without the complexity of creating a custom solution with the whole hosting, scalability and security considerations.
+Flexible enough to offer countless possibilities to MCE power users without the complexity of creating a custom solution with the whole hosting, scalability and security considerations.
 
 Right now, it requires either:
 
@@ -102,7 +102,7 @@ Right now, it requires either:
 Salesforce can solve it. Below are two possible solutions (and a bonus one for even more performance-oriented fun):
 
 1. __Minimum Valuable Solution__: Script Activity with the same features as in Automation Studio. The possibility of executing SSJS (or even AMPScript to optimise performance) against every Journey member would allow for pre-send updates of data from external systems using HTTP functions to ensure that crucial personalisation details are up-to-date.
-2. __Solution Deluxe__: Extension of the previous idea to define various paths based on a predefined value in the script. Think about custom decision splits using out-of-sfmc data that allow you to change the Journey path based on real-time information from external systems.
+2. __Solution Deluxe__: Extension of the previous idea to define various paths based on a predefined value in the script. Think about custom decision splits using out-of-MCE data that allow you to change the Journey path based on real-time information from external systems.
 3. __Bonus Solution__: There is also a place for a much less system-heavy script activity on the side. One that captures all members that get to that Activity and in predefined cadence (for example, every hour), if there is at least one member available, executes provided script once. Think of it as a mix of Wait and Script Activity that allows executing logic applied to groups. Use cases? Lazy update of the personalisation-source Data Extension that happens only if there are members that would need it. Or performance check of the subsequent communication to decide whether the members should receive it. All with the performance impact of one script execution per hour - regardless of the number of members.
 
 <Button
@@ -113,7 +113,7 @@ Salesforce can solve it. Below are two possible solutions (and a bonus one for e
 
 ### Wait Until Time Range Activity
 
-Salesforce Marketing Cloud offers many different Wait Activities, but one basic is missing - Wait Until Time Range.
+Salesforce Marketing Cloud Engagement offers many different Wait Activities, but one basic is missing - Wait Until Time Range.
 
 __Use Case__
 
@@ -182,7 +182,7 @@ Right now, there are only two ways to add the UTM's:
 Salesforce can fix it. Below are two possible solutions:
 
 1. __Minimum Valuable Solution__: Add a text box to a Behavioral Trigger Content Block configuration menu to add our custom tracking. The Content Block should apply the provided tracking query to each link. AMPScript support included.
-2. __Solution Deluxe__: On top of the above solution, Marketing Cloud should consider the Parameter Management to allow for a mix of global UTM's from Web Analytics Connector and local from the new text box in Behavioral Trigger Content Block configuration.
+2. __Solution Deluxe__: On top of the above solution, MCE should consider the Parameter Management to allow for a mix of global UTM's from Web Analytics Connector and local from the new text box in Behavioral Trigger Content Block configuration.
 
 <Button
     link='https://ideas.salesforce.com/s/idea/a0B8W00000GdhNRUAZ/link-tracking-in-behavioral-trigger-content-block'
@@ -248,17 +248,17 @@ There should be no `rem` units used in the Behavioral Trigger Content Block code
 
 ### Content Builder Shared Folders Permissions
 
-Content Builder is great for creating and neatly organising assets in Marketing Cloud, but it has one huge issue. Folder access management.
+Content Builder is great for creating and neatly organising assets in MCE, but it has one huge issue. Folder access management.
 
 There are already great [Ideas on expanding the folder rights](https://trailblazer.salesforce.com/ideaView?id=0873A000000PZ6oQAG), so in this Idea, I want to focus on something different - and much easier to fix for Salesforce.
 
-When settings permissions for a Marketing Cloud User or Role, there are options that control the rights to Shared Folders of Content Builder. As with Shared Data Extensions Folder permissions, you can decide what the user or role can do with Shared Content Folders.
+When settings permissions for an MCE User or Role, there are options that control the rights to Shared Folders of Content Builder. As with Shared Data Extensions Folder permissions, you can decide what the user or role can do with Shared Content Folders.
 
 However, there is one huge difference:
 1. With Shared Data Extension Folders, when you remove all permissions, the user or role can no longer see Shared space and effectively loses access to all Shared Data Extensions.
 2. With Shared Content Folders, when you remove all permissions, the user or role will not see the folders, but they will still see the Shared Folder tab and - what's much worse - `All Shared Content` section displaying all the Content assets stored within Shared Folders.
 
-As SFMC applies the permissions to read and edit content to both local and shared assets, every person with edit rights can change assets in a Shared Content Folder - event if they do not have permission to that folder.
+As MCE applies the permissions to read and edit content to both local and shared assets, every person with edit rights can change assets in a Shared Content Folder - event if they do not have permission to that folder.
 
 This behaviour breaks a prevalent use case of having local folders available to all creators while limiting shared folders only to administrative roles. It is possible (and very useful) for Data Extensions. But not for Content Builder, as everyone can access all administrative-level assets (like master templates or crucial content blocks).
 
@@ -274,9 +274,9 @@ The fix is straightforward - if the current user does not have any permissions t
 
 ## Setup
 
-### Restore default permissions for SFMC Standard System Roles
+### Restore default permissions for MCE Standard System Roles
 
-While Salesforce updates the Standard Roles (Email Studio and Marketing Cloud ones) during Releases, users can also modify them within the SFMC Setup freely (permissions of those System Roles are not locked).
+While Salesforce updates the Standard Roles (Email Studio and Marketing Cloud Engagement ones) during Releases, users can also modify them within the MCE Setup freely (permissions of those System Roles are not locked).
 
 Unfortunately, there is no option to see whether the Standard Role deviates from the default configuration. It creates problems for new administrators coming to existing implementation or after someone modifies the wrong role by mistake/not following the best practices.
 
@@ -289,7 +289,7 @@ It would be of great help to have on the Stnadard System Roles either:
 
 Currently, there is no real workaround apart from:
 
-- Checking it against another, unchanged SFMC (which is not an option for most) or
+- Checking it against another, unchanged MCE (which is not an option for most) or
 - Using the manual [backup, I'm currently building](https://github.com/MateuszDabrowski/sfmc-roles-backup) (which is not the best long-term option, especially with all the changes to the permissions happening multiple times a year).
 
 <Button
@@ -300,7 +300,7 @@ Currently, there is no real workaround apart from:
 
 ### Increase Licence Limits with Additional Business Units
 
-Salesforce Marketing Cloud's Business Unit structure is essential for organising marketing operations across different brands, regions, or teams. However, its effectiveness is severely undermined by the current licence model, where key limits are shared across all Business Units. This creates a critical bottleneck, especially for Yearly Automation Executions, where a single active BU can consume the entire enterprise-wide allowance, crippling all other BUs.
+Salesforce Marketing Cloud Engagement's Business Unit structure is essential for organising marketing operations across different brands, regions, or teams. However, its effectiveness is severely undermined by the current licence model, where key limits are shared across all Business Units. This creates a critical bottleneck, especially for Yearly Automation Executions, where a single active BU can consume the entire enterprise-wide allowance, crippling all other BUs.
 
 The most painful licence limit is Yearly Automation Executions. Why is it so painful? Because the threshold is absurdly small for real-life usage. An Enterprise licence provides 100K yearly executions. A single automation running every hour uses 8,760 executions per year. This means an entire enterprise can only support roughly 11 hourly automations in total before hitting the limit. And for multi-BU setups that use Multi-Org Marketing Cloud Connect integration, it's a killer.
 

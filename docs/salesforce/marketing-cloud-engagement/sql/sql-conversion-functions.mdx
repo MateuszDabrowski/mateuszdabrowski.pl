@@ -1,6 +1,6 @@
 ---
 id: sql-conversion-functions
-title: SFMC SQL Conversion Functions
+title: MCE SQL Conversion Functions
 sidebar_label: Conversion Functions
 description: Break from the limits of Data Extension data types. Use full power of SQL to control your values.
 image: img/og/og-image-sf-mce-sql-conversion-functions.png
@@ -11,13 +11,13 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='Break from the limits of source data types. Use the full power of SQL to transform your values.' />
 
-Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
+Salesforce Marketing Cloud Engagement SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
-Here, I will cover only selected conversion functions, that I find most useful for Marketing Automation purposes. They will help you change the value types to enable the use of type-based Salesforce Marketing Cloud User Interface elements and type-specific functions.
+Here, I will cover only selected conversion functions, that I find most useful for Marketing Automation purposes. They will help you change the value types to enable the use of type-based MCE User Interface elements and type-specific functions.
 
 ## CAST & CONVERT
 
-In Salesforce Marketing Cloud, you can use two universal conversion functions - `CAST` and `CONVERT`.
+In Marketing Cloud Engagement, you can use two universal conversion functions - `CAST` and `CONVERT`.
 
 ### CAST
 
@@ -31,7 +31,7 @@ WHERE DateJoined > CAST('2020-10-30' AS DATE)
 
 It takes a value and expected datatype with `AS` operator in between.
 
-However, in Salesforce Marketing Cloud, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there).
+However, in MCE, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there).
 
 ### CONVERT
 
@@ -84,14 +84,14 @@ SELECT
 
 ### Data Types
 
-There are over 30 data types available for conversion, but there are only a few that are useful on a day-to-day basis in Salesforce Marketing Cloud:
+There are over 30 data types available for conversion, but there are only a few that are useful on a day-to-day basis in MCE:
 
 | Data Type | Description | Comment |
 | -- | -- | -- |
 | CHAR | Fixed-length string | |
 | NCHAR | Fixed-length string with Unicode support | |
 | VARCHAR | Variable-length string | |
-| NVARCHAR | Variable-length string with Unicode support | Best option for most SFMC string use cases |
+| NVARCHAR | Variable-length string with Unicode support | Best option for most MCE string use cases |
 | DECIMAL/NUMERIC | Decimal number with big precision | Best option if you need a decimal number |
 | INT | Integer number | Best option if your number is not decimal |
 | BIGINT | Big integer number | When your number is bigger than 2,147,483,647, you need BIGINT |

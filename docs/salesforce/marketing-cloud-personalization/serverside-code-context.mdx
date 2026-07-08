@@ -174,11 +174,11 @@ Returns the name of the currently pushed action as configured in the Sitemap (f.
 
 #### context.event.fields.url
 
-Returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on the query string values you set in the email campaign using SFMC data).
+Returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on the query string values you set in the email campaign using MCE data).
 
 #### context.event.fields.customAttribute
 
-Apart from those always-there properties, you will also see custom attributes you passed along with the event. For example, if in the Sitemap you are passing SFMC Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled out by the Add to Cart event to determine whether you want to promote a cross-sell. Add the `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
+Apart from those always-there properties, you will also see custom attributes you passed along with the event. For example, if in the Sitemap you are passing MCE Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled out by the Add to Cart event to determine whether you want to promote a cross-sell. Add the `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
 
 :::note You Should Know
 

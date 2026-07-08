@@ -15,13 +15,13 @@ import { Button } from '/src/components/Buttons.js';
 
 ## Outline
 
-1. [Learn everything about SFMC Contact Deletion Process](#contact-deletion-in-sfmc)
+1. [Learn everything about MCE Contact Deletion Process](#contact-deletion-in-mce)
 2. [Check out sample segments just waiting to be deleted](#which-contacts-should-you-delete)
 3. [Create privacy-focused Contact Deletion Archive](#contact-deletion-archive)
 
-## Contact Deletion in SFMC
+## Contact Deletion in MCE
 
-Salesforce Marketing Cloud makes Contact Deletion not only easy but also powerful. The out-of-the-box solution does most of the heavy lifting, leaving us the decision of who and when should be deleted from our platform.
+Marketing Cloud Engagement makes Contact Deletion not only easy but also powerful. The out-of-the-box solution does most of the heavy lifting, leaving us the decision of who and when should be deleted from our platform.
 
 But before we start the cleanup, let's see why we should do it in the first place. It's not easy to get new opted-in Contacts, so we shouldn't take removal lightly. However, there are multiple good reasons to do that:
 
@@ -32,7 +32,7 @@ But before we start the cleanup, let's see why we should do it in the first plac
 - __Deliverability__: Sending to dead or bad quality Contacts hurts your email deliverability and inbox placement.
 - __Analytics__: Bad quality data negatively impacts the quality of your analytics, making it harder to make the right decisions.
 
-Once we know why we should delete, it's time to see what exactly is the built-in SFMC Contact Deletion process doing behind the scenes:
+Once we know why we should delete, it's time to see what exactly is the built-in MCE Contact Deletion process doing behind the scenes:
 
 1. It manages __supression period for contacts__ requested for deletion:
     - Suppression in __Contact Builder__ hides the contacts and blocks the possibility to create a new one with the same Contact Key.
@@ -53,15 +53,15 @@ As you can see, a lot out-of-the-box. But what is the purpose of the suppression
 
 Contact Deletion is irreversible. Once we remove the contact, it is deleted for good, and there is no option to bring it back. Sure, you can add it again, but it won't have any past data. So, if you are not confident in your Contact Deletion process, you might [configure suppression period](#enable-contact-deletion) to have some time for reflection. That's why it is there by default (currently at two days). If you find a mistake during that period, put a Support ticket as soon as possible with high priority.
 
-There is also a second reason for the suppression period. Depending on the parallel processes run in your Marketing Cloud, the number of contacts requested for deletion, as well as the volume of data in the system, SFMC Contact Deletion can be a very time-consuming process. Suppression makes sure that even if it takes longer than you would like, the Contact will not get any unwanted communication.
+There is also a second reason for the suppression period. Depending on the parallel processes run in your MCE, the number of contacts requested for deletion, as well as the volume of data in the system, MCE Contact Deletion can be a very time-consuming process. Suppression makes sure that even if it takes longer than you would like, the Contact will not get any unwanted communication.
 
 :::note You Should Know
 
-Few places are not targeted by the out-of-the-box Marketing Cloud Contact Deletion process:
+Few places are not targeted by the out-of-the-box MCE Contact Deletion process:
 
 - Non-Sendable Data Extensions » _Can be removed with either retention or heavy custom scripting_
 - Synchronized Data Extensions » _Can be removed in the source system_
-- Triggered Send Lists » _Can be removed using [API method](#sfmc-api-contact-deletion)_
+- Triggered Send Lists » _Can be removed using [API method](#mce-api-contact-deletion)_
 
 It also ignores any data that is not connected to the deleted contact by Contact Key / Subscriber Key / Contact ID, so be sure to have a proper deduplication process in place for compliance.
 
@@ -69,7 +69,7 @@ It also ignores any data that is not connected to the deleted contact by Contact
 
 ### Enable Contact Deletion
 
-To use the Contact Deletion Process in Salesforce Marketing Cloud, you must enable it first. To do this, you need to have a Marketing Cloud Administrator role.
+To use the Contact Deletion Process in Marketing Cloud Engagement, you must enable it first. To do this, you need to have a Marketing Cloud Administrator role.
 
 1. Go to parent Business Unit.
 2. Go to Audience Builder » Contact Builder.
@@ -82,7 +82,7 @@ If you want the Contact Deletion process to trigger automatically after starting
 
 :::note You Should Know
 
-For the most popular SFMC tenant type - Enterprise 2.0 - the deletion must happen at the parent level and automatically apply across all Business Units.
+For the most popular MCE tenant type - Enterprise 2.0 - the deletion must happen at the parent level and automatically apply across all Business Units.
 
 If you have a different tenant type, check the official [documentation](https://help.salesforce.com/s/articleView?id=sf.mc_cab_contact_deletion.htm&type=5).
 
@@ -94,7 +94,7 @@ Once the Contact Deletion is [enabled and configured](#enable-contact-deletion),
 
 :::note You Should Know
 
-Manual Contact Deletion in Email Studio will remove the contact only from Email Studio. To trigger the Contact Deletion Process, you must leverage Contact Builder or [API method](#sfmc-api-contact-deletion).
+Manual Contact Deletion in Email Studio will remove the contact only from Email Studio. To trigger the Contact Deletion Process, you must leverage Contact Builder or [API method](#mce-api-contact-deletion).
 
 :::
 
@@ -114,7 +114,7 @@ If you want to remove more contacts, leverage the Data Extension method shared b
 
 #### Delete all contacts from List or Data Extension
 
-This method will be better if you want to remove a significant number of contacts once but don't want the hassle of the most potent [API method](#sfmc-api-contact-deletion).
+This method will be better if you want to remove a significant number of contacts once but don't want the hassle of the most potent [API method](#mce-api-contact-deletion).
 
 1. Go to parent Business Unit.
 2. Go to Audience Builder » Contact Builder.
@@ -122,7 +122,7 @@ This method will be better if you want to remove a significant number of contact
 4. Without selecting any contact, click the trash icon.
 5. Click Delete contacts from list / data extension depending on your needs.
 6. Select the Sendable Data Extension used for the Contact Deletion process.
-7. Decide whether the Data Extension itself should stay in the system after SFMC deletes the contacts.
+7. Decide whether the Data Extension itself should stay in the system after MCE deletes the contacts.
 8. Click Delete Contacts.
 9. Review and confirm by clicking Delete.
 
@@ -132,11 +132,11 @@ This method allows you to delete up to one million contacts per operation. If yo
 
 :::
 
-### SFMC API Contact Deletion
+### MCE API Contact Deletion
 
-Previous methods are nice, but they require manual triggering in the Salesforce Marketing cloud each time you run the Contact Deletion Process. There are, however, many use cases where you might want to trigger it automatically - for example, from a different system responsible for managing privacy.
+Previous methods are nice, but they require manual triggering in MCE each time you run the Contact Deletion Process. There are, however, many use cases where you might want to trigger it automatically - for example, from a different system responsible for managing privacy.
 
-Thankfully, SFMC offers a solution for that as well with REST API. To implement it:
+Thankfully, MCE offers a solution for that as well with REST API. To implement it:
 
 1. Create authentication endpoint with correct permissions with Installed Package
     1. Go to Setup in Parent Business Unit.
@@ -204,9 +204,9 @@ In this endpoint, you have control over three values:
 
 ### Contact Deletion with Automation Studio
 
-With the [API Contact Deletion](#sfmc-api-contact-deletion) we are not limited to external triggers. We can also leverage AMPScript or SSJS to trigger it directly from Marketing Cloud.
+With the [API Contact Deletion](#mce-api-contact-deletion) we are not limited to external triggers. We can also leverage AMPScript or SSJS to trigger it directly from MCE.
 
-The most popular use case is a Contact Deletion Automation scheduled to clean up the database regularly. It's a great idea to keep your SFMC instance clean without much of a hassle.
+The most popular use case is a Contact Deletion Automation scheduled to clean up the database regularly. It's a great idea to keep your MCE instance clean without much of a hassle.
 
 My recommended approach is to create a dedicated Pending Contact Deletion Shared Data Extension that will store records to be deleted along with some context and remove its content nightly with the Script Activity.
 
@@ -227,7 +227,7 @@ You don't need anything but the Subscriber Key for essential contact deletion. H
 
 #### Contact Deletion Script Activity
 
-Below you can find ready-to-use SSJS snippet for Script Activity. Change `clientSecret`, `clientID` and `clientBase` variables to data you saved during [Installed Package configuration](#sfmc-api-contact-deletion). If needed, change also the `contactDeletionDEKey`, `errorDE` and `automationName` variables to reflect your configuration.
+Below you can find ready-to-use SSJS snippet for Script Activity. Change `clientSecret`, `clientID` and `clientBase` variables to data you saved during [Installed Package configuration](#mce-api-contact-deletion). If needed, change also the `contactDeletionDEKey`, `errorDE` and `automationName` variables to reflect your configuration.
 
 To learn more about `errorDE` check my [debugging guide](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx#error-logging). You will find there also details about [helper functions](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx#error-handler-function) from the script.
 
@@ -380,7 +380,7 @@ Remember to test those recommendations and queries (for example, using [Query St
 
 ### Contacts deleted in Salesforce CRM
 
-If you use Marketing Cloud Connect to integrate your Salesforce CRM with the Marketing Cloud, you should think about synchronizing deletions between those two systems. It does not happen automatically. By default, contacts deleted in SF CRM are removed from Synchronized Data Extensions and stay in other Marketing Cloud tables.
+If you use Marketing Cloud Connect to integrate your Salesforce CRM with MCE, you should think about synchronizing deletions between those two systems. It does not happen automatically. By default, contacts deleted in SF CRM are removed from Synchronized Data Extensions and stay in other MCE tables.
 
 You can, however, add this using Query Activity in Automation Studio. For the email channel, it's straightforward:
 
@@ -400,11 +400,11 @@ If you are also using other channels, you can include their [System Data Views](
 
 This method is also great for removing deleted or unused records from other objects counted against your All Contacts licence limits - Leads and Users. There are two caveats, however.
 
-First, to remove unused Leads and Users, you must first stop them from synchronizing via Marketing Cloud Connect. Otherwise, they will come back to SFMC at the next scheduled synchronization. The best way to do it is to create a boolean field on those objects (for example, `ShouldSyncToSFMC`) that would be `true` only for records you need in your system. Depending on your use case, it might be neither (so just set `false` as the default value), or it might be complicated (the calculated field will be your best friend). With such a boolean, you will be able to select it as a filter for your Marketing Cloud Connect object synchronization.
+First, to remove unused Leads and Users, you must first stop them from synchronizing via Marketing Cloud Connect. Otherwise, they will come back to MCE at the next scheduled synchronization. The best way to do it is to create a boolean field on those objects (for example, `ShouldSyncToSFMC`) that would be `true` only for records you need in your system. Depending on your use case, it might be neither (so just set `false` as the default value), or it might be complicated (the calculated field will be your best friend). With such a boolean, you will be able to select it as a filter for your Marketing Cloud Connect object synchronization.
 
-Second is the problem of finding those records in the Marketing Cloud. The easy way is to create a copy of Synchronized Data Extensions before filtering them. However, this will not always be possible, and it won't capture Leads and Users that were removed in the past from CRM.
+Second is the problem of finding those records in MCE. The easy way is to create a copy of Synchronized Data Extensions before filtering them. However, this will not always be possible, and it won't capture Leads and Users that were removed in the past from CRM.
 
-If you have Mobile Studio in your SFMC licence, you have a nice workaround:
+If you have Mobile Studio in your MCE licence, you have a nice workaround:
 
 1. Go to Contact Builder.
 2. Click All Contacts in the top menu.
@@ -456,7 +456,7 @@ For the complete list, check [Daniel Ballinger's cheat sheet](http://www.fishofp
 
 If you want to remove only those Leads / Users that you no longer synchronize via filtered Marketing Cloud Connect, you will need to add a comparison similar to the Contacts use case.
 
-```sql title="Find all Users and Leads that are no longer synchronized to SFMC"
+```sql title="Find all Users and Leads that are no longer synchronized to MCE"
 SELECT contact.SubscriberKey
 FROM AllContactsList                    AS contact
     LEFT JOIN Leads_Salesforce          AS lead

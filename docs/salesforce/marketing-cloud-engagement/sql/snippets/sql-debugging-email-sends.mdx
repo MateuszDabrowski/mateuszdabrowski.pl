@@ -1,8 +1,8 @@
 ---
 id: sql-debugging-email-sends
-title: SFMC SQL Debugging Email Sends
+title: MCE SQL Debugging Email Sends
 sidebar_label: Debugging Email Sends
-description: Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with Query Studio to the rescue.
+description: Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL with Query Studio to the rescue.
 image: img/og/og-image-sf-mce-sql-debugging-email-sends.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SQL, Snippet, Email, Debugging, Analytics]
 ---
@@ -11,13 +11,13 @@ import { LeadText } from '/src/components/LeadText.js';
 import Image from '@theme/IdealImage';
 import flowchart from '/static/img/article/article-image-sfmc-debugging-email-sends.png'
 
-<LeadText content='Make finding problems with email delivery in Salesforce Marketing Cloud great again. SQL with the Query Studio to the rescue.' />
+<LeadText content='Make finding problems with email delivery in MCE great again. SQL with the Query Studio to the rescue.' />
 
 ## Problem with straightforward Email Send analysis
 
-Deliverability issues, unfortunately, are a standard both during the Salesforce Marketing Cloud implementation phase as well as after the go-live.
+Deliverability issues, unfortunately, are a standard both during the MCE implementation phase as well as after the go-live.
 
-The test you sent to yourself during the Marketing Cloud implementation that never arrived in the inbox. The subscriber that asks where is his newsletter with the promo code.
+The test you sent to yourself during the MCE implementation that never arrived in the inbox. The subscriber that asks where is his newsletter with the promo code.
 
 You can try debugging it with Journey Builder data or Reports, but in most cases, those solutions provide either not enough or way too much for the specific check you need to make.
 
@@ -118,9 +118,9 @@ You can use the same approach to output only opens or clicks by changing the pre
 
 ## Email Send Debugging Step-by-Step
 
-Now you know the SFMC Email Send Debugging query in and out. But how to work with the outcomes? And what are the next steps?
+Now you know the Marketing Cloud Engagement Email Send Debugging query in and out. But how to work with the outcomes? And what are the next steps?
 
-As they say, with great power comes great complexity. And that's definitely true for finding the root cause of the undelivered email. The deliverability by itself is already a beautiful mess, and then there are various features and options you can use directly in Salesforce Marketing Cloud. Let's dive in.
+As they say, with great power comes great complexity. And that's definitely true for finding the root cause of the undelivered email. The deliverability by itself is already a beautiful mess, and then there are various features and options you can use directly in MCE. Let's dive in.
 
 :::note You Should Know
 
@@ -150,13 +150,13 @@ Check whether an ErrorCode column value is filled for the send and subscriber yo
 
 - __There is no data for that subscriber/send__ » It's time go to to the [next step](#3-check-all-subscribers-list).
 - __ErrorCode is filled__ » Check the [Error Code value meaning](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx#send-log-errorcode-values) to find the root cause.
-- __ErrorCode is not filled__ » The email was sent but not delivered to the recipient - you have deliverability issues. Check your configuration (From Address Management in SFMC + SPF/DKIM/DMARC in DNS) and deliverability metrics (Salesforce offers Reputation Audit Test and Sender Rating as [features-on-demand](/docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx#deliverability-features)).
+- __ErrorCode is not filled__ » The email was sent but not delivered to the recipient - you have deliverability issues. Check your configuration (From Address Management in MCE + SPF/DKIM/DMARC in DNS) and deliverability metrics (Salesforce offers Reputation Audit Test and Sender Rating as [features-on-demand](/docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx#deliverability-features)).
 
 ### 3. Check All Subscribers List
 
-If there is no trace of the send in System Data Views and Send Log, it means that Marketing Cloud was not able to attempt sending. There are few possible reasons for that. Let's start with potential subscriber issues by searching for problematic Contact in Email Studio All Subscribers.
+If there is no trace of the send in System Data Views and Send Log, it means that MCE was not able to attempt sending. There are few possible reasons for that. Let's start with potential subscriber issues by searching for problematic Contact in Email Studio All Subscribers.
 
-- __There is no subscriber__ » The most probable reason is subscriber block by SFMC [List Detective](https://help.salesforce.com/s/articleView?id=000335444&type=1) that protects your lists from nasty emails. What frequently trips people is that it scrubs various group addresses like `admin@`, `info@` and [more](https://www.cameronrobert.com.au/sfmc/email-usernames-blocked-by-salesforce-marketing-cloud/).
+- __There is no subscriber__ » The most probable reason is subscriber block by MCE [List Detective](https://help.salesforce.com/s/articleView?id=000335444&type=1) that protects your lists from nasty emails. What frequently trips people is that it scrubs various group addresses like `admin@`, `info@` and [more](https://www.cameronrobert.com.au/sfmc/email-usernames-blocked-by-salesforce-marketing-cloud/).
 - __Subscriber Status is Unsubscribed or Held__ » Contact is not eligible for receiving the email. Should they want to get it - push them through the official subscription process to stay compliant.
 
 If you are sending through Journey Builder and in the Journey configuration selected to use Email Address from the Entry Source instead of Contacts, be sure to also check whether the Email Address field in the Data Extension selected for Entry stores correct email for that subscriber.
@@ -170,15 +170,14 @@ If everything was fine with the Subscriber, another option is an issue with the 
 
 ### 5. Check Suppressions and Exclusions
 
-If there are no errors within the Preview, the next potential culprit can be Exclusion or Suppression. There are quite a lot of them, and not all will be relevant for you, depending on the SFMC configuration and method of sending, so be sure to check applicable ones from the Exclusion List, Exclusion Script, Suppression List, Auto-Suppression List.
+If there are no errors within the Preview, the next potential culprit can be Exclusion or Suppression. There are quite a lot of them, and not all will be relevant for you, depending on the MCE configuration and method of sending, so be sure to check applicable ones from the Exclusion List, Exclusion Script, Suppression List, Auto-Suppression List.
 
 ### 6. Create Support Ticket
 
-If, after all those checks, there is still no answer to the root cause - create a Support Ticket. Sometimes, it can be a master unsubscribe, server-related queue build-up or a bug on the Marketing Cloud backend.
+If, after all those checks, there is still no answer to the root cause - create a Support Ticket. Sometimes, it can be a master unsubscribe, server-related queue build-up or a bug on the MCE backend.
 
 ### Email Send Debugging Flowchart
 
 Prefer complex processes visualised? Got you covered:
 
 <Image img={flowchart} alt='Flowchart with visual representation of the debugging email sends process'/>
-

@@ -13,13 +13,13 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='To catch, or not to catch, that is debugging.' />
 
-When you start working with programmatic languages in Salesforce Marketing Cloud, you will quickly become close friends with the Error 500 page. And if you beat it and go forward with the code and official documentation, you will fall in love with unexpected errors in functions and API responses. How to survive those?
+When you start working with programmatic languages in Salesforce Marketing Cloud Engagement, you will quickly become close friends with the Error 500 page. And if you beat it and go forward with the code and official documentation, you will fall in love with unexpected errors in functions and API responses. How to survive those?
 
 ----
 
 ## SSJS Testing Ground
 
-Before diving deep into errors, let's talk about where to write the SSJS. The language is useful in many places within the Marketing Cloud ecosystem. Among else in:
+Before diving deep into errors, let's talk about where to write the SSJS. The language is useful in many places within the MCE ecosystem. Among else in:
 
 - Cloud Pages (Web Studio)
 - [Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx) (Web Studio -> Content Builder)
@@ -74,7 +74,7 @@ How to deal with those issues? Apart from just reading through your code line by
 
 ### Divide and Conquer
 
-The first one can be done directly in the Marketing Cloud but is a bit of a brute-force approach. You block half of your code from running by enclosing it in a multiline comment (`/* here goes the code */`) and check again. If it works, you have half of the SSJS validated (from the 500 error perspective). If not, you split the remaining code in half and comment it out. Rinse, repeat. This way, you can quickly find the few lines that are the source of the issue and focus on validating them.
+The first one can be done directly in MCE but is a bit of a brute-force approach. You block half of your code from running by enclosing it in a multiline comment (`/* here goes the code */`) and check again. If it works, you have half of the SSJS validated (from the 500 error perspective). If not, you split the remaining code in half and comment it out. Rinse, repeat. This way, you can quickly find the few lines that are the source of the issue and focus on validating them.
 
 ### SSJS Linting
 
@@ -87,7 +87,7 @@ For many issues leading to 500 error, there is an even faster solution, but it r
 
 Once done, you have automatic SSJS code validation (again, only from the perspective of 500 error - but it is still worth it).
 
-There is also a much more basic and less helpful but built-in solution to validate your SSJS code directly in the Marketing Cloud. Script Activity in Automation Studio. After adding your code there and clicking Validate Syntax button, it will check it against some basic rules. However, I recommend going with the ESLint. It provides much more value and is faster once configured.
+There is also a much more basic and less helpful but built-in solution to validate your SSJS code directly in Marketing Cloud Engagement. Script Activity in Automation Studio. After adding your code there and clicking Validate Syntax button, it will check it against some basic rules. However, I recommend going with the ESLint. It provides much more value and is faster once configured.
 
 :::note What about Try/Catch?
 
@@ -125,7 +125,7 @@ As you can see in the code snippet above, I have more than just a `response` var
 
 ### Debugging Variable
 
-Whenever you create a script for the long-term, it is good to keep your debugging `Write` functions. There might be new requirements. Data sources change. Marketing Cloud too. And sometimes, those things might break your code.
+Whenever you create a script for the long-term, it is good to keep your debugging `Write` functions. There might be new requirements. Data sources change. MCE too. And sometimes, those things might break your code.
 
 Of course, keeping the `Writes` as above is a no-go. You don't want your customers to see those. But there is a neat little trick to eat the cake and have it too:
 
@@ -249,7 +249,7 @@ You can also see why Try/Catch block is so valuable, as in second paragraph our 
 </TabItem>
 </Tabs>
 
-Try/Catch is especially useful for SSJS Functions that call out-of-page data. Marketing Cloud Data Extensions, Salesforce Objects or even data sources from outside the Salesforce environment. It also will help when you are handling responses from such sources. For example, trying to get value from a nested object.
+Try/Catch is especially useful for SSJS Functions that call out-of-page data. MCE Data Extensions, Salesforce Objects or even data sources from outside the Salesforce environment. It also will help when you are handling responses from such sources. For example, trying to get value from a nested object.
 
 In most cases, the simple Try/Catch will be all you need, but there is also a third element that might be very helpful: `finally`. Its purpose is to store a code that will execute, no matter what. Great for a cleanup code that must run regardless whether the previous logic was successful or not.
 
@@ -316,7 +316,7 @@ Here I'm using the string passed to `throw` just for debugging purposes, but you
 
 :::note You Should Know
 
-You are not limited to strings with the `throw`. You can also pass objects to mimic the Marketing Cloud errors. It will make error handling much easier:
+You are not limited to strings with the `throw`. You can also pass objects to mimic the MCE errors. It will make error handling much easier:
 
 ```js {2}
 if (response.StatusCode != 200) {
@@ -334,7 +334,7 @@ Once you debug your code using the above methods, it is still good to program de
 
 ### Logging to Data Extension
 
-The easiest way to log your errors is to leverage Marketing Cloud Data Extensions.
+The easiest way to log your errors is to leverage MCE Data Extensions.
 
 My recommendation is to create one Data Extension that will capture all the errors from the whole instance. It will make it much easier and faster to check any new issues.
 
@@ -419,7 +419,7 @@ You can solve it by creating a single Error Handler function and just calling it
 
 Whenever the Try/Catch block finds an error, the above snippet will check the value of debugging variable. If it is equal to `true`, it will just Write the error to the page to make it easier to debug quickly. If it is `false`, it will add the error to the Data Extension instead.
 
-Most of the Marketing Cloud Errors are objects with two keys: `message` and `description`. Putting those elements into separate columns of the Data Extension make it easier to read the log.
+Most of the MCE Errors are objects with two keys: `message` and `description`. Putting those elements into separate columns of the Data Extension make it easier to read the log.
 
 Using the Error Handler Function is useful, especially when you are triggering it multiple times or when you have elaborate logic for handling (for example, API calls to external systems for bug tracking).
 

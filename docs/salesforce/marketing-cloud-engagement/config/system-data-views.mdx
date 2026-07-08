@@ -2,7 +2,7 @@
 id: system-data-views
 title: MCE System Data Views
 sidebar_label: System Data Views
-description: Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.
+description: Dive deep into System Data Views - the backend Marketing Cloud Engagement data. Actionable pearls await.
 image: img/og/og-image-sf-mce-system-data-views.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, Configuration, SQL, Analytics, Data Extensions, Email, Journey]
 ---
@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 import { LeadText } from '/src/components/LeadText.js';
 import { ButtonRow } from '/src/components/Buttons.js';
 
-<LeadText content='Dive deep into System Data Views - the backend Marketing Cloud data. Actionable pearls await.' />
+<LeadText content='Dive deep into System Data Views - the backend Marketing Cloud Engagement data. Actionable pearls await.' />
 
 ## Data Views Basics
 
@@ -20,13 +20,13 @@ System Data Views are **built-in backend Data Extensions** that you can use to f
 
 Data Views have **data retention settings set to 6 months**. If you want to store any data for a more extended period, you must create an Automation that will be copying data to your Data Extension.
 
-Be careful, however, as some of the System Data Views can get absurdly big quick, and making copies within your Marketing Cloud Instance may lead to performance issues. In such cases, a much better idea might be to export that data on a scheduled basis to an external Data Warehouse.
+Be careful, however, as some of the System Data Views can get absurdly big quick, and making copies within your MCE Instance may lead to performance issues. In such cases, a much better idea might be to export that data on a scheduled basis to an external Data Warehouse.
 
 Another important point related to Data Views is always knowing which Data View you genuinely want to use. For example, in most cases, you will be interested in parent-level [`_Subscribers`](#_subscribers) Data View, which means you will need to use the [`Ent.`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx#enterprise-data-extension) prefix in your query.
 
 :::note You Should Know
 
-Below you can find selected Salesforce Marketing Cloud Data Views focused on Subscribers, Emails, Journeys and Automations. You can find the SMS Channel Data Views in [Mobile Connect Data Views article](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx).
+Below you can find selected Salesforce Marketing Cloud Engagement Data Views focused on Subscribers, Emails, Journeys and Automations. You can find the SMS Channel Data Views in [Mobile Connect Data Views article](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx).
 
 Be sure to check the excellent [Dataviews.io](https://dataviews.io) - an interactive system tables relationship diagram created by [Zuzanna Jarczyńska](https://sfmarketing.cloud/author/zjarczynska/). It will for sure help you with multi-view [`JOIN`s](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx).
 
@@ -162,7 +162,7 @@ When working with `_EnterpriseAttribute` Data View:
 
 1. If you are using the query in the child Business Unit, always use `ENT.` prefix as it is enterprise-level only Data View.
 2. When querying or joining `_EnterpriseAttribute`, always include the underscore before SubscriberID - this is the only Data View that requires it.
-3. Despite the `Email Address` field is visible in the Salesforce Marketing Cloud UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get the Email Address of your Subscriber, query the `_Subscribers` Data View.
+3. Despite the `Email Address` field is visible in the Salesforce MCE UI when you go to Profile Attributes, it is not part of the `_EnterpriseAttribute` Data View. To get the Email Address of your Subscriber, query the `_Subscribers` Data View.
 4. Unfortunately, the default Preference Attribute `HTML Email` is not accessible via query.
 5. `_EnterpriseAttribute` Data View is unique, as it might contain spaces in field names. You build it by creating the Profile Attributes in Email Studio. If your profile attribute name contains space, you will have to use the square bracket notation to capture it: `SELECT [Attribute With Spaces] FROM _EnterpriseAttribute`.
 6. This Data View, along with [`_Subscribers`](#_subscribers), [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes) and [`_ListSubscribers`](#_listsubscribers) , does not have six-month data retention.
@@ -194,7 +194,7 @@ AccountUserID | The ID number for the account user that performed the job | Numb
 FromName | The from name in the email send | Text | X
 FromEmail | The from email address in the email send | Email | X
 SchedTime | The time the job was scheduled | Date | X
-PickupTime | The time the Marketing Cloud application started the job | Date | X
+PickupTime | The time the MCE application started the job | Date | X
 DeliveredTime | The time the email was delivered | Date | X
 EventID | The ID for the job event | Text | X
 IsMultipart | Whether the job was sent as multi-part MIME or not | Boolean |
@@ -373,7 +373,7 @@ When working with `_Sent` Data View:
 
 1. Use `JobID`, `ListID`, `BatchID` and `SubscriberId` or `SubscriberKey` to match various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce) for a single engagement with a particular subscriber. Example: [Query for Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx#solution).
 2. The most valuable data here is the `EventDate` field that lets you know when the email was sent (and whether that happened at all).
-3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left Marketing Cloud. Check [enhanced Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx), applied personalisation, data source, `RaiseError` scripts.
+3. If you have triggered a send for an email and after a few minutes you don't see it here, in most cases, it means that the send was blocked and never left MCE. Check [enhanced Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx), applied personalisation, data source, `RaiseError` scripts.
 
 ---
 
@@ -453,7 +453,7 @@ When working with `_ReconcilableDispositionView` Data View:
 2. Alternatively just use Transactional Journey and set its Email/SMS to use Reconciliation to skip all that mess.
 3. When triggering transactional message provide a MessageKey (up to 100 characters) along with other data to allow for matching with your transactional source system (e.g. e-commerce platform). Thanks to the reconciliation feature, even if source system triggers multiple messages with the same MessageKey, MCE will only process the first one protecting recipients from duplicate messaging. If you do not provide a MessageKey, MCE will generate the MessageKey for you.
 4. Extend [Email and SMS Send Logs](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx) with the MessageKey to simplify the process of matching transactional sends delivery status with various events from multiple Data Views like [`_Open`](#_open), [`_Click`](#_click), [`_Bounce`](#_bounce).
-5. The message will get Disposition `0` (Queued) when it is triggered and stay in this state until it is processed for delivery and left Marketing Cloud (then it will get updated to `1` (Sent)) or if it was not sent at all or is still in queue after the expiration window (then it will get updated to `2` (NotSent)).
+5. The message will get Disposition `0` (Queued) when it is triggered and stay in this state until it is processed for delivery and left MCE (then it will get updated to `1` (Sent)) or if it was not sent at all or is still in queue after the expiration window (then it will get updated to `2` (NotSent)).
 6. `ErrorCodeID`, `ErrorName`, and `ErrorDescription` will be populated only if `Disposition` is equal to `2` (NotSent). If your transactional messages are not being delivered, check these fields to understand why.
 7. `StartTime` field allows you to track trigger time for transactional messages. For Data Extension sends, it will be the time when the job started. For API sends, it will be the time when the API call was received. It's fun data point to compare against [`_Sent`](#_sent) `EventDate` to check the time it took for the message to be sent after the trigger.
 8. `SubscriberID` field might be null if there are issues with the subscriber record.
@@ -520,9 +520,9 @@ When working with `_Open` Data View:
 
 :::note You Should Know
 
-There is **no official engagement feedback loop** that informs Marketing Cloud (or any other Marketing Automation Platform) that your recipient opened the email.
+There is **no official engagement feedback loop** that informs MCE (or any other Marketing Automation Platform) that your recipient opened the email.
 
-All Marketing Automation Platforms put an **invisible 1px wide image in the email** body that is unique for every email you send. When someone opens an email, its images are downloaded from the server. SFMC treats the download of this 1px wide image as proof that the recipient opened the email. And in most cases, it is correct. But...
+All Marketing Automation Platforms put an **invisible 1px wide image in the email** body that is unique for every email you send. When someone opens an email, its images are downloaded from the server. MCE treats the download of this 1px wide image as proof that the recipient opened the email. And in most cases, it is correct. But...
 
 The **images don't always render** (that's why you should always use alt-text). Some recipients opt-in on a per-email basis to download email graphics. Government audiences might not even have this option. Because of the admin policy, the privacy concerns over engagement tracking or limited internet bandwidth. In such a case, even if the user opens an email, you won't have information about it.
 
@@ -621,7 +621,7 @@ There might be cases where the click data is wrong - when you see that email as 
 >
 <TabItem value='fields'>
 
-Stores information about your Email Bounces. Best place in Marketing Cloud to understand why your messages are not getting delivered.
+Stores information about your Email Bounces. Best place in MCE to understand why your messages are not getting delivered.
 
 This Data View, along with [`_Complaint`](#_complaint), should be monitored regularly to assess the health of your email marketing.
 
@@ -648,7 +648,7 @@ SMTPMessage | The message regarding the bounce from the mail system | Text | X
 SMTPCode | The error code for the bounce from the mail system | Number | X
 TriggererSendDefinitionObjectID | The object ID for the triggered send definition | Text | X
 TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
-IsFalseBounce | Indicates a false bounce if [SFMC received delivery receipt after receiving bounce](https://help.salesforce.com/s/articleView?id=000390396&type=1). | Boolean | X
+IsFalseBounce | Indicates a false bounce if [MCE received delivery receipt after receiving bounce](https://help.salesforce.com/s/articleView?id=000390396&type=1). | Boolean | X
 
 </TabItem>
 <TabItem value='values'>
@@ -758,11 +758,11 @@ When working with `_Bounce` Data View:
 3. The `Domain` helps aggregate the bounce data to see any domain-specific problem with deliverability.
 4. `SMTPBounceReason` is the most helpful information when you want to understand what happened to your send. Be careful - this value can be configured to a custom string by the server owner. Some administrators are using this to inform you about a specific issue. Some are even faking the information to limit the emails coming to their servers from selected sources.
 5. `SMTPCode` is useful for getting additional data on the Bounce Reason. Watch especially for 541 and 554. In most cases, it means you are considered a spammer by the server or already blocklisted. I recommend you to create an Automation with Verification Activity to get an automated warning whenever there are more than a few occurrences. Triage immediately.
-6. If you get errors when trying to select `IsFalseBounce` - it might be missing on the SFMC backend. Create a Support Ticket to resolve it.
+6. If you get errors when trying to select `IsFalseBounce` - it might be missing on the MCE backend. Create a Support Ticket to resolve it.
 
 :::note You Should Know
 
-`SMTPBounceReason` field is `nvarchar(max)` SQL type, and due to that might be longer than the 4000 characters limit for the Data Extension string length in Salesforce Marketing Cloud. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#left--right).
+`SMTPBounceReason` field is `nvarchar(max)` SQL type, and due to that might be longer than the 4000 characters limit for the Data Extension string length in Salesforce MCE. If you want to save this data outside of Data View, be sure to use [`LEFT(SMTPBounceReason, 4000)`](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#left--right).
 
 :::
 
@@ -770,7 +770,7 @@ When working with `_Bounce` Data View:
 
 `_Complaint` Data View stores Email Service Providers Feedback Loop (FBL) data. It means that if someone clicks the `Report Spam` button for your email and there is FBL in place, this information will be added to the Data View. It will also result in an unsubscribe event and be visible in the [`_Unsubscribe`](#_unsubscribe).
 
-Currently, Salesforce Marketing Cloud [supports Feedback Loops](https://help.salesforce.com/s/articleView?id=000353531&type=1) for Bluetie (Excite), Comcast, Cox, Fastmail, Microsoft Hotmail, Italia Online, La Poste, Liberty Global, Locaweb, Mail.ru, OpenSRS (Tucows), Rackspace (Mailtrust), Seznam, Synacor, Telenor, Telstra, Terra, UOL (Brazil), USA.net, XS4ALL and Yandex.
+Currently, Salesforce MCE [supports Feedback Loops](https://help.salesforce.com/s/articleView?id=000353531&type=1) for Bluetie (Excite), Comcast, Cox, Fastmail, Microsoft Hotmail, Italia Online, La Poste, Liberty Global, Locaweb, Mail.ru, OpenSRS (Tucows), Rackspace (Mailtrust), Seznam, Synacor, Telenor, Telstra, Terra, UOL (Brazil), USA.net, XS4ALL and Yandex.
 
 You can additionally [register for the Yahoo Feedback Loop](https://help.salesforce.com/s/articleView?id=000312472&type=1). Gmail also has a [Feedback Loop system](https://help.salesforce.com/s/articleView?id=000353530&type=1), but it works differently and won't be in `_Complaint` Data View.
 
@@ -829,14 +829,14 @@ When working with `_Complaint` Data View:
 
 ## Subscription Data Views
 
-Subscription management in Salesforce Marketing Cloud is complex. Very complex.
+Subscription management in Salesforce MCE is complex. Very complex.
 
 It starts with four levels of unsubscriptions:
 
 1. List unsubscribe = no more sends from a particular list or publication list.
 2. Business Unit unsubscribe = no more sends from a particular business unit.
-3. Master unsubscribe = no more sends from your Marketing Cloud.
-4. Global unsubscribe = no more sends from Marketing Cloud. Any, globally.
+3. Master unsubscribe = no more sends from your MCE.
+4. Global unsubscribe = no more sends from MCE. Any, globally.
 
 And it gets even more interesting when you consider that triggering specific unsubscription level depends on email configuration, Email Studio configuration, preference center configuration and subscriber's behaviour.
 
@@ -846,7 +846,7 @@ To give us at least a chance to make sense of that mess, Salesforce created mult
 
 :::note You Should Know
 
-Spam Complaint and List-Unsubscribe Header are pretty particular unsubscription use cases. They are added to [`_Unsubscribe`](#_unsubscribe) and [`_BusinessUnitUnsubscribe`](#_businessunitunsubscribes) as unsubscriptions from a list used in send (for example, ID of Publication List selected for the send). In reality, Marketing Cloud will perform automatic unsubscribe from the All Subscriber list (depending on Email Studio settings - Child BU's or Enterprise one), not the list mentioned in `ListID`.
+Spam Complaint and List-Unsubscribe Header are pretty particular unsubscription use cases. They are added to [`_Unsubscribe`](#_unsubscribe) and [`_BusinessUnitUnsubscribe`](#_businessunitunsubscribes) as unsubscriptions from a list used in send (for example, ID of Publication List selected for the send). In reality, MCE will perform automatic unsubscribe from the All Subscriber list (depending on Email Studio settings - Child BU's or Enterprise one), not the list mentioned in `ListID`.
 
 As a result, when querying, you will see the list-specific unsubscribe that doesn't result in unsubscription from the list but instead blocks all commercial communication as a Business Unit or Master unsubscribe.
 
@@ -862,7 +862,7 @@ In `_Subscribers`, you can check what is the __current subscription status__ for
 
 It means that status changes like Import Activity, direct API change, manual change in the Email Studio (not Job-specific) will be reflected in the `_Subscribers` Data View, but not in the `_Unsubscribe`. On the other hand, `UnsubEvents` does not necessarily change the Status in the `_Subscribers`. For example, taking care of List-Unsubscribe Header clicks require dedicated Automation to get this data from `_Unsubscribe` Data View and push it to other parts of your consent data model.
 
-This Data View stores data only for six-months, so retention-less `_Subscribers` Data View might show more unsubscribed records if you are not cleaning them from SFMC regularly.
+This Data View stores data only for six-months, so retention-less `_Subscribers` Data View might show more unsubscribed records if you are not cleaning them from MCE regularly.
 
 All of this makes `_Unsubscribe` a much better source of knowledge about unsubscription.
 
@@ -932,7 +932,7 @@ If the subscriber clicks "Unsubscribe from All" on the out-of-the-box unsubscrip
 
 Here comes the fresh `_BusinessUnitUnsubscribes` Data View. It shows you the only unsubscribed contacts for each Business Unit. If the contact resubscribes - it will disappear from this Data View.
 
-`_BusinessUnitUnsubscribes` Data View will work differently depending on your SFMC [unsubscription configuration](https://help.salesforce.com/s/articleView?id=sf.mc_es_unsubscribe_settings.htm&type=5). You will be able to query it from the Child BU level only for Business Units set to "unsubscribe from this business unit only".
+`_BusinessUnitUnsubscribes` Data View will work differently depending on your MCE [unsubscription configuration](https://help.salesforce.com/s/articleView?id=sf.mc_es_unsubscribe_settings.htm&type=5). You will be able to query it from the Child BU level only for Business Units set to "unsubscribe from this business unit only".
 
 <Tabs
     defaultValue='fields'
@@ -958,7 +958,7 @@ UnsubReason | The reason listed is a custom value configured by your administrat
 `UnsubReason` possible values:
 - Spam Complaint
 - Unsubscribed from list details on subscriber properties dialog.
-- Unsubscribed by Salesforce Marketing Cloud RMM service based on subscriber Leave/Reply email.
+- Unsubscribed by Salesforce MCE RMM service based on subscriber Leave/Reply email.
 - Unsubscribed by subscriber edit API call.
 - Unsubscribed from the Subscription Center
 - Unsubscribed via Import
@@ -985,13 +985,13 @@ When working with `_BusinessUnitUnsubscribes` Data View:
 
 1. Remember that it stores only currently unsubscribed contacts. Not unsubscribe event data (that's in [`_Unsubscribe`](#_unsubscribe)) and not other statuses (like bounced, held). It will also not show unsubscribed users after they resubscribed or got deleted.
 2. `SubscriberID` or `SubscriberKey` along with `UnsubDateUTC` might fuzzy match the data in this data view with [`_Unsubscribe`](#_unsubscribe).
-3. `UnsubDateUTC`, as name suggests, is in UTC instead of the SFMC-standard UTC-6. Remember to use [`DATEADD`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#dateadd) to normalize it before comparing to other system dates.
+3. `UnsubDateUTC`, as name suggests, is in UTC instead of the MCE-standard UTC-6. Remember to use [`DATEADD`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#dateadd) to normalize it before comparing to other system dates.
 4. The real treat in this data view (apart from finally having an easy option to see Business Unit unsubscribes) is the `UnsubReason` field that can tell you more about the unsubscribe.
 5. This Data View, along with [`_Subscribers`](#_subscribers), [`_EnterpriseAttribute`](#_enterpriseattribute) and [`_ListSubscribers`](#_listsubscribers), does not have six-month data retention.
 
 :::note You Should Know
 
-`UnsubDateUTC` not only uses a different timezone from the rest of the system dates. It differs by a few milliseconds from [`_Unsubscribe`](#_unsubscribe) `EventDate`. When querying (SFMC doesn't show seconds for date fields), you won't see it, but the comparison is using the full datetime value.
+`UnsubDateUTC` not only uses a different timezone from the rest of the system dates. It differs by a few milliseconds from [`_Unsubscribe`](#_unsubscribe) `EventDate`. When querying (MCE doesn't show seconds for date fields), you won't see it, but the comparison is using the full datetime value.
 
 Because of it, you cannot match it out-of-the-box. [`DATEDIFF`](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#datediff) is here to save the day:
 
@@ -1007,7 +1007,7 @@ DATEDIFF(MINUTE, _Unsubscribe.EventDate, DATEADD(HOUR, -6, _BusinessUnitUnsubscr
 
 `_ListSubscribers` Data View stores data about the current status of the subscription. It might sound similar to [`_Subscribers`](#_subscribers) and [`_BusinessUnitUnsubscribes`](#_businessunitunsubscribes), but there are significant differences:
 
-- `_Subscribers` has data about All Subscribers list only. `_ListSubscribers` shows status for all Lists available in Salesforce Marketing Cloud.
+- `_Subscribers` has data about All Subscribers list only. `_ListSubscribers` shows status for all Lists available in Salesforce MCE.
 - `_BusinessUnitUnsubscribes` has data about contacts unsubscribed from All Subscribers on every Business Unit. `_ListSubscribers` doesn't show Business Unit information, but it covers all Lists and all Statuses.
 
 <Tabs
@@ -1160,7 +1160,7 @@ When working with `_Journey` Data View:
 
 1. `VersionID` field is perfect to [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) with [`_JourneyActivity`](#_journeyactivity). It lets you map multi-channel engagement to a particular Journey (visible in `JourneyName`) and its specific version (as shown in `VersionNumber`).
 2. You can also connect it to SMS channel using [_SMSMessageTracking](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smsmessagetracking) Data View by making a [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON journey.VersionID = smsTracking.JBDefinitionID`.
-3. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found, it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the SFMC REST API.
+3. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found, it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the MCE REST API.
 4. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and, based on the send volume or performance, stop them and notify you about that.
 5. You can query only Journeys that currently exists in your Business Unit.
 

@@ -1,6 +1,6 @@
 ---
 id: sql-where
-title: SFMC SQL Where
+title: Marketing Cloud Engagement SQL Where
 sidebar_label: Where
 description: Use WHERE to make your query lean and to the point. Less is more.
 image: img/og/og-image-sf-mce-sql-where.png
@@ -11,7 +11,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='Use WHERE to make your query lean and to the point. Less is more.' />
 
-With just [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) and [`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) statements, you can already start building your queries. With the addition of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx), you can do much more than in the Salesforce Marketing Cloud UI. `WHERE` grants you even more power by allowing you to filter your queries' outcomes.
+With just [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) and [`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) statements, you can already start building your queries. With the addition of [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx), you can do much more than in the Salesforce Marketing Cloud Engagement UI. `WHERE` grants you even more power by allowing you to filter your queries' outcomes.
 
 The concept behind it is straightforward. It takes all the results you obtained with the query above the `WHERE`, and for each, it applies one or more conditions. If they evaluate to `TRUE` - this particular result will be available in the output Data Extension. If evaluation ends with `FALSE`, `WHERE` will filter it out.
 
@@ -66,7 +66,7 @@ FROM _Subscribers
 WHERE CONVERT(DATE, DateJoined) >= DATEADD(MONTH, -1, CONVERT(DATE, GETUTCDATE()))
 ```
 
-With dates, you will frequently want to use a bit more complex structure for the comparison to work correctly. In this case, we are converting the `DateJoined` value to a simple date (day, month, year without the time). We are also getting a current date in UTC format and converting it to a simple date. Next, we subtract one month and compare it to the `DateJoined` transformed value. I cover more such examples in the [SFMC SQL Date Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx).
+With dates, you will frequently want to use a bit more complex structure for the comparison to work correctly. In this case, we are converting the `DateJoined` value to a simple date (day, month, year without the time). We are also getting a current date in UTC format and converting it to a simple date. Next, we subtract one month and compare it to the `DateJoined` transformed value. I cover more such examples in the [MCE SQL Date Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx).
 
 ## LIKE operator
 

@@ -1,6 +1,6 @@
 ---
 id: sql-join
-title: SFMC SQL Join
+title: MCE SQL Join
 sidebar_label: Join
 description: Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.
 image: img/og/og-image-sf-mce-sql-join.png
@@ -117,7 +117,7 @@ FROM WelcomeCampaignSegment AS wel
 
 Then there is Self-join. It is not a separate type of `JOIN` statement but rather a specific use case for the above types. It joins the table to itself. Useful when you have columns in your data extension that point to other columns in the same extension.
 
-A use case I can think of in the world of Salesforce Marketing Cloud could be, for example, a Data Extension that stores product categories and subcategories.
+A use case I can think of in the world of Salesforce Marketing Cloud Engagement could be, for example, a Data Extension that stores product categories and subcategories.
 
 Input Data Extension:
 
@@ -172,13 +172,13 @@ FROM Account_Salesforce AS a1
 
 :::
 
-Thinking about how much easier it would be with a neat visual cheat sheet? Perfect - I prepared one for you [at the bottom](#sfmc-sql-join-cheat-sheet) :)
+Thinking about how much easier it would be with a neat visual cheat sheet? Perfect - I prepared one for you [at the bottom](#mce-sql-join-cheat-sheet) :)
 
 ## Joining ON
 
 I was writing a lot about the various `JOIN` statements, but there is also the `ON` element. We use it to define the relationship between the joined data sources. It tells the query which value it should consider to decide whether the record is available in both columns.
 
-In our example, we used `ON de.SubscriberKey = o.SubscriberKey` that takes the SubscriberKey from the Data Extension and the System Data View and matches the rows based on it. You can use any other but always think about edge cases. Is the email address always unique? It is a very similar experience to what you do in the Salesforce Marketing Cloud Data Designer.
+In our example, we used `ON de.SubscriberKey = o.SubscriberKey` that takes the SubscriberKey from the Data Extension and the System Data View and matches the rows based on it. You can use any other but always think about edge cases. Is the email address always unique? It is a very similar experience to what you do in the MCE Data Designer.
 
 This column does not have to be the Primary Key of the Data Extension or System Data View. You can select any as long as its values have a match in the second source.
 
@@ -483,11 +483,11 @@ The check for rows existing in both queries is done considering data in all prov
 
 You can have the same outcome with more control over comparison logic with a mix of [`JOIN`](#join-types) and [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
 
-## SFMC SQL JOIN Cheat Sheet
+## MCE SQL JOIN Cheat Sheet
 
-All standard SQL JOINs in a single image with name, example SFMC-focused use case, key part of the SQL query and diagrams visualising the output. Ready to bookmark or download. Full size version linked below the preview.
+All standard SQL JOINs in a single image with name, example Marketing Cloud Engagement-focused use case, key part of the SQL query and diagrams visualising the output. Ready to bookmark or download. Full size version linked below the preview.
 
-<Image img={cheatSheet} alt='Salesforce Marketing Cloud SQL JOIN Cheat Sheet' />
+<Image img={cheatSheet} alt='MCE SQL JOIN Cheat Sheet' />
 
 <br/>
 <br/>

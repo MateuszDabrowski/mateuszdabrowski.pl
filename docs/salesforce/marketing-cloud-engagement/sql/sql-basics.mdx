@@ -1,8 +1,8 @@
 ---
 id: sql-basics
-title: SFMC SQL Basics
+title: MCE SQL Basics
 sidebar_label: Basics
-description: SELECT your data FROM Salesforce Marketing Cloud WHERE drag-and-drop Filters are not enough.
+description: SELECT your data FROM Salesforce Marketing Cloud Engagement WHERE drag-and-drop Filters are not enough.
 image: img/og/og-image-sf-mce-sql-basics.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SQL]
 ---
@@ -13,38 +13,38 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import DocCardList from '@theme/DocCardList';
 
-<LeadText content='SELECT your data FROM Salesforce Marketing Cloud WHERE drag-and-drop Filters are not enough.' />
+<LeadText content='SELECT your data FROM Salesforce Marketing Cloud Engagement WHERE drag-and-drop Filters are not enough.' />
 
-## How to segment data in Marketing Cloud
+## How to segment data in MCE
 
-Salesforce Marketing Cloud offers a few ways of segmenting data for your marketing needs. Out of the box, you can use Filters and SQL Query Activities.
+MCE offers a few ways of segmenting data for your marketing needs. Out of the box, you can use Filters and SQL Query Activities.
 
 Filters are a straightforward drag-and-drop solution for one-time (Filtered Data Extensions) or refreshed on-schedule (Data Filters with Automation) segmentation. Unfortunately, they are constrained, as they allow you to copy a single Data Extension with all its columns and filtered-down rows. That filtering can leverage source Data Extension values, another Data Extension values (through Data Relationship) or Measures. That's it. For real Marketing Automation, it's not enough.
 
-This is why you are looking to learn about SFMC SQL. Along with Automation Studio Query Activity, it will allow you to deploy any segmentation scenario you want with complete control over the output columns, names and values. However, with great power comes some learning required.
+This is why you are looking to learn about Marketing Cloud Engagement SQL. Along with Automation Studio Query Activity, it will allow you to deploy any segmentation scenario you want with complete control over the output columns, names and values. However, with great power comes some learning required.
 
 There is also a third way - paid AppExchange solutions that offer you a way to eat a cookie and have a cookie: the full power of SQL with a drag-and-drop interface. For a price.
 
-You can check my comparison of all the above options in my [here](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#sfmc-segmentation-solutions). This article will focus only on the most powerful and free option - SFMC SQL.
+You can check my comparison of all the above options in my [here](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#mce-segmentation-solutions). This article will focus only on the most powerful and free option - MCE SQL.
 
-## SQL in Salesforce Marketing Cloud
+## SQL in MCE
 
-SQL (Structured Query Language) is one of the best ways to work with relational databases. And Marketing Cloud's Data Extensions, with the help of Data Designer, offer precisely that. A relational database. The same is valid for system Data Views containing tracking data. Because of this, SQL is used in SFMC whenever powerful segmentation is needed (mainly using Automation Studio).
+SQL (Structured Query Language) is one of the best ways to work with relational databases. And MCE's Data Extensions, with the help of Data Designer, offer precisely that. A relational database. The same is valid for system Data Views containing tracking data. Because of this, SQL is used in MCE whenever powerful segmentation is needed (mainly using Automation Studio).
 
-The main difference from standard SQL (SFMC uses more or less SQL Server 2019) is that SFMC supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
+The main difference from standard SQL (MCE uses more or less SQL Server 2019) is that MCE supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
 
-Another limiting characteristic of SFMC SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of SFMC are not relational databases.
+Another limiting characteristic of MCE SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of MCE are not relational databases.
 
-Finally, the significant limitation you might hit as your Marketing Cloud grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in Marketing Cloud. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
+Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
 
-## Where to learn SFMC SQL
+## Where to learn MCE SQL
 
-Before we start with the real deal, let's cover where to learn to write SQL. I recommend getting a [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio). It's a free AppExchange add-on to Marketing Cloud developed by Salesforce. While it has cons, it's perfect for quickly learning how to query.
+Before we start with the real deal, let's cover where to learn to write SQL. I recommend getting a [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio). It's a free AppExchange add-on to MCE developed by Salesforce. While it has cons, it's perfect for quickly learning how to query.
 
-If you cannot install this app in your Marketing Cloud, there are still two ways to learn Marketing Cloud SQL:
+If you cannot install this app in your MCE, there are still two ways to learn MCE SQL:
 
 1. Query Activities in Automation Studio. It will be much less user-friendly because for each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results. But it will let you train using the data you have in your platform.
-2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn Marketing Cloud SQL even if you don’t have access to SFMC. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
+2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to MCE. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
 
 I always start in [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio), and only once my SQL Query is complete and validated do I move it to Automation Studio.
 
@@ -59,14 +59,14 @@ Once you have the right tool, it’s time to get the right knowledge. There are 
  newTabRight='true'
 />
 
-## How to learn SFMC SQL
+## How to learn MCE SQL
 
-SFMC SQL is very limited compared to the full power of Structured Query Language, but there are still many topics to cover. I split them into steps that slowly add more complex concepts to make it easier. Each should provide knowledge that you can actively use in your day-to-day work.
+Marketing Cloud Engagement SQL is very limited compared to the full power of Structured Query Language, but there are still many topics to cover. I split them into steps that slowly add more complex concepts to make it easier. Each should provide knowledge that you can actively use in your day-to-day work.
 
 In each level, you will see:
 
 1. Learning materials to read.
-2. Exercise you can do in your Marketing Cloud platform to test your skills.
+2. Exercise you can do in your MCE platform to test your skills.
 3. Hint that can help you with the exercise if you are stuck.
 4. Example solution to that exercise. Keep in mind that there might be more than one correct approach.
 
@@ -127,7 +127,7 @@ Learn how to leverage a second Data Extension or Data View, change the output's 
 
 #### Learning materials
 
-- [JOIN](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) - [JOIN Types](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#join-types), [Joining ON](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on) and [Table Name Prefixes](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#table-name-prefix) sections. It might be helpful to check out the [visual cheatsheet](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#sfmc-sql-join-cheat-sheet).
+- [JOIN](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) - [JOIN Types](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#join-types), [Joining ON](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#joining-on) and [Table Name Prefixes](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#table-name-prefix) sections. It might be helpful to check out the [visual cheatsheet](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#mce-sql-join-cheat-sheet).
 - [Aliasing](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as) - just the Aliasing with AS and Custom values sections.
 - [NULL functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx) - just the first three paragraphs and [IS NULL](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#is-null) section.
 - [_Sent](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_sent), [_Open](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_open) and [_Click](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_click) Data Views.
@@ -225,7 +225,7 @@ For our need here, if the Subscriber Key has 18 characters, no `@`, and starts w
 </TabItem>
 <TabItem value='solution'>
 
-```sql title="Solution working on Parent Business Unit. The results will differ a lot depending on your SFMC implementation."
+```sql title="Solution working on Parent Business Unit. The results will differ a lot depending on your MCE implementation."
 SELECT
       SubscriberKey
     , CASE
@@ -374,7 +374,7 @@ Bonus: the fun with multiple joins [never ends](/docs/salesforce/marketing-cloud
 
 ### Level 6 - GROUP, COUNT, TOP and HAVING
 
-Graduate from just playing with rows and start calculating the data to see patterns, outliers and problems. It is handy for SFMC Administrators and Consultants performing analysis on the platform data.
+Graduate from just playing with rows and start calculating the data to see patterns, outliers and problems. It is handy for MCE Administrators and Consultants performing analysis on the platform data.
 
 #### Learning materials
 
@@ -405,7 +405,7 @@ If you send huge volumes, feel free to change the timeframe from last month to l
 2. All calculated values require an [alias](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#aliasing-with-as).
 3. Pick the right [type of JOIN](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx#join-types) and correct set of joining rules so that you get precisely those rows that you need (limit the fan-out created by the possibility of many bounces per single send).
 4. When building the date filter, the output will be completely different depending on which date you use (hopefully, not every send will have a bounce).
-5. Unfortunately, in SFMC, you cannot use alias in WHERE/HAVING/ORDER BY and similar places - you have to use the function/calculation.
+5. Unfortunately, in MCE, you cannot use alias in WHERE/HAVING/ORDER BY and similar places - you have to use the function/calculation.
 6. When calculating Bounce Rate, do it so that the outcome is an integer equal to a percent.
 
 Important: Because of the Query Studio bug, you cannot have spaces around the multiplication symbol (`*`); otherwise, you will see an error related to a bad practice blanket SELECTs.
@@ -447,7 +447,7 @@ I will add more levels once I finish writing supporting learning materials :)
 
 ## Writing with style
 
-Knowing the available functions is one thing. Writing good and readable queries - another. Salesforce Marketing Cloud is always a team sport, so be sure to leverage the power of a [Style Guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx) to improve the quality of your SQL.
+Knowing the available functions is one thing. Writing good and readable queries - another. MCE is always a team sport, so be sure to leverage the power of a [Style Guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx) to improve the quality of your SQL.
 
 ## Order of operations
 

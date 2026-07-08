@@ -2,7 +2,7 @@
 id: behavioral-triggers
 title: MCE Behavioral Triggers
 sidebar_label: Behavioral Triggers
-description: Win-back your e-commerce customers with SFMC Behavioral Triggers.
+description: Win-back your e-commerce customers with MCE Behavioral Triggers.
 image: img/og/og-image-sf-mce-behavioral-triggers.png
 tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, Configuration, Email, Journey, Personalisation, Behavioral Triggers, Einstein]
 ---
@@ -12,11 +12,11 @@ import TabItem from '@theme/TabItem';
 import { LeadText } from '/src/components/LeadText.js';
 import { ButtonRow } from '/src/components/Buttons.js';
 
-<LeadText content="Win-back your e-commerce customers with SFMC Behavioral Triggers." />
+<LeadText content="Win-back your e-commerce customers with MCE Behavioral Triggers." />
 
-## Marketing Cloud Behavioral Triggers
+## MCE Behavioral Triggers
 
-Behavioral Triggers are a solution for smoothly moving abandoned engagement data from your e-commerce to Salesforce Marketing Cloud. They enable powerful win-back communication you can create with minimal technical knowledge in express time.
+Behavioral Triggers are a solution for smoothly moving abandoned engagement data from your e-commerce to Salesforce Marketing Cloud Engagement. They enable powerful win-back communication you can create with minimal technical knowledge in express time.
 
 Currently, there are three scenarios available:
 
@@ -24,7 +24,7 @@ Currently, there are three scenarios available:
 2. Abandoned Browse
 3. Abandoned Wishlist
 
-In each case, what Behavioral Triggers does is push relevant data (items left in the cart, browsed without conversion or added to wishlist) to the Einstein Backend and - after configured time - to Marketing Cloud Data Extension.
+In each case, what Behavioral Triggers does is push relevant data (items left in the cart, browsed without conversion or added to wishlist) to the Einstein Backend and - after configured time - to MCE Data Extension.
 
 You can then leverage this data extension as both Journey Entry and a source of personalisation using built-in Behavioral Trigger Content Block. The latter allows you to use clean UI to configure dynamic content using the obtained engagement data.
 
@@ -36,7 +36,7 @@ Before you use the Behavioral Triggers, be sure to fulfil pre-requisites:
 2. Many data leveraged by Triggers is coming from the **Product Catalog**, so be sure to **[configure](#initial-catalog-upload)** it before capturing the events.
 3. Behavioural data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to **enable Einstein Data Extensions**.
 4. **Implement the [Collect.js](#collectjs)** script on your e-commerce to capture session and engagement data.
-5. Finally, **configure Behavioral Triggers** to bring relevant data to Marketing Cloud Data Extensions.
+5. Finally, **configure Behavioral Triggers** to bring relevant data to MCE Data Extensions.
 
 As you can see, if you already use Einstein Recommendations, most of the necessary work is already done, and full implementation should take you just a few minutes. In such a case, you will only need to update Collect.js and configure the Behavioral Triggers slightly.
 
@@ -50,7 +50,7 @@ Behavioral Triggers seems to be easy to implement, but a lot is going in the bac
 4. A customer decides on one of the products and adds it to the cart - you trigger the [Cart data layer](#track-cart) (Abandoned Cart scenario).
 5. Customer goes through the purchase process and buys the product - you trigger the [Cart data layer](#track-cart) with explicit parameter (This blocks Abandoned Cart from launching communication).
 6. Each of the above triggers is sent to Einstein Backend (IgoDigital) that stores the information.
-7. Marketing Cloud Behavioral Triggers query the Einstein Backend for any events that occurred some time ago - you can configure it in the range from 15 minutes to 3 hours (in 15 minutes increments).
+7. Marketing Cloud Engagement Behavioral Triggers query the Einstein Backend for any events that occurred some time ago - you can configure it in the range from 15 minutes to 3 hours (in 15 minutes increments).
 8. If there is a matching event, it checks whether there is any other event that overwrites it. For example, if your customer viewed a product page, and a few minutes later, added this product to the cart, the page view will be ignored. The Behavioral Trigger will wait for the abandoned cart.
 9. Once there is an event ripe for reengagement, Behavioral Trigger will put it into a system created Data Extension (one per scenario) with three data points: subscriber key, timestamp and encrypted data.
 10. Now you can use this to add the customer to a Customer Journey.
@@ -66,7 +66,7 @@ There are many quirks and tricks - read on to learn how to get more out of Behav
 
 ---
 
-## Marketing Cloud Configuration
+## MCE Configuration
 
 Before you implement the [Collect.js](#collectjs), you have to make the basic configuration of the Behavioral Triggers.
 
@@ -86,7 +86,7 @@ Just remember that those attributes are global (linked to a product, not to a pa
 
 #### User and Profile Attributes
 
-The next step allows you to configure Custom Profile Attributes. It is beneficial for general Einstein purposes, but it is also crucial for Behavioral Triggers if you want to personalise your win-back email for unknown (to Marketing Cloud) customers.
+The next step allows you to configure Custom Profile Attributes. It is beneficial for general Einstein purposes, but it is also crucial for Behavioral Triggers if you want to personalise your win-back email for unknown (to MCE) customers.
 
 If this is something you want to do, enable Custom User Profile Attributes and add necessary ones.
 
@@ -98,9 +98,9 @@ On this last step before Summary, you configure what you will be tracking. Categ
 
 #### Initial Catalog Upload
 
-Once you configure the Email Recommendations, it is time to make the first upload of the Catalog. Go to Einstein » Einstein Overview » Email Recommendations » Admin » Catalog and click Connect a New Catalog. Select the Product Catalog, import method and format. Pass the column's name that contains Unique ID and tell SFMC whether it is complete or partial Catalog import.
+Once you configure the Email Recommendations, it is time to make the first upload of the Catalog. Go to Einstein » Einstein Overview » Email Recommendations » Admin » Catalog and click Connect a New Catalog. Select the Product Catalog, import method and format. Pass the column's name that contains Unique ID and tell MCE whether it is complete or partial Catalog import.
 
-Once Marketing Cloud completes the upload, be sure to map the fields from your source to the Standard and Custom Fields available in the Catalog.
+Once MCE completes the upload, be sure to map the fields from your source to the Standard and Custom Fields available in the Catalog.
 
 #### Einstein Data Extension
 
@@ -140,7 +140,7 @@ First, click New Trigger in the top right. You can select from the three availab
 
 Select the one you want to start with, and you will be able to set suppression rules - one related to multiple triggers and the second to a recent purchase. For initial configuration, I recommend setting both to 0. It will make testing much more manageable. Once you go to production, change those appropriately as per your business requirements.
 
-When you confirm the setup, Marketing Cloud creates the system Data Extension to store Behavioral Trigger data (one per scenario).
+When you confirm the setup, MCE creates the system Data Extension to store Behavioral Trigger data (one per scenario).
 
 The only left option is the Session Timeout Limit. You can access it by clicking the cog icon next to the New Trigger button. You can select from a range starting at 15 minutes and going in 15 minutes increments up to 3 hours. Again, for testing purposes, make it the shortest possible and later update based on business needs.
 
@@ -166,11 +166,11 @@ Before you start building the data layers, you first need to import the code res
 
 Be sure to change the `MID` in the above URL to the ID of the Business Unit that you want to use for your Behavioral Triggers.
 
-Once you have it, you may start building the data layers that will move the information from your e-commerce to Marketing Cloud. For simplicity, I won't be writing the above code in the snippets below.
+Once you have it, you may start building the data layers that will move the information from your e-commerce to MCE. For simplicity, I won't be writing the above code in the snippets below.
 
 ### Set Org ID
 
-The first data layer you need to push contains, again, the MID of the Business Unit. Just as with the [Collect Code Script](#collect-code-script), be sure to change the `MID` to your SFMC BU's actual ID.
+The first data layer you need to push contains, again, the MID of the Business Unit. Just as with the [Collect Code Script](#collect-code-script), be sure to change the `MID` to your MCE BU's actual ID.
 
 ```html {2} title="Set Org ID Data Layer"
 <script type="text/javascript">
@@ -191,12 +191,12 @@ The second data layer that will be key for sending Behavioral Triggered communic
 
 The base function is pushing your customer's unique identifier (don't be intimidated by the `email` in that code - you do not have to pass the email address there). Depending on your use case, it might be either:
 
-1. Subscriber Key (if you plan on sending only to contacts known to Marketing Cloud or have an option to generate Subscriber straight from your e-commerce) or
-2. Email Address (recommended if you want to push win-back emails to unknown users in your Marketing Cloud and you do not have an option to create them properly.)
+1. Subscriber Key (if you plan on sending only to contacts known to MCE or have an option to generate Subscriber straight from your e-commerce) or
+2. Email Address (recommended if you want to push win-back emails to unknown users in your MCE and you do not have an option to create them properly.)
 
 :::note You Should Know
 
-If you decide to push an Email Address to communicate with people not yet in the Marketing Cloud, be sure to make them Subscribers. You can easily do it using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage SQL Activity to copy the needed data to another Data Extension using this query:
+If you decide to push an Email Address to communicate with people not yet in MCE, be sure to make them Subscribers. You can easily do it using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage SQL Activity to copy the needed data to another Data Extension using this query:
 
 ```sql title="Basic Subscriber data preparation"
 SELECT
@@ -237,7 +237,7 @@ There are two options to keep your Einstein Catalog up-to-date. Manual uploads a
 
 :::note You Should Know
 
-With [April 2021 Marketing Cloud Release](https://help.salesforce.com/articleView?id=sf.mc_rn_april_2021_collect_tracking_code_streaming.htm&type=5) the Collect.js Streaming Updates will be deprecated. The way forward will be Streaming Updates via API. Read more [here](https://help.salesforce.com/articleView?id=sf.mc_rn_april_2021_collect_tracking_code_streaming.htm&type=5).
+With [April 2021 MCE Release](https://help.salesforce.com/articleView?id=sf.mc_rn_april_2021_collect_tracking_code_streaming.htm&type=5) the Collect.js Streaming Updates will be deprecated. The way forward will be Streaming Updates via API. Read more [here](https://help.salesforce.com/articleView?id=sf.mc_rn_april_2021_collect_tracking_code_streaming.htm&type=5).
 
 As existing implementation will be available for some time still to allow for migration, I'm keeping this section until the end of the grace period.
 
@@ -282,7 +282,7 @@ In many cases, all those domains might be the same, but if you are using Content
 
 :::
 
-With this data layer, you can be sure that the Catalog stored in Marketing Cloud is always up-to-date. It is crucial, as everything in the Behavioral Trigger Content Block uses the Catalog data.
+With this data layer, you can be sure that the Catalog stored in MCE is always up-to-date. It is crucial, as everything in the Behavioral Trigger Content Block uses the Catalog data.
 
 The `available` parameter is essential as it is the best way to make sure the personalisation in the email won't show the product that is no longer available even if it was in the abandoned cart. Of course, this is true for the moment of email send, not the moment of email open.
 
@@ -1190,11 +1190,11 @@ Using either of those two tools will allow you to make sure that:
 4. It passes the correctly structured JSON with this data to IgoDigital.
 5. You receive status 200 on the API call in the Network tab.
 
-Once all of the above is validated, the correct data should be available to Salesforce Marketing Cloud Einstein and Behavioral Triggers.
+Once all of the above is validated, the correct data should be available to Salesforce MCE Einstein and Behavioral Triggers.
 
 ### Debugging Data Flow
 
-Now it's time to check whether the data is coming through to your Salesforce Marketing Cloud.
+Now it's time to check whether the data is coming through to your Salesforce MCE.
 
 There are few things to check:
 

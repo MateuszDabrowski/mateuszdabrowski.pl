@@ -1,6 +1,6 @@
 ---
 id: sql-string-functions
-title: SFMC SQL String Functions
+title: Marketing Cloud Engagement SQL String Functions
 sidebar_label: String Functions
 description: Take control over strings with built-in SQL functions. Let the query do the job.
 image: img/og/og-image-sf-mce-sql-string-functions.png
@@ -11,7 +11,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='Take control over strings with built-in SQL functions. Let the query do the job.' />
 
-Salesforce Marketing Cloud SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
+Salesforce Marketing Cloud Engagement SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
 
 Here, I will cover only selected string functions that I find most useful for Marketing Automation purposes. They will help you change the values, split and concatenate them, or find elements within.
 
@@ -64,7 +64,7 @@ The function returns one of the three possible values:
 2. 0 - if the value to find is not within the searched value
 3. any other digit - the index where the value to find starts within the searched value - if there are multiple occurrences, the result will show the starting index of just the first one.
 
-By default, `CHARINDEX` in SFMC is case-insensitive in its searches. You can, however, enforce case sensitivity by adding `COLLATE`:
+By default, `CHARINDEX` in MCE is case-insensitive in its searches. You can, however, enforce case sensitivity by adding `COLLATE`:
 
 ```sql title="Case sensitive CHARINDEX search - note lack of a comma between the value and COLLATE"
 CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
@@ -181,12 +181,12 @@ SELECT
     , UPPER(LEFT(FirstName, 1)) + LOWER(RIGHT(FirstName, LEN(FirstName) - 1)) AS Propercase /* Output: 'Mateusz' */
 ```
 
-However, it will not work with complex (like names with a hyphen in the middle) or multi-word values. The standard SQL solution - User Defined Function - doesn't work in a limited Salesforce Marketing Cloud SQL environment. The alternative - using [`CHARINDEX`](#charindex)/[`PATINDEX`](#patindex) to find each word - gets awful as soon as you hit three words and more.
+However, it will not work with complex (like names with a hyphen in the middle) or multi-word values. The standard SQL solution - User Defined Function - doesn't work in a limited MCE SQL environment. The alternative - using [`CHARINDEX`](#charindex)/[`PATINDEX`](#patindex) to find each word - gets awful as soon as you hit three words and more.
 
-Recommended approach? Either clean the data before ingestion to SFMC or do it directly in the email with the built-in AMPScript `ProperCase` function.
+Recommended approach? Either clean the data before ingestion to MCE or do it directly in the email with the built-in AMPScript `ProperCase` function.
 
 ## FORMAT with Strings
 
-`FORMAT` function lets you quickly change the data into a different format. In Salesforce Marketing Cloud, it is especially useful, as you cannot create your functions. `FORMAT` might save you massive headaches.
+`FORMAT` function lets you quickly change the data into a different format. In MCE, it is especially useful, as you cannot create your functions. `FORMAT` might save you massive headaches.
 
 The `FORMAT` works only with datetime and numeric values. Why I'm writing about it here then? Because you can use [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#cast--convert) function to change some of your strings into compliant data types. Consider changing string dates into datetime or phone numbers into integers to format them easily. Check out [`FORMAT` with Dates](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates) and [`FORMAT` with Numbers](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx#format-with-numbers) for more information. The outcome of formatting both number and date types with this function is a string.

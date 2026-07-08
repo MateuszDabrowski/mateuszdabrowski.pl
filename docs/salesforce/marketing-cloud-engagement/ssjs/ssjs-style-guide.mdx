@@ -11,7 +11,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content='Script with style. Readable code is a few rules & conventions away.' />
 
-First things first: this Salesforce Marketing Cloud SSJS style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
+First things first: this Salesforce Marketing Cloud Engagement SSJS style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
 
 1. Be consistent across your codebase.
 2. Strive for good readability.
@@ -75,7 +75,7 @@ __Use `camelCase` for all elements of JS syntax.__
 
 The first category of the building blocks in your code will be JavaScript (ECMAScript 3 in case of SSJS) native elements. Variables (`var` only), functions (no array goodies), and methods.
 
-For all of those I'm using `camelCase`. It's the most popular convetion, so it will make it easier to work with other programmers, leverage code snippets and onboard new-to-SSJS people to SFMC development.
+For all of those I'm using `camelCase`. It's the most popular convetion, so it will make it easier to work with other programmers, leverage code snippets and onboard new-to-SSJS people to MCE development.
 
 ```js
 /* ✅ camelCase for JS syntax */
@@ -103,7 +103,7 @@ __Use `PascalCase` for all elements of SSJS syntax.__
 
 I take a different approach when working with SSJS Functions from both Platform and Core libraries. For any element coming from those, I use `PascalCase`.
 
-Not only it allows to differentiate JavaScript native and SFMC custom elements, but it also follows the official SSJS documentation (and therefore most of the snippets you might find).
+Not only it allows to differentiate JavaScript native and MCE custom elements, but it also follows the official SSJS documentation (and therefore most of the snippets you might find).
 
 ```js
 /* ✅ PamelCase for JS syntax */
@@ -436,7 +436,7 @@ I recommend using [JSDoc](https://jsdoc.app/index.html) for few reasons:
 1. It's a popular standard.
 2. It provides recommendations on what to add to the comment.
 3. Many code editors will help you write it and highlight its syntax.
-4. Marketing Cloud ecosystem already leverages it in Interaction Studio.
+4. MCE ecosystem already leverages it in Interaction Studio.
 
 ```js
 /**
@@ -486,7 +486,7 @@ It is a long article, so let's gather all the recommendations in one place:
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).
 
-Looking for more Marketing Cloud style? Check out my:
+Looking for more MCE style? Check out my:
 
 - [AMPScript Style Guide](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.mdx)
-- [SFMC SQL Style Guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx)
+- [MCE SQL Style Guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx)
