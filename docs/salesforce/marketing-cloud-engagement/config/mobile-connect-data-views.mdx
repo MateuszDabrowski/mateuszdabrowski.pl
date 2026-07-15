@@ -60,7 +60,7 @@ _Channel | Communication channel. Used to be Mobile, now not in use | Text | X
 _CarrierID | Numeric code for the mobile carrier used by the contact | Number |
 _CountryCode | Two letter country code | Text |
 _CreatedDate | Date the subscription was created | Date |
-_CreatedBy | Person responsible for contact creation | Date |
+_CreatedBy | Person responsible for contact creation | Text |
 _ModifiedBy | Person responsible for contact modification | Text | X
 _City | Contact's City | Text | X
 _State | Contact's State | Text | X
@@ -478,19 +478,16 @@ CampaignID | The SMS campaign tied to the record | Number | X |
 Sent | If the message was sent | Boolean |
 Delivered | If the message was delivered | Boolean | X |
 Undelivered | Whether the message was delivered successfully or not | Boolean | X |
-Unsub | If the subscriber unsubscribed. Currently always null. | Boolean | X |
-OptIn | Whether the subscriber has opted-in to the SMS messages. Currently always null. | Boolean | X |
-OptOut | Whether the subscriber has opted out of SMS messages. Currently always null. | Boolean | X |
 Outbound | If the message was outgoing | Boolean | X |
 Inbound | If the message was incoming | Boolean | X |
 CreateDateTime | The date and time the tracking record was created | Date |
 ModifiedDateTime | The date and CST time the tracking record was modified | Date |
 ActionDateTime | The actual date/time the MCE received a delivery or non-delivery event. Timestamps for delivery receipts are not indicative of when a message was received on a handset. The SMS industry does not support read receipts, and the data returned in this view are based on when a delivery receipt is returned to our system. | Date |
 MessageText | The text of the message | Text | X |
-IsTest | If the message was a test message | Number | X |
+IsTest | If the message was a test message | Boolean | X |
 MobileMessageRecurrenceID | The ID of the recurrence schedule for the message. Can be used for troubleshooting send issues. | Number | X |
 ResponseToMobileMessageTrackingID | The tracking ID of the response to the message | Number | X |
-IsValid | Populates to 1 for inbound message and 0 for Outbound message | Number | X |
+IsValid | Populates to 1 for inbound message and 0 for Outbound message | Boolean | X |
 InvalidationCode | Invalidation code for the message. Currently always null. | Number | X |
 SMSJobID | GUID with JobID matching value in [SMS Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx). Filled only for sends since Spring 2023. | String | X
 SMSBatchID | BatchID matching value in [SMS Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx). Filled only for sends since Spring 2023. | Number | X
@@ -509,6 +506,7 @@ ShortCode | The short code or long code used to send your message | Text | X |
 SharedKeyword | The keyword used in your message | Text | X |
 Ordinal | Represents the parts in a multi-part message. Represented in ascending order starting at 0. | Number | X |
 FromName | From Name that an individual message was deployed with. Maximum length: 11 characters | Text | X |
+ConversationStateID | Crrelates MO/MT messages | Text | X |
 JBDefinitionID | Unique identifier for the related journey | Text | X |
 JBActivityID | Unique identifier for the related journey activity | Text | X |
 
@@ -629,7 +627,7 @@ There might be multiple reasons for the SMS to be undelivered, for example:
 
 Name | Description | Data Type | Nullable
 -- | -- | -- | --
-MobileNumber | Mobile number for the subscriber | Text |
+MobileNumber | Mobile number for the subscriber | Phone |
 Undeliverable | Whether the subscriber is eligible for future deliveries | Boolean |
 BounceCount | Number of times message was not delivered | Number |
 FirstBounceDate | Date of the first unsuccessful delivery | Date |
