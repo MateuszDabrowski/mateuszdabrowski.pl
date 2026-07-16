@@ -68,7 +68,7 @@ Else, it's time to look somewhere... else.
 
 Time to check whether there is any free solution available on demand. You can do it by going to [marketing AppExchange](https://appexchange.salesforce.com/category/marketing) and applying filters to get Free solutions dedicated to MCE.
 
-To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](#query-studio) covered below) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3u00000PFaZrEAL).
+To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](#query-studio) covered below) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000Fz2a4UAB).
 
 If you are lucky enough to find something free in AppExchange related to your requirements, check whether it is good enough. Just as you did in the [previous step](#2-validate-out-of-the-box-options).
 
@@ -157,9 +157,11 @@ Therefore we get to the update requirements step, where the company needs to pri
 
 <Image img={segmentation} alt='Triangle with three corners - FREE, POWERFUL and SIMPLE - and three solutions: FREE and POWERFUL SQL Query Activity, FREE and SIMPLE Filtered Data Extensions, POWERFUL and SIMPLE DESelect Segment. '/>
 
-I hope it is now easier to find when AppExchange can solve MCE requirements. With that, let's jump to the segmentation solutions available there.
+I hope it is now easier to find when AppExchange can solve MCE requirements. With that, let's jump to the solutions available there.
 
 ---
+
+## AppExchange Solutions for MCE
 
 ### Query Studio
 
@@ -210,15 +212,33 @@ Despite some quirks, Query Studio is a huge timesaver and quality of life improv
 
 ---
 
+### MCE Schema Explorer
+
+Creator | Pricing
+-- | --
+Salesforce Labs | Free
+
+Schema Explorer is a new tool directly from Salesforce Labs that maps your MCE data ecosystem - Data Extensions, Journeys, Automations, and how they depend on each other - into one visual schema.
+
+MCE has no built-in data lineage view, so understanding how objects relate is usually tribal knowledge held by whoever built the instance. Schema Explorer also connects to an Agentforce agent, so you can ask questions about your own data model instead of clicking through Contact Builder to find out.
+
+It's free, made available by Salesforce Labs, and actively developed. Definitely worth checking out if you are a Salesforce Marketing Cloud Engagement architect or administrator.
+
+<Button
+ link='https://appexchange.salesforce.com/appxListingDetail?listingId=661d2ae0-c125-4f40-874d-004d58824c6b'
+ text='AppExchange'
+ newTab='true'
+/>
+
+---
+
 ### DESelect Segment
 
 <Image img={deselectSegment} alt='Screenshot of the DESelect Segment User Interface'/>
 
 Creator | Pricing
 -- | --
-DESelect | [Starts at $700/month](https://deselect.com/pricing/)
-
-#### The Good
+DESelect | [Paid](https://deselect.com/pricing/)
 
 DESelect Segment is the golden standard for the middle ground between the very limited Filtered Data Extensions and yes-code SQL Queries. Actually, "middle ground" is not fair.
 
@@ -250,20 +270,17 @@ The out-of-the-box path for query segmentation is:
 
 DESelect Segment can do all of it in a single, streamlined process using guided creator. Faster, simpler and less intimidating to beginners. Available right in the MCE main menu.
 
-Is it perfect then?
+While I'm a big fan of [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx), I know it's not a tool for everyone. If you want SQL-level segmentation without hiring for SQL skills toward it, DESelect is the tool for you.
 
-#### The Bad
+:::note You Should Know
 
-Well, there are two issues:
+DESelect Segment builds the segments with SQL for you as standard Query Activities. You can see the SQL behind the scenes.
 
-1. It's not free. But it is nicely priced for the power you get. It's up to you whether you want to invest in SQL competencies or a no-code solution that can do the same, by everyone, faster.
-2. It's complex. Sure, it's a clean drag-and-drop interface, but because of all the available features, it has some learning curve (and training offered by DESelect) to leverage its full potential.
+But it doesn't use Automations. Instead, it runs the Query Activities directly from their server using API calls. The data still stays in your MCE instance, but you are not burning the [yearly Automation execution limit](TODO LINK TO LICENCE LIMITS ARTICLE).
 
-#### The Sum Up
+If you are running a lot of segments, it can singificantly offset the subscription cost of DESelect Segment.
 
-To fully leverage Salesforce MCE, you need a robust segmentation solution. Filtered Data Extensions ain't it. It leaves you with SQL Query Activity and AppExchange.
-
-While I'm a big fan of [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx), I know it's not a tool for everyone. The code-based solutions always make scaling the marketing team much harder. DESelect Segment is currently the best option to solve that problem, and - with ongoing updates - it keeps getting better.
+:::
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G0yE1UAJ'
@@ -276,53 +293,167 @@ While I'm a big fan of [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql
 
 ---
 
+### DESelect Engage
+
+Creator | Pricing
+-- | --
+DESelect | [Paid](https://deselect.com/pricing/engage-pricing/)
+
+DESelect Engage is a different DESelect product from Segment - it doesn't touch *who* you send to, it caps *how often* you send to them, applying frequency capping and saturation control across campaigns and Business Units.
+
+MCE has nothing native for this and while you can implement it with complex SQL queries it will be massive amount of work, maintenance, and [yearly Automation execution limit](TODO LINK TO LICENCE LIMITS ARTICLE) burn. Without it, avoiding over-messaging the same contact comes down to campaign owners informally coordinating with each other. Engage replaces that with rule-based prioritisation (transactional beats newsletter, newsletter beats ad hoc, etc) and visibility into saturation, even for contacts sitting in multiple Business Units.
+
+If you struggle with oversaturation, Engage is worth taking a look at. Managing your marketing pressure is key to keeping your contacts engaged and your deliverability healthy.
+
+<ButtonRow
+ linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000JeGMiUAN'
+ textLeft='AppExchange'
+ newTabLeft='true'
+ linkRight='https://deselect.com/engage/'
+ textRight='Website'
+ newTabRight='true'
+/>
+
+---
+
+### DESelect Search
+
+Creator | Pricing
+-- | --
+DESelect | Free
+
+DESelect Search does one thing: it searches every object in MCE - Data Extensions, automations, query activities, content blocks, and more - by name or external key, across Business Units.
+
+MCE's folder-based navigation has no cross-object search at all, so "where did I put that Data Extension" usually means digging through nested folders by hand. Search replaces that with a single search box, installed once for the whole team.
+
+It's free and it solves a genuine daily annoyance. You can easily build it yourself as a [Cloud Page App](TODO LINK TO CLOUD PAGE APP ARTICLE), but if you have more interesting tasks at hand, DESelect Search is a polished, ready-to-go solution.
+
+<ButtonRow
+ linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000Fz2a4UAB'
+ textLeft='AppExchange'
+ newTabLeft='true'
+ linkRight='https://deselect.com/search/'
+ textRight='Website'
+ newTabRight='true'
+/>
+
+---
+
 ### Activation Studio
 
 <Image img={activationStudio} alt='Screenshot of the Activiation Studio User Interface'/>
 
 Creator | Pricing
 -- | --
-Harvest Tech Labs | [Starts at €350/month](https://activation-studio.com/pricing/)
+Harvest Tech Labs | [Paid](https://activation-studio.com/pricing/), 30-day free trial
 
-#### The Good
+Activation Studio bolts drag-and-drop segmentation, lead scoring, and lightweight web tracking onto MCE through three modules - Segment Designer, Score Designer, and Interaction Designer - that you can buy separately or as a bundle.
 
-Activation Studio is a new player in the MCE drag & drop segmentation game. Let's check what are the unique selling points that make it stand out:
+Its Segment Designer trades DESelect Segment's flexibility and power for something narrower but faster and less technical: it builds on Attribute Groups you've already defined in Contact Builder Data Designer, so relationships come pre-wired instead of hand-built. Score Designer is much more unique feature, as it adds simple lead scoring model that was always a gap for MCE.
 
-1. Different target
-
-Activation Studio is not targeting power users but digital marketers that need an effortless but potent way of creating segments. You won't be able to leverage the full power of SQL in a drag-and-drop interface here. You also won't be able to join all Data Extensions available in your MCE.
-
-Instead, you can leverage the Attribute Groups built in the Contact Builder Data Designer. While it limits what you can do, it also makes building segments a breeze, as all relationships are already defined.
-
-It also lets you quickly create the final Data Extension and leverage it as an Entry to the Journey. Och, and it provides you with engagement benchmarks and actual performance.
-
-Not a jack-of-all-trades, but a purpose build solution.
-
-2. More than just segmentation
-
-While segmentation is the core of Activation Studio, there are more features (to be made) available. Lead Scoring and Behavioral data from the web are options that significantly increase the tool's power. Both are built with effortless usage by marketers in mind.
-
-3. Down-to-earth pricing
-
-Activation Studio segmentation is already significantly cheaper than other options, and additional features further improve the price-to-value ratio.
-
-#### The Bad
-
-It's a new product, and you can still see its infancy. While fully operational, some relatively basic features (like folders) are missing.
-
-However, the development pipeline is full of features, and many improvements will be delivered over the coming months improving the value proposition (and making me rewrite this mini-review).
-
-#### The Sum Up
-
-Activation Studio fills a niche as a segmentation more potent than the Filtered Data Extensions and more effortless than the DESelect Segment (while sacrificing some of its power).
-
-Especially with Scoring and Interaction-focused add-ons, it will be an excellent suite of solutions targeted at smaller MCE users that would benefit from a streamlined tool dedicated to non-technical marketers.
+I'd reach for it over DESelect Segment specifically for smaller and less technicalMCE teams that just want to drag & drop segments on their static data model and enhance it with a built-in lead scoring.
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3u00000PurpQEAR'
  textLeft='AppExchange'
  newTabLeft='true'
  linkRight='https://activation-studio.com/drag-and-drop-segmentation-salesforce-marketing-cloud/'
+ textRight='Website'
+ newTabRight='true'
+/>
+
+---
+
+### Qairy
+
+Creator | Pricing
+-- | --
+QAiry | [Freemium](https://www.qairy.com/pricing)
+
+Qairy skips the filter-building UI entirely and replaces it with a chat box: describe the audience in plain English (or other language) and its AI writes and runs the underlying SFMC-compatible SQL for you, returning a segment or Data Extension.
+
+That's a genuinely different approach to no-code segmentation than the drag-and-drop tools above. It works against your existing data model, supports scheduled refresh, and only ever sends Data Extension metadata to the AI, never row-level data, so your contact data stays inside SFMC.
+
+The key limitation is related to your metadata quality. AI works best when your data extensions, descriptions and fields are well-named and separated. If you have dozens of similar DEs with cryptic or duplicated columns, the AI will struggle to understand what you mean.
+
+There is a free tier, but it only covers Data Views reporting. Good for testing, or simplyfying quick reporting, but not segmentation. It also won't let you check how problematic your data model is before you pay.
+
+<ButtonRow
+ linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000IknOOUAZ'
+ textLeft='AppExchange'
+ newTabLeft='true'
+ linkRight='https://www.qairy.com'
+ textRight='Website'
+ newTabRight='true'
+/>
+
+---
+
+### Marketing Cloud Connect Toolbox
+
+Creator | Pricing
+-- | --
+Lightbox Logic | Paid
+
+Marketing Cloud Connect Toolbox extends the standard Marketing Cloud Connect package by surfacing MCE email, SMS, WhatsApp, and Push activity directly on Salesforce CRM records.
+
+Standard Marketing Cloud Connect gives Sales and Service Cloud only limited visibility into what MCE actually sent (and IERs generally are a pain to setup and maintain). This toolbox closes that gap without copying MCE data into CRM storage, so a rep sees engagement history without leaving Salesforce.
+
+You can create a basic version of it with LWC component and MCE API, but MCC Toolbox provides much more with option to sync emails to Cloud Storage of your choice and showing the visuals of the email in the CRM record. This provides both much more detailed visibility for your Sales and Service teams, but also helps with compliance of storing messaging sent to customers.
+
+It earns its place when Sales or Service reps genuinely need that send visibility on the CRM record - if your teams live entirely in MCE, skip it.
+
+<ButtonRow
+ linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000J6QDbUAN'
+ textLeft='AppExchange'
+ newTabLeft='true'
+ linkRight='https://lightboxlogic.com.au/marketing-cloud-connect-toolbox/'
+ textRight='Website'
+ newTabRight='true'
+/>
+
+---
+
+### Stashr
+
+Creator | Pricing
+-- | --
+Avagate | [Freemium](https://www.avagate.com/solutions/stashr)
+
+Stashr backs up, version-controls, and recovers MCE assets - Content Builder, Data Extension and Automation Studio configurations, Web Studio CloudPages and Code Resources - with change monitoring that flags what changed, line by line.
+
+MCE has no native backup or version history for most of this (MCE Package Manager is not even close for that purpose). Delete or overwrite something by mistake and it's gone for good. Stashr's free tier covers manual backup of three configurations up to 50 assets each, which is enough to try it on a real project before paying, though recovery only reaches as far back as the day you installed it.
+
+Nice way to add a bit of peace of mind to your MCE operations and even the free tier might be enough to secure the most important and complex assets.
+
+<ButtonRow
+ linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000IrJkeUAF'
+ textLeft='AppExchange'
+ newTabLeft='true'
+ linkRight='https://www.avagate.com/solutions/stashr'
+ textRight='Website'
+ newTabRight='true'
+/>
+
+---
+
+### Inbox Monster
+
+Creator | Pricing
+-- | --
+Inbox Monster | [Paid](https://inboxmonster.com/pricing)
+
+Inbox Monster pairs pre-send email QA with post-send deliverability monitoring: inbox placement, spam traps, sender reputation, plus SMS signal tracking.
+
+MCE's native preview tools don't get you rendering across real inbox clients or ongoing reputation monitoring at this depth, so Inbox Monster is filling a genuine gap rather than duplicating something MCE half-does already. It also has a direct integration with MCE, so you can use it without leaving the platform.
+
+It's built - and priced - for high-volume senders where deliverability is a revenue line, not a side concern. For a smaller MCE team, Emails on Acid might be a more suitable option.
+
+<ButtonRow
+ linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000Gk56iUAB'
+ textLeft='AppExchange'
+ newTabLeft='true'
+ linkRight='https://inboxmonster.com'
  textRight='Website'
  newTabRight='true'
 />
