@@ -61,6 +61,7 @@ _CarrierID | Numeric code for the mobile carrier used by the contact | Number |
 _CountryCode | Two letter country code | Text |
 _CreatedDate | Date the subscription was created | Date |
 _CreatedBy | Person responsible for contact creation | Text |
+_ModifiedDate | Date the subscription was modified | Date |
 _ModifiedBy | Person responsible for contact modification | Text | X
 _City | Contact's City | Text | X
 _State | Contact's State | Text | X
@@ -119,7 +120,8 @@ SELECT
     , mobileAddress._CountryCode      AS CountryCode
     , mobileAddress._CreatedDate      AS CreatedDate
     , mobileAddress._CreatedBy        AS CreatedBy
-    , mobileAddress._ModifiedBy       AS ModifiedBy
+    , mobileAddress._ModifiedDate      AS ModifiedDate
+    , mobileAddress._ModifiedBy        AS ModifiedBy
     , mobileAddress._City             AS City
     , mobileAddress._State            AS State
     , mobileAddress._ZipCode          AS ZipCode
@@ -527,9 +529,6 @@ SELECT
     , smsTracking.Sent
     , smsTracking.Delivered
     , smsTracking.Undelivered
-    , smsTracking.Unsub
-    , smsTracking.OptIn
-    , smsTracking.OptOut
     , smsTracking.Outbound
     , smsTracking.Inbound
     , smsTracking.CreateDateTime
@@ -558,6 +557,7 @@ SELECT
     , smsTracking.SharedKeyword
     , smsTracking.Ordinal
     , smsTracking.FromName
+    , smsTracking.ConversationStateID
     , smsTracking.JBDefinitionID
     , smsTracking.JBActivityID
 FROM _SMSMessageTracking AS smsTracking
