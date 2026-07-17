@@ -1,0 +1,40 @@
+---
+id: marketing-cloud-ideas
+title: Marketing Cloud Next Ideas
+sidebar_label: Marketing Cloud Next
+description: Here you can find all my Salesforce Marketing Cloud Next IdeaExchange contributions. Let's make the change!
+image: img/og/og-image-sf-mcn-ideas.png
+tags: [Salesforce, Marketing Cloud Next]
+---
+
+import { LeadText } from '/src/components/LeadText.js';
+import { Button } from '/src/components/Buttons.js';
+
+<LeadText content="Here you can find all my Salesforce Marketing Cloud Next IdeaExchange contributions. Let's make the change!" />
+
+## Setup
+
+### Separate CMS Content Languages from Platform Translation Settings
+
+Setup > Language Settings offers two org-wide toggles - Enable end-user languages and Enable platform-only languages - that unlock additional languages beyond the Fully Supported set. Once enabled, these languages become selectable in two very different places at once: any user's personal Language field (Settings > Language and Time Zone), and the language picker for CMS/Marketing Workspaces used by Salesforce CMS and Marketing Cloud Next Content.
+
+However, these are two genuinely separate use cases sharing one switch. An admin who only wants to author multilingual marketing content - for example, Polish or Portuguese email and landing page copy in a region-based Marketing Workspace - has no way to unlock that language for content without also exposing it as a personal interface option to every user in the org.
+
+For End-User tier languages, this at least gives opted-in users a properly translated interface. For Platform-only tier languages, Salesforce provides no translation at all, so enabling one purely for content purposes - a common, legitimate need for global companies operating in markets outside the Fully Supported list - opens up a language nobody should sensibly pick for their own interface, with no native way to prevent it.
+
+Right now, there is no real workaround:
+
+1. Don't enable the tier - the language stays out of the personal Language picker, but the content team stays permanently blocked from authoring in it.
+2. Enable it and rely on internal communication to discourage staff from switching their personal language - not enforceable, no admin visibility into who's using what, and no audit trail.
+3. There is no profile or permission-based control to restrict which Displayed Languages a given user can select from for themselves - it's all-or-nothing at the org level.
+
+Salesforce can solve this. Below are two possible solutions:
+
+1. __Minimum Valuable Solution__: Add a "Content only" scope option when enabling a language in Setup > Language Settings, so it becomes available to CMS/Marketing Workspace language pickers without adding it to the org's Displayed Languages list - and therefore without exposing it as a personal user Language option.
+2. __Solution Deluxe__: Add a permission-based control (a new user permission, or an extension of the existing CMS/Content Admin permission sets) governing which Displayed Languages a profile or permission set can select from for its own personal Language field - decoupling "available for content" from "available for personal interface selection" without requiring two separate language lists to maintain.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0BHp000017JliNMAS/separate-cms-content-languages-from-platform-translation-settings'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
