@@ -1,0 +1,80 @@
+---
+id: marketing-cloud-ideas
+title: Marketing Cloud Next Ideas
+sidebar_label: Marketing Cloud Next
+description: Here you can find all my Salesforce Marketing Cloud Next IdeaExchange contributions. Let's make the change!
+image: img/og/og-image-sf-mcn-ideas.png
+tags: [Salesforce, Marketing Cloud Next]
+---
+
+import { LeadText } from '/src/components/LeadText.js';
+import { Button } from '/src/components/Buttons.js';
+
+<LeadText content="Here you can find all my Salesforce Marketing Cloud Next IdeaExchange contributions. Let's make the change!" />
+
+## Setup
+
+### Separate CMS Content Languages from Platform Translation Settings
+
+Setup > Language Settings offers two org-wide toggles - Enable end-user languages and Enable platform-only languages - that unlock additional languages beyond the Fully Supported set. Once enabled, these languages become selectable in two very different places at once: any user's personal Language field (Settings > Language and Time Zone), and the language picker for CMS/Marketing Workspaces used by Salesforce CMS and Marketing Cloud Next Content.
+
+However, these are two genuinely separate use cases sharing one switch. An admin who only wants to author multilingual marketing content - for example, Polish or Portuguese email and landing page copy in a region-based Marketing Workspace - has no way to unlock that language for content without also exposing it as a personal interface option to every user in the org.
+
+For End-User tier languages, this at least gives opted-in users a properly translated interface. For Platform-only tier languages, Salesforce provides no translation at all, so enabling one purely for content purposes - a common, legitimate need for global companies operating in markets outside the Fully Supported list - opens up a language nobody should sensibly pick for their own interface, with no native way to prevent it.
+
+Right now, there is no real workaround:
+
+1. Don't enable the tier - the language stays out of the personal Language picker, but the content team stays permanently blocked from authoring in it.
+2. Enable it and rely on internal communication to discourage staff from switching their personal language - not enforceable, no admin visibility into who's using what, and no audit trail.
+3. There is no profile or permission-based control to restrict which Displayed Languages a given user can select from for themselves - it's all-or-nothing at the org level.
+
+Salesforce can solve this. Below are two possible solutions:
+
+1. __Minimum Valuable Solution__: Add a "Content only" scope option when enabling a language in Setup > Language Settings, so it becomes available to CMS/Marketing Workspace language pickers without adding it to the org's Displayed Languages list - and therefore without exposing it as a personal user Language option.
+2. __Solution Deluxe__: Add a permission-based control (a new user permission, or an extension of the existing CMS/Content Admin permission sets) governing which Displayed Languages a profile or permission set can select from for its own personal Language field - decoupling "available for content" from "available for personal interface selection" without requiring two separate language lists to maintain.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0BHp000017JliNMAS/separate-cms-content-languages-from-platform-translation-settings'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+---
+
+## Reporting
+
+### Allow Row-Level and Summary Formulas to Reference Calculated Insights
+
+Data 360/Semantic Model reports already ship with a rich layer of pre-built metrics - Calculated Measures and Calculated Dimensions, things like `Email Bounce Rate` or `Email Sends` on the Marketing Performance Semantic Model report. These are almost certainly backed by Data Cloud Calculated Insights, the platform's own reusable, governed, schedule-computed metric layer that already feeds segments and activations elsewhere.
+
+Row-Level and Summary Formulas explicitly reject them, though - `IF(Email_Bounce_Rate:SUM > 1, 1, 0)` and its Row-Level equivalent both fail outright with "[Row-level/Summary] formula is not supported on calculated measures or calculated dimensions." So building even a simple threshold-breach flag - "is Hard Bounce Rate over 1%?" - can't reference the ready-made `Email Hard Bounce Rate` field at all. It has to be rebuilt from scratch against the report's raw, one-row-per-event fields instead, duplicating logic that's already correctly computed and governed somewhere else in Data Cloud. Multiply that across every report and every org that wants similar alerting, and the same "what counts as a bounce, what counts as sent" logic gets re-derived over and over, report by report - with every rebuild a fresh chance for a mismatched string literal or a wrong field reference to quietly break the metric's meaning.
+
+Salesforce can fix this. Below are two possible solutions:
+
+1. __Minimum Valuable Solution__: Let Row-Level and Summary Formulas reference existing Calculated Measures/Calculated Dimensions (and Calculated Insights more generally) directly - the same fields already usable as plain report columns and as Report Subscription condition aggregates today, so a metric only has to be defined once.
+2. __Solution Deluxe__: Go further and remove the need for a formula at all in the case that drives most of them - let Report Subscription Conditions **OR** conditions together, not just **AND**. Today's Conditions UI states plainly "you will get notified when all of the conditions are met" - there's no way to fire on *any* condition. Letting a subscription OR multiple conditions directly against existing Calculated Measures (e.g. `Email Hard Bounce Rate greater than 0.01` OR `Email Soft Bounce Rate greater than 0.10`) would cover most multi-category threshold alerts without a single Row-Level or Summary Formula ever needing to be built.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0BHp000017JljyMAC/allow-rowlevelsummary-formulas-to-reference-calculated-insights'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
+
+### Reference Row-Level Formula Fields by Their Name in Summary Formulas
+
+Data 360/Semantic Model reports let you build a Row-Level Formula field - say, `Is_Hard_Bounce` - and give it a clear, readable Column Name. That name is what shows up everywhere in the report builder: the Outline pane, the column header, and the Fields panel's own "Row-Level Formulas" folder.
+
+Everywhere, except inside a Summary Formula. There, referencing the field by that same name (`Is_Hard_Bounce:SUM`) fails validation with `Field Is_Hard_Bounce:SUM does not exist. Check spelling.` The field is real - it's sitting right there in the Fields panel - but Summary Formulas silently require a completely different, auto-generated internal alias instead (`CDF1`, `CDF2`, `CDF3`...), discoverable only by using Insert from the picker rather than typing the name you gave the field yourself.
+
+This creates absurd maintenance burden: keep a separate, self-maintained map of which `CDF` corresponds to which named field, because the formula editor never shows that mapping anywhere - not in the field list, not in a tooltip, not in the formula itself once inserted. Mix up two Row-Level Formulas and a calculation silently references the wrong data, with nothing to catch it.
+
+Salesforce can fix this. Below are two possible solutions:
+
+1. __Minimum Valuable Solution__: If the internal `CDF` alias needs to stay for engine reasons, at minimum surface the mapping in the UI - show the alias next to the field's name in the Fields panel, have a tooltip on hover with the alias,or have Insert paste a labelled reference (e.g. `Is_Hard_Bounce /*CDF2*/:SUM`) instead of a bare, unexplained code.
+2. __Solution Deluxe__: Let Summary Formulas reference a Row-Level Formula field by its actual Column Name (`Is_Hard_Bounce:SUM`), the same way classic Lightning report Summary Formulas reference any other field on the report.
+
+<Button
+    link='https://ideas.salesforce.com/s/idea/a0BHp000017JljAMAS/reference-rowlevel-formula-fields-by-name-in-summary-formulas'
+    text='Vote on IdeaExchange'
+    newTab='true'
+/>
