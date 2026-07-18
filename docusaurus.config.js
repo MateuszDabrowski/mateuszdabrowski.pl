@@ -83,6 +83,10 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
+                            label: 'Marketing Cloud Next',
+                            to: 'docs/category/salesforce/marketing-cloud',
+                        },
+                        {
                             label: 'Marketing Cloud Engagement',
                             to: 'docs/category/salesforce/marketing-cloud-engagement',
                         },
@@ -243,6 +247,10 @@ module.exports = {
                 {
                     title: 'Other Docs',
                     items: [
+                        {
+                            label: 'MC Next',
+                            to: 'docs/category/salesforce/marketing-cloud/',
+                        },
                         {
                             label: 'MC Personalization',
                             to: 'docs/category/salesforce/marketing-cloud-personalization/',

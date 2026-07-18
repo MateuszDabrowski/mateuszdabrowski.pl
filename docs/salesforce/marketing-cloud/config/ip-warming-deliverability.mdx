@@ -1,0 +1,433 @@
+---
+id: ip-warming-deliverability
+title: MC Next IP Warming & Deliverability
+sidebar_label: IP Warming & Deliverability
+description: Marketing Cloud Next automates IP-warming, but not your deliverability work. Here's what's automatic, what isn't, and where to watch.
+image: img/og/og-image-sf-mcn-ip-warming.png
+tags: [Salesforce, Marketing Cloud, Agentforce Marketing, Deliverability, Email, IP Warming, Configuration]
+toc_max_heading_level: 4
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { LeadText } from '/src/components/LeadText.js';
+
+<LeadText content="Marketing Cloud Next automates IP-warming, but not your deliverability work. Here's what's automatic, what isn't, and where to watch." />
+
+## Deliverability Next
+
+__Marketing Cloud Next automates IP-warming, but the looming terror of deliverability still stays.__
+
+Every email marketer knows the IP warming drill: prepare an engaged database, craft perfectly engaging content, plan a volume ramp, throttle your own sends day by day, and hope the inbox service providers (ISPs) are pleased with your efforts. Get the ramp wrong and you spend months rebuilding a reputation to get your emails delivered.
+
+On MC Next, that ritual is (partially) gone. For two reasons. Firstly, Shared IP is the default for most users (and the only option until the Spring '26 release). Secondly, once you obtain Dedicated IP Address(es), Salesforce assigns, warms, and reclaims IPs automatically based on your sending volume. You don't request a dedicated IP, you don't build a ramp schedule, and you don't throttle sends to protect a fresh IP's reputation - the platform does it automatically in the background.
+
+:::note You Should Know
+
+Automated IP warming is unique to Marketing Cloud Next. On Marketing Cloud Engagement and Marketing Cloud Account Engagement, you still purchase a dedicated IP explicitly and warm it manually, the old-fashioned way.
+
+:::
+
+What this doesn't remove is the rest of deliverability. Domain reputation, list hygiene, content quality, and bounce monitoring are still entirely on you - and matter even more now, with ISPs enforcing stricter bounce and complaint limits and increasingly looking at domain reputation over IP reputation. The rest of this article covers what MC Next handles for you, what still needs your attention, and where to watch for trouble.
+
+---
+
+## How Automated IP Warming Actually Works
+
+Let's look at the mechanics you're no longer configuring yourself. MCN's IP management runs on volume-based thresholds, a gradual routing-based ramp, and a "downgrade" path that automatically removes dedicated IPs as volume decreases.
+
+### Shared IP Pool
+
+All Marketing Cloud Next accounts start on a shared pool of multiple IPs. The pool is shared across multiple accounts, and the platform automatically rotates your sends across the pool to balance load and protect reputation. You don't see the individual IPs in the pool, and you don't control which one is used for a given send.
+
+### Transactional vs Promotional IPs
+
+However, MCN doesn't pool all outbound mail together. Shared sending is split into two separate lanes - Transactional and Promotional. Each has its own separate pool of Shared IPs, and each works toward its own dedicated IP assignment and warming independently.
+
+In practice, this means an account with heavy transactional volume (order confirmations, password resets, receipts) but modest promotional volume can end up with a dedicated IP for transactional sends while promotional campaigns keep running on the shared pool, or vice versa. You can check your current state in **Settings > Unified Messaging > Email > Settings > Sending IP Addresses** screen - on a fully shared account this currently just reads as a single "General" line.
+
+### Shared-to-Dedicated Migration Triggers
+
+Migration to a dedicated IP is volume-driven, per lane, and sequential as volume keeps growing:
+
+Milestone | Threshold | What Happens
+-- | -- | --
+First dedicated IP | ~5M emails/month | Salesforce detects sustained volume and begins migrating the lane from shared to a dedicated IP.
+Second dedicated IP | ~10M emails/month | A second dedicated IP is added to the same lane.
+Additional IPs | Per each additional ~5M emails/month | More IPs are assigned sequentially, up to a cap of 32 dedicated IPs per account.
+
+These numbers are guidelines, not commitments - treat them as the range where migration typically starts, not a switch that flips the moment you cross 5M.
+
+### Automatic Warming Window
+
+__A single campaign send can be split across multiple IPs at once.__
+
+When migration begins, Salesforce automatically plans and executes the warming - roughly a 35 day ramp - by gradually shifting a growing percentage of volume from the shared pool onto the new dedicated IP. You don't control the curve, and you don't need to: if your sending volume temporarily exceeds what the ramp allows on a given day, the excess is simply routed back through the shared pool rather than overloading the new IP.
+
+The practical consequence is worth internalising before you go looking for it in your logs: during the warming window, the same campaign can be delivered to part of its audience via the dedicated IP and the rest via the shared pool, at the same time. If you're inspecting message headers or bounce data from a single send during this period and see two different sending IPs, that's the ramp working as intended, not a routing bug.
+
+### Fallback from Dedicated to Shared
+
+Dedicated IPs aren't permanent once assigned. If you have more than one dedicated IP, Salesforce evaluates a **45-day lookback average** of sending volume against the same threshold used for migration. If the average drops below it, dedicated IPs are reclaimed and the traffic is routed to the rest of your IPs.
+
+If you have just one dedicated IP (be it by design or as a result of reclamation), Salesforce checks whether volume stays below the ~5M/month guideline for **90 days**. If it does, that final dedicated IP is reclaimed too and the lane fully reverts to the shared pool. Reclaimed IPs go through a cooldown period before being reused. You have no guarantee of getting the same IP back, and if you later exceed the threshold again, a new dedicated IP is assigned and warmed from scratch.
+
+### The Gray Pool Safety Net
+
+Reclamation protects dedicated IPs from being under-used. A separate mechanism, the **Gray Pool**, protects everyone else on the shared pool from a single bad sender. Shared-IP accounts with a bounce rate around **5%** or higher are temporarily moved into this isolated pool - separate from both the normal shared pool and any dedicated IPs - and stay there until their bounce rate recovers.
+
+The Gray Pool exists so that one account's list-hygiene problem doesn't drag down deliverability for every other shared-pool sender. If your sends suddenly land here, the fix isn't the IP - it's whatever's driving the bounce rate (see the [bounce categories](#the-four-bounce-categories) below).
+
+---
+
+## Prerequisites and Domain Reputation
+
+Automating the IP side doesn't touch domain reputation, list quality, or content - and Salesforce's own [deliverability guidance for MCN](https://help.salesforce.com/s/articleView?id=005225012&type=1) is explicit that these remain the customer's responsibility. Treat them as prerequisites to check before you send anything meaningful, not cleanup you get to later.
+
+### Prerequisites Before You Send
+
+Requirement | Task | Verification
+-- | -- | --
+SPF & DKIM | Authenticate your sending domain once - add the CNAME records Salesforce provides to your DNS ([setup guide](https://help.salesforce.com/s/articleView?id=mktg.um_channel_email_set_up_and_authenticate_a_sending_domain.htm&type=5&language=en_US)). Salesforce signs every send automatically after that. An unverified domain gets no signing at all. | Retrieve email headers ([instructions by provider](https://mxtoolbox.com/Public/Content/EmailHeaders/)) and confirm both pass (with [header analyzer](https://mxtoolbox.com/EmailHeaders.aspx)).
+DMARC | Add a DMARC record to DNS and set an enforcement policy with IT. MCN suggests wording during the same domain setup, but ownership stays with you for as long as the domain sends mail. | Same header retrieval: the `Authentication-Results` line reports `dmarc=pass` or `fail` right alongside SPF and DKIM.
+Bulk sender compliance | Meet [Gmail's](https://support.google.com/mail/answer/81126), [Yahoo's](https://senders.yahooinc.com/best-practices/), and [Microsoft's](https://sendersupport.olc.protection.outlook.com/pm/policies.aspx) bulk sender guidelines - these apply to your sending practices regardless of which Salesforce product sends the mail. | Cross-check your setup against all three before any warming activity starts.
+Legal compliance | Meet CAN-SPAM, GDPR, CASL, and other regional email marketing laws based on where your recipients are. | Confirm consent records, opt-out mechanics, and sender disclosures meet the laws your list touches.
+
+### Domain vs. Subdomain: Where to Send From
+
+__Never send bulk mail - transactional or marketing - from the same domain your team uses for everyday email.__
+
+MCN's domain authentication works identically whether you point it at your root domain or at a subdomain - Salesforce doesn't force a structure on you. That flexibility means it's entirely possible to authenticate `yourcompany.com` directly and send every campaign from it. Don't do it.
+
+The risk isn't abstract. If a bulk send triggers a spam-folder placement or a blocklist hit, and that domain is the same one your sales team uses in Outlook or Gmail every day, you've just put their one-to-one client emails at risk over a newsletter mistake. Any mistake in the DNS configuration can lead to deliverability issues for your whole organization. That's a far more concrete cost than a dip in a reputation score.
+
+I'd structure it in three:
+
+Domain | Carries | Why
+-- | -- | --
+Root domain (`yourcompany.com`) | Human-sent corporate email only | Never touches automated sending, so a marketing incident can't threaten your team's ability to email a client.
+Transactional subdomain (e.g. `mail.yourcompany.com`) | Receipts, password resets, security alerts | Isolated from marketing's higher-variance sending patterns - this is the mail your business genuinely can't afford to have blocked.
+Marketing subdomain (e.g. `m.yourcompany.com`) | Promotional campaigns | Absorbs marketing's higher-risk profile (bigger volume swings, more list-hygiene variance, more complaint exposure) without threatening the other two.
+
+This mirrors the Transactional vs. Promotional split MCN already runs at the [shared IP pool level](#transactional-vs-promotional-ips) - lining up domain identity with IP lane gives mailbox providers the cleanest possible signal, and turns a bounce or complaint spike into something you can trace back to a single cause instead of three tangled ones.
+
+:::note You Should Know
+
+Subdomain separation is risk reduction, not a firewall. Subdomain reputation isn't cleanly walled off from the root domain - Google's own Postmaster documentation confirms subdomain signal aggregates up into the organisational (root) domain, and sustained abuse on a subdomain can still be traced back and penalise the parent. The three-way split protects your team's everyday email and your transactional stream from marketing's mistakes day-to-day - it doesn't make marketing's mistakes free.
+
+:::
+
+### Domain Warming Schedule
+
+Domain reputation is evaluated independently of whatever Salesforce automates on the IP side, and how much warming you actually need depends entirely on where the domain you're about to send from has been. There are three realistic starting points:
+
+#### Happy Path: Existing Domain, Good Reputation
+
+Most MCN customers don't cut over in one move - they run a parallel migration, standing up a brand new subdomain for MCN while the old tool keeps sending from its existing one. That new subdomain has no sending history of its own, but it sits under a root domain that already does, and that's not nothing: per Google's own Postmaster documentation, a new subdomain of an established, reputable root domain inherits some starting trust, which is why warmup on it typically moves faster than warming a domain with no history anywhere in the family.
+
+The same logic applies even more directly if you're moving the exact same subdomain over rather than running in parallel - the reputation you built there doesn't evaporate just because the sending infrastructure behind it changed (unless you paused sends for over a month). Domain and IP reputation are evaluated separately, and mailbox providers aren't resetting their trust in an identity just because Salesforce is now the one sending on its behalf.
+
+Either way, I'd still watch the first few sends closely - the sending infrastructure genuinely is new even when the domain history isn't - but there's no reason to run the full multi-week ramp from the New Path below as if this were a domain with zero signal anywhere. Ramp over days rather than weeks, and hold yourself to the same bounce (**2%**) and complaint (**0.1%**) ceilings as any other path - if either creeps up, that's your signal the "good reputation" assumption didn't survive the platform switch.
+
+#### Bad Path: Existing Domain, Bad Reputation
+
+If you're migrating specifically because deliverability was already bad on the old platform, don't carry that subdomain's reputation into MCN with you. Provision a fresh subdomain (or even domain, depending on how bad it was) or wait at least a month before reusing the old one. Treat the migration as the reputation reset it should be - dragging a damaged identity onto new sending infrastructure just means inheriting the same problems with a new vendor attached (and potentially getting a fast track to Gray Pool).
+
+#### New Path: Brand New Domain
+
+This is actually the least common scenario for MCN customers - most arrive with an existing domain and sending history from somewhere else - but it's the one Salesforce's own guidance covers most literally.
+
+Even on a fully shared, fully automated IP, a brand-new sending domain starts at zero reputation. Google, Microsoft, Yahoo, and Apple all weight domain reputation as a primary signal now, with IP reputation as the fallback for an unknown domain - so warming the domain is still a manual, planned exercise, IP automation notwithstanding.
+
+<Tabs
+ defaultValue={null}
+ values={[
+ {label: "Salesforce's Plan", value: 'salesforce'},
+ {label: 'My Plan', value: 'myplan'},
+ ]}
+>
+<TabItem value='salesforce'>
+
+Salesforce's [domain warming guidance](https://help.salesforce.com/s/articleView?id=005318368&type=1&language=en_US) lays out the first week like this:
+
+Day | Daily Max Volume
+-- | --
+1-3 | 500
+4-5 | 1,000
+6 | 1,500
+7 | 2,000
+8 | 2,500
+
+Past week one, expand the audience by one additional month of engagement history each week: week two goes to subscribers engaged in the last two months, week three to the last three, and so on. From week six onward, stop sending to anyone with no engagement in the past six months - by then they're doing more harm to your reputation than good. Once you've sent to 60-70% of your total addressable audience, you can open sending to everyone. Most accounts complete the full ramp in four to seven weeks.
+
+</TabItem>
+<TabItem value='myplan'>
+
+I find Salesforce's plan overly conservative for most accounts - it treats every recipient identically regardless of which mailbox provider is actually evaluating your reputation, and those providers don't move at the same pace or on the same signals. I'd split the audience by receiving domain instead and warm each segment on its own curve:
+
+- **Microsoft** (outlook.com, hotmail.com, live.com, msn.com)
+- **Yahoo** (yahoo.com, aol.com, and Yahoo-owned domains)
+- **Google** (gmail.com, googlemail.com)
+- **Everyone else**, grouped as one remaining segment
+
+:::note You Should Know
+
+Depending on your audience, you may need to split the "Everyone else" segment further. If you have a large number of recipients on a single ISP (e.g., Comcast, NHS), treat that ISP as its own segment and warm it independently.
+
+:::
+
+Warm each segment independently, doubling volume daily - **500 → 1000 → 2000 → 4000** and onward - rather than Salesforce's flatter week-one ramp. The doubling curve gets you to meaningful volume faster on the segments that behave well, while keeping every segment small enough early on that a bad signal from one provider doesn't force you to slow down on all of them.
+
+Watch bounce and complaint rate per segment, not just in aggregate - a spike on Yahoo shouldn't automatically throttle your Google-bound volume, and vice versa. If a segment spikes, hold or step back that segment specifically before doubling again; don't restart the whole plan over one provider's bad day.
+
+</TabItem>
+</Tabs>
+
+:::note You Should Know
+
+Microsoft is slower than Google and Yahoo to react to warming, in both directions. A volume spike or complaint problem takes longer to surface in Microsoft's signals - SNDS data itself typically lags 24-72 hours behind actual sending - and a genuine improvement in your sending behaviour takes longer to translate into better delivery than it does on Gmail or Yahoo. Don't conclude your Microsoft segment "isn't working" after a few days the way you might for Google - give it real time before adjusting the plan.
+
+:::
+
+Two numbers to hold yourself to throughout, on either plan: keep bounce rate under **2%** and complaint rate under **0.1%**. If either creeps up, or engagement dips, scale back to the last volume level that performed well before continuing the ramp - don't push through a bad signal hoping it self-corrects.
+
+Postmaster tools for each provider give you the clearest insight into how your domain is being evaluated, and are worth checking daily during the ramp. If you see a problem, investigate it before continuing - don't just keep sending and hope it fixes itself.
+
+### List Hygiene as a Reputation Multiplier
+
+__Switching platforms will not make previously bounced addresses deliverable.__
+
+If you're importing subscribers into MCN from another platform, only bring across addresses that have never hard-bounced or unsubscribed, and that have shown genuine engagement in the past year. A hard bounce is a property of the address, not the sending platform - reintroducing it through a new tool just repeats the same failed delivery and damages the new domain's reputation from day one.
+
+The same discipline applies ongoing, not just at migration:
+
+- Suppress subscribers inactive for over a year.
+- Never use purchased or rented lists - they're the single most common cause of spam-trap hits.
+- Use confirmed (double) opt-in for new subscribers wherever your process allows it.
+- Run a scheduled hygiene pass rather than waiting for a deliverability incident to trigger one.
+
+List quality compounds. A domain that only ever sends to engaged recipients builds reputation faster and protects it longer than one that occasionally sends to a stale segment "just to see".
+
+### Content and Authentication Checks
+
+- Keep the unsubscribe link visible and functional without requiring a login - gating it behind authentication is a common, avoidable cause of spam complaints (a recipient who can't unsubscribe easily will complain instead). Rule of thumb: unsubscribe should be as easy as subscribe - if not easier.
+- Include a physical mailing address where CAN-SPAM applies.
+- Run new templates through mail testing tool before a big send - find issues with spam filters, broken links, or missing images before they reach a live audience.
+
+---
+
+## Monitoring: Where to Watch Deliverability and Bounces
+
+With IP-side warming automated, your job shifts from tuning a ramp curve to watching signal. For anything beyond a quick glance, **build a custom report on the Marketing Performance Semantic Model** - Salesforce confirmed it supports the exact same Row-Level Formula, Summary Formula, and Report Subscription mechanism that used to live on the All Email Activities report, and unlike that report, it isn't gated by a provisioning-date cutoff. All Email Activities itself is legacy-only now: the underlying Marketing Analytics package is available only to orgs whose default Data Space was provisioned before the Summer '26 release, and isn't offered at all to anyone provisioned after that - including every new MCN Growth or Advanced customer. If your org still has it, it works exactly as it always has; if not, the Semantic Model report is the direct replacement.
+
+Approach | Availability | Ease of Use | Flexibility | Cost
+-- | -- | -- | -- | --
+Marketing Performance Dashboard | Every MCN org | High - pre-built cards and filters, no query writing | Low - locked to whatever's exposed on the tab | Data Cloud credits to run, plus the Tableau Next permission set just to view it
+Marketing Performance Semantic Model Report | Every MCN org | Medium - standard report builder, you choose the fields and groupings | High - full Row-Level/Summary Formula support, same as a classic report | None beyond what Marketing Performance itself requires
+Query Editor (SQL) | Every MCN org | Low - you're writing SQL against the Data Cloud DMO yourself | High - full control over fields, joins, and date logic | Data Cloud query credits
+All Email Activities Report | **Legacy only** - orgs provisioned before Summer '26 | Medium - toggle Detail Rows, standard report filters and groupings | Medium - reshape within the report framework, but you're still working with a fixed report type | None - native Salesforce reporting, no Data 360 credits
+
+For a daily glance, the dashboard is the starting point. For routine bounce-rate alerting (see [Turning Thresholds into Alerts](#turning-thresholds-into-alerts)), build around the Semantic Model report instead - it's free, available to every org, and it's exactly what Report Subscription conditions attach to. Reach for the Query Editor when neither prebuilt view covers what you need, and treat All Email Activities as a bonus if your org happens to still have it.
+
+### Three Ways to Monitor Send Health
+
+<Tabs
+ defaultValue={null}
+ values={[
+   {label: 'Marketing Performance Dashboard', value: 'dashboard'},
+   {label: 'Semantic Model Report', value: 'semanticreport'},
+   {label: 'MCN Query Editor', value: 'query'},
+   {label: 'All Email Activities Report (Legacy)', value: 'report'},
+ ]}
+>
+<TabItem value='dashboard'>
+
+Deliverability reporting lives under **Marketing app > Marketing Performance > Deliverability** - a sub-tab next to "Insights" in the top navigation.
+
+It's the best place for high-level monitoring of your sending health, and the first place to check if you see a sudden spike in bounces or complaints. It also allows you to drill down into the underlying data, and filter it to find the source of any issues.
+
+:::note You Should Know
+
+If you don't see this tab at all, an admin needs to install Marketing Performance in Setup or provide you with **Tableau Next Included App Business User** permission to access it.
+
+:::
+
+</TabItem>
+<TabItem value='semanticreport'>
+
+Go to **Reports > New Report**, and under **Category**, select **Semantic Data Models > Marketing Performance Semantic Model**. It's a 211-field report type built on the same Salesforce Data Objects behind Marketing Performance (Campaign, Market Segment, Flow Version, Individual, and others), and it needs at least one grouping column before it renders anything.
+
+Add the fields relevant to deliverability, grouped under **Calculated Measures** in the column picker: `Email Sends`, `Email Bounces`, `Email Technical/Soft/Hard/Blocked/Unknown Bounces`, and - unlike All Email Activities - **native rate fields**: `Email Bounce Rate`, `Email Soft Bounce Rate`, `Email Hard Bounce Rate`.
+
+:::note You Should Know
+
+This report type keeps two field layers strictly separate, and it matters the moment you touch formulas (see [Turning Thresholds into Alerts](#turning-thresholds-into-alerts)): the wide, pre-aggregated fields above are **Calculated Measures** - fine as report columns or Report Subscription conditions, but explicitly unsupported inside a Row-Level or Summary Formula. I've filed an [Idea](/sites/ideas/salesforce/marketing-cloud-ideas.mdx#allow-row-level-and-summary-formulas-to-reference-calculated-insights) asking Salesforce to close this gap.
+
+:::
+
+</TabItem>
+<TabItem value='query'>
+
+```sql title="A 30-day lookback for correlating spikes with bounce timing"
+SELECT
+      CAST("ssot__EngagementDateTm__c" AS DATE) -- bucket engagement events by calendar day
+    , COUNT(*)
+FROM "ssot__EmailEngagement__dlm"
+WHERE "ssot__DataSourceId__c" LIKE 'MessagingEvents%'
+  AND "ssot__EmailRecipientSendStatus__c" = 'SENT'
+  AND "ssot__EngagementDateTm__c" >= CURRENT_TIMESTAMP - INTERVAL '30' DAY
+GROUP BY CAST("ssot__EngagementDateTm__c" AS DATE)
+ORDER BY CAST("ssot__EngagementDateTm__c" AS DATE) ASC
+LIMIT 30
+```
+
+Run this in the Query Editor workspace against Data Cloud when you need the raw daily counts rather than a dashboard view - useful if you want to correlate it with data not available in the standard dashboard or report.
+
+</TabItem>
+<TabItem value='report'>
+
+Open the **All Email Activities** standard report - Analytics tab > Email Engagement Reports folder - and turn off **Detail Rows**. The report has one row per send/open/bounce/unsubscribe/click, each a boolean column, so collapsing detail rows and summing **Is Sent** per day gives the cleanest view for spotting a single-day jump against your typical average without wading through row-level data.
+
+:::note You Should Know
+
+This report only exists for orgs whose default Data Space was provisioned before Summer '26 - Salesforce confirmed the underlying Marketing Analytics package isn't offered at all to anyone provisioned after that cutoff, including every new MCN Growth or Advanced customer, and there's no self-service install path around it. If your Analytics tab has no Email Engagement Reports folder, that's not a missed setup step - use Marketing Performance or the Query Editor instead.
+
+:::
+
+</TabItem>
+</Tabs>
+
+### The Four Bounce Categories
+
+Prior to the May 2026 bounce management update, MCN only distinguished Soft and Hard bounces. Since then, two additional categories - Block and Technical - split out from it, giving a more precise read on whether a bounce is about the recipient, your reputation, or the mail infrastructure itself.
+
+:::note You Should Know
+
+Bounces logged before the May 2026 update keep their original Soft/Hard classification - they are not retroactively reclassified. Expect your historical Soft and Hard bounce rates to shift once the new categories start capturing what used to be lumped into them.
+
+:::
+
+Category | Common Causes | System Behaviour | Suppression | Actionable Thresholds
+-- | -- | -- | -- | --
+**Soft** | Mailbox full, temporary inactivity, greylisting, transient rate limiting, DNS timeouts | Not suppressed; retried automatically over a 12-hour window | None - address stays eligible | Same address soft-bounces 30+ consecutive days (especially "mailbox full") → suppress manually. Rate exceeds 10% for a specific ISP → investigate an ISP-side issue.
+**Block** | SPF/DKIM/DMARC failures, IP or domain on a blocklist, high-complaint rate | Not suppressed; retried over 12 hours if the original response was a 4xx | None | Rate exceeds 2% → verify authentication, check ISP postmaster tools, check blocklist status.
+**Technical** | DNS resolution errors, SMTP/TLS handshake failures, protocol mismatches, routing problems | Not suppressed; retried over 12 hours if the original response was a 4xx | None | Rate exceeds 5% across multiple ISPs for 24+ hours, or persistent connection errors → contact Support. Often correlates with volume spikes or IP warming windows.
+**Hard** | Address doesn't exist, malformed syntax, domain has no mail servers, account closed | Suppressed; no retries | Permanent, tied to the email address (not the contact record), specific to your MCN account | Rate is rising at all → audit list acquisition and import sources, not the sending infrastructure.
+
+Soft, Block, and Technical bounces are diagnostic signals about your practices or the mail path, not a verdict on the recipient - which is why none of them suppress the address. Hard bounces are the only category that's actually about the address itself, and that's the only one MCN locks out permanently; resetting one requires a Support case, and Salesforce recommends doing that only for confirmed false positives (a temporary major-ISP outage, or a whitelisted corporate firewall), not routinely.
+
+:::note You Should Know
+
+__A spam complaint isn't a bounce - it's a separate, post-delivery signal, and it might suppress the address.__ When a recipient marks your email as spam, some ISPs forward it back through a feedback loop as an Abuse Reporting Format (ARF) reply, and that specific subscriber is unsubscribed immediately - independent of anything in the bounce table above. However, if you start getting a lot of complaints, the ISP may start blocking your mail entirely, which will show up as Block bounces in the table above.
+
+:::
+
+### Turning Thresholds into Alerts
+
+Checking a dashboard daily doesn't scale, and the thresholds above are exactly the kind of condition that should actively notify you instead of waiting to be noticed. Salesforce's native **Report Subscription conditions** turn either report into a push alert. Which build you need depends on how many thresholds you want watched at once - so start with the quick method, and only reach for the fuller one if it doesn't cover your case.
+
+#### Quick Method: Subscribe Directly to Hard Bounce Rate
+
+__No formulas required - the rate is already a field on the report.__ Hard bounces are the category worth watching on their own: they're permanent, they're about your list rather than a transient mail-path issue, and any non-zero rate is worth investigating (see [the table above](#the-four-bounce-categories)). Both report types expose it natively - `Email Hard Bounce Rate` as a Calculated Measure on the Semantic Model report, `Is Bounced` filtered to Hard on All Email Activities - so a subscription condition can point straight at it.
+
+1. From the report, select **Subscribe**.
+2. Set a daily schedule.
+3. Under **Conditions**, select **Add conditions to this report**, and pick the rate field directly from the **Aggregate** dropdown - e.g. `Email Hard Bounce Rate greater than 0.01`.
+4. Choose **Summary + Report** for the full breakdown attached, or **Summary only** for a lighter alert, add recipients, and save.
+
+:::note You Should Know
+
+Multiple conditions on a native subscription are joined with **AND** - "you will get notified when all of the conditions are met". That covers a single threshold fine, but it can't express "alert me if *either* Hard *or* Soft breaches its own threshold" - each added condition narrows the trigger, it doesn't widen it. That gap is exactly what the fuller method below exists to close - and exactly what I'm asking Salesforce to fix directly in [this Idea](/sites/ideas/salesforce/marketing-cloud-ideas.mdx#allow-row-level-and-summary-formulas-to-reference-calculated-insights): letting Conditions OR against each other would make most of the fuller method below unnecessary.
+
+:::
+
+#### Fuller Method: OR-Combine Multiple Category Thresholds
+
+__Reach for this when you want to watch all bounce categories against their own thresholds in a single alert.__ This needs the two-layer Row-Level + Summary Formula pattern, and on the Semantic Model report specifically, the formula syntax has real, undocumented differences from a classic Lightning report worth knowing before you start.
+
+:::note You Should Know
+
+There is a platform limit of **5 Row-Level Formulas and 5 Summary Formulas per report**.
+
+:::
+
+1. **Calculate each bounce category to enable threshold-based alerts**. Row-Level Formulas can only reference the report's raw, one-row-per-event fields (`Send Status`, `Bounce Type` under Logical View: Engagement Union) - pointing one at a Calculated Measure like `Email Bounce Rate` fails outright with *"Row-level formula is not supported on calculated measures or calculated dimensions"*. Reference the raw fields, without aggregate suffix, compared to a quoted string. Build `Is_Sent` first - it's the denominator every rate below divides by:
+
+```text title="Row-Level Formula - Is_Sent (Number, 0 decimals)"
+IF(Logical_View_Engagement_Union.Send_Status = "SENT", 1, 0)
+```
+
+```text title="Row-Level Formula - Is_Soft_Bounce (Number, 0 decimals)"
+IF(Logical_View_Engagement_Union.Bounce_Type = "Soft", 1, 0)
+```
+
+```text title="Row-Level Formula - Is_Block_Bounce (Number, 0 decimals)"
+IF(Logical_View_Engagement_Union.Bounce_Type = "Block", 1, 0)
+```
+
+```text title="Row-Level Formula - Is_Technical_Bounce (Number, 0 decimals)"
+IF(Logical_View_Engagement_Union.Bounce_Type = "Technical", 1, 0)
+```
+
+```text title="Row-Level Formula - Is_Hard_Bounce (Number, 0 decimals)"
+IF(Logical_View_Engagement_Union.Bounce_Type = "Hard", 1, 0)
+```
+
+That's five Row-Level Formulas which hits the five row-level formulas per report limit exactly. That also means this design leaves no spare slot: watching anything beyond these five, like per-ISP breakdown, needs a second report or checking those details in another place.
+
+2. **Add missing category-specific bounce rates**. `Email Bounce Rate`, `Email Soft Bounce Rate`, and `Email Hard Bounce Rate` are already available as Calculated Measure columns (see the Semantic Model Report tab above), but Block and Technical don't (yet?) have a native rate field, only raw count columns (`Email Blocked Bounces`, `Email Technical Bounces`). Thankfully you can build the rate yourself for those two, using Summary Formulas based on the Row-Level flags created in step 1:
+
+```text title="Summary Formula - Block_Bounce_Rate (Number, 2 decimals)"
+CDF{Is_Block_Bounce}:SUM / CDF{Is_Sent}:SUM
+```
+
+```text title="Summary Formula - Technical_Bounce_Rate (Number, 2 decimals)"
+CDF{Is_Technical_Bounce}:SUM / CDF{Is_Sent}:SUM
+```
+
+Add available out-of-the-box columns `Email Bounce Rate`, `Email Soft Bounce Rate`, and `Email Hard Bounce Rate` alongside these two to cover all four categories plus the overall rate in the report. If Salesforce adds native `Email Block Bounce Rate`/`Email Technical Bounce Rate` fields later (the category split itself only shipped May 2026, so rate-field coverage may still be catching up), these two formulas become redundant too - worth re-checking the column picker before building them.
+
+:::note You Should Know
+
+The examples above write `CDF{Field_Name}` instead of a hardcoded `CDF2`/`CDF3`/etc. because the exact numbers might be different for you.
+
+Use Fields sidebar **Insert** to add each Row-Level Formula with the correct for you number or paste the whole formula into Einstein sidebar and let it do the work for you. The `CDF{Field_Name}` syntax is a placeholder that Einstein can resolve to the correct `CDFn` for your report automatically, so you don't have to track which number landed on which field.
+
+Referencing a Row-Level Formula field inside a Summary Formula by the name you gave it - `Is_Soft_Bounce:SUM` - fails with *"Field ... does not exist. Check spelling".* Salesforce silently reassigns each Row-Level Formula an internal alias (`CDF1`, `CDF2`...) that only surfaces if you **Insert** the field from the Fields panel rather than typing its name - the formula box shows only the opaque code from that point on. That numbering isn't portable either: which alias lands on which field depends on creation order within that specific report, so `Is_Sent` might be `CDF1` in one report and `CDF3` in another.
+
+I've filed an [Idea](/sites/ideas/salesforce/marketing-cloud-ideas.mdx#reference-row-level-formula-fields-by-their-name-in-summary-formulas) asking Salesforce to let Summary Formulas address a field by name instead, to make our life a little bit easier.
+
+:::
+
+3. **Combine everything into one subscribable flag**. Summary Formulas can't reference other Summary Formulas either (same limitation as a classic Lightning report), so this one has to recompute every condition itself rather than chain through step 2's per-category formulas. It checks all bounce categories and Gray Pool thresholds at once as per the [table above](#the-four-bounce-categories), returning `1` if any of them are breached and `0` otherwise. Perfect for the subscription condition.
+
+Paste below as-is to Formula Einstein so it can resolve the `CDF{Field_Name}` aliases for you.
+
+```text title="Summary Formula - Is_Deliverability_At_Risk (Number, combined flag)"
+IF(OR(CDF{Is_Soft_Bounce}:SUM / CDF{Is_Sent}:SUM > 0.10, CDF{Is_Block_Bounce}:SUM / CDF{Is_Sent}:SUM > 0.02, CDF{Is_Technical_Bounce}:SUM / CDF{Is_Sent}:SUM > 0.05, CDF{Is_Hard_Bounce}:SUM / CDF{Is_Sent}:SUM > 0.01, (CDF{Is_Soft_Bounce}:SUM + CDF{Is_Block_Bounce}:SUM + CDF{Is_Technical_Bounce}:SUM + CDF{Is_Hard_Bounce}:SUM) / CDF{Is_Sent}:SUM > 0.05), 1, 0)
+```
+
+Subscribe the same way as the quick method above, with **Aggregate** `Is_Deliverability_At_Risk`, **Operator** `Equals`, **Value** `1`.
+
+### Debugging a Bounce Spike
+
+When an alert (or the dashboard) flags a spike, work through it in this order:
+
+1. **Correlate timing.** Check Delivery Status Trends By Day on the Deliverability tab, your Semantic Model report, the Query Editor output, or All Email Activities (if your org still has it) for a volume spike on the same date. A jump in Technical or Soft bounces - particularly the `4.4.7 (delivery time expired)` code - very often just means you sent noticeably more than your recent average and ISPs are deferring as a warning, not a hard rejection.
+2. **Identify the dominant category and ISP.** If Block or Technical bounces cluster on one provider, go straight to that provider's postmaster tool - Gmail Postmaster Tools, Microsoft SNDS, or Yahoo Postmaster - for the reputation signal they're seeing on their end.
+3. **Check blocklist status** with a tool like MXToolbox, especially if Block bounces reference IP reputation directly.
+4. **Re-validate authentication** via header retrieval, particularly if the spike coincides with a domain or template change.
+5. **For the Microsoft-specific `5.7.1` hard bounce**, remember Microsoft evaluates more than the sending IP - fixing the underlying sending behaviour (volume discipline, list hygiene) matters more than waiting for a block to lift, because the same bounce will recur if the behaviour doesn't change.
+6. **Scale back, don't push through.** Drop volume to the last level that didn't trigger the spike, then resume the ramp from [Domain Warming Schedule](#domain-warming-schedule) rather than jumping straight back to full volume.
+
+---
+
+## Sum Up
+
+1. **Don't build a manual IP warming plan on MCN** - it's automated per pool, per lane, and mid-campaign IP splitting during the ramp is expected behaviour, not a bug.
+2. **Make sure your sending domain is warm regardless of IP automation** - ISPs weight domain reputation when deciding on what will happen with your emails.
+3. **Never send bulk mail from the same domain your team uses for everyday email** - split root domain, transactional subdomain, and marketing subdomain so one bad campaign can't threaten the other two.
+4. **Treat list hygiene as reputation infrastructure, not cleanup** - never re-import addresses that previously hard-bounced or unsubscribed elsewhere, and hold bounce/complaint rate under 2%/0.1% throughout any warming ramp.
+5. **Replace manual dashboard-checking with a Report Subscription alert** - start with a direct condition on `Email Hard Bounce Rate` (no formulas needed), and only build the Row-Level + Summary Formula OR-combination if you need multiple category thresholds watched in one alert - then diagnose by bounce category and correlate with send volume before reacting to any spike.
+
+If you've found other undocumented MCN deliverability behaviour worth sharing, let me know - this is very much a moving target while the feature is still this new.

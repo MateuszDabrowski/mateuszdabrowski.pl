@@ -78,7 +78,7 @@ const features = [
         imageUrl: 'img/md_brain_icon.png',
         description: (
             <>
-                My notes on Marketing Cloud, Agentforce and other things Salesforce. Are you craving for more in-depth documentation or looking for tested code snippets, solutions and prompts? Hop in!
+                My notes on Salesforce Marketing, Agentforce and other things Salesforce. Are you craving for more in-depth documentation or looking for tested code snippets, solutions and prompts? Hop in!
             </>
         ),
         url: '/docs/',
@@ -210,14 +210,14 @@ const highlightedArticles = [
     {
         title: <>Contact Deletion</>,
         url: './docs/salesforce/marketing-cloud-engagement/config/contact-deletion/',
-        description: 'Everything you need to clean up your SFMC from dirty Contacts.',
+        description: 'Everything you need to clean up your MCE from dirty Contacts.',
         tags: ['Marketing Cloud Engagement'],
         cta: 'Read more »',
     },
     {
         title: <>System Data Views</>,
         url: './docs/salesforce/marketing-cloud-engagement/config/system-data-views/',
-        description: 'Learn about hidden Data Views storing key data about your SFMC.',
+        description: 'Learn about hidden Data Views storing key data about your MCE.',
         tags: ['Marketing Cloud Engagement'],
         cta: 'Read more »',
     },
@@ -334,7 +334,7 @@ function Newsletter() {
                     <div className="col col--8">
                         <h2 className={styles.newsletterHeading}>Stay in the loop</h2>
                         <p className={styles.newsletterDescription}>
-                            Get the latest Salesforce Marketing Cloud and Agentforce tips, guides, and industry news straight to your inbox.
+                            Get the latest Salesforce Marketing and AI tips, guides, and industry news straight to your inbox.
                         </p>
                     </div>
                     <div className="col col--4">
@@ -365,7 +365,7 @@ const events = [
         title: 'Insider Insights: Why SFMC Experts Share Their Top Content',
         date: 'September 05, 2024',
         place: 'Online',
-        description: 'Join to hear multiple Marketing Cloud content creators talk about their tips, tricks and motivations for sharing knowledge via blogs and videos.',
+        description: 'Join to hear multiple Marketing Cloud Engagement content creators talk about their tips, tricks and motivations for sharing knowledge via blogs and videos.',
         url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketing-cloud-developers-group-presents-insider-insights-why-sfmc-experts-share-their-top-content/',
     },
     {

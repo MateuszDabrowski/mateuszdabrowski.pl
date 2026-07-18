@@ -18,6 +18,36 @@ module.exports = {
                 },
                 {
                     type: 'category',
+                    label: 'Marketing Cloud Next',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Salesforce Marketing Cloud Next',
+                        description: 'Learn about code and configuration best practices in Salesforce Marketing Cloud Next (Growth & Advanced). From segmentation through personalization and configuration options that everyone should know.',
+                        slug: 'category/salesforce/marketing-cloud',
+                        keywords: ['Salesforce', 'Marketing Cloud Next', 'Agentforce Marketing'],
+                        image: 'img/og/og-image-sf-mcn.png',
+                    },
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'Config',
+                            link: {
+                                type: 'generated-index',
+                                title: 'Salesforce Marketing Cloud Next Config',
+                                description: 'Most of the things in Salesforce Marketing Cloud Next aren\'t coding. Business Units. Data Kits. Segmentation. Here I focus on the most important ones that are crucial for Marketing Cloud users.',
+                                slug: 'category/salesforce/marketing-cloud/config',
+                                keywords: ['Salesforce', 'Marketing Cloud', 'Agentforce Marketing', 'Configuration'],
+                                image: 'img/og/og-image-sf-mcn-config.png',
+                            },
+                            items: [
+                                'salesforce/marketing-cloud/config/ip-warming-deliverability',
+                            ],
+                        },
+
+                    ],
+                },
+                {
+                    type: 'category',
                     label: 'Marketing Cloud Engagement',
                     link: {
                         type: 'generated-index',
