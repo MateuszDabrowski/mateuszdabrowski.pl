@@ -261,7 +261,7 @@ Add the fields relevant to deliverability, grouped under **Calculated Measures**
 
 :::note You Should Know
 
-This report type keeps two field layers strictly separate, and it matters the moment you touch formulas (see [Turning Thresholds into Alerts](#turning-thresholds-into-alerts)): the wide, pre-aggregated fields above are **Calculated Measures** - fine as report columns or Report Subscription conditions, but explicitly unsupported inside a Row-Level or Summary Formula. I've filed an [Idea](/sites/ideas/salesforce/marketing-cloud-ideas.mdx#allow-row-level-and-summary-formulas-to-reference-calculated-insights) asking Salesforce to close this gap.
+This report type keeps two field layers strictly separate, and it matters the moment you touch formulas (see [Turning Thresholds into Alerts](#turning-thresholds-into-alerts)): the wide, pre-aggregated fields above are **Calculated Measures** - fine as report columns or Report Subscription conditions, but explicitly unsupported inside a Row-Level or Summary Formula. I've filed an [Idea](/sites/ideas/salesforce/marketing-cloud-ideas#allow-row-level-and-summary-formulas-to-reference-calculated-insights) asking Salesforce to close this gap.
 
 :::
 
@@ -337,7 +337,7 @@ __No formulas required - the rate is already a field on the report.__ Hard bounc
 
 :::note You Should Know
 
-Multiple conditions on a native subscription are joined with **AND** - "you will get notified when all of the conditions are met". That covers a single threshold fine, but it can't express "alert me if *either* Hard *or* Soft breaches its own threshold" - each added condition narrows the trigger, it doesn't widen it. That gap is exactly what the fuller method below exists to close - and exactly what I'm asking Salesforce to fix directly in [this Idea](/sites/ideas/salesforce/marketing-cloud-ideas.mdx#allow-row-level-and-summary-formulas-to-reference-calculated-insights): letting Conditions OR against each other would make most of the fuller method below unnecessary.
+Multiple conditions on a native subscription are joined with **AND** - "you will get notified when all of the conditions are met". That covers a single threshold fine, but it can't express "alert me if *either* Hard *or* Soft breaches its own threshold" - each added condition narrows the trigger, it doesn't widen it. That gap is exactly what the fuller method below exists to close - and exactly what I'm asking Salesforce to fix directly in [this Idea](/sites/ideas/salesforce/marketing-cloud-ideas#allow-row-level-and-summary-formulas-to-reference-calculated-insights): letting Conditions OR against each other would make most of the fuller method below unnecessary.
 
 :::
 
@@ -395,7 +395,7 @@ Use Fields sidebar **Insert** to add each Row-Level Formula with the correct for
 
 Referencing a Row-Level Formula field inside a Summary Formula by the name you gave it - `Is_Soft_Bounce:SUM` - fails with *"Field ... does not exist. Check spelling".* Salesforce silently reassigns each Row-Level Formula an internal alias (`CDF1`, `CDF2`...) that only surfaces if you **Insert** the field from the Fields panel rather than typing its name - the formula box shows only the opaque code from that point on. That numbering isn't portable either: which alias lands on which field depends on creation order within that specific report, so `Is_Sent` might be `CDF1` in one report and `CDF3` in another.
 
-I've filed an [Idea](/sites/ideas/salesforce/marketing-cloud-ideas.mdx#reference-row-level-formula-fields-by-their-name-in-summary-formulas) asking Salesforce to let Summary Formulas address a field by name instead, to make our life a little bit easier.
+I've filed an [Idea](/sites/ideas/salesforce/marketing-cloud-ideas#reference-row-level-formula-fields-by-their-name-in-summary-formulas) asking Salesforce to let Summary Formulas address a field by name instead, to make our life a little bit easier.
 
 :::
 
