@@ -23,7 +23,7 @@ In this article, I will explain the current state of the Salesforce Marketing Cl
 
 :::note You Should Know
 
-This article covers late 2025 state of Salesforce Marketing Cloud products. The new solutions are rapidly evolving, and my opionions on them will change as they mature. I will be updating this article regularly to keep it up to date with the latest updates.
+This article covers mid-2026 state of Salesforce Marketing Cloud products. The new solutions are rapidly evolving, and my opinions on them will change as they mature. I will be updating this article regularly to keep it up to date with the latest updates.
 
 :::
 
@@ -83,16 +83,16 @@ classDiagram
       - Large & medium businesses
       - Small to medium teams
     }
-    class SMB {
+    class D360 {
       - Both B2C and B2B
-      - Small businesses
-      - Small marketing teams
+      - Businesses committed to Data 360
+      - Complex or real-time personalisation needs
     }
 
     %% Define Relationships between Platforms and their Audiences
     MCE --> B2C : targets
     MCAE --> B2B : targets
-    MC --> SMB : targets
+    MC --> D360 : targets
 ```
 
 #### Salesforce Marketing Cloud Engagement
@@ -141,15 +141,17 @@ All Marketing Cloud Account Engagement customers already receive access to the n
 
 __Name history__: Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud [on Core] (MCoC)» Marketing Cloud Next (MCN) » Marketing Cloud (MC)
 
-The newest of the three products, Marketing Cloud, is a fresh take on Marketing Automation. Announced in 2024, it is built from scratch on the Data 360 (also known as Data Cloud in the ancient early 2025 days) platform, and leverages capabilities and integrations of other Salesforce products (especially the new hype champion - Agentforce 360).
+The newest of the three products, Marketing Cloud, is a fresh take on Marketing Automation. Announced in 2024 and rebranded Marketing Cloud Next in June 2025 (when Salesforce declared it __generally available__), it is built from scratch on the Data 360 platform (also known as Data Cloud in the ancient days of early 2025), and leverages capabilities and integrations of other Salesforce products (especially the new hype champion - Agentforce 360).
 
-Based on its current features, it is designed for small businesses and small marketing teams, both B2C and B2B, with basic marketing needs. At the same time, Enterprise (or higher) Salesforce CRM licence is a prerequisite to use it. It is not a standalone Marketing Automation platform like Marketing Cloud Engagement, but rather a complementary product for CRM.
+Official marketing puts the entry-level __Growth Edition__ as a tool for small businesses, while __Advanced Edition__ targets larger, multi-brand organisations. Either way, an Enterprise (or higher) Salesforce CRM licence is a prerequisite just to get started - already a stretch for a product pitched at small businesses. It is not a standalone Marketing Automation platform like Marketing Cloud Engagement, but rather a complementary product for Salesforce CRM.
 
-Marketing Cloud focuses on a drag-and-drop interface, rich segmentation with Data 360 and automated marketing operations with Agentforce for Marketing that can automatically create briefs, emails and customer journeys in Flows. On the other hand, the tool currently offers limited features and minimal customization options. It's heavily developed and rapidly catching up to Marketing Cloud Account Engagement with B2B focused features, but still not a perfect match and not even close in terms of stability.
+Don't let the SMB marketing fool you though. Based on where the actual feature investment has gone, Marketing Cloud is built for businesses already committed to (or ready to commit to) Data 360 - not ones with basic needs. Its headline differentiator, __Real-Time Segments__, is built on Data 360's Real-time Data Graph and exists specifically for complex, cross-system, real-time use cases: unifying identity across systems and triggering campaigns off live behavioural signals. __Business Units__ (with cross-BU content sharing) - an enterprise-scale, multi-brand/multi-market feature - is Advanced Edition only, not Growth. If your needs really are basic, you likely don't need what makes this product distinctive in the first place.
+
+Marketing Cloud focuses on a drag-and-drop interface, rich segmentation with Data 360 and automated marketing operations with Agentforce for Marketing that can automatically create briefs, emails and customer journeys in Flows. It's rapidly closing feature gaps - AMPscript support, a native data store (Marketing Objects), Business Units, and dedicated IPs all shipped for the first time between Spring and Summer '26. It's heavily developed and rapidly catching up to Marketing Cloud Account Engagement with B2B focused features, but still not a perfect match and not even close in terms of stability.
 
 :::note You Should Know
 
-Salesforce Marketing Cloud is definitely the future of Marketing Automation on the Salesforce platform. It has great ideas and massive potential - definitely needed to compete with other modern Marketing Automation platforms on the market. However, right now it's a very immature product with numerous bugs, limited features and heavily layered usage-based pricing. It's great as a complementary product for existing MCE & MCAE customers to experiment with new features, but not ready yet to confidently stand on its own (unless you are an existing Data 360 customer with very basic email needs).
+Salesforce Marketing Cloud is undoubtedly where Salesforce's Marketing Automation investment is heading, and it has real potential to compete with the modern platforms on the market. For now, though, treat it as an experimentation ground rather than a destination: ideal for existing MCE & MCAE customers exploring what's new through Plus licences, but not something I'd bet a standalone, net-new implementation on just yet - unless you're already deep enough in Data 360 that its complex segmentation and real-time personalisation are exactly what you came for.
 
 :::
 
@@ -157,17 +159,17 @@ Salesforce Marketing Cloud is definitely the future of Marketing Automation on t
 
 | Feature/Aspect | Marketing Cloud Engagement (MCE) | Marketing Cloud Account Engagement (MCAE) | Marketing Cloud (MC) |
 |--|--|--|--|
-| **Target Audience** | Large & Enterprise B2C | Medium & Large B2B | Small B2C & B2B |
-| **Use Case** | Complex and business-specific marketing | Lead focused and sales aligned marketing | Agentic supported simple marketing |
+| **Target Audience** | Large & Enterprise B2C | Medium & Large B2B | B2C & B2B businesses on (or investing in) Data 360 |
+| **Use Case** | Complex and business-specific marketing | Lead focused and sales aligned marketing | Complex, real-time segmentation and personalisation |
 | **Salesforce CRM** | Optional | Required | Required |
 | **Flexibility & Customisability** | High | Moderate | Low |
 | **Ease of Use** | Moderate | High | High |
 | **Setup Complexity** | High | Low | Moderate |
-| **Key Features** | Advanced segmentation, complex journeys, and heavy customization | Lead scoring, grading and prospect tracking | Drag & drop interface, agentic support and newest features |
+| **Key Features** | Advanced segmentation, complex journeys, and heavy customization | Lead scoring, grading and prospect tracking | Data 360-native real-time segmentation, agentic support, and newest features |
 | **Community & Resources** | Strong | Strong | Growing |
 | **Pricing** | High | Moderate | It's complicated |
-| **Ideal For** | Businesses with complex needs and IT support | B2B companies with straightforward needs | Small businesses with basic needs |
-| **State** | Well established product | Looming end of life | Publicly available beta |
+| **Ideal For** | Businesses with complex needs and IT support | B2B companies with straightforward needs | Businesses with top data teams and real-time ambitions |
+| **State** | Well established product | Looming end of life | Generally available work in progress |
 
 ### Real-Time Personalization Platforms
 
@@ -197,15 +199,20 @@ While there is no official end-of-life announcement for Marketing Cloud Personal
 
 __Name history__: Einstein Personalization (EP) » Salesforce Personalization (SP)
 
-Salesforce Personalization is one of the newest products in the Salesforce Marketing Cloud ecosystem. Announced in 2024, it is built from scratch on the Data 360 platform, leveraging its capabilities and integrations with other Salesforce products. It is designed to work in tandem with Marketing Cloud and other Salesforce products, providing real-time personalization capabilities that utilize your entire Salesforce ecosystem. It also leverages Agentforce and the Lightning Platform to provide a no-code, drag-and-drop interface that is easy to use and set up.
+Salesforce Personalization is one of the newest products in the Salesforce Marketing Cloud ecosystem. Announced in 2024 as Einstein Personalization (restricted GA that summer), renamed Salesforce Personalization in Spring '25, and declared __generally available__ alongside Marketing Cloud's Growth and Advanced editions in Winter '25. It is built from scratch on the Data 360 platform, leveraging its capabilities and integrations with other Salesforce products. It is designed to work in tandem with Marketing Cloud and other Salesforce products, providing real-time personalization capabilities that utilize your entire Salesforce ecosystem. It also leverages Agentforce and the Lightning Platform to provide a no-code, drag-and-drop interface that is easy to use and set up - on web, at least.
+
+Its most distinctive recent capability is __Agentforce Adaptive Websites__: visitors chat with an embedded agent that dynamically curates page content and recommendations from the conversation itself, instead of relying purely on pre-built Decision and Targeting Rule logic. MCP has nothing quite like it. The DevOps side has grown up too - __Data Kits__ now let you promote Recommenders, Engagement Signals and Objectives from sandbox to production through Data 360's Package Manager, and a no-code __Sitemap Builder__ Chrome extension removes the need to hand-write tracking JavaScript (your milage might vary depending on the website architecture).
 
 :::note You Should Know
 
-Similarly to the new Marketing Cloud, Salesforce Personalization seems to be the future of real-time personalization on the Salesforce platform. However, its only selling point is the tight integration with Data 360 and easy usage in the new suite of Salesforce Products. On the other hand:
-1. It is a very immature product with limited features, nowhere near the capabilities of Marketing Cloud Personalization.
-2. There is no migration path from MCP to SP.
-3. There is no clear indication if SP will ever reach feature parity with MCP.
-4. Due to it being built on Data 360, it is using Sub-Second Real-Time Event Credits - the second most expensive credit type after Profile Unification Credits (that are also required) - making it a very costly alternative to more powerful MCP.
+Similarly to the new Marketing Cloud, Salesforce Personalization is another "GA in name, alpha/beta in practice" product - just split by channel rather than by feature. It's been officially generally available since Winter '25, and on web it's genuinely caught up in places: proper Experiments (A/B testing with lift and chance-to-beat-control analytics), both rule-based and objective-based Recommenders, Attribution Intelligence, and Adaptive Websites are all real, documented, GA capabilities.
+
+Off web, it's a different story: mobile app personalization only reached its own GA milestone in July 2026, Experience Templates - the no-code layer that lets a marketer render a Decision's content without engineering - only support the Web channel (Salesforce's own product UI states "Mobile Experience Templates will be supported in an upcoming release," no date given), and mobile engagement tracking (view/click/conversion back to a Decision) has no documented path at all.
+
+On top of that:
+1. There is now a partial migration path: a Sitemap Converter automates the sitemap and tracking-layer conversion from MCP to Data 360, complete with an Errors/To-Do/Review report. It only covers sitemap and data ingestion though - personalization campaigns, recommenders and targeting logic still need rebuilding from scratch, and there is still no indication SP will ever reach full feature parity with MCP's broader, more established multichannel array.
+2. The configuration UX is also still noticeably worse than MCP's - expect more clicks and a less intuitive object model to reach the same result.
+3. Due to it being built on Data 360, it uses Sub-Second Real-Time Event Credits - the second most expensive credit type after Profile Unification Credits (also required) - making it a costly alternative to the more powerful MCP.
 
 :::
 
@@ -219,11 +226,11 @@ Similarly to the new Marketing Cloud, Salesforce Personalization seems to be the
 | **Flexibility & Customisability** | High | Low |
 | **Ease of Use** | Moderate | Low |
 | **Setup Complexity** | Moderate | High |
-| **Key Features** | Multichannel personalization, AI-driven recommendations, and heavy customization | Drag & drop interface, agentic support and Data 360 integration |
+| **Key Features** | Multichannel personalization, AI-driven recommendations, and heavy customization | Adaptive Websites, and Data 360-native integration |
 | **Community & Resources** | Strong | Growing |
 | **Pricing** | Moderate | It's complicated |
 | **Ideal For** | Businesses with personalization and recommendation needs | Businesses with small volumes and huge margins |
-| **State** | Well established product | Publicly available beta |
+| **State** | Well established product | GA since Winter '25, mobile & no-code tooling still catching up |
 
 ### Marketing Intelligence Platforms
 
@@ -297,7 +304,7 @@ If you are looking for a Marketing Automation Platform and the Salesforce offeri
 
 - If you need a complex and highly customisable solution, go for __Marketing Cloud Engagement__.
 - If you use Salesforce CRM and need something simpler, B2B focused, with good support and maturity, go for __Marketing Cloud Account Engagement__.
-- If you are a Salesforce CRM (and - even better - Data 360) user and just need basic marketing capabilities with agentic support to minimise the effort, go for the new __Marketing Cloud__.
+- If you are a Salesforce CRM user already on (or ready to invest in) Data 360 and need complex, heavily-calculated segmentation or real-time personalisation, go for the new __Marketing Cloud__ - don't be misled by its Growth Edition's small-business marketing; its real differentiators live in Data 360-native capabilities, not basic needs.
 
 :::note You Should Know
 
