@@ -1,10 +1,10 @@
 ---
 id: appexchange-solutions
-title: MCE AppExchange Solutions
-sidebar_label: AppExchange Solutions
-description: Fill the feature gaps with plug-and-play apps. Salesforce Marketing Cloud Engagement AppExchange ready-to-use solution highlights.
+title: MCE AgentExchange Solutions
+sidebar_label: AgentExchange Solutions
+description: Fill the feature gaps with plug-and-play apps. Salesforce Marketing Cloud Engagement AgentExchange ready-to-use solution highlights.
 image: img/og/og-image-sf-mce-appexchange.png
-tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, App, AppExchange]
+tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, App, AgentExchange, AppExchange]
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
@@ -16,11 +16,13 @@ import queryStudio from '/static/img/article/article-image-appexchange-query-stu
 import deselectSegment from '/static/img/article/article-image-appexchange-deselect-segment.png';
 import activationStudio from '/static/img/article/article-image-appexchange-activation-studio.png';
 
-<LeadText content="Fill the feature gaps with plug-and-play apps. Solution highlights from Salesforce MCE's AppExchange." />
+<LeadText content="Fill the feature gaps with plug-and-play apps. Solution highlights from Salesforce MCE's AgentExchange." />
 
-AppExchange is an app store for various Clouds within Salesforce Customer 360 platform. You will find in-house solutions from Salesforce Labs and 3rd party. Free and paid. Good and bad. But all - validated by [Salesforce Security Review](https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm).
+AgentExchange (formerly known as AppExchange) is an app store for various Clouds within Salesforce Customer 360 platform. You will find in-house solutions from Salesforce Labs and 3rd party. Free and paid. Good and bad. But all - validated by [Salesforce Security Review](https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm).
 
-From over 4000 solutions available there, only around 60 are for [Salesforce Marketing Cloud Engagement (MCE)](https://appexchange.salesforce.com/category/marketing). Here, I will focus only on those I had experience with to provide some value over the standard MCE AppExchange descriptions.
+The new name arrived in 2026, when Salesforce unified AppExchange, Slack Marketplace, and Agentforce components - agents, actions, and prompt templates now sit next to the classic apps. For the solutions below, the rebrand changed nothing: existing listings, reviews, and links carried over untouched.
+
+From over 4500 solutions available there, only around 100 are for [Salesforce Marketing Cloud Engagement (MCE)](https://appexchange.salesforce.com/category/marketing). Here, I will focus only on those I had some experience with.
 
 :::note You Should Know
 
@@ -28,13 +30,13 @@ This document is a living thing. New solutions keep popping up, and old ones som
 
 :::
 
-## When is AppExchange worth it?
+## When is AgentExchange worth it?
 
-Before we jump into specific solutions available in the store, let's talk about whether you should consider going through AppExchange offerings. This question is especially relevant with how feature-packed and customizable MCE is. And not that easy to answer when you assess all decision drivers.
+Before we jump into specific solutions available in the store, let's talk about whether you should consider going through AgentExchange offerings. This question is especially relevant with how feature-packed and customizable MCE is. And not that easy to answer when you assess all decision drivers.
 
 ### 1. Define feature requirements
 
-Ok, you want a feature and are eager to find a solution to deliver it. Now stop. Before opening the AppExchange repository, you should dive deep into the exact requirements the solution has to fulfil.
+Ok, you want a feature and are eager to find a solution to deliver it. Now stop. Before opening the AgentExchange repository, you should dive deep into the exact requirements the solution has to fulfil.
 
 Key things to consider:
 - __What it needs to do__ - what is the minimum valuable outcome, and what is an ideal one?
@@ -64,15 +66,15 @@ If the out-of-the-box solution checks both boxes - you hit the jackpot and can l
 
 Else, it's time to look somewhere... else.
 
-### 3. Free AppExchange Solutions
+### 3. Free AgentExchange Solutions
 
-Time to check whether there is any free solution available on demand. You can do it by going to [marketing AppExchange](https://appexchange.salesforce.com/category/marketing) and applying filters to get Free solutions dedicated to MCE.
+Time to check whether there is any free solution available on demand. You can do it by going to [marketing AgentExchange](https://appexchange.salesforce.com/category/marketing) and applying filters to get Free solutions dedicated to MCE.
 
-To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](#query-studio) covered below) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000Fz2a4UAB).
+To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](#query-studio) covered below) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](#deselect-search).
 
-If you are lucky enough to find something free in AppExchange related to your requirements, check whether it is good enough. Just as you did in the [previous step](#2-validate-out-of-the-box-options).
+If you are lucky enough to find something free in AgentExchange related to your requirements, check whether it is good enough. Just as you did in the [previous step](#2-validate-out-of-the-box-options).
 
-No luck? Before checking the paid filter in AppExchange, there is one more approach to consider.
+No luck? Before checking the paid filter in AgentExchange, there is one more approach to consider.
 
 ### 4. Custom Solution
 
@@ -82,16 +84,16 @@ There are four things to consider:
 
 1. __Can you build a Custom solution?__ This can be done using in-house developers or outsourced to external specialists, but you need either skills or a budget.
 2. __Will it be good enough?__ If you have the means, building a custom is easy. But do you have _enough_ skills or budget to make a good solution that will be user-friendly, optimized, polished and matching all your requirements?
-3. __Will it be cheaper than AppExchange?__ Sure, with enough time and money, you can build something good enough. But will it be more affordable than a similar solution available in the paid section of AppExchange?
-4. __Will you maintain it?__ Even if you answered yes to the previous three points, you must consider maintenance. In most cases, building a custom is just the beginning. Requirements change, new needs happen, platforms get updated and require refactor. With AppExchange solutions, it _should_ be much less of a worry in the long term.
+3. __Will it be cheaper than AgentExchange?__ Sure, with enough time and money, you can build something good enough. But will it be more affordable than a similar solution available in the paid section of AgentExchange?
+4. __Will you maintain it?__ Even if you answered yes to the previous three points, you must consider maintenance. In most cases, building a custom is just the beginning. Requirements change, new needs happen, platforms get updated and require refactor. With AgentExchange solutions, it _should_ be much less of a worry in the long term.
 
 While the list might look like a hard pass for custom solutions, there is a place for them. Especially on the ends of the spectrum. Simple, but lifesaving micro solutions ([Cloud Page Apps](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps.mdx), [Code Resources](docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx)) or custom behemoths aligned to all non-negotiable quirks and features of your internal processes.
 
-However, if you hit a hard "no" to any of the above questions, it's time to visit the AppExchange again.
+However, if you hit a hard "no" to any of the above questions, it's time to visit the AgentExchange again.
 
-### 5. Paid AppExchange Solutions
+### 5. Paid AgentExchange Solutions
 
-Here we are. After defining the requirements, we haven't found anything worthy among the out-of-the-box solutions, the land of the free AppExchange was barren, and the custom work didn't seem like the best choice. Paid AppExchange it is. But is it really?
+Here we are. After defining the requirements, we haven't found anything worthy among the out-of-the-box solutions, the land of the free AgentExchange was barren, and the custom work didn't seem like the best choice. Paid AgentExchange it is. But is it really?
 
 Assuming you found a paid solution, you still need to assess whether it will be good enough. The positive part here? If you see only small pieces missing from the ideal, you might talk with the solution creators and discuss prioritization of the future changes.
 
@@ -103,7 +105,7 @@ If not, it's time to update your requirements - the list of needed features or t
 
 Sounds complex? Would you rather have a visual guide? Got you covered:
 
-<Image img={flowchart} alt='Flowchart with visual representation of the When is AppExchange Worth It? analysis process'/>
+<Image img={flowchart} alt='Flowchart with visual representation of the When is AgentExchange Worth It? analysis process'/>
 
 Looks complex? Would you rather have an example-based walkthrough? Got you covered as well in the next chapter:
 
@@ -111,7 +113,7 @@ Looks complex? Would you rather have an example-based walkthrough? Got you cover
 
 Finding the right approach to database segmentation is one of the critical elements of successful marketing automation. In Salesforce MCE, it's a complex topic because (spoiler) there is no perfect - powerful, simple and free - solution. You need to choose your priorities.
 
-Looks like excellent use case to test the ["Is AppExchange worth it?" process](#when-is-appexchange-worth-it) on a real-life scenario, so let's check how it works.
+Looks like excellent use case to test the ["Is AgentExchange worth it?" process](#when-is-agentexchange-worth-it) on a real-life scenario, so let's check how it works.
 
 __1. Feature Requirements__
 
@@ -137,9 +139,9 @@ Filtered Data Extensions are free, require nearly no implementation (apart from 
 
 SQL Query Activities are free, require no implementation, work directly in MCE and allow segmenting on multiple data points, but... demand [SQL](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx) skills. It means training requirements, slower segmentation and a higher risk of errors by inexperienced users. Not easy enough.
 
-__3. Free AppExchange__
+__3. Free AgentExchange__
 
-Filtering the AppExchange for free solutions will show only one related to segmentation - [Query Studio](#query-studio). While it's a great tool, it's still a SQL-based solution. It's also not an end-to-end tool for segmentation purposes. Not good enough.
+Filtering the AgentExchange for free solutions will show only one related to segmentation - [Query Studio](#query-studio). While it's a great tool, it's still a SQL-based solution. It's also not an end-to-end tool for segmentation purposes. Not good enough.
 
 __4. Custom Solution__
 
@@ -147,9 +149,9 @@ There are two base options for the drag and drop custom solution approach.
 
 First - generator that modifies predefined segments. It's relatively simple to build, but it allows you to make only minor adaptations of the templated query, mostly on filtering ([SQL WHERE](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx)). Very limited and requires hard coding for each new segment template. Not good enough and hard to maintain.
 
-Second - fully-fledged visual wrapper over SQL queries. Full power with a drag and drop interface. Sounds like a dream? Correct. Such solution requires a lot of work and testing. The cost would skyrocket well above (spoiler alert) what is available in the paid section of AppExchange. Not worth it.
+Second - fully-fledged visual wrapper over SQL queries. Full power with a drag and drop interface. Sounds like a dream? Correct. Such solution requires a lot of work and testing. The cost would skyrocket well above (spoiler alert) what is available in the paid section of AgentExchange. Not worth it.
 
-__5. Paid AppExchange__
+__5. Paid AgentExchange__
 
 Finally, we get to the last stop. After a quick search, we can find two solutions: tried and tested [DESelect Segment](#deselect-segment) and the new contender [Activation Studio](#activation-studio). More details on them in a moment, but from the perspective of this exercise - both are subscription based, while one of the key things to consider was the beloved "no budget".
 
@@ -157,11 +159,11 @@ Therefore we get to the update requirements step, where the company needs to pri
 
 <Image img={segmentation} alt='Triangle with three corners - FREE, POWERFUL and SIMPLE - and three solutions: FREE and POWERFUL SQL Query Activity, FREE and SIMPLE Filtered Data Extensions, POWERFUL and SIMPLE DESelect Segment. '/>
 
-I hope it is now easier to find when AppExchange can solve MCE requirements. With that, let's jump to the solutions available there.
+I hope it is now easier to find when AgentExchange can solve MCE requirements. With that, let's jump to the solutions available there.
 
 ---
 
-## AppExchange Solutions for MCE
+## AgentExchange Solutions for MCE
 
 ### Query Studio
 
@@ -206,7 +208,7 @@ Despite some quirks, Query Studio is a huge timesaver and quality of life improv
 
 <Button
  link='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT'
- text='AppExchange'
+ text='AgentExchange'
  newTab='true'
 />
 
@@ -226,7 +228,7 @@ It's free, made available by Salesforce Labs, and actively developed. Definitely
 
 <Button
  link='https://appexchange.salesforce.com/appxListingDetail?listingId=661d2ae0-c125-4f40-874d-004d58824c6b'
- text='AppExchange'
+ text='AgentExchange'
  newTab='true'
 />
 
@@ -284,7 +286,7 @@ If you are running a lot of segments, it can singificantly offset the subscripti
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G0yE1UAJ'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://deselect.com/segment/'
  textRight='Website'
@@ -307,7 +309,7 @@ If you struggle with oversaturation, Engage is worth taking a look at. Managing 
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000JeGMiUAN'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://deselect.com/engage/'
  textRight='Website'
@@ -330,7 +332,7 @@ It's free and it solves a genuine daily annoyance. You can easily build it yours
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000Fz2a4UAB'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://deselect.com/search/'
  textRight='Website'
@@ -355,7 +357,7 @@ I'd reach for it over DESelect Segment specifically for smaller and less technic
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3u00000PurpQEAR'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://activation-studio.com/drag-and-drop-segmentation-salesforce-marketing-cloud/'
  textRight='Website'
@@ -380,7 +382,7 @@ There is a free tier, but it only covers Data Views reporting. Good for testing,
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000IknOOUAZ'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://www.qairy.com'
  textRight='Website'
@@ -405,7 +407,7 @@ It earns its place when Sales or Service reps genuinely need that send visibilit
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000J6QDbUAN'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://lightboxlogic.com.au/marketing-cloud-connect-toolbox/'
  textRight='Website'
@@ -428,7 +430,7 @@ Nice way to add a bit of peace of mind to your MCE operations and even the free 
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000IrJkeUAF'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://www.avagate.com/solutions/stashr'
  textRight='Website'
@@ -451,7 +453,7 @@ It's built - and priced - for high-volume senders where deliverability is a reve
 
 <ButtonRow
  linkLeft='https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000Gk56iUAB'
- textLeft='AppExchange'
+ textLeft='AgentExchange'
  newTabLeft='true'
  linkRight='https://inboxmonster.com'
  textRight='Website'
