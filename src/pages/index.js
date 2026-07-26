@@ -136,7 +136,7 @@ function Feature({ imageUrl, title, description, url, cta }) {
 const freeApps = [
     {
         title: <>Diagramforce</>,
-        url: 'https://diagramforce.mateuszdabrowski.pl',
+        url: 'https://diagramforce.com',
         githubUrl: 'https://github.com/MateuszDabrowski/diagramforce',
         imageUrl: 'img/article/index-image-tool-diagramforce.png',
         description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally to your browser\'s storage, export as JSON, PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',

@@ -65,7 +65,7 @@ module.exports = {
         announcementBar: {
             id: 'announcementBar',
             content:
-                'Looking for payment-free, hassle-free diagramming solution? My <a href="https://diagramforce.mateuszdabrowski.pl" style="text-decoration: underline">Diagramforce</a> got you covered ;)',
+                'Looking for payment-free, hassle-free diagramming solution? My <a href="https://diagramforce.com" style="text-decoration: underline">Diagramforce</a> got you covered ;)',
             backgroundColor: '#0176d3',
             textColor: '#fffffe',
         },
@@ -149,7 +149,7 @@ module.exports = {
                     items: [
                         {
                             label: 'Diagramforce',
-                            to: 'https://diagramforce.mateuszdabrowski.pl',
+                            to: 'https://diagramforce.com',
                         },
                         {
                             label: 'Clockforce',
@@ -634,7 +634,7 @@ module.exports = {
                     /* Tools pages restructure */
                     {
                         from: ['/sites/tools/salesforce/diagramforce/', '/sites/apps/salesforce/diagramforce/'],
-                        to: 'https://diagramforce.mateuszdabrowski.pl/',
+                        to: 'https://diagramforce.com/',
                     },
                     {
                         from: ['/sites/tools/salesforce/clockforce/', '/sites/apps/salesforce/clockforce/'],
