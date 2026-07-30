@@ -118,6 +118,10 @@ module.exports = {
                             label: 'How to get Salesforce Certification Vouchers?',
                             to: 'sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
                         },
+                        {
+                            label: 'How to open Salesforce Support Case without Agent?',
+                            to: 'https://help.salesforce.com/s/case-submission?cr_case=1',
+                        }
                     ]
                 },
                 {
