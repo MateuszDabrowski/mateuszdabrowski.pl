@@ -152,15 +152,19 @@ module.exports = {
                     position: 'left',
                     items: [
                         {
-                            label: 'Diagramforce',
+                            label: 'Diagramforce: Diagramming for Trailblazers',
                             to: 'https://diagramforce.com',
                         },
                         {
-                            label: 'Clockforce',
+                            label: 'Clockforce: Timetool for Trailblazers',
                             to: 'https://clockforce.mateuszdabrowski.pl',
                         },
                         {
-                            label: 'Strum',
+                            label: 'Slot: Your Inboxes in One App',
+                            to: 'slot',
+                        },
+                        {
+                            label: 'Strum: Tabs made easy',
                             to: 'strum',
                         },
                     ],

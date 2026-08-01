@@ -133,24 +133,36 @@ function Feature({ imageUrl, title, description, url, cta }) {
     );
 }
 
-const freeApps = [
+const apps = [
     {
         title: <>Diagramforce</>,
         url: 'https://diagramforce.com',
         githubUrl: 'https://github.com/MateuszDabrowski/diagramforce',
         imageUrl: 'img/article/index-image-tool-diagramforce.png',
-        description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally to your browser\'s storage, export as JSON, PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',
+        description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally, export as JSON or PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',
         tags: ['Salesforce', 'Diagrams', 'Architecture', 'Data Model'],
-        cta: 'Check it out',
+        platforms: ['Web'],
+        cta: 'Open App',
+        badge: 'FREE',
     },
     {
-        title: <>Clockforce</>,
-        url: 'https://clockforce.mateuszdabrowski.pl',
-        githubUrl: 'https://github.com/MateuszDabrowski/clockforce',
-        imageUrl: 'img/article/index-image-tool-clockforce.png',
-        description: 'Timezone collaboration tool for global teams and Marketing Cloud Engagement users. Compare timezones on a visual timeline, save Time Blocks and share them via URL for easy cross-organization meeting planning - no calendar access needed. Plus, generate production-ready SQL, AMPScript and SSJS snippets with proper timezone handling around MCE\'s fixed UTC-6 server time.',
-        tags: ['Marketing Cloud Engagement', 'Timezones', 'SQL', 'AMPScript', 'SSJS'],
-        cta: 'Check it out',
+        title: <>Slot</>,
+        url: '/slot',
+        appStoreUrl: 'https://apps.apple.com/app/id6796483262',
+        imageUrl: 'img/apple/slot/Slot-Mac-Card.webp',
+        description: 'Every Google and Microsoft account in one native Mac app, each in its own isolated session - unread on the Dock, meeting alerts, call controls on the account rail, and links that always open as the right account.',
+        tags: ['Gmail', 'Outlook', 'Meet', 'Teams'],
+        platforms: ['macOS'],
+    },
+    /* Shelf lands here. */
+    {
+        title: <>Strum</>,
+        url: '/strum',
+        appStoreUrl: 'https://apps.apple.com/app/id6764788253',
+        imageUrl: 'img/apple/strum/Strum-Pad-Library.webp',
+        description: 'A clean, focused tablature editor for ukulele and guitar. Write a song, drop in chords, set a strum pattern, and hear it back on a real recorded instrument - with a pro-grade tuner, custom tunings, and a library that syncs across your devices.',
+        tags: ['Ukulele', 'Guitar', 'Tabs'],
+        platforms: ['macOS', 'iPadOS', 'iOS'],
     },
 ];
 
@@ -245,6 +257,72 @@ const highlightedArticles = [
 ];
 
 /**
+ * Renders one app as a full-width row: image beside the story, platform
+ * chips under the title, and the store badge where store apps earn one.
+ */
+function AppRow({ title, url, description, tags, platforms, cta, imageUrl, githubUrl, appStoreUrl, badge }) {
+    const img = useBaseUrl(imageUrl);
+    const storeBadge = useBaseUrl('img/apple/appstore.svg');
+    return (
+        <div className="col col--12">
+            <div className={styles.appRow}>
+                <div className={styles.appRowImage}>
+                    <span className={styles.platformChips}>
+                        {platforms.map((platform, idx) => (
+                            <span key={idx} className={styles.platformChip}>{platform}</span>
+                        ))}
+                    </span>
+                    {badge && <span className={styles.toolBadge}>{badge}</span>}
+                    <Link to={url}>
+                        <img src={img} alt={title} loading="lazy" />
+                    </Link>
+                </div>
+                <div className={styles.appRowBody}>
+                    <div className={styles.appRowHeader}>
+                        <Link className={clsx(styles.cardTitle, styles.appRowTitle)} to={url}>
+                            {title}
+                        </Link>
+                        <p className={styles.cardTags}>
+                            {tags.map((tag, idx) => (
+                                <span key={idx}>#{tag}{idx < tags.length - 1 ? ' ' : ''}</span>
+                            ))}
+                        </p>
+                    </div>
+                    <p>{description}</p>
+                    {/* One grammar for every row: the left side reads, the right
+                        side acts - a page link in text style beside the app's own
+                        button or its store badge. 'Check it out' used to open the
+                        app on one row and a page about it on the next. */}
+                    <div className={styles.appRowFooter}>
+                        <div>
+                            {appStoreUrl && (
+                                <Link className={styles.toolGithubLink} to={url}>
+                                    Learn more »
+                                </Link>
+                            )}
+                            {githubUrl && (
+                                <Link className={styles.toolGithubLink} to={githubUrl}>
+                                    View on GitHub »
+                                </Link>
+                            )}
+                        </div>
+                        {appStoreUrl ? (
+                            <Link className={styles.appStoreBadge} to={appStoreUrl} aria-label={`Download on the App Store`}>
+                                <img src={storeBadge} alt="Download on the App Store" loading="lazy" />
+                            </Link>
+                        ) : (
+                            <Link className='button button--outline button--primary' to={url}>
+                                {cta}
+                            </Link>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/**
  * Renders a card component used for tools, categories and articles.
  *
  * @param {string} title - The title of the card.
@@ -256,15 +334,16 @@ const highlightedArticles = [
  * @param {string} variant - Style variant ('card' for default, 'tool' for tool cards).
  * @return {JSX.Element} The rendered card component.
  */
-function Card({ title, url, description, tags, cta, imageUrl, githubUrl, articleUrl, colSize = 'col--3', variant = 'card' }) {
+function Card({ title, url, description, tags, cta, imageUrl, githubUrl, articleUrl, appStoreUrl, badge, compact, colSize = 'col--3', variant = 'card' }) {
     const isToolVariant = variant === 'tool';
     const imgPng = useBaseUrl(imageUrl);
     const imgWebp = useBaseUrl(imageUrl?.replace(/\.png$/, '.webp'));
     return (
         <div className={clsx('col', colSize)}>
-            <div className={clsx('card', styles.card, isToolVariant && styles.toolCard)}>
+            <div className={clsx('card', styles.card, isToolVariant && styles.toolCard, compact && styles.toolCardCompact)}>
                 {isToolVariant && imgPng && (
                     <div className={styles.toolImageWrapper}>
+                        {badge && <span className={styles.toolBadge}>{badge}</span>}
                         <Link to={url}>
                             <picture>
                                 <source srcSet={imgWebp} type="image/webp" />
@@ -304,6 +383,11 @@ function Card({ title, url, description, tags, cta, imageUrl, githubUrl, article
                                     </Link>
                                 )}
                             </div>
+                            {appStoreUrl && (
+                                <Link className={styles.toolGithubLink} to={appStoreUrl}>
+                                    View in App Store »
+                                </Link>
+                            )}
                             {githubUrl && (
                                 <Link className={styles.toolGithubLink} to={githubUrl}>
                                     View on GitHub »
@@ -494,15 +578,15 @@ function Home() {
                         </section>
                     )}
 
-                    {freeApps && freeApps.length > 0 && (
+                    {apps && apps.length > 0 && (
                         <section className={clsx(styles.section, styles.sectionAlt)}>
                             <div className="container">
                                 <h2 className={styles.sectionHeading}>
-                                    Free Apps
+                                    Apps
                                 </h2>
                                 <div className={clsx('row', styles.centeredRow)}>
-                                    {freeApps.map((props, idx) => (
-                                        <Card key={idx} colSize='col--6' variant='tool' {...props} />
+                                    {apps.map((props, idx) => (
+                                        <AppRow key={idx} {...props} />
                                     ))}
                                 </div>
                             </div>

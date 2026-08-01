@@ -225,6 +225,141 @@ html[data-theme='dark'] .toolCard {
 .toolImageWrapper {
   overflow: hidden;
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  position: relative;
+}
+
+/* The pricing badge riding an app card's image corner. */
+.toolBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* An app as a row: image on the left, story on the right. Rows stack, so
+   the section scales by addition instead of by squeezing columns. */
+.appRow {
+  display: flex;
+  flex-direction: row;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--ifm-card-background-color);
+  box-shadow: var(--ifm-global-shadow-md) !important;
+  margin-bottom: 2rem;
+}
+
+html[data-theme='dark'] .appRow {
+  background-color: #212121;
+}
+
+.appRowImage {
+  position: relative;
+  flex: 0 0 44%;
+  min-height: 300px;
+}
+
+.appRowImage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  transition: transform 0.3s ease;
+}
+
+.appRowImage img:hover {
+  transform: scale(1.03);
+}
+
+.appRowBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 2rem;
+}
+
+/* Name and tags share the top line: the name at display size on the left,
+   the tags tucked into the right - at row width a card-sized title dwarfed. */
+.appRowHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.appRowTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.appRowHeader .cardTags {
+  /* Top-aligned with the name - the nudge matches the title's own leading,
+     so the tags sit level with the caps, not with the space above them. */
+  margin: 0;
+  padding-top: 0.4rem;
+  text-align: right;
+}
+
+.appRowFooter {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.25rem;
+}
+
+.appStoreBadge {
+  display: inline-block;
+  line-height: 0;
+}
+
+.appStoreBadge img {
+  height: 40px;
+  width: auto;
+}
+
+.platformChips {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  margin: 0;
+}
+
+.platformChip {
+  display: inline-block;
+  padding: 2px 12px;
+  margin-right: 6px;
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 820px) {
+  .appRow {
+    flex-direction: column;
+  }
+  .appRowImage {
+    flex-basis: auto;
+    min-height: 0;
+    height: 220px;
+  }
 }
 
 .toolImage {

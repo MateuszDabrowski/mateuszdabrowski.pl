@@ -1,0 +1,562 @@
+---
+title: Slot - Your Inboxes in One App
+description: Every Google and Microsoft account in one native Mac app, each with completely isolated data. Mail, Calendar, Drive, Meet, Outlook, Teams and more.
+keywords: [slot, gmail, outlook, mail app, multiple accounts, google workspace, microsoft 365, mac app, mateusz dąbrowski]
+slug: /slot
+hide_table_of_contents: false
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+import React, { useState } from 'react';
+import clsx from 'clsx';
+import styles from './styles.module.css';
+
+{/* Custom Inline React Component for Image Lightbox Overlay */}
+export const ZoomImage = ({ src, alt, imgStyle }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <img
+        src={src}
+        alt={alt}
+        style={{ cursor: 'zoom-in', ...imgStyle }}
+        onClick={() => setIsOpen(true)}
+      />
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 99999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'zoom-out',
+            backdropFilter: 'blur(5px)',
+            margin: 0,
+            padding: 0
+          }}
+          onClick={() => setIsOpen(false)}
+        >
+          <div style={{ position: 'absolute', top: '24px', right: '32px', color: '#ffffff', fontSize: '3rem', fontWeight: '300', lineHeight: 1 }}>&times;</div>
+          <img
+            src={src}
+            alt={alt}
+            style={{ maxHeight: '90vh', maxWidth: '90vw', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
+<Head>
+  <link rel="canonical" href="https://mateuszdabrowski.pl/slot/" />
+  <meta property="og:url" content="https://mateuszdabrowski.pl/slot/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Slot - Your Inboxes in One App" />
+  <meta property="og:description" content="Every Google and Microsoft account in one native Mac app, each with completely isolated data." />
+  <meta property="og:image" content="https://mateuszdabrowski.pl/img/og/og-image-slot.png" />
+</Head>
+
+{/* Hero section */}
+<header className={styles.hero} style={{ borderRadius: '44px', marginTop: '1rem', marginBottom: '2rem' }}>
+  <div className={styles.heroInner}>
+    <div style={{textAlign: 'center', paddingBottom: '2rem'}}>
+      <img
+        src="/img/apple/slot/Slot_light.webp"
+        alt="Slot app icon"
+        width={128}
+        height={128}
+        style={{
+          width: 128,
+          height: 128,
+          borderRadius: '22.37%',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+          marginBottom: '1rem'
+        }}
+      />
+
+      <h1 className={styles.heroProjectTagline} style={{marginBottom: '0.5rem', lineHeight: 0}} aria-label="Slot">
+        {/* The app's own wordmark, ported stroke-for-stroke from WordmarkView:
+            the L is the rail tile's corner, the O is its unread badge. */}
+        <svg role="img" aria-label="Slot" viewBox="0 0 41 22" width="190" height="102"
+             fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M 7.4 7.23 A 3 3 0 1 0 4.5 11 A 3 3 0 1 1 1.6 14.77" />
+          <path d="M 12.7 5 L 12.7 11.4 A 5 5 0 0 0 17.7 16.4 L 21.1 16.4" />
+          <circle cx="21.5" cy="6" r="3.4" />
+          <path d="M 29.3 5.2 L 38.3 5.2 M 33.8 5.2 L 33.8 17" />
+        </svg>
+      </h1>
+
+      <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--ifm-color-primary)', margin: '0 0 1.5rem' }}>
+        Your tools, under your control
+      </p>
+
+      <p
+        style={{
+          fontSize: '1.15rem',
+          maxWidth: '640px',
+          margin: '0 auto 2rem',
+          lineHeight: 1.55,
+          color: '#ffffff',
+          opacity: 0.9
+        }}
+      >
+        All your inboxes - and the rest of Google's and Microsoft's productivity apps - in one native Mac window, with everything a browser tab can never give you: unread on the Dock, notifications with per-account quiet hours, meeting countdowns, your call's mute one click away, and links that always open as the right account. All of them signed in at once, each in its own sealed session. No signing out, no private windows, no hunting through tabs.
+      </p>
+
+      <p style={{margin: '0 0 0.5rem'}}>
+        <a
+          href="https://apps.apple.com/app/id6796483262"
+          aria-label="Download Slot on the App Store"
+          style={{display: 'inline-block', lineHeight: 0}}
+        >
+          <img
+            src="/img/apple/appstore.svg"
+            alt="Download on the App Store"
+            height={48}
+            style={{height: 48, width: 'auto'}}
+          />
+        </a>
+      </p>
+      <p style={{margin: '0 0 1.5rem', fontSize: '0.95rem', color: '#ffffff', opacity: 0.75}}>
+        One purchase. No subscription, ever.
+      </p>
+
+      <p
+        style={{
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: '0.9rem',
+          lineHeight: 1.5,
+          margin: 0,
+        }}
+      >
+        Mac<br/>
+        Requires macOS 26 or later
+      </p>
+    </div>
+  </div>
+</header>
+
+{/* Main Device Showcase */}
+{/* The inbox hero: Gmail open, rail with badges, calendar panel. Same frame the
+    app in one image - same product, two identities, two colours. */}
+<section className={styles.section}>
+  <div className="container">
+    <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
+      <div className="col col--12" style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/slot/Slot-Mac-Mail.webp"
+          alt="Slot showing a Gmail account, with the account rail on the left"
+          imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '12px'}}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Why Slot */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 2rem' }}>
+
+    <div className="text--center" style={{marginBottom: '1rem'}}>
+
+## <span style={{fontSize: '2.5rem'}}>Why Slot</span>
+
+    </div>
+    <p className="text--center" style={{fontSize: '1.2rem', marginBottom: '2rem'}}>
+      Everything Gmail and Outlook already give you - and:
+    </p>
+    <div className="row">
+      <div className="col col--6" style={{padding: '0 2rem'}}>
+        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>
+          › Unread counts on the Dock and on every account tile<br/>
+          › A New badge for what arrived since you last looked<br/>
+          › Native notifications that name the sender and subject<br/>
+          › Quiet hours and alert pauses, per account<br/>
+          › Meeting countdowns under each account's tile<br/>
+          › A live pill for the call you are on - mute camera or mic from any tab
+        </p>
+      </div>
+      <div className="col col--6" style={{padding: '0 2rem'}}>
+        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>
+          › mailto: links that ask which account should send<br/>
+          › Each account's links routed to the browser you chose<br/>
+          › Docs, Sheets, Slides, Word, Excel and PowerPoint in their own windows<br/>
+          › All nineteen Google and Microsoft apps, each on or off per account<br/>
+          › Every account in its own isolated session, enforced by macOS<br/>
+          › One purchase - no subscription, ever
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* What's inside Header */}
+<div className="container">
+  <div className="text--center" style={{marginTop: '4rem', marginBottom: '1rem'}}>
+
+## <span style={{fontSize: '2.5rem'}}>What's inside</span>
+
+  </div>
+</div>
+
+{/* Feature 2: Native signals */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Unread You Can Actually See</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        Slot watches every account for new mail, so counts appear on the Dock icon and on every account tile without you opening a single tab, and a <strong>New</strong> marker tells you a new message arrived since you last looked. Notifications are native, name the sender and subject, and are configurable per account - including quiet hours and a pause for a set number of days, so a work account can go quiet at 18:00 while a personal one does not.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/slot/Slot-Mac-Notifications.webp"
+        alt="Unread badges on the account rail and a native notification"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 3: Meetings */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Meetings Before They Start</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        Paste your calendar's private address once and Slot shows what is coming up under each account, with a reminder at the lead times you choose. The calendar is parsed on your Mac - recurring events, exceptions, time zones and all - with no sign-in and no account access beyond that one address. All-day blocks stay out of the way, and a Join button takes you straight into the call. Once you are on it, the call becomes a live pill under its account's tile, and the camera and microphone controls sit right beside it - mute and unmute from any tab, on any account.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/slot/Slot-Mac-Meetings.webp"
+        alt="A live call and the next meeting, as pills under the account tile"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 4: Links */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Every Link, the Right Account</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        Make Slot your mail handler and every <code>mailto:</code> asks which account should send. Links going the other way are routed per account too: send one account's links to Chrome and another's to Safari, or keep them inside Slot - so the Jira link in a work mail opens in the browser that is signed in as work. Any tab can be pulled out into its own window and tiled beside another account's, and every window says whose it is.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/slot/Slot-Mac-Compose.webp"
+        alt="Per-account settings: colours, apps, quiet hours, and which account answers links"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 1: Isolation */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Accounts That Cannot See Each Other</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        Every account runs in its own website data store - separate cookies, separate sessions, separate caches. This is not a profile switcher and not a private window: the separation is the architecture, not a setting - enforced by macOS, so no page in one account can reach anything in another. Give each account its own colour and the whole window tells you which identity you are in before you read a word.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/slot/Slot-Mac-TwoAccounts.webp"
+        alt="A Microsoft account in its own colour, every other account one click away on the rail"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 5: Privacy posture */}
+<section className={styles.section} style={{ margin: '4rem 0' }}>
+  <div className="container" style={{ backgroundColor: '#212121', borderRadius: '16px', padding: '4rem 3rem' }}>
+    <div className="row">
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>Nothing Reaches Me</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          No account to create, no servers of mine, no analytics, no telemetry, no crash reporting and no third-party code of any kind. Slot never asks for, reads or stores your password - sign-in happens on your provider's own page.
+        </p>
+      </div>
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>Yours to Lock</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          Require Touch ID to open Slot, and camera and microphone go only to Meet and Teams - no other page can even ask. Removing an account deletes all of its data.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section className={styles.section}>
+  <div className="container">
+
+## Support {#support}
+
+<p>
+  Need help, found a bug, or want to suggest a feature? Email
+  **[slot_feedback@mateuszdabrowski.pl](mailto:slot_feedback@mateuszdabrowski.pl)**.
+  Include your macOS version and which provider the account is with - it makes most issues quicker to diagnose. I read every email.
+</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Frequently asked questions
+
+    </div>
+
+<details className={styles.faqDetails}>
+  <summary>Is my mail stored on my Mac?</summary>
+
+  No. Slot shows Google's and Microsoft's own web apps, so your mail, files and calendar stay on their servers exactly as they do in a browser. Slot is not an offline client and does not download your mailbox. What it keeps locally is small: your account list, its settings, and each account's session.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Do my accounts share a login?</summary>
+
+  Never. Each account has its own website data store, so cookies and sessions from one are invisible to the others. That is the whole point of the app - you can be signed into two Google accounts at once without either knowing about the other, and without a private window.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>My passkey doesn't work when signing in.</summary>
+
+  Passkeys and iCloud Keychain autofill need entitlements Apple grants only to browsers, so they cannot work inside any app that hosts a web view - Slot included. Choose another sign-in method, usually your password plus your normal second factor. Slot tells you this before you reach the sign-in page rather than letting it fail silently.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Which accounts can I add?</summary>
+
+  Google accounts - personal Gmail or Workspace - and Microsoft accounts, both consumer Outlook and work or school tenants. Other providers are not yet supported.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>My admin has disabled calendar feed addresses.</summary>
+
+  Some Workspace administrators hide the secret iCal address. For Google accounts, Slot can instead read today's Meet-linked meetings from the Meet page - switch on the fallback in **Settings → Accounts → Calendar feed**. It only finds meetings that have a Meet link, and it reads Google's own page, so it can stop working when they redesign it.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Can I open two accounts side by side?</summary>
+
+  Yes. Right-click any tab and choose **Open as Window**. The tab stays in the strip, the surface moves into its own window carrying that account's colour and name, and macOS tiles it like any other window.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Does Slot support [feature X]?</summary>
+
+  The current scope is described above. If the feature you need isn't there, write in - I read every email and feature requests inform what ships next.
+
+</details>
+
+<br/>
+
+:::note Reporting a bug
+**Useful details to include:**
+* A short description of what happened.
+* What you expected to happen.
+* The Slot build number (visible in **Settings → About**).
+* Your macOS version.
+* Which provider the account is with, and whether it is personal or work.
+* A screenshot, if relevant - with anything private cropped out.
+:::
+
+  </div>
+</section>
+
+{/* Visual separator for Privacy Policy */}
+<section className={styles.section} style={{ marginBottom: '4rem' }}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 3rem' }}>
+
+## Privacy Policy {#privacy-policy}
+
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: July 30, 2026</p>
+
+<p>Slot is built by Mateusz Dąbrowski. This policy explains what the Slot app does with your data. The short version: Slot sends nothing to me, and it keeps every account apart from every other one. The longer version matters, because Slot is a container for accounts you already have with Google and Microsoft, and a lot of what happens inside it is between you and them.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### What Slot is, and whose policy applies
+
+    </div>
+
+<p>Slot puts each of your Google and Microsoft accounts in its own window, with its own storage. When you use Gmail, Google Calendar, Drive, Meet, Outlook, Teams or any other surface inside Slot, you are using that company's own web application. Their code runs, their servers are contacted, and their privacy policies govern it - exactly as they would in a browser tab.</p>
+
+<ul>
+  <li>Google: <a href="https://policies.google.com/privacy">policies.google.com/privacy</a></li>
+  <li>Microsoft: <a href="https://privacy.microsoft.com/privacystatement">privacy.microsoft.com/privacystatement</a></li>
+</ul>
+
+<p>This policy covers the part that is mine: the app itself.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Nothing reaches me
+
+    </div>
+
+<p>I operate no servers for Slot. There is no account to create, no sign-in to Slot itself, and no way for your data to reach me. Slot contains <strong>no analytics, no telemetry, no crash reporting, no advertising identifiers and no third-party SDKs of any kind</strong> - it is built entirely against Apple's own frameworks and bundles no other company's code.</p>
+
+<p>The only way to send me anything is to choose <strong>Send Feedback</strong> in Settings, which opens a new message to <a href="mailto:slot_feedback@mateuszdabrowski.pl">slot_feedback@mateuszdabrowski.pl</a> in your mail app. You write it, you decide what is in it, and you send it.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Accounts are kept apart
+
+    </div>
+
+<p>Every account gets its own isolated data store. Cookies, sessions and site data from one account are invisible to every other one - this is what lets a work and a personal Google account be signed in at the same time without either being aware of the other, and it is enforced by macOS, not by Slot being careful.</p>
+
+<p>Slot <strong>never asks for, reads, stores or logs your password.</strong> Signing in happens on your provider's own sign-in page, inside a web view, and Slot runs no script on it. Session cookies live inside the account's store, managed by the system; Slot does not read them except to send the Gmail unread request described below, and it never copies them anywhere.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### What Slot keeps on your Mac
+
+    </div>
+
+<p>All of this stays on your Mac, in Slot's own container. None of it is uploaded anywhere.</p>
+
+<ul>
+  <li><strong>Your account list</strong> - for each account: a name, any name you set yourself, the address the account reports, the colour you chose, which surfaces you enabled, which browser opens its links, your notification and quiet-hours settings, the calendar feed address if you added one, and the last unread count Slot showed you.</li>
+  <li><strong>Profile pictures</strong> - the picture shown on the account rail, cached as a file.</li>
+  <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, and whether Slot asks for Touch ID on unlock.</li>
+  <li><strong>Each account's website data</strong> - cookies, local storage and caches, held by macOS in that account's isolated store.</li>
+</ul>
+
+<p>Attachments you download go to your Downloads folder. Addresses you copy go to the clipboard. Both are ordinary macOS behaviour and both are yours.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### What Slot itself sends, and where
+
+    </div>
+
+<p>Beyond the provider pages you are using, Slot makes exactly four kinds of request of its own:</p>
+
+<ul>
+  <li><strong>Your unread count</strong>, from <code>mail.google.com</code>, about once a minute for each signed-in Google account, using that account's own session. The reply contains your address, the unread count, and the sender and subject of the newest unread message.</li>
+  <li><strong>Your profile picture</strong>, from <code>googleusercontent.com</code>, once per account. This request carries no cookies.</li>
+  <li><strong>Your calendar feed</strong>, but only if you paste an address into Settings - and then only to the address you pasted. Slot accepts <code>https</code> addresses only, sends no cookies and no sign-in, and re-fetches at most every five minutes while it is open. If you have not added a feed, no such request is ever made.</li>
+  <li><strong>An attachment you asked to print</strong>, from Gmail's own attachment hosts, only at the moment you press Command-P in Gmail's attachment viewer, using that account's own session. The file goes to the print panel and is then deleted - it is never saved to Downloads and never kept.</li>
+</ul>
+
+<p>Two things are worth stating plainly. The calendar feed address is a secret in itself - anyone holding it can read that calendar - which is why Slot refuses to send it unencrypted and refuses an address with a password in it. And when you have chosen to open a document in an external browser, Slot adds your account's address to the link so the right account opens; that link then goes to the browser you picked, and to the provider.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### What Slot reads from the pages it shows
+
+    </div>
+
+<p>Slot reads a small number of specific things out of provider pages so it can show them natively. It installs no permanent scripts, registers no channel a page could call into, and bundles no JavaScript of its own. There are four reads, all one-shot and read-only:</p>
+
+<ul>
+  <li>The address of your profile picture, from the Gmail page's own header.</li>
+  <li>Your unread count and display name, from the Outlook mailbox page, together with the sender and subject of the newest message - the same three things the Gmail feed carries, so a notification can say who wrote.</li>
+  <li>Today's meeting times and titles from the Google Meet page - <strong>only</strong> if you switched on the Meet fallback, which exists for accounts whose administrator has disabled calendar feeds.</li>
+  <li>The address of the attachment Gmail is showing you, and <strong>only</strong> at the moment you press Command-P while its viewer is open. Slot looks at pictures and frames, never at text, and asks for one address so it can print that file instead of the mailbox behind it.</li>
+</ul>
+
+<p>None of them reads a form field, a password, a cookie or a session token, and none reads the body of your mail. Nothing read this way is sent anywhere by Slot.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Notifications
+
+    </div>
+
+<p>When Slot tells you about new mail, the notification carries the account name, the sender, and the subject line - the same preview any mail app shows. Meeting reminders carry the meeting's title. macOS keeps notifications in Notification Center until they are cleared, which is the system's own storage, not Slot's. You can switch mail or meeting notifications off entirely, per account or globally, in Settings.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Camera and microphone
+
+    </div>
+
+<p>Slot requests the camera and microphone only for video calls, and grants them only to Google Meet and Microsoft Teams. Any other page in any account is refused, by Slot, before macOS is asked. You are asked once per account and the answer is remembered; deny it and everything else keeps working.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Deleting your data
+
+    </div>
+
+<p>Removing an account in Slot deletes that account's entire website data store - cookies, sessions, caches - along with its picture and its settings. Nothing is kept for later.</p>
+
+<p>To remove everything at once, delete Slot and then remove <code>~/Library/Containers/mdpl.slot</code>. Signing out is separate: your accounts at Google and Microsoft are unaffected by anything you do in Slot, and are managed with those companies.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Children's privacy
+
+    </div>
+
+<p>Slot is not directed at children. It requires accounts with Google or Microsoft, which have their own age requirements, and it displays whatever those services display.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Changes to this policy
+
+    </div>
+
+<p>If the policy changes, I'll update the "Last updated" date above and post the new version at the same URL. Material changes will be called out in the app's release notes.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Contact
+
+    </div>
+
+<p>Questions about this policy or about Slot's data handling: **[slot_feedback@mateuszdabrowski.pl](mailto:slot_feedback@mateuszdabrowski.pl)**.</p>
+
+  </div>
+</section>
