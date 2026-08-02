@@ -25,6 +25,7 @@ that source file, the source file wins — open it and update this doc.
 
 ## 0. How to use this spec (for LLMs)
 
+
 You will usually be asked something like:
 
 > "Transcribe *Stand By Me* for high-G ukulele into a `.strum` file."
@@ -74,7 +75,7 @@ strummed once on high-G ukulele.
   "instrument": "ukulele",
   "tuning": "highG",
   "usesEighths": false,
-  "strummingPatternID": "down-up",
+  "strummingPatternID": "freeform",
   "fingerOverrides": {},
   "notes": null,
   "sections": [
@@ -95,10 +96,10 @@ strummed once on high-G ukulele.
           "lyrics": null,
           "activeBeatSlotCount": null,
           "beats": [
-            { "index": 0, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "down", "pinnedChordName": "C",  "notes": [] },
-            { "index": 1, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "up",   "pinnedChordName": null, "notes": [] },
-            { "index": 2, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "down", "pinnedChordName": null, "notes": [] },
-            { "index": 3, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "up",   "pinnedChordName": null, "notes": [] }
+            { "index": 0, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "down", "pinnedChordName": "C",  "notes": [{"string":0,"fret":0},{"string":1,"fret":0},{"string":2,"fret":0},{"string":3,"fret":3}] },
+            { "index": 1, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "up",   "pinnedChordName": null, "notes": [{"string":0,"fret":0},{"string":1,"fret":0},{"string":2,"fret":0},{"string":3,"fret":3}] },
+            { "index": 2, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "down", "pinnedChordName": null, "notes": [{"string":0,"fret":0},{"string":1,"fret":0},{"string":2,"fret":0},{"string":3,"fret":3}] },
+            { "index": 3, "duration": "quarter", "dotted": false, "isRest": false, "isDrumHit": false, "strum": "up",   "pinnedChordName": null, "notes": [{"string":0,"fret":0},{"string":1,"fret":0},{"string":2,"fret":0},{"string":3,"fret":3}] }
           ]
         }
       ]
@@ -120,8 +121,14 @@ That's the whole file. Key points:
   position in its parent's array (0-based, increasing).
 * A `pinnedChordName` set on **beat 0** carries through following beats
   until another chord is pinned — beats 1–3 use the same C.
-* Empty `notes: []` means "no tab notes on this beat" — required, not
-  optional. (`notes` at the *song* level is a different field — see § 3.)
+* **`pinnedChordName` is a label, not a sound.** The pitches come from
+  `notes` — which is why all four beats above repeat the C shape. A beat
+  with a pinned chord and `notes: []` is **silent** (§ 4.6). Pin the name
+  once, where the chord changes; repeat the frets on every beat you want
+  to hear.
+* `notes: []` therefore means "this slot sounds nothing" — correct only
+  for a sustain slot or a rest. The field is required, not optional.
+  (`notes` at the *song* level is a different field — see § 3.)
 * Optional fields (`strummingPatternID`, `timeSignatureNumerator`,
   `usesEighths` on a section; `lyrics`, `activeBeatSlotCount` on a
   measure; `pinnedChordName` on a beat) are present-but-`null` rather
@@ -153,7 +160,9 @@ StrumSongDTO {
   minimumReaderVersion       Int?     optional, oldest reader that can open the file; omit (defaults to 1) unless the song uses a custom tuning (set 3) or the ebStandard/dropC built-in tuning (set 5) — see § 7.3
   title                      String   required
   artist                     String   required
-  bpm                        Int      required, integer beats-per-minute (no schema bound — pick 30..300 in practice)
+  bpm                        Int      required, **quarter-note** beats per minute (the notated pulse), independent of
+                                      usesEighths: at bpm 60 a quarter slot lasts 1 s and an eighth slot 0.5 s.
+                                      Clamped to 40..300 at playback; pick 30..300.
   capoFret                   Int?     optional, 0..24 (clamped on import); omit or 0 = no capo. Raises the SOUNDING pitch by
                                       that many semitones while fret numbers stay as written — capo tab convention. Do NOT
                                       transpose the frets or rename the chords: a C shape stays "C". Purely additive, so it
@@ -163,9 +172,13 @@ StrumSongDTO {
   instrument                 String   required, "ukulele" | "guitar" | "electricGuitar"
   tuning                     String   required, see § 5.1
   usesEighths                Bool     required, true → each beat slot is an 8th note; false → quarter notes
-  strummingPatternID         String?  optional, see § 5.4 (null defaults to "down-up")
+  strummingPatternID         String?  optional — use "freeform" when authoring by hand (§ 5.4). Editor-side only:
+                                      it never affects playback. Null defaults to "down-up".
   fingerOverrides            Map      required (can be {}), see § 3.1
-  notes                      String?  optional, free-form song notes (NOT tab notes — those live on beats)
+  notes                      String?  optional, free-form song notes (NOT tab notes — those live on beats). Use it for
+                                      what the schema has no field for: composer vs. arranger credit, the source
+                                      edition, transcription caveats, tempo and expression guidance. `artist` is the
+                                      only other attribution slot — put the composer there for a classical work.
   sections                   Array    required, see § 4.1
   customChords               Array?   optional, see § 7
   customStrumPatterns        Array?   optional, see § 7
@@ -201,14 +214,27 @@ When `false`, it has four (one per quarter note). General rule:
 |---|---|
 | Pure quarters, plain "down on each beat" feel | `false` |
 | Any 8th-note strum (down-up, island, calypso, almost all pop/folk) | `true` |
-| 16th-note feel | `true` (use 16ths as `duration` on individual beats) |
+| 16th-note feel | There is no 16th grid inside a 4/4 bar — the finest 4/4 slot is an eighth. Quantise to eighths, or write the bar as **8/8 with `usesEighths: true`** (16 sixteenth-slots, same four quarter-beats). Never set `"sixteenth"` on one slot of an eighth-grid bar: that shortens the bar. |
 
-A 4/4 bar with `usesEighths: true` carries **8 beats** in the
-`beats` array. Each beat's `duration` defaults to `"eighth"` (you set it
-per beat — see § 4.5). Other time signatures follow the same rule:
-slot count = numerator × (denominator / 4) × (usesEighths ? 2 : 1) for
-common cases. The safe play is: pick a meter, pick `usesEighths`, then
-fill the resulting slot count.
+A 4/4 bar with `usesEighths: true` carries **8 beats** in the `beats`
+array, each `"eighth"`.
+
+Slot count = **`numerator × (usesEighths ? 2 : 1)`**. The denominator does
+*not* multiply it — it sets each slot's `duration` instead. Compound `/8`
+meters (6/8, 9/8, 12/8) are locked to `numerator` eighth-slots and ignore
+`usesEighths` for grid purposes.
+
+| Meter | `usesEighths` | Slots | Each slot |
+|---|---|---|---|
+| 4/4 | `true` | 8 | `"eighth"` |
+| 4/4 | `false` | 4 | `"quarter"` |
+| 3/4 | `true` | 6 | `"eighth"` |
+| 3/8 | `false` | 3 | `"eighth"` |
+| 6/8 | either | 6 | `"eighth"` |
+| 4/2 | `false` | 4 | `"half"` |
+
+The safe play is: pick a meter, pick `usesEighths`, fill the resulting
+slot count, and give every slot the same duration.
 
 ---
 
@@ -276,6 +302,11 @@ chorus's text under the music, fill it in measure by measure. Strum
 draws lyrics centred under each bar; line breaks within a `lyrics`
 string render as one line (the field is single-line semantically).
 
+The row is styled as sung lyrics. Expression marks and performance
+directions ("Adagio, cantabile", "rit.") work there if you want them
+under the bar, but they will read as lyrics — for an instrumental piece
+prefer the song-level `notes` field (§ 3).
+
 For multi-bar phrases, distribute the lyrics across bars so each chunk
 appears under the bar where its syllables land. Example:
 
@@ -288,16 +319,20 @@ appears under the bar where its syllables land. Example:
 
 ### 4.4 Pickup bars / shortened measures
 
-`activeBeatSlotCount` lets a measure carry fewer playable beats than its
-slot array suggests. Useful for **anacrusis / pickup bars** ("you say
-goodbye…" on beat 4 only of a 4/4 bar).
+`activeBeatSlotCount: N` makes the measure **end after its first N
+slots**. Playback schedules `beats.prefix(N)` and the renderer draws the
+trailing barline early. It drops the *trailing* slots, never the leading
+ones.
 
-Strategy: fill the full slot count in `beats` (e.g. 8 beats for a 4/4
-`usesEighths` bar), set the leading slots to `isRest: true`, and set
-`activeBeatSlotCount: 2` to mark only the last 2 slots as playable. Or
-leave `activeBeatSlotCount: null` and rely on rests alone — both work,
-but `activeBeatSlotCount` is the better signal for visually-shortened
-bars.
+So for a pickup bar, put the anacrusis in the **leading** slots: a
+one-eighth pickup in a 4/4 `usesEighths` bar is the note on slot 0,
+`activeBeatSlotCount: 1`, and seven filler slots to keep the array
+full-length. Do **not** write leading rests and expect the tail to play —
+it never sounds.
+
+If you want the pickup to appear at the *end* of a visually full bar,
+leave `activeBeatSlotCount: null` and use leading rests alone; the bar
+then occupies its full length in playback.
 
 Constraints (enforced on import):
 
@@ -382,11 +417,40 @@ strike should sustain (`strum: "none"`), and an explicit rest.
 and/or `ornament` to notate playing technique — see § 5.6 for the values
 and rules. They attach only to **fretted** notes (`fret >= 0`); a
 connective (`transition`) is tagged on the **destination** note and
-connects back from the *previous note on the same string within the same
-measure*. Both are notation-only in playback **except** a `"harmonic"`
+connects back from the *previous sounding note on the same string* — the
+scan reaches into the previous measure, and the mark then renders as two
+half-arcs meeting at the barline (§ 5.6). Both are notation-only in playback **except** a `"harmonic"`
 ornament, which
 sounds one octave (+12 semitones) above the fretted pitch. Omit the keys
 entirely for a plain note — older `.strum` files without them are fine.
+
+### 4.7 How long a note rings
+
+You do not notate note length with `duration` (§ 5.3) — you notate it by
+leaving the following slots empty. A struck string rings on **per
+string** through every later slot until one of these ends it:
+
+* the same string is struck again;
+* a beat with `isRest: true` (an explicit rest damps everything);
+* a beat with `strum: "mute"` (a chuck damps everything);
+* the end of the measure;
+* a hard cap of 4 quarter-beats — the instrument's natural decay, so a
+  note cannot ring longer than one 4/4 bar.
+
+A pluck on a *different* string does **not** cut it, so a melody note
+keeps singing over an accompaniment figure.
+
+A sustain slot is therefore exactly:
+
+```json
+{"duration": "<slot unit>", "dotted": false, "isRest": false,
+ "isDrumHit": false, "strum": "none", "pinnedChordName": null, "notes": []}
+```
+
+`isRest: false` is load-bearing. Flip it to `true` and you have written a
+rest — the note you meant to hold is cut off. There is no tie mechanism,
+and no way to rest one voice while another sounds: a rest is
+measure-wide.
 
 ---
 
@@ -399,7 +463,7 @@ you lose information.
 
 ### 5.1 Tunings and string indexing
 
-`tuning` field: one of `"highG" | "lowG" | "baritone" | "guitarStandard" | "dropD"`,
+`tuning` field: one of `"highG" | "lowG" | "baritone" | "guitarStandard" | "dropD" | "ebStandard" | "dropC"`,
 **or** a custom-tuning id `"ct-…"` defined in `customTunings` (see § 7.3).
 
 | `tuning` raw value | Instrument | Strings | MIDI per `string` index |
@@ -506,24 +570,43 @@ custom chord (§ 7).
 
 `dotted: true` multiplies by 1.5 (so a dotted quarter is 1.5 beats).
 
-The duration is **per beat slot**, not "the total duration of the
-measure." A 4/4 bar with `usesEighths: true` has 8 slots, each
-`"eighth"`; setting one slot to `"quarter"` does NOT shorten the bar in
-playback — it just changes the *displayed* glyph on the staff row.
+**`duration` sets the slot's actual length.** A beat occupies
+`duration.beats × (dotted ? 1.5 : 1)` quarter-beats of playback time, so
+**a measure's durations MUST sum to the bar length** (`numerator × 4 /
+denominator` quarter-beats).
+
+In practice that means one rule: **every slot in a measure carries the
+same duration — the slot unit implied by the meter.** 4/4 with
+`usesEighths: true` → all eight slots `"eighth"`. 4/4 with `false` → all
+four `"quarter"`. 6/8 → all six `"eighth"`. Both seed songs Strum ships
+use `"eighth"` on every single beat (200/200 and 80/80); do the same.
+
+**To write a half note**, put the note on one slot and leave the slots it
+covers empty (`"strum": "none"`, `"notes": []`, `"isRest": false`) — the
+strike rings through them (§ 4.7). Do **not** write `"half"` on the
+attacking slot.
+
+A bar whose durations sum long *plays* long: the playhead and the
+metronome sit on the over-long slot, and every later bar drifts. Worse,
+the editor's open-time repair pass then **hard-deletes the trailing
+beats, with their tab notes**, to force the bar back to length.
 
 Unknown values fall back to `"quarter"`.
 
 ### 5.4 Strumming pattern ids (`strummingPatternID`)
 
-A pattern dictates what stroke each beat slot gets by default. The
-per-beat `strum` field overrides the pattern's choice on that slot.
+A pattern is an **editor seeding tool, not a playback layer**. It decides
+which stroke Strum writes into a beat when the *user* applies the pattern
+or drops a chord in the app. **Playback reads only the per-beat `strum`
+value** — `strummingPatternID` has no effect on the sound of a file you
+author. Always write the `strum` you want on every beat.
 
 | Id | Behaviour |
 |---|---|
 | `"down-up"` | **Default.** Alternating down on odd slots, up on even slots. Adaptive — works at any slot count. |
 | `"all-down"` | Down on every "main" beat, none on the off-beats. Adaptive. |
 | `"island"` | Fixed 8-slot: `D _ D U _ U D U`. Use only when the measure has 8 slots. |
-| `"calypso"` | Fixed 8-slot: `D _ D U U M _ D U`. (`M` = mute.) |
+| `"calypso"` | Fixed 8-slot: `D _ D U U _ D U`. Use only when the measure has 8 slots. |
 | `"waltz"` | Fixed 6-slot 3/4 pattern. Use only in 3/4. |
 | `"fingerstyle"` | Fingerstyle on every slot. Adaptive. |
 | `"freeform"` | "Don't auto-fill anything" — relies entirely on per-beat `strum` values. Adaptive. |
@@ -531,11 +614,11 @@ per-beat `strum` field overrides the pattern's choice on that slot.
 | `"cs-…"` | A stable pattern id found in files **exported by Strum** (schema 4+). When authoring a file by hand, use `"custom-N"` instead — it's positional against your own `customStrumPatterns` array and needs no id computation. A `"cs-…"` reference only resolves when the file ships a `customStrumPatterns` entry whose `id` matches. |
 | `null` | Treated the same as `"down-up"`. |
 
-Pick `"freeform"` whenever you intend to set the `strum` field
-explicitly on every beat (which you usually will, for a transcription).
-Pick `"down-up"` or `"all-down"` if you want the per-beat `strum` field
-to remain `"none"` on most beats and let the pattern fill in the
-strokes at playback.
+Set `strummingPatternID: "freeform"` in essentially every file you
+author. It is the only value whose strokes are all `preserve`, so a later
+in-app chord edit will not overwrite the strums you wrote. Any other id
+is a live grenade: the first time the user adds a chord in the editor,
+that pattern's strokes are stamped over your beats.
 
 ### 5.5 Strum directions (`BeatDTO.strum`)
 
@@ -545,8 +628,8 @@ strokes at playback.
 | `"down"` | Downstroke (low strings to high). |
 | `"up"` | Upstroke (high strings to low). |
 | `"fingerstyle"` | Pluck — typically paired with explicit `notes` on the beat. |
-| `"arpeggio-up"` | Arpeggiate the pinned chord from low to high. |
-| `"arpeggio-down"` | Arpeggiate from high to low. |
+| `"arpeggio-up"` | Roll the beat's own tab notes in **reverse string order** (uke string 3→0, guitar high-e→low-E), spread across the slot. It does **not** read the pinned chord — write the shape into `notes`. This is string order, not pitch order: on a re-entrant high-G uke the roll ends on the g string, which is not the top note. |
+| `"arpeggio-down"` | The same roll in ascending string order (uke 0→3). |
 | `"mute"` | Percussive string-mute ("chuck") — no pitch. |
 | `"drum"` | Body-tap percussive hit. **Use `isDrumHit: true` on the beat, not this stroke**, for persistence — `"drum"` only appears in pattern definitions (§ 7). |
 | `"rest"` | Explicit rest — pattern-side only. On a persisted `BeatDTO`, use `isRest: true` and `strum: "none"` instead. |
@@ -585,11 +668,17 @@ tab degrade to a small **entry-stub** half-arc rising into the note
 | `"legato"` | bare arc | Plain legato connective into **this** note — the arc with no technique letter, for smooth ties where the mechanism isn't named. (A bare entry-stub arc when no origin is reachable.) |
 
 **Keep connectives physically plausible.** The renderer fences every
-transition: the origin must sit within **3 slots** of the destination,
-and any **rest**, **drum hit**, or **3+-string chord** between them
-severs the chain (the mark degrades to a short entry-stub arc). When
-transcribing, tag transitions only on notes that closely follow their
-origin on the same string.
+transition. Walking back from the destination, each beat is tested
+*before* it is considered as the origin, so a beat that is a **rest**, a
+**drum hit**, or sounds **3 or more strings** both blocks the path and is
+disqualified from *being* the origin — a full chord reads as a re-grip of
+the fretting hand. The destination beat itself is exempt, so a connective
+may land on a note inside a chord. The origin must sit **at most 3 slots**
+back, counted across a barline if the scan reaches the previous measure;
+empty `"none"` slots are transparent. When no origin survives, the mark
+degrades to a short entry-stub arc — harmless, but the arc you intended
+is not drawn. Practical rule: put connectives one or two slots after
+their origin, and keep the origin beat to one or two notes.
 
 `ornament` — an *in-place* decoration of the note itself.
 
@@ -615,7 +704,7 @@ keep going.
 |---|---|---|
 | File size | ≤ 5 MB | Rejected before parsing. |
 | `schemaVersion` | writer ver (`6`) | Informational; a value *newer* than the importing app shows a non-blocking "update for full detail" note but still imports. |
-| `minimumReaderVersion` | `≤` app's version | If the file demands a **newer** reader than the app supports, import is **refused** with an "Update Strum" alert. Omit it (→ 1) unless you know you need a breaking feature — set **3** when the song (or one of its custom chords) references a `"ct-…"` custom tuning (see § 7.3). |
+| `minimumReaderVersion` | `≤` app's version | If the file demands a **newer** reader than the app supports, import is **refused** with an "Update Strum" alert. Omit it (→ 1) unless the song needs a breaking feature: set **3** when it (or one of its custom chords) references a `"ct-…"` custom tuning (§ 7.3), and set **5** when `tuning` is `"ebStandard"` or `"dropC"` (§ 5.1). Take the higher if both apply. |
 | Number of sections | ≤ 50 | Extras truncated. |
 | Measures per section | ≤ 100 | Extras truncated. |
 | Beats per measure | ≤ 32 | Extras truncated. |
@@ -631,6 +720,7 @@ keep going.
 | `TabNote.ornament` | NoteOrnament enum (§ 5.6) | Unknown → none; dropped if `fret < 0`. |
 | `isDrumHit` invariant | drum hit ⇒ no notes, no chord | Notes and chord dropped; logged. |
 | `activeBeatSlotCount` | `> 0` and ≤ beat count | Out of range → set to null (no truncation). |
+| Sum of a measure's `duration` values | = `numerator × 4 / denominator` quarter-beats | Over-long: the bar plays long, and the editor's first-open repair **hard-deletes trailing beats and their tab notes**. Under-long: padded with empty sustain slots. |
 | Unknown `duration` | — | Falls back to `"quarter"`. |
 | Unknown `strum` | — | Falls back to `"none"`. |
 | Unknown `instrument` | — | Falls back to `"ukulele"`. |
@@ -729,7 +819,7 @@ You almost never need this. Prefer setting per-beat `strum` values with
 
 ### 7.3 Custom tunings
 
-If the song uses a tuning that isn't one of the five built-ins in § 5.1
+If the song uses a tuning that isn't one of the **seven** built-ins in § 5.1
 (e.g. Open D, DADGAD, an alternate uke tuning), define it under
 `customTunings` at the song level and reference it by its `"ct-…"` id
 from the song's `tuning` field (and from any `customChords[].tuning`
@@ -809,14 +899,14 @@ The six measure bodies:
   "lyrics": "Sweet home,",
   "activeBeatSlotCount": null,
   "beats": [
-    {"index":0,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":"G","notes":[]},
-    {"index":1,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[]},
-    {"index":2,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":null,"notes":[]},
-    {"index":3,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[]},
-    {"index":4,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":null,"notes":[]},
-    {"index":5,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[]},
-    {"index":6,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":null,"notes":[]},
-    {"index":7,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[]}
+    {"index":0,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":"G","notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]},
+    {"index":1,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]},
+    {"index":2,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":null,"notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]},
+    {"index":3,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]},
+    {"index":4,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":null,"notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]},
+    {"index":5,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]},
+    {"index":6,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"down","pinnedChordName":null,"notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]},
+    {"index":7,"duration":"eighth","dotted":false,"isRest":false,"isDrumHit":false,"strum":"up","pinnedChordName":null,"notes":[{"string":0,"fret":0},{"string":1,"fret":2},{"string":2,"fret":3},{"string":3,"fret":2}]}
   ]
 }
 ```
@@ -826,15 +916,11 @@ Five more measures with `index: 1..5`, `pinnedChordName` switching to
 `"C"` (index 4), `"C"` (index 5 — sustains). Same eight strum beats
 each.
 
-Alternative — use the built-in pattern instead of writing the strums:
-
-```json
-"strummingPatternID": "down-up",
-"usesEighths": true
-```
-
-…and leave each beat's `strum` as `"none"`. Strum will fill in the
-down-up at playback. Less verbose but loses per-beat control.
+Note that every beat repeats the full G shape. The chord *name* is
+pinned once, on beat 0; the *frets* are what make sound (§ 4.6). There is
+no shortcut here — leaving `strum: "none"` and relying on
+`strummingPatternID` produces a silent file, because playback never reads
+the pattern (§ 5.4).
 
 ### 8.2 Fingerpicked intro on high-G
 
@@ -999,10 +1085,10 @@ When transcribing from a non-Strum input, climb the ladder:
 2. **Pin chords.** Walk the original chord chart and pin each chord on
    the first beat of the measure it lands on (or the exact beat for
    mid-bar changes). Leave `strum: "none"` everywhere.
-3. **Pick a strum pattern.** If the user described a feel ("down-up",
-   "island", "fingerstyle"), set `strummingPatternID` accordingly and
-   you're often done. If they want a bespoke rhythm, switch to
-   `"freeform"` and fill `strum` per beat.
+3. **Write the strums yourself.** Set `strummingPatternID: "freeform"`
+   and fill `strum` on every beat, plus the chord's full fret shape in
+   `notes` on every beat you want to hear. A pattern id will not do this
+   for you at playback (§ 5.4).
 4. **Add lyrics.** One line per measure, segmented to fit roughly.
 5. **Add tab notes only when the part is melodic** — intros, outros,
    solo lines, instrumental breaks. A pure rhythm part needs no
@@ -1019,12 +1105,20 @@ information), default to:
 
 * `instrument: "ukulele"`, `tuning: "highG"` (the app's primary use case).
 * `bpm: 90`, time signature `4/4`, `usesEighths: true`.
-* `strummingPatternID: "down-up"`.
-* Pin each chord on beat 0 of its measure.
-* No tab notes, no per-beat strums (let the pattern fill them in).
+* `strummingPatternID: "freeform"`.
+* Pin each chord name on beat 0 of its measure.
+* Write that chord's full fret shape into `notes` on every beat, with
+  `strum` alternating `"down"` / `"up"` — nothing is filled in for you.
 
 That delivers a song the user can play through immediately, then refine
 in the editor.
+
+**Instrumental / melodic transcriptions.** When the request is a melody
+rather than a chord chart, invert the ladder: write the melody as `notes`
+on every sounding beat with `strum: "fingerstyle"`, pin chord names as
+reading aids only, and prefer `lowG` or `baritone` over the `highG`
+default — high-G is re-entrant and bottoms out at C4, so a
+melody-plus-bass arrangement has no bass register on it.
 
 ---
 
@@ -1040,17 +1134,21 @@ If a value isn't covered by this spec, look it up directly in:
   ids per instrument/tuning.
 * `Shared/Music/StrummingPattern.swift` — built-in pattern definitions.
 
+**If this section disagrees with §§ 1-8, trust §§ 1-8** — they are the
+normative tables.
+
 The file format carries **two** version numbers. `schemaVersion` is the
-*writer* version (currently `3`) and bumps on every format change.
+*writer* version (currently `6`) and bumps on every format change.
 `minimumReaderVersion` (optional, defaults to `1`) is the *oldest* app
 version that can still read the file correctly, and bumps **only** on a
 breaking change. The importer rejects a file only when its
 `minimumReaderVersion` exceeds what the app supports (telling the user to
 update); a merely-newer `schemaVersion` still imports (older app drops
 the keys it doesn't know) with a soft note. So a file you author at
-`schemaVersion: 3` with a built-in tuning (no `minimumReaderVersion`)
-loads on every shipping build; only a custom-tuning song raises
-`minimumReaderVersion` to `3` (§ 7.3), because resolving an unknown
-`"ct-…"` id on an older reader is a silent, breaking misread. If a
+`schemaVersion: 6` with a built-in tuning (no `minimumReaderVersion`)
+loads on every shipping build; a custom-tuning song raises
+`minimumReaderVersion` to `3` (§ 7.3) and an `ebStandard` / `dropC` song
+raises it to `5` (§ 5.1), because resolving an unknown tuning id on an
+older reader is a silent, breaking misread. If a
 future release bumps the writer version, update this doc alongside the
 schema.
