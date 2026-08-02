@@ -160,7 +160,7 @@ const apps = [
         url: '/strum',
         appStoreUrl: 'https://apps.apple.com/app/id6764788253',
         imageUrl: 'img/apple/strum/Strum-Pad-Library.webp',
-        description: 'A clean, focused tablature editor for ukulele and guitar. Write a song, drop in chords, set a strum pattern, and hear it back on a real recorded instrument - with a pro-grade tuner, custom tunings, and a library that syncs across your devices.',
+        description: 'A clean, focused tablature editor for ukulele and guitar. Write a song, drop in chords, set a strum pattern, and hear it back on a recorded instrument. Practice to a metronome that auto-scrolls the tab and ramps the tempo - plus capo support, a built-in tuner, custom tunings, and a library that syncs through your own iCloud.',
         tags: ['Ukulele', 'Guitar', 'Tabs'],
         platforms: ['macOS', 'iPadOS', 'iOS'],
     },

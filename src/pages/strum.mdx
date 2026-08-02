@@ -69,7 +69,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
   <div className={styles.heroInner}>
     <div style={{textAlign: 'center', paddingBottom: '2rem'}}>
       <img
-        src="/img/apple/strum/Strum_light.png"
+        src="/img/apple/strum/Strum_light.webp"
         alt="Strum app icon"
         width={128}
         height={128}
@@ -100,7 +100,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
           opacity: 0.9
         }}
       >
-        A clean, focused tablature editor for ukulele and guitar. Quickly write tabs, simulate playback to check your timing, tune your instrument, and practice with a metronome that auto-scrolls the tab and ramps the tempo to build muscle memory.
+        A clean, focused tablature editor for ukulele and guitar. Write tabs, play them back to check your timing, tune your instrument, and practice with a metronome that auto-scrolls the tab and ramps the tempo to build muscle memory.
       </p>
 
       <p style={{margin: '0 0 1.5rem'}}>
@@ -116,6 +116,9 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
             style={{height: 48, width: 'auto'}}
           />
         </a>
+      </p>
+      <p style={{margin: '0 0 1.5rem', fontSize: '0.95rem', color: '#ffffff', opacity: 0.75}}>
+        One purchase. No subscription, ever.
       </p>
 
       <p
@@ -168,26 +171,26 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
     <div className="row">
       <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
 
-### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Write at the Speed of Thought</span>
+<p style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.03em', margin: '0 0 0.75rem'}}>Write Everything in One Place</p>
 
         <p>
-          Combine staff, tabs, chords, and lyrics unified on a single screen. Effortlessly configure song sections and quickly duplicate measures to build arrangements fast.
+          Combine staff, tabs, chords, and lyrics on a single screen. Set up song sections and duplicate measures to build arrangements fast.
         </p>
       </div>
       <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
 
-### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Hear It,<br/>Hands-Free</span>
+<p style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.03em', margin: '0 0 0.75rem'}}>Hear It,<br/>Hands-Free</p>
 
         <p>
-          Simulate playback instantly to check your timing. With a built-in metronome, precise subdivision control, and follow-tab auto-scrolling, your hands never leave the instrument. The Practice Hub adds tempo speed-ups, drop-out training, and count-ins to build real muscle memory.
+          Hear your song played back on a real recorded instrument. With a built-in metronome, subdivision control, and follow-tab auto-scrolling, your hands never leave the instrument. The Practice Hub adds tempo speed-ups, drop-out training, and count-ins to build muscle memory.
         </p>
       </div>
       <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
 
-### <span style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase'}}>Total Customization</span>
+<p style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.03em', margin: '0 0 0.75rem'}}>Build Your Own Chords and Patterns</p>
 
         <p>
-          Your sound, your rules. Build exact finger placements with the multi-fret chord editor, and design intricate custom strum patterns from strokes, mutes, and rests. Browse and tweak every chord shape from the global library — no song required.
+          Build exact finger placements with the multi-fret chord editor, and design your own strum patterns from strokes, mutes, and rests. Browse and tweak every chord shape from the global library - no song required.
         </p>
       </div>
     </div>
@@ -206,43 +209,43 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 {/* Feature 1: Tab-first Editing */}
 <section className={styles.section}>
   <div className="container">
-    <div className="row" style={{alignItems: 'center'}}>
-      <div className="col col--6" style={{padding: '2rem'}}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Tab-first Editing</span>
 
-        <p style={{fontSize: '1.1rem'}}>
-          Tap any beat to open a focused editor. Dial in notes on per-string fret wheels, pick a chord from a filterable grid, or drop a rest, mute, or drum hit. Long-press any chord to customize its shape or fingering. Effortlessly arrange longer pieces by configuring custom song sections, adding repeat barlines, and quickly duplicating entire measures or sections. Supports Ukulele (high-G/low-G/baritone) and guitar (standard EADGBe).
-        </p>
       </div>
-      <div className="col col--6" style={{textAlign: 'center'}}>
-        <ZoomImage
-          src="/img/apple/strum/Strum-Pad-AddBeat.webp"
-          alt="Tab first editing interface"
-          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-        />
-      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        Tap any beat to open a focused editor. Dial in notes on per-string fret wheels, pick a chord from a filterable grid, or drop a rest, mute, chuck, or drum hit. Long-press any chord to customize its shape or fingering. Arrange longer pieces by configuring custom song sections, adding repeat barlines, and duplicating entire measures or sections. Set a capo and playback moves to the sounding pitch while the tab keeps the frets you actually hold. Supports ukulele (high-G, low-G, baritone), guitar and electric guitar (Standard, Eb half-step-down, Drop C, Drop D), and any custom tuning you build.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/strum/Strum-Pad-AddBeat.webp"
+        alt="Tab first editing interface"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
     </div>
   </div>
 </section>
 
-{/* Feature 2: Chord & Strum Libraries */}
+{/* Feature 2: Capo */}
 <section className={styles.section}>
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
     <div className="row" style={{alignItems: 'center'}}>
       <div className="col col--6" style={{textAlign: 'center', order: 1}}>
         <ZoomImage
-          src="/img/apple/strum/Strum-Phone-Fingerings.webp"
-          alt="Custom chords and strum library"
+          src="/img/apple/strum/Strum-Phone-Read.webp"
+          alt="Capo pill and notation on iPhone"
           imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
       </div>
       <div className="col col--6" style={{padding: '2rem', order: 2}}>
 
-### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Chord & Strum Libraries</span>
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Capo, the Songbook Way</span>
 
         <p style={{fontSize: '1.1rem'}}>
-          Go beyond the defaults. Use standard shapes or build your own with the multi-fret finger editor to specify exact custom finger placements. Design intricate custom strum patterns from strokes, mutes, and rests. Save any custom shape or strum pattern to your global library to reuse it everywhere, or keep it specific to just one song. Browse and filter every chord in your tuning straight from the library.
+          Set a capo on any song and playback moves to the real sounding pitch, while the tab keeps showing the frets you actually hold. Chord names stay the ones you know - a C shape is still "C" - with a "Capo 2" badge on the song and on exported PDFs, exactly how a songbook prints it. Standard notation follows the capo too, because notation shows what you hear. The tuner knows about it as well: tune the open strings as usual, then switch to the capoed pitches to check your intonation with the capo on.
         </p>
       </div>
     </div>
@@ -252,27 +255,73 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 {/* Feature 3: Built-in Tuner */}
 <section className={styles.section}>
   <div className="container">
-    <div className="row" style={{alignItems: 'center'}}>
-      <div className="col col--6" style={{padding: '2rem'}}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Built-in Tuner</span>
 
-        <p style={{fontSize: '1.1rem'}}>
-          Pluck a string, see flat/sharp/in-tune feedback in real time. An adaptive noise gate ignores room sound so the needle stays steady. Audio is processed entirely on-device and never recorded or transmitted. Reach it any time from the library - tune up before you even open a song.
-        </p>
       </div>
-      <div className="col col--6" style={{textAlign: 'center'}}>
+      <p style={{fontSize: '1.1rem'}}>
+        Pluck a string, see flat/sharp/in-tune feedback in real time. An adaptive noise gate ignores room sound so the needle stays steady, and the tuner snaps straight to the correct string when you switch notes. Tunes to any tuning you use, including your own custom ones. The custom tuning editor carries its own detector as well: pluck a string and tap Set to capture the pitch you are hearing. Set the concert pitch anywhere from 415 Hz to 466 Hz to match whoever you are playing with, or switch to capoed targets to check intonation with the capo on. Audio is processed entirely on-device and never recorded or transmitted. Reach it any time from the library - tune up before you even open a song.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/strum/Strum-Pad-Tuner.webp"
+        alt="Tuner with capo-aware targets on iPad"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 4: Chord & Strum Libraries */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{textAlign: 'center', order: 2}}>
         <ZoomImage
-          src="/img/apple/strum/Strum-Pad-Tuner.webp"
-          alt="Tuner interface on iPad"
-          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          src="/img/apple/strum/Strum-Phone-Fingerings.webp"
+          alt="Chord fingering editor on iPhone"
+          imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
+      </div>
+      <div className="col col--6" style={{padding: '2rem', order: 1}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Chord & Strum Libraries</span>
+
+        <p style={{fontSize: '1.1rem'}}>
+          Use the standard shapes, or place every finger yourself in the multi-fret finger editor. Design your own strum patterns from strokes, chucks, mutes, and rests. Save any custom shape or strum pattern to your global library to reuse it everywhere, or keep it specific to just one song. Browse and filter every chord in your tuning straight from the library.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-{/* Feature 4: Playback & Metronome */}
+{/* Feature 5: Real instruments */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Recorded Instruments</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        The ukulele you hear was recorded for this app, so chords ring and fade the way the real thing does - percussive body taps and muted chucks included. Guitar and electric guitar play sampled recordings of real instruments too. Prefer something lighter? One switch in Settings moves everything to the built-in synth, set per device so your iPhone and iPad can differ. The metronome has the same choice: a recorded mechanical click, or a clean digital one.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/strum/Strum-Pad-Settings.webp"
+        alt="Playback sound and metronome settings on iPad"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 6: Playback & Metronome */}
 <section className={styles.section}>
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
     <div className="row" style={{alignItems: 'center'}}>
@@ -288,37 +337,60 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Playback & Metronome</span>
 
         <p style={{fontSize: '1.1rem'}}>
-          Tempo wheel for live BPM changes and granular subdivision control. The follow-tab automatically scrolls the song along with the metronome for a completely hands-free practice experience. Simulated playback seamlessly respects all your configured repeats and section markers. The metronome also lives in the library for a quick standalone click.
+          Tempo wheel for live BPM changes and subdivision control. The follow-tab automatically scrolls the song along with the metronome while you play. Playback respects your repeats and section markers. The metronome also lives in the library for a quick standalone click.
         </p>
       </div>
     </div>
   </div>
 </section>
 
-{/* Feature 5: Practice & Training Lab */}
+{/* Feature 7: Practice & Training Lab */}
 <section className={styles.section}>
   <div className="container">
-    <div className="row" style={{alignItems: 'center'}}>
-      <div className="col col--6" style={{padding: '2rem'}}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Practice & Training Lab</span>
 
-        <p style={{fontSize: '1.1rem'}}>
-          Open the Practice Hub in Read mode from the metronome icon or by long-pressing any measure or section. Loop a passage while the Rhythm Training Lab ramps the tempo up step by step to build muscle memory at speed. Drop-out training mutes the click for a few measures at a time so you learn to hold time on your own, and count-ins give you a beat to catch before playback begins. Scope any of it to a single measure, a section, or the whole song.
-        </p>
       </div>
-      <div className="col col--6" style={{textAlign: 'center'}}>
+      <p style={{fontSize: '1.1rem'}}>
+        Open the Practice Hub in Read mode from the metronome icon or by long-pressing any measure or section. Loop a passage while the Rhythm Training Lab ramps the tempo up step by step to build muscle memory at speed. Drop-out training mutes the click for a few measures at a time so you learn to hold time on your own, and count-ins give you a beat to catch before playback begins. Scope any of it to a single measure, a section, or the whole song.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/strum/Strum-Pad-Training.webp"
+        alt="Rhythm Training Lab on iPad"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 8: Library */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className="col col--6" style={{textAlign: 'center', order: 2}}>
         <ZoomImage
-          src="/img/apple/strum/Strum-Pad-Training.webp"
-          alt="Rhythm Training Lab on iPad"
-          imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          src="/img/apple/strum/Strum-Phone-Library.webp"
+          alt="Song library with folders and favourites on iPhone"
+          imgStyle={{maxHeight: '400px', borderRadius: '24px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
+      </div>
+      <div className="col col--6" style={{padding: '2rem', order: 1}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>A Library That Stays Tidy</span>
+
+        <p style={{fontSize: '1.1rem'}}>
+          Group songs into colour-coded folders, star the ones you come back to, and mark the one you are learning right now - it gets its own section at the top. Search by title or artist, sort how you like, and reorder by dragging. Deleted songs rest in a Trash for 7 days, so a mis-tap is easy to undo.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
-{/* Feature 6: Sync & Export */}
+{/* Feature 9: Sync & Export */}
 <section className={styles.section} style={{ margin: '4rem 0' }}>
   <div className="container" style={{ backgroundColor: '#212121', borderRadius: '16px', padding: '4rem 3rem' }}>
     <div className="row">
@@ -343,7 +415,11 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
         </div>
 
         <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
-          Export any song as a clean vector PDF or image to print and share. You can also send the native <code style={{color: '#212121', backgroundColor: '#f5f6f7', padding: '0.2rem 0.4rem', borderRadius: '4px'}}>.strum</code> file directly to other users for seamless app-to-app collaboration.
+          Export any song as a clean vector PDF or image to print and share. You can also send the native <code style={{color: '#212121', backgroundColor: '#f5f6f7', padding: '0.2rem 0.4rem', borderRadius: '4px'}}>.strum</code> file directly to another Strum user, who can open it and keep editing.
+        </p>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
+          The <code style={{color: '#212121', backgroundColor: '#f5f6f7', padding: '0.2rem 0.4rem', borderRadius: '4px'}}>.strum</code> format is <a href="/strum/llm-spec.md" style={{color: 'var(--ifm-color-primary)'}}>documented in full</a>, written to be handed straight to an AI assistant. Give it the spec and the song you want, and it can write an importable file for you.
         </p>
       </div>
     </div>
@@ -358,7 +434,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <p>
   Need help, found a bug, or want to suggest a feature? Email
   **[strum_support@mateuszdabrowski.pl](mailto:strum_support@mateuszdabrowski.pl)**.
-  Include your device model and OS version — it makes most issues quicker to diagnose. I read every email.
+  Include your device model and OS version - it makes most issues quicker to diagnose. I read every email.
 </p>
 
     <div style={{marginTop: '2rem'}}>
@@ -377,7 +453,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <details className={styles.faqDetails}>
   <summary>A song I made on iPad isn't showing up on iPhone.</summary>
 
-  Both devices need to be signed into the same iCloud account, with iCloud Drive on. Open Strum's **Settings → About** tab — if it says "Local-only fallback", iCloud isn't reachable; sign into iCloud in the system Settings app and re-launch Strum. Sync usually catches up within 30 seconds.
+  Both devices need to be signed into the same iCloud account, with iCloud Drive on. Open Strum's **Settings → About** tab - if it says "Local-only fallback", iCloud isn't reachable; sign into iCloud in the system Settings app and re-launch Strum. Sync usually catches up within 30 seconds.
 
 </details>
 
@@ -398,14 +474,21 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <details className={styles.faqDetails}>
   <summary>Can I print or share a song as PDF?</summary>
 
-  Yes — open the song, tap the share icon, and choose to export as a **PDF**, an **Image**, or a native **.strum** file (perfect for sending to other Strum users). When exporting a PDF or Image, the output will exactly match what is currently configured in your view—if you toggle off the staff or lyrics in the app, they will be hidden in the export too. To export many songs at once, use **Settings → Export library**.
+  Yes - open the song, tap the share icon, and choose to export as a **PDF**, an **Image**, or a native **.strum** file (perfect for sending to other Strum users). When exporting a PDF or Image, the output matches exactly what you see on screen - toggle off the staff or lyrics in the app and they are gone from the export too. To export many songs at once, use **Settings → Export library**.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Can I get a song in without typing it out?</summary>
+
+  Two ways. Any `.strum` file someone sends you imports directly. And the format is [documented in a single file](/strum/llm-spec.md) written for AI assistants - hand that document to Claude, Gemini or ChatGPT along with the song you want, and ask it for a `.strum` file. Everything imported is validated and clamped on the way in, so a malformed file can't corrupt your library.
 
 </details>
 
 <details className={styles.faqDetails}>
   <summary>Does Strum support [feature X]?</summary>
 
-  The current scope is described above. If the feature you need isn't there, write in — I read every email and feature requests inform what ships next.
+  Everything Strum does today is listed above. If the feature you need isn't there, write in - I read every email and feature requests inform what ships next.
 
 </details>
 
@@ -450,7 +533,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
   <li>App preferences (default tempo, tuning, time signature, default fingerings, metronome settings, follow-tab options).</li>
 </ul>
 
-<p>This data never reaches a server controlled by me. It is stored in your iCloud private database and is visible only to you, on devices signed into the same Apple ID. I — the developer — cannot see it.</p>
+<p>This data never reaches a server controlled by me. It is stored in your iCloud private database and is visible only to you, on devices signed into the same Apple ID. I - the developer - cannot see it.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -469,7 +552,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
   <li>Contacts, photos, calendars, or other system data.</li>
 </ul>
 
-<p>There are no third-party SDKs in the app and no external servers the app talks to.</p>
+<p>There are no third-party SDKs in the app. The only network traffic Strum makes is to Apple's CloudKit, syncing your library into your own iCloud account.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -477,7 +560,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
     </div>
 
-<p>Strum requests microphone permission only when you open the **in-app tuner**. The tuner listens to a string you pluck and tells you whether it's in tune. Audio is processed entirely on-device, in real time, and is **never recorded, saved, or transmitted**. If you deny microphone permission, every other part of Strum continues to work normally — only the tuner is affected.</p>
+<p>Strum requests microphone permission only when you open the **in-app tuner**. The tuner listens to a string you pluck and tells you whether it's in tune. Audio is processed entirely on-device, in real time, and is **never recorded, saved, or transmitted**. If you deny microphone permission, every other part of Strum continues to work normally - only the tuner is affected.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -485,7 +568,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
     </div>
 
-<p>Strum's sync uses your iCloud account. Apple's privacy policy governs how iCloud handles your data: [apple.com/legal/privacy](https://www.apple.com/legal/privacy/). If you sign out of iCloud, or disable iCloud for Strum in Settings, the app continues to work — your library is stored locally on the device. New changes simply stop syncing to other devices.</p>
+<p>Strum's sync uses your iCloud account. Apple's privacy policy governs how iCloud handles your data: [apple.com/legal/privacy](https://www.apple.com/legal/privacy/). If you sign out of iCloud, or disable iCloud for Strum in Settings, the app continues to work - your library is stored locally on the device. New changes simply stop syncing to other devices.</p>
 
     <div style={{marginTop: '2rem'}}>
 
