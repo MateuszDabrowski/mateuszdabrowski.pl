@@ -41,6 +41,7 @@ module.exports = {
                             },
                             items: [
                                 'salesforce/marketing-cloud/config/ip-warming-deliverability',
+                                'salesforce/marketing-cloud/config/business-units',
                             ],
                         },
 

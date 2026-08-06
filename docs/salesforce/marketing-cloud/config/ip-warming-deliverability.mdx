@@ -58,6 +58,12 @@ Additional IPs | Per each additional ~5M emails/month | More IPs are assigned se
 
 These numbers are guidelines, not commitments - treat them as the range where migration typically starts, not a switch that flips the moment you cross 5M.
 
+:::note You Should Know
+
+I have heard mixed feedback on whether starting stright from a Dedicated IP is possible. Salesforce's own guidance is that you can't request a dedicated IP, and that the platform automatically assigns one when your volume exceeds the threshold. However, some customers report being able to request a dedicated IP as a starting point. If you have a strong use case, try your luck with the account team.
+
+:::
+
 ### Automatic Warming Window
 
 __A single campaign send can be split across multiple IPs at once.__
@@ -429,5 +435,3 @@ When an alert (or the dashboard) flags a spike, work through it in this order:
 3. **Never send bulk mail from the same domain your team uses for everyday email** - split root domain, transactional subdomain, and marketing subdomain so one bad campaign can't threaten the other two.
 4. **Treat list hygiene as reputation infrastructure, not cleanup** - never re-import addresses that previously hard-bounced or unsubscribed elsewhere, and hold bounce/complaint rate under 2%/0.1% throughout any warming ramp.
 5. **Replace manual dashboard-checking with a Report Subscription alert** - start with a direct condition on `Email Hard Bounce Rate` (no formulas needed), and only build the Row-Level + Summary Formula OR-combination if you need multiple category thresholds watched in one alert - then diagnose by bounce category and correlate with send volume before reacting to any spike.
-
-If you've found other undocumented MCN deliverability behaviour worth sharing, let me know - this is very much a moving target while the feature is still this new.
