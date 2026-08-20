@@ -11,6 +11,7 @@ toc_max_heading_level: 4
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import { LeadText } from '/src/components/LeadText.js';
+import { Button } from '/src/components/Buttons.js';
 
 <LeadText content="Marketing Cloud Next automates IP-warming, but not your deliverability work. Here's what's automatic, what isn't, and where to watch." />
 
@@ -60,7 +61,7 @@ These numbers are guidelines, not commitments - treat them as the range where mi
 
 :::note You Should Know
 
-I have heard mixed feedback on whether starting stright from a Dedicated IP is possible. Salesforce's own guidance is that you can't request a dedicated IP, and that the platform automatically assigns one when your volume exceeds the threshold. However, some customers report being able to request a dedicated IP as a starting point. If you have a strong use case, try your luck with the account team.
+Can you start straight on a dedicated IP? The docs say no - there's no request path in the platform, and assignment is automatic once volume crosses the threshold. The reality says yes - through your Account Executive, if you have a strong enough use case for an exception.
 
 :::
 
@@ -122,6 +123,10 @@ This mirrors the Transactional vs. Promotional split MCN already runs at the [sh
 Subdomain separation is risk reduction, not a firewall. Subdomain reputation isn't cleanly walled off from the root domain - Google's own Postmaster documentation confirms subdomain signal aggregates up into the organisational (root) domain, and sustained abuse on a subdomain can still be traced back and penalise the parent. The three-way split protects your team's everyday email and your transactional stream from marketing's mistakes day-to-day - it doesn't make marketing's mistakes free.
 
 :::
+
+#### Domain Assignment in Business Units
+
+On a Business Units org (MCN Advanced Edition), the three-way split gains one more rule: an authenticated domain is assigned to all Business Units or to exactly one - never a subset. The assign picker locks a taken domain until it's unassigned from its current Business Unit, so per-Business-Unit sending identities mean per-Business-Unit subdomains, each authenticated and warmed on its own. Mind two ceilings while planning: the per-Business-Unit picker allows up to 10 domains, and only one authenticated domain can be used for custom link shortening. Full trade-off in [MC Next Business Units](/docs/salesforce/marketing-cloud/config/business-units.mdx#domains).
 
 ### Domain Warming Schedule
 
@@ -203,11 +208,11 @@ Postmaster tools for each provider give you the clearest insight into how your d
 
 __Switching platforms will not make previously bounced addresses deliverable.__
 
-If you're importing subscribers into MCN from another platform, only bring across addresses that have never hard-bounced or unsubscribed, and that have shown genuine engagement in the past year. A hard bounce is a property of the address, not the sending platform - reintroducing it through a new tool just repeats the same failed delivery and damages the new domain's reputation from day one.
+If you're importing subscribers into MCN from another platform, only bring across addresses that have never hard-bounced or unsubscribed, and that have shown genuine engagement in the past 6 months. A hard bounce is a property of the address, not the sending platform - reintroducing it through a new tool just repeats the same failed delivery and damages the new domain's reputation from day one.
 
 The same discipline applies ongoing, not just at migration:
 
-- Suppress subscribers inactive for over a year.
+- Suppress subscribers inactive for over 6 months.
 - Never use purchased or rented lists - they're the single most common cause of spam-trap hits.
 - Use confirmed (double) opt-in for new subscribers wherever your process allows it.
 - Run a scheduled hygiene pass rather than waiting for a deliverability incident to trigger one.
@@ -219,6 +224,14 @@ List quality compounds. A domain that only ever sends to engaged recipients buil
 - Keep the unsubscribe link visible and functional without requiring a login - gating it behind authentication is a common, avoidable cause of spam complaints (a recipient who can't unsubscribe easily will complain instead). Rule of thumb: unsubscribe should be as easy as subscribe - if not easier.
 - Include a physical mailing address where CAN-SPAM applies.
 - Run new templates through mail testing tool before a big send - find issues with spam filters, broken links, or missing images before they reach a live audience.
+
+Salesforce's own deliverability guidance, published for the whole Marketing Cloud family, is worth a read alongside this article - it covers related topics this piece doesn't: CAPTCHA/bot protection on signup forms, concrete spam-filter content triggers, named reputation-checking tools, and per-product hard-bounce removal mechanics.
+
+<Button
+ link='https://help.salesforce.com/s/articleView?id=mktg.mktg_apps_email_delivery_basics.htm&type=5&language=en_US'
+ text='Read Deliverability Fundamentals'
+ newTab='true'
+/>
 
 ---
 
