@@ -182,7 +182,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
           › Quiet hours and alert pauses, per account<br/>
           › Meeting countdowns under each account's tile<br/>
           › An agenda of every account's day on one timeline - today, tomorrow, or a month<br/>
-          › A live pill for the call you are on - mute camera or mic from any tab
+          › A live pill for the call you are on - mute camera or mic from any window
         </p>
       </div>
       <div className="col col--6" style={{padding: '0 2rem'}}>
@@ -191,8 +191,8 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
           › Each account's links routed to the browser you chose<br/>
           › Docs, Sheets, Slides, Word, Excel and PowerPoint in their own windows<br/>
           › All nineteen Google and Microsoft apps, each on or off per account<br/>
+          › Three notes and a list of favourite files, one click from any window<br/>
           › Every account in its own isolated session, enforced by macOS<br/>
-          › Three local notes with checklists, one click from any window<br/>
           › One purchase - no subscription, ever
         </p>
       </div>
@@ -242,13 +242,59 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
       </div>
       <p style={{fontSize: '1.1rem'}}>
-        Paste your calendar's private address once and Slot shows what is coming up under each account, with a reminder at the lead times you choose. The calendar is parsed on your Mac - recurring events, exceptions, time zones and all - with no sign-in and no account access beyond that one address. All-day blocks stay out of the way, and a Join button takes you straight into the call. Once you are on it, the call becomes a live pill under its account's tile, and the camera and microphone controls sit right beside it - mute and unmute from any tab, on any account.
+        Paste your calendar's private address once and Slot shows what is coming up under each account, with a reminder at the lead times you choose. The calendar is parsed on your Mac - recurring events, exceptions, time zones and all - with no sign-in and no account access beyond that one address. All-day blocks stay out of the way, and a Join button takes you straight into the call. Once you are on it, the call becomes a live pill under its account's tile, and the camera and microphone controls follow it into every window - so you can mute while reading a spreadsheet, without going back to find the call.
       </p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
         src="/img/apple/slot/Slot-Mac-Meetings.webp"
         alt="A live call and the next meeting, as pills under the account tile"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 3b: The day */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Your Whole Day, Across Every Account</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        One column holding every account's meetings at once, drawn to scale, with a line for now - so a clash between work and personal is a thing you can see rather than a thing you find out about. Overlaps are marked even when the two meetings belong to different accounts. Today, tomorrow, or a month of dates to plan against, and you can mark the days you are not fully free: recurring blockers, a day of travel, a week taken off. Those marks are your own and are not shared with any calendar.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/slot/Slot-Mac-Agenda.webp"
+        alt="Every account's meetings in one column, with the next one counted down"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 3c: Notes and files */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Notes and Files That Follow You</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        Three notes, one click from any window, for the to-do list and the thing somebody just said on a call. Type <code>- </code>, <code>1. </code>, <code>[] </code> or <code># </code> and the line becomes what you meant; tick a checkbox and the count on the rail goes down. They are plain files on your Mac and sync nowhere. Beside them, the documents you keep coming back to: bookmark any Drive, Docs or Office file and it joins one list spanning every account, with your own name and tags on it - and each one opens in the account that owns it.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/slot/Slot-Mac-Notes.webp"
+        alt="A note open beside the mailbox, one click from the rail"
         imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
       />
     </div>
@@ -295,29 +341,6 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
       <ZoomImage
         src="/img/apple/slot/Slot-Mac-TwoAccounts.webp"
         alt="A Microsoft account in its own colour, every other account one click away on the rail"
-        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-      />
-    </div>
-  </div>
-</section>
-
-{/* Feature 5: Agenda and Notes - new in 1.1.0 */}
-<section className={styles.section}>
-  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
-    <div style={{maxWidth: '800px', margin: '0 auto'}}>
-      <div className="text--center">
-
-### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Your Day and Your Notes, Everywhere</span>
-
-      </div>
-      <p style={{fontSize: '1.1rem'}}>
-        The Agenda shows every account's meetings on one timeline, with overlaps marked - even when the clash is between two different accounts. Check what awaits you tomorrow, or take a quick peek into the year with week numbers and weekends marked, and click any empty hour to start a new event in selected account's calendar. Next to it you have Slot's notes: three tabs for quick to-do lists, meeting notes or personal notes. Both open from the rail - and from the title bar of every call and document window. What is next and what you meant to write down stay one click away everywhere in Slot.
-      </p>
-    </div>
-    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
-      <ZoomImage
-        src="/img/apple/slot/Slot-Mac-Agenda.webp"
-        alt="The agenda timeline and a Slot note open over a live call"
         imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
       />
     </div>
@@ -376,7 +399,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <details className={styles.faqDetails}>
   <summary>Is my mail stored on my Mac?</summary>
 
-  No. Slot shows Google's and Microsoft's own web apps, so your mail, files and calendar stay on their servers exactly as they do in a browser. Slot is not an offline client and does not download your mailbox. What it keeps locally is small: your account list, its settings, each account's session, and the three notes you write in Slot itself - RTF files on your Mac, never uploaded.
+  No. Slot shows Google's and Microsoft's own web apps, so your mail, files and calendar stay on their servers exactly as they do in a browser. Slot is not an offline client and does not download your mailbox. What it keeps locally is small: your account list, its settings, and each account's session.
 
 </details>
 
@@ -494,8 +517,10 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
   <li><strong>Your account list</strong> - for each account: a name, any name you set yourself, the address the account reports, the colour you chose, which surfaces you enabled, which browser opens its links, your notification and quiet-hours settings, the calendar feed address if you added one, and the last unread count Slot showed you.</li>
   <li><strong>Profile pictures</strong> - the picture shown on the account rail, cached as a file.</li>
   <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, and whether Slot asks for Touch ID on unlock.</li>
+  <li><strong>Your notes</strong> - the three notes in Slot's own note panel, with their formatting, saved as files. They belong to the app rather than to any account, and nothing in them is sent anywhere.</li>
+  <li><strong>Your favourites</strong> - the metadata of documents you chose to keep: each one's address, the name it had when you kept it, any name or tags you gave it, and which account it belongs to.</li>
+  <li><strong>Your availability</strong> - the dates you marked in the month view as limited availability or as travel, and the repeating pattern if you set one. You type these into Slot yourself; they are read from no calendar and belong to no account.</li>
   <li><strong>Each account's website data</strong> - cookies, local storage and caches, held by macOS in that account's isolated store.</li>
-  <li><strong>Your notes</strong> - the Slot notes are kept as ordinary RTF files in Slot's Application Support folder. They belong to no account, they are never transmitted anywhere, just used locally by Slot.</li>
 </ul>
 
 <p>Attachments you download go to a folder you pick once through the system's own panel - Downloads by default. Addresses you copy go to the clipboard. Both are ordinary macOS behaviour and both are yours.</p>
