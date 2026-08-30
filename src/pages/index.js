@@ -150,7 +150,7 @@ const apps = [
         url: '/slot',
         appStoreUrl: 'https://apps.apple.com/app/id6796483262',
         imageUrl: 'img/apple/slot/Slot-Mac-Card.webp',
-        description: 'Every Google and Microsoft account in one native Mac app, each in its own isolated session - unread on the Dock, meeting alerts, call controls on the account rail, and links that always open as the right account.',
+        description: 'Every Google and Microsoft account in one native Mac app, each in its own isolated session - unreads on the Dock, email & meeting alerts, call controls wherever you are, and links that always open as the right account.',
         tags: ['Gmail', 'Outlook', 'Meet', 'Teams'],
         platforms: ['macOS'],
     },
