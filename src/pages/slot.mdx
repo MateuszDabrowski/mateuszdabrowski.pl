@@ -18,7 +18,7 @@ import styles from './styles.module.css';
     changed, and CDNs go on serving the old picture. Confirmed the hard way:
     the 1.2.0 page showed the 1.1.0 rail for over a day after deploying. Bump
     this with the app's version and every screenshot is a new URL. */}
-export const ASSETS = '1.3.0';
+export const ASSETS = '1.4.0';
 
 {/* Custom Inline React Component for Image Lightbox Overlay */}
 export const ZoomImage = ({ src, alt, imgStyle }) => {
@@ -258,6 +258,29 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
       <ZoomImage
         src="/img/apple/slot/Slot-Mac-Meetings.webp"
         alt="A live call and the next meeting, as pills under the account tile"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 3a: The menu bar */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Your Day and Your Mute, in the Menu Bar</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>
+        Today's date and the time to your next meeting sit in the menu bar, accessible in every app you use - with the status of microphone and camera your call is holding. Click it and today's agenda opens right there. Right-click to mute, open the call's window, open a favourite, or start a timer (count up, count down, stay on time during presentations and work) - without bringing Slot forward first. Slot stays in the Dock with its unread badge.
+      </p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/slot/Slot-Mac-Documents.webp"
+        alt="Slot's menu bar item with its menu open over a document window: mute, the call, a running timer, accounts and favourites"
         imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
       />
     </div>
@@ -525,8 +548,8 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <ul>
   <li><strong>Your account list</strong> - for each account: a name, any name you set yourself, the address the account reports, the colour you chose, which surfaces you enabled, which browser opens its links, your notification and quiet-hours settings, the calendar feed address if you added one, and the last unread count Slot showed you.</li>
   <li><strong>Profile pictures</strong> - the picture shown on the account rail, cached as a file.</li>
-  <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, and whether Slot asks for Touch ID on unlock.</li>
-  <li><strong>Your notes</strong> - the three notes in Slot's own note panel, with their formatting, saved as files. They belong to the app rather than to any account, and nothing in them is sent anywhere.</li>
+  <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, whether the menu bar item and its countdown are shown, and whether Slot asks for Touch ID on unlock.</li>
+  <li><strong>Your notes</strong> - the notes in Slot's own note panel, up to four, with their formatting, saved as files. A note you made shared belongs to the app; a note you made per account is one file per account, deleted with that account. Nothing in them is sent anywhere.</li>
   <li><strong>Your favourites</strong> - the metadata of documents you chose to keep: each one's address, the name it had when you kept it, any name or tags you gave it, and which account it belongs to.</li>
   <li><strong>Your availability</strong> - the dates you marked in the month view as limited availability or as travel, and the repeating pattern if you set one. You type these into Slot yourself; they are read from no calendar and belong to no account.</li>
   <li><strong>Each account's website data</strong> - cookies, local storage and caches, held by macOS in that account's isolated store.</li>
