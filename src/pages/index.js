@@ -144,6 +144,7 @@ const apps = [
         platforms: ['Web'],
         cta: 'Open App',
         badge: 'FREE',
+        layout: 'row',
     },
     {
         title: <>Slot</>,
@@ -153,8 +154,18 @@ const apps = [
         description: 'Every Google and Microsoft account in one native Mac app, each in its own isolated session - unreads on the Dock, email & meeting alerts, call controls wherever you are, and links that always open as the right account.',
         tags: ['Gmail', 'Outlook', 'Meet', 'Teams'],
         platforms: ['macOS'],
+        layout: 'card',
     },
-    /* Shelf lands here. */
+    {
+        title: <>Shelf</>,
+        url: '/shelf',
+        appStoreUrl: 'https://apps.apple.com/app/id6762406443',
+        imageUrl: 'img/apple/shelf/Shelf-Mac-Main.webp',
+        description: 'The small things you keep retyping - door codes, addresses, snippets, queries, prompts, test emails - encrypted on your device, synced through iCloud, and one tap from your clipboard on iPhone, iPad, Mac and Apple Watch.',
+        tags: ['Your', 'Stuff', 'Vault', 'Clipboard'],
+        platforms: ['macOS', 'iPadOS', 'iOS', 'watchOS'],
+        layout: 'card',
+    },
     {
         title: <>Strum</>,
         url: '/strum',
@@ -163,6 +174,7 @@ const apps = [
         description: 'A clean, focused tablature editor for ukulele and guitar. Write a song, drop in chords, set a strum pattern, and hear it back on a recorded instrument. Practice to a metronome that auto-scrolls the tab and ramps the tempo - plus capo support, a built-in tuner, custom tunings, and a library that syncs through your own iCloud.',
         tags: ['Ukulele', 'Guitar', 'Tabs'],
         platforms: ['macOS', 'iPadOS', 'iOS'],
+        layout: 'card',
     },
 ];
 
@@ -315,6 +327,52 @@ function AppRow({ title, url, description, tags, platforms, cta, imageUrl, githu
                                 {cta}
                             </Link>
                         )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/**
+ * Renders an app as a stacked card for a multi-column row: image on top with
+ * the platform chips, then the story, then the same read-left / act-right
+ * footer AppRow uses. Three App Store apps sit side by side under the
+ * full-width free web tool, so the section reads as one tool and one family.
+ */
+function AppCard({ title, url, description, tags, platforms, imageUrl, appStoreUrl }) {
+    const img = useBaseUrl(imageUrl);
+    const storeBadge = useBaseUrl('img/apple/appstore.svg');
+    return (
+        <div className={clsx('col col--4', styles.appCardCol)}>
+            <div className={styles.appCard}>
+                <div className={styles.appCardImage}>
+                    <span className={styles.platformChips}>
+                        {platforms.map((platform, idx) => (
+                            <span key={idx} className={styles.platformChip}>{platform}</span>
+                        ))}
+                    </span>
+                    <Link to={url}>
+                        <img src={img} alt={title} loading="lazy" />
+                    </Link>
+                </div>
+                <div className={styles.appCardBody}>
+                    <Link className={clsx(styles.cardTitle, styles.appCardTitle)} to={url}>
+                        {title}
+                    </Link>
+                    <p className={styles.cardTags}>
+                        {tags.map((tag, idx) => (
+                            <span key={idx}>#{tag}{idx < tags.length - 1 ? ' ' : ''}</span>
+                        ))}
+                    </p>
+                    <p>{description}</p>
+                    <div className={styles.appRowFooter}>
+                        <Link className={styles.toolGithubLink} to={url}>
+                            Learn more »
+                        </Link>
+                        <Link className={styles.appStoreBadge} to={appStoreUrl} aria-label={`Download on the App Store`}>
+                            <img src={storeBadge} alt="Download on the App Store" loading="lazy" />
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -586,7 +644,9 @@ function Home() {
                                 </h2>
                                 <div className={clsx('row', styles.centeredRow)}>
                                     {apps.map((props, idx) => (
-                                        <AppRow key={idx} {...props} />
+                                        props.layout === 'card'
+                                            ? <AppCard key={idx} {...props} />
+                                            : <AppRow key={idx} {...props} />
                                     ))}
                                 </div>
                             </div>
