@@ -119,7 +119,7 @@ module.exports = {
                             to: 'sites/faq/salesforce/how-to-get-sf-certification-vouchers/',
                         },
                         {
-                            label: 'How to open Salesforce Support Case without Agent?',
+                            label: 'How to open Salesforce Support Case without Agentforce?',
                             to: 'https://help.salesforce.com/s/case-submission?cr_case=1',
                         }
                     ]
@@ -162,6 +162,10 @@ module.exports = {
                         {
                             label: 'Slot: Your Inboxes in One App',
                             to: 'slot',
+                        },
+                        {
+                            label: 'Shelf: Quick Copy Vault',
+                            to: 'shelf',
                         },
                         {
                             label: 'Strum: Tabs made easy',
