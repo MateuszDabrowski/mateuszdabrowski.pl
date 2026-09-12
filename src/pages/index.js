@@ -531,6 +531,27 @@ const events = [
         description: 'Polish Dreamin\' session covering Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
         url: 'https://www.coffeeforce.pl/dreamin',
     },
+    {
+        title: 'From Salesforce to Agentforce: The good, the bad, and the future',
+        date: 'March 28, 2025',
+        place: 'Wrocław, Poland',
+        description: 'Polish Dreamin\' session covering Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
+        url: 'https://www.coffeeforce.pl/dreamin',
+    },
+    {
+        title: 'MC Next Consultant Bootcamp: Analytics & Performance Insights',
+        date: 'October 20, 2026',
+        place: 'Online',
+        description: 'Day 5 of the Marketing Cloud Next Consultant Bootcamp series, this session will cover Analytics & Performance Insights part of the Exam. Learn how to leverage data and insights to optimize your marketing strategies and drive better results.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-global-bootcamp-group-virtual-presents-marketing-cloud-next-consultant-bootcamp-day-5/',
+    },
+    {
+        title: 'MC Next Consultant Bootcamp: Ask Me Anything',
+        date: 'October 27, 2026',
+        place: 'Online',
+        description: 'Day 7 of the Marketing Cloud Next Consultant Bootcamp series, this session will be the closing AMA session. Get your exam questions answered by the bootcamp speakers and get ready to become certified Marketing Cloud Next Consultant.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-global-bootcamp-group-virtual-presents-marketing-cloud-next-consultant-bootcamp-day-7/',
+    },
 ];
 
 /**
@@ -636,6 +657,21 @@ function Home() {
                         </section>
                     )}
 
+                    {futureEvents && futureEvents.length > 0 && (
+                        <section className={clsx(styles.section, styles.sectionAlt)}>
+                            <div className="container">
+                                <h2 className={styles.sectionHeading}>
+                                    Upcoming Events
+                                </h2>
+                                <div className={clsx('row', styles.centeredRow)}>
+                                    {futureEvents.map((event, idx) => (
+                                        <Event key={idx} {...event} />
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    )}
+
                     {apps && apps.length > 0 && (
                         <section className={clsx(styles.section, styles.sectionAlt)}>
                             <div className="container">
@@ -647,21 +683,6 @@ function Home() {
                                         props.layout === 'card'
                                             ? <AppCard key={idx} {...props} />
                                             : <AppRow key={idx} {...props} />
-                                    ))}
-                                </div>
-                            </div>
-                        </section>
-                    )}
-
-                    {futureEvents && futureEvents.length > 0 && (
-                        <section className={clsx(styles.section, styles.sectionAlt)}>
-                            <div className="container">
-                                <h2 className={styles.sectionHeading}>
-                                    Upcoming Events
-                                </h2>
-                                <div className={clsx('row', styles.centeredRow)}>
-                                    {futureEvents.map((event, idx) => (
-                                        <Event key={idx} {...event} />
                                     ))}
                                 </div>
                             </div>
