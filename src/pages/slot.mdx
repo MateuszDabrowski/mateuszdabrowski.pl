@@ -18,7 +18,7 @@ import styles from './styles.module.css';
     changed, and CDNs go on serving the old picture. Confirmed the hard way:
     the 1.2.0 page showed the 1.1.0 rail for over a day after deploying. Bump
     this with the app's version and every screenshot is a new URL. */}
-export const ASSETS = '1.4.0';
+export const ASSETS = '1.5.0';
 
 {/* Custom Inline React Component for Image Lightbox Overlay */}
 export const ZoomImage = ({ src, alt, imgStyle }) => {
@@ -299,11 +299,14 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
       <p style={{fontSize: '1.1rem'}}>
         One column holding every account's meetings at once, drawn to scale, with a line for now - so a clash between work and personal is a thing you can see rather than a thing you find out about. Overlaps are marked even when the two meetings belong to different accounts. Today, tomorrow, or a month of dates to plan against, and you can mark the days you are not fully free: recurring blockers, a day of travel, a week taken off. Those marks are your own and are not shared with any calendar.
       </p>
+      <p style={{fontSize: '1.1rem'}}>
+        Track the time zones you work with - per account, so the Dubai partner's clock belongs to the work calendar and never to the personal one. The line for now says the time there, an empty slot says what the meeting you are about to propose would be there, and resting on any meeting opens a card with the organiser, the guests and your reply, the location, the description, and the times in every zone that account tracks.
+      </p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
         src="/img/apple/slot/Slot-Mac-Agenda.webp"
-        alt="Every account's meetings in one column, with the next one counted down"
+        alt="Every account's meetings in one column, with the time in Casablanca and Dubai on the line for now"
         imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
       />
     </div>
