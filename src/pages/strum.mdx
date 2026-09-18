@@ -10,6 +10,7 @@ import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import { Email } from '/src/components/Email.jsx';
 import styles from './styles.module.css';
 
 {/* Custom Inline React Component for Image Lightbox Overlay */}
@@ -433,7 +434,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
 <p>
   Need help, found a bug, or want to suggest a feature? Email
-  **[strum_support@mateuszdabrowski.pl](mailto:strum_support@mateuszdabrowski.pl)**.
+  **<Email user="strum_support" />**.
   Include your device model and OS version - it makes most issues quicker to diagnose. I read every email.
 </p>
 
@@ -481,7 +482,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <details className={styles.faqDetails}>
   <summary>Can I get a song in without typing it out?</summary>
 
-  Two ways. Any `.strum` file someone sends you imports directly. And the format is [documented in a single file](/strum/llm-spec.md) written for AI assistants - hand that document to Claude, Gemini or ChatGPT along with the song you want, and ask it for a `.strum` file. Everything imported is validated and clamped on the way in, so a malformed file can't corrupt your library.
+  Two ways. Any `.strum` file someone sends you imports directly. And the format is [documented in a single file](pathname:///strum/llm-spec.md) written for AI assistants - hand that document to Claude, Gemini or ChatGPT along with the song you want, and ask it for a `.strum` file. Everything imported is validated and clamped on the way in, so a malformed file can't corrupt your library.
 
 </details>
 
@@ -602,7 +603,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
     </div>
 
-<p>Questions about this policy or about Strum's data handling: **[strum_support@mateuszdabrowski.pl](mailto:strum_support@mateuszdabrowski.pl)**.</p>
+<p>Questions about this policy or about Strum's data handling: **<Email user="strum_support" />**.</p>
 
   </div>
 </section>

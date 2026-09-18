@@ -10,6 +10,7 @@ import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import { Email } from '/src/components/Email.jsx';
 import styles from './styles.module.css';
 
 {/* The release these screenshots belong to, appended to every screenshot URL
@@ -400,7 +401,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
 <p>
   Need help, found a bug, or want to suggest a feature? Email
-  **[shelf_support@mateuszdabrowski.pl](mailto:shelf_support@mateuszdabrowski.pl)**.
+  **<Email user="shelf_support" />**.
   Include your device model and OS version - it makes most issues quicker to diagnose.
   I read every email.
 </p>
@@ -577,7 +578,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
     </div>
 
-<p>Questions about this policy or about Shelf's data handling: **[shelf_support@mateuszdabrowski.pl](mailto:shelf_support@mateuszdabrowski.pl)**.</p>
+<p>Questions about this policy or about Shelf's data handling: **<Email user="shelf_support" />**.</p>
 
   </div>
 </section>

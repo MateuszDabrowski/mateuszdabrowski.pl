@@ -6,49 +6,67 @@ image: img/og/og-image-privacy.png
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
+import { Email } from '/src/components/Email.jsx';
 
 <LeadText content="Legal stuff. Short and simple." />
 
 ## TL;DR
 
-I do not collect your personal data and do not share any information with third parties except for non-personally identifiable, aggregated data used by [Google Analytics Solutions](https://www.google.com/analytics/) and [Cloudflare](https://www.cloudflare.com/).
+Browsing this site leaves no personal data with me. What I get is aggregated, non-identifiable traffic data from [Cloudflare](https://www.cloudflare.com/) and search statistics from [Algolia](https://www.algolia.com/). Nothing is shared with anyone else.
 
-## Cookies
+## Cookies {#stored-in-your-browser}
 
-Cookies are a small text file that is placed on your computer by websites that you visit. They are widely used to make websites work and provide analytical data to the owner of the site. I'm using cookies from two different sources: [Google Analytics Solutions](https://www.google.com/analytics/) and [Cloudflare](https://www.cloudflare.com/).
+Cookies are small text files that websites place on your computer. They are widely used to make websites work and to give the owner some analytical data. I'm using cookies from two sources: Cloudflare on every page and Google on the newsletter page only.
 
 :::note Check yourself
-You can check what cookies are in use on any page and what are their values by going to Developer Tools in your browser, navigating to Console tab, writing `document.cookies` and confirming with Enter. Many browsers also have a more detailed view in the Developer Tools. For example, Safari will show you more information about Cookies in the Storage tab.
+You can check what cookies are in use on any page and what their values are by going to Developer Tools in your browser, navigating to the Console tab, writing `document.cookie` and confirming with Enter. Many browsers also have a more detailed view in the Developer Tools. For example, Safari shows cookies in the Storage tab.
 :::
-
-### Google Analytics
-
-Google Analytics is a web analytics service that tracks and reports website traffic.
-
-Cookie Name | Expiration | Purpose
------------ | ---------- | -------
-_ga         | 2 years    | This cookie uses a random number and a timestamp combination to create a unique and anonymous identifier of each visitor
-_gid        | 24 hours   | This cookie works just like the one above but is focused on mapping visitor behaviour on the website
-_gat        | 1 minute   | This cookie throttles request rate to Google Analytics server
-
-To further protect your privacy, I am not sharing visitor IP with Google Analytics and have Google Advertising Features switched off.
 
 ### Cloudflare
 
-Cloudflare is service providing security and protection for websites.
+Cloudflare delivers this site and keeps bots away from it.
 
 Cookie Name | Expiration | Purpose
 ----------- | ---------- | -------
-_cfduid     | 11 days    | This cookie collects anonymised (one-way hashed) visitor IP addresses to detect malicious ones and minimise blocking legitimate users.
-_cf_bm      | 30 minutes | This cookie detects behaviour anomalies to identify and mitigate automated bad bot traffic
+__cf_bm     | 30 minutes | Tells browsers from bots to limit automated traffic. Holds no information about you.
+
+### Google
+
+The newsletter page embeds a Google Form. Google sets these cookies inside it, on its own domain, not mine.
+{/* Batch 2 (native form) removes the Google Form. Delete this subsection and change the intro above to Cloudflare only. */}
+
+Cookie Name | Expiration | Purpose
+----------- | ---------- | -------
+S           | Your visit | Google Forms session
+COMPASS     | Your visit | Google Forms session
+NID         | 6 months   | Google's preferences cookie
 
 ## Data processing
 
-I only collect general information such as pages visited, time spent on pages, heat-map of activity on the site, information about the browser, country where you are located, etc. The data collected is used in the aggregated form to improve this website and spot trends without possibility to identify individuals.
+I only collect general information such as pages visited, country, browser and device. Cloudflare gathers it without cookies, and I see it only in aggregate, so there is no way to identify you.
 
-Anonymised information mentioned above is aggregated and stored in a central database provided by [Google Analytics Solutions](https://www.google.com/analytics/). It is erased on a regular, rolling basis (after 26 months of inactivity).
+Algolia receives what you type into the search box and shows me aggregated statistics: what people look for and what returns nothing. That is how I pick the next article to write.
 
-Additionally, if you want to stop even this level of processing, most web browsers allow control over most cookies through the browser settings. You may delete the cookies or let them expire. You can also opt-out Google tracking across all websites by downloading the Google Analytics opt-out [browser add-on](https://tools.google.com/dlpage/gaoptout). If you have any additional questions regarding data processing on this website, feel free to [send me an e&#8209;mail](mailto:legal@mateuszdabrowski.pl).
+Both services see your IP address while doing their job, as any web service does. The legal basis is my legitimate interest in running and improving this site. Cloudflare is a US company certified under the EU-US Data Privacy Framework. Algolia is an EU company.
+
+If you want to stop even this level of processing, any content blocker will do it, and the site works fine without the beacon. If you have questions about data processing on this website, feel free to <Email user="legal">send me an email</Email>.
+
+## Newsletter
+
+If you subscribe to the newsletter, you give me your email address. That is the only personal data this site collects, and only because you hand it over.
+
+- **What I collect:** your email address and the time you submitted the form. No name, no tracking of what you read.
+- **Why:** to send you the newsletter. The address is used for nothing else and is never shared or sold.
+- **Legal basis:** your consent, given when you submit the form. Unsubscribing withdraws it.
+{/* Batch 2 (native form with double opt-in) wording for this bullet:
+    the form posts straight from your browser to a script in my Google Workspace account, so nothing passes through this site. You get a confirmation email and the address is added to the list only when you click its link. The list is a Google Sheet in that account and the emails go out through Gmail from my own sending tool. Google processes the data on my behalf under its Workspace terms. */}
+- **Where it goes:** the form is a Google Form, so the address goes straight from your browser to Google and nothing passes through this site. The list is a Google Sheet in my Google Workspace account, and the emails go out through Gmail from my own sending tool. Google processes the data on my behalf under its Workspace terms.
+- **How long:** until you unsubscribe. After that I keep the address only as unsubscribed, so a later email never goes to you by accident. If you subscribe again, the newest choice wins. Write to <Email user="legal" /> if you want the address gone entirely.
+- **Unsubscribing:** the link in any email, the "Unsubscribe" option on the newsletter page, or an email to <Email user="newsletter" /> from the subscribed address.
+
+## Your rights
+
+You can ask what I hold about you, have it corrected or deleted, or withdraw your consent. Just write to <Email user="legal" />. The person responsible for your data is me, Mateusz Dąbrowski, Warsaw, Poland. You can also complain to a data protection authority.
 
 ## Changes
 

@@ -10,6 +10,7 @@ import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import { Email } from '/src/components/Email.jsx';
 import styles from './styles.module.css';
 
 {/* The release these screenshots belong to, appended to every screenshot URL
@@ -421,7 +422,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
 <p>
   Need help, found a bug, or want to suggest a feature? Email
-  **[slot_feedback@mateuszdabrowski.pl](mailto:slot_feedback@mateuszdabrowski.pl)**.
+  **<Email user="slot_feedback" />**.
   Include your macOS version and which provider the account is with - it makes most issues quicker to diagnose. I read every email.
 </p>
 
@@ -528,7 +529,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
 <p>I operate no servers for Slot. There is no account to create, no sign-in to Slot itself, and no way for your data to reach me. Slot contains <strong>no analytics, no telemetry, no crash reporting, no advertising identifiers and no third-party SDKs of any kind</strong> - it is built entirely against Apple's own frameworks and bundles no other company's code.</p>
 
-<p>The only way to send me anything is to choose <strong>Send Feedback</strong> in Settings, which opens a new message to <a href="mailto:slot_feedback@mateuszdabrowski.pl">slot_feedback@mateuszdabrowski.pl</a> in your mail app. You write it, you decide what is in it, and you send it.</p>
+<p>The only way to send me anything is to choose <strong>Send Feedback</strong> in Settings, which opens a new message to <Email user="slot_feedback" /> in your mail app. You write it, you decide what is in it, and you send it.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -642,7 +643,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
     </div>
 
-<p>Questions about this policy or about Slot's data handling: **[slot_feedback@mateuszdabrowski.pl](mailto:slot_feedback@mateuszdabrowski.pl)**.</p>
+<p>Questions about this policy or about Slot's data handling: **<Email user="slot_feedback" />**.</p>
 
   </div>
 </section>
