@@ -8,6 +8,10 @@ package-lock.json
 # Generated files
 .docusaurus
 .cache-loader
+.claude
+
+# Private
+scripts/
 
 # Misc
 .DS_Store
