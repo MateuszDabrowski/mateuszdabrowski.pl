@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 200">
+  <!-- Brand break: twelve 200x200 cells built from five designs in the site
+       pattern's style, placed in a fixed shuffled order with 90-degree turns
+       so the repeat is long and directionless. Tiles seamlessly on cell
+       edges. Palette matches custom.css: blue #1D73C9, light blue #4A9BEA,
+       red #DA4E55, amber #F6B355. -->
+  <defs>
+    <symbol id="stripes" viewBox="0 0 200 200"><rect width="200" height="40" y="0" fill="#4A9BEA"/><rect width="200" height="40" y="40" fill="#1D73C9"/><rect width="200" height="40" y="80" fill="#DA4E55"/><rect width="200" height="40" y="120" fill="#F6B355"/><rect width="200" height="40" y="160" fill="#FFFFFF"/></symbol>
+    <symbol id="slant" viewBox="0 0 200 200"><rect width="200" height="200" fill="#4A9BEA"/><polygon points="0,0 50,0 150,200 100,200" fill="#F6B355"/><polygon points="50,0 100,0 200,200 150,200" fill="#DA4E55"/><polygon points="100,0 150,0 250,200 200,200" fill="#1D73C9"/></symbol>
+    <symbol id="ring" viewBox="0 0 200 200"><rect width="200" height="200" fill="#1D73C9"/><path d="M100,0 L-80,0 A180,180 0 0,0 100,180 Z" fill="#DA4E55"/><path d="M100,0 L100,180 A180,180 0 0,0 280,0 Z" fill="#4A9BEA"/><path d="M100,0 L-10,0 A110,110 0 0,0 100,110 Z" fill="#4A9BEA"/><path d="M100,0 L100,110 A110,110 0 0,0 210,0 Z" fill="#FFFFFF"/></symbol>
+    <symbol id="slantback" viewBox="0 0 200 200"><rect width="200" height="200" fill="#F6B355"/><polygon points="60,0 110,0 10,200 -40,200" fill="#FFFFFF"/><polygon points="110,0 160,0 60,200 10,200" fill="#DA4E55"/><polygon points="160,0 210,0 110,200 60,200" fill="#1D73C9"/></symbol>
+    <symbol id="tri" viewBox="0 0 200 200"><polygon points="0,0 200,0 100,100" fill="#F6B355"/><polygon points="200,0 200,200 100,100" fill="#DA4E55"/><polygon points="200,200 0,200 100,100" fill="#4A9BEA"/><polygon points="0,200 0,0 100,100" fill="#FFFFFF"/></symbol>
+  </defs>
+  <svg x="0" width="200" height="200" viewBox="0 0 200 200"><use href="#stripes" width="200" height="200"/></svg>
+  <svg x="200" width="200" height="200" viewBox="0 0 200 200"><use href="#ring" width="200" height="200"/></svg>
+  <svg x="400" width="200" height="200" viewBox="0 0 200 200"><use href="#slant" width="200" height="200"/></svg>
+  <svg x="600" width="200" height="200" viewBox="0 0 200 200"><use href="#tri" width="200" height="200"/></svg>
+  <svg x="800" width="200" height="200" viewBox="0 0 200 200"><use href="#slantback" width="200" height="200"/></svg>
+  <svg x="1000" width="200" height="200" viewBox="0 0 200 200"><use href="#stripes" width="200" height="200" transform="rotate(90 100 100)"/></svg>
+  <svg x="1200" width="200" height="200" viewBox="0 0 200 200"><use href="#tri" width="200" height="200" transform="rotate(180 100 100)"/></svg>
+  <svg x="1400" width="200" height="200" viewBox="0 0 200 200"><use href="#ring" width="200" height="200" transform="rotate(180 100 100)"/></svg>
+  <svg x="1600" width="200" height="200" viewBox="0 0 200 200"><use href="#slant" width="200" height="200" transform="rotate(90 100 100)"/></svg>
+  <svg x="1800" width="200" height="200" viewBox="0 0 200 200"><use href="#slantback" width="200" height="200" transform="rotate(90 100 100)"/></svg>
+  <svg x="2000" width="200" height="200" viewBox="0 0 200 200"><use href="#ring" width="200" height="200" transform="rotate(90 100 100)"/></svg>
+  <svg x="2200" width="200" height="200" viewBox="0 0 200 200"><use href="#tri" width="200" height="200" transform="rotate(270 100 100)"/></svg>
+</svg>

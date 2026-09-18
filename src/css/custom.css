@@ -1,8 +1,25 @@
 /* ---------------------------------- COLOURS -------------------------------- */
 
 :root {
+  /* Height of the brand band above the footer. Keep it a whole number of
+     pixels: the band's cells are square, so the cell width equals this
+     height and a fraction would put cell edges between pixels. */
+  --brand-break-height: 16px;
   --ifm-color-primary: #1D73C9;
+  /* Infima derives hover and active states from these six; left undefined
+     they fall back to Infima's stock blue. */
+  --ifm-color-primary-dark: #1A69B7;
+  --ifm-color-primary-darker: #1861AA;
+  --ifm-color-primary-darkest: #15528F;
+  --ifm-color-primary-light: #2180DF;
+  --ifm-color-primary-lighter: #2A85E0;
+  --ifm-color-primary-lightest: #4997E5;
   --ifm-color-secondary: #F6B355;
+  /* The brand amber is 1.8:1 on white, unreadable as text. This is the
+     nearest amber that passes 4.5:1; dark mode uses the brand amber itself.
+     Use it wherever amber is text on the page background, not for chips,
+     buttons or anything on the dark hero and footer. */
+  --md-color-amber-text: #A96609;
   --ifm-color-tertiary: #DA4E55;
   --ifm-color-gray: #212121;
   --ifm-color-black: #18191a;
@@ -12,6 +29,13 @@
 
 html[data-theme='dark'] {
   --ifm-color-primary: #DA4E55;
+  --ifm-color-primary-dark: #D63D45;
+  --ifm-color-primary-darker: #D43039;
+  --ifm-color-primary-darkest: #BE282F;
+  --ifm-color-primary-light: #DE6369;
+  --ifm-color-primary-lighter: #E06C71;
+  --ifm-color-primary-lightest: #E6898E;
+  --md-color-amber-text: #F6B355;
   --ifm-color-tertiary: #1D73C9;
   --ifm-background-surface-color: #18191a;
   --ifm-background-color: #212121;
@@ -73,7 +97,36 @@ html[data-theme='dark'] .header-salesforce-link:before {
 /* ---------------------------------- FOOTER --------------------------------- */
 
 .footer {
+  position: relative;
+  padding-top: calc(var(--ifm-footer-padding-vertical) + var(--brand-break-height));
   background-color: var(--ifm-color-black);
+}
+
+/* A band of the brand pattern as the footer's top rule. In dark mode the
+   footer shares its tone with the card-coloured sections, so without it the
+   homepage's last section would run straight into the footer. The SVG is a
+   6:1 tile of five cells drawn in the pattern's style; it repeats on cell
+   edges, so any height works and the width takes care of itself. */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--brand-break-height);
+  background: url('/img/brand-break.svg') repeat-x left top / auto 100%;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --brand-break-height: 12px;
+  }
+}
+
+@media print {
+  .footer::before {
+    display: none;
+  }
 }
 
 .footer__title {
@@ -91,6 +144,13 @@ html[data-theme='dark'] .header-salesforce-link:before {
 
 /* ------------------------------- NAVBAR MENU ------------------------------ */
 
+/* Second-level entries inside a navbar dropdown (e.g. MCE subtopics) */
+.navbar .dropdown__link--nested,
+.navbar-sidebar .menu__link.dropdown__link--nested {
+    padding-left: 1.75rem;
+    font-size: 0.85rem;
+}
+
 .navbar__item>.dropdown__menu a.navbar__link--active {
   color: var(--ifm-navbar-link-color);
   opacity: 0.85;
@@ -103,9 +163,163 @@ html[data-theme='dark'] .header-salesforce-link:before {
 
 /* ------------------------------- SIDEBAR MENU ------------------------------ */
 
-ul>li>ul a.menu__link {
-  font-size: 0.9rem;
+/* A case and weight ladder so the tree scans by structure, not by caret:
+   root sections and their categories are uppercase (bold, then semibold),
+   subcategories are bold in normal case, articles regular and lighter.
+   Level classes come from Docusaurus (level-1 = root). The .menu__list
+   .menu__list-item prefix outranks Infima's own list-item margin rule. */
+
+/* Root sections (Salesforce, JavaScript) */
+.menu__list .menu__list-item.theme-doc-sidebar-item-category-level-1 {
+  margin-top: 1.25rem;
+}
+
+.menu__list > .menu__list-item.theme-doc-sidebar-item-category-level-1:first-child {
+  margin-top: 0;
+}
+
+/* Root rows use the site's <HEADING/> treatment: mono, uppercase, amber brackets */
+.theme-doc-sidebar-item-category-level-1 > div > .menu__link,
+.theme-doc-sidebar-item-category-level-1 > .menu__link {
+  font-family: Courier, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ifm-font-color-base);
+}
+
+/* The theme's label span grows to fill the flex row and would push the closing
+   bracket to the far edge; keep it at content width for these rows. */
+.theme-doc-sidebar-item-category-level-1 > div > .menu__link > span,
+.theme-doc-sidebar-item-category-level-1 > .menu__link > span {
+  flex: 0 1 auto;
+}
+
+.theme-doc-sidebar-item-category-level-1 > div > .menu__link::before,
+.theme-doc-sidebar-item-category-level-1 > .menu__link::before {
+  content: '<';
+  color: var(--ifm-color-secondary);
+}
+
+.theme-doc-sidebar-item-category-level-1 > div > .menu__link::after,
+.theme-doc-sidebar-item-category-level-1 > .menu__link::after {
+  content: '/>';
+  color: var(--ifm-color-secondary);
+}
+
+/* Infima rotates a collapsed sublist link's ::after for its own caret; ours is text */
+.menu__list-item--collapsed.theme-doc-sidebar-item-category-level-1 > div > .menu__link::after,
+.menu__list-item--collapsed.theme-doc-sidebar-item-category-level-1 > .menu__link::after {
+  transform: none;
+}
+
+/* Categories (clouds, index rows, JS Snippets) */
+.menu__list .menu__list-item.theme-doc-sidebar-item-category-level-2 {
+  margin-top: 0.5rem;
+}
+
+.theme-doc-sidebar-item-category-level-2 > div > .menu__link,
+.theme-doc-sidebar-item-category-level-2 > .menu__link {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ifm-font-color-base);
+}
+
+/* Subcategories (Config, SQL, Snippets ...) */
+.menu__list .menu__list-item.theme-doc-sidebar-item-category-level-3,
+.menu__list .menu__list-item.theme-doc-sidebar-item-category-level-4 {
+  margin-top: 0.25rem;
+}
+
+.theme-doc-sidebar-item-category-level-3 > div > .menu__link--sublist,
+.theme-doc-sidebar-item-category-level-4 > div > .menu__link--sublist {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+}
+
+/* Carets follow the ladder: root rows get a double chevron, categories a single
+   heavier one, subcategories a single light one, all at the same size. Same
+   up-pointing orientation as Infima's icon, so its rotations and the dark-mode
+   filter still apply. */
+.theme-doc-sidebar-item-category-level-1 > div > .menu__caret::before,
+.theme-doc-sidebar-item-category-level-2 > div > .menu__caret::before,
+.theme-doc-sidebar-item-category-level-3 > div > .menu__caret::before,
+.theme-doc-sidebar-item-category-level-4 > div > .menu__caret::before {
+  background-size: 1.5rem 1.5rem;
+}
+
+.theme-doc-sidebar-item-category-level-1 > div > .menu__caret::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>');
+}
+
+.theme-doc-sidebar-item-category-level-2 > div > .menu__caret::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>');
+}
+
+.theme-doc-sidebar-item-category-level-3 > div > .menu__caret::before,
+.theme-doc-sidebar-item-category-level-4 > div > .menu__caret::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>');
+}
+
+/* Articles and links */
+.theme-doc-sidebar-item-link .menu__link {
+  font-size: 0.875rem;
+  font-weight: 400;
   opacity: 0.85;
+}
+
+.menu__link--active,
+.menu__link--active.menu__link--sublist {
+  color: var(--ifm-menu-color-active);
+  opacity: 1;
+}
+
+/* Cross-cloud index folders (Webinars, Ideas): a plain row opening the index page.
+   Their children are refs to pages that already live in their cloud folders, so
+   the list and the caret are hidden and the row only lights up on the index itself.
+   !important because the theme's Collapsible writes display inline when it opens. */
+.menu__list-item.sidebar-index > ul,
+.menu__list-item.sidebar-index .menu__caret {
+  display: none !important;
+}
+
+.menu__list-item.sidebar-index > div > .menu__link--active:not([aria-current='page']),
+.menu__list-item.sidebar-index > .menu__link--active:not([aria-current='page']) {
+  color: var(--ifm-menu-color);
+  background: none;
+}
+
+/* ------------------------------ OFF-SITE MARKER ----------------------------- */
+
+/* One marker for links that leave the site: a muted north-east arrow instead of
+   the theme's boxed icon, in the navbar, sidebars, footer and article text.
+   The sidebar cross-link to another section gets a plain arrow. Buttons,
+   image links, icon-only links and anything with .no-offsite-marker (chips)
+   are left alone. Components outside article text opt in with
+   .offsite-marker (the homepage What's new feed). */
+.navbar .dropdown__link > svg,
+.menu__link > svg,
+.footer__link-item > svg {
+  display: none;
+}
+
+.navbar .dropdown__link[target="_blank"]::after,
+.menu__link[target="_blank"]::after,
+.footer__link-item[target="_blank"]::after,
+.markdown a[target="_blank"]:not(.button):not(.no-offsite-marker):not(:has(img))::after,
+.offsite-marker[target="_blank"]::after,
+.menu__list-item.sidebar-crosslink > .menu__link::after {
+  content: '\2197';
+  margin-left: 0.3rem;
+  font-size: 0.85em;
+  opacity: 0.6;
+}
+
+.menu__list-item.sidebar-crosslink > .menu__link::after {
+  content: '\2192';
 }
 
 /* ----------------------------------- DOCS ---------------------------------- */
@@ -113,6 +327,12 @@ ul>li>ul a.menu__link {
 article {
   max-width: 800px;
   margin: 0 auto;
+}
+
+/* The About Me page is built from panels and grids, not prose, so it takes
+   the whole container like the homepage does. */
+.page-about-me article {
+  max-width: none;
 }
 
 article header>h1 {
@@ -192,6 +412,22 @@ html[data-theme='light'] .DocSearch {
   /* Footer */
   --docsearch-footer-background: var(--ifm-color-white);
   --docsearch-logo-color: var(--ifm-font-color-base);
+  /* DocSearch 4 variable names; see the dark block. */
+  --docsearch-search-button-background: var(--ifm-color-emphasis-100);
+  --docsearch-search-button-text-color: var(--ifm-font-color-base);
+  --docsearch-background-color: var(--ifm-color-white);
+  --docsearch-secondary-text-color: var(--ifm-color-emphasis-700);
+  --docsearch-subtle-color: var(--ifm-color-emphasis-200);
+  --docsearch-icon-color: var(--ifm-font-color-base);
+  --docsearch-key-background: var(--ifm-color-emphasis-200);
+  --docsearch-key-color: var(--ifm-font-color-base);
+  --docsearch-primary-color: var(--ifm-color-primary);
+  --docsearch-highlight-color: var(--ifm-color-primary);
+  --docsearch-focus-color: var(--ifm-color-primary-lighter);
+  --docsearch-dropdown-menu-background: var(--ifm-color-white);
+  --docsearch-dropdown-menu-item-hover-background: var(--ifm-color-emphasis-100);
+  --docsearch-soft-primary-color: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+  --docsearch-hit-highlight-color: var(--ifm-color-primary);
 }
 
 html[data-theme='dark'] .DocSearch {
@@ -213,6 +449,24 @@ html[data-theme='dark'] .DocSearch {
   --docsearch-key-gradient: linear-gradient(-26.5deg,
       var(--ifm-color-emphasis-200) 0%,
       var(--ifm-color-emphasis-100) 100%);
+  /* DocSearch 4 renamed the variables above; without these the button and
+     keys fall back to its stock navy and purple. */
+  --docsearch-search-button-background: var(--ifm-color-black);
+  --docsearch-search-button-text-color: var(--ifm-font-color-base);
+  --docsearch-background-color: var(--ifm-background-color);
+  --docsearch-secondary-text-color: var(--ifm-color-emphasis-700);
+  --docsearch-subtle-color: var(--ifm-color-emphasis-200);
+  --docsearch-icon-color: var(--ifm-font-color-base);
+  --docsearch-key-background: var(--ifm-color-emphasis-200);
+  --docsearch-key-color: var(--ifm-font-color-base);
+  --docsearch-primary-color: var(--ifm-color-primary);
+  --docsearch-highlight-color: var(--ifm-color-primary);
+  --docsearch-focus-color: var(--ifm-color-primary-lighter);
+  --docsearch-modal-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.5);
+  --docsearch-dropdown-menu-background: var(--ifm-background-color);
+  --docsearch-dropdown-menu-item-hover-background: var(--ifm-color-emphasis-200);
+  --docsearch-soft-primary-color: color-mix(in srgb, var(--ifm-color-primary) 18%, transparent);
+  --docsearch-hit-highlight-color: var(--ifm-color-primary);
 }
 
 /* ------------------------------- VIDEO EMBED ------------------------------- */
@@ -237,34 +491,29 @@ html[data-theme='dark'] .DocSearch {
 
 /* ---------------------------- GOOGLE FORM EMBED ---------------------------- */
 
+/* Sized to the form (Google renders it about 640px wide) and centred, with
+   the page's own card look around Google's white sheet. */
 .form--container {
-  position: relative;
-  background-color: var(--ifm-color-white);
-  border-radius: 10px;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: var(--ifm-global-shadow-md);
 }
 
-@media only screen and (max-width: 768px) {
-  .form--container {
-    height: 600px
-  }
-}
-
-@media only screen and (min-width: 768px) {
-  .form--container {
-    padding-bottom: 120%;
-  }
-}
-
+/* Tall enough for the whole Google Form (title, consent text, email, choice,
+   submit, footer) without scrolling inside the frame; narrower screens wrap
+   more lines, so they get extra room. */
 .form--container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: block;
   width: 100%;
-  height: 600px;
+  height: 1000px;
+  border: 0;
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (max-width: 576px) {
   .form--container iframe {
-    height: 100%;
+    height: 1150px;
   }
 }
