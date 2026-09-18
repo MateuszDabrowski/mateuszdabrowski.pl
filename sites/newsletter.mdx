@@ -1,28 +1,31 @@
 ---
 id: newsletter
 title: Newsletter
-description: Get yet another email in your inbox. This time, about Salesforce Marketing Cloud & AI.
+description: Get yet another email in your inbox. This time, about Salesforce Marketing, Data & AI.
 image: img/og/og-image-newsletter.png
 tags: [Salesforce, Marketing Cloud, Marketing Cloud Engagement, Personalization, Agentforce, Marketing Automation, Best Practice, Email]
+hide_table_of_contents: true
+custom_edit_url: null
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
 import { Form } from '/src/components/FormEmbed.js';
+import NewsletterForm from '/src/components/NewsletterForm.jsx';
+import { newsletterForm, nativeFormEnabled } from '/src/data/newsletter.js';
 
-<LeadText content="Get yet another email in your inbox. This time, about Salesforce Marketing Cloud & AI." />
+<LeadText content="Get yet another email in your inbox. This time, about Salesforce Marketing, Data & AI." />
 
-Looking for a Salesforce Marketing Cloud, Personalization & Agentforce focused newsletter lacking any specific cadence and jumping from one topic to another?
+Looking for a newsletter jumping between SF MarTech & Architecture topics with no fixed cadence? You are in the right place!
 
-You are in the right place!
+What you will get:
 
-I plan to send short emails about:
+- New content on my site: docs, snippets, apps.
+- Actually important news from the Salesforce ecosystem.
+- Practical and tested AI for MarTech and Salesforce folks.
+- Random finds by other Trailblazers that I found worthwhile.
 
-- New content on my site.
-- Interesting articles and videos by other Trailblazers.
-- Exciting news from the Salesforce Marketing Cloud and Agentforce world.
-- Some random marketing-related stuff I find worthwhile.
+What you will **not** get: sponsors, filler, or an email because a calendar said so.
 
-Sounds good? Here you can join the list:
+Sounds good? Here you can join the list (or leave it):
 
-<Form formId="1FAIpQLSchEjM7E23A7vBYnCktPplisn9PNyU4z4fKH4XmntSPzEttyQ" />
-
+{nativeFormEnabled ? <NewsletterForm {...newsletterForm} /> : <Form formId={newsletterForm.formId} />}

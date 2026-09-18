@@ -1,0 +1,179 @@
+/* Subscribe form: a panel in the site's card grammar, inputs on Infima's
+   variables so both themes work without a second palette. */
+
+.form {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: var(--ifm-card-background-color);
+  box-shadow: var(--ifm-global-shadow-md);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+html[data-theme='dark'] .form {
+  background-color: #212121;
+}
+
+/* The docs-footer variant is flat: the prompt around it is the panel. */
+.compact,
+html[data-theme='dark'] .compact {
+  max-width: none;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* Subscribe / Unsubscribe switch above the field. */
+.modes {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mode {
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background: none;
+  color: var(--ifm-font-color-base);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.modeActive {
+  border-color: var(--ifm-color-emphasis-900);
+  background-color: var(--ifm-color-emphasis-900);
+  color: var(--ifm-background-surface-color);
+}
+
+/* Unsubscribe is red in both themes; the theme's tertiary swaps to blue on dark. */
+.unsubscribeButton {
+  --ifm-button-background-color: #DA4E55;
+  --ifm-button-border-color: #DA4E55;
+  color: #ffffff;
+}
+
+.unsubscribeButton:hover {
+  --ifm-button-background-color: #D63D45;
+  --ifm-button-border-color: #D63D45;
+  color: #ffffff;
+}
+
+.row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.label {
+  flex: 1;
+  margin: 0;
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  min-height: 3rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: var(--ifm-font-color-base);
+  font: inherit;
+  font-size: 1rem;
+}
+
+html[data-theme='dark'] .input {
+  background-color: #212121;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ifm-color-primary) 25%, transparent);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--ifm-color-tertiary);
+}
+
+.button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  .row {
+    flex-direction: column;
+  }
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.topics {
+  margin: 1rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.check {
+  display: block;
+  margin: 0.2rem 0;
+}
+
+.notice {
+  margin: 0.85rem 0 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.error {
+  margin: 0.75rem 0 0;
+  color: var(--ifm-color-tertiary);
+  font-size: 0.9rem;
+}
+
+.done {
+  margin: 0;
+}
+
+.linkButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ifm-link-color);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Turnstile renders its own widget here; invisible mode leaves it empty. */
+.turnstile {
+  margin-top: 0.75rem;
+}
+
+.turnstile:empty {
+  display: none;
+}
