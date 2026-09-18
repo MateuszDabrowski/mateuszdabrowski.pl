@@ -1,587 +1,226 @@
 ---
 id: about-me
 title: About Me
-description: I’m a European Salesforce MVP and Marketing Automation Architect focused on implementing Marketing Automation and AI Agents in Salesforce Ecosystem.
+description: Mateusz Dąbrowski is a European Salesforce MVP and Marketing Cloud Architect - ten years of Marketing Automation, the last six in the Salesforce ecosystem, with architecture and technical leadership across pharma, manufacturing, e-commerce and professional services, and AI agents a growing part of the work.
 image: img/og/og-image-about-me.png
-toc_max_heading_level: 4
+hide_title: true
+hide_table_of_contents: true
+custom_edit_url: null
 ---
 
-import { LeadText } from '/src/components/LeadText.js';
-import { Timeline } from '/src/components/Timeline.jsx';
-import { IndustryExperience } from '/src/components/IndustryExperience.jsx';
-import { PlatformExperience } from '/src/components/PlatformExperience.jsx';
-import { buildToc } from '/src/components/timelineUtils.js';
+import clsx from 'clsx';
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+import styles from '/src/pages/styles.module.css';
+import about from '/src/components/AboutMe.module.css';
+import { AboutStats, CredentialList, SpeakingList, IndustryList, AboutJsonLd } from '/src/components/AboutSummary.jsx';
+import { timelineEvents } from '/src/data/aboutMeEvents.js';
 
-<LeadText content="I’m a European Salesforce MVP and Marketing Automation Architect focused on implementing Marketing Automation and AI Agents in Salesforce Ecosystem." />
+<Head>
+  <body className="page-about-me" />
+</Head>
 
-I worked on the local, regional, and global teams as an internal leader and external consultant. This experience gives me multiple perspectives on every marketing challenge.
+<AboutJsonLd
+  events={timelineEvents}
+  jobTitle="Marketing Cloud Architect"
+  alsoKnows={['Claude', 'Anthropic Claude', 'Agentic workflows', 'AI agents']}
+  awards={[
+    'Salesforce MVP (2022 to present)',
+    'Salesforce Marketing Champion (2021 to present)',
+    '18x Trailblazer Community Answers Leader (Salesforce, 2022)',
+    'Digital Marketing Team of the Year 2017 and 2018 (Wolters Kluwer)',
+  ]}
+  description="Mateusz Dąbrowski is a European Salesforce MVP and Marketing Cloud Architect - ten years of Marketing Automation, the last six in the Salesforce ecosystem, with architecture and technical leadership across pharma, manufacturing, e-commerce and professional services, and AI agents a growing part of the work."
+/>
 
-Having worked in digital marketing, e-commerce, sales, and editorial, I know how good automation implementation ties in multiple departments of the company and requires sincere cooperation of the teams.
+<header className={clsx(styles.hero, about.aboutHero)}>
+  <div className={about.aboutHeroInner}>
+    <img className={about.aboutHeroImage} src="/img/md_profile_icon.png" alt="Mateusz Dąbrowski" />
+    <div>
+      <h1 className={about.aboutHeroName}>Mateusz Dąbrowski</h1>
+      <p className={about.aboutHeroRole}>Marketing Cloud Architect · Salesforce MVP · MarTech since 2014 · Warsaw, Poland</p>
+      <p className={about.aboutHeroLead}>European Salesforce MVP and Marketing Cloud Architect. I implement Marketing Automation and AI Agents in the Salesforce ecosystem, and write about it here.</p>
+      <p className={about.aboutHeroLinks}>
+        <Link href="https://www.linkedin.com/in/mateusz-dabrowski-pl/">LinkedIn</Link>
+        <span className={about.aboutHeroSep}> · </span>
+        <Link href="https://github.com/MateuszDabrowski">GitHub</Link>
+        <span className={about.aboutHeroSep}> · </span>
+        <Link href="https://trailblazer.me/id/madabrowski">Trailblazer</Link>
+      </p>
+    </div>
+  </div>
+</header>
 
-My passion is business process automation. Good asset and campaign templates. Data integration & architecture. Agents and custom developments. All those elements are necessary to leverage the full potential of modern platforms. And bring the most value and highest ROI to the company.
+<AboutStats events={timelineEvents} />
 
-export const timelineEvents = [
-// ──────────────────────────────────────────────────────────
-  // Work Experience
-  // ──────────────────────────────────────────────────────────
-  // PwC — individual role entries
-  {
-    id: "pwc-rtcdp-non-profit",
-    type: "period",
-    title: "Implemented Adobe RT-CDP for Non-Profit Industry",
-    organisation: "PwC",
-    startDate: "2025-11",
-    endDate: "2026-04",
-    description: "› As a Tech Lead, coordinated work of Adobe RT-CDP development team delivering personalized Use Cases\n› Worked on Sources, Data Distiller Queries, Schemas, Audiences and Destinations activating data to Adobe Campaign\n› Leveraged Adobe Journey Optimizer for managing behavioral data feedback loop from Adobe Campaign to RT-CDP\n› Supported SIT, UAT and Go-Live",
-    icon: "Project",
-    industry: ["Non Profit"],
-    platform: ["Adobe RT-CDP", "Adobe Campaign", "Adobe Journey Optimizer"],
-   technology: ["Marketing Automation", "Customer Data Platforms", "Integration"],
-  },
-  {
-    id: "pwc-agentforce-knowledge",
-    type: "period",
-    title: "Shared Agentforce knowledge for PwC Firms",
-    organisation: "PwC",
-    startDate: "2024-09",
-    endDate: "2025-10",
-    description: "› As a member of the global Portfolio Enablement Team, I led the discovery of Salesforce Agentforce with a key focus on building Knowledge-based Agents\n› Supported PwC teams around the world with creating Agentforce World Tour demos to generate project pipelines based on innovative and use-case-driven scenarios\n› Facilitated Agentforce offerings leading to won contracts for some of the first implementations of Agentforce in the world\n› Led cross-alliance Agentforce x Workday PoC to showcase the future of cross-platform agentic workflows \n› Developed and maintained a guide focused on up-skill, pre-sales, build and implementation of Agentforce\n› Delivered top-rated three-day-long global hackathon workshop on understanding, designing, building and selling Agentforce",
-    icon: "Project",
-    industry: ["Professional Services"],
-    platform: ["Salesforce Agentforce"],
-   technology: ["AI", "Agentic Systems", "Integration"],
-  },
-  {
-    id: "pwc-sfmc-manufacturing",
-    type: "period",
-    title: "Implemented Marketing Cloud Engagement & Personalization for Manufacturing Industry",
-    organisation: "PwC",
-    startDate: "2023-09",
-    endDate: "2024-11",
-    description: "› As an MCE Architect, managed the data model requirements and dependencies between multiple Build Streams and the Client\n› Architected the data flows for profile and consent data models connected via Marketing Cloud Connect with Sales and Service Clouds\n› Designed closed-loop real-time consent management processing that maintains the golden record in the Salesforce CRM\n› Defined and supported implementation of the performance and security-focused Web Studio Architecture",
-    icon: "Project",
-    industry: ["Manufacturing"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation", "Integration"],
-  },
-  {
-    id: "pwc-is-consumer-electronics",
-    type: "period",
-    title: "Improved and extended implementation of Interaction Studio for a Consumer Electronics E-commerce",
-    organisation: "PwC",
-    startDate: "2022-08",
-    endDate: "2023-09",
-    description: "› Performed audit of the original implementation of Interaction Studio and MCE\n› Refactored Sitemap, Web Campaigns (templates and configuration), Einstein Recipes and Catalog configuration\n› Extended the Catalog with custom objects to enable new features for ML models\n› Implemented new use cases based on the client’s needs and Interaction Studio capabilities\n› Cooperated with client data teams to create new indicators driving real-time personalization",
-    icon: "Project",
-    industry: ["E-commerce"],
-    platform: ["Salesforce Marketing Cloud Personalization"],
-   technology: ["Marketing Automation", "Real-Time Personalization"],
-  },
-  {
-    id: "pwc-sfmc-pharmaceutical",
-    type: "period",
-    title: "Implemented two MCE orgs from scratch for Pharmaceutical Industry",
-    organisation: "PwC",
-    startDate: "2021-07",
-    endDate: "2022-08",
-    description: "› As a Tech Lead, coordinated work of the MCE development team on 50+ Business Units project\n› Architected the contact, and multi-level consent data models in multi-org and single-org setups connected via Marketing Cloud Connect with Health Cloud\n› Created 50+ Preference Centres with consent management backend supporting real-time changes cross-cloud\n› Created Contact Deletion process with a privacy-first archiving solution\n› Developed custom deployer solution to speed up multi-country deployment\n› Prepared naming convention, refactoring and optimisation recommendations for the client",
-    icon: "Project",
-    industry: ["Pharma & Healthcare"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation", "Integration"],
-  },
-  {
-    id: "pwc-is-personal-care",
-    type: "period",
-    title: "Implemented Interaction Studio for Personal Care Industry",
-    organisation: "PwC",
-    startDate: "2021-05",
-    endDate: "2021-07",
-    description: "› Developed Sitemap (hybrid model with ETL and GTM)\n› Created Overlay Web Template with custom engagement triggers\n› Created Einstein Decisions Web Template with text-based ML experiences\n› Created Notification Server-Side Template\n› Deployed custom Interaction Cookie Expiry solution",
-    icon: "Project",
-    industry: ["Pharma & Healthcare", "E-commerce"],
-    platform: ["Salesforce Marketing Cloud Personalization"],
-   technology: ["Marketing Automation", "Real-Time Personalization"],
-  },
-  {
-    id: "pwc-email-app-travel",
-    type: "period",
-    title: "Implemented a custom Email Translation App for the Travel Industry",
-    organisation: "PwC",
-    startDate: "2021-05",
-    endDate: "2021-07",
-    description: "› Created custom Cloud App (MVC pattern) with SLDS-based user experience\n› Used MCE Content Builder REST API to download Email content (including all versions of AB Test and Dynamic Content blocks)\n› Leveraged Smartling REST API to translate all the content blocks (with approval process)\n› With both above-mentioned APIs built the system for creating translated and secured copies of the Email within a minute of the completed translation",
-    icon: "Project",
-    industry: ["Travel"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation", "Integration", "Custom App Development"],
-  },
-   {
-    id: "pwc-digital-enablement-app",
-    type: "period",
-    title: "Improved Salesforce Digital Enablement App",
-    organisation: "PwC",
-    startDate: "2021-03",
-    endDate: "2021-05",
-    description: "› Debugged and extended the Assets (Journeys, Emails, Data Extensions, SQL and AMPScript, Cross-cloud API integration)\n› Created Deployer to implement the solution on the MCE side in 10% of the time previously required (Web Studio with SSJS)",
-    icon: "Project",
-    industry: ["Professional Services"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation", "Custom App Development"],
-  },
-  {
-    id: "pwc-behavioral-personal-care",
-    type: "period",
-    title: "Implemented Behavioral Triggers from scratch for Personal Care Industry",
-    organisation: "PwC",
-    startDate: "2020-10",
-    endDate: "2021-02",
-    description: "› Configured MCE and created Collect.js Scripts\n› Built custom Behavioral Trigger Content Block for Email\n› Shared Best Practices on the custom Content Block and data layer implementation",
-    icon: "Project",
-    industry: ["Pharma & Healthcare", "E-commerce"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation", "Real-Time Personalization"],
-  },
-  {
-    id: "pwc-sfmc-education",
-    type: "period",
-    title: "Implemented MCE from scratch for Education Industry",
-    organisation: "PwC",
-    startDate: "2020-08",
-    endDate: "2021-05",
-    description: "› Data model in multi-org setup connected via Marketing Cloud Connect with Education Cloud\n› Data management: synchronization, deduplication, deletion (Design and implementation in Automation Studio with SQL, SSJS)\n› Created Email Template and template-based Assets\n› Created Journeys along with Data Filters and Automations for segmentation purposes (no-code priority approach to minimize technical skill dependence)\n› Implemented Mobile Studio's Connect with custom keyword-specific subscription management\n› Architected and implemented Preference Center with MCE-wide consent management backend\n› Created custom MCE Application supporting segmentation and data cleansing",
-    icon: "Project",
-    industry: ["Education"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation", "Integration"],
-  },
-  {
-    id: "pwc-sfmc-energy",
-    type: "period",
-    title: "Extended existing MCE implementation for Energy Industry client",
-    organisation: "PwC",
-    startDate: "2020-04",
-    endDate: "2020-09",
-    description: "› Created Form Assets (Web Studio with HTML, CSS, JS)\n› Universal Form Processing for huge time saving with each new form implementation (Design and implementation in Web Studio with SSJS)\n› Robust and privacy-first Double Opt-In Process for GDPR compliance (Design and implementation in Web and Email Studios with HTML, CSS, SSJS, AMPScript, Triggered Sends)\n› Automation Error Logging for easier problem solving (Design and implementation in Automation Studio with SSJS)\n› Bug fixing in Automation Studio, Journey Builder and Email Studio (SQL, AMPScript)",
-    icon: "Project",
-    industry: ["Energy"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation"],
-  },
-   {
-    id: "pwc-sfmc-apps",
-    type: "period",
-    title: "Created custom MCE Apps",
-    organisation: "PwC",
-    startDate: "2020-02",
-    endDate: "2020-04",
-    description: "› Form Generator - a no-code solution for creating forms (with submission processing and data extension storage) leading to huge time-savings when creating any forms\n› Campaign Manager - a no-code solution for creating cross-cloud campaigns (including folders, naming conventions, tracked links) allowing for end-to-end campaign management directly from MCE",
-    icon: "Project",
-    industry: ["Professional Services"],
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation", "Custom App Development"],
-  },
-  // Sanofi
-  {
-    id: "sanofi",
-    type: "period",
-    title: "Supported global MarTech transition for Pharma Industry client",
-    organisation: "Sanofi",
-    startDate: "2019-01",
-    endDate: "2020-01",
-    description: "› Global Campaign Demand & Blueprint Process\n› Deliverability Strategy (design, pilot, run & maintain)\n› Education (best practice & user guides on automation, email, deliverability)\n› SAFe (PI analysis, business acceptance, market adoption)\n› Martech (assessment & business implementation of tools)\n› Evolution (off-shelf solutions & new feature/channel enablement)\n› Collaboration (internal cross-team & external vendors)\n› Business Process Optimization (Atlassian Jira, Microsoft Sharepoint)",
-    icon: "Project",
-    industry: ["Pharma & Healthcare"],
-    platform: ["Adobe Campaign"],
-   technology: ["Marketing Automation"],
-  },
-  // Self-employed
-   {
-    id: "self-3",
-    type: "period",
-    title: "Salesforce Marketing & AI Consultant",
-    organisation: "Mateusz Dąbrowski (Self-employed)",
-    startDate: "2025-01",
-    endDate: "Present",
-    description: "I design, build and extend Marketing, Real-Time Personalization and Agent-driven Automation using Salesforce ecosystem.",
-    icon: "Project",
-   technology: ["Marketing Automation", "Real-Time Personalization", "AI", "Agentic Systems"],
-  },
-  {
-    id: "self-2",
-    type: "period",
-    title: "Marketing Automation Consultant",
-    organisation: "Mateusz Dąbrowski (Self-employed)",
-    startDate: "2018-12",
-    endDate: "2025-01",
-    description: "Sharing my passion for Marketing Cloud Engagement (MCE), Marketing Automation, E-Mail Marketing, Lead Generation, Martech Process Automation and APIs.",
-    icon: "Project",
-   technology: ["Marketing Automation", "Real-Time Personalization"],
-  },
-  {
-    id: "self-1",
-    type: "period",
-    title: "Led MarTech transition for Legal and E-commerce Industry client",
-    organisation: "Mateusz Dąbrowski (Self-employed)",
-    startDate: "2016-10",
-    endDate: "2018-12",
-    description: "› Reporting on metrics of campaigns/nurtures/emails\n› Supervising and consulting on best practices (CoE + JIRA)\n› Testing and campaign proofing of new MA tools\n› Creation and improvement of templates & conventions\n› Cross-department point-of-contact for MA related projects\n› Creation and optimisation of lead scoring models\n› Creation, implementation and evaluation of A/B tests\n› Subscription & Preference flows UX (GDPR + DOI)\n› Marketing pressure and deliverability management\n› Creation of custom reports (OBIEE + Python)\n› Database nurturing and cleaning\n› Marketing Automation Campaigns & Programs\n› Landing Page creation (HTML + CSS + JS)\n› E-mail development (HTML + CSS + MJML)\n› Automation and integration (Python)\n› E-mail and Landing Page copywriting\n› Graphic design for web (Sketch)",
-    icon: "Project",
-    industry: ["Legal", "E-commerce"],
-    platform: ["Oracle Eloqua", "Oracle Content Marketing"],
-   technology: ["Marketing Automation"],
-  },
-  // Wolters Kluwer
-  {
-    id: "wk",
-    type: "period",
-    title: "E-commerce & Digital Marketing Specialist",
-    organisation: "Wolters Kluwer S.A.",
-    startDate: "2014-01",
-    endDate: "2016-09",
-    description: "› Digital marketing on legal and educational markets\n› Cross-division cooperation on omnichannel marketing\n› Writing and editorial of content for LP and emails\n› Project management (website and online product)\n› Cooperation with the third party on e-commerce solutions (Google, Ideo)\n› Webinar management and technical support",
-    icon: "Project",
-    industry: ["Legal", "E-commerce"],
-   technology: ["Digital Marketing", "E-commerce"],
-  },
-    // ──────────────────────────────────────────────────────────
-  // Personal projects
-  // ────────────────────────────────────────────────────────────
-     {
-    id: "diagramforce",
-    type: "period",
-    title: "Created Diagramforce - Salesforce Architecture Diagramming Tool",
-    startDate: "2026-04",
-    endDate: "Present",
-    description: "Vibe coded free browser-based visual diagramming tool for Salesforce architects and consultants.  Architecture diagrams, data models, process flows, org charts, and Gantt charts - all in the browser with no account, no backend, and no data leaving your machine.",
-    url: "https://diagramforce.mateuszdabrowski.pl",
-    icon: "Project",
-   technology: ["Marketing Automation", "AI", "Agentic Systems", "Custom App Development"],
-  },
-   {
-    id: "clockforce",
-    type: "period",
-    title: "Created Clockforce - Timezone Collaboration Tool",
-    startDate: "2026-04",
-    endDate: "Present",
-    description: "Vibe coded free timezone app for cross-organization collaboration. Compare timezones on a visual timeline, save Time Blocks and share them via URL for easy cross-organization meeting planning - no calendar access needed. And if you are MCE user, generate production-ready SQL, AMPScript and SSJS snippets with proper timezone handling around fixed UTC-6 server time.",
-    url: "https://clockforce.mateuszdabrowski.pl",
-    icon: "Project",
-   technology: ["Marketing Automation", "AI", "Agentic Systems", "Custom App Development"],
-  },
-    {
-    id: "mdpl",
-    type: "period",
-    title: "Created mateuszdabrowski.pl Website",
-    startDate: "2020-07",
-    endDate: "Present",
-    description: "Wrote unofficial Salesforce Marketing documentation focused on development and configuration best practices",
-    url: "https://mateuszdabrowski.pl",
-    icon: "Project",
-   technology: ["Marketing Automation"],
-  },
-  {
-    id: "elquent",
-    type: "period",
-    title: "Created ELQuent - Eloqua Automation Tool",
-    startDate: "2018-03",
-    endDate: "2021-04",
-    description: "Developed automation tool for Oracle's Eloqua Marketing Automation built with Python.\nUtilizes Eloqua Bulk and REST APIs to create whole campaigns with all required assets, easily upload contacts, manage file and asset libraries in Oracle Eloqua.",
-    url: "https://github.com/MateuszDabrowski/elquent",
-    icon: "Project",
-   technology: ["Marketing Automation", "Integration", "Custom App Development"],
-  },
-  // ──────────────────────────────────────────────────────────
-  // Positions / Awards
-  // ──────────────────────────────────────────────────────────
-  { id: "pos-pwc-leader",
-  type: "single",
-  title: "Became Acting Marketing Automation Practice Leader",
-  description: "Led Marketing Automation Practice and delivered comprehensive marketing automation solutions with a team of 30+ Salesforce & Adobe experts.\n› Supported sales process with discovery, RFPs and demos\n› Managed project pipeline and team up-skilling needs\n› Owned recruitment and staffing strategy\n› Triaged escalations and facilitated smooth resolution\n› Optimized assets for team evaluation and budgeting",
-  organisation: "PwC",
-  date: "2025-08",
-  icon: "Position" },
-  { id: "pos-pwc-manager", type: "single", title: "Promoted to Marketing Automation Manager", organisation: "PwC", date: "2023-03", icon: "Position" },
-  { id: "pos-pwc-team-lead", type: "single", title: "Became Team Lead", description: "Led small team of Salesforce Marketing Trailblazers", organisation: "PwC", date: "2021-12", icon: "Position" },
-  { id: "pos-pwc-architect", type: "single", title: "Promoted to Salesforce Marketing Cloud Architect", organisation: "PwC", date: "2021-05", icon: "Position" },
-  { id: "pos-pwc-senior", type: "single", title: "Promoted to Senior Salesforce Marketing Cloud Consultant", organisation: "PwC", date: "2020-05", icon: "Position" },
-  { id: "pos-pwc-mid", type: "single", title: "Joined PwC as Salesforce Marketing Cloud Consultant", organisation: "PwC", date: "2020-02", icon: "Position" },
-    { id: "pos-sanofi", type: "single", title: "Joined Sanofi as Global Campaign Service Manager", organisation: "Sanofi", date: "2019-01", icon: "Position" },
-    { id: "pos-wk", type: "single", title: "Joined Wolters Kluwer as E-commerce & Digital Marketing Specialist", organisation: "Wolters Kluwer", date: "2014-01", icon: "Position" },
-  // ──────────────────────────────────────────────────────────
-  // Certifications
-  // ──────────────────────────────────────────────────────────
-  { id: "cert-salesforce-platform-administrator", type: "single", title: "Salesforce Platform Administrator", organisation: "Salesforce", date: "2026-01", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20Platform%20Administrator.pdf", icon: "Certification", platform: ["Salesforce CRM"],technology: ["CRM"] },
-  { id: "cert-salesforce-agentforce-specialist", type: "single", title: "Salesforce Agentforce Specialist", organisation: "Salesforce", date: "2025-03", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20AI%20Specialist.pdf", icon: "Certification", platform: ["Salesforce Agentforce"],technology: ["AI", "Agentic Systems"] },
-  { id: "cert-salesforce-data-cloud-consultant", type: "single", title: "Salesforce Data Cloud Consultant", organisation: "Salesforce", date: "2024-11", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20Data%20Cloud.pdf", icon: "Certification", platform: ["Salesforce Data 360"],technology: ["Customer Data Platforms"] },
-  { id: "cert-salesforce-mulesoft-associate", type: "single", title: "Salesforce MuleSoft Associate", organisation: "Salesforce", date: "2024-05", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/MuleSoft%20Associate.pdf", icon: "Certification", platform: ["MuleSoft"],technology: ["Integration"] },
-  { id: "cert-salesforce-marketing-associate", type: "single", title: "Salesforce Marketing Associate", organisation: "Salesforce", date: "2024-01", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SFMC%20Associate.pdf", icon: "Certification", platform: ["Salesforce Marketing Cloud Engagement"],technology: ["Marketing Automation"] },
-  { id: "cert-salesforce-business-analyst", type: "single", title: "Salesforce Business Analyst", organisation: "Salesforce", date: "2023-12", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20Business%20Analyst.pdf", icon: "Certification", platform: ["Salesforce CRM"], technology: ["CRM"] },
-  { id: "cert-salesforce-ai-associate", type: "single", title: "Salesforce AI Associate", organisation: "Salesforce", date: "2023-09", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20AI%20Associate.pdf", icon: "Certification", platform: ["Salesforce Agentforce"], technology: ["AI"] },
-  { id: "cert-salesforce-marketing-cloud-advanced-cross-channel", type: "single", title: "Salesforce Marketing Cloud Advanced Cross Channel", organisation: "Salesforce", date: "2023-01", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20Accredited%20SFMC%20Advanced%20Cross%20Channel.pdf", icon: "Certification", platform: ["Salesforce Marketing Cloud Engagement"],technology: ["Marketing Automation"] },
-  { id: "cert-salesforce-javascript-developer", type: "single", title: "Salesforce JavaScript Developer", organisation: "Salesforce", date: "2022-12", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20JavaScript%20Developer%20I.pdf", icon: "Certification", platform: ["Salesforce CRM"], technology: ["CRM"] },
-  { id: "cert-salesforce-platform-foundations", type: "single", title: "Salesforce Platform Foundations", organisation: "Salesforce", date: "2022-12", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20Associate.pdf", icon: "Certification", platform: ["Salesforce CRM"], technology: ["CRM"] },
-  { id: "cert-salesforce-slack-consultant", type: "single", title: "Salesforce Slack Consultant", organisation: "Salesforce", date: "2022-12", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/Slack%20Consultant.pdf", icon: "Certification", platform: ["Slack"], technology: ["Collaboration"] },
-  { id: "cert-salesforce-strategy-designer", type: "single", title: "Salesforce Strategy Designer", organisation: "Salesforce", date: "2022-11", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20Strategy%20Designer.pdf", icon: "Certification", platform: ["Salesforce CRM"], technology: ["CRM"] },
-  { id: "cert-salesforce-user-experience-designer", type: "single", title: "Salesforce User Experience Designer", organisation: "Salesforce", date: "2022-01", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20UX%20Designer.pdf", icon: "Certification", platform: ["Salesforce CRM"], technology: ["CRM"] },
-  { id: "cert-salesforce-marketing-cloud-personalization", type: "single", title: "Salesforce Marketing Cloud Personalization", organisation: "Salesforce", date: "2021-07", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SF%20Accredited%20Interaction%20Studio.pdf", icon: "Certification", platform: ["Salesforce Marketing Cloud Personalization"],technology: ["Real-Time Personalization"] },
-  { id: "cert-salesforce-marketing-cloud-engagement-administrator", type: "single", title: "Salesforce Marketing Cloud Engagement Administrator", organisation: "Salesforce", date: "2020-09", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SFMC%20Administrator.pdf", icon: "Certification", platform: ["Salesforce Marketing Cloud Engagement"],technology: ["Marketing Automation"]
-   },
-  { id: "cert-salesforce-marketing-cloud-engagement-consultant", type: "single", title: "Salesforce Marketing Cloud Engagement Consultant", organisation: "Salesforce", date: "2020-07", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SFMC%20Consultant.pdf", icon: "Certification", platform: ["Salesforce Marketing Cloud Engagement"],technology: ["Marketing Automation"] },
-  { id: "cert-safe-5-agilist", type: "single", title: "SAFe 5 Agilist", organisation: "Scaled Agile", date: "2020-06", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Agile/SAFe%205%20Agilist.pdf", icon: "Certification" },
-  { id: "cert-salesforce-marketing-cloud-engagement-developer", type: "single", title: "Salesforce Marketing Cloud Engagement Developer", organisation: "Salesforce", date: "2020-05", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SFMC%20Developer.pdf", icon: "Certification", platform: ["Salesforce Marketing Cloud Engagement"],technology: ["Marketing Automation"] },
-  { id: "cert-salesforce-marketing-cloud-engagement-email-specialist", type: "single", title: "Salesforce Marketing Cloud Engagement Email Specialist", organisation: "Salesforce", date: "2020-03", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Salesforce/SFMC%20Email%20Specialist.pdf", icon: "Certification", platform: ["Salesforce Marketing Cloud Engagement"],technology: ["Marketing Automation"] },
-    { id: "cert-safe-4-agilist", type: "single", title: "SAFe 4 Agilist", organisation: "Scaled Agile", date: "2019-09", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Agile/SAFe%204%20Agilist.pdf", icon: "Certification" },
-  { id: "cert-oracle-eloqua-b2b-luminary-2018", type: "single", title: "Oracle Eloqua B2B Luminary 2018", organisation: "Oracle", date: "2018-10", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Oracle/Oracle%20Eloqua%20Luminary%202018.pdf", icon: "Certification", platform: ["Oracle Eloqua"],technology: ["Marketing Automation"]  },
-  { id: "cert-oracle-content-marketing-master-2018", type: "single", title: "Oracle Content Marketing Master 2018", organisation: "Oracle", date: "2018-09", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Oracle/Oracle%20OCM%20Master%202018.pdf", icon: "Certification", platform: ["Oracle Content Marketing"],technology: ["Marketing Automation"]  },
-  { id: "cert-oracle-eloqua-b2b-master-2018", type: "single", title: "Oracle Eloqua B2B Master 2018", organisation: "Oracle", date: "2018-06", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Oracle/Oracle%20Eloqua%20Master%202018.pdf", icon: "Certification", platform: ["Oracle Eloqua"],technology: ["Marketing Automation"]  },
-  { id: "cert-oracle-content-marketing-master-2017", type: "single", title: "Oracle Content Marketing Master 2017", organisation: "Oracle", date: "2017-12", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Oracle/Oracle%20Eloqua%20Master%202017.pdf", icon: "Certification", platform: ["Oracle Content Marketing"],technology: ["Marketing Automation"]  },
-  { id: "cert-oracle-eloqua-b2b-master-2017", type: "single", title: "Oracle Eloqua B2B Master 2017", organisation: "Oracle", date: "2017-10", url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Oracle/Oracle%20OCM%20Master%202017.pdf", icon: "Certification", platform: ["Oracle Eloqua"],technology: ["Marketing Automation"] },
-  // ──────────────────────────────────────────────────────────
-  // Speaking Events
-  // ──────────────────────────────────────────────────────────
-  {
-    id: "spk-09",
-    type: "single",
-    title: "From Salesforce to Agentforce: The good, the bad, the future",
-    organisation: "Polish Dreamin' 2025",
-    date: "2025-03",
-    description: "Delivered in-person Session with Agentforce quick start followed by recommendations and best practices on how to make the most of the tool.",
-    url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/pdf/%5B2025-03%5D%20From%20Salesforce%20to%20Agentforce.pdf",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Agentforce"],
-    technology: ["AI", "Agentic Systems"]
-  },
-  {
-    id: "spk-08",
-    type: "single",
-    title: "From Salesforce to Agentforce: New Agentic World",
-    organisation: "Warsaw Salesforce Architect Meetup",
-    date: "2024-12",
-    description: "Delivered in-person Session covering the what, the how, the why and the how much along with some architecture and implementation considerations based on our hands-on experience with Agentforce.",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Agentforce"],
-    technology: ["AI", "Agentic Systems"]
-  },
-  {
-    id: "spk-07",
-    type: "single",
-    title: "Salesforce Data in MCE Journey Builder",
-    organisation: "Trailblazer Community Group",
-    date: "2024-09",
-    description: "Delivered MCE Journey Builder Bootcamp Series webinar focused on pros, cons and best practices of using Salesforce Data in MCE Journey Builder.",
-    url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/pdf/%5B2024-09%5D%20SF%20CRM%20in%20Journey%20Builder%20with%20MCC.pdf",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce CRM", "Salesforce Marketing Cloud Engagement"],
-    technology: ["Marketing Automation", "Integration"]
-  },
-  {
-    id: "spk-06",
-    type: "single",
-    title: "Explore Interaction Studio: Server-Side Code Tips and Tricks",
-    organisation: "Salesforce Connections '23",
-    date: "2023-06",
-    description: "Delivered in-person Session focused on how to make the most out of the Server-Side Code powering Campaign Templates in the Interaction Studio.",
-    url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/pdf/%5B2023-06%5D%20Interaction%20Studio%20ServerSide%20Code.pdf",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Marketing Cloud Personalization"],
-    technology: ["Real-Time Personalization"]
-  },
-  {
-    id: "spk-05",
-    type: "single",
-    title: "Salesforce MCE Account Architecture",
-    organisation: "Trailblazer Community Group",
-    date: "2023-01",
-    description: "Delivered Marketing Cloud Engagement Bootcamp Series webinar focused on Business Unit architecture, Single-Org vs Multi-Org patterns and deliverability 101.",
-    url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/pdf/%5B2023-01%5D%20SFMC%20Account%20Architecture.pdf",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Marketing Cloud Engagement"],
-    technology: ["Marketing Automation", "Integration"]
-  },
-  {
-    id: "spk-04",
-    type: "single",
-    title: "When AppExchange is right and what to do when it's wrong",
-    organisation: "Trailblazer Community Group",
-    date: "2022-10",
-    description: "Delivered MCE Implementation Series webinar focused on building Cloud Page Apps.",
-    url: "https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps/",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Marketing Cloud Engagement"],
-    technology: ["Marketing Automation", "Custom App Development"]
-  },
-  {
-    id: "spk-03",
-    type: "single",
-    title: "Architecting Web Solutions in Salesforce MCE",
-    organisation: "Trailblazer Community Group",
-    date: "2021-06",
-    description: "Delivered Marketing Cloud Engagement Architecture & Implementation Strategies Series webinar focused on Web Studio Architectural Patterns.",
-    url: "https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions/",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Marketing Cloud Engagement"],
-    technology: ["Marketing Automation"]
-  },
-  {
-    id: "spk-02",
-    type: "single",
-    title: "Debugging Salesforce MCE: SSJS & AMPScript",
-    organisation: "SForce Summit Poland 2022",
-    date: "2021-11",
-    description: "Delivered webinar (in Polish) focused on debugging programmatic languages in Salesforce Marketing Cloud Engagement.",
-    url: "https://www.youtube.com/watch?v=a-UK1CWWX6M",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Marketing Cloud Engagement"],
-    technology: ["Marketing Automation"]
-  },
-  {
-    id: "spk-01",
-    type: "single",
-    title: "Code Resource – Power of Possibilities",
-    organisation: "SForce Summit Poland 2021",
-    date: "2021-11",
-    description: "Delivered webinar (in Polish) on Web Studio Code Resources use cases in Salesforce MCE.",
-    url: "https://www.youtube.com/watch?v=XAXvwPG0aXU",
-    icon: "SpeakingEvent",
-    platform: ["Salesforce Marketing Cloud Engagement"],
-    technology: ["Marketing Automation"]
-  },
-  // ──────────────────────────────────────────────────────────
-  // Education
-  // ──────────────────────────────────────────────────────────
-  {
-    id: "edu-agile-project-management",
-    type: "period",
-    title: "Agile Project Management Professional Certificate",
-    organisation: "University of Maryland",
-    startDate: "2018-11",
-    endDate: "2019-07",
-    description: "Applied Scrum, Agile Planning, Agile Solutions for Innovation, Leadership Principles, and Project Control.",
-    url: "https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/certs/Agile/Agile%20Project%20Management%20-%20Maryland%20Professional%20Certificate.pdf",
-    icon: "Education",
-  },
-  {
-    id: "edu-data-science",
-    type: "period",
-    title: "Data Science Professional Certificate",
-    organisation: "UC Berkeley",
-    startDate: "2018-04",
-    endDate: "2018-10",
-    description: "Computational Thinking with Python, Inferential Thinking by Resampling, Prediction and Machine Learning.",
-    icon: "Education",
-  },
-  {
-    id: "edu-law",
-    type: "period",
-    title: "Master of Law",
-    organisation: "University of Warsaw",
-    startDate: "2011-10",
-    endDate: "2017-09",
-    description: "Thesis: Protection of personal data in e-marketing under General Data Protection Regulation.",
-    icon: "Education",
-  },
-  {
-    id: "edu-journalism",
-    type: "period",
-    title: "Bachelor of Journalism",
-    organisation: "University of Warsaw",
-    startDate: "2009-10",
-    endDate: "2012-09",
-    description: "Thesis: Blog and the legal definition of the term press.",
-    icon: "Education",
-  },
-  // ──────────────────────────────────────────────────────────
-  // Memberships & Organisations
-  // ──────────────────────────────────────────────────────────
-  {
-    id: "org-06",
-    type: "period",
-    title: "Joined Salesforce Trailblazer Community Forum Ambassadors",
-    organisation: "Salesforce",
-    startDate: "2024-03",
-    endDate: "Present",
-    description: "Forum Ambassadors are Salesforce experts sharing their knowledge, creating content and fighting with spam & AI hallucinations to deliver valuable Trailblazer Community experience for everyone.",
-    icon: "Organisation",
-    platform: ["Salesforce"],
-  },
-  {
-    id: "org-05",
-    type: "period",
-    title: "Joined Salesforce Credentials Ambassadors",
-    organisation: "Salesforce",
-    startDate: "2022-08",
-    endDate: "Present",
-    description: "Community of experts supporting the Salesforce Credentialing Team with creating, updating and improving Salesforce certifications.",
-    icon: "Organisation",
-    platform: ["Salesforce Marketing Cloud Engagement"],
-   technology: ["Marketing Automation"]
-  },
-  {
-    id: "org-04",
-    type: "period",
-    title: "Joined MC Personalization Technical Advisory Board",
-    organisation: "Salesforce",
-    startDate: "2022-10",
-    endDate: "2024-02",
-    description: "Co-operation with Salesforce Product Team responsible for Marketing Cloud Personalization (Interaction Studio) on the product roadmap, future features and current pain-points.",
-    icon: "Organisation",
-    platform: ["Salesforce Marketing Cloud Personalization"],
-   technology: ["Real-Time Personalization"]
-  },
-  {
-    id: "org-03",
-    type: "period",
-    title: "Became Salesforce MVP",
-    organisation: "Salesforce",
-    startDate: "2022-02",
-    endDate: "Present",
-    description: "Salesforce MVPs are top-notch product experts committed to sharing their knowledge and helping their communities succeed.",
-    icon: "Organisation",
-    platform: ["Salesforce"],
-  },
-  {
-    id: "org-02",
-    type: "period",
-    title: "Became Salesforce Marketing Champion",
-    organisation: "Salesforce",
-    startDate: "2021-05",
-    endDate: "Present",
-    description: "Salesforce program for master marketers who are product experts, active in the community, self-starting leaders, and willing to help others blaze their trail every single day.",
-    icon: "Organisation",
-    platform: ["Salesforce Marketing Cloud Engagement", "Salesforce Marketing Cloud Personalization"],
-   technology: ["Marketing Automation", "Real-Time Personalization"]
-  },
-  {
-    id: "org-01",
-    type: "period",
-    title: "Became Marketing Automation Centre of Excellence Lead",
-    organisation: "Wolters Kluwer",
-    startDate: "2018-05",
-    endDate: "2018-12",
-    description: "Led the Marketing Automation Centre of Excellence driving best practices and governance. Focus on business drivers related to Eloqua adoption and use, enhancements and knowledge sharing across countries.",
-    icon: "Organisation",
-    platform: ["Oracle Eloqua"],
-   technology: ["Marketing Automation"]
-  },
-];
+Twelve years in MarTech, the last six in the Salesforce ecosystem. I started on the client side, in e-commerce and digital marketing for a legal publisher. There I taught myself Python to automate my own work, then led the move to Marketing Automation on Oracle Eloqua and built the tooling around it. What I learned there still drives my work: automation pays off only when marketing, sales, data and IT cooperate, and the platform is set up so they can.
 
-export const toc = buildToc(timelineEvents);
+Global campaign operations on Adobe Campaign for a pharma company came next. In 2020 I switched to Salesforce: six years in a Big Four Marketing Cloud practice. Consultant, then architect, team lead, manager and acting practice lead of thirty-plus Salesforce and Adobe experts. A dozen engagements in those years. They ranged from custom Cloud Page apps and Agentforce proofs of concept to Marketing Cloud implementations for fifty-plus business units, in pharma, manufacturing, consumer goods, energy, education and travel.
 
-## Timeline
+Today I work as a principal architect on Salesforce MarTech, across Marketing Cloud, Data 360 and Agentforce implementations. AI agents are a growing part of every engagement, and Claude is part of my own daily workflow. I also build tools that make the work simpler for me and others, like [Diagramforce](https://diagramforce.com) for architecture diagrams or [Slot](/slot/) for managing multiple inboxes. And I share my knowledge with the community.
 
-Below is the full picture - every project, role change, certification and speaking engagement that shaped my path.
+<section className={styles.aboutSection}>
+  <h2 className={styles.sectionHeading}>What I do</h2>
+  <div className={clsx('row', styles.centeredRow)}>
+    <div className={clsx('col col--4', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.doCard)}>
+        <h3 className={styles.panelTitle}>Architecture</h3>
+        <p>Contact, profile and consent data models. <Link to="/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture/">Multi-org and multi-business-unit setups</Link>. Integration with Sales, Service and Health Cloud through <Link to="/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder/">Marketing Cloud Connect</Link>. <Link to="/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions/">Web Studio architecture</Link> built for performance and security.</p>
+      </div>
+    </div>
+    <div className={clsx('col col--4', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.doCard, about.doCardAmber)}>
+        <h3 className={styles.panelTitle}>Technical leadership</h3>
+        <p>Running the build team on implementations from scratch, including the deployers and naming conventions that make a fifty-business-unit rollout repeatable.</p>
+      </div>
+    </div>
+    <div className={clsx('col col--4', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.doCard, about.doCardRed)}>
+        <h3 className={styles.panelTitle}>Audit and rescue</h3>
+        <p>Taking over an existing Marketing Cloud or Personalization implementation, finding what is wrong, and refactoring it into something the client's own team can run.</p>
+      </div>
+    </div>
+    <div className={clsx('col col--4', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.doCard, about.doCardAmber)}>
+        <h3 className={styles.panelTitle}>AI agents</h3>
+        <p>Practical use of AI and agents across Agentforce and Claude. Agentic workflows that take manual steps out of internal and external processes, and ways to get the most out of Salesforce systems with them.</p>
+      </div>
+    </div>
+    <div className={clsx('col col--4', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.doCard)}>
+        <h3 className={styles.panelTitle}>Custom applications</h3>
+        <p><Link to="/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/">Cloud Page apps</Link>, API integrations and internal tools on Marketing Cloud. On my own time: <Link href="https://diagramforce.com">Diagramforce</Link>, <Link to="/slot/">Slot</Link>, <Link to="/shelf/">Shelf</Link> and <Link to="/strum/">Strum</Link>.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<Timeline events={timelineEvents} />
+<section className={clsx(styles.aboutSection, about.darkBand)}>
+  <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>Selected work</h2>
+  <div className="row">
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={styles.panel}>
+        <h3 className={styles.panelTitle}>Two Marketing Cloud Engagement orgs for a global pharma company</h3>
+        <p className={about.caseMeta}><span className={about.caseChip}>Pharma and healthcare</span><span className={about.caseWhen}>PwC · 2021 to 2022</span></p>
+        <p><strong>The problem.</strong> Fifty-plus business units across countries, Marketing Cloud connected to Health Cloud, and consent that must update in every system as soon as it changes in one.</p>
+        <p><strong>What I did.</strong> Led the Marketing Cloud build team. Designed the contact model and the multi-level consent model for both multi-org and single-org setups, wired through Marketing Cloud Connect. Built fifty-plus preference centres on a consent backend that pushes changes across clouds in real time. Added a privacy-first <Link to="/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/">contact deletion</Link> and archiving process, and a custom deployer for the multi-country rollout. Left a naming convention and a refactoring plan behind.</p>
+        <p><strong>What changed.</strong> One consent model for every business unit, kept in step with Health Cloud in real time, and a deployer that cut the time to roll out each country.</p>
+      </div>
+    </div>
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={styles.panel}>
+        <h3 className={styles.panelTitle}>Marketing Cloud Engagement and Personalization for a manufacturer</h3>
+        <p className={about.caseMeta}><span className={about.caseChip}>Manufacturing</span><span className={about.caseWhen}>PwC · 2023 to 2024</span></p>
+        <p><strong>The problem.</strong> Several build streams, one client, and a golden customer record that lives in the CRM while consent gets collected in marketing channels.</p>
+        <p><strong>What I did.</strong> Marketing Cloud architect across the streams. Owned the data model requirements and their dependencies. Designed the profile and consent flows through Marketing Cloud Connect to Sales and Service Cloud, and a closed-loop, real-time consent process that keeps the golden record in the CRM. Defined the performance- and security-focused Web Studio architecture and supported the build.</p>
+        <p><strong>What changed.</strong> Consent captured in any channel lands on the CRM record in real time, and Web Studio runs on an architecture built for performance and security.</p>
+      </div>
+    </div>
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={styles.panel}>
+        <h3 className={styles.panelTitle}>Interaction Studio audit and rebuild for a consumer electronics retailer</h3>
+        <p className={about.caseMeta}><span className={about.caseChip}>E-commerce</span><span className={about.caseWhen}>PwC · 2022 to 2023</span></p>
+        <p><strong>The problem.</strong> An existing Interaction Studio and Marketing Cloud implementation due for an audit. New use cases were waiting on it, and the client's data team had no way to feed it new signals.</p>
+        <p><strong>What I did.</strong> Audited both platforms. Refactored the sitemap, the <Link to="/docs/salesforce/marketing-cloud-personalization/serverside-code-context/">web campaign templates</Link> and configuration, the Einstein recipes and the catalog. Extended the catalog with custom objects so the ML models had new features to work with. Built new use cases against the client's needs and worked with their data teams on the indicators driving real-time personalisation.</p>
+        <p><strong>What changed.</strong> A platform the client's own data team can extend, with new indicators and catalog objects feeding the recipes.</p>
+      </div>
+    </div>
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={styles.panel}>
+        <h3 className={styles.panelTitle}>Agentforce enablement for a global professional services network</h3>
+        <p className={about.caseMeta}><span className={about.caseChip}>Professional services</span><span className={about.caseWhen}>PwC · 2024 to 2025</span></p>
+        <p><strong>The problem.</strong> Agentforce had just launched. A global firm had to understand it, demo it, sell it and build it, with no playbook to follow.</p>
+        <p><strong>What I did.</strong> Led the discovery, with a focus on knowledge-based agents. Built the Agentforce World Tour demos for teams around the world, a cross-alliance Agentforce and Workday proof of concept, and the guide covering up-skilling, pre-sales, build and implementation. Designed and ran a three-day global hackathon on understanding, designing, building and selling Agentforce.</p>
+        <p><strong>What changed.</strong> Contracts won for some of the first Agentforce implementations in the world, sold with use-case-driven demos.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-## Industries
+<section className={styles.aboutSection}>
+  <h2 className={styles.sectionHeading}>Projects</h2>
+  <IndustryList events={timelineEvents} />
+</section>
 
-Over the years I've delivered marketing automation projects across a wide range of sectors. Each card below aggregates my hands-on experience in a given industry - actual projects, technologies and the platforms I used to get the job done.
+<section className={styles.aboutSection}>
+  <h2 className={styles.sectionHeading}>What people say</h2>
+  <div className="row">
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.quoteCard)}>
+        <p className={about.quoteText}>I worked with Mateusz on an Interaction Studio global roll-out for a consumer goods international retailer. [...] What amazed me about Mateusz is his ability to quickly grasp new technologies as well as his creative approach to solve technical challenges. Moreover, he's outstanding client facing.</p>
+        <p className={about.quoteWho}>Oscar Garcia Guerra</p>
+        <p className={about.quoteRole}>Solution Architect at Salesforce on the same Interaction Studio programme</p>
+      </div>
+    </div>
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.quoteCard)}>
+        <p className={about.quoteText}>Whether it was career advice, navigating a difficult situation, or hands-on help with designing and implementing solutions, he never hesitated to step in and support. He leads by example, combining strategic thinking with a very practical, down-to-earth approach.</p>
+        <p className={about.quoteWho}>Piotr Hoffman</p>
+        <p className={about.quoteRole}>Senior Marketing Automation Consultant on Mateusz's team at PwC</p>
+      </div>
+    </div>
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.quoteCard)}>
+        <p className={about.quoteText}>He not only transferred the running processes, but also optimized them for new possibilities using the full available tools. He had a big impact on development and optimization of the data model and a new approach to segmentation based on the availability of behavioral data.</p>
+        <p className={about.quoteWho}>Kinga Matysiak</p>
+        <p className={about.quoteRole}>Mateusz's manager on the Wolters Kluwer engagement</p>
+      </div>
+    </div>
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={clsx(styles.panel, about.quoteCard)}>
+        <p className={about.quoteText}>He patiently handled tons of enquiries from us, and explained the next steps as well as made great recommendations which improved our original plan. He liaised a number of stakeholders internally and externally, and build a firm bridge between multiple teams.</p>
+        <p className={about.quoteWho}>Masako Kitaji</p>
+        <p className={about.quoteRole}>Omnichannel Operations Manager at Sanofi during the global MA platform migration</p>
+      </div>
+    </div>
+  </div>
+  <p className={about.quoteRole}>Excerpts from public LinkedIn recommendations; the full texts are on <Link href="https://www.linkedin.com/in/mateusz-dabrowski-pl/">LinkedIn</Link>.</p>
+</section>
 
-<IndustryExperience events={timelineEvents} />
+<section className={clsx(styles.aboutSection, about.darkBand)}>
+  <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>Credentials and community</h2>
+  <div className="row">
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={styles.panel}>
+        <h3 className={styles.panelTitle}>Community</h3>
+        <ul>
+          <li><strong>Salesforce MVP</strong> since 2022</li>
+          <li><strong>Salesforce Marketing Champion</strong> since 2021</li>
+          <li><strong>18x Trailblazer Community Answers Leader</strong> - Salesforce's weekly top twelve for best answers, in Marketing Cloud and Personalization</li>
+          <li><strong>Marketing Cloud Personalization Technical Advisory Board</strong>, 2022 to 2024 - product roadmap work with the Salesforce product team</li>
+          <li><strong>Salesforce Credentials Ambassador</strong> since 2022 - supporting the certification team on exam content</li>
+          <li><strong>Trailblazer Community Forum Ambassador</strong> since 2024</li>
+          <li><strong>Salesforce documentation and product feedback</strong> - fixes to Help and Developer docs, and early testing of new concepts and features with the product teams</li>
+        </ul>
+      </div>
+    </div>
+    <div className={clsx('col col--6', styles.gridCol)}>
+      <div className={styles.panel}>
+        <h3 className={styles.panelTitle}>Education</h3>
+        <ul>
+          <li><strong>Master of Law</strong>, University of Warsaw - thesis on personal data protection in e-marketing under the GDPR</li>
+          <li><strong>Bachelor of Journalism</strong>, University of Warsaw</li>
+          <li><strong>Data Science Professional Certificate</strong>, UC Berkeley</li>
+          <li><strong>Agile Project Management Professional Certificate</strong>, University of Maryland</li>
+        </ul>
+      </div>
+    </div>
+    <div className={clsx('col col--12', styles.gridCol)}>
+      <div className={styles.panel}>
+        <h3 className={styles.panelTitle}>Certifications</h3>
+        <CredentialList events={timelineEvents} />
+      </div>
+    </div>
+  </div>
+</section>
 
-## Platforms
-
-I work across the Salesforce, Adobe and Oracle ecosystems - from Marketing Cloud(s) and Agentforce to RT-CDP and Eloqua. Each card below shows how long and how deeply I've worked with a given platform, detailed with projects, technologies, speaking engagements and industries where I applied it.
-
-<PlatformExperience events={timelineEvents} />
+<section className={styles.aboutSection}>
+  <h2 className={styles.sectionHeading}>Speaking</h2>
+  <div className="row">
+    <div className={clsx('col col--12', styles.gridCol)}>
+      <div className={styles.panel}>
+        <SpeakingList events={timelineEvents} />
+      </div>
+    </div>
+  </div>
+</section>
