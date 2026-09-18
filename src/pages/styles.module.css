@@ -31,6 +31,34 @@
 
 .heroCodeVariable {
   color: var(--ifm-color-secondary);
+  display: inline-block;
+  transition: width 300ms ease;
+}
+
+.heroWordSwap {
+  display: inline-block;
+  animation: heroWordIn 300ms ease;
+}
+
+@keyframes heroWordIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.25em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroCodeVariable {
+    transition: none;
+  }
+
+  .heroWordSwap {
+    animation: none;
+  }
 }
 
 .heroCodeValue {
@@ -69,68 +97,188 @@
   }
 }
 
-@keyframes scrollDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-
-  50% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-}
-
-.animatedWord {
-  display: inline-block;
-  animation: scrollDown 1s ease-in-out;
-}
-
-/* Features */
-.features {
+/* About + What's new: two panels right under the hero, so the first content
+   screen answers "who is this" and "what is new". */
+.panel {
   display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: var(--ifm-card-background-color);
+  box-shadow: var(--ifm-global-shadow-md);
 }
 
-.featureImage {
-  height: 150px;
-  max-width: 60%;
-  padding-top: 20px;
-  margin: 0 auto;
+html[data-theme='dark'] .panel {
+  background-color: #212121;
 }
 
-.featureHeading {
+/* One heading for every panel. It sets no alignment of its own: the
+   centred panels centre it, the feed panel leaves it on the left. */
+.panelHeading {
   color: var(--ifm-color-primary);
   font-size: var(--ifm-h3-font-size);
   font-family: Courier, monospace;
   text-transform: uppercase;
-  padding-top: 1rem;
-  text-align: center;
 }
 
-.featureHeading:before {
+.panelHeading:before {
   font-family: Courier, monospace;
   content: "<";
   color: var(--ifm-color-secondary);
 }
 
-.featureHeading:after {
+.panelHeading:after {
   font-family: Courier, monospace;
   content: "/>";
   color: var(--ifm-color-secondary);
+}
+
+/* The left column stacks two panels; the about panel grows to fill the
+   height the feed sets, the newsletter box keeps its content height. */
+.panelStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.aboutPanel {
+  flex: 1;
+  height: auto;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.newsletterPanel {
+  flex: 0 0 auto;
+  height: auto;
+  align-items: center;
+  text-align: center;
+}
+
+.newsletterPitch {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.aboutImage {
+  height: 150px;
+  max-width: 60%;
+  margin: 0 auto 1rem;
 }
 
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+}
+
+/* "Learn more »" under the connect button: the same text-link grammar the
+   app cards use for the page about the thing. */
+.aboutMoreLink {
+  margin-top: 0.75rem;
+  color: var(--md-color-amber-text);
+  font-size: var(--ifm-h5-font-size);
+}
+
+.aboutMoreLink:hover {
+  color: var(--ifm-color-primary);
+}
+
+.feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Meta on the left, story on the right - reads like a changelog. */
+.feedItem {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 0 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.feedItem:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.feedItem:last-child {
+  padding-bottom: 0;
+}
+
+.feedMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin: 0;
+  padding-top: 0.2rem;
+  color: var(--md-color-amber-text);
+  font-family: Courier, monospace;
+  font-size: 0.85rem;
+}
+
+.feedKind {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #ffffff;
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* One brand colour per kind: Doc keeps the primary default above, App
+   takes the amber (dark text - white on amber is under 2:1), Event the
+   tertiary. The class is looked up by kind name, so a new kind without a
+   rule here simply falls back to the primary. */
+.feedKindApp {
+  background: var(--ifm-color-secondary);
+  color: #212121;
+}
+
+.feedKindEvent {
+  background: var(--ifm-color-tertiary);
+}
+
+.feedTitle {
+  color: var(--ifm-color-primary);
+  font-size: var(--ifm-h4-font-size);
+  font-weight: 700;
+}
+
+.feedDescription {
+  margin: 0.15rem 0 0;
+}
+
+@media (max-width: 996px) {
+  .panelCol {
+    margin-bottom: 2rem;
+  }
+
+  .panelCol:last-child {
+    margin-bottom: 0;
+  }
+
+  .feedItem {
+    grid-template-columns: 1fr;
+    gap: 0.35rem 0;
+  }
+
+  .feedMeta {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0;
+  }
 }
 
 /* Shared section layout */
@@ -198,7 +346,7 @@ html[data-theme='light'] .sectionHeadingDark {
 }
 
 .cardTags {
-  color: var(--ifm-color-secondary);
+  color: var(--md-color-amber-text);
   font-size: var(--ifm-h5-font-size);
 }
 
@@ -461,38 +609,12 @@ html[data-theme='dark'] .appCard {
 }
 
 .toolGithubLink {
-  color: var(--ifm-color-secondary);
+  color: var(--md-color-amber-text);
   font-size: var(--ifm-h5-font-size);
 }
 
 .toolGithubLink:hover {
   color: var(--ifm-color-primary);
-}
-
-/* Event cards */
-.eventCardWrapper {
-  display: flex;
-  justify-content: center;
-}
-
-.eventCard {
-  margin-bottom: 2rem;
-  border-radius: 8px;
-  padding: 16px;
-  text-align: center;
-  background-color: var(--ifm-card-background-color);
-  box-shadow: var(--ifm-global-shadow-md) !important;
-}
-
-html[data-theme='dark'] .eventCard {
-  background-color: #212121;
-}
-
-.eventDetail {
-  color: var(--ifm-color-secondary);
-  font-size: var(--ifm-h5-font-size);
-  font-weight: bold;
-  margin-bottom: 0.5rem;
 }
 
 @media only screen and (max-width: 768px) {
@@ -526,84 +648,40 @@ html[data-theme='dark'] .eventCard {
   }
 }
 
-/* Newsletter */
-.newsletter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 0;
-  background-color: var(--ifm-card-background-color);
-  width: 100%;
-}
-
-.newsletterHeading {
-  color: var(--ifm-color-primary);
-  font-size: var(--ifm-h2-font-size);
-  font-family: Courier, monospace;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-.newsletterHeading:before {
-  font-family: Courier, monospace;
-  content: "<";
-  color: var(--ifm-color-secondary);
-}
-
-.newsletterHeading:after {
-  font-family: Courier, monospace;
-  content: "/>";
-  color: var(--ifm-color-secondary);
-}
-
-.newsletterDescription {
-  font-size: var(--ifm-h4-font-size);
-  margin-bottom: 1.5rem;
-}
-
-.newsletterButtonWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.newsletterButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.6em 1.2em;
-  border: 1px solid var(--ifm-color-tertiary);
-  background: transparent;
-  color: var(--ifm-color-tertiary);
-}
-
-.newsletterButton:hover {
-  background: var(--ifm-color-tertiary);
-}
-
-@media only screen and (max-width: 768px) {
-  .newsletter {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .newsletterHeading {
-    font-size: var(--ifm-h3-font-size);
-  }
-
-  .newsletterDescription {
-    font-size: var(--ifm-h5-font-size);
-  }
-
-  .newsletterButtonWrapper {
-    justify-content: flex-start;
-    margin-top: 1rem;
-  }
-}
-
 /* FAQ Details - Admonition Note Grey */
 .faqDetails {
   --ifm-alert-background-color: var(--ifm-color-secondary-contrast-background);
   --ifm-alert-border-color: var(--ifm-color-secondary-dark);
+}
+/* Grid column with a bottom gap, for panel grids that wrap to more than one
+   row at desktop width (the About Me page). */
+.gridCol {
+  margin-bottom: 2rem;
+}
+
+/* Panel heading as a card title rather than the monospace banner. */
+.panelTitle {
+  color: var(--ifm-color-primary);
+  font-size: var(--ifm-h4-font-size);
+  margin-bottom: 0.5rem;
+}
+
+/* The About Me sections sit inside the docs container, so they carry no
+   background band of their own; the panels do the separating. */
+.aboutSection {
+  padding: 1rem 0 0;
+}
+
+/* The subscribe button stays the brand blue in both themes: on the dark
+   theme the primary is red, and red reads as an alarm on a subscribe. */
+.newsletterButton {
+  --ifm-button-background-color: #1D73C9;
+  --ifm-button-border-color: #1D73C9;
+  color: #ffffff;
+}
+
+.newsletterButton:hover {
+  --ifm-button-background-color: #1A69B7;
+  --ifm-button-border-color: #1A69B7;
+  color: #ffffff;
 }

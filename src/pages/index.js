@@ -22,6 +22,10 @@ function Hero() {
     const [currentToolIndex, setCurrentToolIndex] = useState(0);
 
     useEffect(() => {
+        // Under the OS reduce-motion setting the word stays put instead of cycling.
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return undefined;
+        }
         const interval = setInterval(() => {
             setCurrentToolIndex((prevIndex) => (prevIndex + 1) % dynamicHeroWords.length);
         }, 5000);
@@ -34,21 +38,27 @@ function Hero() {
             <div className={styles.heroInner}>
                 <h1 className={styles.heroProjectTagline}>
                     Automate{' '}
-                    <span
-                        className={clsx(styles.heroProjectKeywords, styles.fixedWidth)}
-                        aria-live="polite"
-                    >
+                    <span className={styles.heroProjectKeywords}>
                         Marketing Automation
                     </span>
 
                 </h1>
                 <h2 className={styles.heroProjectSubTagline}>
                     <span className={styles.heroCodeFunction}>let</span>{' '}
+                    {/* Decorative: not a live region, or screen readers would
+                        announce the new word every five seconds for as long as
+                        the page is open. */}
+                    {/* The box is sized in ch so the rest of the line slides
+                        with the word length instead of snapping; the key
+                        remounts the word so its fade-in runs on every swap. */}
                     <span
-                        className={clsx(styles.heroCodeVariable, styles.fixedWidth)}
-                        aria-live="polite"
+                        className={styles.heroCodeVariable}
+                        style={{ width: `${dynamicHeroWords[currentToolIndex].length}ch` }}
+                        aria-hidden="true"
                     >
-                        {dynamicHeroWords[currentToolIndex]}
+                        <span key={dynamicHeroWords[currentToolIndex]} className={styles.heroWordSwap}>
+                            {dynamicHeroWords[currentToolIndex]}
+                        </span>
                     </span>{' '}
                     <span className={styles.heroCodeSymbols}>=</span>{' '}
                     <span className={styles.heroCodeFunction}>do</span>
@@ -61,73 +71,250 @@ function Hero() {
     );
 }
 
-const features = [
+const about = {
+    imageUrl: 'img/md_profile_icon.png',
+    title: <>About me</>,
+    description: (
+        <>
+            Ahoj! I'm Mateusz Dąbrowski - European Salesforce MVP & Architect working on Marketing Automation and AI Agents. I constantly learn about MarTech, process automation, data architecture, agents and custom code and share about it here as docs, snippets and apps.
+        </>
+    ),
+    url: 'https://www.linkedin.com/in/mateusz-dabrowski-pl/',
+    cta: <>Let's Connect</>,
+    moreUrl: './sites/about-me/',
+    moreCta: <>Learn more »</>,
+};
+
+/* The newsletter is the channel with the most reliable reach, so its box
+   carries the only filled button on the page. */
+const newsletter = {
+    title: <>Stay in the loop</>,
+    description: <>Get notified about new content, Salesforce Marketing, Data and AI news, and the occasional MarTech find. No fixed cadence.</>,
+    url: './sites/newsletter/',
+    cta: <>Subscribe</>,
+};
+
+/* Newest things on the site, hand-curated. Docs ship a few times a year and
+   apps more often, so one mixed list stays fresh where a docs-only one would
+   not. Never list a doc with draft: true - the dev server renders drafts, the
+   production build does not, so the link would 404 on the live site. */
+const whatsNew = [
     {
-        title: <>Let's connect</>,
-        imageUrl: 'img/md_profile_icon.png',
-        description: (
-            <>
-                Ahoj! My name is Mateusz Dąbrowski. I'm Salesforce MVP & Architect. I find joy in deconstructing problems and automating solutions. Got questions, suggestions or want to get in touch?
-            </>
-        ),
-        url: 'https://www.linkedin.com/in/mateusz-dabrowski-pl/',
-        cta: <>Let's Connect</>,
+        date: '2026-09-12',
+        kind: 'App',
+        title: 'Slot 1.5.0',
+        url: '/slot/',
+        description: 'Time zones per account: the clock on the line for now, and every meeting card showing the time in each zone that account tracks.',
     },
     {
-        title: <>Pick my brain</>,
-        imageUrl: 'img/md_brain_icon.png',
-        description: (
-            <>
-                My notes on Salesforce Marketing, Agentforce and other things Salesforce. Are you craving for more in-depth documentation or looking for tested code snippets, solutions and prompts? Hop in!
-            </>
-        ),
-        url: '/docs/',
-        cta: <>Docs & Snippets</>,
+        date: '2026-09-04',
+        kind: 'App',
+        title: 'Shelf 1.0',
+        url: '/shelf/',
+        description: 'New app. The small things you keep retyping, encrypted on your device, synced through iCloud, one tap from your clipboard.',
     },
     {
-        title: <>Change the Clouds</>,
-        imageUrl: 'img/md_cloud_icon.png',
-        description: (
-            <>
-                Salesforce ecosystem is powerful. But it can always be more useful. Here you can find all my Salesforce IdeaExchange contributions. Vote to make <code>&#123;InsertCurrentName&#125;</code>&nbsp;Cloud a better tool.
-            </>
-        ),
-        url: '/sites/category/ideas/',
-        cta: <>My Ideas</>,
+        date: '2026-08-07',
+        kind: 'Doc',
+        title: 'MC Next Business Units',
+        url: '/docs/salesforce/marketing-cloud/config/business-units/',
+        description: 'Business Units reuse an MCE name for a new Data Space architecture - with decisions you can\'t undo.',
+    },
+    {
+        date: '2026-07-18',
+        kind: 'Doc',
+        title: 'MC Next IP Warming & Deliverability',
+        url: '/docs/salesforce/marketing-cloud/config/ip-warming-deliverability/',
+        description: 'MCN automates IP warming, not your deliverability work. What\'s automatic, what isn\'t, and where to watch.',
+    },
+    {
+        date: '2026-07-08',
+        kind: 'Doc',
+        title: 'MCP Serverside Code Properties',
+        url: '/docs/salesforce/marketing-cloud-personalization/serverside-code-properties/',
+        description: 'Build your marketers\' dream campaign configuration UI in Marketing Cloud Personalization.',
+    },
+    {
+        date: '2026-02-16',
+        kind: 'Doc',
+        title: 'MCE SQL Debugging All Contacts',
+        url: '/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/',
+        description: 'Clean up your MCE Contacts before they clean up your wallet. Step-by-step guide to identifying subscriber issues.',
     },
 ];
 
+/* Dated things that expire: listed at the top of What's new until the day
+   is over, then dropped. Past entries stay as a record. */
+const events = [
+    {
+        title: 'Salesforce World Tour Essentials',
+        date: '2024-06-19',
+        place: 'Warszawa, Poland',
+        description: 'A perfect place to discuss how businesses can transform multi-channel marketing with Salesforce Marketing Cloud Engagement and Real-Time Personalization.',
+        url: 'https://invite.salesforce.com/world-tour-essentials-warszawa-2024/pwc',
+    },
+    {
+        title: 'Insider Insights: Why SFMC Experts Share Their Top Content',
+        date: '2024-09-05',
+        place: 'Online',
+        description: 'Join to hear multiple Marketing Cloud Engagement content creators talk about their tips, tricks and motivations for sharing knowledge via blogs and videos.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketing-cloud-developers-group-presents-insider-insights-why-sfmc-experts-share-their-top-content/',
+    },
+    {
+        title: 'Salesforce CRM in Journey Builder with Marketing Cloud Connect',
+        date: '2024-09-10',
+        place: 'Online',
+        description: 'The Journey Builder Deep Dive series covers the advanced features of the Journey Builder. This session will focus on the JB MCC integration features, use cases and gotchas.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketer-group-marketing-cloud-phoenix-united-states-presents-journey-builder-deep-dive-session-2-salesforce-crm-in-your-journeys-with-mc-connect/',
+    },
+    {
+        title: 'From Salesforce to Agentforce: New Agentic World',
+        date: '2024-12-03',
+        place: 'Warszawa, Poland',
+        description: 'Architect Community Group session covering the Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-architect-group-warsaw-poland-presents-od-salesforce-do-agentforce-ai-w-praktyce/',
+    },
+    {
+        title: 'From Salesforce to Agentforce: The good, the bad, and the future',
+        date: '2025-03-28',
+        place: 'Wrocław, Poland',
+        description: 'Polish Dreamin\' session covering Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
+        url: 'https://www.coffeeforce.pl/dreamin',
+    },
+    {
+        title: 'Agentforce World Tour',
+        date: '2026-05-27',
+        place: 'Warszawa, Poland',
+        description: 'A perfect place to discuss how businesses can transform multi-channel marketing with Salesforce Marketing Cloud Engagement and Real-Time Personalization.',
+        url: 'https://invite.salesforce.com/agentforce-world-tour-warsaw-26/coffeeforce',
+    },
+    {
+        title: 'MC Next Consultant Bootcamp: Analytics & Performance Insights',
+        date: '2026-10-20',
+        place: 'Online',
+        description: 'Day 5 of the Marketing Cloud Next Consultant Bootcamp series, this session will cover Analytics & Performance Insights part of the Exam. Learn how to leverage data and insights to optimize your marketing strategies and drive better results.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-global-bootcamp-group-virtual-presents-marketing-cloud-next-consultant-bootcamp-day-5/',
+    },
+    {
+        title: 'MC Next Consultant Bootcamp: Ask Me Anything',
+        date: '2026-10-27',
+        place: 'Online',
+        description: 'Day 7 of the Marketing Cloud Next Consultant Bootcamp series, this session will be the closing AMA session. Get your exam questions answered by the bootcamp speakers and get ready to become certified Marketing Cloud Next Consultant.',
+        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-global-bootcamp-group-virtual-presents-marketing-cloud-next-consultant-bootcamp-day-7/',
+    },
+];
+
+const feedMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 /**
- * Renders a feature component.
+ * Today's date as YYYY-MM-DD in local time. Comparing ISO strings keeps an
+ * event listed through its own day and needs no timezone arithmetic.
  *
- * @param {string} imageUrl - The URL of the image.
- * @param {string} title - The title of the feature.
- * @param {string} description - The description of the feature.
- * @param {string} url - The URL for the feature.
- * @param {string} cta - The call to action text.
- * @return {JSX.Element} The rendered feature component.
+ * @return {string} Today as YYYY-MM-DD.
  */
-function Feature({ imageUrl, title, description, url, cta }) {
-    const imgUrl = useBaseUrl(imageUrl);
+function todayIso() {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${now.getFullYear()}-${month}-${day}`;
+}
+
+/**
+ * Formats a YYYY-MM-DD string as "Sep 12, 2026" without going through Date,
+ * so server and client render the same text whatever their timezone.
+ *
+ * @param {string} isoDate - Date as YYYY-MM-DD.
+ * @return {string} The formatted date.
+ */
+function formatFeedDate(isoDate) {
+    const [year, month, day] = isoDate.split('-');
+    return `${feedMonths[Number(month) - 1]} ${Number(day)}, ${year}`;
+}
+
+/**
+ * Renders the left column as two stacked panels: about me (photo, intro,
+ * connect button) growing to fill the column, and a smaller newsletter box
+ * with its subscribe button underneath.
+ *
+ * @param {Object} about - imageUrl, title, description, url, cta.
+ * @param {Object} newsletter - title, description, url, cta.
+ * @return {JSX.Element} The rendered column.
+ */
+function AboutColumn({ about, newsletter }) {
+    const imgUrl = useBaseUrl(about.imageUrl);
     return (
-        <div className={clsx('col col--4', styles.feature)}>
-            {imgUrl && (
-                <div className='text--center'>
-                    <img className={styles.featureImage} src={imgUrl} alt={title} />
+        <div className={clsx('col col--4', styles.panelCol, styles.panelStack)}>
+            <div className={clsx(styles.panel, styles.aboutPanel)}>
+                <img className={styles.aboutImage} src={imgUrl} alt="Mateusz Dąbrowski" />
+                <h2 className={styles.panelHeading}>{about.title}</h2>
+                <p>{about.description}</p>
+                <div className={styles.buttons}>
+                    <Link
+                        className='button button--outline button--block button--secondary button--lg shadow--md'
+                        to={about.url}
+                    >
+                        {about.cta}
+                    </Link>
                 </div>
-            )}
-            <h3 className={styles.featureHeading}>{title}</h3>
-            <p>{description}</p>
-            <div className={styles.buttons}>
-                <Link
-                    className={clsx(
-                        'button button--outline button--block button--secondary button--lg shadow--md',
-                        styles.getStarted
-                    )}
-                    to={url}
-                >
-                    {cta}
+                <Link className={styles.aboutMoreLink} to={about.moreUrl}>
+                    {about.moreCta}
                 </Link>
+            </div>
+            <div className={clsx(styles.panel, styles.newsletterPanel)}>
+                <h2 className={styles.panelHeading}>{newsletter.title}</h2>
+                <p className={styles.newsletterPitch}>{newsletter.description}</p>
+                <div className={styles.buttons}>
+                    <Link className={clsx('button button--block button--lg shadow--md', styles.newsletterButton)} to={newsletter.url}>
+                        {newsletter.cta}
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/**
+ * Renders the What's new panel. Upcoming events come first, soonest first,
+ * and drop out once their day has passed; the newest released items fill
+ * the remaining rows, newest first. The row budget is fixed so the panel
+ * keeps its height next to the about panel whether or not an event is on.
+ *
+ * @param {Array} items - Released entries with date, kind, title, url, description.
+ * @param {Array} upcoming - Event entries with date, title, place, url, description.
+ * @param {number} limit - How many rows to show in total.
+ * @return {JSX.Element} The rendered panel.
+ */
+function WhatsNew({ items, upcoming = [], limit = 6 }) {
+    const today = todayIso();
+    const events = upcoming
+        .filter((event) => event.date >= today)
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map((event) => ({ ...event, kind: 'Event' }));
+    const released = [...items].sort((a, b) => b.date.localeCompare(a.date));
+    const rows = [...events, ...released].slice(0, limit);
+    return (
+        <div className={clsx('col col--8', styles.panelCol)}>
+            <div className={styles.panel}>
+                <h2 className={styles.panelHeading}>What's new</h2>
+                <ul className={styles.feed}>
+                    {rows.map((item) => (
+                        <li key={item.url + item.date} className={styles.feedItem}>
+                            <p className={styles.feedMeta}>
+                                <span className={clsx(styles.feedKind, styles[`feedKind${item.kind}`])}>
+                                    {item.kind}
+                                </span>
+                                <time dateTime={item.date}>{formatFeedDate(item.date)}</time>
+                                {item.place && <span>{item.place}</span>}
+                            </p>
+                            <div>
+                                <Link className={clsx(styles.feedTitle, 'offsite-marker')} to={item.url}>
+                                    {item.title}
+                                </Link>
+                                <p className={styles.feedDescription}>{item.description}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );
@@ -148,7 +335,7 @@ const apps = [
     },
     {
         title: <>Slot</>,
-        url: '/slot',
+        url: '/slot/',
         appStoreUrl: 'https://apps.apple.com/app/id6796483262',
         imageUrl: 'img/apple/slot/Slot-Mac-Card.webp',
         description: 'Every Google and Microsoft account in one native Mac app, each in its own isolated session - unreads on the Dock, email & meeting alerts, call controls wherever you are, and links that always open as the right account.',
@@ -158,7 +345,7 @@ const apps = [
     },
     {
         title: <>Shelf</>,
-        url: '/shelf',
+        url: '/shelf/',
         appStoreUrl: 'https://apps.apple.com/app/id6762406443',
         imageUrl: 'img/apple/shelf/Shelf-Mac-Main.webp',
         description: 'The small things you keep retyping - door codes, addresses, snippets, queries, prompts, test emails - encrypted on your device, synced through iCloud, and one tap from your clipboard on iPhone, iPad, Mac and Apple Watch.',
@@ -168,7 +355,7 @@ const apps = [
     },
     {
         title: <>Strum</>,
-        url: '/strum',
+        url: '/strum/',
         appStoreUrl: 'https://apps.apple.com/app/id6764788253',
         imageUrl: 'img/apple/strum/Strum-Pad-Library.webp',
         description: 'A clean, focused tablature editor for ukulele and guitar. Write a song, drop in chords, set a strum pattern, and hear it back on a recorded instrument. Practice to a metronome that auto-scrolls the tab and ramps the tempo - plus capo support, a built-in tuner, custom tunings, and a library that syncs through your own iCloud.',
@@ -178,49 +365,12 @@ const apps = [
     },
 ];
 
-const highlightedCategories = [
-    {
-        title: <>SQL</>,
-        url: './docs/category/salesforce/marketing-cloud-engagement/sql/',
-        description: 'SQL basics, not-so-basics and snippets to learn or copy-paste.',
-        tags: ['Marketing Cloud Engagement'],
-        cta: 'View articles »',
-    },
-    {
-        title: <>Config</>,
-        url: './docs/category/salesforce/marketing-cloud-engagement/config/',
-        description: 'MCE setup and architecture tricks and best practices for everyone.',
-        tags: ['Marketing Cloud Engagement'],
-        cta: 'View articles »',
-    },
-    {
-        title: <>SSJS</>,
-        url: './docs/category/salesforce/marketing-cloud-engagement/ssjs/',
-        description: 'Writing, styling, debugging and abusing SSJS. Everywhere.',
-        tags: ['Marketing Cloud Engagement'],
-        cta: 'View articles »',
-    },
-    {
-        title: <>Serverside Code</>,
-        url: './docs/category/salesforce/marketing-cloud-personalization/serverside-code/',
-        description: 'Undocumented magic for creating amazing MCP campaign templates.',
-        tags: ['Marketing Cloud Personalization'],
-        cta: 'View articles »',
-    },
-];
-
+/* Ordered by a year of GA page views; the last two are editorial picks. */
 const highlightedArticles = [
     {
-        title: <>SQL Basics</>,
-        url: './docs/salesforce/marketing-cloud-engagement/sql/sql-basics/',
-        description: 'Best place to start your journey with writing SQL Queries in MCE.',
-        tags: ['Marketing Cloud Engagement'],
-        cta: 'Read more »',
-    },
-    {
-        title: <>SQL Join</>,
-        url: './docs/salesforce/marketing-cloud-engagement/sql/sql-join/',
-        description: 'Check how to work with more than one Data Extension or Data View.',
+        title: <>System Data Views</>,
+        url: './docs/salesforce/marketing-cloud-engagement/config/system-data-views/',
+        description: 'Learn about hidden Data Views storing key data about your MCE.',
         tags: ['Marketing Cloud Engagement'],
         cta: 'Read more »',
     },
@@ -232,16 +382,9 @@ const highlightedArticles = [
         cta: 'Read more »',
     },
     {
-        title: <>Contact Deletion</>,
-        url: './docs/salesforce/marketing-cloud-engagement/config/contact-deletion/',
-        description: 'Everything you need to clean up your MCE from dirty Contacts.',
-        tags: ['Marketing Cloud Engagement'],
-        cta: 'Read more »',
-    },
-    {
-        title: <>System Data Views</>,
-        url: './docs/salesforce/marketing-cloud-engagement/config/system-data-views/',
-        description: 'Learn about hidden Data Views storing key data about your MCE.',
+        title: <>SQL Basics</>,
+        url: './docs/salesforce/marketing-cloud-engagement/sql/sql-basics/',
+        description: 'Best place to start your journey with writing SQL Queries in MCE.',
         tags: ['Marketing Cloud Engagement'],
         cta: 'Read more »',
     },
@@ -249,6 +392,20 @@ const highlightedArticles = [
         title: <>Mobile Connect Data Views</>,
         url: './docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/',
         description: 'View Mobile Connect data goldmine in SMS System Data Views.',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
+    },
+    {
+        title: <>SQL Join</>,
+        url: './docs/salesforce/marketing-cloud-engagement/sql/sql-join/',
+        description: 'Check how to work with more than one Data Extension or Data View.',
+        tags: ['Marketing Cloud Engagement'],
+        cta: 'Read more »',
+    },
+    {
+        title: <>Contact Deletion</>,
+        url: './docs/salesforce/marketing-cloud-engagement/config/contact-deletion/',
+        description: 'Everything you need to clean up your MCE from dirty Contacts.',
         tags: ['Marketing Cloud Engagement'],
         cta: 'Read more »',
     },
@@ -464,147 +621,12 @@ function Card({ title, url, description, tags, cta, imageUrl, githubUrl, article
 }
 
 /**
- * Renders a newsletter section with a heading, description, and a button to subscribe.
- *
- * @return {JSX.Element} The rendered newsletter section.
- */
-function Newsletter() {
-    return (
-        <section className={styles.newsletter}>
-            <div className="container">
-                <div className="row">
-                    <div className="col col--8">
-                        <h2 className={styles.newsletterHeading}>Stay in the loop</h2>
-                        <p className={styles.newsletterDescription}>
-                            Get the latest Salesforce Marketing and AI tips, guides, and industry news straight to your inbox.
-                        </p>
-                    </div>
-                    <div className="col col--4">
-                        <div className={styles.newsletterButtonWrapper}>
-                            <Link className={clsx(
-                                    'button button--outline button--block button--primary button--lg shadow--md',
-                                    styles.newsletterButton
-                                )} to="./sites/newsletter/">
-                                Subscribe now
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-}
-
-const events = [
-    {
-        title: 'Salesforce World Tour Essentials',
-        date: 'June 19, 2024',
-        place: 'Warszawa, Poland',
-        description: 'A perfect place to discuss how businesses can transform multi-channel marketing with Salesforce Marketing Cloud Engagement and Real-Time Personalization.',
-        url: 'https://invite.salesforce.com/world-tour-essentials-warszawa-2024/pwc',
-    },
-    {
-        title: 'Insider Insights: Why SFMC Experts Share Their Top Content',
-        date: 'September 05, 2024',
-        place: 'Online',
-        description: 'Join to hear multiple Marketing Cloud Engagement content creators talk about their tips, tricks and motivations for sharing knowledge via blogs and videos.',
-        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketing-cloud-developers-group-presents-insider-insights-why-sfmc-experts-share-their-top-content/',
-    },
-    {
-        title: 'Salesforce CRM in Journey Builder with Marketing Cloud Connect',
-        date: 'September 10, 2024',
-        place: 'Online',
-        description: 'The Journey Builder Deep Dive series covers the advanced features of the Journey Builder. This session will focus on the JB MCC integration features, use cases and gotchas.',
-        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-marketer-group-marketing-cloud-phoenix-united-states-presents-journey-builder-deep-dive-session-2-salesforce-crm-in-your-journeys-with-mc-connect/',
-    },
-    {
-        title: 'From Salesforce to Agentforce: New Agentic World',
-        date: 'December 03, 2024',
-        place: 'Warszawa, Poland',
-        description: 'Architect Community Group session covering the Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
-        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-architect-group-warsaw-poland-presents-od-salesforce-do-agentforce-ai-w-praktyce/',
-    },
-    {
-        title: 'From Salesforce to Agentforce: The good, the bad, and the future',
-        date: 'March 28, 2025',
-        place: 'Wrocław, Poland',
-        description: 'Polish Dreamin\' session covering Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
-        url: 'https://www.coffeeforce.pl/dreamin',
-    },
-    {
-        title: 'From Salesforce to Agentforce: The good, the bad, and the future',
-        date: 'March 28, 2025',
-        place: 'Wrocław, Poland',
-        description: 'Polish Dreamin\' session covering Agentforce. Learn about differences between a Chatbot, Einstein Copilot and Agentforce, purpose of the Data Cloud in the new Salesforce AI move and what can Agents can bring to the market.',
-        url: 'https://www.coffeeforce.pl/dreamin',
-    },
-    {
-        title: 'MC Next Consultant Bootcamp: Analytics & Performance Insights',
-        date: 'October 20, 2026',
-        place: 'Online',
-        description: 'Day 5 of the Marketing Cloud Next Consultant Bootcamp series, this session will cover Analytics & Performance Insights part of the Exam. Learn how to leverage data and insights to optimize your marketing strategies and drive better results.',
-        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-global-bootcamp-group-virtual-presents-marketing-cloud-next-consultant-bootcamp-day-5/',
-    },
-    {
-        title: 'MC Next Consultant Bootcamp: Ask Me Anything',
-        date: 'October 27, 2026',
-        place: 'Online',
-        description: 'Day 7 of the Marketing Cloud Next Consultant Bootcamp series, this session will be the closing AMA session. Get your exam questions answered by the bootcamp speakers and get ready to become certified Marketing Cloud Next Consultant.',
-        url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-global-bootcamp-group-virtual-presents-marketing-cloud-next-consultant-bootcamp-day-7/',
-    },
-];
-
-/**
- * Renders an event card component.
- *
- * @param {string} title - The title of the event.
- * @param {string} date - The date of the event.
- * @param {string} place - The location of the event.
- * @param {string} description - The description of the event.
- * @param {string} url - The URL for the event.
- * @return {JSX.Element} The rendered event card component.
- */
-function Event({ title, date, place, description, url }) {
-    return (
-        <div className={clsx('col col--4', styles.eventCardWrapper)}>
-            <div className={clsx('card', styles.eventCard)}>
-                <div className='card__header'>
-                    <h3>{title}</h3>
-                    <p className={styles.eventDetail}>{date} — {place}</p>
-                </div>
-                <div className='card__body'>
-                    <p>{description}</p>
-                </div>
-                <div className='card__footer'>
-                    <Link className='button button--outline button--primary' to={url}>
-                        Let's Meet
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-/**
- * Checks if the given date string represents a future date.
- *
- * @param {string} dateString - The date string to be checked.
- * @return {boolean} Returns true if the given date string represents a future date, false otherwise.
- */
-function isFutureDate(dateString) {
-    const eventDate = new Date(dateString);
-    const currentDate = new Date();
-    return eventDate > currentDate;
-}
-
-/**
  * Renders the Home component with various metadata and sections.
  *
  * @return {JSX.Element} The rendered Home component.
  */
 function Home() {
     const { siteConfig: { customFields = {} } = {} } = useDocusaurusContext();
-    const futureEvents = events.filter(event => isFutureDate(event.date));
 
     return (
         <>
@@ -645,33 +667,29 @@ function Home() {
                 <main>
                     <Hero />
 
-                    {features && features.length > 0 && (
-                        <section className={styles.features}>
-                            <div className="container">
-                                <div className="row">
-                                    {features.map((props, idx) => (
-                                        <Feature key={idx} {...props} />
-                                    ))}
-                                </div>
+                    <section className={clsx(styles.section, styles.sectionAlt)}>
+                        <div className="container">
+                            <div className="row">
+                                <AboutColumn about={about} newsletter={newsletter} />
+                                <WhatsNew items={whatsNew} upcoming={events} />
                             </div>
-                        </section>
-                    )}
+                        </div>
+                    </section>
 
-                    {futureEvents && futureEvents.length > 0 && (
-                        <section className={clsx(styles.section, styles.sectionAlt)}>
+                    {highlightedArticles && highlightedArticles.length > 0 && (
+                        <section className={clsx(styles.section, styles.sectionDark)}>
                             <div className="container">
-                                <h2 className={styles.sectionHeading}>
-                                    Upcoming Events
+                                <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>
+                                    Most popular docs & snippets
                                 </h2>
-                                <div className={clsx('row', styles.centeredRow)}>
-                                    {futureEvents.map((event, idx) => (
-                                        <Event key={idx} {...event} />
+                                <div className='row'>
+                                    {highlightedArticles.map((props, idx) => (
+                                        <Card key={idx} {...props} />
                                     ))}
                                 </div>
                             </div>
                         </section>
                     )}
-
                     {apps && apps.length > 0 && (
                         <section className={clsx(styles.section, styles.sectionAlt)}>
                             <div className="container">
@@ -689,37 +707,6 @@ function Home() {
                         </section>
                     )}
 
-                    {highlightedCategories && highlightedCategories.length > 0 && (
-                        <section className={clsx(styles.section, styles.sectionDark)}>
-                            <div className="container">
-                                <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>
-                                    Most popular topics
-                                </h2>
-                                <div className='row'>
-                                    {highlightedCategories.map((props, idx) => (
-                                        <Card key={idx} {...props} />
-                                    ))}
-                                </div>
-                            </div>
-                        </section>
-                    )}
-
-                    <Newsletter />
-
-                    {highlightedArticles && highlightedArticles.length > 0 && (
-                        <section className={clsx(styles.section, styles.sectionDark)}>
-                            <div className="container">
-                                <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>
-                                    Most popular docs & snippets
-                                </h2>
-                                <div className='row'>
-                                    {highlightedArticles.map((props, idx) => (
-                                        <Card key={idx} {...props} />
-                                    ))}
-                                </div>
-                            </div>
-                        </section>
-                    )}
                 </main>
             </Layout>
         </>
