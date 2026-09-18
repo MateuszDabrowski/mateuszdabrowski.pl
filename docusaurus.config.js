@@ -60,7 +60,10 @@ module.exports = {
             { name: 'msapplication-TileColor', content: '#F6B355' },
         ],
         docs: {
-            sidebar: { autoCollapseCategories: true, },
+            // Off (the Docusaurus default): with it on, a page listed twice in the sidebar
+            // (its cloud folder and the Webinars / Ideas index) auto-expands the index and
+            // collapses every other root folder, including the one being browsed.
+            sidebar: { autoCollapseCategories: false },
         },
         announcementBar: {
             id: 'announcementBar',
@@ -91,6 +94,26 @@ module.exports = {
                             to: 'docs/category/salesforce/marketing-cloud-engagement',
                         },
                         {
+                            label: 'SQL',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/sql',
+                            className: 'dropdown__link--nested',
+                        },
+                        {
+                            label: 'SSJS',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/ssjs',
+                            className: 'dropdown__link--nested',
+                        },
+                        {
+                            label: 'AMPScript',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/ampscript',
+                            className: 'dropdown__link--nested',
+                        },
+                        {
+                            label: 'Config',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/config',
+                            className: 'dropdown__link--nested',
+                        },
+                        {
                             label: 'Marketing Cloud Personalization',
                             to: 'docs/category/salesforce/marketing-cloud-personalization/',
                         },
@@ -98,12 +121,20 @@ module.exports = {
                             label: 'JavaScript',
                             to: 'docs/category/javascript/',
                         },
+                        {
+                            label: 'Webinars',
+                            to: 'docs/category/webinars/',
+                        },
+                        {
+                            label: 'Ideas',
+                            to: 'docs/category/ideas/',
+                        },
                     ],
                 },
                 {
                     label: 'FAQ',
                     to: 'sites/category/faq',
-                    activeBasePath: 'sites/faq',
+                    activeBaseRegex: '^/sites/(category/)?faq',
                     position: 'left',
                     items: [
                         {
@@ -120,32 +151,9 @@ module.exports = {
                         },
                         {
                             label: 'How to open Salesforce Support Case without Agentforce?',
-                            to: 'https://help.salesforce.com/s/case-submission?cr_case=1',
+                            href: 'https://help.salesforce.com/s/case-submission?cr_case=1',
                         }
                     ]
-                },
-                {
-                    label: 'Webinars',
-                    to: 'docs/category/webinars/',
-                    position: 'left',
-                    items: [
-                        {
-                            label: 'MCE Account Architecture',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture',
-                        },
-                        {
-                            label: 'Salesforce Data in Journey Builder',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder',
-                        },
-                        {
-                            label: 'Architecting MCE Web Solutions',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions',
-                        },
-                        {
-                            label: 'MCE Cloud Page Apps',
-                            to: 'docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps',
-                        },
-                    ],
                 },
                 {
                     label: 'Apps',
@@ -156,38 +164,18 @@ module.exports = {
                             to: 'https://diagramforce.com',
                         },
                         {
-                            label: 'Clockforce: Timetool for Trailblazers',
-                            to: 'https://clockforce.mateuszdabrowski.pl',
-                        },
-                        {
                             label: 'Slot: Your Inboxes in One App',
-                            to: 'slot',
+                            to: 'slot/',
                         },
                         {
                             label: 'Shelf: Quick Copy Vault',
-                            to: 'shelf',
+                            to: 'shelf/',
                         },
                         {
                             label: 'Strum: Tabs made easy',
-                            to: 'strum',
+                            to: 'strum/',
                         },
                     ],
-                },
-                {
-                    label: 'Ideas',
-                    to: 'sites/category/ideas',
-                    activeBasePath: 'sites/ideas',
-                    position: 'left',
-                    items: [
-                        {
-                            label: 'Marketing Cloud Engagement',
-                            to: 'sites/ideas/salesforce/marketing-cloud-engagement-ideas/',
-                        },
-                        {
-                            label: 'Marketing Cloud Personalization',
-                            to: 'sites/ideas/salesforce/marketing-cloud-personalization-ideas/',
-                        },
-                    ]
                 },
                 {
                     label: 'Newsletter',
@@ -232,15 +220,40 @@ module.exports = {
             style: 'dark',
             links: [
                 {
-                    title: 'MC Engagement Docs',
+                    title: 'Docs & Snippets',
                     items: [
                         {
-                            label: 'Zen of SFMC',
+                            label: 'MC Next',
+                            to: 'docs/category/salesforce/marketing-cloud/',
+                        },
+                        {
+                            label: 'MC Engagement',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/',
+                        },
+                        {
+                            label: 'MC Personalization',
+                            to: 'docs/category/salesforce/marketing-cloud-personalization/',
+                        },
+                        {
+                            label: 'JavaScript',
+                            to: 'docs/category/javascript/',
+                        },
+                        {
+                            label: 'Webinars',
+                            to: 'docs/category/webinars/',
+                        },
+                    ],
+                },
+                {
+                    title: 'MC Engagement',
+                    items: [
+                        {
+                            label: 'Zen of MCE',
                             to: 'docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud',
                         },
                         {
                             label: 'Config',
-                            to:  'docs/category/salesforce/marketing-cloud-engagement/config/',
+                            to: 'docs/category/salesforce/marketing-cloud-engagement/config/',
                         },
                         {
                             label: 'SQL',
@@ -257,40 +270,44 @@ module.exports = {
                     ],
                 },
                 {
-                    title: 'Other Docs',
+                    title: 'Apps',
                     items: [
                         {
-                            label: 'MC Next',
-                            to: 'docs/category/salesforce/marketing-cloud/',
+                            label: 'Diagramforce',
+                            to: 'https://diagramforce.com',
                         },
                         {
-                            label: 'MC Personalization',
-                            to: 'docs/category/salesforce/marketing-cloud-personalization/',
+                            label: 'Slot',
+                            to: 'slot/',
                         },
                         {
-                            label: 'JavaScript',
-                            to: 'docs/category/javascript/',
+                            label: 'Shelf',
+                            to: 'shelf/',
+                        },
+                        {
+                            label: 'Strum',
+                            to: 'strum/',
                         },
                     ],
                 },
                 {
-                    title: 'My',
+                    title: 'More',
                     items: [
                         {
-                            label: 'Newsletter',
-                            to: 'sites/newsletter',
-                        },
-                        {
-                            label: 'Webinars',
-                            to: 'docs/category/webinars',
+                            label: 'About Me',
+                            to: 'sites/about-me',
                         },
                         {
                             label: 'Toolset',
                             to: 'sites/my-toolset',
                         },
                         {
+                            label: 'Newsletter',
+                            to: 'sites/newsletter',
+                        },
+                        {
                             label: 'Ideas',
-                            to: 'sites/category/ideas',
+                            to: 'docs/category/ideas/',
                         },
                         {
                             label: 'FAQ',
@@ -320,7 +337,9 @@ module.exports = {
             indexName: 'mateuszdabrowski',
             placeholder: 'Search Docs & Snipptes',
             contextualSearch: true,
-            insights: true,
+            // No click tracking: it needs a persistent user token. Algolia's own
+            // search statistics (top queries, no-result queries) do not, and stay on.
+            insights: false,
         },
     },
     presets: [
@@ -342,10 +361,6 @@ module.exports = {
                 sitemap: {
                     changefreq: 'weekly',
                     priority: 0.5,
-                },
-                gtag: {
-                    trackingID: 'GTM-N46LB5K',
-                    anonymizeIP: true,
                 },
             },
         ],
@@ -608,14 +623,22 @@ module.exports = {
                         from: ['/docs/category/interaction-studio-snippets/', '/docs/category/-mc-personalization-snippets/'],
                         to: '/docs/category/salesforce/marketing-cloud-personalization/snippets/',
                     },
-                    /* Ideas restructure */
+                    /* Ideas restructure: pages moved from /sites/ideas to their cloud folders in /docs */
                     {
-                        from: ['/ideas/', '/sites/ideas/', '/sites/ideas/marketing-cloud-ideas/'],
-                        to: '/sites/ideas/salesforce/marketing-cloud-engagement-ideas/',
+                        from: ['/ideas/', '/sites/ideas/', '/sites/category/ideas/'],
+                        to: '/docs/category/ideas/',
                     },
                     {
-                        from: ['/sites/ideas/mc-personalization-ideas/', '/sites/ideas/interaction-studio-ideas/'],
-                        to: '/sites/ideas/salesforce/marketing-cloud-personalization-ideas/',
+                        from: ['/sites/ideas/salesforce/marketing-cloud-ideas/'],
+                        to: '/docs/salesforce/marketing-cloud/ideas/',
+                    },
+                    {
+                        from: ['/sites/ideas/marketing-cloud-ideas/', '/sites/ideas/salesforce/marketing-cloud-engagement-ideas/'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/ideas/',
+                    },
+                    {
+                        from: ['/sites/ideas/mc-personalization-ideas/', '/sites/ideas/interaction-studio-ideas/', '/sites/ideas/salesforce/marketing-cloud-personalization-ideas/'],
+                        to: '/docs/salesforce/marketing-cloud-personalization/ideas/',
                     },
                     /* Webinars restructure */
                     {

@@ -13,7 +13,8 @@ module.exports = {
             items: [
                 {
                     type: 'link',
-                    label: '» SFMC Product Names Explained',
+                    label: 'SFMC Product Names Explained',
+                    className: 'sidebar-crosslink',
                     href: '/sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds/',
                 },
                 {
@@ -44,7 +45,11 @@ module.exports = {
                                 'salesforce/marketing-cloud/config/business-units',
                             ],
                         },
-
+                        {
+                            type: 'doc',
+                            id: 'salesforce/marketing-cloud/ideas',
+                            label: 'Ideas',
+                        },
                     ],
                 },
                 {
@@ -91,7 +96,7 @@ module.exports = {
                                 'salesforce/marketing-cloud-engagement/sql/sql-style-guide',
                                 {
                                     type: 'category',
-                                    label: '› SQL Snippets',
+                                    label: 'Snippets',
                                     link: {
                                         type: 'generated-index',
                                         title: 'Salesforce Marketing Cloud Engagement SQL Snippets',
@@ -127,7 +132,7 @@ module.exports = {
                                 'salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance',
                                 {
                                     type: 'category',
-                                    label: '› SSJS Snippets',
+                                    label: 'Snippets',
                                     link: {
                                         type: 'generated-index',
                                         title: 'Salesforce Marketing Cloud Engagement SSJS Snippets',
@@ -145,7 +150,7 @@ module.exports = {
                                 },
                                 {
                                     type: 'link',
-                                    label: '» Official SSJS Docs',
+                                    label: 'Official SSJS Docs',
                                     href: 'https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ssjs_serverSideJavaScript.html',
                                 },
                             ],
@@ -166,7 +171,7 @@ module.exports = {
                                 'salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance',
                                 {
                                     type: 'category',
-                                    label: '› AMPScript Snippets',
+                                    label: 'Snippets',
                                     link: {
                                         type: 'generated-index',
                                         title: 'Salesforce Marketing Cloud Engagement AMPScript Snippets',
@@ -181,7 +186,7 @@ module.exports = {
                                 },
                                 {
                                     type: 'link',
-                                    label: '» Official AMPScript Docs',
+                                    label: 'Official AMPScript Docs',
                                     href: 'https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ampscript.html',
                                 },
                             ],
@@ -229,6 +234,11 @@ module.exports = {
                                 'salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps',
                             ],
                         },
+                        {
+                            type: 'doc',
+                            id: 'salesforce/marketing-cloud-engagement/ideas',
+                            label: 'Ideas',
+                        },
                     ],
                 },
                 {
@@ -247,7 +257,7 @@ module.exports = {
                         'salesforce/marketing-cloud-personalization/open-time-email',
                         {
                             type: 'category',
-                            label: '› Serverside Code',
+                            label: 'Serverside Code',
                             link: {
                                 type: 'generated-index',
                                 title: 'Salesforce Marketing Cloud Personalization Serverside Code',
@@ -264,7 +274,7 @@ module.exports = {
                         },
                         {
                             type: 'category',
-                            label: '› MC Personalization Snippets',
+                            label: 'Snippets',
                             link: {
                                 type: 'generated-index',
                                 title: 'Salesforce Marketing Cloud Personalization Snippets',
@@ -278,22 +288,68 @@ module.exports = {
                             ],
                         },
                         {
+                            type: 'doc',
+                            id: 'salesforce/marketing-cloud-personalization/ideas',
+                            label: 'Ideas',
+                        },
+                        {
                             type: 'link',
-                            label: '» MCP Templates Repository',
+                            label: 'MCP Templates Repository',
                             href: 'https://github.com/MateuszDabrowski/mcp-campaign-templates',
                         },
                         {
                             type: 'link',
-                            label: '» Official MCP Business Docs',
+                            label: 'Official MCP Business Docs',
                             href: 'https://help.salesforce.com/s/articleView?id=sf.mc_pers.htm',
                         },
                         {
                             type: 'link',
-                            label: '» Official MCP Developer Docs',
+                            label: 'Official MCP Developer Docs',
                             href: 'https://developer.salesforce.com/docs/marketing/personalization/guide/get-started.html',
                         },
                     ],
                 },
+            // Cross-cloud indexes (inside Salesforce) for the two formats the navbar links to. Items are
+            // refs, so each page keeps its cloud folder as home (breadcrumbs, prev/next).
+            // The refs feed the index page's cards; in the sidebar the folder is shown
+            // as a plain row (children hidden via .sidebar-index), so no page is listed twice.
+            {
+                type: 'category',
+                label: 'Webinars',
+                className: 'sidebar-index',
+                link: {
+                    type: 'generated-index',
+                    title: 'Webinars',
+                    description: 'My sessions on various aspects of Salesforce Marketing Cloud with summary, recordings, slides, snippets and articles.',
+                    slug: 'category/webinars',
+                    keywords: ['Salesforce', 'Marketing Cloud Engagement', 'Webinar'],
+                    image: 'img/og/og-image-sf-mce-webinars.png',
+                },
+                items: [
+                    { type: 'ref', id: 'salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture' },
+                    { type: 'ref', id: 'salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder' },
+                    { type: 'ref', id: 'salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions' },
+                    { type: 'ref', id: 'salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps' },
+                ],
+            },
+            {
+                type: 'category',
+                label: 'Ideas',
+                className: 'sidebar-index',
+                link: {
+                    type: 'generated-index',
+                    title: 'Ideas',
+                    description: 'Here you can find all my Salesforce IdeaExchange contributions by solution. Let\'s make the change!',
+                    slug: 'category/ideas',
+                    keywords: ['Salesforce', 'IdeaExchange'],
+                    image: 'img/og/og-image-sf-ideas.png',
+                },
+                items: [
+                    { type: 'ref', id: 'salesforce/marketing-cloud/ideas', label: 'Marketing Cloud Next' },
+                    { type: 'ref', id: 'salesforce/marketing-cloud-engagement/ideas', label: 'Marketing Cloud Engagement' },
+                    { type: 'ref', id: 'salesforce/marketing-cloud-personalization/ideas', label: 'Marketing Cloud Personalization' },
+                ],
+            },
             ],
         },
         {
@@ -312,7 +368,7 @@ module.exports = {
                 'js/js-dom',
                 {
                     type: 'category',
-                    label: '› JS Snippets',
+                    label: 'Snippets',
                     link: {
                         type: 'generated-index',
                         title: 'JS Snippets',
@@ -326,25 +382,6 @@ module.exports = {
                         'js/snippets/engage-with-countdown',
                     ],
                 },
-            ],
-        },
-    ],
-    webinars: [
-        {
-            type: 'category',
-            label: 'Webinars',
-            link: {
-                type: 'generated-index',
-                title: 'Webinars',
-                description: 'My sessions on various aspects of Salesforce Marketing Cloud with summary, recordings, slides, snippets and articles.',
-                keywords: ['Salesforce', 'Marketing Cloud Engagement', 'Webinar'],
-                image: 'img/og/og-image-sf-mce-webinars.png',
-            },
-            items: [
-                'salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture',
-                'salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder',
-                'salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions',
-                'salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps',
             ],
         },
     ],
