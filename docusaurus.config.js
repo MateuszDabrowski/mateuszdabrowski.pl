@@ -361,6 +361,8 @@ module.exports = {
                 sitemap: {
                     changefreq: 'weekly',
                     priority: 0.5,
+                    // Email landing pages: noindex, and not offered to crawlers either.
+                    ignorePatterns: ['/newsletter/**'],
                 },
             },
         ],
