@@ -19,7 +19,7 @@ import styles from './styles.module.css';
     changed, and CDNs go on serving the old picture. Confirmed the hard way:
     the 1.2.0 page showed the 1.1.0 rail for over a day after deploying. Bump
     this with the app's version and every screenshot is a new URL. */}
-export const ASSETS = '1.5.0';
+export const ASSETS = '1.6.0';
 
 {/* Custom Inline React Component for Image Lightbox Overlay */}
 export const ZoomImage = ({ src, alt, imgStyle }) => {
@@ -192,7 +192,8 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
           › Quiet hours and alert pauses, per account<br/>
           › Meeting countdowns under each account's tile<br/>
           › An agenda of every account's day on one timeline - today, tomorrow, or a month<br/>
-          › A live pill for the call you are on - mute camera or mic from any window
+          › A live pill for the call you are on - mute camera or mic from any window<br/>
+          › Draw over the page while you share your screen, and keep your name off Slot's bars
         </p>
       </div>
       <div className="col col--6" style={{padding: '0 2rem'}}>
@@ -201,8 +202,9 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
           › Each account's links routed to the browser you chose<br/>
           › Docs, Sheets, Slides, Word, Excel and PowerPoint in their own windows<br/>
           › All nineteen Google and Microsoft apps, each on or off per account<br/>
-          › Three notes and a list of favourite files, one click from any window<br/>
+          › Up to four notes and a list of favourite files, one click from any window<br/>
           › Every account in its own isolated session, enforced by macOS<br/>
+          › Diagramforce, a free diagramming tool, as an optional add-on<br/>
           › One purchase - no subscription, ever
         </p>
       </div>
@@ -252,7 +254,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
       </div>
       <p style={{fontSize: '1.1rem'}}>
-        Paste your calendar's private address once and Slot shows what is coming up under each account, with a reminder at the lead times you choose. The calendar is parsed on your Mac - recurring events, exceptions, time zones and all - with no sign-in and no account access beyond that one address. All-day blocks stay out of the way, and a Join button takes you straight into the call. Once you are on it, the call becomes a live pill under its account's tile, and the camera and microphone controls follow it into every window - so you can mute while reading a spreadsheet, without going back to find the call.
+        Paste your calendar's private address once and Slot shows what is coming up under each account, with a reminder at the lead times you choose. The calendar is parsed on your Mac - recurring events, exceptions, time zones and all - with no sign-in and no account access beyond that one address. All-day blocks stay out of the way, and a Join button takes you straight into the call. Once you are on it, the call becomes a live pill under its account's tile, and the camera and microphone controls follow it into every window - so you can mute while reading a spreadsheet, without going back to find the call. When you share your screen, a pencil in every window's bar draws over the page for the people watching - pen, highlighter, rectangle, arrow and numbered markers you can move - and clears when you are done.
       </p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
@@ -324,7 +326,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
       </div>
       <p style={{fontSize: '1.1rem'}}>
-        Up to four notes, one click from any window - each shared everywhere, or belonging to the account you are in. Type <code>- </code>, <code>1. </code>, <code>[] </code> or <code># </code> and the line becomes what you meant; tick a checkbox and the count on the rail goes down. They are files on your Mac and sync nowhere. Beside them, the documents you keep coming back to: bookmark any Drive, Docs or Office file and it joins one list spanning every account - each row wearing its file type in its account's colour, filterable by account, type and tag - and each one opens in the account that owns it.
+        Up to four notes, one click from any window - each shared everywhere, or belonging to the account you are in. Type <code>- </code>, <code>1. </code>, <code>[] </code> or <code># </code> and the line becomes what you meant; tick a checkbox and the count on the rail goes down. They are files on your Mac and sync nowhere, and each account comes back to the note it last had open. Beside them, the documents you keep coming back to: bookmark any Drive, Docs or Office file and it joins one list spanning every account - each row wearing its file type in its account's colour, filterable by account, type and tag - and each one opens in the account that owns it.
       </p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
@@ -408,7 +410,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
         </div>
 
         <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>
-          Require Touch ID to open Slot, and camera and microphone go only to Meet and Teams - no other page can even ask. Presenting? One switch hides Slot from your screen share: the main window, everything but one account, or every window - the audience sees a black card, you keep seeing it all. Removing an account deletes all of its data.
+          Require Touch ID to open Slot, and camera and microphone go only to Meet and Teams - no other page can even ask. Presenting? One switch hides Slot from your screen share: the main window, everything but one account, or every window - the audience sees a black card, you keep seeing it all. A second switch takes your name, address and picture off Slot's own bars for the share; what the page shows of you stays. Removing an account deletes all of its data.
         </p>
       </div>
     </div>
@@ -475,6 +477,13 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 </details>
 
 <details className={styles.faqDetails}>
+  <summary>Diagramforce cannot open the Google file picker in Slot.</summary>
+
+  Known, and reported to Apple (FB24880571, WebKit bug 324733): inside an app, WebKit sends the picker's frame no cookies, so it cannot sign in. Saving, loading and sharing work in Slot as they do in a browser; the two doors that need the picker - the whole-Drive search and Add to Shared Drive - need Diagramforce in a browser until WebKit is fixed.
+
+</details>
+
+<details className={styles.faqDetails}>
   <summary>Does Slot support [feature X]?</summary>
 
   The current scope is described above. If the feature you need isn't there, write in - I read every email and feature requests inform what ships next.
@@ -502,7 +511,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
 ## Privacy Policy {#privacy-policy}
 
-<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: July 30, 2026</p>
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: September 22, 2026</p>
 
 <p>Slot is built by Mateusz Dąbrowski. This policy explains what the Slot app does with your data. The short version: Slot sends nothing to me, and it keeps every account apart from every other one. The longer version matters, because Slot is a container for accounts you already have with Google and Microsoft, and a lot of what happens inside it is between you and them.</p>
 
@@ -552,7 +561,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <ul>
   <li><strong>Your account list</strong> - for each account: a name, any name you set yourself, the address the account reports, the colour you chose, which surfaces you enabled, which browser opens its links, your notification and quiet-hours settings, the calendar feed address if you added one, and the last unread count Slot showed you.</li>
   <li><strong>Profile pictures</strong> - the picture shown on the account rail, cached as a file.</li>
-  <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, whether the menu bar item and its countdown are shown, and whether Slot asks for Touch ID on unlock.</li>
+  <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, whether the menu bar item and its countdown are shown, whether Slot asks for Touch ID on unlock, which add-ons are on and for which accounts, whether your name and picture show on Slot's own bars, and the tab and note each account last had open.</li>
   <li><strong>Your notes</strong> - the notes in Slot's own note panel, up to four, with their formatting, saved as files. A note you made shared belongs to the app; a note you made per account is one file per account, deleted with that account. Nothing in them is sent anywhere.</li>
   <li><strong>Your favourites</strong> - the metadata of documents you chose to keep: each one's address, the name it had when you kept it, any name or tags you gave it, and which account it belongs to.</li>
   <li><strong>Your availability</strong> - the dates you marked in the month view as limited availability or as travel, and the repeating pattern if you set one. You type these into Slot yourself; they are read from no calendar and belong to no account.</li>
@@ -576,6 +585,8 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
   <li><strong>An attachment you asked to print</strong>, from Gmail's own attachment hosts, only at the moment you press Command-P in Gmail's attachment viewer, using that account's own session. The file goes to the print panel and is then deleted - it is never saved to Downloads and never kept.</li>
 </ul>
 
+<p>With the Diagramforce add-on switched on for an account, that account's window also loads <code>diagramforce.com</code> - my own diagramming tool, a static page served by GitHub Pages, with no analytics and no server of its own. GitHub sees that request as it sees any visit to the site. Diagramforce keeps your diagrams in that account's Google Drive, through Google's own authorization page inside the tab; Slot holds no token for it, and the add-on is off until you switch it on.</p>
+
 <p>Two things are worth stating plainly. The calendar feed address is a secret in itself - anyone holding it can read that calendar - which is why Slot refuses to send it unencrypted and refuses an address with a password in it. And when you have chosen to open a document in an external browser, Slot adds your account's address to the link so the right account opens; that link then goes to the browser you picked, and to the provider.</p>
 
     <div style={{marginTop: '2rem'}}>
@@ -584,7 +595,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
     </div>
 
-<p>Slot reads a small number of specific things out of provider pages so it can show them natively. It installs no permanent scripts, registers no channel a page could call into, and bundles no JavaScript of its own. There are four reads, all one-shot and read-only:</p>
+<p>Slot reads a small number of specific things out of provider pages so it can show them natively. It installs no permanent scripts on any provider's page, registers no channel a page could call into, and bundles no JavaScript of its own. The one exception is the Diagramforce add-on: on its own pages, and nowhere else, Slot sets a single read-only marker saying which version of Slot the page is in, so the tool can adapt to it. The marker carries nothing about you or your accounts. There are four reads, all one-shot and read-only:</p>
 
 <ul>
   <li>The address of your profile picture, from the Gmail page's own header.</li>

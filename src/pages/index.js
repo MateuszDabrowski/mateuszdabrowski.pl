@@ -100,11 +100,11 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
-        date: '2026-09-12',
+        date: '2026-09-22',
         kind: 'App',
-        title: 'Slot 1.5.0',
+        title: 'Slot 1.6.0',
         url: '/slot/',
-        description: 'Time zones per account: the clock on the line for now, and every meeting card showing the time in each zone that account tracks.',
+        description: 'Slot works with all your Google and Microsoft accounts in one place. New: Diagramforce as an add-on per account, drawing and privacy for screen sharing, and each account remembering where you left off.',
     },
     {
         date: '2026-09-04',
