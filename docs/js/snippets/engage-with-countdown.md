@@ -1,0 +1,175 @@
+# Engage with Countdown
+
+> Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
+
+Source: https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## Outline
+
+1. [Learn how to implement the solution](https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/#final-countdown)
+2. [Adapt it to the story you are telling](https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/#counting-options)
+3. [Leverage personalisation for even better results](https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/#take-advantage-of-dynamic-content)
+
+Lured visitors to your landing page? Great! Now it is time to convert them to your cause. Whitepaper download, product purchase or enrollment, doesn't matter. In each case, you will fight for the attention of the user and drive him towards the goal set for him. It's not easy in the modern web environment, but even the basics might give you the upper hand.
+
+## Final countdown
+
+Let's talk about a simple solution you can implement on your landing page in just  — a counter.
+
+To add a dynamic countdown to your website, you will need basic HTML (to put it into a specific place) and a JavaScript code to do the math. CSS is optional but might spice up the style of your page.
+
+### HTML
+
+Firstly, you will need to create an `id` attribute to mark the container in which you want to display the counter. It might be on the `<p>` element for an inline solution or on `<div>` element were you to create a more visual version.
+
+Next, the spans. Add empty `<span>` elements with the `class` corresponding to the time unit you want to show. JavaScript will swap it for the correct numeric value and dynamically change it as time passes. You can add just hours, or you can go for full spectrum.
+
+For example, did you know there is only  left till 55th anniversary of the first moon landing?
+
+```html Sample countdown code for above line
+<p id="counter1">
+    For example, did you know there is only <span class="days"></span> days, <span class="hours"></span> hours, <span class="minutes"></span> minutes and <span class="seconds"></span> seconds left till 50th anniversary of the first moonlanding?
+</p>
+
+<script>
+    function getTimeRemaining(endtime) {
+        const now = new Date().getTime();
+        const t = endtime - now;
+        const seconds = Math.floor((t / 1000) % 60);
+        const minutes = Math.floor((t / 1000 / 60) % 60);
+        const hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+        const days = Math.floor(t / (1000 * 60 * 60 * 24));
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+    function initializeClock(element, endtime) {
+        const clock = document.querySelector(element);
+        const daysSpan = clock.querySelector('.days');
+        const hoursSpan = clock.querySelector('.hours');
+        const minutesSpan = clock.querySelector('.minutes');
+        const secondsSpan = clock.querySelector('.seconds');
+
+        function updateClock() {
+            const t = getTimeRemaining(endtime);
+            daysSpan.innerHTML = t.days;
+            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+            if (t.total <= 0) {
+                clearInterval(timeinterval);
+            }
+        }
+        updateClock();
+        const timeinterval = setInterval(updateClock, 1000);
+    }
+
+    /* Declare deadline time */
+    const deadline = new Date("2019-07-20T20:17:00+00:00").getTime()
+    /* Trigger counter function by targeting specific element and passing the above deadline */
+    initializeClock('#counter1', deadline);
+</script>
+```
+
+### JavaScript
+
+There is much more fun in the JavaScript part. Worry not - you don't need to know the language at all. Let's have a look at the lines to understand what is happening on the general level and then focus on personalisation options.
+
+#### Function `getTimeRemaining`
+
+The first function does the math behind countdown. With the deadline set for the counter and the current time took from visitor's hardware, it calculates the remaining values of each time unit.
+
+Remember to keep there those and only those units that you actually use in your counter. The rest should be deleted (for example, if you want to get rid of the *day* unit, remove both the `const days = (...)` line and `'days': days,` from the return statement).
+
+#### Function `initializeClock`
+
+The second function is responsible for finding the `id` attribute and `<span>` elements we created in the HTML part and updating the countdown every second. Simple and only possible edit would be to delete the line with time unit that will not be used, just as mentioned above.
+
+#### Function `updateClock`
+
+The job of the last one is to swap span elements targeted in `initializeClock` to values calculated by `getTimeRemaining` - and to stop counter refreshing after it gets to zero. Again - only edit needed would be to delete the unneeded unit.
+
+To not leave you with “delete this, delete that” talk and empty hands, feel free to take a look at a simplified [sample code](https://gist.github.com/MateuszDabrowski/f433cecf3c02c400c9e74d08b78ad50c#file-day-counter-html) that counts only days. As for the placement in your code - it will be best to put the `<script>(...)</script>` part right before the closing `</body>` tag.
+
+## Counting options
+
+Time for the important part - the one you will always edit. The counter's deadline. You probably already noticed `const deadline` in the sample and guessed it is the line we will focus on now. It might look a bit intimidating with the weird structure, but in this way, it actually gives you a lot of power. This date formatting is an example of an [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard.
+
+```js
+const deadline = new Date("2077-07-20T20:17:00+00:00").getTime()
+```
+
+To use it, insert date in a YYYY-MM-DD**T**hh\:mm:ss \*\*+\*\*hh:mm format. The **T** is just a delimiter between date and time, \*\*+\*\*hh:mm, on the other hand, allows you to add time variable (for example summertime change).
+
+However, depending on the needs, you may want to use other available formats, for example, simplified only-date format perfect when you need to count days.
+
+```js
+const deadline = new Date("2077-01-31").getTime();
+```
+
+Another option is to calculate the amount of time to count down from instead of a static end date. It might be a much better solution if you want to create a feeling of pressure for a small task or engage visitor without a real deadline on your side.
+
+To use this solution, you need to declare the starting value. In below example, it is set to 15 days. The code multiplies 1000 milliseconds times 60 seconds times 60 minutes times 24 hours. Want to count 5 minutes? Go for 1000 \* 60 \* 60 \* 5.
+
+```js
+const deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+```
+
+## Take advantage of dynamic content
+
+Simple countdown on landing page already can make an enormous difference to your conversion rate. But, of course, you can get even more out of it by using the toolset of your marketing automation tool.
+
+There are many cases where urgency is a perfect solution, however, not always all visitors should
+see the same timeframe. An example? Renewal notification that counts downtime before a subscription expires. Instead of a
+static product end date, implement the counter and put some pressure with seconds running out in real-time.
+
+To do this, make your marketing automation tool push a date value (in above mentioned ISO 8601 format) from the visitor data model right into var deadline JavaScript line.
+
+**Salesforce Marketing Cloud**
+
+In Salesforce Marketing Cloud, you can use either [AMPScript personalisation string](https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/personalisationStringsAMPscript.htm) or SSJS personalisation string:
+
+```js
+/* Remember to check whether the date you are using has Local or System based timezone */
+const deadline = new Date('<ctrl:field name=DateTypeAttributeName />').getTime();
+```
+
+Wondering what will happen with visitors that don't have this date value? With just personalisation string such users will see the counter set to zero right from the start. Of course, we would rather not have it that way. Thankfully SSJS personalisations strings allow us to add default value very easily:
+
+```js
+const deadline = new Date('<ctrl:field name=DateTypeAttributeName default='2077-07-20T20:17:00+00:00' />').getTime();
+```
+
+You can also easily create a dynamic content block that will be visible only when the date from personalisation string is soon enough, by leveraging a simple `if/else` logic of SSJS.
+
+**Oracle Eloqua**
+
+In Oracle Eloqua it would be a [field merge](https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCAA/Help/FieldMerges/FieldMergeExamples.htm):
+
+```js
+const deadline = new Date('<span class=eloquaemail> Date_Field_Merge1 </span>').getTime();
+```
+
+Wondering what will happen with visitors that don't have this date value? With just field merge such users will see the counter set to zero right from the start. Of course, we would rather not have it that way. Let's create a remedy with yet another marketing automation tool - [dynamic content](https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCAA/Help/DynamicContent/DynamicContentExamples.htm) (that's Eloqua name for a content element that adapts to the visitor depending on the value in the data model). Just wrap the HTML part of a counter and set it to be visible only if the visitor has a date value in the field used in field merge (or even when it is also within the chosen timeframe).
+
+```html
+<span elqid="001" elqtype="DynamicContent" class="remove-absolute" style="display: block"></span>
+```
+
+Use it hard. How? Put that renewal offer with a counter inside a dynamic content and insert it into every content landing page. Simple and quick solution to make sure your customers will be notified *when* they should. You can also put single dynamic content box related to events or webinars and push information with the counter about the nearest happening one. Just be sure to leverage dynamic content options to show different texts depending on visitor persona. And, of course, update that dynamic content after the event.
+
+What next? Take the code, implement on a landing page, build an urgency fueled story and watch boosted engagement do its job. You can count on it.
+
+> **Note: You Should Know**
+>
+> As emails don't support JavaScript, you won't be able to leverage the above code for your sends. However, that doesn't mean you cannot increase engagement with a countdown in your outbound.
+>
+> Multiple solutions create dynamically changing .gifs that allows you to create a real-time timer in your email. I'm using [Sendtric](https://www.sendtric.com). A different approach, same engagement boosting value.

@@ -1,0 +1,364 @@
+# MCE SQL Basics
+
+> SELECT your data FROM Salesforce Marketing Cloud Engagement WHERE drag-and-drop Filters are not enough.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## How to segment data in MCE
+
+MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) offers a few ways of segmenting data for your marketing needs. Out of the box, you can use Filters and SQL Query Activities.
+
+Filters are a straightforward drag-and-drop solution for one-time (Filtered Data Extensions) or refreshed on-schedule (Data Filters with Automation) segmentation. Unfortunately, they are constrained, as they allow you to copy a single Data Extension with all its columns and filtered-down rows. That filtering can leverage source Data Extension values, another Data Extension values (through Data Relationship) or Measures. That's it. For real Marketing Automation, it's not enough.
+
+This is why you are looking to learn about Marketing Cloud Engagement SQL. Along with Automation Studio Query Activity, it will allow you to deploy any segmentation scenario you want with complete control over the output columns, names and values. However, with great power comes some learning required.
+
+There is also a third way - paid AppExchange solutions that offer you a way to eat a cookie and have a cookie: the full power of SQL with a drag-and-drop interface. For a price.
+
+You can check my comparison of all the above options in my [here](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#mce-segmentation-solutions). This article will focus only on the most powerful and free option - MCE SQL.
+
+## SQL in MCE
+
+SQL (Structured Query Language) is one of the best ways to work with relational databases. And MCE's Data Extensions, with the help of Data Designer, offer precisely that. A relational database. The same is valid for system Data Views containing tracking data. Because of this, SQL is used in MCE whenever powerful segmentation is needed (mainly using Automation Studio).
+
+The main difference from standard SQL (MCE uses more or less SQL Server 2019) is that MCE supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
+
+Another limiting characteristic of MCE SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of MCE are not relational databases.
+
+Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
+
+## Where to learn MCE SQL
+
+Before we start with the real deal, let's cover where to learn to write SQL. I recommend getting a [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio). It's a free AppExchange add-on to MCE developed by Salesforce. While it has cons, it's perfect for quickly learning how to query.
+
+If you cannot install this app in your MCE, there are still two ways to learn MCE SQL:
+
+1. Query Activities in Automation Studio. It will be much less user-friendly because for each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results. But it will let you train using the data you have in your platform.
+2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to MCE. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
+
+I always start in [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio), and only once my SQL Query is complete and validated do I move it to Automation Studio.
+
+Once you have the right tool, it’s time to get the right knowledge. There are few formats available. If you like reading followed by small knowledge checks - this page is the right choice. But if you prefer watching a video or a doing a challenge - Cameron Roberts and Sabuhi Yahya got you covered:
+
+[Cam’s SQL Playlist](https://www.youtube.com/watch?v=g0SZmP3Kl_I\&list=PLYjAMqKETE1pc21Q4_cCGq7tGyy-vy8qc) | [Sabuhi’s SQL30 Challenge](https://marketingcloud30.com/challenge/sql30/)
+
+## How to learn MCE SQL
+
+Marketing Cloud Engagement SQL is very limited compared to the full power of Structured Query Language, but there are still many topics to cover. I split them into steps that slowly add more complex concepts to make it easier. Each should provide knowledge that you can actively use in your day-to-day work.
+
+In each level, you will see:
+
+1. Learning materials to read.
+2. Exercise you can do in your MCE platform to test your skills.
+3. Hint that can help you with the exercise if you are stuck.
+4. Example solution to that exercise. Keep in mind that there might be more than one correct approach.
+
+---
+
+### Level 1 - SELECT, FROM, WHERE
+
+Learn the three essential SQL statements for all queries. They will give you similar power to what Filters can do - with the bonus of choosing the columns you need for your final segment.
+
+#### Learning materials
+
+- [SELECT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) - just the first part, before the aliasing section.
+- [FROM](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) - whole article.
+- [WHERE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) - the first part, before the Basic Operators, plus [Equality Operators](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#equality-operators) and [Logical Operators](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#logical-operators). Don't worry about Comparison operators or shorthands for now. Don't worry about the examples with dates and unknown functions. We will get there. For now, think about how you can filter based on simple values like status.
+- [System Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/) - the basics and [\_Subscribers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View.
+
+#### Check your skills
+
+**Exercise**
+
+Write a query that will find Subscriber Key for all Active (opted-in) Subscribers in your All Subscribers list.
+
+**Hints**
+
+1. All Subscribers List data is stored in [\_Subscribers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View.
+2. If you are running your query on a child Business Unit, you will need to use [`Ent.` prefix](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/#enterprise-system-data-views).
+3. You don't have to [SELECT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) any columns but the SubscriberKey. You can use [WHERE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) on not selected columns.
+4. Current status of a Subscriber is saved in the `Status` column of [\_Subscribers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View as a string. You can use it for filtering with [WHERE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/).
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit"
+SELECT SubscriberKey
+FROM _Subscribers
+WHERE Status = 'active'
+```
+
+Bonus: you can change the last line to, for example, `WHERE Domain = 'gmail.com'` to see how many Subscribers are using free Google inbox.
+
+---
+
+### Level 2 - JOIN, Aliasing, NULL
+
+Learn how to leverage a second Data Extension or Data View, change the output's column name, and deal with basic `NULL` cases.
+
+#### Learning materials
+
+- [JOIN](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) - [JOIN Types](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#join-types), [Joining ON](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#joining-on) and [Table Name Prefixes](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#table-name-prefix) sections. It might be helpful to check out the [visual cheatsheet](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#mce-sql-join-cheat-sheet).
+- [Aliasing](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#aliasing-with-as) - just the Aliasing with AS and Custom values sections.
+- [NULL functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/) - just the first three paragraphs and [IS NULL](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/#is-null) section.
+- [\_Sent](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_sent), [\_Open](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_open) and [\_Click](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_click) Data Views.
+
+#### Check your skills
+
+**Exercise**
+
+Write a query that will find Subscriber Key for all Active (opted-in) Subscribers in your All Subscribers list that were sent an email in the last 6 months.
+
+**Hints**
+
+1. Don't write SQL from scratch. Leverage what you already have.
+2. Sent data is stored in [\_Sent](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_sent) Data View.
+3. You don't have to worry about the 6-month requirement because \_Sent Data View stores only six months of data.
+4. You can chain multiple filters using [`WHERE` Logical Operators](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#logical-operators).
+5. [LEFT JOIN](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#left-and-right-joins) will add columns even if there is no data in the second table.
+6. You can find those records without data in the second table using [`IS NULL`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/#is-null).
+7. You need to join tables [`ON`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#joining-on) a common value.
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit"
+SELECT sub.SubscriberKey
+FROM _Subscribers   AS sub
+    LEFT JOIN _Sent AS sent
+        ON sent.SubscriberKey = sub.SubscriberKey
+WHERE
+    sub.Status = 'active'
+    AND sent.EventDate IS NOT NULL
+```
+
+You can write this query without the filter on `sent.EventDate` but with `INNER JOIN _Sent` instead. The above version makes it easier to change the query for the bonus below.
+
+Bonus: Change `IS NOT NULL` to `IS NULL` in the last line to see how many active Subscribers haven't received any communication in the last 6 months. It's an excellent segment for the win-back Journey!
+
+---
+
+### Level 3 - LIKE, CASE, Strings
+
+Learn how to deal with string values, how to implement SQL version of if/else logic and how to make complex conditions calculating your data. With this, you are no longer limited to the data already available in the tables.
+
+#### Learning materials
+
+- [LIKE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/) - whole article, but focus on [LIKE with Wildcard](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/#like-with-wildcard), you will use it more. Check out also the [LIKE operator in WHERE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#like-operator) section.
+- [CASE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/) - whole article plus [CASE operator in WHERE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#case-operator) section.
+- [String functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/) - check out all, but focus on most frequently used [LEFT & RIGHT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#left--right), [LEN](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#len) and [CHARINDEX](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#charindex).
+
+#### Check your skills
+
+**Exercise**
+
+Write a query that will find Subscriber Key for all Subscribers in your All Subscribers list and add a new column called `SubscriberKeyType`. In that new column, calculate whether the Subscriber Key is using an email address, Salesforce ID (and in this case - source object) or other. Possible values should be: `Email`, `Account`, `Contact`, `User`, `Lead`, and `Other`.
+
+> **Note: You Should Know**
+>
+> For our need here, if the Subscriber Key has 18 characters, no `@`, and starts with three specific characters, it probably is a Salesforce ID. Those first three characters point to a specific Salesforce Object being a source of that record:
+>
+> - 001 = Account
+> - 003 = Contact
+> - 005 = User
+> - 00Q = Lead
+
+**Hints**
+
+1. The easiest way to find an email is to use [LIKE with Wildcard](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/#like-with-wildcard) looking for `{something}@{domain}.{tld}`.
+2. [CASE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/) returns the value assigned to the first matched scenario, so the order of `WHEN`s makes a difference.
+3. You can use multiple conditions and [String functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/) in the `WHEN` checks.
+4. [CASE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/) can create a new column when you use it in [SELECT with an alias](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#aliasing-with-as).
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit. The results will differ a lot depending on your MCE implementation."
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN SubscriberKey LIKE '%@%.%'                                 THEN 'Email'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '001' THEN 'Account'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '003' THEN 'Contact'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '005' THEN 'User'
+        WHEN LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) = '00Q' THEN 'Lead'
+        ELSE 'Other'
+      END AS SubscriberKeyType
+FROM _Subscribers
+```
+
+While you could use `LIKE` for all the conditions, `LEFT` will perform better in this `CASE` because it will only compare the first three characters instead of anywhere in the whole string.
+
+This query is excellent for understanding what the source of your Subscribers is. It will be even more helpful later when you learn how to aggregate the data. With it, you will quickly see the exact number of subscribers from each source.
+
+---
+
+### Level 4 - Dates, WHERE operators, Conversion
+
+Learn how to use the most important filter of all - date filtering. Read about essential date functions and what to do when you don't have the correct data type for your use case.
+
+#### Learning materials
+
+- [Date functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/) - [GETDATE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#getdate--getutcdate) and [DATEADD](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#dateadd) are the most important sections.
+- [WHERE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) - while we already covered parts of where, this is time to make a deeper dive into [Comparison operators](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#comparison-operators), [BETWEEN shorthand](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#between-shorthand) and [IN shorthand](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#in-shorthand).
+- [Conversion functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/) - the whole article, but treat Data Types and Data Style Codes more as reference material.
+- [\_Bounce](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_bounce) Data View.
+
+#### Check your skills
+
+**Exercise**
+
+Write a query that will find Subscriber Key for all Subscribers in your All Subscribers list that joined the list within the last year and had a bounce on Google or Microsoft email between the first day of the current month (write that date manually, as a string) and today.
+
+For this exercise, we will assume that Google users have emails like `something@gmail.com`, Microsoft users - `something@outlook.com` and Yahoo - `something@yahoo.com`.
+
+**Hints**
+
+1. Consider impact of the [JOIN type](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#join-types) on the query output. Can you leverage it to minimise the data you are working on?
+2. When writing the date comparison, take a pen and paper and draw a timeline with the part you want to capture. Seeing it makes it much easier to write it correctly.
+3. When deciding whether to use shorthands - go with the most readable option.
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit"
+SELECT sub.SubscriberKey
+FROM _Subscribers       AS sub
+    INNER JOIN _Bounce  AS b
+        ON b.SubscriberKey = sub.SubscriberKey
+WHERE
+    sub.DateJoined >= DATEADD(YEAR, -1, GETDATE())
+    AND b.Domain IN ('gmail.com', 'outlook.com', 'yahoo.com')
+    AND b.EventDate BETWEEN CONVERT(DATE, '2023-01-01') AND GETDATE()
+```
+
+Bonus: Dive deeper into bounces by selecting SMTPBounceReason and SMTPMessage in the `_Bounce` Data View to learn more about the root cause of the bounces.
+
+---
+
+### Level 5 - Multiple JOINS, UNION, INTERSECT and EXCEPT
+
+Learn to leverage data from multiple tables - the only limitations will be creativity and autokill function crashing queries after 30 minutes of execution ;)
+
+#### Learning materials
+
+- [JOINs](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#multiple-joins) - yup, everything. The Cheat Sheet at the end should be useful to visualise multi-JOIN fun better.
+- [Journey Builder Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#journey-data-views) - both \_Journey and \_JourneyActivity.
+
+#### Check your skills
+
+**Exercise**
+
+Find some active Journey from the last quarter that already had some email sends with engagement. Note the name of the Journey and Email Activity.
+
+Write a query that will find Subscriber Key and Email Address for all Subscribers in your All Subscribers list that clicked a link in the first email activity in the Journey you selected.
+
+Append a proof record with Subscriber Key equal to `level5exercise` and your email address.
+
+**Hints**
+
+1. Think about which tables you need for the task. The less, the better.
+2. Think what [types of JOINs](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#join-types) will be needed. To make it easier - take a pen and paper and draw a diagram. Seriously, it's super helpful as the number of tables grows.
+3. Think about what columns you can join the tables in a way that will protect you from the fan out (a one-to-many relationship that results in more rows than needed in the output).
+4. [UNION](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#union) with [aliases](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#aliasing-with-as) is great for arbitrary added records in SQL.
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit"
+SELECT
+      sub.SubscriberKey
+    , sub.EmailAddress
+FROM _Subscribers               AS sub
+    INNER JOIN _Click           AS c
+        ON c.SubscriberKey = sub.SubscriberKey
+        AND c.IsUnique = 1
+    INNER JOIN _JourneyActivity AS ja
+        ON ja.JourneyActivityObjectID = c.TriggererSendDefinitionObjectID
+    INNER JOIN _Journey         AS j
+        ON j.VersionID = ja.VersionID
+WHERE
+    j.JourneyName = 'SelectedJourneyName'
+    AND ja.ActivityName = 'SelectedEmailActivityName'
+
+UNION
+
+SELECT
+      'level5exercise'      AS SubscriberKey
+    , 'your@email.address'  AS EmailAddress
+```
+
+Bonus: the fun with multiple joins [never ends](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/#solution).
+
+---
+
+### Level 6 - GROUP, COUNT, TOP and HAVING
+
+Graduate from just playing with rows and start calculating the data to see patterns, outliers and problems. It is handy for MCE Administrators and Consultants performing analysis on the platform data.
+
+#### Learning materials
+
+- [Aggregate functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/) - focus on [GROUP BY](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by), [COUNT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#count) and [HAVING](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#having).
+- [Order of operations](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/#order-of-operations) - this is when it becomes tricky.
+- [TOP](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top) - focus on how to use it with [ORDER BY](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-with-order-by)
+
+#### Check your skills
+
+**Exercise**
+
+Find the number of sends, unique bounces, and the bounce rate (percent of bounces vs sends) per domain from deliveries attempted in the last month. Filter the records to only those Domains with at least 100 sends. Order by the bounce rate descending and limit to the top 20 records.
+
+If you send huge volumes, feel free to change the timeframe from last month to last week for the exercise.
+
+**Hints**
+
+1. Build query step by step and validate the output. In this case, it might be easiest to write SELECT for just the Domain with the suitable tables and date filter, then add the GROUP BY to validate aggregation and then go with additional aggregate functions.
+2. All calculated values require an [alias](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#aliasing-with-as).
+3. Pick the right [type of JOIN](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#join-types) and correct set of joining rules so that you get precisely those rows that you need (limit the fan-out created by the possibility of many bounces per single send).
+4. When building the date filter, the output will be completely different depending on which date you use (hopefully, not every send will have a bounce).
+5. Unfortunately, in MCE, you cannot use alias in WHERE/HAVING/ORDER BY and similar places - you have to use the function/calculation.
+6. When calculating Bounce Rate, do it so that the outcome is an integer equal to a percent.
+
+Important: Because of the Query Studio bug, you cannot have spaces around the multiplication symbol (`*`); otherwise, you will see an error related to a bad practice blanket SELECTs.
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit"
+SELECT TOP 20
+      s.Domain
+    , COUNT(s.EventDate)    AS SendCount
+    , COUNT(b.EventDate)    AS BounceCount
+    , COUNT(b.EventDate)*100/COUNT(s.EventDate) AS BounceRate
+FROM _Sent AS s
+    LEFT JOIN _Bounce AS b
+        ON b.JobID = s.JobID
+        AND b.ListID = s.ListID
+        AND b.BatchID = s.BatchID
+        AND b.SubscriberID = s.SubscriberID
+        AND b.IsUnique = 1
+WHERE s.EventDate >= DATEADD(MONTH, -1, GETDATE())
+GROUP BY s.Domain
+HAVING COUNT(s.EventDate) >= 100
+ORDER BY COUNT(b.EventDate)*100/COUNT(s.EventDate) DESC
+```
+
+Bonus: This query might be performance heavy. One option to make it perform better is to shorten the timeframe in the WHERE filter. Another would be to split this query into two - one getting cumulative counts and the second responsible for doing math for Bounce Rate. Also, check how the numbers change when selecting only Hard Bounces.
+
+---
+
+### Level 7 - coming soon-ish
+
+I will add more levels once I finish writing supporting learning materials :)
+
+---
+
+## Writing with style
+
+Knowing the available functions is one thing. Writing good and readable queries - another. MCE is always a team sport, so be sure to leverage the power of a [Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/) to improve the quality of your SQL.
+
+## Order of operations
+
+One of the key things to remember when building more complex queries is the order of operations, as it will decide what is in the output:
+
+[`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) > [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) > [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by) > [`HAVING`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#having) > [`DISTINCT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#distinct) > [`ORDER BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-with-order-by)
+
+It means that rows filtered with `WHERE` will not be considered for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
+
+## All SQL Guides

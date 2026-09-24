@@ -1,0 +1,79 @@
+# How to get hands-on experience with MCE
+
+> You want to learn Marketing Cloud Engagement (MCE). And the best way to learn is to get your hands dirty. So, how can you get access to the MCE playground?
+
+Source: https://mateuszdabrowski.pl/sites/faq/salesforce/how-to-get-sfmc-hands-on-experience/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+With more and more people looking to learn about Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud), there are recurring questions about how to get a real-life experience with the platform. For Salesforce CRM, it is incredibly user-friendly through Trailhead Playgrounds and full Dev Orgs. Now it is also available for Marketing Cloud Next (MCN). But Salesforce Marketing Cloud Engagement and Account Engagement, unfortunately, doesn't have such options. About a decade ago, there was a brief moment when Developer Edition accounts for Salesforce Marketing Cloud Engagement were available, but now it is much more complicated. Let's talk options.
+
+> **Note: You Should Know**
+>
+> There is an [idea to bring MCE Dev Orgs back](https://ideas.salesforce.com/s/idea/a0B8W00000GdgUZUAZ/dev-org-for-salesforce-marketing-cloud), and while I encourage voting on it, don't have high hopes.
+
+## Access through Dev Org
+
+Salesforce Marketing Cloud Engagement and the new Marketing Cloud are not available through Salesforce Developer Edition orgs. However, you can get Marketing Cloud Account Engagement (MCAE, formerly Pardot) dev org for free by signing up [here](https://trailhead.salesforce.com/promo/orgs/pardot-de).
+
+## Access through Trailhead Playground
+
+Recently Salesforce finally enabled Marketing Cloud Next Playgrounds so now anyone can quickly spin an Agentforce Marketing org for a Trailhead exercise or free-roam play. You can find it for example [here](https://trailhead.salesforce.com/content/learn/modules/marketing-cloud-next-email-sending-essentials/prepare-your-org-for-email-sending).
+
+No such option is (nor will be) available for Marketing Cloud Engagement or Account Engagement, unfortunately.
+
+## Access through your Company
+
+This is probably not the answer you are looking for, but the easiest way to get hands-on experience with Marketing Cloud Engagement is to work for a company using it. There are three scenarios here:
+
+### 1. Any company that bought Salesforce Marketing
+
+This one is straightforward. If the company has a licence, you can try to get access to it to learn and play. However, due to compliance, security and user licence limits, it might be hard if you are outside the digital marketing/marketing automation team. An excellent option here is to look for a nonprofit organisation using MCE and offer them your support for free. Knowledge for you and tasks done for the Nonprofit. There are also internships available in the ecosystem.
+
+### 2. Salesforce Marketing Cloud Consulting Partner
+
+#### MCE & MCAE Demo Account
+
+Registered Salesforce Consulting Partners can request a [special non-production Marketing Cloud Engagement account](https://help.salesforce.com/s/articleView?id=000390865\&type=1) for learning, development, testing and demoing. If you work for an SF Partner, they should have that account already. If not - they can request it through Partner Program Support Case. It's a nice account with many SuperMessages, Business Units, User and features like Marketing Cloud Personalization (MCP, formerly Interaction Studio) available.
+
+#### MC Next Demo Account
+
+Getting hands on with the new Marketing Cloud (built on Data 360) is much simpler for Partners. Just go to Partner Learning Camp, click Demo Org at the top and request a `SDO` Demo Type. It will have everything - including Data 360 (formerly Data Cloud), Agentforce 360 (formerly Agentforce) and Marketing Cloud Next.
+
+### 3. Salesforce Marketing ISV Partner
+
+That [special non-production account](https://help.salesforce.com/s/articleView?id=000390865\&type=1) is also available to Salesforce ISV (Independent Software Vendor) Partners. However, they must prove that they are building an MCE AppExchange app to be eligible for one.
+
+## Access through Trailhead Academy
+
+In 2023, Salesforce added another - more available but paywalled - option to the Trailhead Academy. It offers a 6-weeks-long [Virtual Bootcamp for Salesforce Marketing Cloud Engagement](https://trailheadacademy.salesforce.com/classes/tvb301-trailblazer-virtual-bootcamp-for-new-marketers) with hands-on experience on the platform as a part of the course. Multiple languages are available, and the price for the English one is $225 (it varies based on the language, so be sure to check the planned classes for the cost to you).
+
+## Access through SuperMums
+
+There is also much pricier, unofficial but fuller option: [SuperMums MCE Bootcamp](https://supermums.org/training/salesforce-marketing-cloud-course/). For £2400 you are getting a 7-weeks live course with 4-weeks access to the platform that hopes to prepare you fully for your first MCE job.
+
+## Access through Trailblazer Community
+
+If you want something free, some community-driven bootcamps offer temporary access to Salesforce MCE for learning purposes. The best group to follow is the [Salesforce Marketer Group in Pheonix, US](https://trailblazercommunitygroups.com/salesforce-marketer-group-marketing-cloud-phoenix-united-states/) led by the knowledge-sharing powerhouse [Jyothsna Bitra (JB)](https://www.linkedin.com/in/jyothsna-bitra).
+
+## Access through HandsOnSFMC
+
+Last (but definitely not least) full-access option I'm aware of is delivered by the fabulous [Tim Ziter](https://www.linkedin.com/in/tim-ziter-92589bb) through his [knowledge-packed HandsOnSFMC website](https://handsonsfmc.com/contact/). It's a weekly event focused on building stuff directly on the MCE platform. Short term access to Marketing Cloud Engagement included.
+
+## Limited access through MCSnippets
+
+Yet another free option is offered by the Salesforce MVP [Pato Sapir](https://www.linkedin.com/in/patosapir). This one, however, is not full-blown access to the Marketing Cloud Engagement, but rather a set of web apps ([MC Snippets for AMPScript and SSJS](https://mcsnippets.herokuapp.com) and [MC Snippets for SQL](https://mcsnippets.herokuapp.com/sql)) that provides option to write proprietary code on the MCE Platform. Perfect for polishing your dev skills and preparing for Salesforce Marketing Cloud Engagement Developer certification.
+
+## Access through Mentor
+
+While the official Salesforce Mentorship program is no longer live, there are still people in the ecosystem that offer their mentorship - and in some cases they are able to provide an access to MCE as well, if their company allows that.
+
+## What else for beginners?
+
+I'm unaware of any hands-on access options besides those listed above (and I'm all ears if you know some more!). What's left for beginners is read-only learning on Trailhead and watch-only learning on MCE-focused YouTube Channels. I especially recommend checking out the following:
+
+1. [Trailblazing Together channel](https://www.youtube.com/@MCLearningCamp) packed with MCE Bootcamps recordings.
+2. [Cameron Robert's channel](https://www.youtube.com/@CameronRobert) full of step-by-step video guides on all things MCE.
+
+After you grasp the basics, the whole Salesforce MCE blogosphere opens for you with its broad knowledge.

@@ -1,0 +1,40 @@
+# License & Attribution
+
+> Let's talk copyrights in a human-readable way
+
+Source: https://mateuszdabrowski.pl/sites/licence/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Let's talk copyrights in a human-readable way.
+
+## Writing & Graphics
+
+All writing, graphics and other content on the site is my original content (unless stated otherwise), and I license it under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). If you are looking at the repository, almost everything in the [docs](https://github.com/MateuszDabrowski/mateuszdabrowski.pl/tree/master/docs), [sites](https://github.com/MateuszDabrowski/mateuszdabrowski.pl/tree/master/sites) and [pages](https://github.com/MateuszDabrowski/mateuszdabrowski.pl/tree/master/src/pages) is [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) and available for re-use with attribution:
+
+> "Article Title" ― [Mateusz Dąbrowski](https://mateuszdabrowski.pl/) ― [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+```html title="Attribution Snippet"
+<a href="https://mateuszdabrowski.pl/link-to-article/">"Article Title"</a> &mdash;
+<a href="https://mateuszdabrowski.pl/">Mateusz Dąbrowski</a> &mdash;
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
+```
+
+This licence covers the content of this website only. My apps (Diagramforce, Slot, Shelf, Strum) are separate products with their own licences and policies, available on their pages.
+
+## Code & Design
+
+Site design and its source code are adapted by me and available under the [MIT license](https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/LICENSE) and are openly available for re-use on [GitHub](https://github.com/MateuszDabrowski/mateuszdabrowski.pl). The MIT licence applies to the code and design, not to the content described above.
+
+## Attribution
+
+- Logo is done by [Marek Jagusiak](https://jagusiak.eu)
+- Profile photo is done by [Monochrom Photo](https://monochromphoto.pl)
+- Website is built with [Docusaurus](https://docusaurus.io)
+- Search is powered by [Algolia](https://www.algolia.com)
+- Product name history comes from [Renameforce](https://renameforce.com) by Adam Erstelle, the survival guide to the Salesforce rename jungle. It remembers what each product was called three renames ago, so I don't have to.
+
+## Trademarks
+
+Salesforce, Marketing Cloud, Agentforce, Data 360 and related marks are trademarks of Salesforce, Inc. Anthropic and Claude are trademarks of Anthropic, PBC. Other product and company names mentioned on this site are trademarks of their respective owners. I use them only to identify the products I write about. This site is independent and is not affiliated with, sponsored by or endorsed by Salesforce, Anthropic or any other vendor.

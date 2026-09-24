@@ -1,0 +1,354 @@
+# AMPScript Style Guide
+
+> Script with style. Readable code is a few rules & best practices away.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Script with style. Readable code is a few rules & conventions away.
+
+First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) AMPScript style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
+
+1. Be consistent across your codebase.
+2. Strive for good readability.
+
+Everything else is preference. And you are just about to learn about mine.
+
+## Naming Convention
+
+AMPScript gives you a lot of freedom when it comes to naming and letter case. But instead of going freestyle with that flexibility, we should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
+
+### Meaningful Names
+
+**Use descriptive names to provide context.**
+
+As [John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. Meaningful and consistent names are an excellent starting point for living a long (coding) life with a limited amount of frustration and regret when someone asks you about your year-old code to adapt to a new project.
+
+Applying the rules listed below is easy when you write the code and remember its logic but can be a challenge after resetting your memory by writing few other scripts. Make your AMPScript better with meaningful variable names:
+
+1. Use descriptive variable names. It is better to have a long explicit one (`IsTrackingSuppressed`) than a short mysterious abbreviation (`Trk`).
+2. When the variable is a boolean, prefix it with `Is` (or `Has`/`Does`/`Are` depending on the underlying data).
+3. When the variable is a date, suffix it with `Date`.
+
+```js
+/* ✅ Descriptive and suggesting boolean data type */
+SET @isTrackingSuppressed = false;
+
+/* ❌ Name neither describes the variable purpose nor suggest its data type */
+SET @value = false;
+
+/* ✅ Descriptive and suggesting date data type */
+SET @trackingSupressionStartDate = Now();
+
+/* ❌ Name neither describes the variable purpose nor suggest its data type */
+SET @supressed = Now();
+```
+
+### AMPScript Letter Case
+
+AMPScript letter case is a minefield. I have seen all possible combinations of letter case used for variables and AMPScript functions - both in shared snippets and official documentation.
+
+I even created a [survey](https://www.linkedin.com/feed/update/urn\:li\:activity:6807595457716518912/) to check which approach is the most popular. Outcomes from 168 votes?
+
+- 45%: Mix of `ProperCase` and `UPPERCASE` for various elements.
+- 30%: `ProperCase` for everything.
+- 15%: `UPPERCASE` for everything.
+- 10%: Other conventions (including `lowercase` with some `camelCase` for functions and `snake_case` for variables by [Adam Spriggs](https://www.linkedin.com/feed/update/urn\:li\:ugcPost:6807595457297084416?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807673667259125762%29\&replyUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807687826575110145%29), co-author of the AMPScript bible - [ampscript.guide](https://ampscript.guide)).
+
+So the best recommendation for you (and your team) to decide on one style - whichever it will be - and stay consistent.
+
+I decided to use a mixed approach for the sake of readability. It might not be as simple as focusing on just one letter case format for the whole code, but it improves the experience of working with longer and more complex AMPScript a lot.
+
+#### AMPScript Variable Names
+
+**Use `camelCase` for variable names.**
+
+I use `camelCase` for AMPScript variables because:
+
+1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
+2. It is easier to differentiate variable name (`@` prefix and `camelCase`) from the function name (`PascalCase`), even if they use the same word (frequent for technical variables like counters).
+3. It is in line with the [SSJS styling for variables](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#js-variables-functions--methods-letter-case), so it's easier to switch between languages.
+
+```js
+/* ✅ camelCase variable names */
+VAR @response, @salesforceCampaigns, @rowCount
+SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = RowCount(@salesforceCampaigns)
+
+/* ❌ lowercase variable names */
+VAR @response, @salesforcecampaigns, @rowcount
+SET @salesforcecampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowcount = RowCount(@salesforcecampaigns)
+
+/* ❌ inconsistent case variable names */
+VAR @RESPONSE, @salesforcecampaigns, @RowCount
+SET @salesforcecampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @RowCount = RowCount(@salesforcecampaigns)
+```
+
+#### AMPScript Functions
+
+**Use `PascalCase` for function names.**
+
+I use `PascalCase` for AMPScript functions because:
+
+1. It is more readable than `lowercase` or `UPPERCASE` - especially for longer names.
+2. It is easier to differentiate function name (`PascalCase`) from the variable name (`@` prefix and `camelCase`), even if they use the same word (frequent for technical variables like counters).
+3. It is in line with the [SSJS styling for built-in functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#ssjs-functions-letter-case), so it's easier to switch between languages.
+
+```js
+/* ✅ PascalCase variable names */
+SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = RowCount(@salesforceCampaigns)
+
+/* ❌ lowercase function names */
+SET @salesforceCampaigns = retrievesalesforceobjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = rowcount(@salesforceCampaigns)
+
+/* ❌ inconsistent case variable names */
+SET @salesforceCampaigns = retrievesalesforceobjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = ROWCOUNT(@salesforceCampaigns)
+```
+
+#### AMPScript Loops, Ifs and Variable Declarations
+
+**Use `UPPERCASE` for loops, if blocks and variable declarations.**
+
+Although I recommend `PascalCase` for most of the AMPScript syntax, I believe that limited usage of `UPPERCASE` can have tremendous benefit to readability.
+
+I use `UPPERCASE` for three groups of elements:
+
+1. Variable declaration and setting syntax (`VAR` & `SET`).
+2. If statement syntax (`IF`, `NOT`, `THEN` `ELSEIF`, `ENDIF` and also `IIF`).
+3. Loop syntax (`FOR`, `TO`/`DOWNTO`, `DO`, `NEXT`).
+
+Those three groups are either fundamental data points within your AMPScript code (variables) or the only source of real complexity (`IF` statements and `FOR` loops). That's why I recommend improving readability and increasing attention around those parts of the script.
+
+```js
+/* ✅ UPPERCASE for variable declarations, IF and FOR syntax */
+VAR @response, @salesforceCampaigns, @rowCount, @counter, @row, @name, @id, @startDate, @endDate, @rowData, @response
+SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+SET @rowCount = RowCount(@salesforceCampaigns)
+
+IF @rowCount > 0 THEN
+    FOR @counter = 1 TO @rowCount DO
+        SET @row = Row(@retrieve, @counter)
+        SET @name = Field(@row, 'Name')
+        SET @id = Field(@row, 'Id')
+        SET @startDate = Field(@row, 'StartDate')
+        SET @endDate = Field(@row, 'EndDate')
+        SET @rowData = Concat(@name, ',', @id, ',', @startDate, ',', @endDate)
+        SET @response = Concat(@response, @rowData, ';')
+    NEXT @counter
+ENDIF
+
+/* ❌ PascalCase for variable declarations, IF and FOR syntax */
+Var @response, @salesforceCampaigns, @rowCount, @counter, @row, @name, @id, @startDate, @endDate, @rowData, @response
+Set @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+Set @rowCount = RowCount(@salesforceCampaigns)
+
+If @rowCount > 0 Then
+    For @counter = 1 To @rowCount Do
+        Set @row = Row(@retrieve, @counter)
+        Set @name = Field(@row, 'Name')
+        Set @id = Field(@row, 'Id')
+        Set @startDate = Field(@row, 'StartDate')
+        Set @endDate = Field(@row, 'EndDate')
+        Set @rowData = Concat(@name, ',', @id, ',', @startDate, ',', @endDate)
+        Set @response = Concat(@response, @rowData, ';')
+    Next @counter
+Endif
+```
+
+### Consistent Quotes
+
+**Use single quote style.**
+
+With AMPScript, you can use either single quotes (`'`) or double quotes (`"`). I prefer the single quotes:
+
+1. I frequently use string variables with HTML that uses double quotes. Using single quotes in SSJS means no need to escape the ones in HTML.
+2. On most keyboard (including mine), it doesn't require pressing Shift each time. Clicking one button is faster.
+
+However, there are many English words using apostrophes, and using double quotes means no need to escape them.
+
+In the end, pick one, align with your team, and stay consistent. Yes, this means updating quotes after copy-pasting from Stack Overflow. RegEx is your friend ;)
+
+```js
+/* ✅ Single Quotes */
+SET @salesforceCampaigns = RetrieveSalesforceObjects('Campaign', 'Name,Id,StartDate,EndDate', 'IsActive', '=', 'True')
+
+/* ❌ Mixed Quotes */
+SET @salesforceCampaigns = RetrieveSalesforceObjects("Campaign", 'Name,Id,StartDate,EndDate', "IsActive", "=", "True")
+```
+
+## Indentation and Spacing
+
+Letter case is just one element of syntax convention that helps with readability. Other important ones are indentation and spacing. AMPScript requires neither, but both can help you write better code.
+
+### Consistent Indentation
+
+**Use indentation to highlight code relationships.**
+
+Indentation in AMPScript is even more critical than in SSJS. Without curly brackets, it is the last hope for readability. The indentation will help you quickly understand the relationships between the code lines.
+
+It is straightforward to apply the correct indentation to the simplicity of AMPScript. There are just two elements that require it. `IF` statements and `FOR` loops - add indentation level inside of those and get readable code.
+
+```js
+/* ✅ Indented Syntax */
+IF @rowCount > 0 THEN
+    FOR @counter = 1 TO @rowCount DO
+        SET @row = Row(@retrieve, @counter)
+        SET @name = Field(@row, 'Name')
+        SET @id = Field(@row, 'Id')
+        SET @startDate = Field(@row, 'StartDate')
+        SET @endDate = Field(@row, 'EndDate')
+        SET @rowData = Concat(@name, ',', @id, ',', @startDate, ',', @endDate)
+        SET @response = Concat(@response, @rowData, ';')
+    NEXT @counter
+ENDIF
+
+/* ❌ Flat Syntax */
+IF @rowCount > 0 THEN
+FOR @counter = 1 TO @rowCount DO
+SET @row = Row(@retrieve, @counter)
+SET @name = Field(@row, 'Name')
+SET @id = Field(@row, 'Id')
+SET @startDate = Field(@row, 'StartDate')
+SET @endDate = Field(@row, 'EndDate')
+SET @rowData = Concat(@name, ',', @id, ',', @startDate, ',', @endDate)
+SET @response = Concat(@response, @rowData, ';')
+NEXT @counter
+ENDIF
+```
+
+> **Note: You Should Know**
+>
+> It's safer to use spaces instead of tabs for indentation. And it's more readable to use four spaces instead of two. You can configure your code editor to output four spaces on each Tab click.
+
+### Intentional Spacing
+
+**Use spaces wherever it makes the code more readable.**
+
+To visually separate elements, use spaces:
+
+- Around operators.
+- After commas.
+
+```js
+/* ✅ Intentional spacing */
+IF @rowCount > 0 THEN
+    FOR @counter = 1 TO @rowCount DO
+        SET @rowData = Concat(@name, ',', @id, ',', @startDate, ',', @endDate)
+        SET @response = Concat(@response, @rowData, ';')
+    NEXT @counter
+ENDIF
+
+/* ❌ Lack of spacing */
+IF @rowCount>0 THEN
+    FOR @counter=1 TO @rowCount DO
+        SET @rowData=Concat(@name,',',@id,',',@startDate,',',@endDate)
+        SET @response=Concat(@response,@rowData,';')
+    NEXT @counter
+ENDIF
+```
+
+## Comments
+
+**Code tells you how. Comments tell you why.** - [Jeff Atwood](https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/)
+
+To make your code better, don't stop at just the code. Leverage comments to their full potential. Context, logic and caveats description will improve the experience for everyone - including you after few weeks.
+
+Whenever you build complex AMPScript code, I recommend using three types of comments: table of contents, section and documentation. For short scripts, the last type will be enough.
+
+### 1. Table of Contents Comment
+
+The first type of comment you should use at the top of your longer scripts is the table of contents comment. This one will be your best friend during the whole lifecycle of your script.
+
+Before writing the AMPScript, describe the desired outcome and all steps you plan to code to get there. It can be high level; it can be a draft. But it will help you focus on the best way to write your script and consider potential roadblocks or opportunities for optimisation.
+
+As you are building your script - update the comment to reflect the approach you took. It will help you assess the impact of potential changes and find missing pieces.
+
+```js
+/* --------------------------------------------------------------------------
+
+Authenticates each visitor to limit access only to SFMC logged-in users.
+
+1. Global Variables - should be updated for each implementation
+2. Authentication Flow
+    2.1. Authorisation
+    2.2. Authentication with REST Token
+        2.2.1. Upsert Logging Data Extension
+
+-------------------------------------------------------------------------- */
+```
+
+### 2. Section Comments
+
+To fully leverage the pseudo-code table of contents, add section comments to mark where each part of your code starts.
+
+For complex scripts, it might be a good idea to create few different levels of such comments. I use upper case with dashes for the first level, title case with dashes for the second level and only title case for the third level of comments
+
+```js
+/* ----------------------------------------------------------------------- */
+/* ------------------------- 1. GLOBAL VARIABLES ------------------------- */
+/* ----------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------- */
+/* ----------------------- 2. AUTHENTICATION FLOW ------------------------ */
+/* ----------------------------------------------------------------------- */
+
+/* ------------------------- 2.1. Authorisation -------------------------- */
+
+/* ------------------------- 2.2. Authentication ------------------------- */
+
+/* 2.2.1. Build token request payload */
+```
+
+### 3. Documentation Comments
+
+Two previous comment types are suitable for high-level view and organisation of your more complex scripts. But the essential type of comment is the one that goes into detail about the implementation - the documentation comments.
+
+When to write a comment? My rule of thumb is to add them whenever someone else reading your code for the first time would ask a question about context or purpose.
+
+```js
+    /* Capture Session for Authorisation purposes */
+    SET @session = RequestParameter('s')
+
+    /* ----------------------------------------------------------------------- */
+    /* ----------------------- 2. AUTHENTICATION FLOW ------------------------ */
+    /* ----------------------------------------------------------------------- */
+
+    /* ---------------------- 2.1. Session Validation ------------------------ */
+
+    /* If there is Session parameter, validate it with logging DE*/
+    IF NOT Empty(@session) THEN
+        /* If user was authenticated for another app or if he is not authenticated, redirect to login page */
+        IF Lookup(@authDE, 'appName', 'session', @session) != @appName THEN
+            Redirect(@appURL)
+        ENDIF
+        /* Authenticated users jumps to main code */
+```
+
+## Sum Up
+
+It is a long article, so let's gather all the recommendations in one place:
+
+1. Be consistent
+2. Strive for readability
+3. Use descriptive names to provide context [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#meaningful-names)
+4. Use `camelCase` for variable names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#ampscript-variable-names)
+5. Use `PascalCase` for function names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#ampscript-functions)
+6. Use `UPPERCASE` for loops, if blocks and variable declarations [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#ampscript-loops-ifs-and-variable-declarations)
+7. Use single quote style [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#consistent-quotes)
+8. Use indentation to highlight code relationships [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#consistent-indentation)
+9. Use spaces wherever it makes the code more readable [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#intentional-spacing)
+10. Use comments to provide required context to your script [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#comments)
+
+If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).
+
+Looking for more MCE style? Check out my:
+
+- [MCE SSJS Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/)
+- [MCE SQL Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/)

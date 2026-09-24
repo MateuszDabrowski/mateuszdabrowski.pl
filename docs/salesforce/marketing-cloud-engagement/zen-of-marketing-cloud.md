@@ -1,0 +1,418 @@
+# Zen of Marketing Cloud
+
+> Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and detail.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+I'm a massive fan of Tim Peters' [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
+
+In this article, I share my Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) adaptation and interpretation of this pearl. Expect some modifications to the original text (minimal, as most of the recommendations are perfectly valid for our Marketing Automation world), followed by my comments on how particular lines can benefit MCE practice.
+
+## Zen of Marketing Cloud
+
+```txt
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Naming conventions count twice.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+Even when certain, test.
+Now is better than never.
+Although never is often better than right now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Documentation is one honking great idea - let's do more of it!
+```
+
+## Thoughts on Zen
+
+Remember that those recommendations are just that - recommendations. Not strict rules, but rather a set of (sometimes contradictory) guidelines that might help you in your day-to-day work with Marketing Cloud Engagement.
+
+---
+
+### Beautiful is better than ugly.
+
+Beauty might not immediately come to mind in the context of software development and implementation, especially in the world of short deadlines and evergrowing KPIs. However, one should not forget about beauty when deploying Marketing Cloud Engagement solutions.
+
+It makes working on the tool more motivating and pleasant and supports many other recommendations listed here - with readability in the first place. Below you can see examples of implementing the beauty principle in Marketing Cloud Engagement.
+
+**MCE Code Example**
+
+When you are writing code in Marketing Cloud Engagement - be it AMPScript, SSJS, SQL, or other - you have a lot of flexibility regarding structure and style. Random indentation, lack of new lines, cryptic variables? Everything is possible and might work.
+
+But you shouldn't stop at writing code that just works. Apply a beauty-focused mindset, and while writing might take a bit longer, the outcome will be more readable, understandable to others and easier to debug.
+
+```sql title="Both queries work - which one would you rather read?"
+/* Beauty */
+SELECT
+      wel.SubscriberKey     AS SubscriberKey
+    , wel.EmailAddress      AS EmailAddress
+    , o.EventDate           AS OpenDate
+FROM WelcomeCampaignSegment AS wel
+    INNER JOIN _Open        AS o
+    ON o.SubscriberKey = wel.SubscriberKey
+
+/* and the Beast */
+Select a.subscriberkey, a.emailaddress, b.eventdate
+From welcomecampaignsegment a join _open b on a.subscriberkey = b.subscriberkey
+
+```
+
+Check my Style Guides for [AMPScript](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/), [SSJS](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/), [SQL](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/) to see more guides on making your code beautiful.
+
+**MCE UI Example**
+
+The choice between beauty and ugliness is not limited to writing the code. The same is valid for working with Marketing Cloud Engagement no-code tools.
+
+Are you creating an Email Template using Blocks in Content Builder? You can drag and drop the empty blocks in proper order and call it a day. But you can also put a bit more work and add sample content with predefined styles to each block, provide placeholder images with visible dimensions and save those elements as separate blocks ready for reuse.
+
+Both approaches deliver the Email Template, but the second one keeps beauty in mind resulting in improved usefulness and value of the final solution.
+
+---
+
+### Explicit is better than implicit.
+
+Marketing Cloud Engagement enables you to decide whether you want to create things implicitly or explicitly. Implicit is faster and easier. Explicit is sturdier and better.
+
+As the MCE is long term commitment used by many people, it's always worth spending a bit more effort and going for the explicit whenever possible. It will save you and your organisation much time in the long run, so consider it an investment.
+
+**MCE Code Example**
+
+We can leverage many tricks when coding for Marketing Cloud Engagement - implicit data type conversions, undocumented endpoints and function behaviours, or just language-specific syntactic sugar. As helpful as they are, those tricks obscure readability, introduce error risk to the code, and many won't know/understand them.
+
+This is why, unless such tricks are necessary, I recommend going for the explicit, clear and obvious version. Even if it is slightly longer or not as sexy.
+
+Of course, it is not always possible - some things are possible only by coding on the edge of the documentation. Even then, you can make it more explicit with good comments. And don't limit those to just the tricky parts. Describing the cleanest functions and scripts will help you (and your team) work more effectively.
+
+```js title="'Code tells you how. Comments tell you why.' - Jeff Atwood"
+/**
+ * @function debugValue
+ * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+ * @param {string} description - Describes meaning of the second parameter in the output
+ * @param {*} value - The value that needs to be debugged
+ */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+```
+
+Read more on using comments in [SSJS](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#comments) and [AMPScript](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#comments).
+
+> **Note: You Should Know**
+>
+> An explicit approach can (and should) be taken to the next level with smart use of asset Keys. They are frequently used in code - especially the Data Extension and Content Block keys. While the default pseudo-random ID does the work, I recommend going for the custom explicit Keys.
+>
+> If you keep Data Extension Name and Key in sync (it might not be possible with longer names due to the Key length limit), you won't have to worry about whether the Data Extension lookup uses the key or the name.
+>
+> You can get even more value from this approach with Content Blocks. It's popular to use them for AMPScript snippets shared across multiple emails or brand-wide dynamic footers. Frequently they are added to the Email Templates with the help of the AMPScript `ContentBlockByID` function. However, as an asset collection grows, it will be harder to remember which Content Block you imported that way (IDs aren't helpful with that).
+>
+> Explicit Content Block Key and `ContentBlockByKey` function can help:
+>
+> ```js title="Which one would you rather see in the email template?"
+> %%=ContentBlockByID("123456")=%%
+> // vs
+> %%=ContentBlockByKey("SharedFooterEMEA")=%%
+> ```
+
+**MCE UI Example**
+
+Being explicit is not limited to the code. When working with the MCE no-code features, you will have many places to improve your solution by adding information.
+
+Many assets offer one or more places to add details: Data Extensions, Installed Packages, Automations - or even Activity-grouping steps. Neither of those places *requires* a description, but each and single one will benefit from explicitly stating its purpose and business/technical context.
+
+There are also places where Marketing Cloud Engagement lets you add smaller pieces of information. Not full descriptions, but rather optional micro data points that explain the purpose. Path names in Journey Builder Decision Splits. Additional Email Attribute Names in Content Builder. Collection and Cloud Page names in Web Studio. Whenever possible - spend that extra time needed to come up with explicit value.
+
+---
+
+### Simple is better than complex.
+
+Marketing Cloud Engagement is a complex tool within a complex Salesforce ecosystem focused on solving complex business needs. But how you operate and develop MCE should be as straightforward as possible. It will make your solution robust, agile and easily understandable.
+
+#### KISS
+
+This recommendation is also known in the software development community under a popular acronym: **KISS** (Keep It Simple ~~Stupid~~ Salesforce). In short, it advocates creating solutions as simple as they can be without sacrificing other values (like readability or performance).
+
+#### YAGNI
+
+Another popular acronym connected to the simplicity principle is **YAGNI** (You Aren't Gonna Need It). This Extreme Programming methodology mantra adds another perspective by stating that you should build only the necessary elements when creating the solution. Everything else is just bloat that makes the outcome more convoluted and error-prone.
+
+**MCE Code Example**
+
+The simplicity focus is useful already when you select the best programming language to do the job. Sure, SSJS is much more powerful and flexible than AMPScript, but unless you have a specific need for this power (YAGNI) you should go for the simpler solution (KISS) ([more on selecting SSJS vs AMPScript](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance/#ampscript-vs-ssjs)).
+
+Once you select the best language for the job, you will have to code the solution. And here again, simplicity will be a helpful guideline. For example, yes, you can create a universal SSJS API wrapper class, but if your script only needs to update Salesforce objects, [built-in AMPScript functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs/) will be enough (YAGNI) and much simpler (KISS).
+
+Think about KISS and YAGNI whenever you are coding, and it will help you deliver more straightforward and better solutions.
+
+```sql
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE()) THEN 1
+        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE()) THEN 0
+    END AS IsNewJoiner
+FROM Ent._Subscribers
+/* When you only need two opposite CASE rules, simple IIF shorthand is better */
+SELECT
+      SubscriberKey
+    , IIF(DateJoined >= DATEADD(MONTH, -1, GETDATE()), 1, 0) AS IsNewJoiner
+FROM Ent._Subscribers
+```
+
+**MCE UI Example**
+
+The two-step approach - limiting the scope (YAGNI) and selecting the easiest solution to deliver it (KISS) - can be applied to no-code solutions as well:
+
+- When creating an email, ask yourself whether you have a specific need requiring custom HTML. If not, go for a simple Drag & Drop Blocks Template.
+- When creating a segment, ask yourself whether you need multiple data sources or calculated data. If not, simple filtered data extension might be enough.
+- When creating complex automation, ask yourself whether you need all those activities in a single process. If not, split into multiple single-purpose Automations.
+
+There are countless places in Marketing Cloud Engagement to apply this approach to benefit the final solution.
+
+---
+
+### Complex is better than complicated.
+
+It might sound contradictory to the previous recommendation, but only on the surface. There is a limit to what can be simplified before it starts getting complicated. In such a case, the complex is the lesser evil.
+
+#### SOC
+
+When laser-focused on simplicity, you will feel tempted to create the whole solution as one element (one script, one Automation, one email). **SOC** (Separation of Concerns) rule tells us that it might be a bad idea to build one solution from multiple parts, each with a different purpose. Numerous concerns stacked within a single asset will make it complicated rather than simple. The recommendation? Split it into separate purpose-oriented elements. It will get more complex but less complicated.
+
+#### DRY
+
+Another essential acronym is **DRY** (Don't Repeat Yourself). It shows a different perspective on the same problem - the simple solution that needs to be replicated multiple times leads to a complicated outcome. Updating is a hassle; performance drops; readability is poor. DRY suggests finding such repetitive spots and refactoring them.
+
+Another application of the DRY principle is related not to a specific solution but to work in general. If you find you are doing the same thing again and again, Don't Repeat Yourself. Automate it.
+
+**MCE Code Example**
+
+I have seen many (too many) Subscription Preference Centers in MCE built with AMPScript. Yes, it's a simple language and capable enough to deliver such a solution. But because of its simplicity, for this use case, it quickly gets full of repeating script lines (DRY violation), multiple purposes (SOC violation) and endless lines of code (readability suffers).
+
+My recommendation for most of the Preference Centers is to go with SSJS. Yes, it's a more complex language than AMPScript, but with a set of tools dedicated to delivering complex use cases. Implement SOC and make it DRY with functions & [loops](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops/). Bring it to the next level by splitting Front-End (Cloud Page) and Back-End (Code Resource). Compared to a single Cloud Page with AMPScript, this solution will be more complex but much less complicated. Thus easier to debug and maintain.
+
+**MCE UI Example**
+
+The same rules apply to Marketing Cloud Engagement no-code solutions. Filtered Data Extensions with Data Relationships are excellent for simple segmentation. Still, when the segment requirements get more complicated, it's better to move to more complex SQL Queries in Automation Studio.
+
+Similarly, you can leverage Marketing Cloud Connect and Journey Builder to update data in Salesforce CRM without any code. Still, when you get to the point of creating journeys with only such updates in mind - its better to go for more complex but less complicated [AMPScript SalesforceObject](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs/#long-ampscript-code) functions.
+
+---
+
+### Flat is better than nested. Sparse is better than dense.
+
+When working on the solution, it is easy to build a matryoshka. Multiple goals within one asset? Let's add an [`if`/`switch`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch/) in the code or a decision split in the Journey Builder. Edge case found during testing? Yet another `if`. Multiple goals within one email? The 4-column layout is here! KPIs for leads, sales, loyalty and brand are not yet met? Let's pack them in a just-being-built welcome Journey.
+
+This turn of events is natural during development, but it quickly leads to a complicated outcome. There are two ways to solve it:
+
+1. **Plan** - As Abraham Lincoln once said, "Give me six hours to chop down a tree, and I will spend the first four sharpening the axe". The same approach will benefit your Marketing Cloud Engagement instance.
+2. **Refactor** - Planning is incredible, but it's nearly impossible to prepare a bulletproof plan. That's fine, as long as you refactor your solution after hitting the bump on the road.
+
+Following those steps will help you create simpler, lighter and better solutions. And the more refactors you do, the better in planning you will become.
+
+**MCE Code Example**
+
+It's easy to write deeply nested code. It's even easier to write dense code, full of syntactic sugar that is short and looks 'professional'—especially when copy-pasting a magical solution found on the Stack Overlow (been there, done that).
+
+However, the good code doesn't have to be short or prove that you know all quirks of the language. The good code must be [readable](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#readability-counts), [simple](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#simple-is-better-than-complex) and [explicit](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#explicit-is-better-than-implicit). And in many cases, it will be a bit longer and created from simpler building blocks.
+
+```js title="Just because it works, doesn't mean it's worth it"
+var region = country == 'UK' ? 'EMEA' : country == 'PL' ? 'EMEA' : country == 'US' ? 'AMER' : 'APAC';
+/* Chained ternary operator above might take less lines of code, but it's definitely not readable.
+Making it more sparse and flat is not only easier for the readars but also for future modifications */
+if (country == 'UK' || country == 'PL') {
+    var region = 'EMEA';
+} else if (country == 'US') {
+    var region = 'AMER';
+} else {
+    var region = 'APAC';
+};
+```
+
+**MCE UI Example**
+
+When building in Journey Builder, it is easy to nest Decision Splits to send various communication based on some criteria, but this approach will quickly become [complicated](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#complex-is-better-than-complicated) and (with how MCE renders multiple splits) [ugly](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#beautiful-is-better-than-ugly).
+
+- If you want to add the splits to cover more appropriate personalisation - make your Journey flat by leveraging Dynamic Content instead.
+- If you want to add the splits to cover different campaign goals - make your Journey flat by splitting each goal into separate Journey ([SOC principle](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#soc)).
+
+The same is true for Emails that frequently grow due to applying multiple KPIs. Sure, you can cram a lot if you go for a 4-column layout with numerous sections. But the layout bugs will emerge, deliverability will suffer, readability will tank, and the reader will get lost in the number of calls to action. Instead, focus on one concrete and targeted action that is crucial for your business.
+
+---
+
+### Readability counts.
+
+Readability is key. In code, it limits bugs, simplifies debugging, improves future development and saves tons of time. In content, it's key to drive the message to the recipient. In short, without readability, there is no value.
+
+I have already written a lot about readability of Marketing Cloud Engagement programmatic langauges: [AMPScript](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/), [SSJS](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/), [SQL](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/).
+
+As for the readability of content:
+
+1. Write short sentences (15 words are nice; stay under 30).
+2. Use simple language (instead of "due to the fact that" use "because").
+3. Prove with hard data (instead of "significant amount of customers recommends" use "93% of customer recommends").
+4. Cut marketing fluff (every part of the content should have an answer to the "so what?" question).
+5. Proofread. Proofread again.
+
+---
+
+### Naming conventions count twice.
+
+I love naming conventions and believe they are crucial to the long term success of marketing automation solutions. They improve readability and maintainability, bring clarity and unlock even more automation possibilities.
+
+What is unique about them is that they provide the most value when implemented from the very start and enforced everywhere. But if you are thinking long term (and with Marketing Automation tools - you should), it's better to implement one late than never. The bigger and older the solution, the more you will feel that a good naming convention is not nice-to-have but rather a must-have.
+
+**MCE Code Example**
+
+You can benefit from implementing a naming convention in all MCE programming languages. Strive for variable, function, column names that are obvious even for someone who sees the code for the first time. Saving a few characters for a shorter name is not worth the time lost for deciphering the meaning later.
+
+```js
+/* You may know what it means when you write the code... */
+if (ts && !tsd) tsd = new Date();
+
+/* ... but everyone else, and even you after a week, will be thankful for explicit names */
+if (isTrackingSuppressed && !trackingSuppressionStartDate) trackingSuppressionStartDate = new Date()
+```
+
+Looking for more examples of good naming? Check Style Guide recommendations for [AMPScript](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/#naming-convention), [SSJS](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#naming-convention) and [SQL](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#explicit-vs-implicit).
+
+**MCE UI Example**
+
+The naming convention is huge when working with Marketing Cloud Engagement. Leveraging a proper one makes it much easier to search and differentiate the assets. It's also an excellent tool to enable some smart personalisations and checks in email communication (with the help of the `%%emailname_%%` personalisation string). And that's not all - a good naming convention will increase value coming from System Data Views and reporting.
+
+With all this praise - what is a good naming convention for the marketing automation assets? It, of course, depends on the specifics of your business, but my recommendation is to mix data-filled shortcuts with separators.
+
+My favourite approach is to:
+
+1. Define a set of business-oriented data points that bring value.
+2. Create readable shortcuts for them to limit the final length of the naming convention.
+3. Create a dedicated place for each separate element in the naming convention.
+4. Split the elements with an underscore (`_`).
+5. Split parts of a single element with a hyphen (`-`).
+
+That's the theory, but what are good business-oriented data points? Some examples I frequently use are:
+
+- Country (if you are operating in multiple markets)
+- Business Unit (if you have a complex internal structure of the company)
+- Segment (if you have a set of predefined master-segments / personas)
+- Campaign Type (it's always helpful)
+- Free-text Asset Name (the human-readable part that helps easily understand the purpose)
+- Asset Type (can help in Content Builder to differentiate various partial assets)
+- Date (beneficial, especially if you are creating a lot of similar assets for recurring goals)
+- Campaign Code (or whatever you are using for closed-loop reporting and 360 analytics)
+
+How does it look when implemented? Let's check an example:
+
+`UK_DEV_C_WEL_brand-welcome-1_EML_21-10_01234`
+
+It's elements would be:
+
+1. Country: `UK` = United Kingdom
+2. Business Unit: `DEV` = Development
+3. Segment: `C` = Customers
+4. Campaign Type: `WEL` = Welcome
+5. Asset Name: `brand-welcome-1`
+6. Asset Type: `EML` = Email
+7. Date: `21-10` = October 2021
+8. Campaign Code: `01234`
+
+As you can see, in under 50 characters, we captured eight different data points and a pretty good picture of the purpose of the asset.
+
+What is more, the Business Intelligence team will be able to use a simple split by an underscore to capture each element as a separate category to enable filtering and grouping in reporting.
+
+---
+
+### Special cases aren't special enough to break the rules. Although practicality beats purity.
+
+Those contradictory lines follow the ancient greek golden middle way philosophy. The thought behind them is pretty straightforward. Whenever you decide to stick to some recommendation or rule (be it from this article or else) - fight the temptation to create exceptions when you encounter the first bump on the road.
+
+Sure, it might be easier to ignore the rule when the deadline is near or you have too much to do. It's easy to say, "I will align it later". But there is always more work to be done "later", and in the end, you finish with a messy solution that doesn't provide the promised value.
+
+On the other hand, following the rules by the book in every single case might stop you from delivering a working solution at all.
+
+That's why we must learn how to follow the rules **and** when to break them.
+
+So follow the rules as a default, break them only when there is no other option, and refactor them whenever possible.
+
+---
+
+### Errors should never pass silently. Unless explicitly silenced.
+
+Every solution can encounter some problems or edge cases. You can even be hit with something outside of your control, like server issues. It is why capturing and analysing the errors is so essential.
+
+In terms of code it means proper [debugging and error handling](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/). Especially [error logging](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/#error-logging) is good idea to keep up with the potential issues in matured Marketing Cloud Engagement solution. You can also protect your solution by creating last resort checks in messaging with the `RaiseError` function.
+
+But there are also platform-based features that capture issues. Journey pre-launch validation, Verification Activity for Automation Studio and its built-in error logging, Send Logs, and Audit Trail. Marketing Cloud Engagement offers many tools to make sure you are up to speed with the state of your platform, so make sure you use all of them.
+
+However, just because you can, it doesn't mean you always need to throw an error. There are some cases where silencing them is the right thing to do. Example?
+
+When sending a personalised email, you might find some contacts with missing data that would error out the send. Ask yourself whether you genuinely want an error in such cases, or rather a dynamic content with non-personalised default will work better.
+
+Such workarounds are even more critical for errors on client-facing assets like Cloud Pages. When coding the user experience, check the possible errors and consider which should be visible to the end-user.
+
+And - considering the quality of out-of-the-box MCE errors - always provide custom error messages.
+
+---
+
+### In the face of ambiguity, refuse the temptation to guess. Even when certain, test.
+
+With the complexity of Marketing Cloud Engagement, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the MCE is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
+
+There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2016 with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
+
+With all this ambiguity in the system, always check during development and always check again before go-live.
+
+---
+
+### Now is better than never. Although never is often better than right now.
+
+When you see an opportunity for improvement or encounter a helpful recommendation, it's a good idea to take a note and implement it to improve the value of your solution. However, fight the temptation to do it instantaneously. Even the enhancement most needed in your solution might break everything if you implement it hastily.
+
+Using previous examples:
+
+1. If you are not yet using proper [debugging and error handling](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/), you definitely should implement it. Should you do it *right* now? Well, there are some quirks that you should test beforehand; otherwise, your script might error out and break the existing process.
+
+2. If you want to implement the asset [naming convention](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#naming-conventions-count-twice), definitely start with discovery and cross-department alignment to have a complete picture of needs before creating the naming template. I believe everyone should use the naming convention, but it will be counterproductive if you start using it too fast and later have to update it based on late feedback.
+
+---
+
+### If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea.
+
+Marketing Cloud Engagement implementation is not something that one can easily explain to a five-year-old. However, if you find it hard to explain it to your colleague or client, it means that the solution is either too complex, too ambiguous, or not understood enough. Each of those cases is dangerous. In the best scenario, it may lead to a non-optimised outcome, in the worst - to a business-breaking crash.
+
+---
+
+### Documentation is one honking great idea - let's do more of it!
+
+Writing and maintaining documentation is a pain. I agree. But you know what is even bigger pain? Not having that documentation in the long run. Marketing Automation projects are long term investments. There are change requests, new team members, mistakes and bugs.
+
+In the long run, good documentation saves much more time than it takes to create it. With the complexity of the solution and the size of the team operating on it, that value grows exponentially.
+
+[John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) once said, "always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live". The same is true for the whole marketing automation solution - and documentation is your best bet at surviving ;)
+
+---
+
+## Sum Up
+
+There is a lot of contradictory recommendations above. It's intentional. Zen of Marketing Cloud is not a list of rigid rules - it would be impossible with the number of differences between Marketing Cloud Engagement customers. Instead, it's a set of flexible guidelines. Treat them as friendly best practices, not absolute rules and adapt them to improve your work.
+
+Across all those recommendations, you can see some key recurring ideas:
+
+1. Make it simple
+2. Make it readable
+3. Make it understandable
+4. Make it maintainable
+5. Make it practical
+
+However, I still love to check the full text of the [Zen of Marketing Cloud](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/#zen-of-marketing-cloud) to see how well I aligned my solution with it.

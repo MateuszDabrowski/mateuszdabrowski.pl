@@ -1,0 +1,421 @@
+# MCE Licence Limits
+
+> With great flexibility come great limitations. Learn how Marketing Cloud Engagement limits can make or break your marketing operations.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## Limits and Guardrails
+
+Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) is an extremely flexible platform. You can fulfill nearly any marketing dream using the available tools. But it also makes MCE a complex solution with power that can be easily abused. Especially when best practices are not followed.
+
+That abuse can lead to outstanding solutions (like [Cloud Page Apps](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/) or [custom processing backends](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/code-resource/)) but it can also lead to huge performance issues that impact both your Marketing Cloud Engagement and the whole stack (like, for example, triggering hundreds of Filter Activities at the same time - please don’t do it (again)).
+
+Salesforce protects clients and themselves using two methods:
+
+- Backend guardrails that completely block some forms of platform abuse (for example, 30 minute auto-kill in Automation Studio, 2 minute auto-kill in Web Studio or 5 MB file size limit in Content Builder)
+- Hard and soft limits that either block you from doing something or might incur additional costs for exceeding them (for example, hard limit for payload size in the REST API that will error out your API call and a soft limit of yearly API requests that may lead to a fun call with Salesforce Account Executive about their usage-based SKUs).
+
+Some of those guardrails and limits can be found in the technical documentation (those can be easily changed or extended by Salesforce whenever they feel like it). Some are part of your licence (as a binding attachment that is not as easy to change for them).
+
+## Marketing Cloud Engagement Licence Limits
+
+Licence limits have an enormous impact on every single client. And while there was no change in what is in your contract, half of those limits weren't enforced by Salesforce until 2024. This lax approach impacted solution architectures and day-to-day practices for years. But that peaceful and full-of-possibilities world is no more. Let's dive into what changed, how painful it can be for marketing operations on MCE, and how we can adapt.
+
+There are six key licence limits for Marketing Cloud Engagement. Each with a different threshold based on the licence tier you have:
+
+| Limit                        | Basic | Pro  | Corporate | Enterprise |
+| ---------------------------- | ----- | ---- | --------- | ---------- |
+| Contacts                     | N/A   | 15K  | 45K       | 500K       |
+| Super Messages               | 250K  | 2.5M | 10M       | 150M       |
+| Data Extension Storage       | 1GB   | 15GB | 45GB      | 100GB      |
+| Yearly Automation Executions | 0     | 15K  | 45K       | 100K       |
+| Yearly API Calls             | 0     | 2M   | 6M        | 200M       |
+| Users                        | 5     | 15   | 45        | 100        |
+
+All of them are shared for all of your Business Units. And all of them can be extended with entitlements, if you are willing to pay.
+
+## Marketing Cloud Engagement Limit Entitlements
+
+Entitlements are paid add-ons that can extend your limits. They are extremely important as (excluding Users) all those thresholds are soft limits. You can go over them and not even know about it until a Salesforce Account Executive invites you to discuss what it means in monetary terms.
+
+The exact costs of the entitlements are top secret and differ from client to client. You will have to check with your Account Executive how it looks for you.
+
+Of course, it's much better to architect your Marketing Cloud Engagement in a way that minimises the usage and monitor it continuously - I will be covering how to do it in the [impact & optimisations section](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#limit-monitoring-and-optimisation).
+
+> **Note: You Should Know**
+>
+> Along with the enforcement of all the licence limits [Salesforce introduced](https://help.salesforce.com/s/articleView?id=000396093\&type=1) additional option to increase the threshold. Now, whenever you purchase an additional Contact entitlement, you will also get a small bump to other limits.
+>
+> A single Contact Entitlement increases:
+>
+> - Contacts by 10K
+> - Super Messages by 50K
+> - Data Extension Storage by 0.01GB
+> - Yearly Automation Executions by 25
+> - Yearly API Calls by 5K
+>
+> As an example, let's say you have the Enterprise MCE licence and plan to have 1M Contacts in your system. This licence tier has a 500K Contact limit, so you need to purchase an additional 500K to meet the requirement. As Contacts are sold in packages of 10K you need 500K target / 10K per package = 50 Contact Entitlements. What does that give you in total?
+>
+> | Limit Type                   | Enterprise Limit | Entitlement Calculation | Entitlement Increase | Total Limit |
+> | ---------------------------- | ---------------- | ----------------------- | -------------------- | ----------- |
+> | Contacts                     | 500K             | 50 \* 10K               | 500K                 | 1M          |
+> | Super Messages               | 150M             | 50 \* 50K               | 2,5M                 | 152,5M      |
+> | Data Extension Storage       | 100GB            | 50 \* 0,01GB            | 0,5GB                | 100,5GB     |
+> | Yearly Automation Executions | 100K             | 50 \* 25                | 1,25K                | 101,25K     |
+> | Yearly API Calls             | 200M             | 50 \* 5K                | 250K                 | 200,25M     |
+> | Users                        | 100              | n/a                     | n/a                  | 100         |
+>
+> As you can see - apart from the Contacts - it's not much. Better than nothing, but it won't save you from a need for additional entitlements dedicated to the most-used aspects of your Marketing Cloud Engagement.
+
+Unfortunately, at the moment, there is no increase to licence limits when you purchase additional Business Units. That's especially problematic with the low (even for a single Business Unit) [Yearly Automation Executions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#yearly-automation-executions) threshold. I have created an [IdeaExchange idea](https://ideas.salesforce.com/s/idea/a0BHp000016LlDJMA0/increase-licence-limits-with-additional-business-units) to address that issue.
+
+## Limit Monitoring and Optimisation
+
+We already know that there are multiple Marketing Cloud Engagement licence limits that are now enforced. We also know that you can always pay to solve that issue. But in many cases, you can minimise the usage (with a smaller or bigger impact on your operations) to save your wallet. Let's dive into the details, limit by limit.
+
+### Super Messages
+
+| Limit          | Basic | Pro  | Corporate | Enterprise |
+| -------------- | ----- | ---- | --------- | ---------- |
+| Super Messages | 250K  | 2.5M | 10M       | 150M       |
+
+Super Messages are the base currency you need for MCE to pay for engagement touchpoints with your customers. Sending an Email? It will cost you Super Message(s). Loading a Cloud Page? Yep, Super Messages. SMS? Tons of Super Messages. Product Recommendation from Einstein on your e-commerce platform? You know the drill.
+
+Furthermore, some features add costs on top of the base Super Message consumption. Sending an Email with higher priority? Additional 4 Super Messages. Interactive Email Form Block? Another Super Message. Einstein Content Selection? Add 2 more. And yes, it stacks. So sending 100K emails can cost you anything from 100K to nearly 1M Super Messages depending on what you picked for it.
+
+[Current Super Message Multipliers](https://www.salesforce.com/products/marketing-cloud/sfmc/sms-ratio-updates/)
+
+#### Super Message Monitoring
+
+The fun part? There is no way to track it in the system. You won't find a Digital Wallet known from the Data Cloud. The only option is to use scheduled email with monthly Super Messages utilization report that is sent to the Primary Contact on the account. You can also request a more detailed report from your Account Executive, but it will be a manual process.
+
+> **Note: You Should Know**
+>
+> Starting in 2025, Salesforce introduced usage monitoring through a Digital Wallet, but only for a new highest Marketing Cloud Next for Engagement licence tier that swaps Super Messages for credits shared with Marketing Cloud on Core. For now, there is no hope on the horizon for all standard MCE licences.
+
+While you could try building a custom solution leveraging the Data Views to calculate the usage:
+
+1. You won’t be able to access all the details (like Cloud Pages impressions or the optional configurations of the email).
+2. You won’t have an easy time assigning the correct multipliers for SMS, as it tends to change over time (and sometimes is even a bit different from the official docs based on the deal with an Account Executive).
+3. Whatever you do, the Account Executive’s report will be the source of truth for the billing.
+
+Trust me, I tried.
+
+> **Note: You Should Know**
+>
+> If the basic scheduled Super Messages utilization report is not enough, you can ask for some specific data points, like splitting the usage per Business Unit, or per Classification. It can be a great help in finding where your money is going and whether the ROI stands behind that spend.
+
+#### Super Message Optimizations
+
+##### Data Quality
+
+The best way to optimise the Super Message usage is to focus on improving data and segmentation. Do you really need those contacts that have not opened any email for over a year? Is there really value in pushing emails to temporary email addresses? Are you sure that the segment for that marketing email is "everyone opted in"?
+
+By trimming the data fat and creating more targeted segmentation, you can easily lower the amount of contacts that will receive the communication. And that means fewer Super Messages burned for delivering messages with no ROI.
+
+But there is more! Improving the data quality of your segments will also mean that a larger percentage of the audience will interact with your more targeted message. This will improve your deliverability and help you get the message to the inbox when it really matters - making your Super Messages work harder for you.
+
+On top of it, you will want to clean up your data anyway to also optimise the [Contact licence limit](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#contacts).
+
+##### Channel Splitting
+
+Another option to lower the Super Message spend is to optimise channels you are using. SMS is extremely costly - in most cases more than 20x the cost of an email or push message.
+
+Of course, there are scenarios where the SMS is the right channel for the message and that cost is worth it. But those are rare cases. Frequently you can easily optimise it by prioritizing a more frugal channel.
+
+For example, if a customer has an App installed - send a push message instead of an SMS. If a customer doesn’t have an app, but there is email address available - send an email. And go for SMS only when the message is crucial and previous methods didn’t trigger expected behaviour. Or when mobile number is the only point of contact.
+
+##### Code Resources
+
+If you are using Cloud Pages for form handling or redirects - switch to [Code Resources](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/code-resource/). They have the same support for AMPScript and SSJS but - unlike Cloud Pages - don't cost any Super Messages when opened. You won’t be able to replace the client-facing pages with them, but they are perfect for running the logic - for free. I covered more about that pattern in my [Web Studio Architecture webinar](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions/).
+
+##### OOTB Feature Scrutiny
+
+Another way to optimise your Super Messages usage is to check if you are paying high multipliers for features you don't really need.
+
+Want to send your transactional messages really quickly? You don’t have to pay 4 Super Messages per email for High Priority Triggered Sends. You can use the Transactional Messaging API that doesn’t add any additional cost, and you won’t be able to tell a difference in the delivery speed.
+
+Interactive Emails sound awesome on paper, but when you consider how [extremely limited](https://help.salesforce.com/s/articleView?id=mktg.mc_ceb_interactive_email_form_client_support.htm\&type=5) the support for them is, you might want to instead use either a direct link to a Cloud Page form (with a query string trick for initial form prefill) or go full AMP for Email. A great thing to A/B test and check the ROI.
+
+Einstein Web and Email Recommendations are fine for small volumes, but for bigger ones, it might actually be better to consider Marketing Cloud Personalization (MCP, formerly Interaction Studio) with all its additional features.
+
+### Contacts
+
+| Limit    | Basic | Pro | Corporate | Enterprise |
+| -------- | ----- | --- | --------- | ---------- |
+| Contacts | N/A   | 15K | 45K       | 500K       |
+
+The second classic licence limit in Marketing Cloud Engagement is the Contact Count. It’s also a soft limit - you can go over it, but it will trigger an invite from your Account Executive to talk about additional [Entitlement SKUs](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#marketing-cloud-engagement-limit-entitlements). The key to this limit is to understand what Contacts are and how you can get way more of them than you expect.
+
+#### Contact Count Sources
+
+"Contact" in Marketing Cloud Engagement is a very broad term covering all records that are billable in terms of the licence. There are multiple groups used for that calculation:
+
+1. Records engaged through any MCE channel (Email Studio, MobileConnect, MobilePush, GroupConnect) - including sends from Journey Builder, Automation Studio, or API-triggered sends.
+2. Records synchronized through Marketing Cloud Connect from Contact, Lead, or User Objects.
+3. Records injected into a Journey (for example, from [Salesforce Data Entry](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder/#video)).
+4. Records manually imported to the All Contacts list (either directly or indirectly through, for example, an import to All Subscribers).
+5. Records added through an SMS opt-in keyword.
+6. Records created as Contacts through a form submission handling process.
+
+All those groups are summed up from all Business Units.
+
+#### Contact Count Monitoring
+
+Monitoring contacts, thankfully, is straightforward. There is a [dedicated report in Analytics Builder](https://help.salesforce.com/s/articleView?id=sf.mc_re_contacts_counts.htm\&type=5) that you can use on your parent Business Unit (EID). It also provides additional data points about the Contacts to facilitate debugging sudden jumps in the count.
+
+> **Note: You Should Know**
+>
+> Unfortunately, there is no way to get a Contact Count per Business Unit. This is because all Contacts are stored at the parent BU (EID) level, even if they are used only on a specific child BU.
+>
+> There are two, imperfect, workarounds:
+>
+> 1. Whenever you import a record to Marketing Cloud Engagement through any source, add Business Unit information to a custom Profile Attribute so that you can later retrieve it from the [\_EnterpriseAttribute Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_enterpriseattribute). Of course, this is easier said than done, as not all Contact sources will make this addition easy. However, if you mostly use [Synchronized Data Extensions in a Multi-Org setup](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/) you should be able to leverage Automation Studio for that enrichment - just keep in mind the edge case of Contact injections coming from [Salesforce Data Entry in Journey Builder](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder/).
+> 2. Another option - working even for past data - is to match Contacts against [\_Job](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#_job) or [\_BusinessUnitUnsubscribes](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#_businessunitunsubscribes) Data Views that are Business Unit-specific. Unfortunately, it will work only for a small subset of records that were sent an email within the last 6 months (in the case of Job). You may also try leveraging the [Send Logs](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/) if you configured them to be Business Unit-specific. However, it’s still a very limited match if you are using multichannel communication.
+
+#### Contact Count Optimizations
+
+##### Contact Minimalisation
+
+The best way to not hit the Contact Count limit is to not load unnecessary contacts into Marketing Cloud Engagement. It sounds obvious, but it happens all the time. There are two key sources that are frequently the reason for adding useless records to your system:
+
+1. Marketing Cloud Connect
+
+When you are integrating Marketing Cloud Engagement with Salesforce CRM, you use Marketing Cloud Connect to define the objects and fields that will be synchronized for your marketing purposes. You have a lot of flexibility when it comes to the scope of the sync, but due to object dependencies nearly every single implementation uses Contacts, Users and frequently also Leads.
+
+All (and only those) three objects automatically impact your Contact Count licence limit as soon as a record is synchronized. In most cases, you don’t need all (or even most) of those records for your marketing. The solution? Marketing Cloud Connect Object Synchronization Configuration, where you can set the Records Collection rules.
+
+The choice is limited to three options: `All records`, `All records created since [date]`, and the life-saving `All records with [checkbox] equal [boolean]`. With that last feature, you can pick a single checkbox field that will serve as a flag for deciding whether a given record will be synchronized.
+
+As long as you can define business requirements around marketable records (for example, don't sync Users, ensure Contacts/Leads have an email address or mobile phone and exclude converted Leads), you can leverage this feature to manage the amount of billable Contacts, lower the usage of the [Data Extension Storage limit](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-storage) and optimise the performance of all your queries.
+
+> **Note: You Should Know**
+>
+> The checkbox cannot be a formula - it must be a standard checkbox field. Of course, in most cases, you will want it to be dynamically set using predefined logic. To do this, leverage an Apex Trigger or a Flow to manage the checkbox state as per the business requirements. And if you are feeling fancy, you can use Agentforce in a Flow to set it based on complex adaptive logic.
+>
+> Additionally, you cannot use multiple checkboxes for MCC filtering - only a single one is supported. So if you have multiple criteria, you will need to consolidate them into a single checkbox field using Apex or a Flow.
+
+2. Manual Imports
+
+Another common source of unnecessary Contacts are manual imports. Whenever you import a file to All Contacts (either directly or through All Subscribers) you will add all those records to your Contact Count. And if you are not careful, you can easily import records that you don’t need for your marketing. For example, temporary email addresses, test records or contacts that have unsubscribed from all communications.
+
+The best practice is to not import records manually and instead leverage automated ingestion (be it through Marketing Cloud Connect, Data Cloud Activation, or Automation Studio from non-Salesforce sources). But if you have to do it:
+
+1. Check whether the data to be imported is really needed for your marketing purposes.
+2. Verify whether the data is clean and compliant.
+3. Import records to a Data Extension first, so that you can review and clean the data before it hits All Contacts.
+
+Records stored in Data Extensions do not impact your Contact Count until they are added to All Contacts (for example, by triggering an Email or SMS Activity). They will, however, impact your [Data Extension Storage](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-storage).
+
+##### Single Subscriber Key
+
+If you have a Subscriber Key, you are a Billable Contact. If you have multiple Subscriber Keys, you are multiple Billable Contacts. Architect your data model and data ingestion processes to ensure that each individual is represented by a single Subscriber Key.
+
+The key reason for duplicate Contacts is using multiple ingestion sources.
+
+1. Marketing Cloud Connect will use Contact, User, and Lead IDs from Salesforce CRM as Subscriber Key - if you are using this integration method, this is the best Subscriber Key you can use.
+2. If you are using Person Accounts in Salesforce CRM, be aware that each Person Account is represented by two records in Salesforce CRM - a Contact and an Account. Marketing Cloud Connect will synchronize both records to MCE: a non-billable (Person) Account and a billable (Person) Contact. Be sure to use the Person Contact ID as your sendable Subscriber Key - otherwise, you will end up with duplicate Contacts (one for the Person Account and one for the Person Contact) and encounter issues with Marketing Cloud Connect related features (like Salesforce Data Entry in Journey Builder or Individual Email Results).
+3. Manual Imports frequently use an email address as a unique identifier - this is a bad practice as an email address can change and is not unique. If you have Salesforce CRM, upload those records there to get CRM IDs as Subscriber Keys. If you use other solutions, pick a unique, non-changing identifier used across your business systems (like a customer ID).
+4. Align your Automation Studio-based imports with the above practices to make sure you are not using a mix of different identifiers for the Subscriber Key.
+5. When working with form submissions or SMS Keyword registrations, be sure to match or create those records in your databse of record (for example, handle the form submission in a way that will first check if the contact exists in your CRM and create it if not before pushing it into a Journey) to limit duplicates and various Subscriber Key types.
+6. Do the same for API integrations - especially Triggered Sends - otherwise, you will have silent Contact Count growth that will be hard to pinpoint.
+
+Be sure to regularly review your All Contacts records and, if you find any issues, check all your ingestion processes to ensure that you are not creating duplicate Contacts.
+
+[Debug Your Contacts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts)
+
+##### Contact Data Retention
+
+Finally, you should always manage your Contact Count by regularly deleting contacts that are no longer needed for your marketing goals. Find records with invalid Subscriber keys, missing channel information, hard bounces, or a long-lasting lack of engagement and remove them from your database to keep it clean and lean. It will help with licence costs, platform performance, and deliverability. Learn more about proper contact deletion and use a ready-to-use script in my full guide:
+
+[MCE Contact Deletion Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion)
+
+### Data Extension Storage
+
+| Limit                  | Basic | Pro  | Corporate | Enterprise |
+| ---------------------- | ----- | ---- | --------- | ---------- |
+| Data Extension Storage | 1GB   | 15GB | 45GB      | 100GB      |
+
+Another important license limit in Marketing Cloud Engagement is Data Extension Storage. It's also a soft limit, meaning that you can exceed it, but it may incur additional costs. There are a couple of things you can do to manage this limit.
+
+#### Data Extension Storage Monitoring
+
+Salesforce provided a great tool to help you with that - the [Data Extension Storage Usage Report](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_extension_storage.htm\&type=5). It provides you with a sneak peek into your current Data Extension usage in Setup » Administration » Data Management » Data Extension Storage and a detailed downloadable report in CSV format directly in Setup Home.
+
+That report is extremely useful as it will help you identify the largest data extensions in your system (Data Extension Name and Customer Key along with its Business Unit details). It provides both the actual size of the data stored as well as information about the Data Retention Policy (if any) configured on the data extension. It's a perfect way to identify data extensions that are not following best practices and are the best candidates for optimisation - ordered by impact on your Data Extension Storage limit.
+
+> **Note: You Should Know**
+>
+> The same report also shows you whether the Data Extension was set as Sendable or not. This is crucial information for the [Contact Deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/) as only Contacts in sendable Data Extension are removed with it. Contact data in non-sendable Data Extensions will stay in the system and impact both Data Extension Storage and your compliance. Data Retention Policy to the rescue!
+
+#### Data Extension Storage Optimisation
+
+##### Data Extension Design
+
+Start with proper Data Extension design. Avoid using unnecessary fields, especially large text fields.
+
+For every field in your Data Extension, ask yourself:
+
+1. Is this data already available in another existing Data Extension?
+2. Do I really need this field?
+3. How often will I use this field?
+4. For long text fields - can I store this data somewhere else and pull it when it's needed via API?
+
+The best way to protect your Marketing Cloud Engagement from storage bloat is to not create space to store that data in the first place.
+
+##### Data Extension Data Retention
+
+Once you define the data that is necessary, manage its storage by implementing a data retention policy on (nearly) all your data extensions. Make configuring it a must-have step in your data extension creation process. There are very few use cases that will require you to keep data longer than 2 years. Most of the time you can go for a 6-month or even 3-month retention period, even for segmentation purposes.
+
+Not only will it help you with the Data Extension Storage limit, but it will also improve the performance of your queries and other operations on those data extensions. It's also a great way to ensure compliance with data protection regulations.
+
+Leverage the [Data Extension Storage Usage Report](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_extension_storage.htm\&type=5) to find data extensions without a retention policy or with a very long one and fix them. It's a quick win with a big impact.
+
+You can now add the most popular Row-Based Retention after the creation of a new Data Extension as long as there are less than 1 billion records contained in the Data Extension and apply it to past records. So don't wait with optimising your data storage monsters.
+
+> **Note: You Should Know**
+>
+> There is also a secret bonus for using Data Retention on your Data Extensions - hidden out-of-the-box field with row creation date that you can access with SQL:
+>
+> ```sql
+> SELECT
+>       SubscriberKey
+>     , [_CreatedDate] AS HiddenCreatedDate
+> FROM DataExtensionWithDataRetention
+> ```
+>
+> Keep in mind that if you add Data Retention after DE creation, this field will show the date of the Data Retention configuration, not the actual row creation date for the old rows.
+
+##### Data Extension Export & Archive
+
+Most companies are very attached to the data they collect. And rightly so - data is the new oil. But not all data is needed in the marketing platform all the time. Frequently you can archive older data that you still see as valuable but is not needed for day-to-day operations and keep it in a cheaper storage (like your Data Warehouse of choice).
+
+You can easily export data from Data Extensions using Automation Studio and store it in an external system (like [AWS S3](https://help.salesforce.com/s/articleView?id=mktg.mc_overview_set_up_amazon_s3_location.htm\&type=5), [Azure Blob Storage](https://help.salesforce.com/s/articleView?id=mktg.mc_overview_set_up_microsoft_azure_location.htm\&type=5) or [Google Cloud Storage](https://help.salesforce.com/s/articleView?id=mktg.mc_overview_set_up_google_cloud_location.htm\&type=5)). You can then delete the data from MCE to free up space. If you need it back, you can always re-import it.
+
+There are out-of-the-box activities in Automation Studio to help you with that - [Data Extract Activity](https://help.salesforce.com/s/articleView?id=mktg.mc_as_use_a_data_extract_activity.htm\&type=5) to export the data and [File Transfer Activity](https://help.salesforce.com/s/articleView?id=mktg.mc_as_using_the_file_transfer_activity.htm\&type=5) to move the file to an external FTP server.
+
+> **Note: You Should Know**
+>
+> If you are integrated with Salesforce CRM, you can also consider 3rd party solution [Marketing Cloud Connect Toolbox](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N4V00000J6QDbUAN) to automate data exports in a way that will make that information easily available directly in your Salesforce CRM objects without impact on the Storage limits of CRM and Marketing Cloud Engagement. Perfect for archiving old campaign engagement and consent data.
+
+### Yearly Automation Executions
+
+| Limit                        | Basic | Pro | Corporate | Enterprise |
+| ---------------------------- | ----- | --- | --------- | ---------- |
+| Yearly Automation Executions | 0     | 15K | 45K       | 100K       |
+
+The most painful licence limit in Marketing Cloud Engagement is the Yearly Automation Executions. This limit defines how many times you can run automations in Automation Studio within a year. It's a soft limit, meaning that you can exceed it, but it may incur additional costs. Why is it so painful? Because it is absurdly small for real-life usage.
+
+Let's say you have a single automation that runs every hour (for example, to pull current CRM data from Synchronized Data Extensions). That's 24 runs per day, 720 runs per month, and 8,760 runs per year. That single automation already burns half of the Pro licence limit. And that's before any segmentation.
+
+Keep in mind that just recently Salesforce finally caved and gave us a more frequent Automation schedule - every 15 minutes - so that we can get closer to real-time data. But that means that a single automation using this new feature will run 35,040 times per year. A single automation, nearly the whole Corporate licence limit.
+
+Even with the highest Enterprise licence limit of 100k yearly executions, you can run only 11 hourly automations before hitting the limit. And currently, that limit is shared across all Business Units in your Marketing Cloud Engagement instance.
+
+> **Note: You Should Know**
+>
+> I created an [IdeaExchange idea](https://ideas.salesforce.com/s/idea/a0B3A00000Gtnz6UAB/increase-yearly-automation-executions-limit-with-additional-business-units) to address that issue. Additionally purchased Business Unit should increase the limits proportionally to make them fully operational.
+
+#### Automation Execution Monitoring
+
+Salesforce gave us two ways to monitor Automation Executions usage. Both are bad.
+
+##### Automation Studio History
+
+The user-friendly way is to check the History tab in Automation Studio. It provides a clean dashboard with Automation and Activity success rates, execution history, and some details. It's a really nice place to get an Automation Studio health overview at a glance - see issues and plan optimisations.
+
+You can also leverage it to monitor Automation Execution usage, but it's far from perfect. You need to manually sum the executions by Automation Success Rate Status and - what is worse - you can look only at a 7-day period at a time. Not very user-friendly for yearly monitoring.
+
+##### Automation Studio Data Views
+
+Another option to view executions is to leverage the [\_AutomationInstance Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_automationinstance). It provides you with all the details about each automation run, including its status, start and end time, and Business Unit.
+
+The good part? You can capture 6 months of data at once.
+
+The bad part?
+
+1. You will need to use an SQL query to count the executions. [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) is your friend here.
+2. There is only 6 months of data available, so you will need to store the results somewhere else to get a full-year overview. [External Data Warehouse](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-export--archive) perhaps?
+
+#### Automation Execution Optimizations
+
+There are a few ways to optimise your Automation Executions usage, but none is perfect.
+
+##### Optimise Schedule
+
+The easiest way to lower the number of Automation Executions is to review the schedule of your automations and make sure they are not running more frequently than necessary. For example, if you have an automation that runs every hour but the data it processes is updated only once a day, you can change the schedule to run daily instead of hourly.
+
+This step is a must-have in your optimisation process, but it will only get you so far. Most of the time you will need to go deeper.
+
+##### Combining Automations
+
+The limit is measured per automation run, not per step or activity within the automation. This means that you can combine multiple automations into a single one to reduce the number of executions. For example, if you have ten automations that run every hour, you could combine them into a single automation and save 90k executions per year.
+
+Sounds easy, right? Well, not really. Combining automations can lead to complex and hard-to-maintain automations. You will also need to ensure that the combined automation can handle failures gracefully and that no step exceeds the 30-minute execution time limit. Any failure in a single step will cause the entire automation to fail, which can lead to missed data updates or other issues.
+
+##### Joruney Buildering your Automations
+
+For some use cases, you can consider moving some of your automation logic to Journey Builder. Journeys are not counted against the Automation Execution limit, so you can leverage them to reduce the number of automations you need to run. The possibilities there are very limited, but with some creativity, you can do a bit of segmentation using Decision Splits and Update Contact Activities. Keep in mind that Journeys are not the most robust tools when it comes to quickly processing large amounts of data, so wouldn't recommend it for anything more than light segmentation even when in a pinch.
+
+##### External Processing
+
+Another option is to move some of the processing outside of Marketing Cloud Engagement. This way you can limit your transformation and processing in Automation Studio to only what is necessary for Marketing Cloud Engagement and do the rest in a more suitable environment (like your Data Warehouse or a dedicated ETL tool). Additionally, you can consider using direct Journey triggers (via API, Salesforce Data Entry or Data Cloud activation) to limit the need for segmentation with Automation Studio.
+
+This approach can significantly reduce the number of Automation Executions, but it requires additional infrastructure and leads to the question of why you are paying for Marketing Cloud Engagement if you are not using its core capabilities and are treating it as a simple sending engine.
+
+##### External Activity Triggers
+
+Finally, you can address a frustrating limit with a slightly ridiculous solution. As the limit is measured per automation run, not per activity run, and you are able to trigger activities directly, you can trigger them from your external system. Set up a simple CRON job that will call the specific chain of activities you need at the time you need them.
+
+> **Note: You Should Know**
+>
+> You can also hit two birds with one stone and leverage a 3rd Party tool like [DESelect Segment](https://deselect.com/segment/) or [Activation Studio](https://activation-studio.com) to get a really clean drag & drop segmentation solution that will do the triggering for you. Both solutions have their own scheduling capabilities that will trigger the activities directly, bypassing the need for an Automation Studio run.
+>
+> For companies with big segmentation needs, the cost of those tools might be smaller than the cost of additional Automation Executions entitlements. And you will get a user friendly segmentation tool that will empower your marketing team as a bonus.
+
+### Yearly API Calls
+
+| Limit            | Basic | Pro | Corporate | Enterprise |
+| ---------------- | ----- | --- | --------- | ---------- |
+| Yearly API Calls | 0     | 2M  | 6M        | 200M       |
+
+The last soft limit of the Marketing Cloud Engagement licence is related to API usage. It defines how many API calls you can make to MCE within a year. As with the previous limits, you can exceed it, but it may incur additional costs.
+
+The good part about this limit is that it's quite high for most use cases. Even the Pro licence with 2M yearly API calls should be sufficient for small to medium-sized businesses. The Enterprise licence with 200M yearly API calls is suitable for large enterprises with standard API usage.
+
+#### API Call Monitoring
+
+Currently, there is no way to monitor the API call usage directly in MCE. You will need to ask your Account Executive for [report on API call usage](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/api_call_volume_history_and_health.html) (or just wait for them to come to you with the invoice).
+
+#### API Call Optimizations
+
+##### Verify Necessity
+
+First and foremost, verify whether all the API calls you are making are necessary. Are there any redundant calls that can be eliminated? Can those calls be changed into SFTP uploads? Limiting the calls is the easiest way to lower the usage, but unfortunately, due to a lack of monitoring, it's hard to identify the low-hanging fruit.
+
+##### Leverage Built-in Features
+
+While API calls are counted against the limit, the built-in features of Marketing Cloud Engagement are not. So whenever possible, leverage the out-of-the-box solutions instead of custom API integrations. For example, use Marketing Cloud Connect for Salesforce CRM integration or Data Cloud Activations instead of building your own API-based integration. Leverage AMPScript and SSJS to pull the data you need instead of using API calls. Leverage SFTP for data big imports and exports instead of API.
+
+##### Use Bulk Endpoints
+
+When you need to make API calls, use the batch options whenever possible. Instead of making multiple individual Data Extension row insertions, leverage the [Data Extension Rows Asynchronous API](https://developer.salesforce.com/docs/marketing/marketing-cloud/references/mc-data_extension_rows_async).
+
+And if you need to push even more data via API, consider using the [Bulk Data Ingest API](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/bulkdataingestion.html) that is designed for high-volume data operations.
+
+> **Note: You Should Know**
+>
+> When working with API calls yous should also consider few other limits that are not related to the licence but can impact your operations - Salesforce grouped them [here](https://help.salesforce.com/s/articleView?id=mktg.mc_overview_limits_api.htm\&type=5).
+
+### Users
+
+| Limit | Basic | Pro | Corporate | Enterprise |
+| ----- | ----- | --- | --------- | ---------- |
+| Users | 5     | 15  | 45        | 100        |
+
+The user limit is the only hard limit of the bunch. It defines the maximum number of active users that you can have in your account. You can increase this limit by purchasing additional entitlements.
+
+Optimisation? Not much you can do here. Just be sure to regularly review your user list and remove any inactive or unnecessary users to free up licenses for new team members (something you should be doing anyway for security reasons).

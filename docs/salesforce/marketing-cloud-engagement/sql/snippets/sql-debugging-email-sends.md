@@ -1,0 +1,175 @@
+# MCE SQL Debugging Email Sends
+
+> Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL with Query Studio to the rescue.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Make finding problems with email delivery in MCE great again. SQL with the Query Studio to the rescue.
+
+## Problem with straightforward Email Send analysis
+
+Deliverability issues, unfortunately, are a standard both during the MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) implementation phase as well as after the go-live.
+
+The test you sent to yourself during the MCE implementation that never arrived in the inbox. The subscriber that asks where is his newsletter with the promo code.
+
+You can try debugging it with Journey Builder data or Reports, but in most cases, those solutions provide either not enough or way too much for the specific check you need to make.
+
+## Solution
+
+```sql
+SELECT
+      s.SubscriberKey     AS SubscriberKey
+    , sub.EmailAddress    AS EmailAddress
+    , sub.Status          AS SubscriptionStatus
+    , j.JourneyName       AS JourneyName
+    , j.VersionNumber     AS JourneyVersion
+    , job.EmailName       AS EmailName
+    , s.EventDate         AS SentDate
+    , job.DeliveredTime   AS DeliveryDate
+    , o.EventDate         AS OpenDate
+    , c.EventDate         AS ClickDate
+    , b.EventDate         AS BounceDate
+    , b.BounceCategory    AS BounceCategory
+    , b.BounceSubcategory AS BounceSubcategory
+    , b.SMTPBounceReason  AS BounceReason
+    , u.EventDate         AS UnsubscribeDate
+FROM _Sent                      AS s
+    LEFT JOIN _Job              AS job
+        ON job.JobID = s.JobID
+    LEFT JOIN _Open             AS o
+        ON o.JobID = s.JobID
+        AND o.ListID = s.ListID
+        AND o.BatchID = s.BatchID
+        AND o.SubscriberID = s.SubscriberID
+        AND o.IsUnique = 1
+    LEFT JOIN _Click            AS c
+        ON s.JobID = c.JobID
+        AND c.ListID = s.ListID
+        AND c.BatchID = s.BatchID
+        AND c.SubscriberID = s.SubscriberID
+        AND c.IsUnique = 1
+    LEFT JOIN _Bounce           AS b
+        ON s.JobID = b.JobID
+        AND b.ListID = s.ListID
+        AND b.BatchID = s.BatchID
+        AND b.SubscriberID = s.SubscriberID
+        AND b.IsUnique = 1
+    LEFT JOIN _Unsubscribe      AS u
+        ON s.JobID = u.JobID
+        AND u.ListID = s.ListID
+        AND u.BatchID = s.BatchID
+        AND u.SubscriberID = s.SubscriberID
+        AND u.IsUnique = 1
+    LEFT JOIN _JourneyActivity  AS ja
+        ON ja.JourneyActivityObjectID = s.TriggererSendDefinitionObjectID
+    LEFT JOIN _Journey          AS j
+        ON j.VersionID = ja.VersionID
+    LEFT JOIN _Subscribers      AS sub
+        ON sub.SubscriberKey = s.SubscriberKey
+WHERE s.EventDate >= DATEADD(DAY, -1, GETDATE())
+```
+
+Within a few seconds, you will see information about sends from the last day, with all the details that might be useful for debugging, like STMP Bounce Reason, Subscriber Status, Unsubscribe Date, etc.
+
+Wondering what to do with that data? Check out [Email Send Debugging Step-by-Step section](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/#email-send-debugging-step-by-step) below.
+
+> **Note: You Should Know**
+>
+> If you are running it from the child Business Unit and do not see EmailAddress, BounceCount and Status, add the `Ent.` prefix to `_Subscribers` Data View name in the last `JOIN`. It will pull the data from \_Subscribers of the parent Business Unit.
+
+## Options
+
+You can even adapt the above query to better suit your needs.
+
+### Change timeframe
+
+My default is checking the sends from the last day. You can change it by modifying the [`DATEADD` function](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#dateadd).
+
+### Limit to a single subscriber
+
+If you are looking for a problem related to only one specific subscriber, you can add `s.SubscriberKey = 'SubscriberKeyOfThatContact'` or `sub.EmailAddress = 'specific@email.address'` to the [`WHERE` statement](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#logical-operators). Or replace the current one not to be limited by the timeframe.
+
+### Limit to a single domain
+
+If you see problems with deliverability for a particular user, I highly recommend checking whether other users from the same domain also have such issues. Maybe it is related to corporate server policy? Add `sub.Domain = 'Recipients.Domain'` to the [`WHERE` statement](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#logical-operators). Or replace the current one not to be limited by the timeframe.
+
+### Limit to a single email
+
+If the problem is related to just one email asset, you can limit your outcomes by adding `job.EmailName = 'ProblematicEmailName'` to the [`WHERE` statement](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#logical-operators). Or replace the current one not to be limited by the timeframe.
+
+### Limit to a single Journey
+
+If you want to focus on a single Journey, you can limit your outcomes by adding `j.JourneyName = 'ProblematicJourneyName'` to the [`WHERE` statement](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#logical-operators). Or replace the current one not to be limited by the timeframe. You can also pinpoint it further by filtering on `j.JourneyVersion`.
+
+### Limit to single engagement type
+
+If you are interested only in bounces and do not need any other sends, add `b.IsUnique = 1` to the [`WHERE` statement](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#logical-operators).
+
+You can use the same approach to output only opens or clicks by changing the prefix from `b` to the [alias](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#table-name-prefix) representing the needed [System Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/).
+
+## Email Send Debugging Step-by-Step
+
+Now you know the Marketing Cloud Engagement Email Send Debugging query in and out. But how to work with the outcomes? And what are the next steps?
+
+As they say, with great power comes great complexity. And that's definitely true for finding the root cause of the undelivered email. The deliverability by itself is already a beautiful mess, and then there are various features and options you can use directly in MCE. Let's dive in.
+
+> **Note: You Should Know**
+>
+> You don't have to follow the steps below in the same order as presented. You can mix and match them, as long as you leave the Support Ticket creation for when you tried all other options.
+>
+> I personally debug in that order because, while I wait for the Query Studio to return the output from query, I can check the following steps in parallel.
+
+### 1. Query System Data Views
+
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. Free Salesforce [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) is the best place to execute that little exploratory analysis.
+
+Once you see the outcome, there are few possibilities:
+
+- **There is no data for that subscriber/send** » It's time go to to the [next step](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/#2-check-send-log).
+- **BounceDate is filled** » Either the email is invalid (hence the bounce), or the recipient's inbox Admin blocked the email (they sometimes use fake bounces to fight spam - especially in enterprise B2B and public markets).
+- **OpenDate or ClickDate is filled** » It's time to compare their timestamps with DeliveryDate. If those are within a single second and there are no later subsequent opens/clicks, the email has been checked by an antispam bot and flagged for no delivery to the final recipient (again, B2B and Public). If the timestamps are spread out (especially engagement ones from the DeliveryDate), the email got delivered to the right person, and they just forgot or lost it.
+- **DeliveryDate is filled** » If there is no Bounce, Open or Click timestamps, but Delivery is filled in, the email should be in the subscriber's Spam folder or Promotions tab.
+- **DeliveryDate is not filled** » It's time go to to the [next step](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/#2-check-send-log).
+
+### 2. Check Send Log
+
+If System Data Views don't have the data or the DeliveryDate is not filled, the email hasn't reached the recipient's inbox. Time to investigate the [Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/).
+
+Check whether an ErrorCode column value is filled for the send and subscriber you are debugging.
+
+- **There is no data for that subscriber/send** » It's time go to to the [next step](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/#3-check-all-subscribers-list).
+- **ErrorCode is filled** » Check the [Error Code value meaning](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/#send-log-errorcode-values) to find the root cause.
+- **ErrorCode is not filled** » The email was sent but not delivered to the recipient - you have deliverability issues. Check your configuration (From Address Management in MCE + SPF/DKIM/DMARC in DNS) and deliverability metrics (Salesforce offers Reputation Audit Test and Sender Rating as [features-on-demand](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/features-on-demand/#deliverability-features)).
+
+### 3. Check All Subscribers List
+
+If there is no trace of the send in System Data Views and Send Log, it means that MCE was not able to attempt sending. There are few possible reasons for that. Let's start with potential subscriber issues by searching for problematic Contact in Email Studio All Subscribers.
+
+- **There is no subscriber** » The most probable reason is subscriber block by MCE [List Detective](https://help.salesforce.com/s/articleView?id=000335444\&type=1) that protects your lists from nasty emails. What frequently trips people is that it scrubs various group addresses like `admin@`, `info@` and [more](https://www.cameronrobert.com.au/sfmc/email-usernames-blocked-by-salesforce-marketing-cloud/).
+- **Subscriber Status is Unsubscribed or Held** » Contact is not eligible for receiving the email. Should they want to get it - push them through the official subscription process to stay compliant.
+
+If you are sending through Journey Builder and in the Journey configuration selected to use Email Address from the Entry Source instead of Contacts, be sure to also check whether the Email Address field in the Data Extension selected for Entry stores correct email for that subscriber.
+
+### 4. Check Personalised Email Preview
+
+If everything was fine with the Subscriber, another option is an issue with the Email Asset. To check that, go to Content Builder, find the email, go to Preview and Test and select the subscriber in the same context as the one used for sending (for example, in the sendable Data Extension used as an Entry to the Journey). Check also a few other subscribers from the same place.
+
+- **Email Preview errors out for all Subscribers** » There is an issue with your email (probably with some programmatic content) that errored out during send.
+- **Email Preview errors out only for that Subscriber** » There is an issue with the personalisation data of that subscriber that clashes with your programmatic content.
+
+### 5. Check Suppressions and Exclusions
+
+If there are no errors within the Preview, the next potential culprit can be Exclusion or Suppression. There are quite a lot of them, and not all will be relevant for you, depending on the MCE configuration and method of sending, so be sure to check applicable ones from the Exclusion List, Exclusion Script, Suppression List, Auto-Suppression List.
+
+### 6. Create Support Ticket
+
+If, after all those checks, there is still no answer to the root cause - create a Support Ticket. Sometimes, it can be a master unsubscribe, server-related queue build-up or a bug on the MCE backend.
+
+### Email Send Debugging Flowchart
+
+Prefer complex processes visualised? Got you covered:
+
+![Flowchart with visual representation of the debugging email sends process](https://mateuszdabrowski.pl/img/article/article-image-sfmc-debugging-email-sends.png)

@@ -1,0 +1,177 @@
+# MCE SQL NULL Functions
+
+> IS NULL, or IS NOT NULL, that is the question. Ways of working with NULL values in Marketing Cloud Engagement (MCE) SQL.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+NULL is a fickle beast, and for the people not accustomed to how it works in SQL, it can create many problems (read: incorrect data output). This is especially true for those coming from nullish-friendly languages (like SSJS). Let's jump into the details.
+
+## NULL
+
+Like in other languages, NULL is a placeholder that marks an absent (unknown) value. Unlike in other languages (like SSJS), it can be used in any data type. You can have `NULL` Date (datetime) , `NULL` Number (int), `NULL` Text (nvarchar) or `NULL` Boolean.
+
+Also, unlike in some other languages, SQL doesn't support a *default* nullish coalescing. In simpler words, it means that empty string (`''`) or zero (`0`) are not equal to `NULL`. It makes sense when you treat `NULL` as an unknown value - unknown is not equal to `0`.
+
+### NULL with standard SQL Functions
+
+Because `NULL` is unknown, if you try to do any standard operation on the NULL (like adding an integer, or [concatenating](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#concat) it with a string), it will return unknown (`NULL`):
+
+```sql {2-3} title="❌ Functions with NULLs"
+SELECT
+      1 + NULL               AS MathFunctionWithNull    -- Outputs NULL
+    , CONCAT('Hello ', NULL) AS StringFunctionWithNull  -- Outputs NULL
+```
+
+### NULL with relational operators
+
+The fun doesn't stop there - When you try to make any [comparison](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#basic-operators) with `NULL`, it will fail, because it is a check against an unknown value. Or, to be more specific, the comparison will evaluate to `FALSE`, impacting your output.
+
+```sql {4-6} title="❌ Comparisons with NULLs"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE
+    NullablePurchaseCount > 0
+    AND NullableProductName != 'T-Shirt'
+    AND EmailAddress != NULL
+```
+
+In the example above, all three comparisons in the [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) statement will return `FALSE` for `NULL`s and the query will not output any rows.
+
+Let's check why, step by step:
+
+1. `NullablePurchaseCount > 0` - The rows with a value (be it `0` or `10`) are evaluated normally. The rows with `NULL` (absent value) evaluate as `FALSE` and are removed from the output.
+2. `NullableProductName != 'T-Shirt'` - The rows with a value (be it `''`, `'Hoodie'` or `'T-Shirt'`) are evaluated normally. The rows with `NULL` (absent value) evaluate as `FALSE` and are removed from the output.
+3. `EmailAddress != NULL` - Regardless of the `EmailAddress` value, because we are comparing it to `NULL`, check for every row evaluate to `FALSE` and therefore is dropped from the output.
+
+### NULL with conditional operators
+
+`NULL` gets even more problematic when you want to work with [`IN`/`NOT IN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#in-shorthand) or [`BETWEEN`/`NOT IN BETWEEN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#between-shorthand).
+
+When you use `NULL` as one of the values searched by `IN` shorthand, it will be ignored, and no rows with `NULL` in the checked column will be outputted for this condition.
+
+When you use `NULL` with the other shorthands (`NOT IN`, `BETWEEN` and `NOT IN BETWEEN`), this condition will have no results.
+
+### NULL with logical operators
+
+When you are building a boolean logic with `AND`/`OR` operators (be it in [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) or in [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/)) treat `NULL` as `FALSE`.
+
+#### AND operator
+
+When you have two booleans or expressions connected by the `AND` operator, it will only evaluate to `TRUE` if both are `TRUE`.
+
+| Boolean or Expression | Boolean or Expression | Result   |
+| --------------------- | --------------------- | -------- |
+| TRUE                  | TRUE                  | **TRUE** |
+| TRUE                  | FALSE                 | FALSE    |
+| TRUE                  | NULL                  | NULL     |
+| FALSE                 | TRUE                  | FALSE    |
+| FALSE                 | FALSE                 | FALSE    |
+| FALSE                 | NULL                  | NULL     |
+| NULL                  | TRUE                  | NULL     |
+| NULL                  | FALSE                 | NULL     |
+| NULL                  | NULL                  | NULL     |
+
+#### OR operator
+
+When you have two booleans or expressions connected by the `OR` operator, it will evaluate to `TRUE` if at least one is `TRUE`.
+
+| Boolean or Expression | Boolean or Expression | Result   |
+| --------------------- | --------------------- | -------- |
+| TRUE                  | TRUE                  | **TRUE** |
+| TRUE                  | FALSE                 | **TRUE** |
+| TRUE                  | NULL                  | **TRUE** |
+| FALSE                 | TRUE                  | **TRUE** |
+| FALSE                 | FALSE                 | FALSE    |
+| FALSE                 | NULL                  | NULL     |
+| NULL                  | TRUE                  | **TRUE** |
+| NULL                  | FALSE                 | NULL     |
+| NULL                  | NULL                  | NULL     |
+
+### NULL with aggregate functions
+
+[Aggregate functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/) just ignore `NULL` values. Calculating average? `NULL` will not be taken into consideration at all - which can scew your output a lot.
+
+The only exception is [`COUNT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#count) that has specific `*` argument for counting rows with `NULL`.
+
+Ok, we discussed a lot of `NULL` problems. Now it's time to solve them with dedicated `NULL` functions.
+
+## IS NULL
+
+Firstly, let's cover how we can recognize whether a `NULL` is a `NULL`. Using standard `=`/`!=` operators won't work, but you can do it easily with dedicated `IS NULL`/`IS NOT NULL` operators:
+
+```sql {3} title="Subscribers with Email Address"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE EmailAddress IS NOT NULL
+```
+
+Because comparison operators don't work, if you are building filters on nullable values, you might have to query defensively:
+
+```sql {5} title="Subscribers with small amount of purchases"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE
+    PurchaseCount < 5
+    OR PurchaseCount IS NULL
+```
+
+Assuming `PurchaseCount` is a nullable field, should you use only `PurchaseCount < 5`, you wouldn't see the rows with the `NULL` in that column. Adding another condition that checks explicitly for `NULL` solves that.
+
+However, there are other methods - dedicated shorthands of the universally helpful [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/) statement. Let's check them.
+
+## ISNULL
+
+`ISNULL` function is the first line of defence against the `NULL`s. It takes two arguments, checks the first one, and returns it if it is not `NULL`. Else, it returns the second. Perfect for creating a fallback value for nullable columns.
+
+```sql {3} title="Subscribers with small amount of purchases"
+SELECT SubscriberKey
+FROM DataExtension
+WHERE ISNULL(PurchaseCount, 0) < 5
+```
+
+Now the filter will check whether `PurchaseCount` is `NULL`. If not, it will use its value. If yes, it will consider it a zero for the conditional check.
+
+The second argument doesn't have to be a standard value. It can also be a column. Just make sure it is not nullable, or...
+
+## COALESCE
+
+If a single fallback provided by `ISNULL` is not enough, the `COALESCE` function lets you provide multiple. `COALESCE` will return the first argument that is not `NULL`. However, if all are `NULL` - the final outcome will also be `NULL`.
+
+```sql {3,5} title="Find Subscribers with at least one available address for a direct mail"
+SELECT
+      SubscriberKey
+    , COALESCE(HomeAddress, WorkAddress, ParentAddress) AS AvailableAddress
+FROM DataExtension
+WHERE COALESCE(HomeAddress, WorkAddress, ParentAddress) IS NOT NULL
+```
+
+> **Note: You Should Know**
+>
+> `COALESCE` is perfect for creating concatenated fields where you are not sure if all parts will be available, as it lets you control the number of spaces between elements:
+>
+> ```sql title="Calculate FullName with nullable MiddleName"
+> SELECT CONCAT(FirstName, ' ', COALESCE(MiddleName + ' ', ''), LastName) AS FullName
+> ```
+
+## NULLIF
+
+Finally, there is the `NULLIF` function that returns `NULL` if two provided arguments are equal or the first argument if they are different:
+
+```sql {4} title="Pulls WorkEmailAddress value only if it is different from general EmailAddress"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , NULLIF(WorkEmailAddress, EmailAddress) AS WorkEmailAddress
+```
+
+I personally find the standard [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) shorthand much more readable and user-friendly, despite being slightly longer than dedicated `NULLIF`:
+
+```sql {4} title="Pulls WorkEmailAddress value only if it is different from general Email Address with IIF"
+SELECT
+      SubscriberKey
+    , EmailAddress
+    , IIF(WorkEmailAddress = EmailAddress, NULL, EmailAddress) AS WorkEmailAddress
+```

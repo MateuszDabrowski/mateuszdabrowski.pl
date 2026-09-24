@@ -1,0 +1,89 @@
+# Toolset
+
+> Show me your tools, and I will tell you who you are. Or so they say
+
+Source: https://mateuszdabrowski.pl/sites/my-toolset/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-13  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Show me your tools, and I will tell you who you are. Or so they say.
+
+## Operating System
+
+MacOS. Sorry Ubuntu, it wasn't working for me anymore.
+
+## Browser
+
+Safari for non-development, and european Vivaldi for everything code related.
+
+## Text Editor
+
+For all my development and writing, I'm using Microsoft [Visual Studio Code](https://code.visualstudio.com/). I tested about a dozen various editors, and this one feels like the most polished and universal solutions for Marketing Automation Developers. It's blazing fast, powerful and extendable — great out-of-the-box, awesome once you configured for your own needs. I'm using it not only for standard coding (HTML, CSS, JavaScript, SSJS, AMPScript, MJML) but also for writing Markdown (including this site), working with JSON, manipulating CSV files and RegExing.
+
+A lot of VSCode powers comes from a fantastic extension repository, and some require a sincere recommendation (in alphabetical order):
+
+- [Color Highlight](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight): Simple tools that add appropriate background to any colour code. Excellent for anything front-end.
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint): If you write JavaScript, you use ESLint. Period.
+- [Image Preview](https://marketplace.visualstudio.com/items?itemName=kisstkondoros.vscode-gutter-preview): Another handy and straightforward solution. It shows miniatures of the image next to the import in the code.
+- [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer): There are many tools to see hot reloading version of the page you are coding. This one is the simplest.
+- [Material Theme](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme): It's a beautiful looking theme.
+- [MJML](https://marketplace.visualstudio.com/items?itemName=mjmlio.vscode-mjml) and [mjml-syntax](https://marketplace.visualstudio.com/items?itemName=digitalstreamio.mjml-syntax): Must have extensions if you want to write mobile-first emails with MJML in VSCode.
+- [MCFS (AMPScript)](https://marketplace.visualstudio.com/items?itemName=sergey-agadzhanov.AMPscript): Worth already for syntax suggestions and highlighting, but there are also more fun features if you dare to connect it to MCE.
+- [Path Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense): Autocompletes paths. Yay!
+- [Rainbow CSV](https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv): Shows columns in pure CSV. Happy magic.
+- [Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree): The best way to work with TODO logging in code.
+- [vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons): Those are nice looking icons.
+- [HTML End Tag Labels](https://marketplace.visualstudio.com/items?itemName=anteprimorac.html-end-tag-labels): Adds HTML tag details on closing tags to make it easier to find yourself in the nested jungle.
+
+Finally, it is not an extension, but a must-have for me: [Fira Code](https://github.com/tonsky/FiraCode) font. Check it out. You will love it.
+
+If you are interested in my configuration, you can find dotfiles on the [Github Repository](https://github.com/MateuszDabrowski/dotfiles/tree/master/vscode).
+
+## Terminal
+
+95% of the time I'm using the terminal integrated into VSCode. 5% of the time it is [iTerm](https://www.iterm2.com) (on Mac) or Powershell (on Windows).
+
+Windows setup with Powershell both as standalone and in the VSCode is quite out-of-the-box with just some [useful aliases](https://github.com/MateuszDabrowski/dotfiles/blob/master/terminal/powershell-profile.txt).
+
+My Mac is a bit more customized. For starters, instead of bash, I'm using [zsh](http://zsh.sourceforge.net) with [oh-my-zsh](https://ohmyz.sh) and [Homebrew](https://brew.sh). I also have a lot of aliases to speed up my work (you can check them in [Github Repo](https://github.com/MateuszDabrowski/dotfiles/blob/master/terminal/.zshrc)).
+
+## LLM
+
+Still exploring to find the best mix, but after the sad slopification of Google Gemini in 2026, I moved nearly fully towards Anthropic Claude with Claude Desktop as enviornment.
+
+## Diagrams
+
+I use my own [Diagramforce](https://diagramforce.mateuszdabrowski.pl/). I'm mapping out architectures, processes and timelines. Diagramforce makes it fast and easy. Especially for Salesforce ecosystem. No subscription needed.
+
+For some scenarios I also use [Mermaid](http://mermaid.js.org). Lets me create diagrams with code and output them to a website in non-image format for better performance. You can find it in multiple articles, like [MMC Integration Patterns](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#single-business-unit-single-org-setup)
+
+## API Client
+
+[Bruno](https://www.usebruno.com). It is simple, and it works.
+
+## Design
+
+I'm not a graphic designer. I need something that is simple, fast and can output images for emails, landing pages and presentations. With such needs, there is nothing better than [Sketch](https://www.sketch.com/).
+
+## Productivity
+
+Apart from the above main areas, I also love some smaller apps that make my life better (unfortunately, all but the last one are Mac only):
+
+1. [Numi](https://numi.app/) - the best calculator app you can have. By far.
+2. [Better Touch Tool](https://folivora.ai/) not only allows you to leverage gestures to their fullest but also takes care of windows snapping to the edges.
+3. [Cleanshot](https://cleanshot.com) makes capturing, annotating and sharing screenshots a breeze.
+4. [Reeder](https://reederapp.com) - RSS is my favourite way of keeping up to speed with topics that are important to me. Reeder does it best.
+5. For tasks and notes, after testing multiple options, I stuck with Apple Notes and Reminders.
+
+For Windows, there is one must-have power user tool: [Microsoft PowerToys](https://github.com/microsoft/PowerToys). Make your day-to-day Windows life better.
+
+## Web Tools
+
+There are many website tools that make my life so much easier.
+
+1. [Regex101](https://regex101.com) is a one-stop-shop for writing and testing your regular expressions.
+2. [Can I Use?](https://caniuse.com/) is perfect for checking whether a frontend feature is supported wide enough for you to use it on your website or Cloud Page.
+3. [Can I Email?](https://www.caniemail.com) does the same as the previous tool, but in the everchanging yet still always behind email world.
+4. [Built With](https://builtwith.com) provides a sneak peak into what created a website. Starting discovery for Marketing Cloud Personalization? This is your first step.
+5. [Placehold](https://placehold.co) is the best solution for adding placeholder images to your design. Just adapt the URL to get exactly what you need.

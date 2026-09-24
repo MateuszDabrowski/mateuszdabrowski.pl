@@ -1,0 +1,22 @@
+# mateuszdabrowski.pl
+# Search engines and AI assistants that fetch pages to answer a question are
+# welcome. Using the content to train AI models is not. Content licence:
+# https://mateuszdabrowski.pl/sites/licence/
+# A plain index for AI assistants: https://mateuszdabrowski.pl/llms.txt
+
+User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+Allow: /
+
+# Crawlers that only collect training data. The assistants and search bots of
+# the same companies (ChatGPT-User, OAI-SearchBot, Claude-User,
+# Claude-SearchBot, PerplexityBot) stay allowed by the group above.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: CCBot
+User-agent: Applebot-Extended
+User-agent: meta-externalagent
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://mateuszdabrowski.pl/sitemap.xml

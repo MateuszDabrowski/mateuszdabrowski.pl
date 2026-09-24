@@ -1,0 +1,414 @@
+# MCE SQL Debugging All Contacts
+
+> Clean up your MCE Contacts before they clean up your wallet. Step-by-step guide to identifying subscriber issues.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## Why should you care about All Contacts list?
+
+Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) is a powerful and flexible tool, but that flexibility can easily lead to messy data if not managed properly. The All Contacts in Contact Builder is a critical component of MCE, as it serves as the central repository for all cross-channel subscriber information. However, over time, this list can become cluttered with invalid or test records, which can lead to increased costs and reduced performance.
+
+This can be a problem for several reasons:
+
+1. **Cost Implications**: The number of contacts in your All Contacts Data list is one of the [Marketing Cloud Engagement Licence Limits](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/). If you have a large number of invalid or test records, you may be paying for contacts that are not actually engaged with your marketing efforts. And never will be.
+2. **Compliance Risks**: Duplicate records in the All Contacts list can pose compliance risks, both in terms of proper consent management and in terms of correct data retention and deletion processes. If you have duplicate records, you may be sending multiple messages to the same individual oversaturating their inbox, not be updating consents across all records, and not deleting all data points to fulfil Right to be Forgotten. This can quickly lead to complaints and potential legal issues.
+3. **Data Quality**: Bloated All Contacts frequently is related to poor data quality or data management. I have seen many cases where test records, duplicates, or invalid subscriber keys have inflated the All Contacts list, making it difficult to manage and segment your audience effectively. It can also lead to incorrect 360 view of your customers as crucial information is split over multiple records.
+
+In this article, I will walk through a step-by-step guide to identify and clean up issues within the All Contacts using SQL queries and MCE UI investigation. By following these steps, you can ensure that your MCE instance remains efficient and cost-effective.
+
+## Pre-requisites
+
+Before we dive into the job, let's check whether you have the necessary permissions and access to perform the cleanup. You will need:
+
+- Access to Contact Builder and All Contacts list.
+- Access to [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/) (free SQL editor for MCE) or at least Automation Studio to run Query Activities.
+- While not necessary, having Mobile Connect licence (regardless of whether you use it or not) makes it so much easier to work with All Contacts list in a programmatic way.
+- At least basic understanding of SQL and how to write queries in Salesforce Marketing Cloud Engagement. If you are new to SQL or not sure on some specific element, I recommend checking out my [MCE SQL Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/) article before proceeding.
+
+## Step 1: Access All Contacts List
+
+The bad news is that you cannot directly query All Contacts list in Salesforce Marketing Cloud Engagement.
+
+The good news is that there are two workarounds to this:
+
+1. If you **have Mobile Connect** licence:
+   1. Go to Audience Builder » Contact Builder » All Contacts » Mobile Lists tab » Click Create Mobile List (top right corner button) and go with Filtered List option.
+   2. Select "All Contacts" as a population.
+   3. Change Filter criteria to: System Data » Contact » Contact Key is not null.
+   4. Click Save as Filter button, name it `AllContactsList`, and Save.
+   5. Update External Key to `AllContactsList` as well.
+   6. Now you have a clone of All Contacts list that you can query in SQL. You can also use this list for other purposes, such as creating filtered lists or using it in Journey Builder. You can also refresh it whenever you want to have the most up-to-date version of All Contacts list.
+   7. If you prefer video format, here is great [video by Cam Roberts](https://www.youtube.com/watch?v=YjMfveB5Ass) on that process.
+
+> **Note: You Should Know**
+>
+> All Contacts view shows many cool data fields, but unfortunately, most are no longer available after the export to the List.
+>
+> Mobile List fields are: `SubscriberKey`, `CustomerKey`, `AudienceID`, `TrackingCode`, `AudienceCode`, `SegmentCode`, `SegmentName`, `Priority`, `SegmentID`, `SplitID`.
+>
+> So in nearly every case you will have to take the Subscriber Key and enrich it with [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) to other more interesting Data Extensions or [System Data Views](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/).
+
+2. If you **don't have Mobile Connect** licence you will need to stitch that information from two sources:
+   1. You can access all your email channel Contacts via [`_Subscribers` System Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers).
+   2. However, you might still have some records in All Contacts list that are not in `_Subscribers` (e.g. test records, Synchronized Data Extension records, hidden records). To access those, you can use a ["Contacts Wihout Channel Address" Data Extract Activity](https://help.salesforce.com/s/articleView?id=mktg.mc_cab_contacts_without_channel_address.htm\&type=5), which will export Contacts not assigned to any channel to a provided Data Extension. You can then query that Data Extension to get the list of those Contacts.
+   3. You can either create a Data Extension with just one field `SubscriberKey` and [`UNION`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#union) those two sources together in SQL to get a single "AllContactsList" Data Extension with full list of Contacts similar to the one available with Mobile Connect workaround, or you can just use [`UNION`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/#union) directly in the queries from this guide.
+
+## Step 2: Identify Issues with All Contacts List
+
+Now that you have access to the All Contacts list, you can start identifying issues with it.
+
+My favourite place to start is to look at the Subscriber Key formats. Subscriber Key is the unique identifier for each contact in Salesforce Marketing Cloud Engagement, and it can be in various formats depending on how the contact was created or imported.
+
+Open Query Studio (or Automation Studio if that's your only option and you have time to manually create target Data Extensions) and run the following query to get an overview of the Subscriber Key formats in your All Contacts list:
+
+```sql
+SELECT
+      COUNT(SubscriberKey)                                                          AS Total_Count
+    , SUM(IIF(SubscriberKey LIKE '003%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_Contact
+    , SUM(IIF(SubscriberKey LIKE '001%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_Account
+    , SUM(IIF(SubscriberKey LIKE '00Q%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_Lead
+    , SUM(IIF(SubscriberKey LIKE '005%' AND LEN(SubscriberKey) = 18, 1, 0))         AS SF_User
+    , SUM(IIF(SubscriberKey LIKE '%@%', 1, 0))                                      AS Email_Format
+    , SUM(IIF(SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7, 1, 0)) AS MobileConnect_Format
+    , SUM(IIF(SubscriberKey LIKE '%test%', 1, 0))                                   AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL, 1, 0))      AS GUID_Format
+    , SUM(IIF(
+        SubscriberKey LIKE '%@%'
+        OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
+        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
+        OR SubscriberKey LIKE '%test%'
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
+        , 0, 1)
+      )                                                                             AS Other_Format
+FROM AllContactsList
+```
+
+> **Note: You Should Know**
+>
+> If you see this query running very long or timing out, remove the least important and non-sargable (non-index-or-performance-friendly) GUID\_Format column:
+>
+> ```sql
+>     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL, 1, 0))      AS GUID_Format
+> ```
+>
+> and
+>
+> ```sql
+>         OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
+> ```
+>
+> This edge case format is resource-intensive to calculate, so removing it should help the query to run faster. You can always run a separate query just to check the GUID format if you need to.
+
+This query will give you a breakdown of the different formats of Subscriber Keys in your All Contacts list, which can help you identify any issues or anomalies.
+
+### Total\_Count
+
+`Total_Count` let's you verify whether your query is operating on the full list of Contacts - just compare that number with what you see in All Contacts view in Contact Builder.
+
+### SF\_Contact
+
+`SF_Contact` will show you how many Subscriber Keys are in the format of Salesforce Contact IDs (start with '003' and are 18 characters long) - these records were likely created through a Salesforce CRM integration or imported with Contact IDs as Subscriber Keys.
+
+Verify this number against the number of records in your Synchronized Data Extension(s) for Contact Object (remember to count it on all Business Units if you use [Multi-Org MCC Integration](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#single-org-vs-multi-org)):
+
+1. If the number is matching and makes sense volume-wise - all good here.
+2. If the number is matching, but is very high - you might check whether you truly need all those Contacts in your MCE instance, and consider [filtering out](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#manage-the-data) those that do not support your marketing use cases.
+3. If the number is higher in the `SF_Contact` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/) in place, which means that all the Contacts that were ever created in your MCE instance are still there, even if they are no longer synchronized.
+
+### SF\_Account
+
+`SF_Account` will show you how many Subscriber Keys are in the format of Salesforce Account IDs (start with '001' and are 18 characters long). You shouldn't have any of those in your All Contacts list, and in most cases it's data architecture issue related to how you manage Person Accounts in your Salesforce CRM and how you set up your integration. For Marketing purposes you should be using Contact ID of the Person Account as Subscriber Key, not the Account ID.
+
+Check your integration setup, fix it to leverage a Person Contact ID, and clean up those records from your All Contacts list as they are not valid for marketing purposes and just inflate your contact count.
+
+### SF\_Lead
+
+`SF_Lead` will show you how many Subscriber Keys are in the format of Salesforce Lead IDs (start with '00Q' and are 18 characters long). Similar to `SF_Contact`, you should check that number against your Synchronized Data Extension(s) for Lead Object:
+
+1. If the number is matching and makes sense volume-wise - all good here.
+2. If the number is matching, but is very high - you might check whether you truly need all those Leads in your MCE instance, and consider [filtering out](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#manage-the-data) those that do not support your marketing use cases.
+3. If the number is higher in the `SF_Lead` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/) in place, which means that all the Leads that were ever created in your MCE instance are still there, even if they are no longer synchronized.
+
+> **Note**
+>
+> Special points here for checking how are you managing Lead-to-Contact transition in Salesforce CRM and how it should be reflected in your MCE instance. You can open the following query to check how the post-conversion clean-up of Leads look like in your All Contacts list:
+>
+> ```sql
+> SELECT
+>       IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')                     AS Account_Conversion_Status
+>     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')                     AS Contact_Conversion_Status
+>     , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))   AS SF_Lead
+> FROM AllContactsList            AS allC
+> INNER JOIN Ent.Lead_Salesforce  AS l
+>     ON allC.SubscriberKey = l.Id
+> GROUP BY
+>       IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')
+>     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')
+> ```
+
+### SF\_User
+
+`SF_User` will show you how many Subscriber Keys are in the format of Salesforce User IDs (start with '005' and are 18 characters long). Unless you have a very specific use case around personalizing or impersonating your emails with Salesforce User information, you do not need any of those in your All Contacts list.
+
+A simple way to manage it is to [add a checkbox on your User object](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#manage-the-data) to identify which (if any) Users should be synced to MCE, and then update your integration to only sync those that are relevant for marketing purposes. Then you can clean up the rest of the records from your All Contacts list.
+
+### Email\_Format
+
+`Email_Format` will show you how many Subscriber Keys are in the format of email addresses (contain '@' symbol).
+
+If you are using Salesforce CRM, you shouldn't have any of those, as you should be using Salesforce Object ID as Subscriber Key.
+
+If you are not using Salesforce CRM, you still shouldn't have any of those, as using email address as Subscriber Key is not a good practice due to potential issues with duplicates, data quality, and compliance. Not only some people change email addresses over time, but - especially in B2B - they might share email addresses. It also can create compliance issues as email address may be a PII and then you need to make sure you can on one hand remove it when Right to be Forgotten is requested, but on the other hand preserve information that you performed that action for a given subscriber.
+
+Proper Subscriber Keys are better and using email address for it in most cases means that someone is manually adding purchased or scraped email lists to Marketing Cloud Engagement. And in most of the civilised world this is not something you want to do.
+
+In short: if there are none, celebrate. If there are some, check how they got there by opening All Contacts in Contact Builder, searching for example email address and looking at the Source and Modified column. Fix the process, clean up mess.
+
+> **Note: You Should Know**
+>
+> In big multi-country implementations it might be hard to pinpoint the root cause of those emails. Checking which country is (probably) responsible for adding those into the system can be a good starting point to then investigate the process and fix it. You can do that by looking at the email domains and inferring the country based on that (e.g. .de for Germany, .fr for France, etc.):
+>
+> ```sql
+> SELECT TOP 100
+>       LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1)) AS TLD
+>     , COUNT(allC.SubscriberKey)                                                     AS Subscriber_Count
+> FROM AllContactsList        AS allC
+>     LEFT JOIN _Subscribers  AS sub
+>         ON sub.SubscriberKey = allC.SubscriberKey
+> WHERE allC.SubscriberKey LIKE '%@%'
+> GROUP BY LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1))
+> ORDER BY COUNT(allC.SubscriberKey) DESC
+> ```
+>
+> If the query above is not returning many results, it means that most of the email addresses in your All Contacts list are not in `_Subscribers` System Data View. This happens when the subscribers are added to All Contacts but have not been attempted for any email sends yet and just pollute your instance without any engagement.
+>
+> P.S. If you are running it from Parent BU, you won't need [`Ent.` prefix](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/#enterprise-data-extension) for `_Subscribers` System Data View.
+
+### MobileConnect\_Format
+
+`MobileConnect_Format` will show you how many Subscriber Keys are in the format of mobile numbers (contain only digits and are at least 7 characters long).
+
+Similarly to `Email_Format`, in most cases you don't want to have such Subscriber Keys in your All Contacts list, however it is a bit more complex than with email addresses. That is because apart from manual data imports (that you shouldn't want - at least with mobile number as a Subscriber Key), the Marketing Cloud Engagement is also creating such records by itself when people not yet in your All Contacts engage with your SMS keywords.
+
+If you see such records in your system, check whether you are using SMS keywords and how are you managing the contacts that got created through them. You should have an automation that creates them in your Database of Records (be it Salesforce CRM or external system) and then syncs back to MCE with proper Subscriber Keys. If you don't have such process in place, you will see inflated Contact numbers and duplicates split between various channels.
+
+> **Note: You Should Know**
+>
+> Just as with email addresses, in big multi-country implementations it might be hard to pinpoint the root cause of those mobile numbers. You can try to do that by looking at the calling codes (the digits at the beginning of the mobile number that indicate the country):
+>
+> ```sql
+> SELECT TOP 100
+>       CallingCode
+>     , COUNT(*) AS Subscriber_Count
+> FROM (
+>     SELECT
+>         CASE
+>             WHEN SubscriberKey LIKE '1%' THEN LEFT(SubscriberKey, 1)
+>             WHEN SubscriberKey LIKE '7%' THEN LEFT(SubscriberKey, 1)
+>             WHEN SubscriberKey LIKE '20%' OR SubscriberKey LIKE '27%' THEN LEFT(SubscriberKey, 2)
+>             WHEN SubscriberKey LIKE '3[0-4,6,9]%' THEN LEFT(SubscriberKey, 2)
+>             WHEN SubscriberKey LIKE '4[0-9]%' THEN LEFT(SubscriberKey, 2)
+>             WHEN SubscriberKey LIKE '5[1-8]%' THEN LEFT(SubscriberKey, 2)
+>             WHEN SubscriberKey LIKE '6[0-6]%' THEN LEFT(SubscriberKey, 2)
+>             WHEN SubscriberKey LIKE '8[1,2,4,6]%' THEN LEFT(SubscriberKey, 2)
+>             WHEN SubscriberKey LIKE '9[0-5,8]%' THEN LEFT(SubscriberKey, 2)
+>             ELSE LEFT(SubscriberKey, 3)
+>         END AS CallingCode
+>     FROM AllContactsList
+>     WHERE
+>         SubscriberKey NOT LIKE '%[^0-9]%'
+>         AND SubscriberKey NOT LIKE '0%'
+>         AND LEN(SubscriberKey) >= 7
+> ) AS MobileFormat
+> GROUP BY CallingCode
+> ORDER BY COUNT(*) DESC
+> ```
+>
+> This query will check 1-digit calling codes for Russia and North American Numbering Plan (NANP) countries (like USA, Canada), then 2-digit calling codes for the lucky few with shorter calling numbers, and finally will pull 3 characters for any other numbers. This way you can get a better understanding of which countries are contributing to mobile number Subscriber Keys in your All Contacts list.
+
+### Test\_Records
+
+`Test_Records` will show you how many Subscriber Keys contain the word "test". While this is not a very sophisticated way to identify test records, it can be a good starting point to identify some of them and then check the Source and Modified column in All Contacts view in Contact Builder to understand how they got there and fix the process.
+
+If there is a bit too much there, consider adding this scenario to your [automated contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio) to remove such records on an ongoing basis.
+
+### GUID\_Format
+
+`GUID_Format` will show you how many Subscriber Keys are in the format of GUIDs (Globally Unique Identifiers). While having some GUIDs as Subscriber Keys is not necessarily a problem, check whether you know where they are coming from and whether they are valid Subscriber Keys that you are using in your marketing efforts.
+
+In some cases those might be valid Subscriber Keys for your non-Salesforce CRM contacts, but I have also seen them being created by rogue API calls or erroneous imports, that silently introduced duplicate records that way
+
+If you don't recognize the source of those GUID Subscriber Keys, check the Source and Modified column in All Contacts view in Contact Builder to understand how they got there and fix the process.
+
+### Other\_Format
+
+`Other_Format` will show you how many Subscriber Keys are in formats other than the ones mentioned above. If you have a significant number of such records, it is worth investigating them further to understand what they are and whether they are valid Subscriber Keys that you should keep in your All Contacts list.
+
+I would start that investigation by pulling a sample of those Subscriber Keys to see whether there is any pattern specific to your instance:
+
+```sql
+SELECT TOP 100
+      SubscriberKey
+FROM AllContactsList
+WHERE NOT (
+    SubscriberKey LIKE '%@%'
+    OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
+    OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
+    OR SubscriberKey LIKE '%test%'
+    OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
+)
+```
+
+If you see a specific recurring pattern in those Subscriber Keys, you can then adjust the initial query to add another column with a count of that specific pattern to understand how many records are affected and whether it is worth creating a specific scenario in your [automated contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio) to remove such records on an ongoing basis.
+
+You can also check the Source and Modified column in All Contacts view in Contact Builder for those specific Subscriber Key patterns to understand how they got there and fix the process.
+
+### Activity Check
+
+Once you have identified the Subscriber Key formats, you can also verify whether those records are being used for actual sends:
+
+```sql
+SELECT
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Count
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
+    , SUM(IIF(
+          allC.SubscriberKey LIKE '%@%'
+          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
+          OR allC.SubscriberKey LIKE '%test%'
+          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+          , 0, 1)
+      )                                                                                         AS Other_Format
+FROM AllContactsList AS allC
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM _Sent AS sent
+    WHERE allC.SubscriberKey = sent.SubscriberKey
+)
+```
+
+By using this query, you can identify how many records in your All Contacts list have not been sent any emails in the last 6 months and potentially just bloat your list (be sure to check against other channels as well, such as MobileConnect, Push, etc. if you are using them).
+
+### Duplicate Check
+
+Finally, you can check for duplicate Subscribers in your All Contacts list to identify any potential issues with data quality and management. The easiest way to start is to check how many records have the same email address:
+
+```sql
+SELECT TOP 50
+      Records_Per_Email
+    , COUNT(EmailAddress)           AS Unique_Emails
+    , SUM(Records_Per_Email)        AS Total_Subscriber_Records
+FROM (
+    SELECT
+          sub.EmailAddress
+        , COUNT(allC.SubscriberKey) AS Records_Per_Email
+    FROM AllContactsList            AS allC
+    INNER JOIN Ent._Subscribers         AS sub
+        ON allC.SubscriberKey = sub.SubscriberKey
+    WHERE sub.EmailAddress IS NOT NULL
+      AND sub.EmailAddress != ''
+    GROUP BY sub.EmailAddress
+) AS EmailCounts
+WHERE Records_Per_Email > 1
+GROUP BY Records_Per_Email
+ORDER BY CAST(Records_Per_Email AS INT) DESC
+```
+
+If you find duplicates, the next good step is to see where those duplicates appear in your data:
+
+```sql
+SELECT
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Duplicate_Records
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
+    , SUM(IIF(
+          allC.SubscriberKey LIKE '%@%'
+          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
+          OR allC.SubscriberKey LIKE '%test%'
+          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+          , 0, 1)
+      )                                                                                         AS Other_Format
+FROM AllContactsList        AS allC
+INNER JOIN Ent._Subscribers AS sub
+    ON allC.SubscriberKey = sub.SubscriberKey
+INNER JOIN (
+    SELECT EmailAddress
+    FROM Ent._Subscribers
+    WHERE EmailAddress IS NOT NULL
+      AND EmailAddress != ''
+    GROUP BY EmailAddress
+    HAVING COUNT(SubscriberKey) > 1
+)                           AS Duplicates
+    ON sub.EmailAddress = Duplicates.EmailAddress
+```
+
+This way, you can identify whether it's isolated issue with, for example, duplicate Leads, or a more systemic issue with your integration or data management processes that is creating duplicates across multiple channels.
+
+> **Note: You Should Know**
+>
+> If you encounter systemic issue and wonder which type of Subscriber Key should be kept as the primary, you can check which types are being used for email sends. This might help you decide which duplicates to keep and which ones to remove:
+>
+> ```sql
+> SELECT
+>       COUNT(allC.SubscriberKey)                                                                 AS Total_Sent_Duplicates
+>     , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+>     , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+>     , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+>     , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+>     , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+>     , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+>     , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+>     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
+>     , SUM(IIF(
+>           allC.SubscriberKey LIKE '%@%'
+>           OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+>           OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
+>           OR allC.SubscriberKey LIKE '%test%'
+>           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+>           , 0, 1)
+>       )                                                                                         AS Other_Format
+> FROM AllContactsList                AS allC
+> INNER JOIN Ent._Subscribers         AS sub
+>     ON allC.SubscriberKey = sub.SubscriberKey
+> INNER JOIN (
+>     SELECT EmailAddress
+>     FROM Ent._Subscribers
+>     WHERE EmailAddress IS NOT NULL
+>       AND EmailAddress != ''
+>     GROUP BY EmailAddress
+>     HAVING COUNT(SubscriberKey) > 1
+> )                                   AS Duplicates
+>     ON sub.EmailAddress = Duplicates.EmailAddress
+> WHERE EXISTS (
+>     SELECT 1
+>     FROM Ent._Sent                  AS sent
+>     WHERE allC.SubscriberKey = sent.SubscriberKey
+> )
+> ```
+
+Remember that you shouldn't just delete duplicates without understanding the root cause of why they were created in the first place. Make sure to fix the processes that led to those duplicates, and set up ongoing monitoring and automated deletion for any recurring issues. Otherwise, you will just end up with the same problem again in the future.
+
+## Step 3: Clean Up All Contacts List
+
+Once you have identified the issues with your All Contacts list, fixed the processes that led to those issues, and set up ongoing monitoring and automated deletion for any recurring issues, you can proceed to clean up your All Contacts list.
+
+Update the initial query to capture all the scenarios that you cleaned up and no longer need in your All Contacts list, and use it to create a Data Extension with all the naughty Contacts you can now happily delete. Then set it on fire:
+
+[Manual Contact Deletion](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#delete-all-contacts-from-list-or-data-extension) | [Automated Contact Deletion](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio)

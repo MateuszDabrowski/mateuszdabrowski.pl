@@ -1,0 +1,137 @@
+# Mateusz Dąbrowski
+
+> Documentation, code snippets and configuration guides for Salesforce Marketing Cloud Next, Marketing Cloud Engagement (SQL, SSJS, AMPScript) and Marketing Cloud Personalization. Written by Mateusz Dąbrowski, a European Salesforce MVP and Marketing Cloud Architect.
+
+Each link below points to a markdown copy of the page. The HTML page has the same path with a trailing slash in place of ".md". All docs in one file: https://mateuszdabrowski.pl/llms-full.txt
+
+The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, credit it as "Article Title" - Mateusz Dąbrowski (https://mateuszdabrowski.pl/) - CC BY-NC-SA 4.0, and link the HTML page. Licence details: https://mateuszdabrowski.pl/sites/licence/
+
+## Salesforce > Marketing Cloud Next
+
+- [Marketing Cloud Next Ideas](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/ideas.md): Here you can find all my Salesforce Marketing Cloud Next IdeaExchange contributions. Let's make the change!
+
+## Salesforce > Marketing Cloud Next > Config
+
+- [MC Next IP Warming & Deliverability](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/ip-warming-deliverability.md): Marketing Cloud Next automates IP-warming, but not your deliverability work. Here's what's automatic, what isn't, and where to watch.
+- [MC Next Business Units](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/business-units.md): Business as unusual. Marketing Cloud Next Business Units reuse an MCE name for a new, different Data Space architecture - with decisions you can't undo.
+
+## Salesforce > Marketing Cloud Engagement
+
+- [Zen of Marketing Cloud](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud.md): Salesforce Marketing Cloud implementation, development and operations Best Practices. In brief and detail.
+- [Marketing Cloud Engagement Ideas](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas.md): Here you can find all my Salesforce Marketing Cloud Engagement IdeaExchange contributions. Let's make the change!
+
+## Salesforce > Marketing Cloud Engagement > SQL
+
+- [MCE SQL Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.md): SELECT your data FROM Salesforce Marketing Cloud Engagement WHERE drag-and-drop Filters are not enough.
+- [MCE SQL Select](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select.md): Selected information on the SELECT statement in Marketing Cloud Engagement SQL.
+- [MCE SQL From](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from.md): Tell the SQL query FROM where you need the data.
+- [MCE SQL Join](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join.md): Data Extensions. System Data Views. With the JOIN statement, use one query to rule them all.
+- [Marketing Cloud Engagement SQL Where](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where.md): Use WHERE to make your query lean and to the point. Less is more.
+- [MCE SQL Case](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case.md): Empower your Marketing Cloud Engagement queries with conditional SQL CASE logic.
+- [MCE SQL Like](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like.md): Get a LIKE and build more flexible Marketing Cloud Engagement SQL queries.
+- [Marketing Cloud Engagement SQL String Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.md): Take control over strings with built-in SQL functions. Let the query do the job.
+- [MCE SQL Date Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.md): Take control over dates with built-in SQL functions. Let the query do the job.
+- [Marketing Cloud Engagement SQL Numeric Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.md): Take control over numbers with built-in SQL functions. Let the query do the job.
+- [MCE SQL Conversion Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.md): Break from the limits of Data Extension data types. Use full power of SQL to control your values.
+- [MCE SQL Aggregate Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.md): Group rows and apply aggregate functions to see the big picture in your data extensions.
+- [MCE SQL NULL Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.md): IS NULL, or IS NOT NULL, that is the question. Ways of working with NULL values in Marketing Cloud Engagement (MCE) SQL.
+- [MCE SQL Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.md): Query with style. Readable, bug-free code is a few shifts & spaces away.
+
+## Salesforce > Marketing Cloud Engagement > SQL > Snippets
+
+- [MCE SQL Debugging Email Sends](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.md): Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL with Query Studio to the rescue.
+- [MCE SQL Debugging Value Length](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length.md): Your Automations crash due to longer than expected values coming from the external source? Make your life easier with SQL.
+- [MCE SQL Debugging All Contacts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts.md): Clean up your MCE Contacts before they clean up your wallet. Step-by-step guide to identifying subscriber issues.
+
+## Salesforce > Marketing Cloud Engagement > SSJS
+
+- [SSJS If & Switch](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.md): Deep dive into the two pillars of SSJS flow control.
+- [SSJS Loops](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops.md): Let's dive into limited looping options of the SSJS.
+- [SSJS Debugging & Error Handling](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.md): To catch, or not to catch, that is debugging.
+- [SSJS Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.md): Script with style. Readable code is a few rules & best practices away.
+- [SSJS vs AMPScript Performance](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.md): Should I use AMPScript or SSJS? Which is better? As always, it depends. Check the performance comparisons for various use cases.
+
+## Salesforce > Marketing Cloud Engagement > SSJS > Snippets
+
+- [SSJS Script Template](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-script-template.md): Jumpstart your coding with best practice fueled SSJS Template.
+- [Solve with Cloud Page Apps](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps.md): Create micro applications tailored to your organisation needs using only Salesforce Marketing Cloud Engagement features.
+- [MobileConnect Phone Change](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change.md): Control your MobileConnect data with hidden _MobileAddress features.
+- [AMPScript in SSJS](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.md): Not all AMPScript functions are available in SSJS. But you still can use them.
+
+## Salesforce > Marketing Cloud Engagement > AMPScript
+
+- [AMPScript Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.md): Script with style. Readable code is a few rules & best practices away.
+
+## Salesforce > Marketing Cloud Engagement > Config
+
+- [MCE Licence Limits](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits.md): With great flexibility come great limitations. Learn how Marketing Cloud Engagement limits can make or break your marketing operations.
+- [MCE System Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views.md): Dive deep into System Data Views - the backend Marketing Cloud Engagement data. Actionable pearls await.
+- [MCE Mobile Connect Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.md): Dive deep into SMS System Data Views - the backend Marketing Cloud Engagement (MCE) data. Actionable pearls await.
+- [MCC Integration Patterns](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.md): Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud Engagement the right way.
+- [MCE Contact Deletion](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.md): Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
+- [MCE Enhanced Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.md): Create, customise and enhance Marketing Cloud Engagement Send Log for debugging and reporting.
+- [MCE Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers.md): Win-back your e-commerce customers with MCE Behavioral Triggers.
+- [MCE Code Resource](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/code-resource.md): Learn how to use and abuse Marketing Cloud Engagement Code Resources, the free-of-charge programmatic powerhouse.
+- [MCE AgentExchange Solutions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.md): Fill the feature gaps with plug-and-play apps. Salesforce Marketing Cloud Engagement AgentExchange ready-to-use solution highlights.
+- [MCE Features On Demand](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/features-on-demand.md): Discover the Salesforce Marketing Cloud Engagement Features On Demand and unlock platform potential.
+- [Export, Import & Document MCE Roles](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles.md): Backup, clone, and move cross-account the Marketing Cloud Engagement roles. In seconds.
+
+## Salesforce > Marketing Cloud Engagement > Webinars
+
+- [MCE Account Architecture](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture.md): Learn how to structure your Marketing Cloud Engagement account to make the most of the Business Units, Marketing Cloud Connect and deliverability features.
+- [Salesforce Data in MCE Journey Builder](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder.md): Learn how to integrate and use Salesforce CRM data with Marketing Cloud Engagement (MCE) Journey Builder. In both ways. The right way.
+- [Architecting Web Solutions in MCE](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions.md): Learn how to make the most out of Marketing Cloud Engagement Web Studio using best practices and tested architecture patterns for Cloud Pages and Code Resources.
+- [MCE Cloud Page Apps](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps.md): Learn how and when to create a custom application for your Marketing Cloud Engagement (MCE) users using Cloud Pages, Code Resources and Installed Packages.
+
+## Salesforce > Marketing Cloud Personalization
+
+- [MCP Catalog Architecture](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/catalog-architecture.md): Marketing Cloud Personalization (Interaction Studio) Catalog Objects architecture, data ingestion, limitations, tricks and tips. Build right from the start.
+- [MCP Open Time Email](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/open-time-email.md): Personalise your MCE emails with the next best action recommendations. In real-time. Even after delivery. Magic.
+- [Marketing Cloud Personalization Ideas](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/ideas.md): Here you can find all my Marketing Cloud Personalization (Interaction Studio) IdeaExchange contributions. Let's make the change!
+
+## Salesforce > Marketing Cloud Personalization > Serverside Code
+
+- [MCP Serverside Code Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.md): Wrap your head around the core feature of Marketing Cloud Personalization (Interaction Studio) and build the bridge between marketer and customer.
+- [MCP Serverside Code Properties](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-properties.md): Build your marketers' dream campaign configuration UI in Marketing Cloud Personalization (Interaction Studio). All the input magic in one place.
+- [MCP Serverside Code Context](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-context.md): Context is king. Also when writing MCP Template Serverside Code.
+
+## Salesforce > Marketing Cloud Personalization > Snippets
+
+- [MCP Catalog ETL Metadata Viewer](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer.md): Debug your Marketing Cloud Personalization (Interaction Studio) Catalog Object Item attributes with the power of Serverside Code.
+
+## JavaScript
+
+- [JS If & Switch](https://mateuszdabrowski.pl/docs/js/js-if-and-switch.md): Deep dive into the two pillars of JavaScript flow control.
+- [JS Loops](https://mateuszdabrowski.pl/docs/js/js-loops.md): JavaScript offers four for loops and two while loops. What's the difference?
+- [JS Document Object Model](https://mateuszdabrowski.pl/docs/js/js-dom.md): Explore, traverse and modify web pages with the power of JavaScript DOM properties and methods.
+
+## JavaScript > Snippets
+
+- [Tailor the experience with data logic](https://mateuszdabrowski.pl/docs/js/snippets/tailor-with-data.md): Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Utilise the power of simple data logic and control the user flows.
+- [Engage with Countdown](https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown.md): Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
+
+## FAQ
+
+- [What is the difference between SF Marketing Clouds?](https://mateuszdabrowski.pl/sites/faq/salesforce/what-is-the-difference-between-sf-marketing-clouds.md): The past, the present and the future of Marketing Automation platforms from Salesforce. Learn about positioning, strengths, weaknesses and what's Next for Marketing Cloud products.
+- [How to get hands-on experience with MCE](https://mateuszdabrowski.pl/sites/faq/salesforce/how-to-get-sfmc-hands-on-experience.md): You want to learn Marketing Cloud Engagement (MCE). And the best way to learn is to get your hands dirty. So, how can you get access to the MCE playground?
+- [How to get SF Certification vouchers?](https://mateuszdabrowski.pl/sites/faq/salesforce/how-to-get-sf-certification-vouchers.md): Salesforce Certifications. What, why and how (you can pay less).
+
+## More
+
+- [Docs & Snippets](https://mateuszdabrowski.pl/docs.md): All things Salesforce Marketing. Code and Config across Engagement, Personalization and Next.
+- [About Me](https://mateuszdabrowski.pl/sites/about-me/): Mateusz Dąbrowski is a European Salesforce MVP and Marketing Cloud Architect - ten years of Marketing Automation, the last six in the Salesforce ecosystem, with architecture and technical leadership across pharma, manufacturing, e-commerce and professional services, and AI agents a growing part of the work.
+
+## Apps
+
+- [Diagramforce](https://diagramforce.com): Free browser-based diagramming tool for Salesforce architects: architecture diagrams, data models, process flows and org charts with Salesforce icons.
+- [Strum file format for LLMs](https://mateuszdabrowski.pl/strum/llm-spec.md): Specification an LLM can follow to transcribe a song into a .strum file the Strum app imports.
+- [Shelf - Your Digital Pocket](https://mateuszdabrowski.pl/shelf/): The small things you keep needing - codes, addresses, IBANs, snippets - encrypted on your device and one tap from your clipboard on iPhone, iPad, Mac and Apple Watch.
+- [Slot - Your Inboxes in One App](https://mateuszdabrowski.pl/slot/): Every Google and Microsoft account in one native Mac app, each with completely isolated data. Mail, Calendar, Drive, Meet, Outlook, Teams and more.
+- [Strum - Tabs Made Easy](https://mateuszdabrowski.pl/strum/): Tablature, chord and strum-pattern editor for ukulele and guitar - for iPhone, iPad, and Mac.
+
+## Optional
+
+- [License & Attribution](https://mateuszdabrowski.pl/sites/licence.md): Let's talk copyrights in a human-readable way
+- [Toolset](https://mateuszdabrowski.pl/sites/my-toolset.md): Show me your tools, and I will tell you who you are. Or so they say
+- [Newsletter](https://mateuszdabrowski.pl/sites/newsletter/): Get yet another email in your inbox. This time, about Salesforce Marketing, Data & AI.
+- [Privacy](https://mateuszdabrowski.pl/sites/privacy.md): Legal stuff. Short and simple

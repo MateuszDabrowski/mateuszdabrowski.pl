@@ -1,0 +1,483 @@
+# SSJS Style Guide
+
+> Script with style. Readable code is a few rules & best practices away.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-09-24  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Script with style. Readable code is a few rules & conventions away.
+
+First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SSJS style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
+
+1. Be consistent across your codebase.
+2. Strive for good readability.
+
+Everything else is preference. And you are just about to learn about mine.
+
+## Naming Convention
+
+SSJS gives you a lot of freedom when it comes to naming and letter case. But instead of going freestyle with that flexibility, we should leverage it to build something meaningful and readable. I decided to focus also on simplicity.
+
+### Meaningful Names
+
+**Use descriptive names to provide context.**
+
+As [John F. Woods](https://groups.google.com/g/comp.lang.c++/c/rYCO5yn4lXw/m/oITtSkZOtoUJ?pli=1) said, `always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live`. Meaningful and consistent names are an excellent starting point for living a long (coding) life with a limited amount of frustration and regret when someone asks you about your year-old code to adapt to a new project.
+
+Applying the rules listed below is easy when you write the code and remember its logic but can be a challenge after resetting your memory by writing few other scripts. Make your SSJS better with meaningful variable and function names.
+
+#### Variable Names
+
+1. Use descriptive variable names. It is better to have a long explicit one (`isTrackingSuppressed`) than a short mysterious abbreviation (`trk`).
+2. When the variable is a boolean, prefix it with `is` (or `has`/`does`/`are` depending on the underlying data).
+3. When the variable is a date, suffix it with `Date`.
+4. When the variable is an array, use a plural name (`optIns`, `favouriteProductCategories`).
+
+```js
+/* ✅ Descriptive and suggesting boolean data type */
+var isTrackingSuppressed = false;
+
+/* ❌ Name neither describes the variable purpose nor suggest its data type */
+var value = false;
+
+/* ✅ Descriptive and suggesting date data type */
+var trackingSupressionStartDate = new Date();
+
+/* ❌ Name neither describes the variable purpose nor suggest its data type */
+var supressed = new Date();
+```
+
+#### Function Names
+
+1. Use descriptive function names. It is better to have a long explicit one (`getEmailAddress`) than a short mysterious abbreviation (`geteml`). Think how you can add as much information as possible, without adding unnecessary bits (`lookupContactBySubscriberKey` vs `lookupAvailableContactBySubscriberKeyFromDataExtension`).
+2. Use a verb (`get`, `post`, `update`, `send`) as the first part of the name to tell what the function is doing.
+3. Apply [variable naming rules](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#variable-names) to the parameters - leave single-letter names for minifiers.
+
+```js
+/* ✅ Both function name and parameters are descriptive */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+
+/* ❌ Neither function name nor parameters are descriptive */
+function write(d, v) {
+    Write(d + ': ' + (typeof v == 'object' ? Stringify(v) : v) + '<br><br>');
+};
+```
+
+### JS Variables, Functions & Methods Letter Case
+
+**Use `camelCase` for all elements of JS syntax.**
+
+The first category of the building blocks in your code will be JavaScript (ECMAScript 3 in case of SSJS) native elements. Variables (`var` only), functions (no array goodies), and methods.
+
+For all of those I'm using `camelCase`. It's the most popular convetion, so it will make it easier to work with other programmers, leverage code snippets and onboard new-to-SSJS people to MCE development.
+
+```js
+/* ✅ camelCase for JS syntax */
+var variableName = 'Hello World';
+function functionName(variableName) {
+    return variableName.toLowerCase();
+};
+
+/* ❌ Random case */
+var VARIABLENAME = 'Hello World';
+function FunctionName(variableName) {
+    return variableName.tolowercase();
+};
+```
+
+> **Note: You Should Know**
+>
+> JavaScript variables are case sensitive. `Name` and `name` are two different variables that can have different values, so it's critically important to have a stable convention.
+
+### SSJS Functions Letter Case
+
+**Use `PascalCase` for all elements of SSJS syntax.**
+
+I take a different approach when working with SSJS Functions from both Platform and Core libraries. For any element coming from those, I use `PascalCase`.
+
+Not only it allows to differentiate JavaScript native and MCE custom elements, but it also follows the official SSJS documentation (and therefore most of the snippets you might find).
+
+```js
+/* ✅ PamelCase for JS syntax */
+Platform.Load('Core', '1');
+var dataExtension = DataExtension.Retrieve({
+    Property: 'CustomerKey',
+    SimpleOperator: 'equals',
+    Value: 'dataExtensionExternalKey'
+});
+
+/* ❌ Random case */
+PLATFORM.LOAD('Core', '1');
+var dataExtension = dataextensions.retrieve({
+    Property: 'CustomerKey',
+    SimpleOperator: 'equals',
+    Value: 'dataExtensionExternalKey'
+});
+```
+
+## Alignment and Indentation
+
+Letter case is just one element of syntax convention that helps with readability. Another huge one is alignment and indentation. JavaScript requires neither, but both can help you write better code.
+
+### Expanded Syntax
+
+**Sparse is better than dense.**
+
+Readability counts. Having fewer lines is not worth the mental gymnastics required to read a condensed code. It is also much easier to find unclosed brackets.
+
+```js
+/* ✅ Expanded Variable Syntax */
+var debugging = {
+    request: true,
+    response: true,
+    error: true
+};
+
+/* ❌ Condensed Variable Syntax */
+var debugging = { request: true, response: true, error: true };
+
+/* ✅ Expanded Function Syntax */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+
+/* ❌ Condensed Function Syntax */
+function debugValue(description, value) { Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>'); };
+
+/* ✅ Expanded Try/Catch Syntax */
+try {
+    var response = HTTP.Get('http://www.example.c');
+} catch (error) {
+    handleError(error);
+};
+
+/* ❌ Condensed Try/Catch Syntax */
+try { var response = HTTP.Get('http://www.example.c'); } catch (error) { handleError(error); };
+```
+
+> **Note: You Should Know**
+>
+> I have two exceptions to this rule - both related to `if` statement shorthands.
+>
+> 1. Ternary operator
+>
+> Ternary simplifies basic `if`/`else` statements, and when used correctly, it should be readable in a single line. If you fear it might be hard to understand, you probably shouldn't use the ternary operator in the first place.
+>
+> ```js
+> /* ✅ Condensed Ternary Syntax */
+> typeof value == 'object' ? Stringify(value) : value;
+>
+> /* ❌ Expanded Ternary Syntax */
+> typeof value == 'object'
+>     ? Stringify(value)
+>     : value;
+>
+> /* ❌ Too Complex for Ternary Syntax */
+> debugging ? debugValue(error) : Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
+> ```
+>
+> 2. Single line `if` statements.
+>
+> Similarly to ternary, single-line if statements also should be used only for basic `if` statements. Whenever there is any complexity (be it `else` statement or just a longer case body), I always go with the expanded syntax.
+>
+> ```js
+> /* ✅ Condensed Shorthand If Syntax */
+> if (debugging) debugValue(error);
+>
+> /* ✅ Expanded Standard If Syntax */
+> if (debugging) {
+>     debugValue(error);
+> } else {
+>     Platform.Function.InsertData('Data_Extension_Name', ['id', 'errorSource', 'errorMessage', 'errorDescription'], [GUID(), 'Name of the place where the script runs', Stringify(error.message), Stringify(error.description)]);
+> };
+>
+> /* ❌ Too Complex for Shorthand If Syntax */
+> if (response.StatusCode == 200) { var parsedResponse = Platform.Function.ParseJSON(String(response.Response)); if (!parsedResponse.success) throw 'Wrong reCAPTCHA'; };
+> ```
+>
+> It's up to you to decide how complex is too complex. Whenever in doubt - use expanded syntax.
+
+### Consistent Indentation
+
+**Use indentation to highlight code relationships.**
+
+This rule extends the expanded syntax guide. Don't stop at expanding. Indent. It will help you quickly understand the relationships between the code lines.
+
+The easy way to implement correct identation is to add a level whenever you open curly bracket and remove one whenever you close it. However, sometimes readability can be improved with even more identation, for example within expanded array.
+
+```js
+/* ✅ Indented Syntax */
+for (var i = 0; i < response.length - 1; i++) {
+    var responseRowData = response[i].split(',');
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    });
+};
+
+/* ❌ Flat Syntax */
+for (var i = 0; i < response.length - 1; i++) {
+var responseRowData = response[i].split(',');
+campaignData.push({
+name: responseRowData[0],
+id: responseRowData[1],
+startDate: responseRowData[2],
+endDate: responseRowData[3]
+});
+};
+```
+
+> **Note: You Should Know**
+>
+> It's safer to use spaces instead of tabs for indentation. And it's more readable to use four spaces instead of two. You can configure your code editor to output four spaces on each Tab click.
+
+### Intentional Spacing
+
+**Use spaces wherever it makes the code more readable.**
+
+To visually separate elements, use spaces:
+
+- Around operators.
+- Before opening curly bracket and after closing curly bracket.
+- After commas.
+- After keywords (`if`, `while`, `function`, etc.).
+
+To provide important context, don't add spaces:
+
+- After opening and before closing non-curly brackets.
+- Between function name and arguments.
+
+```js
+/* ✅ Intentional spacing */
+if (response.StatusCode != 200) {
+    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'}
+};
+
+/* ❌ Lack of spacing */
+if(response.StatusCode!=200){
+    throw{'message':'HTTP.Get Error','description':'Could not connect to example.com'}
+};
+
+/* ✅ Intentional spacing */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+
+/* ❌ Wrong spacing */
+function debugValue ( description, value ) {
+    Write ( description + ': ' + ( typeof value == 'object' ? Stringify( value ) : value ) + '<br><br>' );
+};
+```
+
+## Debatable Styles
+
+Apart from letter case and indentation, some additional style rules are important to consider. Multiple arguments favour various conventions, so feel free not to follow my recommendation as long as you stay consistent across your code.
+
+### Semicolons
+
+**Add a semicolon after each statement.**
+
+The semicolons in JavaScript are optional. You can do without them entirely. But I prefer to use them. Why?
+
+If you do not use semicolons, JS will add them for you using Automatic Semicolon Injection (ASI). In most cases, it works perfectly, but there might be some situations where the outcome is not what you expected. And that will lead to a very long and frustrating debugging session. If you want to think about ASI when writing, you may ignore semicolons.
+
+If you don't want to worry about ASI, per JS language specification, you should:
+
+- Mark the end of your simple statements with a semicolon `;`. Think variable declarations and operations.
+- Don't end complex statements with a semicolon. Think [`if`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch/#if-statements) statements, [loops](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops/), `functions`, `try/catch` blocks.
+- But... you need a semicolon after the [`do/while` loop](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops/#do-while). Because JavaScript (and yeah, it is different from [`while` loop](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops/#while) when considering the statement blocks). Oh, and you will need to add them in your [`for` loop](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops/#for) iteration rules.
+
+That's also a bit to digest and worry about when writing the code. Let's simplify it.
+
+While you don't **need** a semicolon after complex statements, it won't hurt. It can even help you if you plan to minify the code. So, to make it straightforward and fail-safe, I recommend adding it after each statement.
+
+```js title="Keep calm and spam semicolons"
+/* ✅ Semicolons everywhere */
+for (var i = 0; i < response.length - 1; i++) {
+    var responseRowData = response[i].split(',');
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    });
+};
+
+/* ❌ No semicolons - this will crash due to no semicolons between for iteration rules */
+for (var i = 0 i < response.length - 1  i++) {
+    var responseRowData = response[i].split(',')
+    campaignData.push({
+        name: responseRowData[0],
+        id: responseRowData[1],
+        startDate: responseRowData[2],
+        endDate: responseRowData[3]
+    })
+}
+```
+
+### Consistent Quotes
+
+**Use single quote style.**
+
+With SSJS, you can use either single quotes (`'`) or double quotes (`"`). Don't follow the random approach of Salesforce SSJS documentation - choose one and be consistent.
+
+I prefer single quotes for SSJS:
+
+1. I frequently use string variables with HTML that uses double quotes. Using single quotes in SSJS means no need to escape the ones in HTML.
+2. On most keyboard (including mine), it doesn't require pressing Shift each time. Clicking one button is faster.
+
+However, there are also arguments for double quotes:
+
+1. There are many English words using apostrophes, and using double quotes means no need to escape them.
+2. JSON requires double quotes.
+
+In the end, pick one, align with your team, and stay consistent. Yes, this means updating quotes after copy-pasting from Stack Overflow. RegEx is your friend ;)
+
+```js
+/* ✅ Single Quotes */
+if (response.StatusCode != 200) {
+    throw {'message': 'HTTP.Get Error', 'description': 'Could not connect to example.com'};
+};
+
+/* ✅ Double Quotes */
+if (response.StatusCode != 200) {
+    throw {"message": "HTTP.Get Error", "description": "Could not connect to example.com"};
+};
+
+/* ❌ Mixed Quotes */
+if (response.StatusCode != 200) {
+    throw {'message': "HTTP.Get Error", 'description': "Could not connect to example.com"};
+};
+```
+
+## Comments
+
+**Code tells you how. Comments tell you why.** - [Jeff Atwood](https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/)
+
+To make your code better, don't stop at just the code. Leverage comments to their full potential. Context, logic and caveats description will improve the experience for everyone - including you after few weeks.
+
+Whenever you build more complex SSJS code, I recommend using at least three types of comments: table of contents, section and documentation. For short scripts, the last type will be enough.
+
+### 1. Table of Contents Comment
+
+The first type of comment you should use at the top of your longer scripts is the table of contents comment. This one will be your best friend during the whole lifecycle of your script.
+
+Before even starting to write SSJS, describe the desired outcome and steps you plan to code to get there. It can be high level; it can be a draft. But it will help you focus on the best way to write your script and consider potential roadblocks or opportunities for optimisation.
+
+As you are building your script - update the comment to reflect the approach you took. It will help you assess the impact of potential changes and find missing pieces.
+
+```js
+/* ---------------------------------------------------------------------
+
+Authenticates each visitor to limit access only to SFMC logged-in users.
+
+1. Global Variables - should be updated for each implementation
+2. Helper Functions
+    2.1. Error handling
+3. Authentication Flow
+    3.1. Authorisation
+    3.2. Authentication with REST Token
+        3.2.1. Upsert Logging Data Extension
+
+--------------------------------------------------------------------- */
+```
+
+### 2. Section Comments
+
+To fully leverage the pseudo-code table of contents, add section comments to mark where each part of your code starts.
+
+For complex scripts, it might be a good idea to create few different levels of such comments. I use upper case with dashes for the first level, title case with dashes for the second level and only title case for the third level of comments
+
+```js
+/* ----------------------------------------------------------------------- */
+/* ------------------------- 1. GLOBAL VARIABLES ------------------------- */
+/* ----------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------- */
+/* ------------------------- 2. HELPER FUNCTIONS ------------------------- */
+/* ----------------------------------------------------------------------- */
+
+/* ------------------------- 2.1. Error handling ------------------------- */
+
+/* ----------------------------------------------------------------------- */
+/* ------------------------- 3. AUTHENTICATION FLOW ---------------------- */
+/* ----------------------------------------------------------------------- */
+
+/* ------------------------- 3.1. Authorisation -------------------------- */
+
+/* ------------------------- 3.2. Authentication ------------------------- */
+
+/* 3.2.1. Build token request payload */
+```
+
+### 3. Documentation Comments
+
+Two previous comment types are suitable for high-level view and organisation of your more complex scripts. But the essential type of comment is the one that goes into detail about the implementation - the documentation comments.
+
+You should use one for every custom function you create, but it might also benefit variables (especially those with values coming from an API response). Rule of thumb - add them whenever someone else reading your code for the first time would ask a question about context or purpose.
+
+I recommend using [JSDoc](https://jsdoc.app/index.html) for few reasons:
+
+1. It's a popular standard.
+2. It provides recommendations on what to add to the comment.
+3. Many code editors will help you write it and highlight its syntax.
+4. MCE ecosystem already leverages it in Interaction Studio.
+
+```js
+/**
+ * @function debugValue
+ * @description Outputs provided description and SSJS value to front-end in a type-safe & consistent way
+ * @param {string} description - Describes meaning of the second parameter in the output
+ * @param {*} value - The value that needs to be debugged
+ */
+function debugValue(description, value) {
+    Write(description + ': ' + (typeof value == 'object' ? Stringify(value) : value) + '<br><br>');
+};
+
+/**
+ * ClientID of SFMC Installed Package required for API calls
+ * @type {string}
+ * @const
+ */
+var clientID = 'CLIENT_ID';
+
+/**
+ * Authentication GUID passed as a query string through SSO redirect
+ * @type {string}
+ */
+var state = Platform.Request.GetQueryStringParameter('state');
+```
+
+If you find it too complex, feel free to make it simpler, as long as your approach:
+
+1. describes context and purpose and
+2. is consistent across the codebase.
+
+## Sum Up
+
+It is a long article, so let's gather all the recommendations in one place:
+
+1. Be consistent
+2. Strive for readability
+3. Use descriptive names to provide context [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#meaningful-names)
+4. Use `camelCase` for all elements of JS syntax [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#js-variables-functions--methods-letter-case)
+5. Use `PascalCase` for all elements of SSJS syntax [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#ssjs-functions-letter-case)
+6. Sparse is better than dense [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#expanded-syntax)
+7. Use indentation to highlight code relationships [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#consistent-indentation)
+8. Use spaces wherever it makes the code more readable [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#intentional-spacing)
+9. Add a semicolon after each statement [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#semicolons)
+10. Use single quote style [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#consistent-quotes)
+11. Use comments to provide required context to your script [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/#comments)
+
+If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-marketing/).
+
+Looking for more MCE style? Check out my:
+
+- [AMPScript Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/)
+- [MCE SQL Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/)

@@ -1,0 +1,212 @@
+# JS Loops
+
+> JavaScript offers four for loops and two while loops. What's the difference?
+
+Source: https://mateuszdabrowski.pl/docs/js/js-loops/  
+Author: Mateusz Dąbrowski  
+Last updated: 2025-08-31  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## For Loops
+
+### For
+
+The classic `for` loop might be a bit long to write, but it has a lot of excellent properties:
+
+- Available in each JavaScript version.
+- Works with `break` and `continue` statements for better looping control.
+- Both initial and increment expressions can do multiple things.
+- Condition is not limited to iterable size.
+- Fast across various scenarios.
+
+```js {1} title="Example of for loop iterating over an array"
+for (let i = 0; i < array.length; i++) {
+    console.log(array[i]);
+}
+```
+
+Let's break the script down to five steps each `for` loop follows:
+
+1. Execute initial expression (`let i = 0` in the above example).
+2. Evaluate the condition (`i < array.length`). If it is false - the loop terminates. If true:
+3. The statement within the loop is executed (`console.log(array[i])`).
+4. Finally, the increment expression will evaluate (`i++`).
+5. The loop goes back to step 2 until it is false.
+
+If in doubt of which loop to use, pick the classic. To optimize speed, cache the length used for condition:
+
+```js {1} title="Initial expression assigns array.length to a variable to cache it"
+for (let i = 0, arrayLength = array.length; i < arrayLength; i++) {
+    console.log(array[i]);
+}
+```
+
+### For of
+
+`For...of` loop came to JavaScript in ES6 (as many good things have). It loops over iterables: strings, arrays, NodeLists, maps, sets and other array-like objects.
+
+```js {1} title="Example of for...of loop iterating over letters of a string"
+for (const letter of name) {
+    console.log(letter);
+}
+```
+
+This loop is blazing fast for very small iterables. From martech perspective, it is a fantastic tool to iterate over NodeLists/HTMLCollections when working with DOM. Works great for working with outputs of API calls. Worth also using for operating on split-string-arrays (for example comma-separated strings).
+
+It has many qualities that set it apart from the classic `for` loop:
+
+#### Key-Value Pair of Object
+
+It can iterate over key-value paired iterators (for example map or even object - thanks to `Object.entries()`):
+
+```js {1}
+for (const [key, value] of Object.entries(object)) {
+    console.log(key, value);
+}
+```
+
+#### Index-Value Pair of Array
+
+It can catch array values along with indexes:
+
+```js {1}
+for (const [index, value] of array.entries()) {
+    console.log(index, value);
+}
+```
+
+#### In-place Destructuring
+
+It can destructure object on the go:
+
+```js {3}
+const persons = [{ name: 'John Smith' }, { name: 'Jane Doe' }];
+
+for (const { name } of persons) {
+    console.log(name); // returns: 'John Smith' \n 'Jane Doe'
+}
+```
+
+In this example, `for...of` loop not only iterates over objects within an array but also automatically destructures them by getting the value of the `name` key. Thanks to it, the `console.log` will be printing the names in one line.
+
+#### Iterating over Function Arguments
+
+Thanks to existance of special function variable `arguments`, `for...of` can loop over undefined amount of arguments.
+
+```js {3} title="Function will return sum of any number of integers provided thanks to for-of loop"
+function sum() {
+  let sum = 0;
+  for (const number of arguments) {
+    sum += number;
+  }
+  return sum;
+}
+
+sum(1, 2, 3); // returns: 6
+```
+
+### For in
+
+`for...in` loop is a good idea when you want to loop over object prototype methods and properties. Any other scenario? Not worth it. Don't use it. Just don't.
+
+```js {1}
+for (const key in object) {
+    console.log(key);
+}
+```
+
+### forEach
+
+`forEach` iterates directly over an array. It applies function to each item but does not return anything.
+
+```js {1}
+array.forEach((item, index, array) => {
+    console.log(`${item} has index ${index}`);
+    if (index === array.length - 1) {
+        console.log('Last iteration!');
+    }
+});
+```
+
+It differs from other loops:
+
+- No need to define an iteration variable.
+- `continue` or `break` won't work.
+- In the callback function, we can leverage up to three optional parameters for an array: item, index, array.
+- Because it uses a callback function, the logic is block scoped.
+
+In most scenarios, the `for...of` loop will be a better choice.
+
+---
+
+## While Loops
+
+### While
+
+A `while` loop executes its statement as long as the condition evaluates to true.
+
+```js {2} title="Infinite while loop"
+let run = true
+while (run === true) {
+    console.log('To the infinity and beyond!');
+}
+```
+
+To break out of `while` loop, there must be logic within it that will change the condition to false (or a `break` statement):
+
+```js {3}
+let run = true;
+let i = 0;
+while (run === true) {
+    console.log('To the infinity and beyond!');
+    i++;
+    if (i > 10) {
+        run = false;
+    }
+}
+```
+
+or just:
+
+```js {3} title="This loop has the same outcome as the one above"
+let run = true;
+let i = 0;
+while (i <= 10) {
+    console.log('To the infinity and beyond!');
+    i++;
+}
+```
+
+`while` loop is the best option for iterating over **big** arrays.
+
+### Do While
+
+Same as `while`, but the code runs once before evaluating the condition.
+
+```js {1,3}
+do {
+    console.log('Running!');
+} while (run === true)
+```
+
+Perfect when you need to run an API call, check whether there are more pages of outcomes and act accordingly.
+
+> **Note: You Should Know**
+>
+> JavaScript support labels for loops. It allows you to name each loop for even better control with both `continue` and `break` statements.
+>
+> ```js {1,8} title="Labelled loop example using a nested for loops"
+> MainLoopLabel:
+> for (let i = 0; i < array.length; i++) {
+>     // Logic
+>     SecondaryLoopLabel:
+>     for (let j = 0; j < array[i].length; j++) {
+>         // Logic
+>         if (array[i][j] === 'important') {
+>             break MainLoopLabel;
+>         };
+>     };
+> };
+> ```
+>
+> As you can see, in the first line we added a label for the first `for` loop. Then, in the statement within the second `for` loop, we used `break` followed by the label. Once executed, it will break both for loops, even if there were still iterations in the main one. The same approach works with the `continue` statement.
