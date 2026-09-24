@@ -17,6 +17,8 @@ import styles from './AboutMe.module.css';
 import feed from '../pages/styles.module.css';
 
 const PROFILE_URL = 'https://mateuszdabrowski.pl/sites/about-me/';
+// Doc pages name this Person as author by @id (plugins/structured-data).
+const PERSON_ID = `${PROFILE_URL}#person`;
 const SAME_AS = [
   'https://www.linkedin.com/in/mateusz-dabrowski-pl/',
   'https://github.com/MateuszDabrowski',
@@ -194,6 +196,7 @@ export function AboutJsonLd({ events, jobTitle, description, alsoKnows = [], awa
   const person = {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': PERSON_ID,
     name: 'Mateusz Dąbrowski',
     url: PROFILE_URL,
     image: 'https://mateuszdabrowski.pl/img/md_profile_icon.png',

@@ -4,7 +4,8 @@ title: MCE SQL Debugging All Contacts
 sidebar_label: Debugging All Contacts
 description: Clean up your MCE Contacts before they clean up your wallet. Step-by-step guide to identifying subscriber issues.
 image: img/og/og-image-sf-mce-sql-debugging-all-contacts.png
-tags: [Salesforce, Marketing Cloud Engagement, Marketing Automation, SQL, Snippet, Data Management, Debugging, Integration]
+tags: [Marketing Cloud Engagement, SQL, Snippet, Data Management, Debugging, Integration]
+
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
@@ -14,26 +15,26 @@ import { ButtonRow } from '/src/components/Buttons.js';
 
 ## Why should you care about All Contacts list?
 
-Salesforce Marketing Cloud Engagement (MCE) is a powerful and flexible tool, but that flexibility can easily lead to messy data if not managed properly. The All Contacts in Contact Builder is a critical component of MCE, as it serves as the central repository for all cross-channel subscriber information. However, over time, this list can become cluttered with invalid or test records, which can lead to increased costs and reduced performance.
+Salesforce :product[Marketing Cloud Engagement] is a powerful and flexible tool, but that flexibility can easily lead to messy data if not managed properly. The All Contacts in Contact Builder is a critical component of :product[MCE], as it serves as the central repository for all cross-channel subscriber information. However, over time, this list can become cluttered with invalid or test records, which can lead to increased costs and reduced performance.
 
 This can be a problem for several reasons:
-1. **Cost Implications**: The number of contacts in your All Contacts Data list is one of the [Marketing Cloud Engagement Licence Limits](/docs/salesforce/marketing-cloud-engagement/config/licence-limits.mdx). If you have a large number of invalid or test records, you may be paying for contacts that are not actually engaged with your marketing efforts. And never will be.
+1. **Cost Implications**: The number of contacts in your All Contacts Data list is one of the [:product[Marketing Cloud Engagement] Licence Limits](/docs/salesforce/marketing-cloud-engagement/config/licence-limits.mdx). If you have a large number of invalid or test records, you may be paying for contacts that are not actually engaged with your marketing efforts. And never will be.
 2. **Compliance Risks**: Duplicate records in the All Contacts list can pose compliance risks, both in terms of proper consent management and in terms of correct data retention and deletion processes. If you have duplicate records, you may be sending multiple messages to the same individual oversaturating their inbox, not be updating consents across all records, and not deleting all data points to fulfil Right to be Forgotten. This can quickly lead to complaints and potential legal issues.
 3. **Data Quality**: Bloated All Contacts frequently is related to poor data quality or data management. I have seen many cases where test records, duplicates, or invalid subscriber keys have inflated the All Contacts list, making it difficult to manage and segment your audience effectively. It can also lead to incorrect 360 view of your customers as crucial information is split over multiple records.
 
-In this article, I will walk through a step-by-step guide to identify and clean up issues within the All Contacts using SQL queries and MCE UI investigation. By following these steps, you can ensure that your MCE instance remains efficient and cost-effective.
+In this article, I will walk through a step-by-step guide to identify and clean up issues within the All Contacts using SQL queries and :product[MCE] UI investigation. By following these steps, you can ensure that your :product[MCE] instance remains efficient and cost-effective.
 
 ## Pre-requisites
 
 Before we dive into the job, let's check whether you have the necessary permissions and access to perform the cleanup. You will need:
 - Access to Contact Builder and All Contacts list.
-- Access to [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx) (free SQL editor for MCE) or at least Automation Studio to run Query Activities.
+- Access to [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx) (free SQL editor for :product[MCE]) or at least Automation Studio to run Query Activities.
 - While not necessary, having Mobile Connect licence (regardless of whether you use it or not) makes it so much easier to work with All Contacts list in a programmatic way.
-- At least basic understanding of SQL and how to write queries in Salesforce Marketing Cloud Engagement. If you are new to SQL or not sure on some specific element, I recommend checking out my [MCE SQL Basics](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx) article before proceeding.
+- At least basic understanding of SQL and how to write queries in Salesforce :product[Marketing Cloud Engagement]. If you are new to SQL or not sure on some specific element, I recommend checking out my [:product[MCE] SQL Basics](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx) article before proceeding.
 
 ## Step 1: Access All Contacts List
 
-The bad news is that you cannot directly query All Contacts list in Salesforce Marketing Cloud Engagement.
+The bad news is that you cannot directly query All Contacts list in Salesforce :product[Marketing Cloud Engagement].
 
 The good news is that there are two workarounds to this:
 
@@ -65,7 +66,7 @@ So in nearly every case you will have to take the Subscriber Key and enrich it w
 
 Now that you have access to the All Contacts list, you can start identifying issues with it.
 
-My favourite place to start is to look at the Subscriber Key formats. Subscriber Key is the unique identifier for each contact in Salesforce Marketing Cloud Engagement, and it can be in various formats depending on how the contact was created or imported.
+My favourite place to start is to look at the Subscriber Key formats. Subscriber Key is the unique identifier for each contact in Salesforce :product[Marketing Cloud Engagement], and it can be in various formats depending on how the contact was created or imported.
 
 Open Query Studio (or Automation Studio if that's your only option and you have time to manually create target Data Extensions) and run the following query to get an overview of the Subscriber Key formats in your All Contacts list:
 
@@ -122,8 +123,8 @@ This query will give you a breakdown of the different formats of Subscriber Keys
 Verify this number against the number of records in your Synchronized Data Extension(s) for Contact Object (remember to count it on all Business Units if you use [Multi-Org MCC Integration](docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#single-org-vs-multi-org)):
 
 1. If the number is matching and makes sense volume-wise - all good here.
-2. If the number is matching, but is very high - you might check whether you truly need all those Contacts in your MCE instance, and consider [filtering out](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#manage-the-data) those that do not support your marketing use cases.
-3. If the number is higher in the `SF_Contact` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx) in place, which means that all the Contacts that were ever created in your MCE instance are still there, even if they are no longer synchronized.
+2. If the number is matching, but is very high - you might check whether you truly need all those Contacts in your :product[MCE] instance, and consider [filtering out](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#manage-the-data) those that do not support your marketing use cases.
+3. If the number is higher in the `SF_Contact` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx) in place, which means that all the Contacts that were ever created in your :product[MCE] instance are still there, even if they are no longer synchronized.
 
 ### SF_Account
 
@@ -136,12 +137,12 @@ Check your integration setup, fix it to leverage a Person Contact ID, and clean 
 `SF_Lead` will show you how many Subscriber Keys are in the format of Salesforce Lead IDs (start with '00Q' and are 18 characters long). Similar to `SF_Contact`, you should check that number against your Synchronized Data Extension(s) for Lead Object:
 
 1. If the number is matching and makes sense volume-wise - all good here.
-2. If the number is matching, but is very high - you might check whether you truly need all those Leads in your MCE instance, and consider [filtering out](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#manage-the-data) those that do not support your marketing use cases.
-3. If the number is higher in the `SF_Lead` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx) in place, which means that all the Leads that were ever created in your MCE instance are still there, even if they are no longer synchronized.
+2. If the number is matching, but is very high - you might check whether you truly need all those Leads in your :product[MCE] instance, and consider [filtering out](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#manage-the-data) those that do not support your marketing use cases.
+3. If the number is higher in the `SF_Lead` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx) in place, which means that all the Leads that were ever created in your :product[MCE] instance are still there, even if they are no longer synchronized.
 
 :::note
 
-Special points here for checking how are you managing Lead-to-Contact transition in Salesforce CRM and how it should be reflected in your MCE instance. You can open the following query to check how the post-conversion clean-up of Leads look like in your All Contacts list:
+Special points here for checking how are you managing Lead-to-Contact transition in Salesforce CRM and how it should be reflected in your :product[MCE] instance. You can open the following query to check how the post-conversion clean-up of Leads look like in your All Contacts list:
 
 ```sql
 SELECT
@@ -162,7 +163,7 @@ GROUP BY
 
 `SF_User` will show you how many Subscriber Keys are in the format of Salesforce User IDs (start with '005' and are 18 characters long). Unless you have a very specific use case around personalizing or impersonating your emails with Salesforce User information, you do not need any of those in your All Contacts list.
 
-A simple way to manage it is to [add a checkbox on your User object](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#manage-the-data) to identify which (if any) Users should be synced to MCE, and then update your integration to only sync those that are relevant for marketing purposes. Then you can clean up the rest of the records from your All Contacts list.
+A simple way to manage it is to [add a checkbox on your User object](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx#manage-the-data) to identify which (if any) Users should be synced to :product[MCE], and then update your integration to only sync those that are relevant for marketing purposes. Then you can clean up the rest of the records from your All Contacts list.
 
 ### Email_Format
 
@@ -172,7 +173,7 @@ If you are using Salesforce CRM, you shouldn't have any of those, as you should 
 
 If you are not using Salesforce CRM, you still shouldn't have any of those, as using email address as Subscriber Key is not a good practice due to potential issues with duplicates, data quality, and compliance. Not only some people change email addresses over time, but - especially in B2B - they might share email addresses. It also can create compliance issues as email address may be a PII and then you need to make sure you can on one hand remove it when Right to be Forgotten is requested, but on the other hand preserve information that you performed that action for a given subscriber.
 
-Proper Subscriber Keys are better and using email address for it in most cases means that someone is manually adding purchased or scraped email lists to Marketing Cloud Engagement. And in most of the civilised world this is not something you want to do.
+Proper Subscriber Keys are better and using email address for it in most cases means that someone is manually adding purchased or scraped email lists to :product[Marketing Cloud Engagement]. And in most of the civilised world this is not something you want to do.
 
 In short: if there are none, celebrate. If there are some, check how they got there by opening All Contacts in Contact Builder, searching for example email address and looking at the Source and Modified column. Fix the process, clean up mess.
 
@@ -202,9 +203,9 @@ P.S. If you are running it from Parent BU, you won't need [`Ent.` prefix](/docs/
 
 `MobileConnect_Format` will show you how many Subscriber Keys are in the format of mobile numbers (contain only digits and are at least 7 characters long).
 
-Similarly to `Email_Format`, in most cases you don't want to have such Subscriber Keys in your All Contacts list, however it is a bit more complex than with email addresses. That is because apart from manual data imports (that you shouldn't want - at least with mobile number as a Subscriber Key), the Marketing Cloud Engagement is also creating such records by itself when people not yet in your All Contacts engage with your SMS keywords.
+Similarly to `Email_Format`, in most cases you don't want to have such Subscriber Keys in your All Contacts list, however it is a bit more complex than with email addresses. That is because apart from manual data imports (that you shouldn't want - at least with mobile number as a Subscriber Key), the :product[Marketing Cloud Engagement] is also creating such records by itself when people not yet in your All Contacts engage with your SMS keywords.
 
-If you see such records in your system, check whether you are using SMS keywords and how are you managing the contacts that got created through them. You should have an automation that creates them in your Database of Records (be it Salesforce CRM or external system) and then syncs back to MCE with proper Subscriber Keys. If you don't have such process in place, you will see inflated Contact numbers and duplicates split between various channels.
+If you see such records in your system, check whether you are using SMS keywords and how are you managing the contacts that got created through them. You should have an automation that creates them in your Database of Records (be it Salesforce CRM or external system) and then syncs back to :product[MCE] with proper Subscriber Keys. If you don't have such process in place, you will see inflated Contact numbers and duplicates split between various channels.
 
 :::note You Should Know
 

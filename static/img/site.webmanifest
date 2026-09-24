@@ -1,6 +1,8 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Mateusz Dąbrowski",
+    "short_name": "MD",
+    "description": "Salesforce Marketing Cloud docs, snippets and apps by Mateusz Dąbrowski.",
+    "start_url": "/",
     "icons": [
         {
             "src": "android-chrome-192x192.png",
@@ -13,7 +15,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#212121",
+    "background_color": "#212121",
     "display": "standalone"
 }

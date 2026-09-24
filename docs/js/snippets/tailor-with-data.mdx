@@ -4,7 +4,7 @@ title: Tailor the experience with data logic
 sidebar_label: Tailor with Data
 description: Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Utilise the power of simple data logic and control the user flows.
 image: img/og/og-image-tailor-with-data.png
-tags: [Marketing Cloud Engagement, Eloqua, JavaScript, Personalisation, Cloud Page]
+tags: [Marketing Cloud Engagement, Eloqua, JavaScript, Personalisation, Cloud Page, Snippet]
 ---
 
 import Tabs from '@theme/Tabs';
@@ -22,7 +22,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 ## Leverage the data
 
-Most Marketing Automation tools allow you to use the contact and account data for personalisation. Are you inserting a user-specific value from a data model to landing page or email? Creating custom content tailored to the user? Easy and simple. [Eloqua](https://www.oracle.com/marketingcloud/products/marketing-automation/ "Oracle Eloqua Marketing Automation Platform")'s [Field Merges](https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCAA/Help/FieldMerges/FieldMerges.htm "Field Merge Documentation") or [Marketing Cloud](https://www.salesforce.com/eu/products/marketing-cloud/overview/ "Salesforce Marketing Cloud Platform")'s personalisation strings. But you can do so much more!
+Most Marketing Automation tools allow you to use the contact and account data for personalisation. Are you inserting a user-specific value from a data model to landing page or email? Creating custom content tailored to the user? Easy and simple. [Eloqua](https://www.oracle.com/marketingcloud/products/marketing-automation/ "Oracle Eloqua Marketing Automation Platform")'s [Field Merges](https://docs.oracle.com/cloud/latest/marketingcs_gs/OMCAA/Help/FieldMerges/FieldMerges.htm "Field Merge Documentation") or [:product[Marketing Cloud]{of=mce bare}](https://www.salesforce.com/eu/products/marketing-cloud/overview/ "Salesforce Marketing Cloud Platform")'s personalisation strings. But you can do so much more!
 
 ### Change the structure of the landing page
 Part of your subscription centre should be visible only to your clients? Instead of creating and managing two separate pages, you can use personalisation to check whether the visitor has any license and unhide product-related data & subscription section.
@@ -47,7 +47,7 @@ Time to create a script that will solve the problems mentioned above. Firstly, y
 >
 <TabItem value='sfmc'>
 
-For Marketing Cloud, the easiest way is to use the personalisation string. The code is straightforward:
+For :product[Marketing Cloud]{of=mce}, the easiest way is to use the personalisation string. The code is straightforward:
 
 ```html
 <ctrl:field name=ProfileAttributeName />
@@ -263,7 +263,7 @@ Want to be sure only recognised users will enter your subscription centre?
 >
 <TabItem value='sfmc'>
 
-Add email address or contact key personalisation. If it is empty, it means Marketing Cloud did not recognise this user. JavaScript can automatically redirect him to your subscription centre entry form that will take care of authorization.
+Add email address or contact key personalisation. If it is empty, it means :product[Marketing Cloud]{of=mce} did not recognise this user. JavaScript can automatically redirect him to your subscription centre entry form that will take care of authorization.
 
 ```js
  if ('<ctrl:field name="Email Address" />' == '') {

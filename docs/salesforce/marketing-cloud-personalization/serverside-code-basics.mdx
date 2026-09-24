@@ -4,7 +4,8 @@ title: MCP Serverside Code Basics
 sidebar_label: Serverside Code Basics
 description: "Wrap your head around the core feature of Marketing Cloud Personalization (Interaction Studio) and build the bridge between marketer and customer."
 image: img/og/og-image-sf-mcp-serverside-code-basics.png
-tags: [Salesforce, Marketing Cloud Personalization, Personalization, Interaction Studio, Personalisation, TypeScript]
+tags: [Marketing Cloud Personalization, Personalisation, TypeScript]
+
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
@@ -18,7 +19,7 @@ import templateUi from '/static/img/article/article-image-is-serverside-template
 
 ## MCP Serverside Code Purpose
 
-Whether you are creating a Web, Serverside or Triggered Campaign Template in the Marketing Cloud Personalization (Interaction Studio), you start with the Serverside Code tab. It is the true heart of the MCP platform responsible for delivering data-driven personalisations.
+Whether you are creating a Web, Serverside or Triggered Campaign Template in the :product[Marketing Cloud Personalization], you start with the Serverside Code tab. It is the true heart of the :product[MCP] platform responsible for delivering data-driven personalisations.
 
 The developer can use the Serverside Code to:
 
@@ -43,7 +44,7 @@ Open Time Email Campaigns are using different, older system. I covered its detai
 
 :::
 
-When you open the Serverside Code tab in a new Template creation screen for Web, Serverside or Triggered Campaign within the Marketing Cloud Personalization, you will be greeted by a bit intimidating interface. Let's start by breaking it down section by section:
+When you open the Serverside Code tab in a new Template creation screen for Web, Serverside or Triggered Campaign within the :product[Marketing Cloud Personalization], you will be greeted by a bit intimidating interface. Let's start by breaking it down section by section:
 
 <Image img={templateUi} alt='Marketing Cloud Personalization Serverside Template UI screenshot'/>
 
@@ -60,7 +61,7 @@ The final outcome of your work in this tab is the personalised payload (5). Depe
 
 If you don't see `experience` or `campaign` in the payload object (5), it means there is a bug in your template code (1).
 
-If you don't see the configuration form preview (3) updates despite making changes in the serverside code (1), MCP probably froze. Check whether you are still logged in to the MC Personalization (MCP session length is shorter than MCE's). If yes, cut (`ctrl`/`cmd` + `x`) your whole serverside code, provide any symbol (like `a`) to overwrite the cache and replace it back by pasting the code (`ctrl`/`cmd` + `v`).
+If you don't see the configuration form preview (3) updates despite making changes in the serverside code (1), :product[MCP] probably froze. Check whether you are still logged in to the MC Personalization (:product[MCP] session length is shorter than :product[MCE]{bare}'s). If yes, cut (`ctrl`/`cmd` + `x`) your whole serverside code, provide any symbol (like `a`) to overwrite the cache and replace it back by pasting the code (`ctrl`/`cmd` + `v`).
 
 :::
 
@@ -104,7 +105,7 @@ export class NewTemplate implements CampaignTemplateComponent {
 
 ### 1. Field Configuration
 
-The field configuration lets you add properties that will become part of the campaign configuration form used by marketers to set the experiences. It is the primary data input; MCP will directly pass all properties you add here to the campaign response.
+The field configuration lets you add properties that will become part of the campaign configuration form used by marketers to set the experiences. It is the primary data input; :product[MCP] will directly pass all properties you add here to the campaign response.
 
 <Button
     link='/docs/salesforce/marketing-cloud-personalization/serverside-code-properties/'
@@ -122,7 +123,7 @@ Return statement within the run block lets you add custom properties to the fina
 
 :::note You Should Know
 
-The run block execution works differently during the template creation and campaign configuration. When the marketer configures the campaign, MCP applies the changes executed within the run in real time - this may lead to content changes or even the removal of field input. You shouldn't transform the data in the fields directly but rather do it on new variables:
+The run block execution works differently during the template creation and campaign configuration. When the marketer configures the campaign, :product[MCP] applies the changes executed within the run in real time - this may lead to content changes or even the removal of field input. You shouldn't transform the data in the fields directly but rather do it on new variables:
 
 ```ts {8,10} title= "Transform field values using the new variable"
 export class PersonalizedOverlay implements CampaignTemplateComponent {
@@ -145,7 +146,7 @@ Keep this in mind when you have to provide a payload according to a specificatio
 
 :::
 
-With the basics of Serverside Code processing, you are ready to start coding. Next step - build MCP Campaign Template inputs with [Serverside Code Properties](/docs/salesforce/marketing-cloud-personalization/serverside-code-properties/).
+With the basics of Serverside Code processing, you are ready to start coding. Next step - build :product[MCP] Campaign Template inputs with [Serverside Code Properties](/docs/salesforce/marketing-cloud-personalization/serverside-code-properties/).
 
 ---
 
@@ -157,11 +158,11 @@ With the basics of Serverside Code processing, you are ready to start coding. Ne
 
 ## Learn more
 
-Here, I want to share a few of my favourite sources focusing on MCP Serverside Code and its use in Campaign Templates:
+Here, I want to share a few of my favourite sources focusing on :product[MCP] Serverside Code and its use in Campaign Templates:
 
-1. My [MCP Campaign Templates and code snippets](/docs/category/salesforce/marketing-cloud-personalization/snippets/)
+1. My [:product[MCP] Campaign Templates and code snippets](/docs/category/salesforce/marketing-cloud-personalization/snippets/)
 2. My [GitHub repository](https://github.com/MateuszDabrowski/mcp-campaign-templates) with Global and Custom Templates
 3. Christoper's Long [GitHub repository](https://github.com/christopher-longSFDC/mcp/) with Complex Templates
 4. Salesforce Japan [Template Catalog](https://is-template-guide.herokuapp.com/en/) with Web Campaigns
 
-Found other inspiring MCP Serverside Code examples? Let me know!
+Found other inspiring :product[MCP] Serverside Code examples? Let me know!

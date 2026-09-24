@@ -1,0 +1,136 @@
+# Allowed tags for the docs. Keys are the labels used in front matter, so tag
+# URLs stay kebab-case of the label (/docs/tags/amp-script/). A tag missing
+# here triggers a build warning (onInlineTags: 'warn'). Old product names go in
+# the description, not in a second tag.
+
+AgentExchange:
+  label: "AgentExchange"
+  description: "Salesforce AgentExchange, formerly AppExchange: ready-made apps for Marketing Cloud and when to build your own."
+
+AMPScript:
+  label: "AMPScript"
+  description: "AMPScript, the Marketing Cloud Engagement scripting language for emails, Cloud Pages and SMS: style, performance and use inside SSJS."
+
+Analytics:
+  label: "Analytics"
+  description: "Tracking and reporting data about sends, engagement and platform usage."
+
+API:
+  label: "API"
+  description: "Marketing Cloud APIs and their limits, used from Code Resources, Cloud Pages and scripts."
+
+App:
+  label: "App"
+  description: "Custom apps built on Marketing Cloud and ready-made apps from AgentExchange."
+
+Best Practice:
+  label: "Best Practice"
+  description: "Recommended ways to build, code and run Marketing Cloud, with the reasons behind them."
+
+Business Units:
+  label: "Business Units"
+  description: "Business Units in Marketing Cloud Engagement and Marketing Cloud Next: structure, data separation and when to add more."
+
+Cloud Page:
+  label: "Cloud Page"
+  description: "Marketing Cloud Engagement Cloud Pages and Code Resources: landing pages, forms and custom apps built with SSJS, AMPScript and JavaScript."
+
+CRM:
+  label: "CRM"
+  description: "Salesforce CRM data in Marketing Cloud through Marketing Cloud Connect."
+
+Data 360:
+  label: "Data 360"
+  description: "Salesforce Data 360, formerly Data Cloud: the data platform Marketing Cloud Next reads its data from."
+
+Data Extensions:
+  label: "Data Extensions"
+  description: "Marketing Cloud Engagement Data Extensions: structure, limits, data types and the queries that fill them."
+
+Data Management:
+  label: "Data Management"
+  description: "Keeping marketing data clean: contact deletion, catalog data quality and data checks."
+
+Debugging:
+  label: "Debugging"
+  description: "Finding and fixing errors in queries, scripts, sends and catalog data."
+
+Deliverability:
+  label: "Deliverability"
+  description: "Getting email into the inbox: IP warming, sender authentication and sending reputation."
+
+Eloqua:
+  label: "Eloqua"
+  description: "Oracle Eloqua landing pages, where these JavaScript snippets work too."
+
+Email:
+  label: "Email"
+  description: "Email sending, tracking and debugging in Marketing Cloud."
+
+Integration:
+  label: "Integration"
+  description: "Connecting Marketing Cloud with Salesforce CRM and other systems."
+
+JavaScript:
+  label: "JavaScript"
+  description: "Client-side JavaScript for landing pages, personalisation and browser tooling."
+
+Journey:
+  label: "Journey"
+  description: "Journey Builder in Marketing Cloud Engagement: entry sources, CRM data and triggered journeys."
+
+Marketing Cloud Engagement:
+  label: "Marketing Cloud Engagement"
+  description: "Salesforce Marketing Cloud Engagement (MCE), formerly Salesforce Marketing Cloud (SFMC) and ExactTarget: SQL, SSJS, AMPScript, configuration and integration guides."
+
+Marketing Cloud Next:
+  label: "Marketing Cloud Next"
+  description: "Salesforce Marketing Cloud Next (MCN), officially named Marketing Cloud, formerly Agentforce Marketing and Marketing Cloud Growth: Business Units, data model, deliverability and setup on Data 360."
+
+Marketing Cloud Personalization:
+  label: "Marketing Cloud Personalization"
+  description: "Salesforce Marketing Cloud Personalization (MCP), formerly Interaction Studio: catalog, Serverside Code templates and email personalisation."
+
+Performance:
+  label: "Performance"
+  description: "Speed and limits of scripts and platform features, with measured comparisons."
+
+Personalisation:
+  label: "Personalisation"
+  description: "Tailoring content to each person across email, web and apps with Marketing Cloud tools and custom code."
+
+Segmentation:
+  label: "Segmentation"
+  description: "Building audiences from Marketing Cloud data with Filters, SQL, AgentExchange apps and Data 360 segments."
+
+Setup:
+  label: "Setup"
+  description: "Configuration done in Salesforce Setup and product settings, and the limits that shape it: Business Units, roles, features, integrations, sender settings and licence limits."
+
+SMS:
+  label: "SMS"
+  description: "SMS in Marketing Cloud Engagement: MobileConnect data, phone number changes and SMS Data Views."
+
+Snippet:
+  label: "Snippet"
+  description: "Ready-to-use code to copy and adapt: SQL queries, SSJS and AMPScript scripts, JavaScript and Serverside Code templates."
+
+SQL:
+  label: "SQL"
+  description: "SQL for Marketing Cloud Engagement Query Activities and Query Studio: syntax, functions, style and ready-to-use queries."
+
+SSJS:
+  label: "SSJS"
+  description: "Server-Side JavaScript in Marketing Cloud Engagement: syntax, debugging, performance and script templates for Cloud Pages, Code Resources and Automations."
+
+Style Guide:
+  label: "Style Guide"
+  description: "Formatting and naming rules for readable SQL, SSJS and AMPScript."
+
+TypeScript:
+  label: "TypeScript"
+  description: "TypeScript Serverside Code for Marketing Cloud Personalization templates."
+
+Webinar:
+  label: "Webinar"
+  description: "Recorded sessions with slides, summaries and code."

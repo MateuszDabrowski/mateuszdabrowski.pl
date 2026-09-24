@@ -3,8 +3,9 @@ id: export-import-document-sfmc-roles
 title: Export, Import & Document MCE Roles
 sidebar_label: Export, Import & Document MCE Roles
 description: Backup, clone, and move cross-account the Marketing Cloud Engagement roles. In seconds.
-image: img/og/og-image-sf-mce-export-import-documents-roles.png
-tags: [JavaScript, Salesforce, Marketing Cloud Engagement, Marketing Automation, Configuration, Users, Setup]
+image: img/og/og-image-sf-mce-export-import-document-roles.png
+tags: [JavaScript, Marketing Cloud Engagement, Setup]
+
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
@@ -12,17 +13,17 @@ import { Button } from '/src/components/Buttons.js';
 
 <LeadText content="Backup, clone, and move cross-account the Marketing Cloud Engagement roles. In seconds." />
 
-While you get a set of standard user Roles in Marketing Cloud Engagement, those are rarely enough. Instead, they are the base on which you can create custom-tailored solutions that align with your business architecture.
+While you get a set of standard user Roles in :product[Marketing Cloud Engagement], those are rarely enough. Instead, they are the base on which you can create custom-tailored solutions that align with your business architecture.
 
 :::note You Should Know
 
-The best way to work with Roles and Permissions in Marketing Cloud Engagement is to leverage standard roles and build on top of them with custom permissions/roles.
+The best way to work with Roles and Permissions in :product[Marketing Cloud Engagement] is to leverage standard roles and build on top of them with custom permissions/roles.
 
 :::
 
 On top of that, standard Roles are silently changing from release to release as permissions come and go, so keeping track of them is crucial to have a clear picture of what your users can do.
 
-Marketing Cloud Engagement doesn't make it easy. There is no option to clone existing Roles to serve as a starting point for a new custom one. There is no option to export and import them between MCE accounts. There is no option to create good documentation on them (unless you have a kink for super long print screens).
+:product[Marketing Cloud Engagement] doesn't make it easy. There is no option to clone existing Roles to serve as a starting point for a new custom one. There is no option to export and import them between :product[MCE] accounts. There is no option to create good documentation on them (unless you have a kink for super long print screens).
 
 Here comes JavaScript and [Document Object Model (DOM)](/docs/js/js-dom.mdx) to unlock all those scenarios.
 
@@ -32,7 +33,7 @@ Fear not - you don't have to be a developer to leverage it. I will describe ever
 
 When working with multiple roles or overlapping permissions, be sure to check what is the outcome on the user.
 
-Marketing Cloud Engagement goes with the most restrictive resulting permission possible:
+:product[Marketing Cloud Engagement] goes with the most restrictive resulting permission possible:
 
 1. If at least one permission (role-based or individual) is set to Deny - the user will __not__ be able to use the feature.
 2. If there is neither Allow nor Deny permission - the user will __not__ be able to use the feature.
@@ -44,9 +45,9 @@ You can check the outcome by going to Setup > Users > Users > clicking checkbox 
 
 ## Where the magic happens
 
-To start using those MCE Role-related, [DOM](/docs/js/js-dom.mdx)-fueled solutions:
+To start using those :product[MCE] Role-related, [DOM](/docs/js/js-dom.mdx)-fueled solutions:
 
-1. Go to MCE Setup » Users » Roles.
+1. Go to :product[MCE] Setup » Users » Roles.
 2. Click on the name of the Role you want to work with.
 3. Click the `expand all` Button to see the whole permission tree for the Role.
 4. Right-click any permission name within that tree and select `Inspect Element`.
@@ -75,7 +76,7 @@ I created a JavaScript snippet that will [loop](/docs/js/js-loops.mdx) through a
 - Capture the state of Allow and Deny (as a boolean).
 - Output it to the Console as a single long CSV text.
 
-To use it, go to the Role in Marketing Cloud Engagement setup and:
+To use it, go to the Role in :product[Marketing Cloud Engagement] setup and:
 
 ### Export MCE Role
 
@@ -154,7 +155,7 @@ Export to documentation done.
 
 ### Import MCE Role
 
-Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different MCE account).
+Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different :product[MCE] account).
 
 [Access the Console](#where-the-magic-happens) and paste the below code - be sure to update `const csvData` with your CSV output from the export script:
 
@@ -252,7 +253,7 @@ importMergedV2Console(csvData);
 
 It will [loop](/docs/js/js-loops.mdx) through all the saved checkboxes and update their state to the one from your export.
 
-If some new checkboxes don't exist in the export (for example, you did your export before an MCE Release that added some new permissions), those new ones will stay unchanged. If some names were updated or removed - you will get informaton about that in the Console along with the full path to those permissions.
+If some new checkboxes don't exist in the export (for example, you did your export before an :product[MCE] Release that added some new permissions), those new ones will stay unchanged. If some names were updated or removed - you will get informaton about that in the Console along with the full path to those permissions.
 
 That's it. You cloned a Role.
 
@@ -276,7 +277,7 @@ Click enter to run it and save the output text (either by highlighting and copy-
 
 ### [Legacy] Import MCE Role
 
-Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different MCE account).
+Once you have your Role export saved, go to the new Role. It can be either an existing Role you want to overwrite or a new Role (in the same or different :product[MCE] account).
 
 [Access the Console](#where-the-magic-happens) and paste the below code:
 
@@ -293,7 +294,7 @@ Change the `{}` in the first line with the export text you saved and click enter
 
 ## Backup of Standard Roles
 
-As the default System Roles permissions in Marketing Cloud Engagement can be edited freely and [currently there is no easy way to revert those changes](/docs/salesforce/marketing-cloud-engagement/ideas/#restore-default-permissions-for-mce-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
+As the default System Roles permissions in :product[Marketing Cloud Engagement] can be edited freely and [currently there is no easy way to revert those changes](/docs/salesforce/marketing-cloud-engagement/ideas/#restore-default-permissions-for-mce-standard-system-roles), I created a backup repository for you with all out-of-the-box configurations.
 
 <Button
  link='https://github.com/MateuszDabrowski/SFMC-roles-backup'

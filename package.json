@@ -1,12 +1,13 @@
 {
   "name": "md",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "start": "sleep 2 && open -a Safari http://localhost:3000 & docusaurus start --no-open",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy"
+    "deploy": "docusaurus deploy",
+    "mark-products": "node plugins/product-names/mark.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.1",

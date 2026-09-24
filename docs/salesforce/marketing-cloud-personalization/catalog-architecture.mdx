@@ -4,7 +4,7 @@ title: MCP Catalog Architecture
 sidebar_label: Catalog Architecture
 description: Marketing Cloud Personalization (Interaction Studio) Catalog Objects architecture, data ingestion, limitations, tricks and tips. Build right from the start.
 image: img/og/og-image-sf-mcp-catalog-architecture.png
-tags: [Salesforce, Marketing Cloud Personalization, Personalization, Interaction Studio, Setup, Data Management]
+tags: [Marketing Cloud Personalization, Personalisation, Setup, Data Management]
 toc_max_heading_level: 4
 ---
 
@@ -14,7 +14,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 ## Catalog Basics & Limitations
 
-The purpose of the Marketing Cloud Personalization (Interaction Studio) Catalog is to store your asset data along with interconnecting relationships for personalisation and machine learning purposes.
+The purpose of the :product[Marketing Cloud Personalization] Catalog is to store your asset data along with interconnecting relationships for personalisation and machine learning purposes.
 
 There are five out-of-the-box objects: Products, Articles, Blog Posts, Categories and Promotions. You can also create **up to 25 custom** Catalog Objects.
 
@@ -24,7 +24,7 @@ All of the above can be stitched together using prebuilt and custom relationship
 
 With **up to 2 000 000 Items per Catalog** and **up to 10 000 000 Items in total** across all Catalogs, MC Personalization provides a lot of flexibility to architect a Catalog of your dreams.
 
-However, some quirks and features require more consideration to make the most out of MCP capabilities. Especially as some wrong moves can be tough to reverse. Let's dive in.
+However, some quirks and features require more consideration to make the most out of :product[MCP] capabilities. Especially as some wrong moves can be tough to reverse. Let's dive in.
 
 ## Catalog Data Sources
 
@@ -38,7 +38,7 @@ So which one should you use - Sitemap or ETL?
 
 ### Why not both?
 
-Mixing both sources is very tempting as it sounds like the best of both worlds. Unfortunately, it is not recommended approach due to MCP's backend limitations. Sending the same Items through both channels impacts performance, creates concurrency and can lead to incorrect and not-so-easy-to-fix issues with your Catalog.
+Mixing both sources is very tempting as it sounds like the best of both worlds. Unfortunately, it is not recommended approach due to :product[MCP]'s backend limitations. Sending the same Items through both channels impacts performance, creates concurrency and can lead to incorrect and not-so-easy-to-fix issues with your Catalog.
 
 For example, if you control the Exclusion and Eligibility of the Products using Sitemap and the `promotable` attribute, the ETL won't be able to overwrite it (despite officially having higher priority as a data source). It can quickly lead to considerable discrepancies in Product availability for recommendations. Due to that, I recommend enabling Strict Catalog Security setting to protect your Catalog integrity if you are using ETL.
 
@@ -76,7 +76,7 @@ Pros:
 - Much more lean and performant Sitemap.
 
 Cons:
-- Require you to export data in a particularly formatted .csv to MCP SFTP.
+- Require you to export data in a particularly formatted .csv to :product[MCP] SFTP.
 - Not real-time (but every 15 minutes is pretty damn close, come on!).
 - Doesn't support [drill-down Category hierarchy](/docs/salesforce/marketing-cloud-personalization/ideas#full-mcp-category-hierarchy-support-for-etl) in the UI<sup>[*](#category-catalog-unique-attributes)</sup>.
 
@@ -90,7 +90,7 @@ For example, due to swift changes in the price based on demand. Or due to having
 
 2. You cannot schedule a correctly prepared .csv file to MC Personalization SFTP.
 
-In most cases, your systems already use flat files and FTPs for communication, and you can extend the architecture to cover MCP. If not, many tools can help you transform your data cleanly into a nice .csv and add it to Marketing Cloud Personalization Feed with the correct naming convention. You can even leverage Marketing Cloud Engagement's Automation Studio to prepare and deliver the files in the proper format! But sometimes data is just not there - and then, ETL is a no-go.
+In most cases, your systems already use flat files and FTPs for communication, and you can extend the architecture to cover :product[MCP]. If not, many tools can help you transform your data cleanly into a nice .csv and add it to :product[Marketing Cloud Personalization] Feed with the correct naming convention. You can even leverage :product[Marketing Cloud Engagement]{bare}'s Automation Studio to prepare and deliver the files in the proper format! But sometimes data is just not there - and then, ETL is a no-go.
 
 While you can begin with Sitemap and then migrate to the ETL approach, the transitory period may be problematic due to issues described in the [Why not both?](#why-not-both) section above. I recommend finding a workaround and starting with the better option.
 
@@ -118,6 +118,8 @@ graph TB
  classDef check fill:#f6b355,color:#ffffff
  classDef process fill:#333333,color:#ffffff
 ```
+
+*Diagram: choose the Sitemap if ETL updates every 15 minutes are too slow or you cannot schedule a .csv export to :product[MCP] SFTP, and choose ETL otherwise.*
 
 Once you know how to populate the MC Personalization Catalog, it's time to decide what you will be filling in.
 
@@ -167,9 +169,9 @@ Archived | Boolean | Marks whether Item should be Archived | Archived Items are 
 
 :::note You Should Know
 
-Published and Expiration fields (as all Interaction Studio date type fields) use ISO-8601 datetime format. You must pass them as `2022-04-12T10:23:37Z`.
+Published and Expiration fields (as all :product[Interaction Studio]{as-written} date type fields) use ISO-8601 datetime format. You must pass them as `2022-04-12T10:23:37Z`.
 
-If you want to push a datetime to MCP using [ETL](#2-mc-personalization-with-etl), you can prepare the data with SQL using clean [FORMAT](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking MCE Data Extension).
+If you want to push a datetime to :product[MCP] using [ETL](#2-mc-personalization-with-etl), you can prepare the data with SQL using clean [FORMAT](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#format-with-dates): `FORMAT(YourDateField,'yyyy-MM-ddTHH:mm:ssZ')` and output it to a String field type (Text, if we are talking :product[MCE]{bare} Data Extension).
 
 :::
 
@@ -183,7 +185,7 @@ Promotion-related attributes are crucial for controlling what MC Personalization
 
 Archiving does not delete Items (there is no such option in MC Personalization). It only hides them from the Catalog UI while preserving all its values. It has two significant ramifications:
 
-1. Marketing Cloud Personalization still uses archived Items for the personalisation engine - especially as anchors for recommendations. For example, a campaign promoting Similar Items to the Item currently viewed will work on the archvied Item page (and leverage all its metadata). If you want to avoid it, clean all attributes and relationships before archiving.
+1. :product[Marketing Cloud Personalization] still uses archived Items for the personalisation engine - especially as anchors for recommendations. For example, a campaign promoting Similar Items to the Item currently viewed will work on the archvied Item page (and leverage all its metadata). If you want to avoid it, clean all attributes and relationships before archiving.
 2. You can't easily find archived items to make any changes or unarchive them. Find partial workarounds in the [Tips & Tricks section](#view-archived-items-in-the-mcp-catalog).
 
 :::
@@ -220,7 +222,7 @@ Is Department | Boolean | Marks root (top-level) Category | Used in Einstein Rec
 Dedicated Category Catalog attributes focus on the hierarchical relationship between the Categories. This area is a bit of a mess in the MC Personalization because it works differently depending on whether you use [ETL](#2-mc-personalization-with-etl) or [Sitemap](#1-mc-personalization-with-sitemap).
 
 1. **Sitemap-based hierarchy** is using the [basic ID attribute](#basic-catalog-attributes). It expects pipe-delimited IDs providing a full hierarchy path, so `Electronics` (single ID) for root Category, `Electronics|Computers` (two IDs pipe-delimited) for first-level child Category and so on for further levels (it can get quite long for deeper structures: `Electronics|Computers|Laptops|Ultrabooks`). It will unlock the visual hierarchy with tracking data rollups in the Category Catalog UI.
-2. **ETL-based hierarchy** uses the ID Path and Is Department attributes unique to Category Catalog. Each Category has a single ID, passes a single Parent ID (if it has a parent) or Is Department as True (if it doesn't have a parent) and based on the above, MCP generates the ID Path. It's cleaner, but it won't provide the nice visual hierarchy with tracking data rollups in the Category Catalog UI as the Sitemap option offers. I created an [Idea to fix that](/docs/salesforce/marketing-cloud-personalization/ideas#full-mcp-category-hierarchy-support-for-etl).
+2. **ETL-based hierarchy** uses the ID Path and Is Department attributes unique to Category Catalog. Each Category has a single ID, passes a single Parent ID (if it has a parent) or Is Department as True (if it doesn't have a parent) and based on the above, :product[MCP] generates the ID Path. It's cleaner, but it won't provide the nice visual hierarchy with tracking data rollups in the Category Catalog UI as the Sitemap option offers. I created an [Idea to fix that](/docs/salesforce/marketing-cloud-personalization/ideas#full-mcp-category-hierarchy-support-for-etl).
 
 :::note You Should Know
 
@@ -246,7 +248,7 @@ Let's start with the basics. You can create (up to 25) custom Catalog Objects th
 
 :::note You Should Know
 
-Depending on where you look in the Marketing Cloud Personalization, you might still see "Dimensions" - an old name for related Catalog Objects.
+Depending on where you look in the :product[Marketing Cloud Personalization], you might still see "Dimensions" - an old name for related Catalog Objects.
 
 :::
 
@@ -288,7 +290,7 @@ Unfortunately, you will have to use those hardcoded IDs for populating data via 
 
 ## Catalog Tips & Tricks
 
-There are some gotchas you can encounter when working with MCP Catalog. Here I gathered solutions to frequent problems and some undocumented tricks that can make your life easier.
+There are some gotchas you can encounter when working with :product[MCP] Catalog. Here I gathered solutions to frequent problems and some undocumented tricks that can make your life easier.
 
 ### When MCP recommends an Item?
 
@@ -352,6 +354,8 @@ graph TB
  classDef check fill:#f6b355,color:#ffffff
 ```
 
+*Diagram: an Item gets recommended when it is unarchived, eligible, published, unexpired and has a Name and URL, and a Product also needs an Image, a Price and Inventory.*
+
 ### Items missing in MCP Catalog
 
 If you cannot find an Item in the Catalog UI, there are three possible options:
@@ -366,7 +370,7 @@ If you cannot find an Item in the Catalog UI, there are three possible options:
 If Items are not [missing in the MCP Catalog](#items-missing-in-mcp-catalog), but you don't see the data you expect, there are three options:
 
 1. **You have Strict Catalog Security enabled** - In Personalization » Settings » Catalog and Profile Objects » Catalog Settings » Security section » Strict Catalog Security option. If it is checked and you use Sitemap, only the Item ID will be added to the Catalog. It is a security feature that protects the integrity of your data, but you should use it only if you are using [ETL](#2-mc-personalization-with-etl) to populate the Catalog metadata. You should uncheck if you use [Sitemap](#1-mc-personalization-with-sitemap) to build Catalog.
-2. **You send item localization with the Catalog Localization switched off** - In Personalization » Settings » Catalog and Profile Objects » Catalog Settings » Locale section » Localization of Catalog Metadata Based on Page Locale option. If it is unchecked, but you push locale along with Item data, it will be ignored by MCP. Either remove the locale information or enable that option.
+2. **You send item localization with the Catalog Localization switched off** - In Personalization » Settings » Catalog and Profile Objects » Catalog Settings » Locale section » Localization of Catalog Metadata Based on Page Locale option. If it is unchecked, but you push locale along with Item data, it will be ignored by :product[MCP]. Either remove the locale information or enable that option.
 3. **You have a bug in the Sitemap** - Use Visual Editor from the Salesforce Interactions browser extension and execute Sitemap in it on the Item page. Check the left pane to see if the data is populated there. If not - you must fix the JavaScript that captures that data from the website.
 4. **You have another bug in the Sitemap** - If Visual Editor shows all the data, but you still don't have it on most Items, the most probable reason is an issue with timing. Depending on how you capture Item metadata, some might not be available when the Sitemap executes on page load (but is ready when you launch the browser extension). Add a `console.log` to see whether the data is ready when needed, and leverage JS promises to solve the issue.
 
@@ -392,13 +396,13 @@ id,categories,attribute:name,attribute:url,attribute:imageUrl,attribute:descript
 fullDataPlease,,,,,,,,,,,,,,,,,,,,,
 ```
 
-2. Upload that file to the testing folder on the Marketing Cloud Personalization SFTP
+2. Upload that file to the testing folder on the :product[Marketing Cloud Personalization] SFTP
 3. In MC Personalization UI, go to Feeds » Feeds Dashboard » Select the right ETL (all custom Catalog Objects are using CatalogObjectETL) and click Validate or Execute button at the top.
 4. Click Select File » Double click the Testing folder » Select your .csv file. In the File Data section, you should see all the columns you have passed and all the items with only the ID column filled in.
 5. Click Run Test in the bottom left and wait for it to complete. It might take some time for bigger loads. Do **NOT** click the Commit button once it is ready.
 6. Click the Export `{Something}` button in the bottom right - the download will start for the stagedObjects file.
 7. Open it, and you will see three key row types: labels in the first row and then rows starting with either Original or Change value. You don't need any of the Change ones. Filter them out with the tool of your choice. I like to do it in VSCode with `^Change.*(\n|)` regex replacement to nothing.
-8. Here you have it; the full MCP Catalog exported to a .csv file. Two notes: fields you pushed with the `relatedCatalogObject` prefix will return with the `dimensions` prefix, and Multistring fields will return as Arrays instead of being pipe-delimited.
+8. Here you have it; the full :product[MCP] Catalog exported to a .csv file. Two notes: fields you pushed with the `relatedCatalogObject` prefix will return with the `dimensions` prefix, and Multistring fields will return as Arrays instead of being pipe-delimited.
 
 That's dirty, but there is currently no other option for that. I created an [Idea to change that](/docs/salesforce/marketing-cloud-personalization/ideas#full-mcp-catalog-export).
 

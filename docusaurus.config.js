@@ -12,6 +12,19 @@ module.exports = {
     baseUrl: '/',
     trailingSlash: true,
     favicon: 'img/favicon.ico',
+    // Icons for every page. They used to sit in the homepage <Head> only, so
+    // a doc added to a phone home screen got a screenshot instead of the logo.
+    headTags: [
+        { tagName: 'link', attributes: { rel: 'icon', type: 'image/png', sizes: '196x196', href: '/img/favicon_196.png' } },
+        { tagName: 'link', attributes: { rel: 'icon', type: 'image/png', sizes: '167x167', href: '/img/favicon_167.png' } },
+        { tagName: 'link', attributes: { rel: 'icon', type: 'image/png', sizes: '128x128', href: '/img/favicon_128.png' } },
+        { tagName: 'link', attributes: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/img/favicon_32.png' } },
+        { tagName: 'link', attributes: { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/img/favicon_16.png' } },
+        { tagName: 'link', attributes: { rel: 'apple-touch-icon', sizes: '180x180', href: '/img/apple-touch-icon.png' } },
+        { tagName: 'link', attributes: { rel: 'apple-touch-icon', sizes: '152x152', href: '/img/favicon_152.png' } },
+        { tagName: 'link', attributes: { rel: 'manifest', href: '/img/site.webmanifest' } },
+        { tagName: 'link', attributes: { rel: 'mask-icon', href: '/img/safari-pinned-tab.svg', color: '#DA4E55' } },
+    ],
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
     onBrokenLinks: 'warn',
@@ -52,8 +65,10 @@ module.exports = {
     },
     themeConfig: {
         image: 'img/og/og-image-base.png', // Default image for meta tag
-        defaultMode: 'dark',
-        respectPrefersColorScheme: true,
+        colorMode: {
+            defaultMode: 'dark',
+            respectPrefersColorScheme: true,
+        },
         metadata: [
             { name: 'author', content: 'Mateusz Dąbrowski' },
             { name: 'theme-color', content: '#212121' },
@@ -75,8 +90,8 @@ module.exports = {
         navbar: {
             logo: {
                 alt: 'Mateusz Dąbrowski Logo',
-                src: 'img/logo-horizontal-light-2x.png',
-                srcDark: 'img/logo-horizontal-dark-2x.png',
+                src: 'img/logo-horizontal-light.webp',
+                srcDark: 'img/logo-horizontal-dark.webp',
             },
             items: [
                 {
@@ -335,7 +350,7 @@ module.exports = {
             appId: 'F4XVDD6BM8',
             apiKey: 'd7932184e92b94d052fab9cea784b13f',
             indexName: 'mateuszdabrowski',
-            placeholder: 'Search Docs & Snipptes',
+            placeholder: 'Search Docs & Snippets',
             contextualSearch: true,
             // No click tracking: it needs a persistent user token. Algolia's own
             // search statistics (top queries, no-result queries) do not, and stay on.
@@ -351,6 +366,8 @@ module.exports = {
                     routeBasePath: 'docs',
                     include: ['**/*.md', '**/*.mdx'],
                     sidebarPath: require.resolve('./docs/docsSidebar.js'),
+                    // :product[...] markers: current Salesforce product names (plugins/product-names).
+                    beforeDefaultRemarkPlugins: [require('./plugins/product-names').remarkProductNames],
                     showLastUpdateAuthor: true,
                     showLastUpdateTime: true,
                     editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
@@ -358,11 +375,24 @@ module.exports = {
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
                 },
+                // No blog on this site: the preset default rendered an empty /blog/ page.
+                blog: false,
                 sitemap: {
-                    changefreq: 'weekly',
-                    priority: 0.5,
-                    // Email landing pages: noindex, and not offered to crawlers either.
-                    ignorePatterns: ['/newsletter/**'],
+                    // Git date of each doc's last commit. Crawlers use it, unlike
+                    // changefreq and priority, which Google ignores.
+                    lastmod: 'date',
+                    changefreq: null,
+                    priority: null,
+                    ignorePatterns: [
+                        // Email landing pages: noindex, and not offered to crawlers either.
+                        '/newsletter/**',
+                        // Tag and search pages only list other pages.
+                        '/docs/tags/',
+                        '/docs/tags/**',
+                        '/sites/tags/',
+                        '/sites/tags/**',
+                        '/search/',
+                    ],
                 },
             },
         ],
@@ -376,6 +406,7 @@ module.exports = {
                 routeBasePath: 'sites',
                 include: ['**/*.md', '**/*.mdx'],
                 sidebarPath: require.resolve('./sites/sitesSidebar.js'),
+                beforeDefaultRemarkPlugins: [require('./plugins/product-names').remarkProductNames],
                 showLastUpdateAuthor: true,
                 showLastUpdateTime: true,
                 editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
@@ -384,7 +415,11 @@ module.exports = {
         [
             '@docusaurus/plugin-ideal-image',
             {
-                quality: 70,
+                // Serve WebP whatever the source format. 85 keeps code text in
+                // screenshots sharp at about a third of the PNG weight.
+                format: 'webp',
+                adapter: require('./plugins/ideal-image-webp-adapter'),
+                quality: 85,
                 max: 1030,      // max resized image's size.
                 min: 640,       // min resized image's size. if original is lower, use that size.
                 steps: 2,       // the max number of images generated between min and max (inclusive)
@@ -677,9 +712,115 @@ module.exports = {
                         from: ['/sites/tools/salesforce/clockforce/', '/sites/apps/salesforce/clockforce/'],
                         to:'https://clockforce.mateuszdabrowski.pl/',
                     },
+                    /* Tag cleanup (September 2026): merged tags point to the tag they joined,
+                       blanket tags to their category, one-article tags to that article. */
+                    {
+                        from: ['/docs/tags/salesforce/'],
+                        to: '/docs/category/salesforce/',
+                    },
+                    {
+                        from: ['/docs/tags/marketing-automation/'],
+                        to: '/docs/category/salesforce/marketing-cloud-engagement/',
+                    },
+                    {
+                        from: ['/docs/tags/interaction-studio/'],
+                        to: '/docs/tags/marketing-cloud-personalization/',
+                    },
+                    {
+                        from: ['/docs/tags/configuration/'],
+                        to: '/docs/tags/setup/',
+                    },
+                    {
+                        from: ['/docs/tags/app-exchange/'],
+                        to: '/docs/tags/agent-exchange/',
+                    },
+                    {
+                        from: ['/docs/tags/personalization/', '/sites/tags/personalization/'],
+                        to: '/docs/tags/personalisation/',
+                    },
+                    {
+                        from: ['/docs/tags/data-cloud/'],
+                        to: '/docs/tags/data-360/',
+                    },
+                    {
+                        from: ['/docs/tags/marketing-cloud/'],
+                        to: '/docs/tags/marketing-cloud-next/',
+                    },
+                    {
+                        from: ['/docs/tags/behavioral-triggers/', '/docs/tags/einstein/'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/',
+                    },
+                    {
+                        from: ['/docs/tags/ip-warming/', '/docs/tags/agentforce-marketing/'],
+                        to: '/docs/salesforce/marketing-cloud/config/ip-warming-deliverability/',
+                    },
+                    {
+                        from: ['/docs/tags/users/'],
+                        to: '/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles/',
+                    },
+                    {
+                        from: ['/sites/tags/salesforce/', '/sites/tags/marketing-automation/', '/sites/tags/marketing-cloud/'],
+                        to: '/sites/category/faq/',
+                    },
+                    {
+                        from: ['/sites/tags/agentforce/'],
+                        to: '/sites/newsletter/',
+                    },
+                    {
+                        from: ['/sites/tags/best-practice/'],
+                        to: '/docs/tags/best-practice/',
+                    },
+                    {
+                        from: ['/sites/tags/email/'],
+                        to: '/docs/tags/email/',
+                    },
                 ],
             },
         ],
         '@docusaurus/theme-mermaid',
+        [
+            './plugins/structured-data',
+            {
+                // Same @id as the Person markup on the About page (src/components/AboutSummary.jsx).
+                person: {
+                    id: 'https://mateuszdabrowski.pl/sites/about-me/#person',
+                    name: 'Mateusz Dąbrowski',
+                    url: 'https://mateuszdabrowski.pl/sites/about-me/',
+                },
+                license: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+                // Docs and FAQ answers are articles. The Docs & Snippets landing page lists them.
+                articlePaths: ['/docs/', '/sites/faq/'],
+                exclude: ['/docs/'],
+            },
+        ],
+        [
+            './plugins/llms-txt',
+            {
+                title: 'Mateusz Dąbrowski',
+                summary: 'Documentation, code snippets and configuration guides for Salesforce Marketing Cloud Next, Marketing Cloud Engagement (SQL, SSJS, AMPScript) and Marketing Cloud Personalization. Written by Mateusz Dąbrowski, a European Salesforce MVP and Marketing Cloud Architect.',
+                details: [
+                    'Each link below points to a markdown copy of the page. The HTML page has the same path with a trailing slash in place of ".md". All docs in one file: https://mateuszdabrowski.pl/llms-full.txt',
+                    '',
+                    'The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, credit it as "Article Title" - Mateusz Dąbrowski (https://mateuszdabrowski.pl/) - CC BY-NC-SA 4.0, and link the HTML page. Licence details: https://mateuszdabrowski.pl/sites/licence/',
+                ].join('\n'),
+                // Built from React components: the HTML is complete, a markdown copy would not be.
+                htmlOnly: ['/sites/about-me/', '/sites/newsletter/'],
+                optional: ['/sites/my-toolset/', '/sites/newsletter/', '/sites/privacy/', '/sites/licence/'],
+                links: [
+                    {
+                        section: 'Apps',
+                        title: 'Diagramforce',
+                        url: 'https://diagramforce.com',
+                        description: 'Free browser-based diagramming tool for Salesforce architects: architecture diagrams, data models, process flows and org charts with Salesforce icons.',
+                    },
+                    {
+                        section: 'Apps',
+                        title: 'Strum file format for LLMs',
+                        url: '/strum/llm-spec.md',
+                        description: 'Specification an LLM can follow to transcribe a song into a .strum file the Strum app imports.',
+                    },
+                ],
+            },
+        ],
     ],
 };

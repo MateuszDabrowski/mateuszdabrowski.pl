@@ -4,7 +4,8 @@ title: Salesforce Data in MCE Journey Builder
 sidebar_label: SF Data in Journey Builder
 description: Learn how to integrate and use Salesforce CRM data with Marketing Cloud Engagement (MCE) Journey Builder. In both ways. The right way.
 image: img/og/og-image-webinar-sf-data-in-journey-builder.png
-tags: [Webinar, Salesforce, Marketing Cloud Engagement, Marketing Automation, Best Practice, AMPScript, CRM, Configuration, Data Management, Integration, Journey]
+tags: [Webinar, Marketing Cloud Engagement, Best Practice, AMPScript, CRM, Data Management, Integration, Journey]
+
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
@@ -31,7 +32,7 @@ import { YouTube } from '/src/components/VideoEmbed.js';
 
 During the webinar I mentioned the surprising behaviour of Salesforce Data Entry in terms of injection to a Journey based on [this Knowledge Article](https://help.salesforce.com/s/articleView?id=000381146&type=1).
 
-The actual logic for records that are not yet in the Salesforce Marketing Cloud Engagement is a bit more complex:
+The actual logic for records that are not yet in the Salesforce :product[Marketing Cloud Engagement] is a bit more complex:
 
 Email Opt Out | Email IS NULL | Email fails List Detective | Result
 -- | -- | -- | --
@@ -39,8 +40,8 @@ False | False | False | Added to Journey, All Contacts and All Subscribers
 False | True | False | Added to Journey and All Contacts (source = unspecified), but not to All Subscribers
 False | False | True |  Added to Journey and All Contacts (source = unspecified), but not to All Subscribers
 True | False | False | Added to Journey, All Contacts and All Subscriber with Unsubscribed Status
-True | True | False | __Not added to MCE__
-True | False | True | __Not added to MCE__
+True | True | False | __Not added to :product[MCE]__
+True | False | True | __Not added to :product[MCE]__
 
 :::
 

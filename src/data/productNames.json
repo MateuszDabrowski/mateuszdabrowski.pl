@@ -1,0 +1,145 @@
+{
+    "source": "Name history seeded from Renameforce (https://renameforce.com, data of 2026-09-10) and the name history lines in the Marketing Clouds FAQ on this site. Fields: names oldest first, from = year or year-month the name took over, short = abbreviation, display = the name the site shows (defaults to the newest), popular = the name readers still search for, shown once per page as '(formerly ...)'. keepAsWritten = phrases the marking tool (npm run mark-products) leaves alone: talk and chapter titles, licence tier names, menu paths. ambiguous = names the tool never marks on its own, because the site also uses them for something else (the whole product family, a feature brand); mark those by hand. A name several products share (Salesforce Marketing Cloud) needs {of=<id>} on the marker. includes = for a product family: groups of products its tooltip lists in place of a name history. The first product of a group is the main one; the rest are its sub-products, listed indented under it.",
+    "keepAsWritten": [
+        "Marketing Cloud Next for Engagement",
+        "Architecting Web Solutions in MCE",
+        "Salesforce Marketing Cloud Engagement Infrastructure Setup",
+        "MCE Business Units (",
+        "MCE Solutioning 101",
+        "MCE MCC Integration Patterns",
+        "Go to MCE »",
+        "- ExactTarget\n",
+        "Interaction Studio Data"
+    ],
+    "products": [
+        {
+            "id": "salesforce-marketing",
+            "ambiguous": ["Salesforce Marketing Cloud"],
+            "includes": [
+                ["mce", "mcp", "mci"],
+                ["mcn", "salesforce-personalization", "salesforce-marketing-intelligence"],
+                ["mcae"],
+                ["loyalty-management"]
+            ],
+            "names": [
+                { "name": "Salesforce Marketing Cloud" },
+                { "name": "Salesforce Marketing" }
+            ]
+        },
+        {
+            "id": "mce",
+            "ambiguous": ["Salesforce Marketing Cloud", "SFMC"],
+            "popular": "Salesforce Marketing Cloud",
+            "names": [
+                { "name": "ExactTarget", "short": "ET", "from": "2000" },
+                { "name": "ExactTarget Marketing Cloud", "from": "2013" },
+                { "name": "Salesforce ExactTarget Marketing Cloud", "from": "2014" },
+                { "name": "Salesforce Marketing Cloud", "short": "SFMC", "from": "2014" },
+                { "name": "Marketing Cloud Engagement", "short": "MCE", "from": "2022" }
+            ]
+        },
+        {
+            "id": "mcae",
+            "popular": "Pardot",
+            "names": [
+                { "name": "Pardot", "from": "2007" },
+                { "name": "Marketing Cloud Account Engagement", "short": "MCAE", "from": "2022-04" }
+            ]
+        },
+        {
+            "id": "mcn",
+            "ambiguous": ["Marketing Cloud", "Agentforce Marketing"],
+            "display": "Marketing Cloud Next",
+            "popular": "Marketing Cloud Next",
+            "aliases": ["MC Next"],
+            "names": [
+                { "name": "Marketing Cloud Growth", "short": "MCG", "from": "2024" },
+                { "name": "Marketing Cloud Advanced", "short": "MCA", "from": "2025" },
+                { "name": "Marketing Cloud on Core", "short": "MCoC" },
+                { "name": "Marketing Cloud Next", "short": "MCN" },
+                { "name": "Agentforce Marketing", "from": "2025-10" },
+                { "name": "Marketing Cloud", "short": "MC", "from": "2026-09" }
+            ]
+        },
+        {
+            "id": "mcp",
+            "popular": "Interaction Studio",
+            "names": [
+                { "name": "Evergage", "from": "2010" },
+                { "name": "Interaction Studio", "short": "IS", "from": "2020" },
+                { "name": "Marketing Cloud Personalization", "short": "MCP", "from": "2022" }
+            ]
+        },
+        {
+            "id": "salesforce-personalization",
+            "names": [
+                { "name": "Einstein Personalization", "short": "EP", "from": "2024" },
+                { "name": "Salesforce Personalization", "short": "SP", "from": "2025" }
+            ]
+        },
+        {
+            "id": "data-360",
+            "popular": "Data Cloud",
+            "names": [
+                { "name": "Customer 360 Audiences", "from": "2020" },
+                { "name": "Salesforce CDP", "from": "2021" },
+                { "name": "Marketing Cloud Customer Data Platform", "from": "2022-06" },
+                { "name": "Salesforce Genie", "from": "2022-09" },
+                { "name": "Data Cloud", "from": "2023-03" },
+                { "name": "Data 360", "from": "2025-10" }
+            ]
+        },
+        {
+            "id": "agentexchange",
+            "popular": "AppExchange",
+            "names": [
+                { "name": "AppExchange", "from": "2005" },
+                { "name": "AgentExchange", "from": "2026-04" }
+            ]
+        },
+        {
+            "id": "mci",
+            "popular": "Datorama",
+            "names": [
+                { "name": "Datorama", "from": "2012" },
+                { "name": "Salesforce Datorama", "from": "2020" },
+                { "name": "Marketing Cloud Intelligence", "short": "MCI", "from": "2022-06" }
+            ]
+        },
+        {
+            "id": "salesforce-marketing-intelligence",
+            "ambiguous": ["Marketing Intelligence"],
+            "aliases": ["Marketing Intelligence"],
+            "names": [
+                { "name": "Salesforce Marketing Intelligence", "short": "MI", "from": "2026" }
+            ]
+        },
+        {
+            "id": "loyalty-management",
+            "aliases": ["Loyalty Cloud", "Loyalty Management"],
+            "names": [
+                { "name": "Salesforce Loyalty Cloud" },
+                { "name": "Salesforce Loyalty Management" }
+            ]
+        },
+        {
+            "id": "tableau-next",
+            "names": [
+                { "name": "Tableau Einstein", "from": "2024-09" },
+                { "name": "Tableau Next", "from": "2025-04" }
+            ]
+        },
+        {
+            "id": "agentforce-360",
+            "ambiguous": ["Einstein", "Agentforce"],
+            "popular": "Agentforce",
+            "names": [
+                { "name": "Einstein", "from": "2016" },
+                { "name": "AI Cloud", "from": "2023" },
+                { "name": "Einstein 1", "from": "2023" },
+                { "name": "Agentforce", "from": "2024" },
+                { "name": "Agentforce 360", "from": "2025-10" }
+            ]
+        }
+    ]
+}

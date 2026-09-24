@@ -4,14 +4,15 @@ title: MCP Serverside Code Context
 sidebar_label: Serverside Code Context
 description: "Context is king. Also when writing MCP Template Serverside Code."
 image: img/og/og-image-sf-mcp-serverside-code-context.png
-tags: [Salesforce, Marketing Cloud Personalization, Personalization, Interaction Studio, Personalisation, TypeScript]
+tags: [Marketing Cloud Personalization, Personalisation, TypeScript]
+
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
 
 <LeadText content="Context is king. Also when coding MCP Campaign Templates. Read about all its undocumented tricks." />
 
-Marketing Cloud Personalization offers flexible campaign template creation tooling with multiple [properties](/docs/salesforce/marketing-cloud-personalization/serverside-code-properties.mdx) and imports that help you fulfil business needs while providing a pleasant user experience for the marketer. There is also one more—undocumented—feature that can change your template from good to outstanding: the CampaignComponentContext object.
+:product[Marketing Cloud Personalization] offers flexible campaign template creation tooling with multiple [properties](/docs/salesforce/marketing-cloud-personalization/serverside-code-properties.mdx) and imports that help you fulfil business needs while providing a pleasant user experience for the marketer. There is also one more—undocumented—feature that can change your template from good to outstanding: the CampaignComponentContext object.
 
 :::note You Should Know
 
@@ -69,7 +70,7 @@ However, for Web Campaigns, you can do it easily within the handlebars tab, and 
 
 ## userGroup
 
-The `userGroup` string property should tell you the group assigned to the user. Well, it should. In practice, you will see there one of the two values: `Test` for users that got an A/B Test or Rule-Based experience and `testUserGroup` for those that are in the Control group (or in the Template preview pane within MCP UI).
+The `userGroup` string property should tell you the group assigned to the user. Well, it should. In practice, you will see there one of the two values: `Test` for users that got an A/B Test or Rule-Based experience and `testUserGroup` for those that are in the Control group (or in the Template preview pane within :product[MCP] UI).
 
 However, you will see better values in the out-of-the-box serverside payload `userGroup` property that correctly shows values like `Test`, `Default`, and `Control` and only displays `testUserGroup` during preview.
 
@@ -97,7 +98,7 @@ In Template Preview, you will only be able to use [`context.event.fields.item`](
 ```
 "{\"type\":\"ITEM_TYPE\",\"_id\":{\"label\":\"ITEM_LABEL\",\"value\":\"ITEM_ID\"}}"
 ```
-My [MCP Catalog ETL Metadata Viewer](/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer.mdx) provides an example of its usage.
+My [:product[MCP] Catalog ETL Metadata Viewer](/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer.mdx) provides an example of its usage.
 
 :::
 
@@ -128,7 +129,7 @@ Returns the ID of the Catalog Item the user viewed in the event. It pairs perfec
 
 Returns the Catalog of the Item viewed (f.e. `'Product'` for Product View).
 
-The pair of `itemId` and `itemType` is handy, as those two details are precisely what MCP requires for a [`context.services.catalog.findItem()`](#servicescatalog) call that lets you get complete details about the currently displayed item. It enables use cases where you want to change the campaign payload based on displayed item attributes, related catalog objects, or other information on the item details. For example, access to [localized item data](#locale).
+The pair of `itemId` and `itemType` is handy, as those two details are precisely what :product[MCP] requires for a [`context.services.catalog.findItem()`](#servicescatalog) call that lets you get complete details about the currently displayed item. It enables use cases where you want to change the campaign payload based on displayed item attributes, related catalog objects, or other information on the item details. For example, access to [localized item data](#locale).
 
 :::note You Should Know
 
@@ -174,11 +175,11 @@ Returns the name of the currently pushed action as configured in the Sitemap (f.
 
 #### context.event.fields.url
 
-Returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on the query string values you set in the email campaign using MCE data).
+Returns the URL where the event originated. The cool part is that it contains the hash and query strings, so you can drive use cases using those elements (f.e. change the experience based on the query string values you set in the email campaign using :product[MCE]{bare} data).
 
 #### context.event.fields.customAttribute
 
-Apart from those always-there properties, you will also see custom attributes you passed along with the event. For example, if in the Sitemap you are passing MCE Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled out by the Add to Cart event to determine whether you want to promote a cross-sell. Add the `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
+Apart from those always-there properties, you will also see custom attributes you passed along with the event. For example, if in the Sitemap you are passing :product[MCE] Contact Key along with the event: `actionEvent.user.attributes.sfmcContactKey = queryParameters.get('sk');` you will have `context.event.fields.sfmcContactKey` property available with that value. This is huge - it enables us to build campaigns leveraging real-time data. Use cases? Sure! Create an `hasAddedInsurance` attribute filled out by the Add to Cart event to determine whether you want to promote a cross-sell. Add the `hasMetFreeDeliveryThershold` boolean field to conditionally trigger recommendations of products that will help the customer get over the line of free delivery. The sky is the limit with those.
 
 :::note You Should Know
 
@@ -220,7 +221,7 @@ The `trigger` object property is filled only for the Triggered Campaign Template
 
 ## locale
 
-If you have switched on Locale support in your Marketing Cloud Personalization, the `locale` string will return a five-character long combination of ISO language code and ISO country code (`language_COUNTRY`, for example: `en_US` for American English).
+If you have switched on Locale support in your :product[Marketing Cloud Personalization], the `locale` string will return a five-character long combination of ISO language code and ISO country code (`language_COUNTRY`, for example: `en_US` for American English).
 
 You can use it to return the campaign content based on the most recent user locale (be it based on manually entered variations in the Campaign configuration or by pulling directly from the localized Catalog):
 
@@ -237,7 +238,7 @@ let localisedRecommendations = context.services.catalog
 
 ## services
 
-`context.services` is the most potent part of the `context` object - packed to the brim with methods that give you access to Marketing Cloud Personalization data or let you create new recommendations.
+`context.services` is the most potent part of the `context` object - packed to the brim with methods that give you access to :product[Marketing Cloud Personalization] data or let you create new recommendations.
 
 ```js title="Structure of the context.services object"
 {
@@ -255,7 +256,7 @@ It's a nested object, so let's go through it property by property to discuss eac
 
 ### services.catalog
 
-The `services.catalog` object contains a set of lookup methods that help you find Items in your Marketing Cloud Personalization Catalogs. It opens a wide range of use cases for using related Items for cross-sell and up-sell purposes.
+The `services.catalog` object contains a set of lookup methods that help you find Items in your :product[Marketing Cloud Personalization] Catalogs. It opens a wide range of use cases for using related Items for cross-sell and up-sell purposes.
 
 ```js title="Structure of the context.services.catalog object"
 {
@@ -356,7 +357,7 @@ const upSellableItemDetails = context.services.catalog.findItem('Product', upSel
 const crossSellableItemDetails = context.services.catalog.findItem('Product', crossSellableItemId);
 ```
 
-Of course, making so many `findItem()` calls is not optimal, and MCP offers another method as a solution.
+Of course, making so many `findItem()` calls is not optimal, and :product[MCP] offers another method as a solution.
 
 #### context.services.catalog.findItems()
 
@@ -523,7 +524,7 @@ const smartSortedItems = context.services.recommendations.smartSort(smartSortReq
 
 ### services.smartTrends
 
-The `smartTrends()` method lets you leverage the MCP Trends feature directly in the Serverside code of the Campaign. It requires a special `SmartTrendsRequest` argument structure (`{itemIds: ['1018913'], itemType: "Product", lookbackMinutes: 9999 }`) and returns an array of objects with product engagement details within the provided lookback (`[{itemId: '1018913', visitViews: 1234, purchases: 98}]`).
+The `smartTrends()` method lets you leverage the :product[MCP] Trends feature directly in the Serverside code of the Campaign. It requires a special `SmartTrendsRequest` argument structure (`{itemIds: ['1018913'], itemType: "Product", lookbackMinutes: 9999 }`) and returns an array of objects with product engagement details within the provided lookback (`[{itemId: '1018913', visitViews: 1234, purchases: 98}]`).
 
 ```js title="Return item engagement details"
 const smartTrendsRequest: SmartTrendsRequest = {
@@ -795,7 +796,7 @@ Similar to [pageViewCount()](#contextuserpageviewcount), it requires StatsReques
 
 :::note You Should Know
 
-Visit for Marketing Cloud Personalization starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view a few pages, leaves and then returns after 40 minutes - it will be counted as a separate visit.
+Visit for :product[Marketing Cloud Personalization] starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view a few pages, leaves and then returns after 40 minutes - it will be counted as a separate visit.
 
 :::
 
@@ -853,7 +854,7 @@ const itemViewTime = context.user.visitDurationMilis({
 
 ### user.visits
 
-`context.user.visits` is an Array with user visits. Remember that the Marketing Cloud Personalization visit starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view a few pages, leaves and then returns after 40 minutes - it will be counted as a separate visit. It is critical - there is no way to access the history of each page the user visits. You can only see the visit (session start data) with a `pageViewIndex` with a count of page views during that visit.
+`context.user.visits` is an Array with user visits. Remember that the :product[Marketing Cloud Personalization] visit starts from the first page view and ends after the user reaches 30 minutes of inactivity on the site. So if a user goes to your website to view a few pages, leaves and then returns after 40 minutes - it will be counted as a separate visit. It is critical - there is no way to access the history of each page the user visits. You can only see the visit (session start data) with a `pageViewIndex` with a count of page views during that visit.
 
 ```js title="Structure of the context.user.visits array"
 [
@@ -1003,7 +1004,7 @@ The fun use case here is checking when the user updated the cart and, if enough 
 
 ## accountId & datasetId
 
-`accountId` and `datasetId` are string properties that contain information about the Marketing Cloud Personalization account and dataset that generated the event. It is only handy if you want environment-aware debug log visibility logic.
+`accountId` and `datasetId` are string properties that contain information about the :product[Marketing Cloud Personalization] account and dataset that generated the event. It is only handy if you want environment-aware debug log visibility logic.
 
 ## configuration
 

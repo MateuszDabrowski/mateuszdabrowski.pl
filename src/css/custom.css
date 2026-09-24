@@ -48,6 +48,28 @@ html[data-theme='dark'] {
   margin-left: 1rem;
 }
 
+/* From the desktop breakpoint up to about 1040px the full row does not fit.
+   Labels used to wrap ("About / Me") and push the dropdown carets below the
+   text. Labels now stay on one line, and up to 1099px the search button shows
+   only its icon, as DocSearch already does below 768px. */
+@media (min-width: 997px) {
+  .navbar__item.navbar__link,
+  .navbar__item > .navbar__link {
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 997px) and (max-width: 1099px) {
+  .navbar .DocSearch-Button-Placeholder,
+  .navbar .DocSearch-Button-Keys {
+    display: none;
+  }
+
+  .navbar .DocSearch-Button {
+    padding: 0 8px;
+  }
+}
+
 .header-linkedin-link:hover,
 .header-github-link:hover,
 .header-salesforce-link:hover {
@@ -371,6 +393,67 @@ html[data-theme='dark'] article header>h1 {
 .markdown>h4,
 .markdown>h5 {
   color: var(--ifm-color-secondary);
+}
+
+/* The one-sentence "Diagram:" paragraph written under each Mermaid diagram
+   reads as its caption. Mermaid draws in the browser only, so for readers
+   without JavaScript and for the markdown copies the sentence is the diagram. */
+.markdown .docusaurus-mermaid-container + p {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+}
+
+/* Salesforce product names written as :product[...] (plugins/product-names).
+   The dotted underline marks a name with a history. Hover, keyboard focus or
+   a tap shows it, read from data-history so the text itself stays clean. */
+.product-name {
+  position: relative;
+  /* A name split across two lines anchors the tooltip to the end of the
+     first line and the bottom of the second, far from the word. */
+  white-space: nowrap;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+.product-name:hover::after,
+.product-name:focus::after {
+  content: attr(data-history);
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 10;
+  width: max-content;
+  max-width: min(22rem, 80vw);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-background-surface-color);
+  box-shadow: var(--ifm-global-shadow-md);
+  color: var(--ifm-font-color-base);
+  font-size: 0.85rem;
+  font-weight: normal;
+  line-height: 1.5;
+  /* One name per line: the history holds newline characters, and the leading
+     spaces that indent sub-products in a product family's list. */
+  white-space: pre-wrap;
+}
+
+/* On one-column layouts a name near the right edge would push the tooltip off
+   screen, so a tap shows the history in a box pinned to the bottom instead. */
+@media (max-width: 996px) {
+  .product-name:hover::after,
+  .product-name:focus::after {
+    position: fixed;
+    top: auto;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    width: auto;
+    max-width: none;
+  }
 }
 
 .theme-code-block-highlighted-line {

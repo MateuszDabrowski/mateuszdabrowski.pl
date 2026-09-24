@@ -3,7 +3,8 @@ id: ideas
 title: Marketing Cloud Next Ideas
 description: Here you can find all my Salesforce Marketing Cloud Next IdeaExchange contributions. Let's make the change!
 image: img/og/og-image-sf-mcn-ideas.png
-tags: [Salesforce, Marketing Cloud Next]
+tags: [Marketing Cloud Next]
+
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
@@ -15,7 +16,7 @@ import { Button } from '/src/components/Buttons.js';
 
 ### Separate CMS Content Languages from Platform Translation Settings
 
-Setup > Language Settings offers two org-wide toggles - Enable end-user languages and Enable platform-only languages - that unlock additional languages beyond the Fully Supported set. Once enabled, these languages become selectable in two very different places at once: any user's personal Language field (Settings > Language and Time Zone), and the language picker for CMS/Marketing Workspaces used by Salesforce CMS and Marketing Cloud Next Content.
+Setup > Language Settings offers two org-wide toggles - Enable end-user languages and Enable platform-only languages - that unlock additional languages beyond the Fully Supported set. Once enabled, these languages become selectable in two very different places at once: any user's personal Language field (Settings > Language and Time Zone), and the language picker for CMS/Marketing Workspaces used by Salesforce CMS and :product[Marketing Cloud Next] Content.
 
 However, these are two genuinely separate use cases sharing one switch. An admin who only wants to author multilingual marketing content - for example, Polish or Portuguese email and landing page copy in a region-based Marketing Workspace - has no way to unlock that language for content without also exposing it as a personal interface option to every user in the org.
 
@@ -44,9 +45,9 @@ Salesforce can solve this. Below are two possible solutions:
 
 ### Allow Row-Level and Summary Formulas to Reference Calculated Insights
 
-Data 360/Semantic Model reports already ship with a rich layer of pre-built metrics - Calculated Measures and Calculated Dimensions, things like `Email Bounce Rate` or `Email Sends` on the Marketing Performance Semantic Model report. These are almost certainly backed by Data Cloud Calculated Insights, the platform's own reusable, governed, schedule-computed metric layer that already feeds segments and activations elsewhere.
+:product[Data 360]/Semantic Model reports already ship with a rich layer of pre-built metrics - Calculated Measures and Calculated Dimensions, things like `Email Bounce Rate` or `Email Sends` on the Marketing Performance Semantic Model report. These are almost certainly backed by :product[Data Cloud]{as-written} Calculated Insights, the platform's own reusable, governed, schedule-computed metric layer that already feeds segments and activations elsewhere.
 
-Row-Level and Summary Formulas explicitly reject them, though - `IF(Email_Bounce_Rate:SUM > 1, 1, 0)` and its Row-Level equivalent both fail outright with "[Row-level/Summary] formula is not supported on calculated measures or calculated dimensions." So building even a simple threshold-breach flag - "is Hard Bounce Rate over 1%?" - can't reference the ready-made `Email Hard Bounce Rate` field at all. It has to be rebuilt from scratch against the report's raw, one-row-per-event fields instead, duplicating logic that's already correctly computed and governed somewhere else in Data Cloud. Multiply that across every report and every org that wants similar alerting, and the same "what counts as a bounce, what counts as sent" logic gets re-derived over and over, report by report - with every rebuild a fresh chance for a mismatched string literal or a wrong field reference to quietly break the metric's meaning.
+Row-Level and Summary Formulas explicitly reject them, though - `IF(Email_Bounce_Rate:SUM > 1, 1, 0)` and its Row-Level equivalent both fail outright with "[Row-level/Summary] formula is not supported on calculated measures or calculated dimensions." So building even a simple threshold-breach flag - "is Hard Bounce Rate over 1%?" - can't reference the ready-made `Email Hard Bounce Rate` field at all. It has to be rebuilt from scratch against the report's raw, one-row-per-event fields instead, duplicating logic that's already correctly computed and governed somewhere else in :product[Data Cloud]{as-written}. Multiply that across every report and every org that wants similar alerting, and the same "what counts as a bounce, what counts as sent" logic gets re-derived over and over, report by report - with every rebuild a fresh chance for a mismatched string literal or a wrong field reference to quietly break the metric's meaning.
 
 Salesforce can fix this. Below are two possible solutions:
 
@@ -61,7 +62,7 @@ Salesforce can fix this. Below are two possible solutions:
 
 ### Reference Row-Level Formula Fields by Their Name in Summary Formulas
 
-Data 360/Semantic Model reports let you build a Row-Level Formula field - say, `Is_Hard_Bounce` - and give it a clear, readable Column Name. That name is what shows up everywhere in the report builder: the Outline pane, the column header, and the Fields panel's own "Row-Level Formulas" folder.
+:product[Data 360]/Semantic Model reports let you build a Row-Level Formula field - say, `Is_Hard_Bounce` - and give it a clear, readable Column Name. That name is what shows up everywhere in the report builder: the Outline pane, the column header, and the Fields panel's own "Row-Level Formulas" folder.
 
 Everywhere, except inside a Summary Formula. There, referencing the field by that same name (`Is_Hard_Bounce:SUM`) fails validation with `Field Is_Hard_Bounce:SUM does not exist. Check spelling.` The field is real - it's sitting right there in the Fields panel - but Summary Formulas silently require a completely different, auto-generated internal alias instead (`CDF1`, `CDF2`, `CDF3`...), discoverable only by using Insert from the picker rather than typing the name you gave the field yourself.
 

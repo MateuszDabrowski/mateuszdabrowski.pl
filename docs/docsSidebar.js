@@ -6,7 +6,7 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Salesforce',
-                description: 'Salesforce WIP',
+                description: 'Docs, code snippets and configuration guides for Salesforce Marketing Cloud Next, Engagement and Personalization. If you are not sure which one you use, start with SFMC Product Names Explained.',
                 keywords: ['Salesforce'],
                 image: 'img/og/og-image-sf.png',
             },
@@ -225,7 +225,7 @@ module.exports = {
                                 description: 'My sessions on various aspects of Salesforce Marketing Cloud Engagement with summary, recordings, slides, snippets and articles. All-in-one, all for free.',
                                 slug: 'category/salesforce/marketing-cloud-engagement/webinars',
                                 keywords: ['Salesforce', 'Marketing Cloud Engagement', 'Webinar'],
-                                image: 'img/og/og-imag-sf-mce-webinars.png',
+                                image: 'img/og/og-image-sf-mce-webinars.png',
                             },
                             items: [
                                 'salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture',

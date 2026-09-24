@@ -8,6 +8,7 @@ import Link from '@docusaurus/Link';
 import Head from '@docusaurus/Head';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import { PageMetadata } from '@docusaurus/theme-common';
 
 import styles from './styles.module.css';
 
@@ -72,7 +73,7 @@ function Hero() {
 }
 
 const about = {
-    imageUrl: 'img/md_profile_icon.png',
+    imageUrl: 'img/md_profile_icon.webp',
     title: <>About me</>,
     description: (
         <>
@@ -325,7 +326,7 @@ const apps = [
         title: <>Diagramforce</>,
         url: 'https://diagramforce.com',
         githubUrl: 'https://github.com/MateuszDabrowski/diagramforce',
-        imageUrl: 'img/article/index-image-tool-diagramforce.png',
+        imageUrl: 'img/article/index-image-tool-diagramforce.webp',
         description: 'Free browser-based visual diagramming tool for Salesforce architects and consultants. Create architecture diagrams, data models, process flows, org charts and Gantt charts with 1700+ Salesforce SLDS icons. Save your diagrams locally, export as JSON or PNG, or share a copy via URL. No payment, no account, no backend, and no data leaving your machine.',
         tags: ['Salesforce', 'Diagrams', 'Architecture', 'Data Model'],
         platforms: ['Web'],
@@ -630,40 +631,19 @@ function Home() {
 
     return (
         <>
+            {/* Author, theme colour, canonical, og:url and the icons come from the
+                site config for every page. Layout only takes title and description,
+                so the share image and keywords go through PageMetadata, which makes
+                the image URL absolute for og:image and twitter:image alike. */}
+            <PageMetadata image="img/logotyp-og.png" keywords={customFields.keywords} />
             <Head>
-                <meta name="author" content="Mateusz Dąbrowski" />
-                <meta name="HandheldFriendly" content="True" />
-                <meta name="referrer" content="unsafe-url" />
-
-                <link rel="canonical" href="https://mateuszdabrowski.pl/" />
-
-                <meta property="og:url" content="https://mateuszdabrowski.pl/" />
-                <meta property="og:image" content="/img/logotyp-og.png" />
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1500" />
                 <meta property="og:image:height" content="1500" />
                 <meta property="og:type" content="website" />
-
-                <link rel="shortcut icon" sizes="196x196" href="/img/favicon_196.png" />
-                <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="167x167" href="/img/favicon_167.png" />
-                <link rel="apple-touch-icon" sizes="152x152" href="/img/favicon_152.png" />
-                <link rel="icon" type="image/png" sizes="128x128" href="/img/favicon_128.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon_32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon_16.png" />
-                <link rel="manifest" href="/img/site.webmanifest" />
-                <link rel="mask-icon" href="/img/safari-pinned-tab.svg" color="#DA4E55" />
-
-                <meta name="msapplication-TileColor" content="#F6B355" />
-                <meta name="msapplication-square70x70logo" content="/img/favicon-128.png" />
-                <meta name="msapplication-square150x150logo" content="/img/favicon-270.png" />
-                <meta name="msapplication-TileImage" content="/img/favicon-270.png" />
-                <meta name="msapplication-config" content="none" />
-
-                <meta name="theme-color" content="#212121" />
             </Head>
 
-            <Layout title="Automate Marketing Automation" description={customFields.description} keywords={customFields.keywords}>
+            <Layout title="Automate Marketing Automation" description={customFields.description}>
                 <main>
                     <Hero />
 
