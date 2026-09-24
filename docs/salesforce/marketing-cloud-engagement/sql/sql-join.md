@@ -467,6 +467,6 @@ You can have the same outcome with more control over comparison logic with a mix
 
 All standard SQL JOINs in a single image with name, example Marketing Cloud Engagement-focused use case, key part of the SQL query and diagrams visualising the output. Ready to bookmark or download. Full size version linked below the preview.
 
-![MCE SQL JOIN Cheat Sheet](https://mateuszdabrowski.pl/img/article/article-image-sql-join-cheat-sheet.png)
+![Salesforce Marketing Cloud SQL JOIN cheat sheet. Each join has a Venn diagram, a use case and the key SQL. Two tables: INNER, LEFT, RIGHT, LEFT EXCLUDING, RIGHT EXCLUDING, FULL and FULL EXCLUDING. Three tables: INNER INNER, INNER LEFT, LEFT INNER, LEFT LEFT, INNER FULL and FULL FULL.](https://mateuszdabrowski.pl/img/article/article-image-sql-join-cheat-sheet.png)
 
 [View full size](https://raw.githubusercontent.com/MateuszDabrowski/mateuszdabrowski.pl/master/static/img/article/article-image-sql-join-cheat-sheet.png)

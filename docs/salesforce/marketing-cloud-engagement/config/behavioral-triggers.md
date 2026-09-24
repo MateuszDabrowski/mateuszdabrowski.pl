@@ -930,7 +930,7 @@ To fully leverage the Behavioral Trigger Content Block's customisation options, 
 
 **Abandoned Cart**
 
-```
+```json
 {
     "products": [
         {
@@ -1004,7 +1004,7 @@ To fully leverage the Behavioral Trigger Content Block's customisation options, 
 
 Response structure is the same as for Abandoned Browse.
 
-```
+```json
 {
     "products": [
         {
@@ -1043,7 +1043,7 @@ Response structure is the same as for Abandoned Browse.
 
 Response structure is the same as for Abandoned Wishlist.
 
-```
+```json
 {
     "products": [
         {
@@ -1115,7 +1115,7 @@ Now you can leverage its power by writing in the console `_etmc.debug = true` to
 
 Another option to observe what Collect.js is sending to Einstein IgoDigital backend is to go to Network tab of the Developer Tools and look for calls made to `igodigital.com` address. You will see the above data in form of API request payload:
 
-```
+```text
 https://stack7.collect.igodigital.com/c2/northerntrailoutfitters/track_cart?payload={"cart":[{"item":"2020572","unique_id":"2020572AEUAEL","name":"Women’s Red Box Pullover Hoodie","url":"https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572AEUAEL.html","price":50,"sale_price":50,"item_type":"product"}],"url":"https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572BHX.html?source=igodigital"}
 ```
 

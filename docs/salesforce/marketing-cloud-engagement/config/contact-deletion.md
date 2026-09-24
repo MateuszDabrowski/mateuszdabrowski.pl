@@ -1,11 +1,13 @@
 # MCE Contact Deletion
 
-> Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
+> Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Enable, run and monitor Contact Deletion in Marketing Cloud Engagement, and choose which contacts to delete.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
 
 ## Outline
 

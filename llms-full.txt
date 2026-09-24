@@ -2913,7 +2913,7 @@ You can have the same outcome with more control over comparison logic with a mix
 
 All standard SQL JOINs in a single image with name, example Marketing Cloud Engagement-focused use case, key part of the SQL query and diagrams visualising the output. Ready to bookmark or download. Full size version linked below the preview.
 
-![MCE SQL JOIN Cheat Sheet](https://mateuszdabrowski.pl/img/article/article-image-sql-join-cheat-sheet.png)
+![Salesforce Marketing Cloud SQL JOIN cheat sheet. Each join has a Venn diagram, a use case and the key SQL. Two tables: INNER, LEFT, RIGHT, LEFT EXCLUDING, RIGHT EXCLUDING, FULL and FULL EXCLUDING. Three tables: INNER INNER, INNER LEFT, LEFT INNER, LEFT LEFT, INNER FULL and FULL FULL.](https://mateuszdabrowski.pl/img/article/article-image-sql-join-cheat-sheet.png)
 
 [View full size](https://raw.githubusercontent.com/MateuszDabrowski/mateuszdabrowski.pl/master/static/img/article/article-image-sql-join-cheat-sheet.png)
 
@@ -6669,7 +6669,7 @@ Update the initial query to capture all the scenarios that you cleaned up and no
 
 # SSJS If & Switch
 
-> Deep dive into the two pillars of SSJS flow control.
+> Deep dive into the two pillars of SSJS flow control. If statements, ternary, short-circuiting and switch in Marketing Cloud Engagement SSJS.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch/  
 Author: Mateusz Dąbrowski  
@@ -7068,12 +7068,14 @@ Perfect when you need to run an API call, check whether there are more pages of 
 
 # SSJS Debugging & Error Handling
 
-> To catch, or not to catch, that is debugging.
+> To catch, or not to catch, that is debugging. Where to test SSJS, how to trace a 500 error, try/catch, debug output and error logging.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+To catch, or not to catch, that is debugging.
 
 When you start working with programmatic languages in Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud), you will quickly become close friends with the Error 500 page. And if you beat it and go forward with the code and official documentation, you will fall in love with unexpected errors in functions and API responses. How to survive those?
 
@@ -7468,8 +7470,6 @@ Using the Error Handler Function is useful, especially when you are triggering i
 > handleError({message: 'Custom Error Message', description: 'Custom Error Description'});
 > ```
 
-There is also a new solution - [SSJS Lib](https://github.com/email360/ssjs-lib) - created by email360. Among other tools, they support [console logging](https://docs.email360.io/#console_log) and simplified [debugging](https://docs.email360.io/#debug). You can read more about the implementation [here](https://blog.email360.io/posts/core/better-debug.html).
-
 ---
 
 ## Sum Up
@@ -7487,7 +7487,7 @@ If you have any problems with your SSJS code:
 
 # SSJS Style Guide
 
-> Script with style. Readable code is a few rules & best practices away.
+> Script with style. Readable code is a few rules & best practices away. Naming, letter case, indentation, semicolon and comment rules for SSJS in Marketing Cloud Engagement.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/  
 Author: Mateusz Dąbrowski  
@@ -8037,7 +8037,7 @@ Understanding the execution time impact of the scripting context switch was nece
 
 In this scenario, there is no context switch. I timed a pure SSJS loop to have a base for analysis.
 
-```
+```js
 for (var i = 0; i < 10000; i++) {
     var a;
 };
@@ -8047,7 +8047,7 @@ for (var i = 0; i < 10000; i++) {
 
 In the next scenario, I added empty breaking out of SSJS within a loop.
 
-```
+```js
 for (var i = 0; i < 10000; i++) {
     var b;
     </script>
@@ -8060,7 +8060,7 @@ for (var i = 0; i < 10000; i++) {
 
 Next, I pushed an AMPScript block within the break.
 
-```
+```js
 for (var i = 0; i < 10000; i++) {
     </script>
     %%[
@@ -8074,7 +8074,7 @@ for (var i = 0; i < 10000; i++) {
 
 Then I put the for loop in the AMPScript context. As a result, the SSJS code block breaking impact count only once per 10 000 executions, making it irrelevant for the final average. It gives us another base for the next test.
 
-```
+```js
 </script>
 %%[
     FOR @current = 1 TO 10000 DO
@@ -8089,7 +8089,7 @@ Then I put the for loop in the AMPScript context. As a result, the SSJS code blo
 
 For the final scenario I decided to break out of AMPScript context within an AMPScript loop, as this is popular way for creating dynamic content in MCE.
 
-```
+```js
 </script>
     %%[
     FOR @current = 1 TO 10000 DO
@@ -8140,7 +8140,7 @@ All approaches output final sentence as: `One Two Three Four Five Six & 8 Nine-t
 
 **SSJS Split**
 
-```
+```js
 function toTitleCase(string) {
     var sentence = string.toLowerCase().split(" ");
     for (var i = 0; i < sentence.length; i++) {
@@ -8155,7 +8155,7 @@ title = toTitleCase(testedString);
 
 **SSJS Replace**
 
-```
+```js
 title = testedString.replace(
     /[a-zA-Z]\S*/g,
     function(string) {
@@ -8166,7 +8166,7 @@ title = testedString.replace(
 
 **AMPScript in SSJS**
 
-```
+```js
 function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
@@ -8178,7 +8178,7 @@ title = ampScript("SET @response = ProperCase('" + testedString + "')");
 
 **AMPScript**
 
-```
+```js
 %%[
 SET @response = ProperCase(@sentence)
 ]%%
@@ -8234,7 +8234,7 @@ All approaches output final sentence as: `one two three four five six & 8 nine-t
 
 **SSJS Method**
 
-```
+```js
 title = testedString.toLowerCase();
 ```
 
@@ -8242,7 +8242,7 @@ title = testedString.toLowerCase();
 
 This approach doesn't make sense but gives an idea of the impact of using function vs method.
 
-```
+```js
 function toLowerCase(string) {
     var sentence = string.toLowerCase();
     return sentence;
@@ -8252,7 +8252,7 @@ title = toLowerCase(sentences[a]);
 
 **AMPScript in SSJS**
 
-```
+```js
 function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
@@ -8264,7 +8264,7 @@ title = ampScript("SET @response = LowerCase('" + testedString + "')");
 
 **AMPScript**
 
-```
+```js
 %%[
 SET @response = LowerCase(@sentence)
 ]%%
@@ -9475,7 +9475,7 @@ Then we loop over it and split each Campaign string by comma. With the deconstru
 
 # AMPScript Style Guide
 
-> Script with style. Readable code is a few rules & best practices away.
+> Script with style. Readable code is a few rules & best practices away. Naming, letter case, indentation and comment rules for AMPScript in Marketing Cloud Engagement.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide/  
 Author: Mateusz Dąbrowski  
@@ -10149,7 +10149,7 @@ Even with the highest Enterprise licence limit of 100k yearly executions, you ca
 
 > **Note: You Should Know**
 >
-> I created an [IdeaExchange idea](https://ideas.salesforce.com/s/idea/a0B3A00000Gtnz6UAB/increase-yearly-automation-executions-limit-with-additional-business-units) to address that issue. Additionally purchased Business Unit should increase the limits proportionally to make them fully operational.
+> I created an [IdeaExchange idea](https://ideas.salesforce.com/s/idea/a0BHp000016LlDJMA0/increase-licence-limits-with-additional-business-units) to address that issue. Additionally purchased Business Unit should increase the limits proportionally to make them fully operational.
 
 #### Automation Execution Monitoring
 
@@ -12581,12 +12581,14 @@ Of course, there is one downside to this approach. As you need to use Automation
 
 # MCE Contact Deletion
 
-> Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
+> Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Enable, run and monitor Contact Deletion in Marketing Cloud Engagement, and choose which contacts to delete.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
 
 ## Outline
 
@@ -14302,7 +14304,7 @@ To fully leverage the Behavioral Trigger Content Block's customisation options, 
 
 **Abandoned Cart**
 
-```
+```json
 {
     "products": [
         {
@@ -14376,7 +14378,7 @@ To fully leverage the Behavioral Trigger Content Block's customisation options, 
 
 Response structure is the same as for Abandoned Browse.
 
-```
+```json
 {
     "products": [
         {
@@ -14415,7 +14417,7 @@ Response structure is the same as for Abandoned Browse.
 
 Response structure is the same as for Abandoned Wishlist.
 
-```
+```json
 {
     "products": [
         {
@@ -14487,7 +14489,7 @@ Now you can leverage its power by writing in the console `_etmc.debug = true` to
 
 Another option to observe what Collect.js is sending to Einstein IgoDigital backend is to go to Network tab of the Developer Tools and look for calls made to `igodigital.com` address. You will see the above data in form of API request payload:
 
-```
+```text
 https://stack7.collect.igodigital.com/c2/northerntrailoutfitters/track_cart?payload={"cart":[{"item":"2020572","unique_id":"2020572AEUAEL","name":"Women’s Red Box Pullover Hoodie","url":"https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572AEUAEL.html","price":50,"sale_price":50,"item_type":"product"}],"url":"https://production-internal-ccdemo.demandware.net/s/NTOSFRA/default/women%E2%80%99s-red-box-pullover-hoodie-2020572BHX.html?source=igodigital"}
 ```
 
@@ -15379,11 +15381,11 @@ I always wanted to have a full list of those features but could never find it. S
 
 ## Analytics Builder Features
 
-| Feature Name               | Description                                                                                                                                                              | Documentation                                                                                                                                                             | Type |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| Datorama Reports Advanced  | Allows you to customize and create dashboards, add dimensions and measurements, track cross-channel engagement and query the data. Replaced the Discover Reporting Tool. | [Datorama Reports Advanced](https://trailhead.salesforce.com/en/content/learn/modules/datorama-reports-advanced-in-marketing-cloud/get-to-know-datorama-reports-advanced) | Paid |
-| Custom Reports             | Allows you to request creating a new Report aligned with your needs.                                                                                                     | N/A                                                                                                                                                                       | Paid |
-| Account Utilisation Report | Ad hoc request to get the current utilisation status of Super Messages.                                                                                                  | N/A                                                                                                                                                                       | Free |
+| Feature Name                                 | Description                                                                                                                                                                                                  | Documentation                                                                                                                         | Type |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| Intelligence Reports for Engagement Advanced | Allows you to customize and create dashboards, add dimensions and measurements, track cross-channel engagement and query the data. Formerly Datorama Reports Advanced. Replaced the Discover Reporting Tool. | [Intelligence Reports for Engagement Advanced](https://help.salesforce.com/s/articleView?id=mktg.mc_dat_datorama_reports.htm\&type=5) | Paid |
+| Custom Reports                               | Allows you to request creating a new Report aligned with your needs.                                                                                                                                         | N/A                                                                                                                                   | Paid |
+| Account Utilisation Report                   | Ad hoc request to get the current utilisation status of Super Messages.                                                                                                                                      | N/A                                                                                                                                   | Free |
 
 There are some additional analytics and tracking related features within [Automation Studio Features](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/features-on-demand/#automation-studio-features) - Data Extract Types. For example Include User Agent Information, Unique Clicks and Opens, Campaing ID and more.
 
@@ -16893,7 +16895,7 @@ export class NewTemplate implements CampaignTemplateComponent {
 }
 ```
 
-There is a collection of much more complex [Global Templates available](https://github.com/evergage/evergage-global-templates/tree/master) that are great starting points for building actual campaigns, but here we will start with the base snippet and build up from it for learning purposes.
+There is a collection of much more complex [Global Templates available](https://github.com/MateuszDabrowski/mcp-campaign-templates) that are great starting points for building actual campaigns, but here we will start with the base snippet and build up from it for learning purposes.
 
 There are three critical parts of that snippet:
 
@@ -17809,7 +17811,7 @@ The `event` object property is where the magic of the `context` object starts. I
 >
 > In Template Preview, you will only be able to use [`context.event.fields.item`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-context/#eventfields) - a single property with a stringified object containing details of the Item selected in the top right Simulate section):
 >
-> ```
+> ```json
 > "{\"type\":\"ITEM_TYPE\",\"_id\":{\"label\":\"ITEM_LABEL\",\"value\":\"ITEM_ID\"}}"
 > ```
 >
@@ -18879,11 +18881,11 @@ I created the current version of the solution with an easy-to-use, straightforwa
 
 # JS If & Switch
 
-> Deep dive into the two pillars of JavaScript flow control.
+> Deep dive into the two pillars of JavaScript flow control. If statements, ternary, short-circuiting and switch, with examples.
 
 Source: https://mateuszdabrowski.pl/docs/js/js-if-and-switch/  
 Author: Mateusz Dąbrowski  
-Last updated: 2025-08-31  
+Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Deep dive into the two pillars of JavaScript flow control
@@ -19475,7 +19477,7 @@ Selecting elements is just the beginning. Once you pick them, you can [explore](
 
 ## Exploring the DOM
 
-Once you select a page element, you can learn more about it, thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation world.
+Once you select a page element, you can learn more about it, thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation world.
 
 ### attributes
 
@@ -19830,12 +19832,14 @@ Document Object Model can be used to adapt your website in real-time, fill in hi
 
 # Tailor the experience with data logic
 
-> Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Utilise the power of simple data logic and control the user flows.
+> Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Use JavaScript and the data you already have to change landing page structure, forms and user flows.
 
 Source: https://mateuszdabrowski.pl/docs/js/snippets/tailor-with-data/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Utilise the power of simple data logic and control the user flows.
 
 ## Outline
 
@@ -20057,12 +20061,14 @@ You can get even more power with using dynamic content (perfect for simplifying 
 
 # Engage with Countdown
 
-> Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
+> Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Build a JavaScript countdown timer for your landing pages, with counting options and dynamic content.
 
 Source: https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
 
 ## Outline
 
@@ -20356,7 +20362,7 @@ However, it is not as flexible or customisable as Marketing Cloud Engagement, an
 
 #### Salesforce Marketing Cloud Next
 
-**Name history**: Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud \[on Core] (MCoC)» Marketing Cloud Next (MCN) » Marketing Cloud (MC)
+**Name history**: Marketing Cloud \[on Core] (MCoC) » Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud Next (MCN) » Agentforce Marketing » Marketing Cloud (MC)
 
 The newest of the three products, Marketing Cloud Next, is a fresh take on Marketing Automation. Announced in 2024 and declared **generally available** in June 2025, it is built from scratch on the Data 360 platform (also known as Data Cloud in the ancient days of early 2025), and leverages capabilities and integrations of other Salesforce products (especially the new hype champion - Agentforce 360).
 

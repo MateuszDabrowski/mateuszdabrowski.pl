@@ -87,7 +87,7 @@ The `event` object property is where the magic of the `context` object starts. I
 >
 > In Template Preview, you will only be able to use [`context.event.fields.item`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-context/#eventfields) - a single property with a stringified object containing details of the Item selected in the top right Simulate section):
 >
-> ```
+> ```json
 > "{\"type\":\"ITEM_TYPE\",\"_id\":{\"label\":\"ITEM_LABEL\",\"value\":\"ITEM_ID\"}}"
 > ```
 >

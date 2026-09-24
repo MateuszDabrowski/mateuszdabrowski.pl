@@ -1,6 +1,6 @@
 # SSJS Style Guide
 
-> Script with style. Readable code is a few rules & best practices away.
+> Script with style. Readable code is a few rules & best practices away. Naming, letter case, indentation, semicolon and comment rules for SSJS in Marketing Cloud Engagement.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/  
 Author: Mateusz Dąbrowski  

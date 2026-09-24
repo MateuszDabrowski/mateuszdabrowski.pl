@@ -112,7 +112,7 @@ Selecting elements is just the beginning. Once you pick them, you can [explore](
 
 ## Exploring the DOM
 
-Once you select a page element, you can learn more about it, thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element]) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation world.
+Once you select a page element, you can learn more about it, thanks to properties. There is a [long list](https://developer.mozilla.org/en-US/docs/Web/API/Element) of available features, so let's focus on the ones most useful in marketing automation and real-time personalisation world.
 
 ### attributes
 

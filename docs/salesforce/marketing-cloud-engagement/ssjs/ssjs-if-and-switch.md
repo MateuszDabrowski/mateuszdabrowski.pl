@@ -1,6 +1,6 @@
 # SSJS If & Switch
 
-> Deep dive into the two pillars of SSJS flow control.
+> Deep dive into the two pillars of SSJS flow control. If statements, ternary, short-circuiting and switch in Marketing Cloud Engagement SSJS.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch/  
 Author: Mateusz Dąbrowski  

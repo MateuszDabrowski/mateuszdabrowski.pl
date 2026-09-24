@@ -121,7 +121,7 @@ However, it is not as flexible or customisable as Marketing Cloud Engagement, an
 
 #### Salesforce Marketing Cloud Next
 
-**Name history**: Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud \[on Core] (MCoC)» Marketing Cloud Next (MCN) » Marketing Cloud (MC)
+**Name history**: Marketing Cloud \[on Core] (MCoC) » Marketing Cloud Growth (MCG) » Marketing Cloud Advanced (MCA) » Marketing Cloud Next (MCN) » Agentforce Marketing » Marketing Cloud (MC)
 
 The newest of the three products, Marketing Cloud Next, is a fresh take on Marketing Automation. Announced in 2024 and declared **generally available** in June 2025, it is built from scratch on the Data 360 platform (also known as Data Cloud in the ancient days of early 2025), and leverages capabilities and integrations of other Salesforce products (especially the new hype champion - Agentforce 360).
 

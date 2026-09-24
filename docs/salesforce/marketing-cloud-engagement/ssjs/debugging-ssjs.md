@@ -1,11 +1,13 @@
 # SSJS Debugging & Error Handling
 
-> To catch, or not to catch, that is debugging.
+> To catch, or not to catch, that is debugging. Where to test SSJS, how to trace a 500 error, try/catch, debug output and error logging.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+To catch, or not to catch, that is debugging.
 
 When you start working with programmatic languages in Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud), you will quickly become close friends with the Error 500 page. And if you beat it and go forward with the code and official documentation, you will fall in love with unexpected errors in functions and API responses. How to survive those?
 
@@ -399,8 +401,6 @@ Using the Error Handler Function is useful, especially when you are triggering i
 > ```js
 > handleError({message: 'Custom Error Message', description: 'Custom Error Description'});
 > ```
-
-There is also a new solution - [SSJS Lib](https://github.com/email360/ssjs-lib) - created by email360. Among other tools, they support [console logging](https://docs.email360.io/#console_log) and simplified [debugging](https://docs.email360.io/#debug). You can read more about the implementation [here](https://blog.email360.io/posts/core/better-debug.html).
 
 ---
 

@@ -1,11 +1,13 @@
 # Engage with Countdown
 
-> Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
+> Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Build a JavaScript countdown timer for your landing pages, with counting options and dynamic content.
 
 Source: https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
 
 ## Outline
 

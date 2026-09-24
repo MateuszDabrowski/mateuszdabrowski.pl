@@ -1,11 +1,13 @@
 # Tailor the experience with data logic
 
-> Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Utilise the power of simple data logic and control the user flows.
+> Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Use JavaScript and the data you already have to change landing page structure, forms and user flows.
 
 Source: https://mateuszdabrowski.pl/docs/js/snippets/tailor-with-data/  
 Author: Mateusz Dąbrowski  
 Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Utilise the power of simple data logic and control the user flows.
 
 ## Outline
 

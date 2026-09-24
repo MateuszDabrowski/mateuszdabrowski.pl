@@ -317,7 +317,7 @@ Even with the highest Enterprise licence limit of 100k yearly executions, you ca
 
 > **Note: You Should Know**
 >
-> I created an [IdeaExchange idea](https://ideas.salesforce.com/s/idea/a0B3A00000Gtnz6UAB/increase-yearly-automation-executions-limit-with-additional-business-units) to address that issue. Additionally purchased Business Unit should increase the limits proportionally to make them fully operational.
+> I created an [IdeaExchange idea](https://ideas.salesforce.com/s/idea/a0BHp000016LlDJMA0/increase-licence-limits-with-additional-business-units) to address that issue. Additionally purchased Business Unit should increase the limits proportionally to make them fully operational.
 
 #### Automation Execution Monitoring
 

@@ -45,10 +45,10 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 
 ## Salesforce > Marketing Cloud Engagement > SSJS
 
-- [SSJS If & Switch](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.md): Deep dive into the two pillars of SSJS flow control.
+- [SSJS If & Switch](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.md): Deep dive into the two pillars of SSJS flow control. If statements, ternary, short-circuiting and switch in Marketing Cloud Engagement SSJS.
 - [SSJS Loops](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops.md): Let's dive into limited looping options of the SSJS.
-- [SSJS Debugging & Error Handling](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.md): To catch, or not to catch, that is debugging.
-- [SSJS Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.md): Script with style. Readable code is a few rules & best practices away.
+- [SSJS Debugging & Error Handling](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.md): To catch, or not to catch, that is debugging. Where to test SSJS, how to trace a 500 error, try/catch, debug output and error logging.
+- [SSJS Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.md): Script with style. Readable code is a few rules & best practices away. Naming, letter case, indentation, semicolon and comment rules for SSJS in Marketing Cloud Engagement.
 - [SSJS vs AMPScript Performance](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.md): Should I use AMPScript or SSJS? Which is better? As always, it depends. Check the performance comparisons for various use cases.
 
 ## Salesforce > Marketing Cloud Engagement > SSJS > Snippets
@@ -60,7 +60,7 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 
 ## Salesforce > Marketing Cloud Engagement > AMPScript
 
-- [AMPScript Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.md): Script with style. Readable code is a few rules & best practices away.
+- [AMPScript Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.md): Script with style. Readable code is a few rules & best practices away. Naming, letter case, indentation and comment rules for AMPScript in Marketing Cloud Engagement.
 
 ## Salesforce > Marketing Cloud Engagement > Config
 
@@ -68,7 +68,7 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 - [MCE System Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views.md): Dive deep into System Data Views - the backend Marketing Cloud Engagement data. Actionable pearls await.
 - [MCE Mobile Connect Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.md): Dive deep into SMS System Data Views - the backend Marketing Cloud Engagement (MCE) data. Actionable pearls await.
 - [MCC Integration Patterns](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.md): Marketing Cloud Connect Architecture: Single-Org, Multi-Org and everything in between. Integrate Salesforce CRM and Marketing Cloud Engagement the right way.
-- [MCE Contact Deletion](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.md): Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
+- [MCE Contact Deletion](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.md): Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Enable, run and monitor Contact Deletion in Marketing Cloud Engagement, and choose which contacts to delete.
 - [MCE Enhanced Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.md): Create, customise and enhance Marketing Cloud Engagement Send Log for debugging and reporting.
 - [MCE Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers.md): Win-back your e-commerce customers with MCE Behavioral Triggers.
 - [MCE Code Resource](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/code-resource.md): Learn how to use and abuse Marketing Cloud Engagement Code Resources, the free-of-charge programmatic powerhouse.
@@ -101,14 +101,14 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 
 ## JavaScript
 
-- [JS If & Switch](https://mateuszdabrowski.pl/docs/js/js-if-and-switch.md): Deep dive into the two pillars of JavaScript flow control.
+- [JS If & Switch](https://mateuszdabrowski.pl/docs/js/js-if-and-switch.md): Deep dive into the two pillars of JavaScript flow control. If statements, ternary, short-circuiting and switch, with examples.
 - [JS Loops](https://mateuszdabrowski.pl/docs/js/js-loops.md): JavaScript offers four for loops and two while loops. What's the difference?
 - [JS Document Object Model](https://mateuszdabrowski.pl/docs/js/js-dom.md): Explore, traverse and modify web pages with the power of JavaScript DOM properties and methods.
 
 ## JavaScript > Snippets
 
-- [Tailor the experience with data logic](https://mateuszdabrowski.pl/docs/js/snippets/tailor-with-data.md): Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Utilise the power of simple data logic and control the user flows.
-- [Engage with Countdown](https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown.md): Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
+- [Tailor the experience with data logic](https://mateuszdabrowski.pl/docs/js/snippets/tailor-with-data.md): Everyone and his boss are talking about personalisation. Most stop at tailoring the content. Don't be that person. Use JavaScript and the data you already have to change landing page structure, forms and user flows.
+- [Engage with Countdown](https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown.md): Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Build a JavaScript countdown timer for your landing pages, with counting options and dynamic content.
 
 ## FAQ
 

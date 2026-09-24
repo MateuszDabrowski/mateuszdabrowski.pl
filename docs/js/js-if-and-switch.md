@@ -1,10 +1,10 @@
 # JS If & Switch
 
-> Deep dive into the two pillars of JavaScript flow control.
+> Deep dive into the two pillars of JavaScript flow control. If statements, ternary, short-circuiting and switch, with examples.
 
 Source: https://mateuszdabrowski.pl/docs/js/js-if-and-switch/  
 Author: Mateusz Dąbrowski  
-Last updated: 2025-08-31  
+Last updated: 2026-09-24  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Deep dive into the two pillars of JavaScript flow control

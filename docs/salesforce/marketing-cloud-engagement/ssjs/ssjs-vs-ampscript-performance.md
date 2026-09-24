@@ -64,7 +64,7 @@ Understanding the execution time impact of the scripting context switch was nece
 
 In this scenario, there is no context switch. I timed a pure SSJS loop to have a base for analysis.
 
-```
+```js
 for (var i = 0; i < 10000; i++) {
     var a;
 };
@@ -74,7 +74,7 @@ for (var i = 0; i < 10000; i++) {
 
 In the next scenario, I added empty breaking out of SSJS within a loop.
 
-```
+```js
 for (var i = 0; i < 10000; i++) {
     var b;
     </script>
@@ -87,7 +87,7 @@ for (var i = 0; i < 10000; i++) {
 
 Next, I pushed an AMPScript block within the break.
 
-```
+```js
 for (var i = 0; i < 10000; i++) {
     </script>
     %%[
@@ -101,7 +101,7 @@ for (var i = 0; i < 10000; i++) {
 
 Then I put the for loop in the AMPScript context. As a result, the SSJS code block breaking impact count only once per 10 000 executions, making it irrelevant for the final average. It gives us another base for the next test.
 
-```
+```js
 </script>
 %%[
     FOR @current = 1 TO 10000 DO
@@ -116,7 +116,7 @@ Then I put the for loop in the AMPScript context. As a result, the SSJS code blo
 
 For the final scenario I decided to break out of AMPScript context within an AMPScript loop, as this is popular way for creating dynamic content in MCE.
 
-```
+```js
 </script>
     %%[
     FOR @current = 1 TO 10000 DO
@@ -167,7 +167,7 @@ All approaches output final sentence as: `One Two Three Four Five Six & 8 Nine-t
 
 **SSJS Split**
 
-```
+```js
 function toTitleCase(string) {
     var sentence = string.toLowerCase().split(" ");
     for (var i = 0; i < sentence.length; i++) {
@@ -182,7 +182,7 @@ title = toTitleCase(testedString);
 
 **SSJS Replace**
 
-```
+```js
 title = testedString.replace(
     /[a-zA-Z]\S*/g,
     function(string) {
@@ -193,7 +193,7 @@ title = testedString.replace(
 
 **AMPScript in SSJS**
 
-```
+```js
 function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
@@ -205,7 +205,7 @@ title = ampScript("SET @response = ProperCase('" + testedString + "')");
 
 **AMPScript**
 
-```
+```js
 %%[
 SET @response = ProperCase(@sentence)
 ]%%
@@ -261,7 +261,7 @@ All approaches output final sentence as: `one two three four five six & 8 nine-t
 
 **SSJS Method**
 
-```
+```js
 title = testedString.toLowerCase();
 ```
 
@@ -269,7 +269,7 @@ title = testedString.toLowerCase();
 
 This approach doesn't make sense but gives an idea of the impact of using function vs method.
 
-```
+```js
 function toLowerCase(string) {
     var sentence = string.toLowerCase();
     return sentence;
@@ -279,7 +279,7 @@ title = toLowerCase(sentences[a]);
 
 **AMPScript in SSJS**
 
-```
+```js
 function ampScript(code) {
     var ampBlock = '\%\%[' + code + ']\%\%';
     Platform.Function.TreatAsContent(ampBlock);
@@ -291,7 +291,7 @@ title = ampScript("SET @response = LowerCase('" + testedString + "')");
 
 **AMPScript**
 
-```
+```js
 %%[
 SET @response = LowerCase(@sentence)
 ]%%
