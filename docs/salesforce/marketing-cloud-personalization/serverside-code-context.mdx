@@ -95,7 +95,7 @@ The `event` object property is where the magic of the `context` object starts. I
 The `context.event` object won't work correctly in the Template Preview sidebar, as there is no valid event in that mode. Use an active campaign directly on the website to preview the actual output during development. Make sure you use the campaign targeting to limit execution just to you.
 
 In Template Preview, you will only be able to use [`context.event.fields.item`](#eventfields) - a single property with a stringified object containing details of the Item selected in the top right Simulate section):
-```
+```json
 "{\"type\":\"ITEM_TYPE\",\"_id\":{\"label\":\"ITEM_LABEL\",\"value\":\"ITEM_ID\"}}"
 ```
 My [:product[MCP] Catalog ETL Metadata Viewer](/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer.mdx) provides an example of its usage.

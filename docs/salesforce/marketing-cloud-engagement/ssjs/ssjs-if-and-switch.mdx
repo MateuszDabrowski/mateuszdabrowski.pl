@@ -2,7 +2,7 @@
 id: ssjs-if-and-switch
 title: SSJS If & Switch
 sidebar_label: If & Switch
-description: Deep dive into the two pillars of SSJS flow control.
+description: Deep dive into the two pillars of SSJS flow control. If statements, ternary, short-circuiting and switch in Marketing Cloud Engagement SSJS.
 image: img/og/og-image-sf-mce-ssjs-if-and-switch.png
 tags: [Marketing Cloud Engagement, SSJS]
 
@@ -85,7 +85,7 @@ All other possible values are considered truthy.
 
 This is very useful, as it allows you to leverage boolean evaluation on truthy values:
 
-``` js {3} title="Applies either personalized name or default value"
+```js {3} title="Applies either personalized name or default value"
 for (var customer in customers) {
     var helloPersonalization;
     if (customer.firstName) { // if customer.firstName has characters, it is truthy

@@ -8,7 +8,7 @@ hide_table_of_contents: false
 
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Email } from '/src/components/Email.jsx';
 import styles from './styles.module.css';
@@ -16,11 +16,21 @@ import styles from './styles.module.css';
 {/* Custom Inline React Component for Image Lightbox Overlay */}
 export const ZoomImage = ({ src, alt, imgStyle }) => {
   const [isOpen, setIsOpen] = useState(false);
+  // Escape closes the enlarged view, like a click on it does.
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKey = (event) => { if (event.key === 'Escape') setIsOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen]);
   return (
     <>
       <img
         src={src}
         alt={alt}
+        // Screenshots further down the page load when the reader gets near them.
+        loading="lazy"
+        decoding="async"
         style={{ cursor: 'zoom-in', ...imgStyle }}
         onClick={() => setIsOpen(true)}
       />

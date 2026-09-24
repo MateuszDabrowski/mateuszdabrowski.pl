@@ -53,9 +53,9 @@
             "popular": "Marketing Cloud Next",
             "aliases": ["MC Next"],
             "names": [
+                { "name": "Marketing Cloud on Core", "short": "MCoC" },
                 { "name": "Marketing Cloud Growth", "short": "MCG", "from": "2024" },
                 { "name": "Marketing Cloud Advanced", "short": "MCA", "from": "2025" },
-                { "name": "Marketing Cloud on Core", "short": "MCoC" },
                 { "name": "Marketing Cloud Next", "short": "MCN" },
                 { "name": "Agentforce Marketing", "from": "2025-10" },
                 { "name": "Marketing Cloud", "short": "MC", "from": "2026-09" }

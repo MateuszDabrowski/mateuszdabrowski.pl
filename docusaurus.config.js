@@ -30,7 +30,7 @@ module.exports = {
     onBrokenLinks: 'warn',
     onBrokenAnchors: 'warn',
     customFields: {
-        description: 'Personal website focused on making the most out of Marketing Automation. let code = do("our job").',
+        description: 'Making the most out of Salesforce Marketing. Docs, SQL, SSJS and AMPScript snippets and apps for Marketing Cloud Engagement, Next and Personalization. let code = do("our job").',
         keywords: [
             'Mateusz Dąbrowski',
             'mateuszdabrowski',
@@ -368,7 +368,8 @@ module.exports = {
                     sidebarPath: require.resolve('./docs/docsSidebar.js'),
                     // :product[...] markers: current Salesforce product names (plugins/product-names).
                     beforeDefaultRemarkPlugins: [require('./plugins/product-names').remarkProductNames],
-                    showLastUpdateAuthor: true,
+                    // Every page is by the same author: the date alone says what is new.
+                    showLastUpdateAuthor: false,
                     showLastUpdateTime: true,
                     editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
                 },
@@ -407,7 +408,7 @@ module.exports = {
                 include: ['**/*.md', '**/*.mdx'],
                 sidebarPath: require.resolve('./sites/sitesSidebar.js'),
                 beforeDefaultRemarkPlugins: [require('./plugins/product-names').remarkProductNames],
-                showLastUpdateAuthor: true,
+                showLastUpdateAuthor: false,
                 showLastUpdateTime: true,
                 editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
             },

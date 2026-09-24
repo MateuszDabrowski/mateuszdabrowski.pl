@@ -5,9 +5,15 @@
   "scripts": {
     "start": "sleep 2 && open -a Safari http://localhost:3000 & docusaurus start --no-open",
     "build": "docusaurus build",
+    "serve": "docusaurus serve",
+    "clear": "docusaurus clear",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "mark-products": "node plugins/product-names/mark.mjs"
+    "mark-products": "node plugins/product-names/mark.mjs",
+    "mark-products-apply": "node plugins/product-names/mark.mjs --apply",
+    "algolia-synonyms": "node plugins/product-names/algolia-synonyms.mjs",
+    "redirects-csv": "node plugins/cloudflare-redirects.mjs",
+    "redirects-check": "node plugins/cloudflare-redirects.mjs --check"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.1",

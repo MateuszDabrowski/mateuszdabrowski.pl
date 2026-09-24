@@ -2,7 +2,7 @@
 id: js-if-and-switch
 title: JS If & Switch
 sidebar_label: If & Switch
-description: Deep dive into the two pillars of JavaScript flow control.
+description: Deep dive into the two pillars of JavaScript flow control. If statements, ternary, short-circuiting and switch, with examples.
 image: img/og/og-image-js-if-and-switch.png
 tags: [JavaScript]
 ---
@@ -84,7 +84,7 @@ All other possible values are considered truthy.
 
 This is very useful, as it allows you to leverage boolean evaluation on truthy values:
 
-``` js {3} title="Applies either personalized name or default value"
+```js {3} title="Applies either personalized name or default value"
 for (let customer of customers) {
     let helloPersonalization;
     if (customer.firstName) { // if customer.firstName has characters, it is truthy
