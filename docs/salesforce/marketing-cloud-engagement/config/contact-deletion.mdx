@@ -485,6 +485,18 @@ Another group ripe for deletion are Contacts that you cannot contact. Multiple s
 4. Bad quality contacts (test records, fake emails, contacts that failed Email Studio List Detective)
 5. [Hidden Triggered Send Managed List Subscribers](https://help.salesforce.com/s/articleView?id=000381035&type=1)
 
+MobilePush is a common source of the third group. If the app doesn't send a Contact Key right away, the SDK registers each new device under a GUID-formatted one. Once the user logs in and the app sends the real key, the device moves to that Contact, and the GUID one stays behind without any channel address - a perfect candidate for deletion. If you would rather not collect them at all, ask your app developers about Delay Registration, which registers a Contact only after the app sets its Contact Key. Just remember that you can't send anything to those users until it happens. You can find more about MobilePush Contacts and devices in my [MobilePush Data Views](docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views.mdx) article.
+
+To find all contacts without any channel, use the **Contacts Without Channel Addresses** type in a Data Extract activity. It doesn't need Support to enable it and writes straight to a Data Extension in the root folder, but it runs on the Enterprise level, takes [several hours](https://help.salesforce.com/s/articleView?id=mktg.mc_cab_contacts_without_channel_address.htm&type=5) and fails without an FTP user, even though it never touches the FTP. Before deleting the results, check them for CRM-synchronised records and contacts waiting for a transactional journey, as both get a channel address only when the first message goes out.
+
+:::note You Should Know
+
+Deleting a Contact that still has a MobilePush device is not a simple cleanup. :product[MCE] treats it as a compliance deletion, and the SDK blocks any future push registration from that device. The only fix is the user reinstalling the app - Salesforce Support can't restore it for you.
+
+It is easier to hit than it sounds, as mobile channel addresses live on the Business Unit level. A filter built in one Business Unit may not see the devices registered in a child one, which is why [Salesforce recommends](https://help.salesforce.com/s/articleView?id=000388835&type=1) picking deletion candidates only with the Contacts Without Channel Addresses extract.
+
+:::
+
 Before deletion, it might be worth saving some of this data for the future (especially suppressed contacts for compliance or hard bounced contacts for future deliverability).
 
 ### Zombie Contacts

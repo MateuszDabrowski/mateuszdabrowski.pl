@@ -102,6 +102,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-09-25',
+        kind: 'Doc',
+        title: 'MCE MobilePush Data Views',
+        url: '/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/',
+        description: 'Push past the docs. The undocumented MobilePush Data Views in MCE, what their values mean and where push engagement data lives.',
+    },
+    {
         date: '2026-09-22',
         kind: 'App',
         title: 'Slot 1.6.0',

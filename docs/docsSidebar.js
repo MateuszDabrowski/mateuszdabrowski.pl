@@ -206,6 +206,7 @@ module.exports = {
                                 'salesforce/marketing-cloud-engagement/config/licence-limits',
                                 'salesforce/marketing-cloud-engagement/config/system-data-views',
                                 'salesforce/marketing-cloud-engagement/config/mobile-connect-data-views',
+                                'salesforce/marketing-cloud-engagement/config/mobile-push-data-views',
                                 'salesforce/marketing-cloud-engagement/config/mcc-integration-patterns',
                                 'salesforce/marketing-cloud-engagement/config/contact-deletion',
                                 'salesforce/marketing-cloud-engagement/config/enhanced-send-log',

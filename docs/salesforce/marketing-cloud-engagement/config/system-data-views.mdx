@@ -27,7 +27,7 @@ Another important point related to Data Views is always knowing which Data View 
 
 :::note You Should Know
 
-Below you can find selected Salesforce :product[Marketing Cloud Engagement] Data Views focused on Subscribers, Emails, Journeys and Automations. You can find the SMS Channel Data Views in [Mobile Connect Data Views article](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx).
+Below you can find selected Salesforce :product[Marketing Cloud Engagement] Data Views focused on Subscribers, Emails, Journeys and Automations. You can find the SMS Channel Data Views in [Mobile Connect Data Views article](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx) and the push channel ones in [MobilePush Data Views article](/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views.mdx).
 
 Be sure to check the excellent [Dataviews.io](https://dataviews.io) - an interactive system tables relationship diagram created by [Zuzanna Jarczyńska](https://sfmarketing.cloud/author/zjarczynska/). It will for sure help you with multi-view [`JOIN`s](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx).
 
@@ -80,16 +80,25 @@ Locale | The locale code for the subscriber | Locale | X
 </TabItem>
 <TabItem value='values'>
 
-`Status` possible values:
+<details>
+<summary>`Status` - 4 values</summary>
+
 - active
 - held
 - unsubscribed
 - bounced
 
-`SubscriberType` possible values:
+</details>
+
+<details>
+<summary>`SubscriberType` - 2 values</summary>
+
 - ExactTarget
 - Unknown External System
+
 In most cases you will see only `Exact Target` in your database.
+
+</details>
 
 ---
 
@@ -229,29 +238,53 @@ TriggeredSendCustomerKey | The customer key for the triggered send | Text | X
 </TabItem>
 <TabItem value='values'>
 
-`JobType` possible values:
+<details>
+<summary>`JobType` - 2 values</summary>
+
 - `null`
 - MULTIPLE_SEND
 
-`JobStatus` possible values:
+</details>
+
+<details>
+<summary>`JobStatus` - 2 values</summary>
+
 - Deleted
 - New
 
-`Category` possible values:
+</details>
+
+<details>
+<summary>`Category` - 4 values</summary>
+
 - Test Send Emails
 - Triggered Sends
 - Version XX (where XX is a number)
 - GUID_VXX (36 character hyphen separated GUID followed by underscore and VXX where XX is a number)
 
-`CharacterSet` possible values:
+</details>
+
+<details>
+<summary>`CharacterSet` - 1 value</summary>
+
 - Unicode - UTF-8
 
-`SendType` possible values:
+</details>
+
+<details>
+<summary>`SendType` - 1 value</summary>
+
 - ExactTargetSend
 
-`SendClassificationType` possible values:
+</details>
+
+<details>
+<summary>`SendClassificationType` - 2 values</summary>
+
 - Default Commercial
 - Default Transactional
+
+</details>
 
 ---
 
@@ -411,14 +444,22 @@ StartTime | The datetime of transactional message trigger | Date |
 </TabItem>
 <TabItem value='values'>
 
-`Channel` possible values:
+<details>
+<summary>`Channel` - 2 values</summary>
+
 - 0 (for Email channel)
 - 1 (for SMS channel)
 
-`Disposition` possible values:
+</details>
+
+<details>
+<summary>`Disposition` - 3 values</summary>
+
 - 0 (for Queued)
 - 1 (for Sent)
 - 2 (for NotSent)
+
+</details>
 
 ---
 
@@ -654,7 +695,8 @@ IsFalseBounce | Indicates a false bounce if [:product[MCE] received delivery rec
 </TabItem>
 <TabItem value='values'>
 
-`BounceCategoryID` possible values:
+<details>
+<summary>`BounceCategoryID` - 5 values</summary>
 
 Value | Meaning
 -- | --
@@ -664,14 +706,21 @@ Value | Meaning
 4 | Unknown Bounce
 5 | Technical/Other Bounce
 
-`BounceCategory` possible values:
+</details>
+
+<details>
+<summary>`BounceCategory` - 5 values</summary>
+
 - Hard Bounce
 - Soft Bounce
 - Block Bounce
 - Unknown Bounce
 - Technical/Other Bounce
 
-`BounceSubcategoryID` possible values:
+</details>
+
+<details>
+<summary>`BounceSubcategoryID` - 15 values</summary>
 
 Value | Meaning | Bounce Type
 -- | -- | --
@@ -691,7 +740,11 @@ Value | Meaning | Bounce Type
 4999 | Other | Hard Bounce, Soft Bounce, Technical/Other Bounce
 9999 | Unknown | Hard Bounce, Soft Bounce, Block Bounce, Unknown Bounce, Technical/Other Bounce
 
-`BounceSubcategory` possible values:
+</details>
+
+<details>
+<summary>`BounceSubcategory` - 14 values</summary>
+
 - Complaints
 - Blocked
 - Content
@@ -707,16 +760,25 @@ Value | Meaning | Bounce Type
 - Other
 - Unknown
 
-`BounceTypeId` possible values:
+</details>
+
+<details>
+<summary>`BounceTypeId` - 2 values</summary>
 
 Value | Meaning
 -- | --
 0 | immediate
 1 | delayed
 
-`BounceType` possible values:
+</details>
+
+<details>
+<summary>`BounceType` - 2 values</summary>
+
 - immediate
 - delayed
+
+</details>
 
 ---
 
@@ -956,13 +1018,17 @@ UnsubReason | The reason listed is a custom value configured by your administrat
 </TabItem>
 <TabItem value='values'>
 
-`UnsubReason` possible values:
+<details>
+<summary>`UnsubReason` - 6 values</summary>
+
 - Spam Complaint
 - Unsubscribed from list details on subscriber properties dialog.
 - Unsubscribed by Salesforce :product[MCE] RMM service based on subscriber Leave/Reply email.
 - Unsubscribed by subscriber edit API call.
 - Unsubscribed from the Subscription Center
 - Unsubscribed via Import
+
+</details>
 
 ---
 
@@ -1039,14 +1105,20 @@ SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
 </TabItem>
 <TabItem value='values'>
 
-`AddMethod` possible values:
+<details>
+<summary>`AddMethod` - 5 values</summary>
+
 - API
 - Imported
 - WebApplication
 - DataExtensionSend
 - Unknown
 
-`ListType` possible values:
+</details>
+
+<details>
+<summary>`ListType` - 6 values</summary>
+
 - Publication List
 - Suppression List
 - List
@@ -1054,11 +1126,17 @@ SubscriberType | The type of subscriber (it will be `ExactTarget`) | Text | X
 - FTAF List
 - Unknown
 
-`Status` possible values:
+</details>
+
+<details>
+<summary>`Status` - 4 values</summary>
+
 - active
 - held
 - unsubscribed
 - bounced
+
+</details>
 
 ---
 
@@ -1095,7 +1173,7 @@ When working with `_ListSubscribers` Data View:
 
 ## Mobile Connect Data Views
 
-Learn more about Mobile Connect [SMS Data Views here](docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx).
+Learn more about Mobile Connect [SMS Data Views here](docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx), and about the undocumented [MobilePush Data Views](docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views.mdx) that hold push devices and tags.
 
 ---
 
@@ -1129,12 +1207,16 @@ JourneyStatus | The current running mode of the Journey | Text
 </TabItem>
 <TabItem value='values'>
 
-`JourneyStatus` possible values:
+<details>
+<summary>`JourneyStatus` - 5 values</summary>
+
 - Draft
 - Running
 - Finishing
 - Stopped
 - Deleted
+
+</details>
 
 ---
 
@@ -1201,7 +1283,9 @@ ActivityType | The type of activity | Text | X
 </TabItem>
 <TabItem value='values'>
 
-`ActivityType` possible values:
+<details>
+<summary>`ActivityType` - 21 values</summary>
+
 - `null`
 - APIEvent
 - Audience
@@ -1223,6 +1307,8 @@ ActivityType | The type of activity | Text | X
 - transactional-api
 - UPDATECONTACTDATA
 - WAIT
+
+</details>
 
 ---
 
@@ -1299,18 +1385,26 @@ AutomationInstanceActivityErrorDetails | The first error message encountered in 
 </TabItem>
 <TabItem value='values'>
 
-`AutomationType` possible values:
+<details>
+<summary>`AutomationType` - 3 values</summary>
+
 - Schedule
 - File Drop
 - Trigger
 
-`AutomationInstanceStatus` possible values:
+</details>
+
+<details>
+<summary>`AutomationInstanceStatus` - 6 values</summary>
+
 - QueuedFile
 - Initialized
 - Executing
 - Stopped
 - Complete
 - Error
+
+</details>
 
 ---
 
@@ -1393,7 +1487,8 @@ ActivityInstanceStatusDetails | The error message encountered in the activity ex
 </TabItem>
 <TabItem value='values'>
 
-`ActivityType` possible values:
+<details>
+<summary>`ActivityType` - 28 values</summary>
 
 Value | Meaning
 -- | --
@@ -1426,12 +1521,18 @@ Value | Meaning
 1701 | Batch Personalization
 3700 | Contact to Business Unit Mapping
 
-`ActivityInstanceStatus` possible values:
+</details>
+
+<details>
+<summary>`ActivityInstanceStatus` - 5 values</summary>
+
 - Initialized
 - Executing
 - Complete
 - Error
 - NotSelected
+
+</details>
 
 ---
 

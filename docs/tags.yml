@@ -99,6 +99,10 @@ Personalisation:
   label: "Personalisation"
   description: "Tailoring content to each person across email, web and apps with Marketing Cloud tools and custom code."
 
+Push:
+  label: "Push"
+  description: "Push notifications, in-app and inbox messages in Marketing Cloud: MobilePush device data, send logs and Data Views."
+
 Segmentation:
   label: "Segmentation"
   description: "Building audiences from Marketing Cloud data with Filters, SQL, AgentExchange apps and Data 360 segments."
