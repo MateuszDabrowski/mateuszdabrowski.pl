@@ -218,7 +218,7 @@ module.exports = {
                     href: 'https://github.com/MateuszDabrowski',
                     position: 'right',
                     className: 'header-github-link',
-                    'aria-label': 'GitHub repository',
+                    'aria-label': 'GitHub Profile',
                 },
             ],
         },

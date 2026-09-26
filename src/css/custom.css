@@ -70,10 +70,49 @@ html[data-theme='dark'] {
   }
 }
 
-.header-linkedin-link:hover,
-.header-github-link:hover,
-.header-salesforce-link:hover {
+/* Dim only the icon, so the tooltip below keeps full opacity. */
+.header-linkedin-link:hover::before,
+.header-github-link:hover::before,
+.header-salesforce-link:hover::before {
   opacity: 0.6;
+}
+
+/* Tooltips for the navbar icons. The profile links show their aria-label, the
+   colour mode toggle (src/theme/ColorModeToggle) its data-tooltip. Only on
+   devices with hover, so a tap on a phone does not leave one open. */
+.header-linkedin-link,
+.header-salesforce-link,
+.header-github-link,
+.navbar [data-tooltip] {
+  position: relative;
+}
+
+@media (hover: hover) {
+  .header-linkedin-link:is(:hover, :focus-visible)::after,
+  .header-salesforce-link:is(:hover, :focus-visible)::after,
+  .header-github-link:is(:hover, :focus-visible)::after,
+  .navbar [data-tooltip]:is(:hover, :focus-visible)::after {
+    content: attr(aria-label);
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    right: 0;
+    z-index: 10;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--ifm-color-emphasis-300);
+    border-radius: var(--ifm-global-radius);
+    background: var(--ifm-background-surface-color);
+    box-shadow: var(--ifm-global-shadow-md);
+    color: var(--ifm-font-color-base);
+    font-size: 0.8rem;
+    font-weight: normal;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .navbar [data-tooltip]:is(:hover, :focus-visible)::after {
+    content: attr(data-tooltip);
+  }
 }
 
 .header-linkedin-link:before {
@@ -409,17 +448,21 @@ html[data-theme='dark'] article header>h1 {
    The dotted underline marks a name with a history. Hover, keyboard focus or
    a tap shows it, read from data-history so the text itself stays clean. */
 .product-name {
-  position: relative;
-  /* A name split across two lines anchors the tooltip to the end of the
-     first line and the bottom of the second, far from the word. */
-  white-space: nowrap;
   text-decoration: underline dotted;
   text-underline-offset: 0.2em;
   cursor: help;
 }
 
-.product-name:hover::after,
-.product-name:focus::after {
+/* The tooltip hangs from the last word, not the whole name. A name split
+   across two lines would anchor it to the end of the first line and the
+   bottom of the second, far from the word, and a name kept on one line
+   leaves a gap at the end of the line above. */
+.product-name__end {
+  position: relative;
+}
+
+.product-name:hover > .product-name__end::after,
+.product-name:focus > .product-name__end::after {
   content: attr(data-history);
   position: absolute;
   top: calc(100% + 0.4rem);
@@ -444,8 +487,8 @@ html[data-theme='dark'] article header>h1 {
 /* On one-column layouts a name near the right edge would push the tooltip off
    screen, so a tap shows the history in a box pinned to the bottom instead. */
 @media (max-width: 996px) {
-  .product-name:hover::after,
-  .product-name:focus::after {
+  .product-name:hover > .product-name__end::after,
+  .product-name:focus > .product-name__end::after {
     position: fixed;
     top: auto;
     right: 1rem;
@@ -472,9 +515,22 @@ html[data-theme='dark'] article header>h1 {
     font-size: 20px;
   }
 
-  div[role="tabpanel"] .admonition p {
+  div[role="tabpanel"] .admonition p,
+  div[role="tabpanel"] details p {
     font-size: 16px;
   }
+}
+
+/* Collapsibles (<details> in docs, used for picklist values) in the look of
+   the You Should Know notes: the grey secondary alert colours and a thick
+   left border, in place of the blue info box Docusaurus gives them. The arrow
+   and the divider follow --ifm-alert-border-color. */
+.markdown details.alert--info {
+  --ifm-alert-background-color: var(--ifm-color-secondary-contrast-background);
+  --ifm-alert-background-color-highlight: rgba(235, 237, 240, 0.15);
+  --ifm-alert-foreground-color: var(--ifm-color-secondary-contrast-foreground);
+  --ifm-alert-border-color: var(--ifm-color-secondary-dark);
+  border-width: 0 0 0 var(--ifm-alert-border-left-width);
 }
 
 /* ---------------------------------- SEARCH --------------------------------- */
@@ -550,6 +606,79 @@ html[data-theme='dark'] .DocSearch {
   --docsearch-dropdown-menu-item-hover-background: var(--ifm-color-emphasis-200);
   --docsearch-soft-primary-color: color-mix(in srgb, var(--ifm-color-primary) 18%, transparent);
   --docsearch-hit-highlight-color: var(--ifm-color-primary);
+}
+
+/* Search page hit icons: the three icons the Cmd+K modal uses for a page, a
+   heading and a text match, drawn in each theme's label colour. Images cannot
+   take currentColor, so update these if the primary or secondary text colour
+   changes. */
+html[data-theme='light'] {
+  --search-hit-page: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231D73C9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z'/%3E%3Cpath d='M14 2v4a2 2 0 0 0 2 2h4'/%3E%3Cpath d='M10 9H8'/%3E%3Cpath d='M16 13H8'/%3E%3Cpath d='M16 17H8'/%3E%3C/svg%3E");
+  --search-hit-heading: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23525860' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' x2='20' y1='9' y2='9'/%3E%3Cline x1='4' x2='20' y1='15' y2='15'/%3E%3Cline x1='10' x2='8' y1='3' y2='21'/%3E%3Cline x1='16' x2='14' y1='3' y2='21'/%3E%3C/svg%3E");
+  --search-hit-text: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23525860' stroke-width='1.7' stroke-linejoin='round'%3E%3Cpath d='M17 5H3h14zm0 5H3h14zm0 5H3h14z'/%3E%3C/svg%3E");
+}
+
+html[data-theme='dark'] {
+  --search-hit-page: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23DA4E55' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z'/%3E%3Cpath d='M14 2v4a2 2 0 0 0 2 2h4'/%3E%3Cpath d='M10 9H8'/%3E%3Cpath d='M16 13H8'/%3E%3Cpath d='M16 17H8'/%3E%3C/svg%3E");
+  --search-hit-heading: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' x2='20' y1='9' y2='9'/%3E%3Cline x1='4' x2='20' y1='15' y2='15'/%3E%3Cline x1='10' x2='8' y1='3' y2='21'/%3E%3Cline x1='16' x2='14' y1='3' y2='21'/%3E%3C/svg%3E");
+  --search-hit-text: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23FFFFFF' stroke-width='1.7' stroke-linejoin='round'%3E%3Cpath d='M17 5H3h14zm0 5H3h14zm0 5H3h14z'/%3E%3C/svg%3E");
+}
+
+/* Search page (/search/). The page drops DocSearch's hit type, but every
+   heading level adds one breadcrumb: 1 = page title, 2 = H2 section, and so on.
+   The label before each result title comes from that count, and the icon from
+   the hit type: a result with a text snippet is a text match. */
+.search-page-wrapper article > h2::before {
+  --search-hit-icon: var(--search-hit-heading);
+  display: inline-block;
+  margin-right: 0.6rem;
+  padding: 0.1rem 0.45rem 0.1rem 1.45rem;
+  background: var(--search-hit-icon) 0.4rem 50% / 0.8rem 0.8rem no-repeat;
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: var(--ifm-global-radius);
+  color: var(--ifm-color-content-secondary);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.search-page-wrapper article:has(.breadcrumbs__item:only-child) > h2::before {
+  content: 'Page';
+}
+
+.search-page-wrapper article:has(.breadcrumbs__item:only-child):not(:has(> p)) > h2::before {
+  --search-hit-icon: var(--search-hit-page);
+  border-color: currentColor;
+  color: var(--ifm-color-primary);
+}
+
+.search-page-wrapper article:has(.breadcrumbs__item:nth-child(2):last-child) > h2::before {
+  content: 'H2';
+}
+
+.search-page-wrapper article:has(.breadcrumbs__item:nth-child(3):last-child) > h2::before {
+  content: 'H3';
+}
+
+.search-page-wrapper article:has(.breadcrumbs__item:nth-child(4):last-child) > h2::before {
+  content: 'H4';
+}
+
+.search-page-wrapper article:has(.breadcrumbs__item:nth-child(5):last-child) > h2::before {
+  content: 'H5';
+}
+
+.search-page-wrapper article:has(> p) > h2::before {
+  --search-hit-icon: var(--search-hit-text);
+}
+
+/* Algolia logo on the search page, in the text colour like the modal's
+   --docsearch-logo-color. The DocSearch terms need it visible and linked. */
+.search-page-wrapper a[href='https://www.algolia.com/'] svg :is(.cls-1, .cls-2) {
+  fill: var(--ifm-font-color-base);
 }
 
 /* ------------------------------- VIDEO EMBED ------------------------------- */

@@ -118,18 +118,33 @@ function transformProductNames(tree, { mode = 'html', onUnknown = () => {} } = {
             onUnknown(label, candidates.map((c) => c.id), node.attributes?.of);
             return [{ type: 'text', value: label }];
         }
-        const tooltip = (text, tabIndex) => ({
-            type: 'mdxJsxTextElement',
-            name: 'span',
-            attributes: [
-                { type: 'mdxJsxAttribute', name: 'className', value: 'product-name' },
-                // Inside a link the link takes focus. Elsewhere the first mention joins the tab
-                // order and later ones are focusable by tap or click only (-1).
-                ...(inLink ? [] : [{ type: 'mdxJsxAttribute', name: 'tabIndex', value: tabIndex }]),
-                { type: 'mdxJsxAttribute', name: 'data-history', value: product.history },
-            ],
-            children: [{ type: 'text', value: text }],
-        });
+        // The last word holds the history and anchors the tooltip, so a long name can wrap
+        // between its words and the tooltip still opens under the line the name ends on.
+        const tooltip = (text, tabIndex) => {
+            const lastWord = text.lastIndexOf(' ') + 1;
+            return {
+                type: 'mdxJsxTextElement',
+                name: 'span',
+                attributes: [
+                    { type: 'mdxJsxAttribute', name: 'className', value: 'product-name' },
+                    // Inside a link the link takes focus. Elsewhere the first mention joins the tab
+                    // order and later ones are focusable by tap or click only (-1).
+                    ...(inLink ? [] : [{ type: 'mdxJsxAttribute', name: 'tabIndex', value: tabIndex }]),
+                ],
+                children: [
+                    ...(lastWord ? [{ type: 'text', value: text.slice(0, lastWord) }] : []),
+                    {
+                        type: 'mdxJsxTextElement',
+                        name: 'span',
+                        attributes: [
+                            { type: 'mdxJsxAttribute', name: 'className', value: 'product-name__end' },
+                            { type: 'mdxJsxAttribute', name: 'data-history', value: product.history },
+                        ],
+                        children: [{ type: 'text', value: text.slice(lastWord) }],
+                    },
+                ],
+            };
+        };
         if (node.attributes && 'as-written' in node.attributes) {
             const text = label.trim();
             return inHeading || mode === 'text' ? [{ type: 'text', value: text }] : [tooltip(text, '-1')];
