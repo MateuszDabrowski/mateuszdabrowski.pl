@@ -4,26 +4,42 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-26  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-## System Data Views
+## Data Views Basics
 
-Learn about MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) [System Data Views Basics](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#data-views-basics) and specific backend tables covering [Email Studio](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#subscriber-data-views), [Journey Builder](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#journey-data-views) & [Automation Studio](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#automation-data-views) data [here](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/).
+MobileConnect Data Views work mostly the same way as the [System Data Views](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#data-views-basics) you know from emails, journeys and automations. They are built-in backend tables that you can freely use in SQL queries for quick reports or to feed your own Data Extensions, and with [one exception](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change/), you **cannot change** them.
+
+Below you can find the MobileConnect SMS Data Views. The push channel ones are in the [MobilePush Data Views article](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/), and the [Email Studio](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#subscriber-data-views), [Journey Builder](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#journey-data-views) and [Automation Studio](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#automation-data-views) ones in the [System Data Views article](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/).
+
+They hold two kinds of data, though. [`_SMSMessageTracking`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smsmessagetracking) and [`_SMSSubscriptionLog`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smssubscriptionlog) log events (messages sent and received, and subscription changes), while [`_MobileAddress`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_mobileaddress) and [`_UndeliverableSMS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_undeliverablesms) show only the current state of each Mobile Number.
+
+`_SMSSubscriptionLog` keeps more than 6 months of data, but Salesforce gives no retention for `_SMSMessageTracking`, so copy the messages you want to keep with a scheduled Automation. In high-volume accounts, a better idea is exporting them to an external Data Warehouse, as big copies can slow down MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud).
+
+The data covers all numbers on your private short and long codes, but only opted-in numbers on shared short codes.
+
+Some of the MobileConnect Data Views are legacy. Salesforce no longer supports [`_MobileAddress`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_mobileaddress) and [`_MobileSubscription`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_mobilesubscription), and [`_SubscriberSMS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_subscribersms) stays empty, so none of them belongs in your regular processes. Still, keep them in mind for edge cases and dirty workarounds. `_MobileAddress` is even unique among all Data Views, as you can update it with SSJS - for example to [change a Mobile Number](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change/).
+
+> **Note: You Should Know**
+>
+> Be sure to check the excellent [Dataviews.io](https://dataviews.io) - an interactive system tables relationship diagram created by [Zuzanna Jarczyńska](https://sfmarketing.cloud/author/zjarczynska/). It will for sure help you with multi-view [`JOIN`s](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/).
+>
+> There is also a more detailed [System Tables relationship diagram](https://dbdiagram.io/d/5ff259ed80d742080a34e3c3) created by [Cameron Roberts](https://cameronrobert.com.au) that contains SQL Database structure along with field lengths.
+>
+> [Zuza's DataViews.io](https://dataviews.io) | [Cam's Detailed Diagram](https://dbdiagram.io/d/5ff259ed80d742080a34e3c3)
+
+## Mobile Numbers and Contacts
+
+Most of the MobileConnect data is assigned to Mobile Number, not Contact. It means that it might be shared by a few contacts (if multiple have the same mobile number set) or migrate between them (if the mobile number gets reassigned).
+
+It shouldn't be a big problem in B2C environments, as most people will have their mobile number and keep it long. However, unused numbers might be recycled after a few years by telecom and go back to the market and given to a new user.
+
+Mobile number recycling is much more present in the B2B scenario, where there is a bigger chance for shared mobile numbers and much faster recycling of the numbers within the organisation. Many companies reuse the phone number of the employees that left.
 
 ## MobileConnect Data Views
 
 MobileConnect Data Views are unique, as most of them are no longer supported by Salesforce. But some still works. All those data views show data limited to a specific Business Unit.
-
-> **Note: You Should Know**
->
-> Most of the MobileConnect data is assigned to Mobile Number, not Contact. It means that it might be shared by a few contacts (if multiple have the same mobile number set) or migrate between them (if the mobile number gets reassigned).
->
-> It shouldn't be a big problem in B2C environments, as most people will have their mobile number and keep it long. However, remember that unused numbers might be recycled after a few years by telecom and go back to the market and given to a new user.
->
-> Mobile number recycling is much more present in the B2B scenario, where there is a bigger chance for shared mobile numbers and much faster recycling of the numbers. Many companies reuse the phone number of the employees that left.
->
-> When working with Mobile Number history of engagement and subscription, take this into consideration.
 
 ### \_MobileAddress
 
@@ -57,7 +73,7 @@ MobileConnect Data Views are unique, as most of them are no longer supported by 
 
 **Field Picklist Values**
 
-`_Status` possible values:
+`_Status` - 3 values
 
 | Value | Meaning  |
 | ----- | -------- |
@@ -65,7 +81,7 @@ MobileConnect Data Views are unique, as most of them are no longer supported by 
 | 2     | Inactive |
 | 3     | Deleted  |
 
-`_Source` possible values:
+`_Source` - 14 values
 
 | Value | Meaning          |
 | ----- | ---------------- |
@@ -155,7 +171,7 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 
 **Field Picklist Values**
 
-`_OptOutStatusID` possible values:
+`_OptOutStatusID` - 4 values
 
 | Value | Meaning             |
 | ----- | ------------------- |
@@ -164,7 +180,7 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 | 10    | DeletingNotOptedOut |
 | 11    | DeletingOptedOut    |
 
-`_OptOutMethodID` possible values (more can come in the future):
+`_OptOutMethodID` - 5 values (more can come in the future)
 
 | Value | Meaning                              |
 | ----- | ------------------------------------ |
@@ -174,7 +190,7 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 | 15    | Suppression                          |
 | NULL  | Subscriber texted an Opt-Out Keyword |
 
-`_OptInStatusID` possible values:
+`_OptInStatusID` - 6 values
 
 | Value | Meaning              |
 | ----- | -------------------- |
@@ -185,7 +201,7 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 | 11    | DeletingOptInPending |
 | 12    | DeletingOptedIn      |
 
-`_OptInMethodID` possible values:
+`_OptInMethodID` - 14 values
 
 | Value | Meaning            |
 | ----- | ------------------ |
@@ -204,7 +220,7 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 | 12    | Mobile Opt-In      |
 | 13    | DeviceRegistration |
 
-`_Source` possible values:
+`_Source` - 5 values
 
 | Value | Meaning      |
 | ----- | ------------ |
@@ -305,7 +321,7 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 
 **Field Picklist Values**
 
-`OptOutStatusID` possible values:
+`OptOutStatusID` - 4 values
 
 | Value | Meaning             |
 | ----- | ------------------- |
@@ -314,7 +330,7 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 | 10    | DeletingNotOptedOut |
 | 11    | DeletingOptedOut    |
 
-`OptOutMethodID` possible values (more can come in the future):
+`OptOutMethodID` - 5 values (more can come in the future)
 
 | Value | Meaning                              |
 | ----- | ------------------------------------ |
@@ -324,7 +340,7 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 | 15    | Suppression                          |
 | NULL  | Subscriber texted an Opt-Out Keyword |
 
-`OptInStatusID` possible values:
+`OptInStatusID` - 6 values
 
 | Value | Meaning              |
 | ----- | -------------------- |
@@ -335,7 +351,7 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 | 11    | DeletingOptInPending |
 | 12    | DeletingOptedIn      |
 
-`OptInMethodID` possible values:
+`OptInMethodID` - 14 values
 
 | Value | Meaning            |
 | ----- | ------------------ |
@@ -354,7 +370,7 @@ You shouldn't be working with `_SubscriberSMS` Data View.
 | 12    | Mobile Opt-In      |
 | 13    | DeviceRegistration |
 
-`Source` possible values:
+`Source` - 5 values
 
 | Value | Meaning      |
 | ----- | ------------ |
@@ -426,8 +442,8 @@ When working with `_SMSSubscriptionLog` Data View:
 | ResponseToMobileMessageTrackingID | The tracking ID of the response to the message                                                                                                                                                                                                                                                                               | Number    | X        |
 | IsValid                           | Populates to 1 for inbound message and 0 for Outbound message                                                                                                                                                                                                                                                                | Boolean   | X        |
 | InvalidationCode                  | Invalidation code for the message. Currently always null.                                                                                                                                                                                                                                                                    | Number    | X        |
-| SMSJobID                          | GUID with JobID matching value in [SMS Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/). Filled only for sends since Spring 2023.                                                                                                                                  | String    | X        |
-| SMSBatchID                        | BatchID matching value in [SMS Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/). Filled only for sends since Spring 2023.                                                                                                                                          | Number    | X        |
+| SMSJobID                          | GUID with JobID matching value in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | String    | X        |
+| SMSBatchID                        | BatchID matching value in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                                    | Number    | X        |
 | SendID                            | The send ID number for the SMS send                                                                                                                                                                                                                                                                                          | Number    | X        |
 | SendSplitID                       | If the message was split, the ID of the split                                                                                                                                                                                                                                                                                | Number    | X        |
 | SendSegmentID                     | The ID of the segment tied to the message                                                                                                                                                                                                                                                                                    | Number    | X        |
@@ -512,7 +528,7 @@ When working with `_SMSMessageTracking` Data View:
 7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. You should pull that data from [`_SMSSubscriptionLog`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smssubscriptionlog).
 8. `JBDefinitionID` and `JBActivityID` let you cleanly match SMS data to [`Journey`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journey) and [`_JourneyActivity`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journeyactivity) Data Views using `VersionID` and `ActivityID` respectively. However, it won't work for old (created before October 2020) SMS Activities - for those you can make a [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) using `Name` field: `ON smsTracking.Name = journeyActivity.ActivityName`.
 9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
-10. `SMSJobID` and `SMSBatchID` are the only way to connect \_SMSMessageTracking Data View to [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) `ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SMSJobID AND smsTracking.SMSBatchID = sendLog.BatchID`.
+10. `SMSJobID` and `SMSBatchID` are the only way to connect \_SMSMessageTracking Data View to the [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log) with a [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) `ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SMSJobID AND smsTracking.SMSBatchID = sendLog.BatchID`.
 
 #### SMS Status Codes
 
@@ -569,8 +585,44 @@ SELECT
 FROM _UndeliverableSMS AS undeliverableSMS
 ```
 
-When working with `_JourneyActivity` Data View:
+When working with `_UndeliverableSMS` Data View:
 
 1. If `Undeliverable` is `TRUE`, check `HoldDate` to know when the number will be reachable again.
 2. Monitor this data view and blocklist numbers with significant `BounceCount` values to clean up your database, save money and protect from spamming potential future owners of the recycled phone number.
 3. It's impossible to know the actual delivery status for SMS sends - MCE reports only whether the SMS carrier accepted the message. It does not know what happens with it after the carrier takes over. However, most of the SMS messages accepted by carriers are delivered.
+
+## SMS Send Log
+
+The Data Views tell you what happened to each SMS, but not what your data looked like when you sent it. That is the job of the SMS Send Log - a [Feature on Demand](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/features-on-demand/) that logs data about each SMS you send. Ask for both of its parts - the SMSSendLog template and the backend Business Rule that fills it, as without the rule the log stays empty. Then create a Data Extension from the template in Contact Builder and keep it non-sendable.
+
+Don't skip it if you already have an email Send Log. Without the SMS one, MCE may write SMS sends to the email Send Log, which [Salesforce treats as an unsupported bug](https://help.salesforce.com/s/articleView?id=000387998\&type=1).
+
+The template comes with these fields:
+
+| Name               | Description                                                                                                                                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SMSJobID           | GUID of the SMS job. Matches `SMSJobID` in [`_SMSMessageTracking`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smsmessagetracking)                          |
+| SMSTriggeredSendID | ID of the triggered send                                                                                                                                                                                                  |
+| BatchID            | ID of the batch. Matches `SMSBatchID` in [`_SMSMessageTracking`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smsmessagetracking)                            |
+| SubID              | ID of the subscriber who got the message. Matches `SubscriberID` in [`_SMSMessageTracking`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_smsmessagetracking) |
+
+You can also add your own fields to log more. Whenever a field name matches a list attribute or a field of the sending Data Extension, MCE writes its value at send time. The email Send Log works the same way, so my [Enhanced Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/) article has ideas worth trying here, especially the [Custom Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/#custom-send-log) part on choosing extra fields. However, the SMS documentation mentions only list attributes and Data Extension fields, so test AMPscript variables with an SMS send before you rely on them.
+
+Since Spring 2023, `_SMSMessageTracking` has the `SMSJobID` and `SMSBatchID` fields, so you can match each logged send with its tracking data. Both fields are empty for older sends, so those will not match:
+
+```sql title="SMS Send Log with tracking data"
+SELECT
+      sendLog.SubID
+    , sendLog.SMSJobID
+    , smsTracking.Mobile
+    , smsTracking.Name
+    , smsTracking.Delivered
+    , smsTracking.ActionDateTime
+FROM [SMS Send Log] AS sendLog
+    INNER JOIN _SMSMessageTracking AS smsTracking
+        ON smsTracking.SubscriberID = sendLog.SubID
+        AND smsTracking.SMSJobID = sendLog.SMSJobID
+        AND smsTracking.SMSBatchID = sendLog.BatchID
+```
+
+Replace `[SMS Send Log]` with the name of your Data Extension and add your custom fields to the `SELECT`.

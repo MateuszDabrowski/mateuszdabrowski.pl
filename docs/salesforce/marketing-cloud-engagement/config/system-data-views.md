@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-26  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -19,7 +19,7 @@ Another important point related to Data Views is always knowing which Data View 
 
 > **Note: You Should Know**
 >
-> Below you can find selected Salesforce Marketing Cloud Engagement Data Views focused on Subscribers, Emails, Journeys and Automations. You can find the SMS Channel Data Views in [Mobile Connect Data Views article](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/).
+> Below you can find selected Salesforce Marketing Cloud Engagement Data Views focused on Subscribers, Emails, Journeys and Automations. You can find the SMS Channel Data Views in [Mobile Connect Data Views article](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/) and the push channel ones in [MobilePush Data Views article](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/).
 >
 > Be sure to check the excellent [Dataviews.io](https://dataviews.io) - an interactive system tables relationship diagram created by [Zuzanna Jarczyńska](https://sfmarketing.cloud/author/zjarczynska/). It will for sure help you with multi-view [`JOIN`s](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/).
 >
@@ -53,18 +53,19 @@ Stores information about your Subscribers. Great for high-level perspective or a
 
 **Field Picklist Values**
 
-`Status` possible values:
+`Status` - 4 values
 
 - active
 - held
 - unsubscribed
 - bounced
 
-`SubscriberType` possible values:
+`SubscriberType` - 2 values
 
 - ExactTarget
 - Unknown External System
-  In most cases you will see only `Exact Target` in your database.
+
+In most cases you will see only `Exact Target` in your database.
 
 ---
 
@@ -179,32 +180,32 @@ Stores information about your Email Sends Jobs. Great for capturing detailed dat
 
 **Field Picklist Values**
 
-`JobType` possible values:
+`JobType` - 2 values
 
 - `null`
 - MULTIPLE\_SEND
 
-`JobStatus` possible values:
+`JobStatus` - 2 values
 
 - Deleted
 - New
 
-`Category` possible values:
+`Category` - 4 values
 
 - Test Send Emails
 - Triggered Sends
 - Version XX (where XX is a number)
 - GUID\_VXX (36 character hyphen separated GUID followed by underscore and VXX where XX is a number)
 
-`CharacterSet` possible values:
+`CharacterSet` - 1 value
 
 - Unicode - UTF-8
 
-`SendType` possible values:
+`SendType` - 1 value
 
 - ExactTargetSend
 
-`SendClassificationType` possible values:
+`SendClassificationType` - 2 values
 
 - Default Commercial
 - Default Transactional
@@ -341,12 +342,12 @@ Stores infomation about your Email and SMS final delivery status for transaction
 
 **Field Picklist Values**
 
-`Channel` possible values:
+`Channel` - 2 values
 
 - 0 (for Email channel)
 - 1 (for SMS channel)
 
-`Disposition` possible values:
+`Disposition` - 3 values
 
 - 0 (for Queued)
 - 1 (for Sent)
@@ -547,7 +548,7 @@ This Data View, along with [`_Complaint`](https://mateuszdabrowski.pl/docs/sales
 
 **Field Picklist Values**
 
-`BounceCategoryID` possible values:
+`BounceCategoryID` - 5 values
 
 | Value | Meaning                |
 | ----- | ---------------------- |
@@ -557,7 +558,7 @@ This Data View, along with [`_Complaint`](https://mateuszdabrowski.pl/docs/sales
 | 4     | Unknown Bounce         |
 | 5     | Technical/Other Bounce |
 
-`BounceCategory` possible values:
+`BounceCategory` - 5 values
 
 - Hard Bounce
 - Soft Bounce
@@ -565,7 +566,7 @@ This Data View, along with [`_Complaint`](https://mateuszdabrowski.pl/docs/sales
 - Unknown Bounce
 - Technical/Other Bounce
 
-`BounceSubcategoryID` possible values:
+`BounceSubcategoryID` - 15 values
 
 | Value | Meaning            | Bounce Type                                                                    |
 | ----- | ------------------ | ------------------------------------------------------------------------------ |
@@ -585,7 +586,7 @@ This Data View, along with [`_Complaint`](https://mateuszdabrowski.pl/docs/sales
 | 4999  | Other              | Hard Bounce, Soft Bounce, Technical/Other Bounce                               |
 | 9999  | Unknown            | Hard Bounce, Soft Bounce, Block Bounce, Unknown Bounce, Technical/Other Bounce |
 
-`BounceSubcategory` possible values:
+`BounceSubcategory` - 14 values
 
 - Complaints
 - Blocked
@@ -602,14 +603,14 @@ This Data View, along with [`_Complaint`](https://mateuszdabrowski.pl/docs/sales
 - Other
 - Unknown
 
-`BounceTypeId` possible values:
+`BounceTypeId` - 2 values
 
 | Value | Meaning   |
 | ----- | --------- |
 | 0     | immediate |
 | 1     | delayed   |
 
-`BounceType` possible values:
+`BounceType` - 2 values
 
 - immediate
 - delayed
@@ -811,7 +812,7 @@ Here comes the fresh `_BusinessUnitUnsubscribes` Data View. It shows you the onl
 
 **Field Picklist Values**
 
-`UnsubReason` possible values:
+`UnsubReason` - 6 values
 
 - Spam Complaint
 - Unsubscribed from list details on subscriber properties dialog.
@@ -880,7 +881,7 @@ When working with `_BusinessUnitUnsubscribes` Data View:
 
 **Field Picklist Values**
 
-`AddMethod` possible values:
+`AddMethod` - 5 values
 
 - API
 - Imported
@@ -888,7 +889,7 @@ When working with `_BusinessUnitUnsubscribes` Data View:
 - DataExtensionSend
 - Unknown
 
-`ListType` possible values:
+`ListType` - 6 values
 
 - Publication List
 - Suppression List
@@ -897,7 +898,7 @@ When working with `_BusinessUnitUnsubscribes` Data View:
 - FTAF List
 - Unknown
 
-`Status` possible values:
+`Status` - 4 values
 
 - active
 - held
@@ -935,7 +936,7 @@ When working with `_ListSubscribers` Data View:
 
 ## Mobile Connect Data Views
 
-Learn more about Mobile Connect [SMS Data Views here](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/).
+Learn more about Mobile Connect [SMS Data Views here](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/), and about the undocumented [MobilePush Data Views](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/) that hold push devices and tags.
 
 ---
 
@@ -960,7 +961,7 @@ Stores information about your Journeys for when context matters.
 
 **Field Picklist Values**
 
-`JourneyStatus` possible values:
+`JourneyStatus` - 5 values
 
 - Draft
 - Running
@@ -1018,7 +1019,7 @@ Stores information about Activities available in your Journeys. Must-have for jo
 
 **Field Picklist Values**
 
-`ActivityType` possible values:
+`ActivityType` - 21 values
 
 - `null`
 - APIEvent
@@ -1102,13 +1103,13 @@ Provides historical information about Automation runs.
 
 **Field Picklist Values**
 
-`AutomationType` possible values:
+`AutomationType` - 3 values
 
 - Schedule
 - File Drop
 - Trigger
 
-`AutomationInstanceStatus` possible values:
+`AutomationInstanceStatus` - 6 values
 
 - QueuedFile
 - Initialized
@@ -1183,7 +1184,7 @@ Provides historical information about Automation Studio Activity runs.
 
 **Field Picklist Values**
 
-`ActivityType` possible values:
+`ActivityType` - 28 values
 
 | Value | Meaning                                        |
 | ----- | ---------------------------------------------- |
@@ -1216,7 +1217,7 @@ Provides historical information about Automation Studio Activity runs.
 | 1701  | Batch Personalization                          |
 | 3700  | Contact to Business Unit Mapping               |
 
-`ActivityInstanceStatus` possible values:
+`ActivityInstanceStatus` - 5 values
 
 - Initialized
 - Executing

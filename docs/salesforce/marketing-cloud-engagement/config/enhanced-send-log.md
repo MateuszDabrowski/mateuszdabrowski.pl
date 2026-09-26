@@ -4,14 +4,14 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-26  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## What is Send Log
 
 Send Log is a table that captures relevant data about sends happening in the platform. In the case of Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud), it is a unique Data Extension that automatically captures the data (no need for AMPScript or SSJS to populate it).
 
-MCE doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), `SMSSendLog` and `PushSendLog`. If you do not see any of those templates - you might need to request this as a free [feature on demand](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/features-on-demand/).
+MCE doesn't have Send Log out of the box, but you can make one yourself. On the first screen of Data Extension creation, select `Create From Template` in the `Creation Method` field. You will see a picklist with multiple templates, including `SendLog` (for Emails), [`SMSSendLog`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log) and [`PushSendLog`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#push-send-log). If you do not see any of those templates - you might need to request this as a free [feature on demand](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/features-on-demand/).
 
 Once you create it, it will automatically populate with each attempted send originating from its Business Unit.
 
