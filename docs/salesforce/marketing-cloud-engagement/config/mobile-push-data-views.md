@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-26  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -282,30 +282,58 @@ The closest thing to a Data View is the Push Send Log - a [Feature on Demand](ht
 
 The template comes with these fields:
 
-| Name                     | Description                                                                              |
-| ------------------------ | ---------------------------------------------------------------------------------------- |
-| PushJobID                | ID of the job that included the push notification                                        |
-| PushTriggeredSendRequest | Token returned by the API call. For list and data extension sends, the same as PushJobID |
-| PushBatchID              | ID of the batch for batched sends                                                        |
-| SubID                    | ID of the subscriber who got the message                                                 |
-| DeviceID                 | ID of the device that got the message                                                    |
-| AppID                    | ID of the app                                                                            |
-| LogDate                  | Date the row was written                                                                 |
+| Name                       | Description                                                                              |
+| -------------------------- | ---------------------------------------------------------------------------------------- |
+| PushJobID                  | ID of the job that included the push notification                                        |
+| PushTriggeredSendRequestID | Token returned by the API call. For list and data extension sends, the same as PushJobID |
+| PushBatchID                | ID of the batch for batched sends                                                        |
+| SubID                      | ID of the subscriber who got the message                                                 |
+| DeviceId                   | ID of the device that got the message                                                    |
+| AppId                      | ID of the app                                                                            |
+| LogDate                    | Date the row was written                                                                 |
 
-You can also add your own fields to log more. Whenever a field name matches a Contact attribute or a field of the sending Data Extension, MCE writes its value at send time. The email Send Log works the same way, so my [Enhanced Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/) article has ideas worth trying here, especially the [Custom Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/#custom-send-log) part on choosing extra fields. However, the push documentation mentions only Contact attributes and Data Extension fields, so test AMPscript variables with a push send before you rely on them. From there, you can query the Push Send Log like any other Data Extension.
+The names come from the template itself and differ slightly from Salesforce's documentation, which lists `PushTriggeredSendRequest`, `DeviceID` and `AppID`. SQL ignores the case, but `PushTriggeredSendRequestID` needs its full name.
+
+The log writes one row per device, so a Contact with two devices gets two rows. In my Journey Builder test, two entries sent together into one journey version shared the `PushJobID`, while each got its own `PushTriggeredSendRequestID`.
+
+You can also add your own fields to log more. Whenever a field name matches a Contact attribute or a field of the sending Data Extension, MCE writes its value at send time. In Journey Builder, the entry Data Extension counts as the sending one, so its fields land in the log even when the message doesn't use them. A few fields also fill from the send itself - `AppName`, `Platform` (as in `Android OS`) and `SystemToken`, the last one per device. Other names from the MobilePush Detail Extract, like `MessageName`, `MessageContent` or `RequestId`, stay empty, and so do `JourneyName` and `JourneyVersion`.
+
+The email Send Log works the same way, so my [Enhanced Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/) article has ideas worth trying here, especially the [Custom Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/#custom-send-log) part on choosing extra fields. From there, you can query the Push Send Log like any other Data Extension.
 
 ### MobilePush Detail Extract
 
 If you need tracking data in bulk, use the **MobilePush Detail Extract Report** type of the Data Extract activity in Automation Studio. It creates a ZIP file with MobilePush tracking data that you then move with a File Transfer activity. You can narrow it down by app, campaign, message and platform. Keep in mind it counts only unique opens. Its `MessageOpened` field gives one open per device, while the MobilePush screen counts every single open, so [the two numbers rarely match](https://help.salesforce.com/s/articleView?id=005131481\&type=1). The report is not enabled by default, so if you don't see the type in your account, open a support case for your MID.
 
-For a regular feed, put the Data Extract and a File Transfer (Move a File From Safehouse) into one scheduled Automation, with exactly the same file naming pattern in both. [Salesforce's walkthrough](https://help.salesforce.com/s/articleView?id=005239066\&type=1) covers every step. Use a Rolling Range of at least a week, as opens arrive late. The SDK sends them in batches when the app goes to the background, and after a failed upload only at the next launch, so [engagement data can lag by days](https://help.salesforce.com/s/articleView?id=005134946\&type=1). Keep Apply Time Zone checked, so that both the timestamps and the extracted period follow your time zone.
+For a regular feed, put the Data Extract and a File Transfer (Move a File From Safehouse) into one scheduled Automation, with exactly the same file naming pattern in both. Check the File Transfer's destination as well. The default ExactTarget Enhanced FTP location can be of the Import Directory type, which puts the ZIP in the Import folder instead of Export. [Salesforce's walkthrough](https://help.salesforce.com/s/articleView?id=005239066\&type=1) covers every step. Use a Rolling Range of at least a week, as opens arrive late. The SDK sends them in batches when the app goes to the background, and after a failed upload only at the next launch, so [engagement data can lag by days](https://help.salesforce.com/s/articleView?id=005134946\&type=1).
 
-If you import the CSV back into a Data Extension, keep only the fields and dates you need, as large push extracts easily hit the 30-minute Query Activity timeout. With overlapping ranges, also give the Data Extension a primary key and import with Add and Update, so repeated rows update the existing ones.
+If you want all push tracking to live in MCE, where you can query it like a Data View, extend that Automation to bring the data back. After the Data Extract and the Move a File From Safehouse transfer, add a second File Transfer with the Manage File action to unzip the file. Then add an Import File activity that loads the CSV into a Data Extension. Your file naming pattern names only the ZIP, while the CSV inside comes as `MobilePushDetailExtractReport.csv`, so use that name in the Import activity. The unzipped file [lands in the Import folder](https://help.salesforce.com/s/articleView?id=mktg.mc_as_file_management_with_the_file_transfer_activity.htm\&type=5), which is where the Import activity looks for it. Schedule it, for example, monthly with a Rolling Range that reaches a week further back than the previous run, so late opens update rows you already have. For that, give the Data Extension a primary key on `PushJobId`, `RequestId` and `DeviceId`, which together identify each row, and import with Add and Update. Also leave Apply Time Zone unchecked in the Data Extract, so `DateTimeSend` stays in CST like the Data Views and the Push Send Log.
+
+Keep an eye on the size, though. Every push to every device adds a row, so a monthly feed grows fast, and **all of it counts towards your [Data Extension Storage](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-storage) licence limit**. Import only the columns you need, as `SystemToken`, `MessageContent` and the two media URLs take most of each row. Then set a Data Retention Policy that keeps only the months you really query. Smaller Data Extensions also keep your queries clear of the 30-minute Query Activity timeout.
+
+Once imported, the extract also connects with the [Push Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#push-send-log). Its `PushJobId` matches the log's `PushJobID`, and its `RequestId` matches `PushTriggeredSendRequestID`. Together with the Device ID, they match each logged send with its tracking row:
+
+```sql title="Push Send Log with MobilePush Detail Extract"
+SELECT
+      sendLog.SubID
+    , sendLog.DeviceId
+    , sendLog.LogDate
+    , pushExtract.MessageName
+    , pushExtract.Status
+    , pushExtract.MessageOpened
+    , pushExtract.OpenDate
+FROM [Push Send Log] AS sendLog
+    INNER JOIN [MobilePush Detail Extract] AS pushExtract
+        ON pushExtract.PushJobId = sendLog.PushJobID
+        AND pushExtract.RequestId = sendLog.PushTriggeredSendRequestID
+        AND pushExtract.DeviceId = sendLog.DeviceId
+```
+
+Replace both names with your Data Extensions and add the custom fields you log to the `SELECT`.
 
 When reading the MobilePush Detail Extract (Salesforce's [troubleshooting guide](https://help.salesforce.com/s/articleView?id=002628213\&type=1) and [FAQ on the report's data](https://help.salesforce.com/s/articleView?id=005223889\&type=1) go deeper):
 
 1. A `Success` status only means MCE handed the message over to Apple or Google. Even an uninstalled app or disabled notifications can return it, so when a notification doesn't show up, check the device and the app next.
-2. A `Fail` comes with the reason in the ServiceResponse column. Most are invalid tokens (`NotRegistered` or `Requested entity was not found` on Android and `InvalidToken` on iOS), and during development usually a provisioning problem.
+2. A `Fail` comes with the reason in the ServiceResponse column. Most are invalid tokens (`NotRegistered` or `Requested entity was not found` on Android and `InvalidToken` on iOS), and during development usually a provisioning problem. On a `Success`, Android rows hold the Firebase message ID there instead.
 3. No record at all means the Device ID was left out of the send. It was opted out or Inactive, it wasn't linked to a Contact in your audience, or the message failed on AMPscript or SSJS before it went out.
 4. A blank `Status` marks an Inbox download. Inbox-only rows appear only once a device downloads the message, while an Inbox + Alert message gets its row as soon as the alert goes out. In-App rows are just the silent pushes announcing a new message, as no report shows In-App displays or clicks.
 5. Opens depend on the date range, so an open after the range ends leaves the message looking unopened. `MessageOpened` records a tap on the push, `InboxMessageOpened` an open from the Inbox list, and `TimeInApp` the seconds spent in the app after the tap. As each device gets one row per message, an Inbox message opened many times shows only [the earliest open within the range](https://help.salesforce.com/s/articleView?id=005386407\&type=1).
@@ -316,11 +344,12 @@ When reading the MobilePush Detail Extract (Salesforce's [troubleshooting guide]
 
 [`_JourneyActivity`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journeyactivity) Data View lists push activities with `ActivityType` = `PUSHNOTIFICATIONACTIVITY`. [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) it with [`_Journey`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journey) on `VersionID` to see which journeys, and which of their versions, send push messages:
 
-```sql title="Journeys sending push messages"
+```sql title="Push activities in each journey version"
 SELECT
       journey.JourneyName
     , journey.VersionNumber
     , journey.JourneyStatus
+    , journey.LastPublishedDate
     , journeyActivity.ActivityName
     , journeyActivity.ActivityExternalKey
 FROM _JourneyActivity AS journeyActivity
@@ -329,7 +358,28 @@ FROM _JourneyActivity AS journeyActivity
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
 ```
 
-That is as far as SQL goes, though. For emails, `JourneyActivityObjectID` matches `TriggererSendDefinitionObjectID` in the send Data Views, but neither the Push Send Log nor the MobilePush Detail Extract holds a journey or activity ID. So you can list the journeys that send push, but no ID ties a specific push send back to one of them. The closest you get is the `MessageName` column of the MobilePush Detail Extract, which [Salesforce fills with the name of the push message in Journey Builder](https://help.salesforce.com/s/articleView?id=000395722\&type=1).
+That is as far as IDs go, though. For emails, `JourneyActivityObjectID` matches `TriggererSendDefinitionObjectID` in the send Data Views, but for push activities it holds only an empty GUID (`00000000-0000-0000-0000-000000000000`). Neither the Push Send Log nor the MobilePush Detail Extract holds a journey or activity ID either.
+
+What you can use is the name. `ActivityName` holds the name of the push message, the same one you see in the MobilePush message list. That holds as long as you don't give the activity a name of its own, as [Salesforce documents for SMS](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_view_sms_message_tracking.htm\&type=5). The extract has it too, as [Salesforce fills its `MessageName` column](https://help.salesforce.com/s/articleView?id=000395722\&type=1) with the name of the push message in Journey Builder. Versions share that name unless you rename the message. However, every journey version sends its own copy of the message, with its own `MessageID` in the extract. MobilePush lists each copy as an Outbound message with the Interaction send method.
+
+To find the `MessageID` of a copy without the extract, open it in MobilePush and decode the ID from its summary. It is Base64, the same format Salesforce [documents for SMS messages](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_view_sms_message_tracking.htm\&type=5): `MTIzOjExNDow` decodes to `123:114:0`, and the first value is the `MessageID`.
+
+Matching the names in SQL gives you the journey behind each copy in the extract. It can't tell the versions apart, though. A name reused in several journeys matches all of them, and a renamed activity matches none, so check the results before you rely on them:
+
+```sql title="MobilePush Detail Extract messages matched to journeys by name"
+SELECT DISTINCT
+      pushExtract.MessageID
+    , pushExtract.MessageName
+    , journey.JourneyName
+FROM [MobilePush Detail Extract] AS pushExtract
+    INNER JOIN _JourneyActivity AS journeyActivity
+        ON journeyActivity.ActivityName = pushExtract.MessageName
+    INNER JOIN _Journey AS journey
+        ON journey.VersionID = journeyActivity.VersionID
+WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
+```
+
+If you need the journey in the Push Send Log itself, use the entry Data Extension. Give it a `JourneyName` field holding the journey's name, add the same field to the Push Send Log, and every push from that journey will log it.
 
 ### Data 360
 

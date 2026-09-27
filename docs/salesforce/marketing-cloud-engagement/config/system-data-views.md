@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-26  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -993,6 +993,7 @@ When working with `_Journey` Data View:
 3. Use `JourneyStatus` to check what is the current Journey Status. It is fantastic for both the [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) statement and a data point for engagement analysis. Think about scheduled Automation that finds all emails performing below expectations and checks which are in the Active Journeys. For all found, it sends you a notification to check and improve. For awful results, you can even use this data in Script Activity to automatically stop the Journey with the MCE REST API.
 4. The Date fields (`CreatedDate`, `LastPublishedDate`, `ModifiedDate`) are cool for automated cleanup of old Journeys, especially when paired with the [`_Sent`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_sent) data. For example, you can create monthly Automation that checks all Journeys that were last modified at least three months ago and, based on the send volume or performance, stop them and notify you about that.
 5. You can query only Journeys that currently exists in your Business Unit.
+6. The first version of a Journey reuses the Journey's ID, so its `VersionID` equals the `JourneyID`, while every later version gets a new one. Watch out for it in your [`JOIN`s](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/): joining `_JourneyActivity` on `JourneyID` instead of `VersionID` still returns rows, but only the first version's activities, repeated once for every version.
 
 > **Note: You Should Know**
 >
