@@ -553,7 +553,7 @@ ResponseToMobileMessageTrackingID | The tracking ID of the response to the messa
 IsValid | Populates to 1 for inbound message and 0 for Outbound message | Boolean | X |
 InvalidationCode | Invalidation code for the message. Currently always null. | Number | X |
 SMSJobID | GUID with JobID matching value in [SMS Send Log](#sms-send-log). Filled only for sends since Spring 2023. | String | X
-SMSBatchID | BatchID matching value in [SMS Send Log](#sms-send-log). Filled only for sends since Spring 2023. | Number | X
+SMSBatchID | Batch ID matching `SmsBatchID` in [SMS Send Log](#sms-send-log). Filled only for sends since Spring 2023. | Number | X
 SendID | The send ID number for the SMS send | Number | X |
 SendSplitID | If the message was split, the ID of the split | Number | X |
 SendSegmentID | The ID of the segment tied to the message | Number | X |
@@ -642,7 +642,7 @@ When working with `_SMSMessageTracking` Data View:
 7. `Unsub`, `OptIn`, `OptOut` are currently not populated at all. You should pull that data from [`_SMSSubscriptionLog`](#_smssubscriptionlog).
 8. `JBDefinitionID` and `JBActivityID` let you cleanly match SMS data to [`Journey`](/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journey) and [`_JourneyActivity`](/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_journeyactivity) Data Views using `VersionID` and `ActivityID` respectively. However, it won't work for old (created before October 2020) SMS Activities - for those you can make a [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) using `Name` field: `ON smsTracking.Name = journeyActivity.ActivityName`.
 9. `SMSStandardStatusCodeId` and `Description` are great for understanding your SMS send's current status.
-10. `SMSJobID` and `SMSBatchID` are the only way to connect _SMSMessageTracking Data View to the [SMS Send Log](#sms-send-log) with a [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SMSJobID AND smsTracking.SMSBatchID = sendLog.BatchID`.
+10. `SMSJobID` and `SMSBatchID` are the only way to connect _SMSMessageTracking Data View to the [SMS Send Log](#sms-send-log) with a [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) `ON smsTracking.SubscriberID = sendLog.SubID AND smsTracking.SMSJobID = sendLog.SmsJobID AND smsTracking.SMSBatchID = sendLog.SmsBatchID`.
 
 #### SMS Status Codes
 
@@ -726,10 +726,12 @@ The template comes with these fields:
 
 Name | Description
 -- | --
-SMSJobID | GUID of the SMS job. Matches `SMSJobID` in [`_SMSMessageTracking`](#_smsmessagetracking)
-SMSTriggeredSendID | ID of the triggered send
-BatchID | ID of the batch. Matches `SMSBatchID` in [`_SMSMessageTracking`](#_smsmessagetracking)
+SmsJobID | GUID of the SMS job. Matches `SMSJobID` in [`_SMSMessageTracking`](#_smsmessagetracking)
+SmsTriggeredSendID | ID of the triggered send
+SmsBatchID | ID of the batch. Matches `SMSBatchID` in [`_SMSMessageTracking`](#_smsmessagetracking)
 SubID | ID of the subscriber who got the message. Matches `SubscriberID` in [`_SMSMessageTracking`](#_smsmessagetracking)
+
+The names come from the current template. If you created your SMS Send Log in the past, its batch field might be called `BatchID` - so if the query below fails, check that name in your log Data Extension first.
 
 You can also add your own fields to log more. Whenever a field name matches a list attribute or a field of the sending Data Extension, :product[MCE] writes its value at send time. The email Send Log works the same way, so my [Enhanced Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx) article has ideas worth trying here, especially the [Custom Send Log](docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx#custom-send-log) part on choosing extra fields. However, the SMS documentation mentions only list attributes and Data Extension fields, so test AMPscript variables with an SMS send before you rely on them.
 
@@ -738,7 +740,7 @@ Since Spring 2023, `_SMSMessageTracking` has the `SMSJobID` and `SMSBatchID` fie
 ```sql title="SMS Send Log with tracking data"
 SELECT
       sendLog.SubID
-    , sendLog.SMSJobID
+    , sendLog.SmsJobID
     , smsTracking.Mobile
     , smsTracking.Name
     , smsTracking.Delivered
@@ -746,8 +748,8 @@ SELECT
 FROM [SMS Send Log] AS sendLog
     INNER JOIN _SMSMessageTracking AS smsTracking
         ON smsTracking.SubscriberID = sendLog.SubID
-        AND smsTracking.SMSJobID = sendLog.SMSJobID
-        AND smsTracking.SMSBatchID = sendLog.BatchID
+        AND smsTracking.SMSJobID = sendLog.SmsJobID
+        AND smsTracking.SMSBatchID = sendLog.SmsBatchID
 ```
 
 Replace `[SMS Send Log]` with the name of your Data Extension and add your custom fields to the `SELECT`.
