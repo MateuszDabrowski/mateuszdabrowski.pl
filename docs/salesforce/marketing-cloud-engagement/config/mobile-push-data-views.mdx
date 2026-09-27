@@ -402,7 +402,7 @@ When reading the MobilePush Detail Extract (Salesforce's [troubleshooting guide]
 
 [`_JourneyActivity`](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_journeyactivity) Data View lists push activities with `ActivityType` = `PUSHNOTIFICATIONACTIVITY`. [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx) it with [`_Journey`](docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_journey) on `VersionID` to see which journeys, and which of their versions, send push messages:
 
-```sql title="Journeys sending push messages"
+```sql title="Push activities in each journey version"
 SELECT
       journey.JourneyName
     , journey.VersionNumber
@@ -424,7 +424,7 @@ To find the `MessageID` of a copy without the extract, open it in MobilePush and
 
 Matching the names in SQL gives you the journey behind each copy in the extract. It can't tell the versions apart, though. A name reused in several journeys matches all of them, and a renamed activity matches none, so check the results before you rely on them:
 
-```sql title="Journeys behind push sends"
+```sql title="MobilePush Detail Extract messages matched to journeys by name"
 SELECT DISTINCT
       pushExtract.MessageID
     , pushExtract.MessageName
