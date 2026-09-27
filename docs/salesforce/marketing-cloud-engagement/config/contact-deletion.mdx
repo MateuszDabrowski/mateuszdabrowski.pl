@@ -549,11 +549,11 @@ It will leverage the `HASHBYTES` function to hash the Email Address. On the one 
 ```sql title="Archive your deletions on schedule"
 SELECT
       pending.SubscriberKey
-    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2)    AS HashedEmail
+    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2) AS HashedEmail
     , pending.DeletionReason
-    , pending.DeletionDate                                                  AS LastDeletionDate
-FROM [Contact Deletion Pending DE]  AS pending
-    INNER JOIN _Subscribers         AS sub
+    , pending.DeletionDate                                               AS LastDeletionDate
+FROM [Contact Deletion Pending DE] AS pending
+    INNER JOIN _Subscribers        AS sub
         ON sub.SubscriberKey = pending.SubscriberKey
 ```
 

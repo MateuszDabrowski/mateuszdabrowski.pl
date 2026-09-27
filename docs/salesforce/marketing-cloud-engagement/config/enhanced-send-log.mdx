@@ -26,12 +26,12 @@ The Send Log template comes with six default fields:
 
 | Name | Type | Length | Primary Key | Nullable |
 | -- | -- | -- | -- | -- |
-| JobID | Numeric | | | Yes |
-| ListID | Numeric | | | Yes |
-| BatchID | Numeric | | | Yes |
-| SubID | Numeric | | | Yes |
-| TriggeredSendID | String | 36 | | Yes |
-| ErrorCode | Numeric | | | Yes |
+| JobID | Number | | | Yes |
+| ListID | Number | | | Yes |
+| BatchID | Number | | | Yes |
+| SubID | Number | | | Yes |
+| TriggeredSendID | Text | 36 | | Yes |
+| ErrorCode | Number | | | Yes |
 
 `JobID` and `BatchID` allow you to differentiate the send if you push the same email on multiple days or campaigns.
 
@@ -91,15 +91,15 @@ Here you can see sample Customised Send Log that I like to use:
 
 | Name | Type | Length | Primary Key | Nullable |
 | -- | -- | -- | -- | -- |
-| JobID | Numeric | | | Yes |
-| ListID | Numeric | | | Yes |
-| BatchID | Numeric | | | Yes |
-| SubID | Numeric | | | Yes |
-| TriggeredSendID | String | 36 | | Yes |
-| ErrorCode | Numeric | | | Yes |
-| SubscriberKey | String | 18 | | Yes |
+| JobID | Number | | | Yes |
+| ListID | Number | | | Yes |
+| BatchID | Number | | | Yes |
+| SubID | Number | | | Yes |
+| TriggeredSendID | Text | 36 | | Yes |
+| ErrorCode | Number | | | Yes |
+| SubscriberKey | Text | 18 | | Yes |
 | EmailAddr | Email | 254 | | Yes |
-| EmailName_ | String | 150 | | Yes |
+| EmailName_ | Text | 150 | | Yes |
 | LogDate | Date | | | |
 | BusinessSpecificField1 | | | | Yes |
 | BusinessSpecificField2 | | | | Yes |
@@ -132,25 +132,25 @@ Create standard Data Extension with more user-friendly names and extend it with 
 
 | Name | Type | Length | Primary Key | Nullable |
 | -- | -- | -- | -- | -- |
-| SubscriberKey | String | 18 | Yes | No |
-| SubscriberID | Numeric | | | Yes |
+| SubscriberKey | Text | 18 | Yes | No |
+| SubscriberID | Number | | | Yes |
 | EmailAddress | Email | 254 | | Yes |
 | BusinessSpecificField1 | | | | Yes |
 | BusinessSpecificField2 | | | | Yes |
-| EmailName | String | 150 | | Yes |
-| JourneyName | String | 100 | | Yes |
-| JourneyVersion | String | 100 | | Yes |
+| EmailName | Text | 150 | | Yes |
+| JourneyName | Text | 100 | | Yes |
+| JourneyVersion | Text | 100 | | Yes |
 | LogDate | Date | | | Yes |
 | SentDate | Date | | | Yes |
-| Delivered | String | 20 | | Yes |
+| Delivered | Text | 20 | | Yes |
 | FirstOpenDate | Date | | | Yes |
 | FirstClickDate | Date | | | Yes |
 | BounceDate | Date | | | Yes |
-| JobID | Numeric | | Yes | Yes |
-| ListID | Numeric | | Yes | Yes |
-| BatchID | Numeric | | Yes | Yes |
-| TriggeredSendID | String | 36 | | Yes |
-| ErrorCode | Numeric | | | Yes |
+| JobID | Number | | Yes | Yes |
+| ListID | Number | | Yes | Yes |
+| BatchID | Number | | Yes | Yes |
+| TriggeredSendID | Text | 36 | | Yes |
+| ErrorCode | Number | | | Yes |
 
 ### Enhanced Send Log SQL Query Activity
 
