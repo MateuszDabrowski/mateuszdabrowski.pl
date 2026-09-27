@@ -134,10 +134,10 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '_'     THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
-        WHEN RecommendedProducts LIKE '%,_,%' THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
+        WHEN RecommendedProducts LIKE '_'       THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_,%'   THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
         ELSE 'False'
       END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
@@ -224,15 +224,15 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '1'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '%,1,%' THEN 'Premium'
-        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '2'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '2,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,1,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2,%'     THEN 'Premium'
         ...
-        WHEN RecommendedProducts LIKE '5'     THEN 'Standard'
-        WHEN RecommendedProducts LIKE '5,%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5'       THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5,%'     THEN 'Standard'
         ...
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
@@ -321,14 +321,14 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '[1-4]'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '%,[1-4],%' THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[5-9]'     THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
-        WHEN RecommendedProducts LIKE '%,[5-9],%' THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[1-4]'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4],%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[5-9]'       THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -351,9 +351,9 @@ It is an excellent tool to create essential categorization solutions for uncontr
 SELECT
       SubscriberKey
     , CASE
-        WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'       THEN 'C-Suite'
-        WHEN FreeTextJobTitle LIKE '%[Mm]anager%'    THEN 'Management'
-        WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%' THEN 'Specialists'
+        WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'          THEN 'C-Suite'
+        WHEN FreeTextJobTitle LIKE '%[Mm]anager%'       THEN 'Management'
+        WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%'    THEN 'Specialists'
       END AS CorporateJobTitleGroup
 FROM _Subscriber
 ```

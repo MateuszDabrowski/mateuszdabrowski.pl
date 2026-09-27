@@ -322,8 +322,8 @@ SELECT
 FROM ContactMasterDE AS subscribers
     INNER JOIN (
         SELECT
-              contacts.EmailAddress        AS EmailAddress
-            , COUNT(contacts.EmailAddress) AS EmailCount
+              contacts.EmailAddress         AS EmailAddress
+            , COUNT(contacts.EmailAddress)  AS EmailCount
         FROM ContactMasterDE AS contacts
         GROUP BY contacts.EmailAddress
         HAVING COUNT(contacts.EmailAddress) > 1

@@ -177,8 +177,8 @@ SELECT
         ELSE 'True'
       END                       AS Delivered
     , CASE
-        WHEN o.EventDate IS NOT NULL THEN o.EventDate
-        WHEN c.EventDate IS NOT NULL THEN c.EventDate
+        WHEN o.EventDate IS NOT NULL    THEN o.EventDate
+        WHEN c.EventDate IS NOT NULL    THEN c.EventDate
       END                       AS FirstOpenDate
     , c.EventDate               AS FirstClickDate
     , b.EventDate               AS BounceDate

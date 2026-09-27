@@ -458,10 +458,10 @@ If you want to remove only those Leads / Users that you no longer synchronize vi
 
 ```sql title="Find all Users and Leads that are no longer synchronized to MCE"
 SELECT contact.SubscriberKey
-FROM AllContactsList                    AS contact
-    LEFT JOIN Leads_Salesforce          AS lead
+FROM AllContactsList            AS contact
+    LEFT JOIN Leads_Salesforce  AS lead
         ON contact.SubscriberKey = lead.ID
-    LEFT JOIN Users_Salesforce          AS user
+    LEFT JOIN Users_Salesforce  AS user
         ON contact.SubscriberKey = user.ID
 WHERE
     (
@@ -549,11 +549,11 @@ It will leverage the `HASHBYTES` function to hash the Email Address. On the one 
 ```sql title="Archive your deletions on schedule"
 SELECT
       pending.SubscriberKey
-    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2) AS HashedEmail
+    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2)    AS HashedEmail
     , pending.DeletionReason
-    , pending.DeletionDate                                               AS LastDeletionDate
-FROM [Contact Deletion Pending DE] AS pending
-    INNER JOIN _Subscribers        AS sub
+    , pending.DeletionDate                                                  AS LastDeletionDate
+FROM [Contact Deletion Pending DE]  AS pending
+    INNER JOIN _Subscribers         AS sub
         ON sub.SubscriberKey = pending.SubscriberKey
 ```
 

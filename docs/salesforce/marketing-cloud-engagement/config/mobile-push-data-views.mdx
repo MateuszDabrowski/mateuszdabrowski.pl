@@ -47,9 +47,9 @@ Keep it in mind when you count your push audience. Rows in [`_PushAddress`](#_pu
 
 ```sql title="Push-reachable Contacts and devices per app"
 SELECT
-      pushAddress._APID                      AS APID
-    , COUNT(DISTINCT pushAddress._ContactID) AS ReachableContacts
-    , COUNT(*)                               AS ReachableDevices
+      pushAddress._APID                         AS APID
+    , COUNT(DISTINCT pushAddress._ContactID)    AS ReachableContacts
+    , COUNT(*)                                  AS ReachableDevices
 FROM _PushAddress AS pushAddress
 WHERE
     pushAddress._OptInStatusID = '2'
@@ -222,41 +222,41 @@ Value | Meaning
 
 ```sql
 SELECT
-      pushAddress._ContactID       AS ContactID
-    , pushAddress._DeviceID        AS DeviceID
-    , pushAddress._APID            AS APID
-    , pushAddress._Status          AS Status
-    , pushAddress._Source          AS Source
-    , pushAddress._SourceObjectId  AS SourceObjectId
-    , pushAddress._Platform        AS Platform
-    , pushAddress._PlatformVersion AS PlatformVersion
-    , pushAddress._Alias           AS Alias
-    , pushAddress._OptOutStatusID  AS OptOutStatusID
-    , pushAddress._OptOutMethodID  AS OptOutMethodID
-    , pushAddress._OptOutDate      AS OptOutDate
-    , pushAddress._OptInStatusID   AS OptInStatusID
-    , pushAddress._OptInMethodID   AS OptInMethodID
-    , pushAddress._OptInDate       AS OptInDate
-    , pushAddress._Channel         AS Channel
-    , pushAddress._CreatedDate     AS CreatedDate
-    , pushAddress._CreatedBy       AS CreatedBy
-    , pushAddress._ModifiedDate    AS ModifiedDate
-    , pushAddress._ModifiedBy      AS ModifiedBy
-    , pushAddress._City            AS City
-    , pushAddress._State           AS State
-    , pushAddress._ZipCode         AS ZipCode
-    , pushAddress._FirstName       AS FirstName
-    , pushAddress._LastName        AS LastName
-    , pushAddress._UTCOffset       AS UTCOffset
-    , pushAddress._IsHonorDST      AS IsHonorDST
-    , pushAddress._SystemToken     AS SystemToken
-    , pushAddress._ProviderToken   AS ProviderToken
-    , pushAddress._Badge           AS Badge
-    , pushAddress._LocationEnabled AS LocationEnabled
-    , pushAddress._TimeZone        AS TimeZone
-    , pushAddress._Device          AS Device
-    , pushAddress._HardwareId      AS HardwareId
-    , pushAddress._DeviceType      AS DeviceType
+      pushAddress._ContactID        AS ContactID
+    , pushAddress._DeviceID         AS DeviceID
+    , pushAddress._APID             AS APID
+    , pushAddress._Status           AS Status
+    , pushAddress._Source           AS Source
+    , pushAddress._SourceObjectId   AS SourceObjectId
+    , pushAddress._Platform         AS Platform
+    , pushAddress._PlatformVersion  AS PlatformVersion
+    , pushAddress._Alias            AS Alias
+    , pushAddress._OptOutStatusID   AS OptOutStatusID
+    , pushAddress._OptOutMethodID   AS OptOutMethodID
+    , pushAddress._OptOutDate       AS OptOutDate
+    , pushAddress._OptInStatusID    AS OptInStatusID
+    , pushAddress._OptInMethodID    AS OptInMethodID
+    , pushAddress._OptInDate        AS OptInDate
+    , pushAddress._Channel          AS Channel
+    , pushAddress._CreatedDate      AS CreatedDate
+    , pushAddress._CreatedBy        AS CreatedBy
+    , pushAddress._ModifiedDate     AS ModifiedDate
+    , pushAddress._ModifiedBy       AS ModifiedBy
+    , pushAddress._City             AS City
+    , pushAddress._State            AS State
+    , pushAddress._ZipCode          AS ZipCode
+    , pushAddress._FirstName        AS FirstName
+    , pushAddress._LastName         AS LastName
+    , pushAddress._UTCOffset        AS UTCOffset
+    , pushAddress._IsHonorDST       AS IsHonorDST
+    , pushAddress._SystemToken      AS SystemToken
+    , pushAddress._ProviderToken    AS ProviderToken
+    , pushAddress._Badge            AS Badge
+    , pushAddress._LocationEnabled  AS LocationEnabled
+    , pushAddress._TimeZone         AS TimeZone
+    , pushAddress._Device           AS Device
+    , pushAddress._HardwareId       AS HardwareId
+    , pushAddress._DeviceType       AS DeviceType
 FROM _PushAddress AS pushAddress
 ```
 

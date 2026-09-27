@@ -146,11 +146,11 @@ Special points here for checking how are you managing Lead-to-Contact transition
 
 ```sql
 SELECT
-      IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')                   AS Account_Conversion_Status
-    , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')                   AS Contact_Conversion_Status
-    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0)) AS SF_Lead
-FROM AllContactsList           AS allC
-INNER JOIN Ent.Lead_Salesforce AS l
+      IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')                     AS Account_Conversion_Status
+    , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')                     AS Contact_Conversion_Status
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))   AS SF_Lead
+FROM AllContactsList            AS allC
+INNER JOIN Ent.Lead_Salesforce  AS l
     ON allC.SubscriberKey = l.Id
 GROUP BY
       IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')
@@ -286,15 +286,15 @@ Once you have identified the Subscriber Key formats, you can also verify whether
 
 ```sql
 SELECT
-      COUNT(allC.SubscriberKey)                                                               AS Total_Count
-    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Contact
-    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Account
-    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Lead
-    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_User
-    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                           AS Email_Format
-    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0)) AS MobileConnect_Format
-    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                        AS Test_Records
-    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))           AS GUID_Format
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Count
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
     , SUM(IIF(
           allC.SubscriberKey LIKE '%@%'
           OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
@@ -302,7 +302,7 @@ SELECT
           OR allC.SubscriberKey LIKE '%test%'
           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
           , 0, 1)
-      )                                                                                       AS Other_Format
+      )                                                                                         AS Other_Format
 FROM AllContactsList AS allC
 WHERE NOT EXISTS (
     SELECT 1
@@ -342,15 +342,15 @@ If you find duplicates, the next good step is to see where those duplicates appe
 
 ```sql
 SELECT
-      COUNT(allC.SubscriberKey)                                                               AS Total_Duplicate_Records
-    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Contact
-    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Account
-    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Lead
-    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_User
-    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                           AS Email_Format
-    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0)) AS MobileConnect_Format
-    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                        AS Test_Records
-    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))           AS GUID_Format
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Duplicate_Records
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
     , SUM(IIF(
           allC.SubscriberKey LIKE '%@%'
           OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
@@ -358,7 +358,7 @@ SELECT
           OR allC.SubscriberKey LIKE '%test%'
           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
           , 0, 1)
-      )                                                                                       AS Other_Format
+      )                                                                                         AS Other_Format
 FROM AllContactsList        AS allC
 INNER JOIN Ent._Subscribers AS sub
     ON allC.SubscriberKey = sub.SubscriberKey
@@ -381,15 +381,15 @@ If you encounter systemic issue and wonder which type of Subscriber Key should b
 
 ```sql
 SELECT
-      COUNT(allC.SubscriberKey)                                                               AS Total_Sent_Duplicates
-    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Contact
-    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Account
-    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_Lead
-    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))         AS SF_User
-    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                           AS Email_Format
-    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0)) AS MobileConnect_Format
-    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                        AS Test_Records
-    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))           AS GUID_Format
+      COUNT(allC.SubscriberKey)                                                                 AS Total_Sent_Duplicates
+    , SUM(IIF(allC.SubscriberKey LIKE '003%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Contact
+    , SUM(IIF(allC.SubscriberKey LIKE '001%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Account
+    , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_Lead
+    , SUM(IIF(allC.SubscriberKey LIKE '005%' AND LEN(allC.SubscriberKey) = 18, 1, 0))           AS SF_User
+    , SUM(IIF(allC.SubscriberKey LIKE '%@%', 1, 0))                                             AS Email_Format
+    , SUM(IIF(allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7, 1, 0))   AS MobileConnect_Format
+    , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
+    , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
     , SUM(IIF(
           allC.SubscriberKey LIKE '%@%'
           OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
@@ -397,7 +397,7 @@ SELECT
           OR allC.SubscriberKey LIKE '%test%'
           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
           , 0, 1)
-      )                                                                                       AS Other_Format
+      )                                                                                         AS Other_Format
 FROM AllContactsList        AS allC
 INNER JOIN Ent._Subscribers AS sub
     ON allC.SubscriberKey = sub.SubscriberKey

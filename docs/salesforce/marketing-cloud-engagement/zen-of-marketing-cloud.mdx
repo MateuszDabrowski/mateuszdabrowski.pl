@@ -69,9 +69,9 @@ But you shouldn't stop at writing code that just works. Apply a beauty-focused m
 ```sql title="Both queries work - which one would you rather read?"
 /* Beauty */
 SELECT
-      wel.SubscriberKey     AS SubscriberKey
-    , wel.EmailAddress      AS EmailAddress
-    , o.EventDate           AS OpenDate
+      wel.SubscriberKey AS SubscriberKey
+    , wel.EmailAddress  AS EmailAddress
+    , o.EventDate       AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open        AS o
     ON o.SubscriberKey = wel.SubscriberKey
