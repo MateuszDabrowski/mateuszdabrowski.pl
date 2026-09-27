@@ -11979,6 +11979,7 @@ When working with `_SMSSubscriptionLog` Data View:
 | MID                               | Member ID (Business Unit ID)                                                                                                                                                                                                                                                                                                 | Number    | X        |
 | Mobile                            | Mobile number for the subscriber                                                                                                                                                                                                                                                                                             | Phone     |          |
 | MessageID                         | Unique Mobile Message ID                                                                                                                                                                                                                                                                                                     | Number    |          |
+| MessageTypeID                     | Identifies the type of message for the tracking record. Returns 0 when undefined                                                                                                                                                                                                                                             | Number    |          |
 | KeywordID                         | Unique identifier for the keyword (GUID)                                                                                                                                                                                                                                                                                     | Text      | X        |
 | CodeID                            | Unique identifier for the SMS code (GUID)                                                                                                                                                                                                                                                                                    | Text      | X        |
 | ConversationID                    | Unique identifier for the SMS conversation. Currently always null.                                                                                                                                                                                                                                                           | Text      | X        |
@@ -11999,6 +12000,8 @@ When working with `_SMSSubscriptionLog` Data View:
 | InvalidationCode                  | Invalidation code for the message. Currently always null.                                                                                                                                                                                                                                                                    | Number    | X        |
 | SMSJobID                          | GUID with JobID matching value in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | Text      | X        |
 | SMSBatchID                        | Batch ID matching `SmsBatchID` in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | Number    | X        |
+| SendDateTime                      | The date and time the message was sent to the aggregator. Accurate to the second, in CST                                                                                                                                                                                                                                     | Date      | X        |
+| DeliveredDateTime                 | The date and time MCE received the delivery event. Accurate to the second, in CST. Filled only for successfully delivered messages and empty for all other statuses, including carrier-level acknowledgements, failures and undelivered messages                                                                             | Date      | X        |
 | SendID                            | The send ID number for the SMS send                                                                                                                                                                                                                                                                                          | Number    | X        |
 | SendSplitID                       | If the message was split, the ID of the split                                                                                                                                                                                                                                                                                | Number    | X        |
 | SendSegmentID                     | The ID of the segment tied to the message                                                                                                                                                                                                                                                                                    | Number    | X        |
@@ -12027,6 +12030,7 @@ SELECT
     , smsTracking.MID
     , smsTracking.Mobile
     , smsTracking.MessageID
+    , smsTracking.MessageTypeID
     , smsTracking.KeywordID
     , smsTracking.CodeID
     , smsTracking.ConversationID
@@ -12047,6 +12051,8 @@ SELECT
     , smsTracking.InvalidationCode
     , smsTracking.SMSJobID
     , smsTracking.SMSBatchID
+    , smsTracking.SendDateTime
+    , smsTracking.DeliveredDateTime
     , smsTracking.SendID
     , smsTracking.SendSplitID
     , smsTracking.SendSegmentID
