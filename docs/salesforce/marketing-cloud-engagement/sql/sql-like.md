@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 `LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#like-in-case) and [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#like-operator) statements.
@@ -104,10 +104,10 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '_'     THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
-        WHEN RecommendedProducts LIKE '%,_,%' THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
+        WHEN RecommendedProducts LIKE '_'       THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_,%'   THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
         ELSE 'False'
       END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
@@ -182,15 +182,15 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '1'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '%,1,%' THEN 'Premium'
-        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '2'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '2,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,1,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2,%'     THEN 'Premium'
         ...
-        WHEN RecommendedProducts LIKE '5'     THEN 'Standard'
-        WHEN RecommendedProducts LIKE '5,%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5'       THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5,%'     THEN 'Standard'
         ...
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
@@ -266,14 +266,14 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '[1-4]'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '%,[1-4],%' THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[5-9]'     THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
-        WHEN RecommendedProducts LIKE '%,[5-9],%' THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[1-4]'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4],%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[5-9]'       THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -293,9 +293,9 @@ If you want to search for a hyphen '-' within a grouping operator that uses a ra
 > SELECT
 >       SubscriberKey
 >     , CASE
->         WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'       THEN 'C-Suite'
->         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'    THEN 'Management'
->         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%' THEN 'Specialists'
+>         WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'          THEN 'C-Suite'
+>         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'       THEN 'Management'
+>         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%'    THEN 'Specialists'
 >       END AS CorporateJobTitleGroup
 > FROM _Subscriber
 > ```

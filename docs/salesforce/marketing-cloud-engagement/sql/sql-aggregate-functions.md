@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Group rows and apply aggregate functions to see the big picture in your data.
@@ -247,8 +247,8 @@ With [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-en
 > FROM ContactMasterDE AS subscribers
 >     INNER JOIN (
 >         SELECT
->               contacts.EmailAddress        AS EmailAddress
->             , COUNT(contacts.EmailAddress) AS EmailCount
+>               contacts.EmailAddress         AS EmailAddress
+>             , COUNT(contacts.EmailAddress)  AS EmailCount
 >         FROM ContactMasterDE AS contacts
 >         GROUP BY contacts.EmailAddress
 >         HAVING COUNT(contacts.EmailAddress) > 1

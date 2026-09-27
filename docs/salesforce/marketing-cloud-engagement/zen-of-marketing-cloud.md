@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 I'm a massive fan of Tim Peters' [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
@@ -56,9 +56,9 @@ But you shouldn't stop at writing code that just works. Apply a beauty-focused m
 ```sql title="Both queries work - which one would you rather read?"
 /* Beauty */
 SELECT
-      wel.SubscriberKey     AS SubscriberKey
-    , wel.EmailAddress      AS EmailAddress
-    , o.EventDate           AS OpenDate
+      wel.SubscriberKey AS SubscriberKey
+    , wel.EmailAddress  AS EmailAddress
+    , o.EventDate       AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open        AS o
     ON o.SubscriberKey = wel.SubscriberKey

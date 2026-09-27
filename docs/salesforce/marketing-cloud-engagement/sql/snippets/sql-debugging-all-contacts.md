@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Why should you care about All Contacts list?
@@ -384,8 +384,8 @@ This way, you can identify whether it's isolated issue with, for example, duplic
 >           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
 >           , 0, 1)
 >       )                                                                                         AS Other_Format
-> FROM AllContactsList                AS allC
-> INNER JOIN Ent._Subscribers         AS sub
+> FROM AllContactsList        AS allC
+> INNER JOIN Ent._Subscribers AS sub
 >     ON allC.SubscriberKey = sub.SubscriberKey
 > INNER JOIN (
 >     SELECT EmailAddress
@@ -394,11 +394,11 @@ This way, you can identify whether it's isolated issue with, for example, duplic
 >       AND EmailAddress != ''
 >     GROUP BY EmailAddress
 >     HAVING COUNT(SubscriberKey) > 1
-> )                                   AS Duplicates
+> )                           AS Duplicates
 >     ON sub.EmailAddress = Duplicates.EmailAddress
 > WHERE EXISTS (
 >     SELECT 1
->     FROM Ent._Sent                  AS sent
+>     FROM Ent._Sent          AS sent
 >     WHERE allC.SubscriberKey = sent.SubscriberKey
 > )
 > ```

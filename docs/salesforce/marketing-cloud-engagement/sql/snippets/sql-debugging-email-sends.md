@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Make finding problems with email delivery in MCE great again. SQL with the Query Studio to the rescue.
@@ -21,21 +21,21 @@ You can try debugging it with Journey Builder data or Reports, but in most cases
 
 ```sql
 SELECT
-      s.SubscriberKey     AS SubscriberKey
-    , sub.EmailAddress    AS EmailAddress
-    , sub.Status          AS SubscriptionStatus
-    , j.JourneyName       AS JourneyName
-    , j.VersionNumber     AS JourneyVersion
-    , job.EmailName       AS EmailName
-    , s.EventDate         AS SentDate
-    , job.DeliveredTime   AS DeliveryDate
-    , o.EventDate         AS OpenDate
-    , c.EventDate         AS ClickDate
-    , b.EventDate         AS BounceDate
-    , b.BounceCategory    AS BounceCategory
-    , b.BounceSubcategory AS BounceSubcategory
-    , b.SMTPBounceReason  AS BounceReason
-    , u.EventDate         AS UnsubscribeDate
+      s.SubscriberKey       AS SubscriberKey
+    , sub.EmailAddress      AS EmailAddress
+    , sub.Status            AS SubscriptionStatus
+    , j.JourneyName         AS JourneyName
+    , j.VersionNumber       AS JourneyVersion
+    , job.EmailName         AS EmailName
+    , s.EventDate           AS SentDate
+    , job.DeliveredTime     AS DeliveryDate
+    , o.EventDate           AS OpenDate
+    , c.EventDate           AS ClickDate
+    , b.EventDate           AS BounceDate
+    , b.BounceCategory      AS BounceCategory
+    , b.BounceSubcategory   AS BounceSubcategory
+    , b.SMTPBounceReason    AS BounceReason
+    , u.EventDate           AS UnsubscribeDate
 FROM _Sent                      AS s
     LEFT JOIN _Job              AS job
         ON job.JobID = s.JobID

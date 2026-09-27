@@ -999,7 +999,7 @@ The diagram above deliberately shows Org 1 running Single BU and Org 2 running M
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 I'm a massive fan of Tim Peters' [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
@@ -1051,9 +1051,9 @@ But you shouldn't stop at writing code that just works. Apply a beauty-focused m
 ```sql title="Both queries work - which one would you rather read?"
 /* Beauty */
 SELECT
-      wel.SubscriberKey     AS SubscriberKey
-    , wel.EmailAddress      AS EmailAddress
-    , o.EventDate           AS OpenDate
+      wel.SubscriberKey AS SubscriberKey
+    , wel.EmailAddress  AS EmailAddress
+    , o.EventDate       AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open        AS o
     ON o.SubscriberKey = wel.SubscriberKey
@@ -1683,7 +1683,7 @@ Bonus Solution: Create a Limit Allocation Manager in Setup. This would be a new 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -2450,7 +2450,7 @@ When selecting Data Extensions to pull data from, remember the best practice to 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 There are cases where all you need is to pull (and maybe transform) data [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
@@ -2566,8 +2566,8 @@ In such a scenario, you can use Self-join to build a more readable table that mi
 
 ```sql {5-6} title="Self-join using INNER JOIN will output only categories that have a parent category"
 SELECT
-      c.CategoryName  AS Category
-    , pc.CategoryName AS ParentCategory
+      c.CategoryName    AS Category
+    , pc.CategoryName   AS ParentCategory
 FROM WristwatchesDE AS c
     INNER JOIN WristwatchesDE AS pc
         ON pc.ParentCategoryID = c.CategoryID
@@ -2592,12 +2592,12 @@ You won't be using Self-join a lot, but it might be a colossal timesaver when ne
 >
 > ```sql {8-12} title="Flattening three levels of Salesforce Account hierarchy"
 > SELECT
->       a1.Id   AS Level1AccountId
->     , a1.Name AS Level1AccountName
->     , a2.Id   AS Level2AccountId
->     , a2.Name AS Level2AccountName
->     , a3.Id   AS Level3AccountId
->     , a3.Name AS Level3AccountName
+>       a1.Id     AS Level1AccountId
+>     , a1.Name   AS Level1AccountName
+>     , a2.Id     AS Level2AccountId
+>     , a2.Name   AS Level2AccountName
+>     , a3.Id     AS Level3AccountId
+>     , a3.Name   AS Level3AccountName
 > FROM Account_Salesforce AS a1
 >     LEFT JOIN Account_Salesforce AS a2
 >         ON a2.Id = a1.ParentId
@@ -2822,8 +2822,8 @@ UNION
 SELECT
       sl.SubscriberKey
     , sl.EmailAddress
-    , 'Seed'       AS FirstName
-    , 'Estimating' AS Interest
+    , 'Seed'        AS FirstName
+    , 'Estimating'  AS Interest
 FROM Seedlist AS sl
 ```
 
@@ -2848,17 +2848,17 @@ In the example above, we add the Seedlist to the master segment and provide stat
 > SELECT
 >       sl.SubscriberKey
 >     , sl.EmailAddress
->     , 'Seed'       AS FirstName
->     , 'Estimating' AS Interest
+>     , 'Seed'        AS FirstName
+>     , 'Estimating'  AS Interest
 > FROM Seedlist AS sl
 >
 > UNION ALL
 >
 > SELECT
->       '123456789987654321' AS SubscriberKey
->     , 'sales@company.com'  AS EmailAddress
->     , 'SalesDepartment'    AS FirstName
->     , 'Leads'              AS Interest
+>       '123456789987654321'  AS SubscriberKey
+>     , 'sales@company.com'   AS EmailAddress
+>     , 'SalesDepartment'     AS FirstName
+>     , 'Leads'               AS Interest
 > ```
 
 ## INTERSECT
@@ -3171,7 +3171,7 @@ To learn more about the possibilities and [shorthands](https://mateuszdabrowski.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Conditional values with CASE
@@ -3187,10 +3187,10 @@ SELECT
     , 'Lead'                AS RecordType
     , GETUTCDATE()          AS ImportDate
     , CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
+        WHEN 1  THEN 'Bronze'
+        WHEN 2  THEN 'Silver'
+        WHEN 3  THEN 'Gold'
+        WHEN 4  THEN 'Platinum'
         ELSE 'Unregistered'
       END                   AS MemberType
 ```
@@ -3208,10 +3208,10 @@ SELECT
     , 'Lead'                AS RecordType
     , GETUTCDATE()          AS ImportDate
     , CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
+        WHEN 1  THEN 'Bronze'
+        WHEN 2  THEN 'Silver'
+        WHEN 3  THEN 'Gold'
+        WHEN 4  THEN 'Platinum'
         ELSE 'Unregistered'
       END                   AS MemberType
 ```
@@ -3231,10 +3231,10 @@ SELECT
     , 'Lead'                AS RecordType
     , GETUTCDATE()          AS ImportDate
     , CASE
-        WHEN MemberType__c = 1 THEN 'Bronze'
-        WHEN MemberType__c = 2 THEN 'Silver'
-        WHEN MemberType__c = 3 THEN 'Gold'
-        WHEN MemberType__c = 4 THEN 'Platinum'
+        WHEN MemberType__c = 1  THEN 'Bronze'
+        WHEN MemberType__c = 2  THEN 'Silver'
+        WHEN MemberType__c = 3  THEN 'Gold'
+        WHEN MemberType__c = 4  THEN 'Platinum'
         ELSE 'Unregistered'
       END                   AS MemberType
 ```
@@ -3355,7 +3355,7 @@ The `CASE` statement is not only useful in a [`SELECT`](https://mateuszdabrowski
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 `LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#like-in-case) and [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#like-operator) statements.
@@ -3455,10 +3455,10 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '_'     THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
-        WHEN RecommendedProducts LIKE '%,_,%' THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'   THEN 'True'
+        WHEN RecommendedProducts LIKE '_'       THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_,%'   THEN 'True'
+        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
         ELSE 'False'
       END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
@@ -3533,15 +3533,15 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '1'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '%,1,%' THEN 'Premium'
-        WHEN RecommendedProducts LIKE '1,%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '2'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '2,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,1,%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '2,%'     THEN 'Premium'
         ...
-        WHEN RecommendedProducts LIKE '5'     THEN 'Standard'
-        WHEN RecommendedProducts LIKE '5,%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5'       THEN 'Standard'
+        WHEN RecommendedProducts LIKE '5,%'     THEN 'Standard'
         ...
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
@@ -3617,14 +3617,14 @@ SELECT
       SubscriberKey
     , EmailAddress
     , CASE
-        WHEN RecommendedProducts LIKE '[1-4]'     THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '%,[1-4],%' THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[5-9]'     THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
-        WHEN RecommendedProducts LIKE '%,[5-9],%' THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[1-4]'       THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4],%'   THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '[5-9]'       THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -3644,9 +3644,9 @@ If you want to search for a hyphen '-' within a grouping operator that uses a ra
 > SELECT
 >       SubscriberKey
 >     , CASE
->         WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'       THEN 'C-Suite'
->         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'    THEN 'Management'
->         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%' THEN 'Specialists'
+>         WHEN FreeTextJobTitle LIKE '[Cc]_[Oo]'          THEN 'C-Suite'
+>         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'       THEN 'Management'
+>         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%'    THEN 'Specialists'
 >       END AS CorporateJobTitleGroup
 > FROM _Subscriber
 > ```
@@ -4494,7 +4494,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Break from the limits of source data types. Use the full power of SQL to transform your values.
@@ -4651,8 +4651,8 @@ Use it by adding the style code as the third argument of the [`CONVERT`](https:/
 
 ```sql
 SELECT
-      CONVERT(NVARCHAR, GETDATE(), 101)              AS DateAsString
-    , CONVERT(DATETIME2, '2020-12-31 19:00:00', 120) AS StringAsDate
+      CONVERT(NVARCHAR, GETDATE(), 101)                 AS DateAsString
+    , CONVERT(DATETIME2, '2020-12-31 19:00:00', 120)    AS StringAsDate
 ```
 
 You can find the full list of style codes on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver15#date-and-time-styles).
@@ -4684,7 +4684,7 @@ You can find the full list of style codes on [Microsoft .Net Doc Pages](https://
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Group rows and apply aggregate functions to see the big picture in your data.
@@ -4927,8 +4927,8 @@ With [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-en
 > FROM ContactMasterDE AS subscribers
 >     INNER JOIN (
 >         SELECT
->               contacts.EmailAddress        AS EmailAddress
->             , COUNT(contacts.EmailAddress) AS EmailCount
+>               contacts.EmailAddress         AS EmailAddress
+>             , COUNT(contacts.EmailAddress)  AS EmailCount
 >         FROM ContactMasterDE AS contacts
 >         GROUP BY contacts.EmailAddress
 >         HAVING COUNT(contacts.EmailAddress) > 1
@@ -5278,7 +5278,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -5407,11 +5407,11 @@ I recommend keeping one information per line, as it allows for much easier scann
 ```sql
 /* ✅ Single information per line  */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -5423,8 +5423,8 @@ FROM _Sent AS s
         AND o.IsUnique = 1
 WHERE
     1 = CASE
-        WHEN j.EmailName LIKE 'UPS_%' THEN 1
-        WHEN j.EmailName LIKE 'CRS_%' THEN 1
+        WHEN j.EmailName LIKE 'UPS_%'   THEN 1
+        WHEN j.EmailName LIKE 'CRS_%'   THEN 1
         ELSE 0
     END
 
@@ -5506,11 +5506,11 @@ For simplicity I use 4-spaces indent, as it is both standard and can be added in
 ```sql
 /* ✅ Dependency based indentation */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -5522,18 +5522,18 @@ FROM _Sent AS s
         AND o.IsUnique = 1
 WHERE
     1 = CASE
-        WHEN j.EmailName LIKE 'UPS_%' THEN 1
-        WHEN j.EmailName LIKE 'CRS_%' THEN 1
+        WHEN j.EmailName LIKE 'UPS_%'   THEN 1
+        WHEN j.EmailName LIKE 'CRS_%'   THEN 1
         ELSE 0
     END
 
 /* ❌ Lack of indentation */
 SELECT
-s.SubscriberKey   AS SubscriberKey
-, j.EmailName     AS EmailName
-, s.EventDate     AS SentDate
-, j.DeliveredTime AS DeliveryDate
-, o.EventDate     AS OpenDate
+s.SubscriberKey     AS SubscriberKey
+, j.EmailName       AS EmailName
+, s.EventDate       AS SentDate
+, j.DeliveredTime   AS DeliveryDate
+, o.EventDate       AS OpenDate
 FROM _Sent AS s
 LEFT JOIN _Job AS j ON j.JobID = s.JobID
 LEFT JOIN _Open AS o ON o.JobID = s.JobID
@@ -5542,8 +5542,8 @@ AND o.BatchID = s.BatchID
 AND o.SubscriberID = s.SubscriberID
 AND o.IsUnique = 1
 WHERE 1 = CASE
-WHEN j.EmailName LIKE 'UPS_%' THEN 1
-WHEN j.EmailName LIKE 'CRS_%' THEN 1
+WHEN j.EmailName LIKE 'UPS_%'   THEN 1
+WHEN j.EmailName LIKE 'CRS_%'   THEN 1
 ELSE 0
 END
 ```
@@ -5558,14 +5558,16 @@ However, there is another place where spacing is beneficial for readability but 
 
 I try to use it whenever possible, but when there is huge imbalance in length (for example one Column requires multi-function calculation or there is a single complex `WHEN` in [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
 
+When you equalize aliases or `THEN` keywords, put them at the first tab stop after the longest line. With the 4-spaces indent, it is exactly where a single press of the Tab key at the end of that line takes you, so you get the alignment without counting spaces. If you also equalize Table aliases in [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) and [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), treat them as a separate group with its own longest line.
+
 ```sql
 /* ✅ Spacing around operators plus equalizing aliases and THEN */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -5577,19 +5579,19 @@ FROM _Sent AS s
         AND o.IsUnique = 1
 WHERE
     1 = CASE
-        WHEN j.EmailName LIKE 'UPS_%'     THEN 1
-        WHEN j.EmailName LIKE 'CRS_%'     THEN 1
-        WHEN j.EmailName = 'OTH_SeedList' THEN 1
+        WHEN j.EmailName LIKE 'UPS_%'       THEN 1
+        WHEN j.EmailName LIKE 'CRS_%'       THEN 1
+        WHEN j.EmailName = 'OTH_SeedList'   THEN 1
         ELSE 0
     END
 
 /* ✅ Spacing around operators plus equalizing aliases with exceptions */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
     , DATEDIFF(HOUR, s.EventDate, o.EventDate) AS TimeToOpen
 FROM _Sent AS s
     LEFT JOIN _Job AS j
@@ -5801,12 +5803,12 @@ Just as with a letter case, you might have your hands tied by cross-system depen
 ```sql {3-8,17-22}
 /* ✅ Meaningful and consistent Column Names */
 SELECT
-      s.SubscriberKey    AS SubscriberKey
-    , j.EmailName        AS EmailName
-    , s.EventDate        AS SentDate
-    , j.DeliveredTime    AS DeliveryDate
-    , o.EventDate        AS OpenDate
-    , j.SuppressTracking AS IsTrackingSuppressed
+      s.SubscriberKey       AS SubscriberKey
+    , j.EmailName           AS EmailName
+    , s.EventDate           AS SentDate
+    , j.DeliveredTime       AS DeliveryDate
+    , o.EventDate           AS OpenDate
+    , j.SuppressTracking    AS IsTrackingSuppressed
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -5815,12 +5817,12 @@ FROM _Sent AS s
 
 /* ❌ No consistency and type alignment in Column Names */
 SELECT
-      s.SubscriberKey    AS SubscriberKey
-    , j.EmailName        AS EmailName
-    , s.EventDate        AS SentDate
-    , j.DeliveredTime    AS DeliveryTime
-    , o.EventDate        AS OpenedAt
-    , j.SuppressTracking AS SuppressTracking
+      s.SubscriberKey       AS SubscriberKey
+    , j.EmailName           AS EmailName
+    , s.EventDate           AS SentDate
+    , j.DeliveredTime       AS DeliveryTime
+    , o.EventDate           AS OpenedAt
+    , j.SuppressTracking    AS SuppressTracking
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -5865,7 +5867,7 @@ Looking for more MCE style? Check out my:
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Make finding problems with email delivery in MCE great again. SQL with the Query Studio to the rescue.
@@ -5882,21 +5884,21 @@ You can try debugging it with Journey Builder data or Reports, but in most cases
 
 ```sql
 SELECT
-      s.SubscriberKey     AS SubscriberKey
-    , sub.EmailAddress    AS EmailAddress
-    , sub.Status          AS SubscriptionStatus
-    , j.JourneyName       AS JourneyName
-    , j.VersionNumber     AS JourneyVersion
-    , job.EmailName       AS EmailName
-    , s.EventDate         AS SentDate
-    , job.DeliveredTime   AS DeliveryDate
-    , o.EventDate         AS OpenDate
-    , c.EventDate         AS ClickDate
-    , b.EventDate         AS BounceDate
-    , b.BounceCategory    AS BounceCategory
-    , b.BounceSubcategory AS BounceSubcategory
-    , b.SMTPBounceReason  AS BounceReason
-    , u.EventDate         AS UnsubscribeDate
+      s.SubscriberKey       AS SubscriberKey
+    , sub.EmailAddress      AS EmailAddress
+    , sub.Status            AS SubscriptionStatus
+    , j.JourneyName         AS JourneyName
+    , j.VersionNumber       AS JourneyVersion
+    , job.EmailName         AS EmailName
+    , s.EventDate           AS SentDate
+    , job.DeliveredTime     AS DeliveryDate
+    , o.EventDate           AS OpenDate
+    , c.EventDate           AS ClickDate
+    , b.EventDate           AS BounceDate
+    , b.BounceCategory      AS BounceCategory
+    , b.BounceSubcategory   AS BounceSubcategory
+    , b.SMTPBounceReason    AS BounceReason
+    , u.EventDate           AS UnsubscribeDate
 FROM _Sent                      AS s
     LEFT JOIN _Job              AS job
         ON job.JobID = s.JobID
@@ -6043,7 +6045,7 @@ Prefer complex processes visualised? Got you covered:
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -6072,12 +6074,12 @@ You can make quick manual check with a simple SQL query. Open your [Query Studio
 
 ```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
 SELECT
-      MAX(LEN(c.Id))          AS SubscriberKey
-    , MAX(LEN(c.FirstName))   AS FirstName
-    , MAX(LEN(c.LastName))    AS LastName
-    , MAX(LEN(c.Email))       AS EmailAddress
-    , MAX(LEN(c.JobTitle__c)) AS CurrentRole
-    , MAX(LEN(c.Industry__c)) AS Industry
+      MAX(LEN(c.Id))            AS SubscriberKey
+    , MAX(LEN(c.FirstName))     AS FirstName
+    , MAX(LEN(c.LastName))      AS LastName
+    , MAX(LEN(c.Email))         AS EmailAddress
+    , MAX(LEN(c.JobTitle__c))   AS CurrentRole
+    , MAX(LEN(c.Industry__c))   AS Industry
 FROM Contact_Salesforce AS c
 ```
 
@@ -6125,13 +6127,13 @@ Go to the Automation that takes care of moving the data from Synchronized Data E
 
 ```sql title="Basic field length checking query"
 SELECT
-      c.Id               AS ContactID
-    , LEN(c.Id)          AS SubscriberKey
-    , LEN(c.FirstName)   AS FirstName
-    , LEN(c.LastName)    AS LastName
-    , LEN(c.Email)       AS EmailAddress
-    , LEN(c.JobTitle__c) AS JobTitle
-    , LEN(c.Industry__c) AS Industry
+      c.Id                  AS ContactID
+    , LEN(c.Id)             AS SubscriberKey
+    , LEN(c.FirstName)      AS FirstName
+    , LEN(c.LastName)       AS LastName
+    , LEN(c.Email)          AS EmailAddress
+    , LEN(c.JobTitle__c)    AS JobTitle
+    , LEN(c.Industry__c)    AS Industry
 FROM Contact_Salesforce AS c
 WHERE
     18 - LEN(c.Id) < 0
@@ -6256,7 +6258,7 @@ WHERE
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Why should you care about All Contacts list?
@@ -6636,8 +6638,8 @@ This way, you can identify whether it's isolated issue with, for example, duplic
 >           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
 >           , 0, 1)
 >       )                                                                                         AS Other_Format
-> FROM AllContactsList                AS allC
-> INNER JOIN Ent._Subscribers         AS sub
+> FROM AllContactsList        AS allC
+> INNER JOIN Ent._Subscribers AS sub
 >     ON allC.SubscriberKey = sub.SubscriberKey
 > INNER JOIN (
 >     SELECT EmailAddress
@@ -6646,11 +6648,11 @@ This way, you can identify whether it's isolated issue with, for example, duplic
 >       AND EmailAddress != ''
 >     GROUP BY EmailAddress
 >     HAVING COUNT(SubscriberKey) > 1
-> )                                   AS Duplicates
+> )                           AS Duplicates
 >     ON sub.EmailAddress = Duplicates.EmailAddress
 > WHERE EXISTS (
 >     SELECT 1
->     FROM Ent._Sent                  AS sent
+>     FROM Ent._Sent          AS sent
 >     WHERE allC.SubscriberKey = sent.SubscriberKey
 > )
 > ```
@@ -10367,11 +10369,11 @@ Stores information about your Profile and Preference Attributes from Email Studi
 
 ```sql
 SELECT
-      ea._SubscriberID                     AS SubscriberID
+      ea._SubscriberID                      AS SubscriberID
     , ea.ProfileAttributeWithoutSpaces
-    , ea.[Profile Attribute With Spaces]   AS ProfileAttributeWithSpace
+    , ea.[Profile Attribute With Spaces]    AS ProfileAttributeWithSpace
     , ea.PreferenceAttributeWithoutSpaces
-    , ea.[Preference Attribute With Spaces]   AS PreferenceAttributeWithSpace
+    , ea.[Preference Attribute With Spaces] AS PreferenceAttributeWithSpace
 FROM _EnterpriseAttribute AS ea
 ```
 
@@ -10729,7 +10731,7 @@ Stores information about your Email Clicks. Detailed click reporting and behavio
 | URL                             | The URL for the link clicked. Dynamic elements are shown as code: `www.example.com?id=%%SubID%%`                                 | Text      | X        |
 | LinkName                        | The link name assigned in the email send                                                                                         | Text      | X        |
 | LinkContent                     | The link content assigned in the email send. Dynamic elements are shown as result: `www.example.com?id=12345`                    | Text      | X        |
-| IsUnique                        | Whether the event is unique or repeated                                                                                          |           |          |
+| IsUnique                        | Whether the event is unique or repeated                                                                                          | Boolean   |          |
 | TriggererSendDefinitionObjectID | The object ID for the triggered send definition                                                                                  | Text      | X        |
 | TriggeredSendCustomerKey        | The customer key for the triggered send                                                                                          | Text      | X        |
 
@@ -10991,7 +10993,7 @@ To give us at least a chance to make sense of that mess, Salesforce created mult
 
 ### \_Unsubscribe
 
-`_Unsubscribe` Data View stores data about unsubscribe events. The wording here is crucial, as it explains the difference from [`_Subscribers`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View unsubsrciption counts.
+`_Unsubscribe` Data View stores data about unsubscribe events. The wording here is crucial, as it explains the difference from [`_Subscribers`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View unsubscription counts.
 
 In `_Subscribers`, you can check what is the **current subscription status** for the All Subscribers list. In `_Unsubscribe`, you see the **unsubscription events** happening from List-Unsubscribe Header, `LogUnsubEvent` API call, Reply Mail Management responses, Complaints and out-of-the-box Preference Center - all linked to a specific [`_Job`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_job). It is also not limited to All Subscribers but also covers unsubscribes from other types of lists.
 
@@ -11612,10 +11614,10 @@ MobileConnect Data Views are unique, as most of them are no longer supported by 
 | \_Channel        | Communication channel. Used to be Mobile, now not in use                                                                                                                   | Text      | X        |
 | \_CarrierID      | Numeric code for the mobile carrier used by the contact                                                                                                                    | Number    |          |
 | \_CountryCode    | Two letter country code                                                                                                                                                    | Text      |          |
-| \_CreatedDate    | Date the subscription was created                                                                                                                                          | Date      |          |
-| \_CreatedBy      | Person responsible for contact creation                                                                                                                                    | Text      |          |
-| \_ModifiedDate   | Date the subscription was modified                                                                                                                                         | Date      |          |
-| \_ModifiedBy     | Person responsible for contact modification                                                                                                                                | Text      | X        |
+| \_CreatedDate    | Date the mobile address was created                                                                                                                                        | Date      |          |
+| \_CreatedBy      | Person responsible for mobile address creation                                                                                                                             | Text      |          |
+| \_ModifiedDate   | Date the mobile address was modified                                                                                                                                       | Date      |          |
+| \_ModifiedBy     | Person responsible for the modification                                                                                                                                    | Text      | X        |
 | \_City           | Contact's City                                                                                                                                                             | Text      | X        |
 | \_State          | Contact's State                                                                                                                                                            | Text      | X        |
 | \_ZipCode        | Contact's Zip Code                                                                                                                                                         | Text      | X        |
@@ -11659,27 +11661,27 @@ MobileConnect Data Views are unique, as most of them are no longer supported by 
 
 ```sql
 SELECT
-      mobileAddress._MobileID         AS MobileID
-    , mobileAddress._ContactID        AS ContactID
-    , mobileAddress._MobileNumber     AS MobileNumber
-    , mobileAddress._Status           AS Status
-    , mobileAddress._Source           AS Source
-    , mobileAddress._SourceObjectId   AS SourceObjectId
-    , mobileAddress._Priority         AS Priority
-    , mobileAddress._Channel          AS Channel
-    , mobileAddress._CarrierID        AS CarrierID
-    , mobileAddress._CountryCode      AS CountryCode
-    , mobileAddress._CreatedDate      AS CreatedDate
-    , mobileAddress._CreatedBy        AS CreatedBy
-    , mobileAddress._ModifiedDate      AS ModifiedDate
-    , mobileAddress._ModifiedBy        AS ModifiedBy
-    , mobileAddress._City             AS City
-    , mobileAddress._State            AS State
-    , mobileAddress._ZipCode          AS ZipCode
-    , mobileAddress._FirstName        AS FirstName
-    , mobileAddress._LastName         AS LastName
-    , mobileAddress._UTCOffset        AS UTCOffset
-    , mobileAddress._IsHonorDST       AS IsHonorDST
+      mobileAddress._MobileID       AS MobileID
+    , mobileAddress._ContactID      AS ContactID
+    , mobileAddress._MobileNumber   AS MobileNumber
+    , mobileAddress._Status         AS Status
+    , mobileAddress._Source         AS Source
+    , mobileAddress._SourceObjectId AS SourceObjectId
+    , mobileAddress._Priority       AS Priority
+    , mobileAddress._Channel        AS Channel
+    , mobileAddress._CarrierID      AS CarrierID
+    , mobileAddress._CountryCode    AS CountryCode
+    , mobileAddress._CreatedDate    AS CreatedDate
+    , mobileAddress._CreatedBy      AS CreatedBy
+    , mobileAddress._ModifiedDate   AS ModifiedDate
+    , mobileAddress._ModifiedBy     AS ModifiedBy
+    , mobileAddress._City           AS City
+    , mobileAddress._State          AS State
+    , mobileAddress._ZipCode        AS ZipCode
+    , mobileAddress._FirstName      AS FirstName
+    , mobileAddress._LastName       AS LastName
+    , mobileAddress._UTCOffset      AS UTCOffset
+    , mobileAddress._IsHonorDST     AS IsHonorDST
 FROM _MobileAddress AS mobileAddress
 ```
 
@@ -11789,19 +11791,19 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 
 ```sql
 SELECT
-      mobileSub._SubscriptionDefinitionID AS SubscriptionDefinitionID
-    , mobileSub._MobileNumber             AS MobileNumber
-    , mobileSub._OptOutStatusID           AS OptOutStatusID
-    , mobileSub._OptOutMethodID           AS OptOutMethodID
-    , mobileSub._OptOutDate               AS OptOutDate
-    , mobileSub._OptInStatusID            AS OptInStatusID
-    , mobileSub._OptInMethodID            AS OptInMethodID
-    , mobileSub._OptInDate                AS OptInDate
-    , mobileSub._Source                   AS Source
-    , mobileSub._CreatedDate              AS CreatedDate
-    , mobileSub._CreatedBy                AS CreatedBy
-    , mobileSub._ModifiedDate             AS ModifiedDate
-    , mobileSub._ModifiedBy               AS ModifiedBy
+      mobileSub._SubscriptionDefinitionID   AS SubscriptionDefinitionID
+    , mobileSub._MobileNumber               AS MobileNumber
+    , mobileSub._OptOutStatusID             AS OptOutStatusID
+    , mobileSub._OptOutMethodID             AS OptOutMethodID
+    , mobileSub._OptOutDate                 AS OptOutDate
+    , mobileSub._OptInStatusID              AS OptInStatusID
+    , mobileSub._OptInMethodID              AS OptInMethodID
+    , mobileSub._OptInDate                  AS OptInDate
+    , mobileSub._Source                     AS Source
+    , mobileSub._CreatedDate                AS CreatedDate
+    , mobileSub._CreatedBy                  AS CreatedBy
+    , mobileSub._ModifiedDate               AS ModifiedDate
+    , mobileSub._ModifiedBy                 AS ModifiedBy
 FROM _MobileSubscription AS mobileSub
 ```
 
@@ -11995,7 +11997,7 @@ When working with `_SMSSubscriptionLog` Data View:
 | ResponseToMobileMessageTrackingID | The tracking ID of the response to the message                                                                                                                                                                                                                                                                               | Number    | X        |
 | IsValid                           | Populates to 1 for inbound message and 0 for Outbound message                                                                                                                                                                                                                                                                | Boolean   | X        |
 | InvalidationCode                  | Invalidation code for the message. Currently always null.                                                                                                                                                                                                                                                                    | Number    | X        |
-| SMSJobID                          | GUID with JobID matching value in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | String    | X        |
+| SMSJobID                          | GUID with JobID matching value in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | Text      | X        |
 | SMSBatchID                        | Batch ID matching `SmsBatchID` in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | Number    | X        |
 | SendID                            | The send ID number for the SMS send                                                                                                                                                                                                                                                                                          | Number    | X        |
 | SendSplitID                       | If the message was split, the ID of the split                                                                                                                                                                                                                                                                                | Number    | X        |
@@ -12012,7 +12014,7 @@ When working with `_SMSSubscriptionLog` Data View:
 | SharedKeyword                     | The keyword used in your message                                                                                                                                                                                                                                                                                             | Text      | X        |
 | Ordinal                           | Represents the parts in a multi-part message. Represented in ascending order starting at 0.                                                                                                                                                                                                                                  | Number    | X        |
 | FromName                          | From Name that an individual message was deployed with. Maximum length: 11 characters                                                                                                                                                                                                                                        | Text      | X        |
-| ConversationStateID               | Crrelates MO/MT messages                                                                                                                                                                                                                                                                                                     | Text      | X        |
+| ConversationStateID               | Correlates MO/MT messages                                                                                                                                                                                                                                                                                                    | Text      | X        |
 | JBDefinitionID                    | Unique identifier for the related journey                                                                                                                                                                                                                                                                                    | Text      | X        |
 | JBActivityID                      | Unique identifier for the related journey activity                                                                                                                                                                                                                                                                           | Text      | X        |
 
@@ -12217,9 +12219,9 @@ Keep it in mind when you count your push audience. Rows in [`_PushAddress`](http
 
 ```sql title="Push-reachable Contacts and devices per app"
 SELECT
-      pushAddress._APID                       AS APID
-    , COUNT(DISTINCT pushAddress._ContactID)  AS ReachableContacts
-    , COUNT(*)                                AS ReachableDevices
+      pushAddress._APID                         AS APID
+    , COUNT(DISTINCT pushAddress._ContactID)    AS ReachableContacts
+    , COUNT(*)                                  AS ReachableDevices
 FROM _PushAddress AS pushAddress
 WHERE
     pushAddress._OptInStatusID = '2'
@@ -12435,13 +12437,13 @@ When working with `_PushAddress` Data View:
 
 ```sql
 SELECT
-      pushTag._DeviceID      AS DeviceID
-    , pushTag._APID          AS APID
-    , pushTag._Value         AS Tag
-    , pushTag._CreatedDate   AS CreatedDate
-    , pushTag._CreatedBy     AS CreatedBy
-    , pushTag._ModifiedDate  AS ModifiedDate
-    , pushTag._ModifiedBy    AS ModifiedBy
+      pushTag._DeviceID     AS DeviceID
+    , pushTag._APID         AS APID
+    , pushTag._Value        AS Tag
+    , pushTag._CreatedDate  AS CreatedDate
+    , pushTag._CreatedBy    AS CreatedBy
+    , pushTag._ModifiedDate AS ModifiedDate
+    , pushTag._ModifiedBy   AS ModifiedBy
 FROM _PushTag AS pushTag
 ```
 
@@ -13036,7 +13038,7 @@ Of course, there is one downside to this approach. As you need to use Automation
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-26  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
@@ -13470,10 +13472,10 @@ If you want to remove only those Leads / Users that you no longer synchronize vi
 
 ```sql title="Find all Users and Leads that are no longer synchronized to MCE"
 SELECT contact.SubscriberKey
-FROM AllContactsList                    AS contact
-    LEFT JOIN Leads_Salesforce          AS lead
+FROM AllContactsList            AS contact
+    LEFT JOIN Leads_Salesforce  AS lead
         ON contact.SubscriberKey = lead.ID
-    LEFT JOIN Users_Salesforce          AS user
+    LEFT JOIN Users_Salesforce  AS user
         ON contact.SubscriberKey = user.ID
 WHERE
     (
@@ -13577,7 +13579,7 @@ This new Query Activity should be put in the Contact Deletion Automation between
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-26  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## What is Send Log
@@ -13592,14 +13594,14 @@ Once you create it, it will automatically populate with each attempted send orig
 
 The Send Log template comes with six default fields:
 
-| Name            | Type    | Length | Primary Key | Nullable |
-| --------------- | ------- | ------ | ----------- | -------- |
-| JobID           | Numeric |        |             | Yes      |
-| ListID          | Numeric |        |             | Yes      |
-| BatchID         | Numeric |        |             | Yes      |
-| SubID           | Numeric |        |             | Yes      |
-| TriggeredSendID | String  | 36     |             | Yes      |
-| ErrorCode       | Numeric |        |             | Yes      |
+| Name            | Type   | Length | Primary Key | Nullable |
+| --------------- | ------ | ------ | ----------- | -------- |
+| JobID           | Number |        |             | Yes      |
+| ListID          | Number |        |             | Yes      |
+| BatchID         | Number |        |             | Yes      |
+| SubID           | Number |        |             | Yes      |
+| TriggeredSendID | Text   | 36     |             | Yes      |
+| ErrorCode       | Number |        |             | Yes      |
 
 `JobID` and `BatchID` allow you to differentiate the send if you push the same email on multiple days or campaigns.
 
@@ -13653,20 +13655,20 @@ When MCE prepares the email for sending, Send Log evaluates all available [perso
 
 Here you can see sample Customised Send Log that I like to use:
 
-| Name                   | Type    | Length | Primary Key | Nullable |
-| ---------------------- | ------- | ------ | ----------- | -------- |
-| JobID                  | Numeric |        |             | Yes      |
-| ListID                 | Numeric |        |             | Yes      |
-| BatchID                | Numeric |        |             | Yes      |
-| SubID                  | Numeric |        |             | Yes      |
-| TriggeredSendID        | String  | 36     |             | Yes      |
-| ErrorCode              | Numeric |        |             | Yes      |
-| SubscriberKey          | String  | 18     |             | Yes      |
-| EmailAddr              | Email   | 254    |             | Yes      |
-| EmailName\_            | String  | 150    |             | Yes      |
-| LogDate                | Date    |        |             |          |
-| BusinessSpecificField1 |         |        |             | Yes      |
-| BusinessSpecificField2 |         |        |             | Yes      |
+| Name                   | Type   | Length | Primary Key | Nullable |
+| ---------------------- | ------ | ------ | ----------- | -------- |
+| JobID                  | Number |        |             | Yes      |
+| ListID                 | Number |        |             | Yes      |
+| BatchID                | Number |        |             | Yes      |
+| SubID                  | Number |        |             | Yes      |
+| TriggeredSendID        | Text   | 36     |             | Yes      |
+| ErrorCode              | Number |        |             | Yes      |
+| SubscriberKey          | Text   | 18     |             | Yes      |
+| EmailAddr              | Email  | 254    |             | Yes      |
+| EmailName\_            | Text   | 150    |             | Yes      |
+| LogDate                | Date   |        |             |          |
+| BusinessSpecificField1 |        |        |             | Yes      |
+| BusinessSpecificField2 |        |        |             | Yes      |
 
 I always add the `SubscriberKey` field (filled from a column of the same name in the Data Extension used for send) along with `EmailAddr` and `EmailName_` fields filled in from personalisation strings. I also add `LogDate` field filled with current date as default to be able to filter rows based on a attempted send date.
 
@@ -13692,27 +13694,27 @@ To do it, you will need additional Data Extension and simple Automation with sin
 
 Create standard Data Extension with more user-friendly names and extend it with journey and engagement data points:
 
-| Name                   | Type    | Length | Primary Key | Nullable |
-| ---------------------- | ------- | ------ | ----------- | -------- |
-| SubscriberKey          | String  | 18     | Yes         | No       |
-| SubscriberID           | Numeric |        |             | Yes      |
-| EmailAddress           | Email   | 254    |             | Yes      |
-| BusinessSpecificField1 |         |        |             | Yes      |
-| BusinessSpecificField2 |         |        |             | Yes      |
-| EmailName              | String  | 150    |             | Yes      |
-| JourneyName            | String  | 100    |             | Yes      |
-| JourneyVersion         | String  | 100    |             | Yes      |
-| LogDate                | Date    |        |             | Yes      |
-| SentDate               | Date    |        |             | Yes      |
-| Delivered              | String  | 20     |             | Yes      |
-| FirstOpenDate          | Date    |        |             | Yes      |
-| FirstClickDate         | Date    |        |             | Yes      |
-| BounceDate             | Date    |        |             | Yes      |
-| JobID                  | Numeric |        | Yes         | Yes      |
-| ListID                 | Numeric |        | Yes         | Yes      |
-| BatchID                | Numeric |        | Yes         | Yes      |
-| TriggeredSendID        | String  | 36     |             | Yes      |
-| ErrorCode              | Numeric |        |             | Yes      |
+| Name                   | Type   | Length | Primary Key | Nullable |
+| ---------------------- | ------ | ------ | ----------- | -------- |
+| SubscriberKey          | Text   | 18     | Yes         | No       |
+| SubscriberID           | Number |        |             | Yes      |
+| EmailAddress           | Email  | 254    |             | Yes      |
+| BusinessSpecificField1 |        |        |             | Yes      |
+| BusinessSpecificField2 |        |        |             | Yes      |
+| EmailName              | Text   | 150    |             | Yes      |
+| JourneyName            | Text   | 100    |             | Yes      |
+| JourneyVersion         | Text   | 100    |             | Yes      |
+| LogDate                | Date   |        |             | Yes      |
+| SentDate               | Date   |        |             | Yes      |
+| Delivered              | Text   | 20     |             | Yes      |
+| FirstOpenDate          | Date   |        |             | Yes      |
+| FirstClickDate         | Date   |        |             | Yes      |
+| BounceDate             | Date   |        |             | Yes      |
+| JobID                  | Number |        | Yes         | Yes      |
+| ListID                 | Number |        | Yes         | Yes      |
+| BatchID                | Number |        | Yes         | Yes      |
+| TriggeredSendID        | Text   | 36     |             | Yes      |
+| ErrorCode              | Number |        |             | Yes      |
 
 ### Enhanced Send Log SQL Query Activity
 
@@ -13739,8 +13741,8 @@ SELECT
         ELSE 'True'
       END                       AS Delivered
     , CASE
-        WHEN o.EventDate IS NOT NULL THEN o.EventDate
-        WHEN c.EventDate IS NOT NULL THEN c.EventDate
+        WHEN o.EventDate IS NOT NULL    THEN o.EventDate
+        WHEN c.EventDate IS NOT NULL    THEN c.EventDate
       END                       AS FirstOpenDate
     , c.EventDate               AS FirstClickDate
     , b.EventDate               AS BounceDate

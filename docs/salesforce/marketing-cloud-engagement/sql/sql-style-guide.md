@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -133,11 +133,11 @@ I recommend keeping one information per line, as it allows for much easier scann
 ```sql
 /* ✅ Single information per line  */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -149,8 +149,8 @@ FROM _Sent AS s
         AND o.IsUnique = 1
 WHERE
     1 = CASE
-        WHEN j.EmailName LIKE 'UPS_%' THEN 1
-        WHEN j.EmailName LIKE 'CRS_%' THEN 1
+        WHEN j.EmailName LIKE 'UPS_%'   THEN 1
+        WHEN j.EmailName LIKE 'CRS_%'   THEN 1
         ELSE 0
     END
 
@@ -232,11 +232,11 @@ For simplicity I use 4-spaces indent, as it is both standard and can be added in
 ```sql
 /* ✅ Dependency based indentation */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -248,18 +248,18 @@ FROM _Sent AS s
         AND o.IsUnique = 1
 WHERE
     1 = CASE
-        WHEN j.EmailName LIKE 'UPS_%' THEN 1
-        WHEN j.EmailName LIKE 'CRS_%' THEN 1
+        WHEN j.EmailName LIKE 'UPS_%'   THEN 1
+        WHEN j.EmailName LIKE 'CRS_%'   THEN 1
         ELSE 0
     END
 
 /* ❌ Lack of indentation */
 SELECT
-s.SubscriberKey   AS SubscriberKey
-, j.EmailName     AS EmailName
-, s.EventDate     AS SentDate
-, j.DeliveredTime AS DeliveryDate
-, o.EventDate     AS OpenDate
+s.SubscriberKey     AS SubscriberKey
+, j.EmailName       AS EmailName
+, s.EventDate       AS SentDate
+, j.DeliveredTime   AS DeliveryDate
+, o.EventDate       AS OpenDate
 FROM _Sent AS s
 LEFT JOIN _Job AS j ON j.JobID = s.JobID
 LEFT JOIN _Open AS o ON o.JobID = s.JobID
@@ -268,8 +268,8 @@ AND o.BatchID = s.BatchID
 AND o.SubscriberID = s.SubscriberID
 AND o.IsUnique = 1
 WHERE 1 = CASE
-WHEN j.EmailName LIKE 'UPS_%' THEN 1
-WHEN j.EmailName LIKE 'CRS_%' THEN 1
+WHEN j.EmailName LIKE 'UPS_%'   THEN 1
+WHEN j.EmailName LIKE 'CRS_%'   THEN 1
 ELSE 0
 END
 ```
@@ -284,14 +284,16 @@ However, there is another place where spacing is beneficial for readability but 
 
 I try to use it whenever possible, but when there is huge imbalance in length (for example one Column requires multi-function calculation or there is a single complex `WHEN` in [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
 
+When you equalize aliases or `THEN` keywords, put them at the first tab stop after the longest line. With the 4-spaces indent, it is exactly where a single press of the Tab key at the end of that line takes you, so you get the alignment without counting spaces. If you also equalize Table aliases in [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) and [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), treat them as a separate group with its own longest line.
+
 ```sql
 /* ✅ Spacing around operators plus equalizing aliases and THEN */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -303,19 +305,19 @@ FROM _Sent AS s
         AND o.IsUnique = 1
 WHERE
     1 = CASE
-        WHEN j.EmailName LIKE 'UPS_%'     THEN 1
-        WHEN j.EmailName LIKE 'CRS_%'     THEN 1
-        WHEN j.EmailName = 'OTH_SeedList' THEN 1
+        WHEN j.EmailName LIKE 'UPS_%'       THEN 1
+        WHEN j.EmailName LIKE 'CRS_%'       THEN 1
+        WHEN j.EmailName = 'OTH_SeedList'   THEN 1
         ELSE 0
     END
 
 /* ✅ Spacing around operators plus equalizing aliases with exceptions */
 SELECT
-      s.SubscriberKey AS SubscriberKey
-    , j.EmailName     AS EmailName
-    , s.EventDate     AS SentDate
-    , j.DeliveredTime AS DeliveryDate
-    , o.EventDate     AS OpenDate
+      s.SubscriberKey   AS SubscriberKey
+    , j.EmailName       AS EmailName
+    , s.EventDate       AS SentDate
+    , j.DeliveredTime   AS DeliveryDate
+    , o.EventDate       AS OpenDate
     , DATEDIFF(HOUR, s.EventDate, o.EventDate) AS TimeToOpen
 FROM _Sent AS s
     LEFT JOIN _Job AS j
@@ -527,12 +529,12 @@ Just as with a letter case, you might have your hands tied by cross-system depen
 ```sql {3-8,17-22}
 /* ✅ Meaningful and consistent Column Names */
 SELECT
-      s.SubscriberKey    AS SubscriberKey
-    , j.EmailName        AS EmailName
-    , s.EventDate        AS SentDate
-    , j.DeliveredTime    AS DeliveryDate
-    , o.EventDate        AS OpenDate
-    , j.SuppressTracking AS IsTrackingSuppressed
+      s.SubscriberKey       AS SubscriberKey
+    , j.EmailName           AS EmailName
+    , s.EventDate           AS SentDate
+    , j.DeliveredTime       AS DeliveryDate
+    , o.EventDate           AS OpenDate
+    , j.SuppressTracking    AS IsTrackingSuppressed
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID
@@ -541,12 +543,12 @@ FROM _Sent AS s
 
 /* ❌ No consistency and type alignment in Column Names */
 SELECT
-      s.SubscriberKey    AS SubscriberKey
-    , j.EmailName        AS EmailName
-    , s.EventDate        AS SentDate
-    , j.DeliveredTime    AS DeliveryTime
-    , o.EventDate        AS OpenedAt
-    , j.SuppressTracking AS SuppressTracking
+      s.SubscriberKey       AS SubscriberKey
+    , j.EmailName           AS EmailName
+    , s.EventDate           AS SentDate
+    , j.DeliveredTime       AS DeliveryTime
+    , o.EventDate           AS OpenedAt
+    , j.SuppressTracking    AS SuppressTracking
 FROM _Sent AS s
     LEFT JOIN _Job AS j
         ON j.JobID = s.JobID

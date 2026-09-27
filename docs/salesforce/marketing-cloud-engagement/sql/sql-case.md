@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Conditional values with CASE
@@ -20,10 +20,10 @@ SELECT
     , 'Lead'                AS RecordType
     , GETUTCDATE()          AS ImportDate
     , CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
+        WHEN 1  THEN 'Bronze'
+        WHEN 2  THEN 'Silver'
+        WHEN 3  THEN 'Gold'
+        WHEN 4  THEN 'Platinum'
         ELSE 'Unregistered'
       END                   AS MemberType
 ```
@@ -41,10 +41,10 @@ SELECT
     , 'Lead'                AS RecordType
     , GETUTCDATE()          AS ImportDate
     , CASE MemberType__c
-        WHEN 1 THEN 'Bronze'
-        WHEN 2 THEN 'Silver'
-        WHEN 3 THEN 'Gold'
-        WHEN 4 THEN 'Platinum'
+        WHEN 1  THEN 'Bronze'
+        WHEN 2  THEN 'Silver'
+        WHEN 3  THEN 'Gold'
+        WHEN 4  THEN 'Platinum'
         ELSE 'Unregistered'
       END                   AS MemberType
 ```
@@ -64,10 +64,10 @@ SELECT
     , 'Lead'                AS RecordType
     , GETUTCDATE()          AS ImportDate
     , CASE
-        WHEN MemberType__c = 1 THEN 'Bronze'
-        WHEN MemberType__c = 2 THEN 'Silver'
-        WHEN MemberType__c = 3 THEN 'Gold'
-        WHEN MemberType__c = 4 THEN 'Platinum'
+        WHEN MemberType__c = 1  THEN 'Bronze'
+        WHEN MemberType__c = 2  THEN 'Silver'
+        WHEN MemberType__c = 3  THEN 'Gold'
+        WHEN MemberType__c = 4  THEN 'Platinum'
         ELSE 'Unregistered'
       END                   AS MemberType
 ```

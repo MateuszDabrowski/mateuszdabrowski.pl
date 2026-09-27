@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-26  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
@@ -438,10 +438,10 @@ If you want to remove only those Leads / Users that you no longer synchronize vi
 
 ```sql title="Find all Users and Leads that are no longer synchronized to MCE"
 SELECT contact.SubscriberKey
-FROM AllContactsList                    AS contact
-    LEFT JOIN Leads_Salesforce          AS lead
+FROM AllContactsList            AS contact
+    LEFT JOIN Leads_Salesforce  AS lead
         ON contact.SubscriberKey = lead.ID
-    LEFT JOIN Users_Salesforce          AS user
+    LEFT JOIN Users_Salesforce  AS user
         ON contact.SubscriberKey = user.ID
 WHERE
     (

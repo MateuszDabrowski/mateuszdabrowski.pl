@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Break from the limits of source data types. Use the full power of SQL to transform your values.
@@ -161,8 +161,8 @@ Use it by adding the style code as the third argument of the [`CONVERT`](https:/
 
 ```sql
 SELECT
-      CONVERT(NVARCHAR, GETDATE(), 101)              AS DateAsString
-    , CONVERT(DATETIME2, '2020-12-31 19:00:00', 120) AS StringAsDate
+      CONVERT(NVARCHAR, GETDATE(), 101)                 AS DateAsString
+    , CONVERT(DATETIME2, '2020-12-31 19:00:00', 120)    AS StringAsDate
 ```
 
 You can find the full list of style codes on [Microsoft .Net Doc Pages](https://docs.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver15#date-and-time-styles).

@@ -31,9 +31,9 @@ Keep it in mind when you count your push audience. Rows in [`_PushAddress`](http
 
 ```sql title="Push-reachable Contacts and devices per app"
 SELECT
-      pushAddress._APID                       AS APID
-    , COUNT(DISTINCT pushAddress._ContactID)  AS ReachableContacts
-    , COUNT(*)                                AS ReachableDevices
+      pushAddress._APID                         AS APID
+    , COUNT(DISTINCT pushAddress._ContactID)    AS ReachableContacts
+    , COUNT(*)                                  AS ReachableDevices
 FROM _PushAddress AS pushAddress
 WHERE
     pushAddress._OptInStatusID = '2'
@@ -249,13 +249,13 @@ When working with `_PushAddress` Data View:
 
 ```sql
 SELECT
-      pushTag._DeviceID      AS DeviceID
-    , pushTag._APID          AS APID
-    , pushTag._Value         AS Tag
-    , pushTag._CreatedDate   AS CreatedDate
-    , pushTag._CreatedBy     AS CreatedBy
-    , pushTag._ModifiedDate  AS ModifiedDate
-    , pushTag._ModifiedBy    AS ModifiedBy
+      pushTag._DeviceID     AS DeviceID
+    , pushTag._APID         AS APID
+    , pushTag._Value        AS Tag
+    , pushTag._CreatedDate  AS CreatedDate
+    , pushTag._CreatedBy    AS CreatedBy
+    , pushTag._ModifiedDate AS ModifiedDate
+    , pushTag._ModifiedBy   AS ModifiedBy
 FROM _PushTag AS pushTag
 ```
 

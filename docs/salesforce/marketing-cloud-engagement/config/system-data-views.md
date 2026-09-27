@@ -111,11 +111,11 @@ Stores information about your Profile and Preference Attributes from Email Studi
 
 ```sql
 SELECT
-      ea._SubscriberID                     AS SubscriberID
+      ea._SubscriberID                      AS SubscriberID
     , ea.ProfileAttributeWithoutSpaces
-    , ea.[Profile Attribute With Spaces]   AS ProfileAttributeWithSpace
+    , ea.[Profile Attribute With Spaces]    AS ProfileAttributeWithSpace
     , ea.PreferenceAttributeWithoutSpaces
-    , ea.[Preference Attribute With Spaces]   AS PreferenceAttributeWithSpace
+    , ea.[Preference Attribute With Spaces] AS PreferenceAttributeWithSpace
 FROM _EnterpriseAttribute AS ea
 ```
 
@@ -473,7 +473,7 @@ Stores information about your Email Clicks. Detailed click reporting and behavio
 | URL                             | The URL for the link clicked. Dynamic elements are shown as code: `www.example.com?id=%%SubID%%`                                 | Text      | X        |
 | LinkName                        | The link name assigned in the email send                                                                                         | Text      | X        |
 | LinkContent                     | The link content assigned in the email send. Dynamic elements are shown as result: `www.example.com?id=12345`                    | Text      | X        |
-| IsUnique                        | Whether the event is unique or repeated                                                                                          |           |          |
+| IsUnique                        | Whether the event is unique or repeated                                                                                          | Boolean   |          |
 | TriggererSendDefinitionObjectID | The object ID for the triggered send definition                                                                                  | Text      | X        |
 | TriggeredSendCustomerKey        | The customer key for the triggered send                                                                                          | Text      | X        |
 
@@ -735,7 +735,7 @@ To give us at least a chance to make sense of that mess, Salesforce created mult
 
 ### \_Unsubscribe
 
-`_Unsubscribe` Data View stores data about unsubscribe events. The wording here is crucial, as it explains the difference from [`_Subscribers`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View unsubsrciption counts.
+`_Unsubscribe` Data View stores data about unsubscribe events. The wording here is crucial, as it explains the difference from [`_Subscribers`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers) Data View unsubscription counts.
 
 In `_Subscribers`, you can check what is the **current subscription status** for the All Subscribers list. In `_Unsubscribe`, you see the **unsubscription events** happening from List-Unsubscribe Header, `LogUnsubEvent` API call, Reply Mail Management responses, Complaints and out-of-the-box Preference Center - all linked to a specific [`_Job`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_job). It is also not limited to All Subscribers but also covers unsubscribes from other types of lists.
 

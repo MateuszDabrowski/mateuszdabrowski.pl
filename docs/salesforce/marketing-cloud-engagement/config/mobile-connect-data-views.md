@@ -59,10 +59,10 @@ MobileConnect Data Views are unique, as most of them are no longer supported by 
 | \_Channel        | Communication channel. Used to be Mobile, now not in use                                                                                                                   | Text      | X        |
 | \_CarrierID      | Numeric code for the mobile carrier used by the contact                                                                                                                    | Number    |          |
 | \_CountryCode    | Two letter country code                                                                                                                                                    | Text      |          |
-| \_CreatedDate    | Date the subscription was created                                                                                                                                          | Date      |          |
-| \_CreatedBy      | Person responsible for contact creation                                                                                                                                    | Text      |          |
-| \_ModifiedDate   | Date the subscription was modified                                                                                                                                         | Date      |          |
-| \_ModifiedBy     | Person responsible for contact modification                                                                                                                                | Text      | X        |
+| \_CreatedDate    | Date the mobile address was created                                                                                                                                        | Date      |          |
+| \_CreatedBy      | Person responsible for mobile address creation                                                                                                                             | Text      |          |
+| \_ModifiedDate   | Date the mobile address was modified                                                                                                                                       | Date      |          |
+| \_ModifiedBy     | Person responsible for the modification                                                                                                                                    | Text      | X        |
 | \_City           | Contact's City                                                                                                                                                             | Text      | X        |
 | \_State          | Contact's State                                                                                                                                                            | Text      | X        |
 | \_ZipCode        | Contact's Zip Code                                                                                                                                                         | Text      | X        |
@@ -106,27 +106,27 @@ MobileConnect Data Views are unique, as most of them are no longer supported by 
 
 ```sql
 SELECT
-      mobileAddress._MobileID         AS MobileID
-    , mobileAddress._ContactID        AS ContactID
-    , mobileAddress._MobileNumber     AS MobileNumber
-    , mobileAddress._Status           AS Status
-    , mobileAddress._Source           AS Source
-    , mobileAddress._SourceObjectId   AS SourceObjectId
-    , mobileAddress._Priority         AS Priority
-    , mobileAddress._Channel          AS Channel
-    , mobileAddress._CarrierID        AS CarrierID
-    , mobileAddress._CountryCode      AS CountryCode
-    , mobileAddress._CreatedDate      AS CreatedDate
-    , mobileAddress._CreatedBy        AS CreatedBy
-    , mobileAddress._ModifiedDate      AS ModifiedDate
-    , mobileAddress._ModifiedBy        AS ModifiedBy
-    , mobileAddress._City             AS City
-    , mobileAddress._State            AS State
-    , mobileAddress._ZipCode          AS ZipCode
-    , mobileAddress._FirstName        AS FirstName
-    , mobileAddress._LastName         AS LastName
-    , mobileAddress._UTCOffset        AS UTCOffset
-    , mobileAddress._IsHonorDST       AS IsHonorDST
+      mobileAddress._MobileID       AS MobileID
+    , mobileAddress._ContactID      AS ContactID
+    , mobileAddress._MobileNumber   AS MobileNumber
+    , mobileAddress._Status         AS Status
+    , mobileAddress._Source         AS Source
+    , mobileAddress._SourceObjectId AS SourceObjectId
+    , mobileAddress._Priority       AS Priority
+    , mobileAddress._Channel        AS Channel
+    , mobileAddress._CarrierID      AS CarrierID
+    , mobileAddress._CountryCode    AS CountryCode
+    , mobileAddress._CreatedDate    AS CreatedDate
+    , mobileAddress._CreatedBy      AS CreatedBy
+    , mobileAddress._ModifiedDate   AS ModifiedDate
+    , mobileAddress._ModifiedBy     AS ModifiedBy
+    , mobileAddress._City           AS City
+    , mobileAddress._State          AS State
+    , mobileAddress._ZipCode        AS ZipCode
+    , mobileAddress._FirstName      AS FirstName
+    , mobileAddress._LastName       AS LastName
+    , mobileAddress._UTCOffset      AS UTCOffset
+    , mobileAddress._IsHonorDST     AS IsHonorDST
 FROM _MobileAddress AS mobileAddress
 ```
 
@@ -236,19 +236,19 @@ The new Data View contains nearly all the same fields (sans `_CreatedBy` and `_M
 
 ```sql
 SELECT
-      mobileSub._SubscriptionDefinitionID AS SubscriptionDefinitionID
-    , mobileSub._MobileNumber             AS MobileNumber
-    , mobileSub._OptOutStatusID           AS OptOutStatusID
-    , mobileSub._OptOutMethodID           AS OptOutMethodID
-    , mobileSub._OptOutDate               AS OptOutDate
-    , mobileSub._OptInStatusID            AS OptInStatusID
-    , mobileSub._OptInMethodID            AS OptInMethodID
-    , mobileSub._OptInDate                AS OptInDate
-    , mobileSub._Source                   AS Source
-    , mobileSub._CreatedDate              AS CreatedDate
-    , mobileSub._CreatedBy                AS CreatedBy
-    , mobileSub._ModifiedDate             AS ModifiedDate
-    , mobileSub._ModifiedBy               AS ModifiedBy
+      mobileSub._SubscriptionDefinitionID   AS SubscriptionDefinitionID
+    , mobileSub._MobileNumber               AS MobileNumber
+    , mobileSub._OptOutStatusID             AS OptOutStatusID
+    , mobileSub._OptOutMethodID             AS OptOutMethodID
+    , mobileSub._OptOutDate                 AS OptOutDate
+    , mobileSub._OptInStatusID              AS OptInStatusID
+    , mobileSub._OptInMethodID              AS OptInMethodID
+    , mobileSub._OptInDate                  AS OptInDate
+    , mobileSub._Source                     AS Source
+    , mobileSub._CreatedDate                AS CreatedDate
+    , mobileSub._CreatedBy                  AS CreatedBy
+    , mobileSub._ModifiedDate               AS ModifiedDate
+    , mobileSub._ModifiedBy                 AS ModifiedBy
 FROM _MobileSubscription AS mobileSub
 ```
 
@@ -442,7 +442,7 @@ When working with `_SMSSubscriptionLog` Data View:
 | ResponseToMobileMessageTrackingID | The tracking ID of the response to the message                                                                                                                                                                                                                                                                               | Number    | X        |
 | IsValid                           | Populates to 1 for inbound message and 0 for Outbound message                                                                                                                                                                                                                                                                | Boolean   | X        |
 | InvalidationCode                  | Invalidation code for the message. Currently always null.                                                                                                                                                                                                                                                                    | Number    | X        |
-| SMSJobID                          | GUID with JobID matching value in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | String    | X        |
+| SMSJobID                          | GUID with JobID matching value in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | Text      | X        |
 | SMSBatchID                        | Batch ID matching `SmsBatchID` in [SMS Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#sms-send-log). Filled only for sends since Spring 2023.                                                                                                            | Number    | X        |
 | SendID                            | The send ID number for the SMS send                                                                                                                                                                                                                                                                                          | Number    | X        |
 | SendSplitID                       | If the message was split, the ID of the split                                                                                                                                                                                                                                                                                | Number    | X        |
@@ -459,7 +459,7 @@ When working with `_SMSSubscriptionLog` Data View:
 | SharedKeyword                     | The keyword used in your message                                                                                                                                                                                                                                                                                             | Text      | X        |
 | Ordinal                           | Represents the parts in a multi-part message. Represented in ascending order starting at 0.                                                                                                                                                                                                                                  | Number    | X        |
 | FromName                          | From Name that an individual message was deployed with. Maximum length: 11 characters                                                                                                                                                                                                                                        | Text      | X        |
-| ConversationStateID               | Crrelates MO/MT messages                                                                                                                                                                                                                                                                                                     | Text      | X        |
+| ConversationStateID               | Correlates MO/MT messages                                                                                                                                                                                                                                                                                                    | Text      | X        |
 | JBDefinitionID                    | Unique identifier for the related journey                                                                                                                                                                                                                                                                                    | Text      | X        |
 | JBActivityID                      | Unique identifier for the related journey activity                                                                                                                                                                                                                                                                           | Text      | X        |
 

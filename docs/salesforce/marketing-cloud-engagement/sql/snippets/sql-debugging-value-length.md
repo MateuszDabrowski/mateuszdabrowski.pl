@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -33,12 +33,12 @@ You can make quick manual check with a simple SQL query. Open your [Query Studio
 
 ```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
 SELECT
-      MAX(LEN(c.Id))          AS SubscriberKey
-    , MAX(LEN(c.FirstName))   AS FirstName
-    , MAX(LEN(c.LastName))    AS LastName
-    , MAX(LEN(c.Email))       AS EmailAddress
-    , MAX(LEN(c.JobTitle__c)) AS CurrentRole
-    , MAX(LEN(c.Industry__c)) AS Industry
+      MAX(LEN(c.Id))            AS SubscriberKey
+    , MAX(LEN(c.FirstName))     AS FirstName
+    , MAX(LEN(c.LastName))      AS LastName
+    , MAX(LEN(c.Email))         AS EmailAddress
+    , MAX(LEN(c.JobTitle__c))   AS CurrentRole
+    , MAX(LEN(c.Industry__c))   AS Industry
 FROM Contact_Salesforce AS c
 ```
 
@@ -86,13 +86,13 @@ Go to the Automation that takes care of moving the data from Synchronized Data E
 
 ```sql title="Basic field length checking query"
 SELECT
-      c.Id               AS ContactID
-    , LEN(c.Id)          AS SubscriberKey
-    , LEN(c.FirstName)   AS FirstName
-    , LEN(c.LastName)    AS LastName
-    , LEN(c.Email)       AS EmailAddress
-    , LEN(c.JobTitle__c) AS JobTitle
-    , LEN(c.Industry__c) AS Industry
+      c.Id                  AS ContactID
+    , LEN(c.Id)             AS SubscriberKey
+    , LEN(c.FirstName)      AS FirstName
+    , LEN(c.LastName)       AS LastName
+    , LEN(c.Email)          AS EmailAddress
+    , LEN(c.JobTitle__c)    AS JobTitle
+    , LEN(c.Industry__c)    AS Industry
 FROM Contact_Salesforce AS c
 WHERE
     18 - LEN(c.Id) < 0

@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-26  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## What is Send Log
@@ -19,14 +19,14 @@ Once you create it, it will automatically populate with each attempted send orig
 
 The Send Log template comes with six default fields:
 
-| Name            | Type    | Length | Primary Key | Nullable |
-| --------------- | ------- | ------ | ----------- | -------- |
-| JobID           | Numeric |        |             | Yes      |
-| ListID          | Numeric |        |             | Yes      |
-| BatchID         | Numeric |        |             | Yes      |
-| SubID           | Numeric |        |             | Yes      |
-| TriggeredSendID | String  | 36     |             | Yes      |
-| ErrorCode       | Numeric |        |             | Yes      |
+| Name            | Type   | Length | Primary Key | Nullable |
+| --------------- | ------ | ------ | ----------- | -------- |
+| JobID           | Number |        |             | Yes      |
+| ListID          | Number |        |             | Yes      |
+| BatchID         | Number |        |             | Yes      |
+| SubID           | Number |        |             | Yes      |
+| TriggeredSendID | Text   | 36     |             | Yes      |
+| ErrorCode       | Number |        |             | Yes      |
 
 `JobID` and `BatchID` allow you to differentiate the send if you push the same email on multiple days or campaigns.
 
@@ -80,20 +80,20 @@ When MCE prepares the email for sending, Send Log evaluates all available [perso
 
 Here you can see sample Customised Send Log that I like to use:
 
-| Name                   | Type    | Length | Primary Key | Nullable |
-| ---------------------- | ------- | ------ | ----------- | -------- |
-| JobID                  | Numeric |        |             | Yes      |
-| ListID                 | Numeric |        |             | Yes      |
-| BatchID                | Numeric |        |             | Yes      |
-| SubID                  | Numeric |        |             | Yes      |
-| TriggeredSendID        | String  | 36     |             | Yes      |
-| ErrorCode              | Numeric |        |             | Yes      |
-| SubscriberKey          | String  | 18     |             | Yes      |
-| EmailAddr              | Email   | 254    |             | Yes      |
-| EmailName\_            | String  | 150    |             | Yes      |
-| LogDate                | Date    |        |             |          |
-| BusinessSpecificField1 |         |        |             | Yes      |
-| BusinessSpecificField2 |         |        |             | Yes      |
+| Name                   | Type   | Length | Primary Key | Nullable |
+| ---------------------- | ------ | ------ | ----------- | -------- |
+| JobID                  | Number |        |             | Yes      |
+| ListID                 | Number |        |             | Yes      |
+| BatchID                | Number |        |             | Yes      |
+| SubID                  | Number |        |             | Yes      |
+| TriggeredSendID        | Text   | 36     |             | Yes      |
+| ErrorCode              | Number |        |             | Yes      |
+| SubscriberKey          | Text   | 18     |             | Yes      |
+| EmailAddr              | Email  | 254    |             | Yes      |
+| EmailName\_            | Text   | 150    |             | Yes      |
+| LogDate                | Date   |        |             |          |
+| BusinessSpecificField1 |        |        |             | Yes      |
+| BusinessSpecificField2 |        |        |             | Yes      |
 
 I always add the `SubscriberKey` field (filled from a column of the same name in the Data Extension used for send) along with `EmailAddr` and `EmailName_` fields filled in from personalisation strings. I also add `LogDate` field filled with current date as default to be able to filter rows based on a attempted send date.
 
@@ -119,27 +119,27 @@ To do it, you will need additional Data Extension and simple Automation with sin
 
 Create standard Data Extension with more user-friendly names and extend it with journey and engagement data points:
 
-| Name                   | Type    | Length | Primary Key | Nullable |
-| ---------------------- | ------- | ------ | ----------- | -------- |
-| SubscriberKey          | String  | 18     | Yes         | No       |
-| SubscriberID           | Numeric |        |             | Yes      |
-| EmailAddress           | Email   | 254    |             | Yes      |
-| BusinessSpecificField1 |         |        |             | Yes      |
-| BusinessSpecificField2 |         |        |             | Yes      |
-| EmailName              | String  | 150    |             | Yes      |
-| JourneyName            | String  | 100    |             | Yes      |
-| JourneyVersion         | String  | 100    |             | Yes      |
-| LogDate                | Date    |        |             | Yes      |
-| SentDate               | Date    |        |             | Yes      |
-| Delivered              | String  | 20     |             | Yes      |
-| FirstOpenDate          | Date    |        |             | Yes      |
-| FirstClickDate         | Date    |        |             | Yes      |
-| BounceDate             | Date    |        |             | Yes      |
-| JobID                  | Numeric |        | Yes         | Yes      |
-| ListID                 | Numeric |        | Yes         | Yes      |
-| BatchID                | Numeric |        | Yes         | Yes      |
-| TriggeredSendID        | String  | 36     |             | Yes      |
-| ErrorCode              | Numeric |        |             | Yes      |
+| Name                   | Type   | Length | Primary Key | Nullable |
+| ---------------------- | ------ | ------ | ----------- | -------- |
+| SubscriberKey          | Text   | 18     | Yes         | No       |
+| SubscriberID           | Number |        |             | Yes      |
+| EmailAddress           | Email  | 254    |             | Yes      |
+| BusinessSpecificField1 |        |        |             | Yes      |
+| BusinessSpecificField2 |        |        |             | Yes      |
+| EmailName              | Text   | 150    |             | Yes      |
+| JourneyName            | Text   | 100    |             | Yes      |
+| JourneyVersion         | Text   | 100    |             | Yes      |
+| LogDate                | Date   |        |             | Yes      |
+| SentDate               | Date   |        |             | Yes      |
+| Delivered              | Text   | 20     |             | Yes      |
+| FirstOpenDate          | Date   |        |             | Yes      |
+| FirstClickDate         | Date   |        |             | Yes      |
+| BounceDate             | Date   |        |             | Yes      |
+| JobID                  | Number |        | Yes         | Yes      |
+| ListID                 | Number |        | Yes         | Yes      |
+| BatchID                | Number |        | Yes         | Yes      |
+| TriggeredSendID        | Text   | 36     |             | Yes      |
+| ErrorCode              | Number |        |             | Yes      |
 
 ### Enhanced Send Log SQL Query Activity
 
@@ -166,8 +166,8 @@ SELECT
         ELSE 'True'
       END                       AS Delivered
     , CASE
-        WHEN o.EventDate IS NOT NULL THEN o.EventDate
-        WHEN c.EventDate IS NOT NULL THEN c.EventDate
+        WHEN o.EventDate IS NOT NULL    THEN o.EventDate
+        WHEN c.EventDate IS NOT NULL    THEN c.EventDate
       END                       AS FirstOpenDate
     , c.EventDate               AS FirstClickDate
     , b.EventDate               AS BounceDate

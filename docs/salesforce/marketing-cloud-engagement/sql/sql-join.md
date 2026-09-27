@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 There are cases where all you need is to pull (and maybe transform) data [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
@@ -120,8 +120,8 @@ In such a scenario, you can use Self-join to build a more readable table that mi
 
 ```sql {5-6} title="Self-join using INNER JOIN will output only categories that have a parent category"
 SELECT
-      c.CategoryName  AS Category
-    , pc.CategoryName AS ParentCategory
+      c.CategoryName    AS Category
+    , pc.CategoryName   AS ParentCategory
 FROM WristwatchesDE AS c
     INNER JOIN WristwatchesDE AS pc
         ON pc.ParentCategoryID = c.CategoryID
@@ -146,12 +146,12 @@ You won't be using Self-join a lot, but it might be a colossal timesaver when ne
 >
 > ```sql {8-12} title="Flattening three levels of Salesforce Account hierarchy"
 > SELECT
->       a1.Id   AS Level1AccountId
->     , a1.Name AS Level1AccountName
->     , a2.Id   AS Level2AccountId
->     , a2.Name AS Level2AccountName
->     , a3.Id   AS Level3AccountId
->     , a3.Name AS Level3AccountName
+>       a1.Id     AS Level1AccountId
+>     , a1.Name   AS Level1AccountName
+>     , a2.Id     AS Level2AccountId
+>     , a2.Name   AS Level2AccountName
+>     , a3.Id     AS Level3AccountId
+>     , a3.Name   AS Level3AccountName
 > FROM Account_Salesforce AS a1
 >     LEFT JOIN Account_Salesforce AS a2
 >         ON a2.Id = a1.ParentId
@@ -376,8 +376,8 @@ UNION
 SELECT
       sl.SubscriberKey
     , sl.EmailAddress
-    , 'Seed'       AS FirstName
-    , 'Estimating' AS Interest
+    , 'Seed'        AS FirstName
+    , 'Estimating'  AS Interest
 FROM Seedlist AS sl
 ```
 
@@ -402,17 +402,17 @@ In the example above, we add the Seedlist to the master segment and provide stat
 > SELECT
 >       sl.SubscriberKey
 >     , sl.EmailAddress
->     , 'Seed'       AS FirstName
->     , 'Estimating' AS Interest
+>     , 'Seed'        AS FirstName
+>     , 'Estimating'  AS Interest
 > FROM Seedlist AS sl
 >
 > UNION ALL
 >
 > SELECT
->       '123456789987654321' AS SubscriberKey
->     , 'sales@company.com'  AS EmailAddress
->     , 'SalesDepartment'    AS FirstName
->     , 'Leads'              AS Interest
+>       '123456789987654321'  AS SubscriberKey
+>     , 'sales@company.com'   AS EmailAddress
+>     , 'SalesDepartment'     AS FirstName
+>     , 'Leads'               AS Interest
 > ```
 
 ## INTERSECT
