@@ -8572,7 +8572,7 @@ The final part of the template is where I'm adding the main part of the script. 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-27  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Cloud Page Apps: what and why
@@ -8683,7 +8683,7 @@ Once your micro application refreshes after authorisation, you can get the code 
 
 **SSJS**
 
-```js {15} title="API Token Authorisation Flow"
+```js {15-21} title="API Token Authorisation Flow"
 var appURL = 'APP_CLOUD_PAGE_URL';
 var clientID = 'CLIENT_ID';
 var clientSecret = 'CLIENT_SECRET';
@@ -8698,7 +8698,13 @@ var payload = {
     redirect_uri: appURL
 };
 
-var response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload));
+/* HTTP.Post throws when the token request is refused, for example with a wrong Client Secret */
+var response;
+try {
+    response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload));
+} catch (tokenError) {
+    response = { StatusCode: 'request refused - ' + String(tokenError && tokenError.message) };
+};
 
 if (response.StatusCode == 200) {
     var parsedResponse = Platform.Function.ParseJSON(response.Response[0]);
@@ -8970,8 +8976,14 @@ By considering all the above, we get a robust and secure template for our Cloud 
             client_secret: clientSecret,
             redirect_uri: appURL
         };
-        /* 3.2.2. Request the token */
-        var response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload));
+        /* 3.2.2. Request the token. HTTP.Post throws when the token request is refused (for example a wrong
+        Client Secret), so the failure is caught here and ends in the Authentication Failed branch below. */
+        var response;
+        try {
+            response = HTTP.Post('https://' + clientBase + '.auth.marketingcloudapis.com/v2/token', 'application/json', Stringify(payload));
+        } catch (tokenError) {
+            response = { StatusCode: 'request refused - ' + String(tokenError && tokenError.message) };
+        };
         /* 3.2.3. Destructure the response */
         if (response.StatusCode == 200) {
             var parsedResponse = Platform.Function.ParseJSON(response.Response[0]);

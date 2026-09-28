@@ -126,6 +126,7 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 
 - [Diagramforce](https://diagramforce.com): Free browser-based diagramming tool for Salesforce architects: architecture diagrams, data models, process flows and org charts with Salesforce icons.
 - [Strum file format for LLMs](https://mateuszdabrowski.pl/strum/llm-spec.md): Specification an LLM can follow to transcribe a song into a .strum file the Strum app imports.
+- [Apps](https://mateuszdabrowski.pl/apps/): Apps by Mateusz Dąbrowski. Diagramforce, a free diagramming tool for Salesforce, plus Slot, Shelf and Strum for Mac, iPhone, iPad and Apple Watch.
 - [Shelf - Your Digital Pocket](https://mateuszdabrowski.pl/shelf/): The small things you keep needing - codes, addresses, IBANs, snippets - encrypted on your device and one tap from your clipboard on iPhone, iPad, Mac and Apple Watch.
 - [Slot - Your Inboxes in One App](https://mateuszdabrowski.pl/slot/): Every Google and Microsoft account in one native Mac app, each with completely isolated data. Mail, Calendar, Drive, Meet, Outlook, Teams and more.
 - [Strum - Tabs Made Easy](https://mateuszdabrowski.pl/strum/): Tablature, chord and strum-pattern editor for ukulele and guitar - for iPhone, iPad, and Mac.
