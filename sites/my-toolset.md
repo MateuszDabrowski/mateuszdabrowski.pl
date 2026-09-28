@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/sites/my-toolset/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-13  
+Last updated: 2026-09-28  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Show me your tools, and I will tell you who you are. Or so they say.
@@ -54,7 +54,7 @@ Still exploring to find the best mix, but after the sad slopification of Google 
 
 ## Diagrams
 
-I use my own [Diagramforce](https://diagramforce.mateuszdabrowski.pl/). I'm mapping out architectures, processes and timelines. Diagramforce makes it fast and easy. Especially for Salesforce ecosystem. No subscription needed.
+I use my own [Diagramforce](https://diagramforce.com/). I'm mapping out architectures, processes and timelines. Diagramforce makes it fast and easy. Especially for Salesforce ecosystem. No subscription needed.
 
 For some scenarios I also use [Mermaid](http://mermaid.js.org). Lets me create diagrams with code and output them to a website in non-image format for better performance. You can find it in multiple articles, like [MMC Integration Patterns](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#single-business-unit-single-org-setup)
 
