@@ -5278,7 +5278,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-09-28  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -5830,6 +5830,33 @@ FROM _Sent AS s
         ON o.JobID = s.JobID
 ```
 
+## Comments
+
+Comments carry the context your query needs, like the reason behind a filter. However, MCE does not ignore everything inside them, and this one is not a matter of taste.
+
+### Apostrophes in Comments
+
+**Leave apostrophes out of comments.**
+
+MCE adds the `N` prefix to every text value in your query on its own. To find those values, it looks for apostrophes, and it does not skip comments. That leaves you with two traps:
+
+1. A single apostrophe in a comment, like the one in `don't`, leaves an apostrophe without a pair. The syntax check passes, but saving the query fails with an error that points you somewhere else entirely: "Error while processing square brackets". It happens in `--` line comments as well.
+2. Apostrophes in two different comments pair up with each other across your query, so it saves and runs. However, the `N` then lands inside your text values. In my test, a query with `/* it's a test */` both above and below `SELECT TOP 1 'a' AS A` returned `aN` instead of `a`.
+
+A pair inside a single comment, like `/* Output: 'MATEUSZ' */` in my examples, is safe, as it closes before the comment ends. Still, a comment with no apostrophes is the only kind you do not have to think about.
+
+```sql {1,6}
+/* ✅ Comment without apostrophes: skip internal test addresses */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+
+/* ❌ Comment with a single apostrophe: don't send to internal test addresses */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+```
+
 ## Sum Up
 
 It is a long article, so let's gather all the recommendations in one place:
@@ -5837,20 +5864,21 @@ It is a long article, so let's gather all the recommendations in one place:
 1. Be consistent
 2. Strive for readability
 3. Use comments to provide required context to your query
-4. Use `UPPERCASE` for SQL syntax [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#sql-syntax-case)
-5. Use `PascalCase` for Table & Column names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#column--table-names-case)
-6. Limit information per line to one [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#single-information-per-line)
-7. Align main SQL keywords to the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#left-aligned-keywords)
-8. Use indentation to highlight the relationship between SQL keywords [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#consistent-indentation)
-9. Use spaces wherever it makes the query more readable [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#intentional-spacing)
-10. Use commas at the beginning of the line [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#commas-placement)
-11. Use full Date Parts names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#date-parts)
-12. Use `INNER JOIN` name over `JOIN` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-13. In `JOIN ON` reference Column from newly joined Table on the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-14. When using `JOIN`, add meaningful aliases for Tables and prefix all Columns [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-15. Always use `AS` keyword between the Table name and the alias [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-16. Use `!=` instead of `<>` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#not-equal-to-symbol)
-17. Use Column names that suggest the data type [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#meaningful-column-names)
+4. Leave apostrophes out of comments [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments)
+5. Use `UPPERCASE` for SQL syntax [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#sql-syntax-case)
+6. Use `PascalCase` for Table & Column names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#column--table-names-case)
+7. Limit information per line to one [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#single-information-per-line)
+8. Align main SQL keywords to the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#left-aligned-keywords)
+9. Use indentation to highlight the relationship between SQL keywords [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#consistent-indentation)
+10. Use spaces wherever it makes the query more readable [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#intentional-spacing)
+11. Use commas at the beginning of the line [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#commas-placement)
+12. Use full Date Parts names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#date-parts)
+13. Use `INNER JOIN` name over `JOIN` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+14. In `JOIN ON` reference Column from newly joined Table on the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+15. When using `JOIN`, add meaningful aliases for Tables and prefix all Columns [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+16. Always use `AS` keyword between the Table name and the alias [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+17. Use `!=` instead of `<>` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#not-equal-to-symbol)
+18. Use Column names that suggest the data type [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#meaningful-column-names)
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-pl/).
 
