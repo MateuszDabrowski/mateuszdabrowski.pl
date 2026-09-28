@@ -390,6 +390,196 @@ article {
   margin: 0 auto;
 }
 
+/* The Apps page (src/pages/apps.mdx) lays out full-width app rows and a row
+   of tiles, so it lifts the reading width for its article. The header keeps a
+   narrow centred column. */
+.apps-page article {
+  max-width: none;
+}
+
+/* The page's own container only caps the width; the MDX page around it
+   already pads the sides, so two paddings would double the phone gutter. */
+.apps-page article .container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Hero band in the app pages' style: dark in light mode, a shade lighter than
+   the page in dark mode, with the four shared rules inside it so the page
+   reads as one header followed by the apps. */
+.apps-page .apps-hero {
+  margin: 1rem 0 2.5rem;
+  padding: 3rem 2.5rem 2.5rem;
+  border-radius: 44px;
+  background-color: #212121;
+  color: #ffffff;
+  text-align: center;
+}
+
+html.apps-page[data-theme='dark'] .apps-hero {
+  background-color: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.apps-page .apps-hero__title {
+  margin: 0 0 1rem;
+  color: #ffffff;
+  font-size: 5.5rem;
+  line-height: 1;
+}
+
+.apps-page .apps-hero__intro {
+  max-width: 720px;
+  margin: 0 auto 2rem;
+  color: #ffffff;
+  opacity: 0.9;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+/* The four apps as outlined buttons, each jumping to its row below: the app
+   icon on the left, the name and the navbar's short line beside it. */
+.apps-page .apps-hero__apps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 auto 2.5rem;
+}
+
+.apps-page .apps-hero__app {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 190px;
+  padding: 0.6rem 1.1rem 0.6rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #ffffff;
+  text-align: left;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.apps-page .apps-hero__app img {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 22.37%;
+  background-color: #ffffff;
+}
+
+.apps-page .apps-hero__app-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.apps-page .apps-hero__app strong {
+  font-size: 1.05rem;
+}
+
+.apps-page .apps-hero__app-text span {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.apps-page .apps-hero__app:hover {
+  border-color: var(--ifm-color-primary);
+  color: #ffffff;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+/* Rows scroll into view below the sticky navbar. */
+.apps-page [id] {
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+}
+
+/* The shared rules: no boxes, a primary accent on the left like the site's
+   admonitions, above a hairline that separates them from the app buttons.
+   Four across, two by two on tablets, stacked on phones. */
+.apps-page .apps-rules {
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: left;
+}
+
+.apps-page .apps-rules > .col {
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 577px) and (max-width: 996px) {
+  .apps-page .apps-rules > .col {
+    --ifm-col-width: 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin-bottom: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .apps-page .apps-hero {
+    padding: 2rem 1.25rem 1.5rem;
+    border-radius: 24px;
+  }
+
+  .apps-page .apps-hero__title {
+    font-size: 3.5rem;
+  }
+
+  .apps-page .apps-hero__apps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .apps-page .apps-hero__app {
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .apps-page .apps-rules > .col {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.apps-page .apps-rule {
+  height: 100%;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+.apps-page .apps-rule p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.apps-page .apps-rule .apps-rule__title {
+  margin-bottom: 0.35rem;
+  color: var(--ifm-color-primary);
+  font-family: Courier, monospace;
+  /* 1.2rem bold counts as large text, where the brand colours pass the 3:1
+     contrast bar on the dark band (3.3:1 light theme, 3.6:1 dark theme). */
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+/* The closing line under the apps. */
+.apps-page .apps-header {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.apps-page .apps-header p {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
 /* The About Me page is built from panels and grids, not prose, so it takes
    the whole container like the homepage does. */
 .page-about-me article {

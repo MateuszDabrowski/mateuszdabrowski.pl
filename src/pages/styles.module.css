@@ -427,6 +427,31 @@ html[data-theme='dark'] .appRow {
   transform: scale(1.03);
 }
 
+/* Whole screenshot, centred in its column: a row tall with text would crop a
+   cover-fitted image down to a corner. The chips and the badge move into the
+   text column for these rows (see AppRow). */
+.appRowImageContain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-basis: 50%;
+  padding: 1.5rem 1.25rem;
+}
+
+.appRowImageContain > a {
+  display: block;
+  width: 100%;
+}
+
+.appRowImageContain img {
+  position: static;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
 .appRowBody {
   flex: 1;
   display: flex;
@@ -451,12 +476,81 @@ html[data-theme='dark'] .appRow {
   line-height: 1.2;
 }
 
+/* One sentence under the name saying what the app does, so the paragraph
+   below reads as the detail. */
+.appRowSubtitle {
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ifm-color-emphasis-900);
+}
+
 .appRowHeader .cardTags {
   /* Top-aligned with the name - the nudge matches the title's own leading,
      so the tags sit level with the caps, not with the space above them. */
   margin: 0;
   padding-top: 0.4rem;
   text-align: right;
+}
+
+.appRowHighlights {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.appRowHighlights li {
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.appRowHighlights li::marker {
+  color: var(--ifm-color-primary);
+}
+
+/* Name and, for full-screenshot rows, the FREE badge on one line. */
+.appRowTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.titleBadge {
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* Right side of the footer: the platform chips, when they are not on the
+   image, then the store badge or the app's button. */
+.appRowActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.platformChipsInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.platformChipsInline .platformChip {
+  margin-right: 0;
+  padding: 2px 10px;
+}
+
+/* The page link keeps its line; when space runs out, the chips and the
+   button wrap on the right instead. */
+.appRowFooter > div:first-child {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .appRowFooter {
@@ -562,6 +656,14 @@ html[data-theme='dark'] .appCard {
   }
 }
 
+/* Image on the right for alternating rows. Only side by side: once rows
+   stack, every image sits on top. */
+@media (min-width: 821px) {
+  .appRowReverse {
+    flex-direction: row-reverse;
+  }
+}
+
 @media (max-width: 820px) {
   .appRow {
     flex-direction: column;
@@ -570,6 +672,10 @@ html[data-theme='dark'] .appCard {
     flex-basis: auto;
     min-height: 0;
     height: 220px;
+  }
+  .appRowImageContain {
+    height: auto;
+    padding: 1rem;
   }
 }
 

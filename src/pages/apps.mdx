@@ -1,0 +1,93 @@
+---
+title: Apps
+description: Apps by Mateusz Dąbrowski. Diagramforce, a free diagramming tool for Salesforce, plus Slot, Shelf and Strum for Mac, iPhone, iPad and Apple Watch.
+keywords: [apps, diagramforce, slot, shelf, strum, salesforce diagrams, mac app, ios app, mateusz dąbrowski]
+slug: /apps
+hide_table_of_contents: true
+wrapperClassName: apps-page
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import { apps } from '@site/src/data/apps';
+import { AppRow } from '@site/src/components/AppShowcase';
+import styles from './styles.module.css';
+
+{/* The app list and both card layouts come from the homepage (src/data/apps.js
+    and src/components/AppShowcase.js), so an app changed there changes here too.
+    Clockforce stays off this page on purpose. */}
+
+<div className="container">
+
+export const AppLinks = () => (
+    <nav className="apps-hero__apps" aria-label="The apps on this page">
+        {apps.map((app) => (
+            <a key={app.title} className="apps-hero__app" href={`#${app.title.toLowerCase()}`}>
+                <img src={useBaseUrl(app.iconUrl)} alt="" width={44} height={44} />
+                <span className="apps-hero__app-text">
+                    <strong>{app.title}</strong>
+                    <span>{app.label}</span>
+                </span>
+            </a>
+        ))}
+    </nav>
+);
+
+{/* A section, not a header: the site styles article header>h1 as the doc
+    title at 7rem !important. */}
+<section className="apps-hero">
+
+<h1 className="apps-hero__title">Apps</h1>
+
+<p className="apps-hero__intro">Diagram your Salesforce org, keep every Google and Microsoft account in one Mac window, copy what you keep retyping and learn songs on ukulele or guitar.</p>
+
+<AppLinks />
+
+<div className="row apps-rules">
+    <div className="col col--3">
+        <div className="apps-rule">
+            <p className="apps-rule__title">No ads</p>
+            <p>No banners or sponsored content in any of them.</p>
+        </div>
+    </div>
+    <div className="col col--3">
+        <div className="apps-rule">
+            <p className="apps-rule__title">No subscriptions</p>
+            <p>Diagramforce is free. Slot, Shelf and Strum are one purchase each.</p>
+        </div>
+    </div>
+    <div className="col col--3">
+        <div className="apps-rule">
+            <p className="apps-rule__title">No new accounts</p>
+            <p>Nothing to sign up for. Slot uses the Google and Microsoft accounts you already have.</p>
+        </div>
+    </div>
+    <div className="col col--3">
+        <div className="apps-rule">
+            <p className="apps-rule__title">No server of mine</p>
+            <p>Your data stays in your browser, your own iCloud or your own Google and Microsoft accounts.</p>
+        </div>
+    </div>
+</div>
+
+</section>
+
+{/* One section per category, every app as a full-width row with the image
+    side alternating down the page. */}
+{['Productivity', 'Music'].map((category) => (
+    <section key={category}>
+        <h2 className={styles.sectionHeading}>{category}</h2>
+        <div className="row">
+            {apps.filter((app) => app.category === category).map((app) => (
+                <AppRow key={app.title} {...app} id={app.title.toLowerCase()} subtitle={app.pitch} highlights={app.features} fit="contain" showTags={false} reverse={apps.indexOf(app) % 2 === 1} />
+            ))}
+        </div>
+    </section>
+))}
+
+<div className="apps-header">
+
+Each app has its own page with the details, the system requirements and an address for questions and feedback.
+
+</div>
+
+</div>

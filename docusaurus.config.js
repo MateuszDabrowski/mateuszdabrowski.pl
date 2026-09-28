@@ -172,6 +172,7 @@ module.exports = {
                 },
                 {
                     label: 'Apps',
+                    to: 'apps/',
                     position: 'left',
                     items: [
                         {
