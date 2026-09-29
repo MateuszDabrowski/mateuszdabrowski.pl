@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-28  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -31,14 +31,14 @@ Finally, the significant limitation you might hit as your MCE grows is AutoKill.
 
 ## Where to learn MCE SQL
 
-Before we start with the real deal, let's cover where to learn to write SQL. I recommend getting a [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio). It's a free AppExchange add-on to MCE developed by Salesforce. While it has cons, it's perfect for quickly learning how to query.
+Before we start with the real deal, let's cover where to learn to write SQL. I recommend [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange). It runs inside your own MCE account and sends your SQL to MCE unchanged, which makes it perfect for quickly learning how to query.
 
-If you cannot install this app in your MCE, there are still two ways to learn MCE SQL:
+If you cannot deploy SQL Studio in your MCE, there are still two ways to learn MCE SQL:
 
 1. Query Activities in Automation Studio. It will be much less user-friendly because for each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results. But it will let you train using the data you have in your platform.
 2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to MCE. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
 
-I always start in [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio), and only once my SQL Query is complete and validated do I move it to Automation Studio.
+I always start in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), and only once my SQL Query is complete and validated do I move it to Automation Studio.
 
 Once you have the right tool, it’s time to get the right knowledge. There are few formats available. If you like reading followed by small knowledge checks - this page is the right choice. But if you prefer watching a video or a doing a challenge - Cameron Roberts and Sabuhi Yahya got you covered:
 
@@ -316,7 +316,7 @@ If you send huge volumes, feel free to change the timeframe from last month to l
 5. Unfortunately, in MCE, you cannot use alias in WHERE/HAVING/ORDER BY and similar places - you have to use the function/calculation.
 6. When calculating Bounce Rate, do it so that the outcome is an integer equal to a percent.
 
-Important: Because of the Query Studio bug, you cannot have spaces around the multiplication symbol (`*`); otherwise, you will see an error related to a bad practice blanket SELECTs.
+Important: Because of the Query Studio bug, you cannot have spaces around the multiplication symbol (`*`); otherwise, you will see an error related to a bad practice blanket SELECTs. SQL Studio sends your query to MCE unchanged, so it does not have this problem.
 
 **Solution**
 

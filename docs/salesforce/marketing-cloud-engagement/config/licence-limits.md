@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Limits and Guardrails
@@ -337,7 +337,7 @@ The good part? You can capture 6 months of data at once.
 
 The bad part?
 
-1. You will need to use an SQL query to count the executions. [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) is your friend here.
+1. You will need to use an SQL query to count the executions. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange), is your friend here.
 2. There is only 6 months of data available, so you will need to store the results somewhere else to get a full-year overview. [External Data Warehouse](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-export--archive) perhaps?
 
 #### Automation Execution Optimizations

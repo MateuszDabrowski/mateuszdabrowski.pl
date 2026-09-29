@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Selected information on the SELECT statement in Marketing Cloud Engagement SQL
@@ -101,7 +101,7 @@ The number of rows will be rounded up to the nearest integer (so `TOP 50 PERCENT
 
 > **Note: You Should Know**
 >
-> `PERCENT` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity.
+> `PERCENT` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity and in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange).
 
 ### TOP with ORDER BY
 
@@ -218,7 +218,7 @@ With those two words added after the `TOP` clause, our query will return all row
 
 > **Note: You Should Know**
 >
-> `WITH TIES` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity.
+> `WITH TIES` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity and in SQL Studio.
 
 ## DISTINCT
 

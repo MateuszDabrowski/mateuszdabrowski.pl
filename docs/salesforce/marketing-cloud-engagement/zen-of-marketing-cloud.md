@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-28  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 I'm a massive fan of Tim Peters' [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
@@ -369,7 +369,7 @@ And - considering the quality of out-of-the-box MCE errors - always provide cust
 
 With the complexity of Marketing Cloud Engagement, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the MCE is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
 
-There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2022, documented as 2016, with different behaviour in Script Activity and Query Studio. There are inconsistent approaches within the same solution (for example [shared folder permissions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
+There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2022, documented as 2016, with different behaviour in Query Activity and the late Query Studio (my replacement, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), fixes this). There are inconsistent approaches within the same solution (for example [shared folder permissions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
 
 With all this ambiguity in the system, always check during development and always check again before go-live.
 

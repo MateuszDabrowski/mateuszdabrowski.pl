@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Fill the feature gaps with plug-and-play apps. Solution highlights from Salesforce MCE's AgentExchange.
@@ -58,7 +58,7 @@ Else, it's time to look somewhere... else.
 
 Time to check whether there is any free solution available on demand. You can do it by going to [marketing AgentExchange](https://appexchange.salesforce.com/category/marketing) and applying filters to get Free solutions dedicated to MCE.
 
-To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) covered below) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#deselect-search).
+To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) covered below, before it left the AgentExchange) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#deselect-search).
 
 If you are lucky enough to find something free in AgentExchange related to your requirements, check whether it is good enough. Just as you did in the [previous step](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#2-validate-out-of-the-box-options).
 
@@ -130,7 +130,7 @@ SQL Query Activities are free, require no implementation, work directly in MCE a
 
 **3. Free AgentExchange**
 
-Filtering the AgentExchange for free solutions will show only one related to segmentation - [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio). While it's a great tool, it's still a SQL-based solution. It's also not an end-to-end tool for segmentation purposes. Not good enough.
+Filtering the AgentExchange for free solutions used to show only one related to segmentation - [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio), which is no longer available there. My free replacement for it, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), is a great tool, but it's still a SQL-based solution. It's also not an end-to-end tool for segmentation purposes. Not good enough.
 
 **4. Custom Solution**
 
@@ -155,6 +155,10 @@ I hope it is now easier to find when AgentExchange can solve MCE requirements. W
 ## AgentExchange Solutions for MCE
 
 ### Query Studio
+
+> **Note: You Should Know**
+>
+> Query Studio is no longer available on AgentExchange. Installed copies still work, but Salesforce's support now sends you to community resources for setup and fixes. So I built [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), a free, open-source replacement that runs inside your own MCE account and validates your SQL exactly like a Query Activity.
 
 ![Screenshot of the Query Studio User Interface](https://mateuszdabrowski.pl/img/article/article-image-appexchange-query-studio.png)
 
@@ -193,9 +197,15 @@ Finally, while it creates a temporary Data Extension on execution, it is not hel
 
 #### The Sum Up
 
-Despite some quirks, Query Studio is a huge timesaver and quality of life improvement. Useful for creating queries, debugging outcomes, and quick checks on Data Views. Free. A must-have for any SQL-enabled or learning-to-be-enabled team.
+Despite some quirks, Query Studio was a huge timesaver and quality of life improvement. Useful for creating queries, debugging outcomes, and quick checks on Data Views. Free. A must-have for any SQL-enabled or learning-to-be-enabled team.
 
-[AgentExchange](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000FP3yFUAT)
+However, it is no longer available on AgentExchange, so the option you can get now is [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement. It keeps the core of Query Studio: a temporary Data Extension on every run, results below your SQL and saving your work as a Query Activity. And it fixes the bad parts:
+
+- It sends your SQL to MCE unchanged, and MCE's own syntax check validates it. Comments, parentheses in the first line of `SELECT`, `TOP PERCENT` and `CAST` in `SELECT` work just as in a Query Activity.
+- It shows MCE's own error messages, with an explanation and a fix wherever it recognises the error.
+- Its temporary Data Extension keeps the Date, Number, Decimal and Boolean types of the fields your query selects. Every other column is still Text.
+
+[SQL Studio](https://mateuszdabrowski.pl/sql-studio/)
 
 ---
 
@@ -245,7 +255,7 @@ While the features sound great, true magic happens when you use them together. W
 
 The out-of-the-box path for query segmentation is:
 
-1. Write and test segmentation query in Query Studio (with Contact Builder in another tab to check the values)
+1. Write and test segmentation query in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (with Contact Builder in another tab to check the values)
 2. Manually create Data Extension that has all needed columns in correct data types and lengths in Contact Builder
 3. Fix it in Email Studio because Content Builder is bugged around CustomerKey and default Current Date
 4. Copy the query to Query Activity in Automation Studio

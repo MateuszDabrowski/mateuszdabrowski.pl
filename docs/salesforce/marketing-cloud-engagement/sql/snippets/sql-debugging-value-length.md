@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -29,7 +29,7 @@ All good, until one of the values, exceed the maximum length you set for its fie
 
 ## Short Term Solution
 
-You can make quick manual check with a simple SQL query. Open your [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) and copy-paste the below code:
+You can make quick manual check with a simple SQL query. Open [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) and copy-paste the below code:
 
 ```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
 SELECT
@@ -58,7 +58,7 @@ Of course, as mentioned above, the values might get longer in the future. But as
 
 ### Debugging with MAX LEN
 
-The second use of the above snippet is quick debugging when an error occurs. Execute it in [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) and compare against the column lengths you set up in your Data Extension. If you see in Query Studio any value longer than the maximum you set up in Data Extension - you found a culprit.
+The second use of the above snippet is quick debugging when an error occurs. Execute it in SQL Studio and compare against the column lengths you set up in your Data Extension. If you see in SQL Studio any value longer than the maximum you set up in Data Extension - you found a culprit.
 
 Now you can look in the data source and check whether this longer-than-expected value is correct. If yes, it is time to update your maximum length in the Data Extension and Profile Attribute configuration.
 

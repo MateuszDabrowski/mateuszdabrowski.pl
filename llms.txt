@@ -39,7 +39,7 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 
 ## Salesforce > Marketing Cloud Engagement > SQL > Snippets
 
-- [MCE SQL Debugging Email Sends](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.md): Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL with Query Studio to the rescue.
+- [MCE SQL Debugging Email Sends](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.md): Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL Studio to the rescue.
 - [MCE SQL Debugging Value Length](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length.md): Your Automations crash due to longer than expected values coming from the external source? Make your life easier with SQL.
 - [MCE SQL Debugging All Contacts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts.md): Clean up your MCE Contacts before they clean up your wallet. Step-by-step guide to identifying subscriber issues.
 
@@ -126,9 +126,10 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 
 - [Diagramforce](https://diagramforce.com): Free browser-based diagramming tool for Salesforce architects: architecture diagrams, data models, process flows and org charts with Salesforce icons.
 - [Strum file format for LLMs](https://mateuszdabrowski.pl/strum/llm-spec.md): Specification an LLM can follow to transcribe a song into a .strum file the Strum app imports.
-- [Apps](https://mateuszdabrowski.pl/apps/): Apps by Mateusz Dąbrowski. Diagramforce, a free diagramming tool for Salesforce, plus Slot, Shelf and Strum for Mac, iPhone, iPad and Apple Watch.
+- [Apps](https://mateuszdabrowski.pl/apps/): Apps by Mateusz Dąbrowski. Diagramforce and SQL Studio, free and open-source tools for Salesforce and Marketing Cloud Engagement, plus Slot, Shelf and Strum for Mac, iPhone, iPad and Apple Watch.
 - [Shelf - Your Digital Pocket](https://mateuszdabrowski.pl/shelf/): The small things you keep needing - codes, addresses, IBANs, snippets - encrypted on your device and one tap from your clipboard on iPhone, iPad, Mac and Apple Watch.
 - [Slot - Your Inboxes in One App](https://mateuszdabrowski.pl/slot/): Every Google and Microsoft account in one native Mac app, each with completely isolated data. Mail, Calendar, Drive, Meet, Outlook, Teams and more.
+- [SQL Studio - Query Studio, Rebuilt Inside Your Own Account](https://mateuszdabrowski.pl/sql-studio/): The free, open-source Query Studio replacement for Marketing Cloud Engagement. Write, run and save SQL inside your own account, with no query or result leaving it.
 - [Strum - Tabs Made Easy](https://mateuszdabrowski.pl/strum/): Tablature, chord and strum-pattern editor for ukulele and guitar - for iPhone, iPad, and Mac.
 
 ## Optional

@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Why should you care about All Contacts list?
@@ -24,7 +24,7 @@ In this article, I will walk through a step-by-step guide to identify and clean 
 Before we dive into the job, let's check whether you have the necessary permissions and access to perform the cleanup. You will need:
 
 - Access to Contact Builder and All Contacts list.
-- Access to [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/) (free SQL editor for MCE) or at least Automation Studio to run Query Activities.
+- Access to [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) or at least Automation Studio to run Query Activities.
 - While not necessary, having Mobile Connect licence (regardless of whether you use it or not) makes it so much easier to work with All Contacts list in a programmatic way.
 - At least basic understanding of SQL and how to write queries in Salesforce Marketing Cloud Engagement. If you are new to SQL or not sure on some specific element, I recommend checking out my [MCE SQL Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/) article before proceeding.
 
@@ -62,7 +62,7 @@ Now that you have access to the All Contacts list, you can start identifying iss
 
 My favourite place to start is to look at the Subscriber Key formats. Subscriber Key is the unique identifier for each contact in Salesforce Marketing Cloud Engagement, and it can be in various formats depending on how the contact was created or imported.
 
-Open Query Studio (or Automation Studio if that's your only option and you have time to manually create target Data Extensions) and run the following query to get an overview of the Subscriber Key formats in your All Contacts list:
+Open SQL Studio (or Automation Studio if that's your only option and you have time to manually create target Data Extensions) and run the following query to get an overview of the Subscriber Key formats in your All Contacts list:
 
 ```sql
 SELECT

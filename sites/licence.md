@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/sites/licence/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-28  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Let's talk copyrights in a human-readable way.
@@ -21,7 +21,7 @@ All writing, graphics and other content on the site is my original content (unle
 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
 ```
 
-This licence covers the content of this website only. My apps (Diagramforce, Slot, Shelf, Strum) are separate products with their own licences and policies. Diagramforce is open source under the [EUPL 1.2](https://github.com/MateuszDabrowski/diagramforce/blob/main/LICENSE), so you can use it at work, change it and share it, as long as the credit to me stays.
+This licence covers the content of this website only. My apps (Diagramforce, SQL Studio, Slot, Shelf, Strum) are separate products with their own licences and policies. Diagramforce and SQL Studio are open source under the EUPL 1.2 ([Diagramforce licence](https://github.com/MateuszDabrowski/diagramforce/blob/main/LICENSE), [SQL Studio licence](https://github.com/MateuszDabrowski/sqlstudio/blob/main/LICENSE)), so you can use them at work, change them and share them, as long as the credit to me stays.
 
 ## Code & Design
 

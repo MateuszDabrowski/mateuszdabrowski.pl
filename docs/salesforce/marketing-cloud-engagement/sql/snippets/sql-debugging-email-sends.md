@@ -1,13 +1,13 @@
 # MCE SQL Debugging Email Sends
 
-> Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL with Query Studio to the rescue.
+> Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL Studio to the rescue.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
-Make finding problems with email delivery in MCE great again. SQL with the Query Studio to the rescue.
+Make finding problems with email delivery in MCE great again. SQL Studio to the rescue.
 
 ## Problem with straightforward Email Send analysis
 
@@ -120,11 +120,11 @@ As they say, with great power comes great complexity. And that's definitely true
 >
 > You don't have to follow the steps below in the same order as presented. You can mix and match them, as long as you leave the Support Ticket creation for when you tried all other options.
 >
-> I personally debug in that order because, while I wait for the Query Studio to return the output from query, I can check the following steps in parallel.
+> I personally debug in that order because, while I wait for SQL Studio to return the output from query, I can check the following steps in parallel.
 
 ### 1. Query System Data Views
 
-I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. Free Salesforce [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) is the best place to execute that little exploratory analysis.
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange), is the best place to execute that little exploratory analysis.
 
 Once you see the outcome, there are few possibilities:
 

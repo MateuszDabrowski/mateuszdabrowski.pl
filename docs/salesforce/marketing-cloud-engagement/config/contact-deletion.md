@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
@@ -358,7 +358,7 @@ You should always align this question with the specific business needs of your c
 
 You can add them within the same Automation as the [Contact Deletion Script Activity](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-script-activity) to ensure they are captured right before cleanup. You may also create separate Automations on your child Business Unit to capture BU-specific candidates for cleanup using data available only there.
 
-Remember to test those recommendations and queries (for example, using [Query Studio](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio)) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
+Remember to test those recommendations and queries (for example, using [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
 
 [Find Problematic Contacts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts)
 

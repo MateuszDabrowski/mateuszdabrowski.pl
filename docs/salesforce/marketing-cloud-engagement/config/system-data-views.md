@@ -4,12 +4,12 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
 
-System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [Query Studio](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) or outputting to the standard Data Extension. They are excellent fuel for SSJS logic.
+System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) or outputting to the standard Data Extension. They are excellent fuel for SSJS logic.
 
 Data Views have **data retention settings set to 6 months**. If you want to store any data for a more extended period, you must create an Automation that will be copying data to your Data Extension.
 

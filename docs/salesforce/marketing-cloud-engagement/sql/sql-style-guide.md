@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-28  
+Last updated: 2026-09-29  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -197,7 +197,7 @@ WHERE
 
 **Align main SQL keywords to the left.**
 
-This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in MCE is a pain, as there is no autoformatter supporting it in the Query Studio or Query Activity. We would have to add all those additional spaces manually. It's just not worth it.
+This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in MCE is a pain, as there is no autoformatter supporting it in the Query Studio or Query Activity. The Format button in my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (a free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) follows this guide, so it will not add them either. We would have to add all those additional spaces manually. It's just not worth it.
 
 ```sql
 /* ✅ Left Aligned Keywords */
@@ -558,7 +558,7 @@ FROM _Sent AS s
 
 ## Comments
 
-Comments carry the context your query needs, like the reason behind a filter. However, MCE does not ignore everything inside them, and this one is not a matter of taste.
+Comments carry the context your query needs, like the reason behind a filter. However, MCE does not ignore everything inside them, and this can break your query.
 
 ### Apostrophes in Comments
 
@@ -571,16 +571,21 @@ MCE adds the `N` prefix to every text value in your query on its own. To find th
 
 A pair inside a single comment, like `/* Output: 'MATEUSZ' */` in my examples, is safe, as it closes before the comment ends. Still, a comment with no apostrophes is the only kind you do not have to think about.
 
-```sql {1,6}
-/* ✅ Comment without apostrophes: skip internal test addresses */
+```sql {4,9,12,14}
+/* ✅ No apostrophes in comments */
 SELECT SubscriberKey
 FROM Ent._Subscribers
-WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* skip internal test addresses */
 
-/* ❌ Comment with a single apostrophe: don't send to internal test addresses */
+/* ❌ A single apostrophe in a comment fails the save */
 SELECT SubscriberKey
 FROM Ent._Subscribers
-WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* don't send to internal test addresses */
+
+/* ❌ Single apostrophes in two comments change the text value between them */
+SELECT SubscriberKey /* it's the first comment */
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* and here's the second one */
 ```
 
 ## Sum Up
