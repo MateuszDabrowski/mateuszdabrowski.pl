@@ -104,6 +104,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-09-29',
+        kind: 'App',
+        title: 'SQL Studio 1.0',
+        url: '/sql-studio/',
+        description: 'New app. Query Studio, rebuilt inside your own MCE account. Free and open source, with MCE\'s own validation and four queries running at once.',
+    },
+    {
         date: '2026-09-25',
         kind: 'Doc',
         title: 'MCE MobilePush Data Views',
@@ -470,10 +477,12 @@ function Home() {
                                     Apps
                                 </h2>
                                 <div className={clsx('row', styles.centeredRow)}>
+                                    {/* Full-width rows alternate their image side, so two
+                                        free tools in a row read as a pair. */}
                                     {apps.map((props, idx) => (
                                         props.layout === 'card'
                                             ? <AppCard key={idx} {...props} />
-                                            : <AppRow key={idx} {...props} />
+                                            : <AppRow key={idx} {...props} reverse={apps.filter((app) => app.layout !== 'card').indexOf(props) % 2 === 1} />
                                     ))}
                                 </div>
                             </div>

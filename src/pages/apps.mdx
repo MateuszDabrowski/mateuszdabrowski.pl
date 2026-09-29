@@ -1,7 +1,7 @@
 ---
 title: Apps
-description: Apps by Mateusz Dąbrowski. Diagramforce, a free diagramming tool for Salesforce, plus Slot, Shelf and Strum for Mac, iPhone, iPad and Apple Watch.
-keywords: [apps, diagramforce, slot, shelf, strum, salesforce diagrams, mac app, ios app, mateusz dąbrowski]
+description: Apps by Mateusz Dąbrowski. Diagramforce and SQL Studio, free and open-source tools for Salesforce and Marketing Cloud Engagement, plus Slot, Shelf and Strum for Mac, iPhone, iPad and Apple Watch.
+keywords: [apps, diagramforce, sql studio, query studio, slot, shelf, strum, salesforce diagrams, mac app, ios app, mateusz dąbrowski]
 slug: /apps
 hide_table_of_contents: true
 wrapperClassName: apps-page
@@ -18,16 +18,25 @@ import styles from './styles.module.css';
 
 <div className="container">
 
+export const appId = (app) => app.title.toLowerCase().replace(/\s+/g, '-');
+
+{/* Two rows: the free Salesforce tools, then the App Store apps. */}
+export const AppLink = ({ app }) => (
+    <a className="apps-hero__app" href={`#${appId(app)}`}>
+        <img src={useBaseUrl(app.iconUrl)} alt="" width={44} height={44} />
+        <span className="apps-hero__app-text">
+            <strong>{app.title}</strong>
+            <span>{app.label}</span>
+        </span>
+    </a>
+);
+
 export const AppLinks = () => (
     <nav className="apps-hero__apps" aria-label="The apps on this page">
-        {apps.map((app) => (
-            <a key={app.title} className="apps-hero__app" href={`#${app.title.toLowerCase()}`}>
-                <img src={useBaseUrl(app.iconUrl)} alt="" width={44} height={44} />
-                <span className="apps-hero__app-text">
-                    <strong>{app.title}</strong>
-                    <span>{app.label}</span>
-                </span>
-            </a>
+        {[apps.filter((app) => app.layout !== 'card'), apps.filter((app) => app.layout === 'card')].map((group, idx) => (
+            <div key={idx} className="apps-hero__apps-row">
+                {group.map((app) => <AppLink key={app.title} app={app} />)}
+            </div>
         ))}
     </nav>
 );
@@ -38,7 +47,7 @@ export const AppLinks = () => (
 
 <h1 className="apps-hero__title">Apps</h1>
 
-<p className="apps-hero__intro">Diagram your Salesforce org, keep every Google and Microsoft account in one Mac window, copy what you keep retyping and learn songs on ukulele or guitar.</p>
+<p className="apps-hero__intro">Diagram your Salesforce org, write Marketing Cloud Engagement SQL inside your own account, keep every Google and Microsoft account in one Mac window, copy what you keep retyping and learn songs on ukulele or guitar.</p>
 
 <AppLinks />
 
@@ -52,19 +61,19 @@ export const AppLinks = () => (
     <div className="col col--3">
         <div className="apps-rule">
             <p className="apps-rule__title">No subscriptions</p>
-            <p>Diagramforce is free and open source, at work too. Slot, Shelf and Strum are one purchase each.</p>
+            <p>Diagramforce and SQL Studio are free and open source, at work too. Slot, Shelf and Strum are one purchase each.</p>
         </div>
     </div>
     <div className="col col--3">
         <div className="apps-rule">
             <p className="apps-rule__title">No new accounts</p>
-            <p>Nothing to sign up for. Slot uses the Google and Microsoft accounts you already have.</p>
+            <p>Nothing to sign up for. SQL Studio uses your Marketing Cloud Engagement login, and Slot the Google and Microsoft accounts you already have.</p>
         </div>
     </div>
     <div className="col col--3">
         <div className="apps-rule">
             <p className="apps-rule__title">No server of mine</p>
-            <p>Your data stays in your browser, your own iCloud or your own Google and Microsoft accounts.</p>
+            <p>Your data stays in your browser, your own iCloud, your own Google and Microsoft accounts or your own Marketing Cloud Engagement account.</p>
         </div>
     </div>
 </div>
@@ -78,7 +87,7 @@ export const AppLinks = () => (
         <h2 className={styles.sectionHeading}>{category}</h2>
         <div className="row">
             {apps.filter((app) => app.category === category).map((app) => (
-                <AppRow key={app.title} {...app} id={app.title.toLowerCase()} subtitle={app.pitch} highlights={app.features} fit="contain" showTags={false} reverse={apps.indexOf(app) % 2 === 1} />
+                <AppRow key={app.title} {...app} id={appId(app)} subtitle={app.pitch} highlights={app.features} fit="contain" showTags={false} reverse={apps.indexOf(app) % 2 === 1} />
             ))}
         </div>
     </section>

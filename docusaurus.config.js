@@ -180,6 +180,10 @@ module.exports = {
                             to: 'https://diagramforce.com',
                         },
                         {
+                            label: 'SQL Studio: MCE Query Studio Replacement',
+                            to: 'sql-studio/',
+                        },
+                        {
                             label: 'Slot: Your Inboxes in One App',
                             to: 'slot/',
                         },
@@ -291,6 +295,10 @@ module.exports = {
                         {
                             label: 'Diagramforce',
                             to: 'https://diagramforce.com',
+                        },
+                        {
+                            label: 'SQL Studio',
+                            to: 'sql-studio/',
                         },
                         {
                             label: 'Slot',

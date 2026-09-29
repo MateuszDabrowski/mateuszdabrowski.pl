@@ -416,6 +416,18 @@ article {
   text-align: center;
 }
 
+/* The dark band on the app pages (licence, data, sharing). #212121 is the
+   page background in dark mode, so there the band lifts to #2a2a2a with a
+   hairline border, like the Apps page hero. */
+.app-dark-band {
+  background-color: #212121;
+}
+
+html[data-theme='dark'] .app-dark-band {
+  background-color: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 html.apps-page[data-theme='dark'] .apps-hero {
   background-color: #2a2a2a;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -441,10 +453,17 @@ html.apps-page[data-theme='dark'] .apps-hero {
    icon on the left, the name and the navbar's short line beside it. */
 .apps-page .apps-hero__apps {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 auto 2.5rem;
+}
+
+.apps-page .apps-hero__apps-row {
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.75rem;
-  margin: 0 auto 2.5rem;
 }
 
 .apps-page .apps-hero__app {
@@ -527,10 +546,15 @@ html.apps-page[data-theme='dark'] .apps-hero {
     font-size: 3.5rem;
   }
 
-  .apps-page .apps-hero__apps {
+  .apps-page .apps-hero__apps,
+  .apps-page .apps-hero__apps-row {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.5rem;
+  }
+
+  .apps-page .apps-hero__apps {
+    align-items: stretch;
   }
 
   .apps-page .apps-hero__app {

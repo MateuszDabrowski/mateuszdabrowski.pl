@@ -11,8 +11,8 @@
  * is the short value statement both pages show; features are the Apps page's
  * bullets, each a benefit with the feature behind it. label is the short line
  * under the app's name in the Apps page header, taken from the navbar, and
- * iconUrl the icon beside it. Diagramforce has no icon of its own yet and uses
- * the MD mark; replace it here once it does.
+ * iconUrl the icon beside it. Diagramforce and SQL Studio have no icons of
+ * their own yet and share the MD mark; replace it here once they do.
  */
 export const apps = [
     {
@@ -35,6 +35,28 @@ export const apps = [
             'A Claude skill that converts your org\'s Flows and Data 360 mappings through the Salesforce CLI and validates each diagram so it opens intact',
             '1700+ Salesforce SLDS icons for systems, clouds and integrations',
             'Diagrams stay in your browser or your own Google Drive, and you share them as a link',
+        ],
+    },
+    {
+        title: 'SQL Studio',
+        iconUrl: 'img/apps/diagramforce-icon.webp',
+        label: 'MCE Query Studio replacement',
+        pitch: 'Query Studio, rebuilt as a free, open-source Cloud Page App that runs inside your own Marketing Cloud Engagement account, with your own login.',
+        category: 'Productivity',
+        url: '/sql-studio/',
+        githubUrl: 'https://github.com/MateuszDabrowski/sqlstudio',
+        imageUrl: 'img/apps/sql-studio/hero.webp',
+        description: 'The free replacement for Query Studio, with everything you used it for: run a query into a temporary Data Extension, check the results below your SQL and save it as a Query Activity. And then some, from four queries running at once to MCE\'s own error messages with an explanation of the fix.',
+        tags: ['MCE', 'SQL', 'Open Source'],
+        platforms: ['MCE'],
+        cta: 'Learn More',
+        badge: 'FREE',
+        layout: 'row',
+        features: [
+            'Four query tabs, each on its own Query Activity, so you can run multiple queries at the same time',
+            'Autocomplete and a search sidebar for every Data View and Data Extension in your Business Unit',
+            'Lint rules for what MCE refuses, like an unpaired apostrophe in a comment or a query that opens with a common table expression, most with a one-click fix, and MCE\'s own error messages with an explanation',
+            'Paged, sortable results with no row limit, and a CSV export of every row',
         ],
     },
     {

@@ -1,0 +1,528 @@
+---
+title: SQL Studio - Query Studio, Rebuilt Inside Your Own Account
+description: The free, open-source Query Studio replacement for Marketing Cloud Engagement. Write, run and save SQL inside your own account, with no query or result leaving it.
+keywords: [sql studio, query studio, marketing cloud engagement, mce, sql editor, cloud page app, query activity, mateusz dąbrowski]
+slug: /sql-studio
+hide_table_of_contents: false
+---
+
+import Head from '@docusaurus/Head';
+import Link from '@docusaurus/Link';
+import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
+import { Email } from '/src/components/Email.jsx';
+import styles from './styles.module.css';
+
+{/* The release these screenshots belong to, appended to every screenshot URL
+    below, the same cache-busting trick the other app pages use. Bump this
+    with SQL Studio's version and every screenshot becomes a new URL. */}
+export const ASSETS = '1.0.0';
+
+{/* Custom Inline React Component for Image Lightbox Overlay */}
+export const ZoomImage = ({ src, alt, imgStyle }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKey = (event) => { if (event.key === 'Escape') setIsOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen]);
+  const versioned = `${src}?v=${ASSETS}`;
+  return (
+    <>
+      <img
+        src={versioned}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        style={{ cursor: 'zoom-in', ...imgStyle }}
+        onClick={() => setIsOpen(true)}
+      />
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 99999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'zoom-out',
+            backdropFilter: 'blur(5px)',
+            margin: 0,
+            padding: 0
+          }}
+          onClick={() => setIsOpen(false)}
+        >
+          <div style={{ position: 'absolute', top: '24px', right: '32px', color: '#ffffff', fontSize: '3rem', fontWeight: '300', lineHeight: 1 }}>&times;</div>
+          <img
+            src={versioned}
+            alt={alt}
+            style={{ maxHeight: '90vh', maxWidth: '90vw', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
+<Head>
+  <link rel="canonical" href="https://mateuszdabrowski.pl/sql-studio/" />
+  <meta property="og:url" content="https://mateuszdabrowski.pl/sql-studio/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="SQL Studio - Query Studio, Rebuilt Inside Your Own Account" />
+  <meta property="og:description" content="The free, open-source Query Studio replacement for Marketing Cloud Engagement. Write, run and save SQL inside your own account, with no query or result leaving it." />
+  <meta property="og:image" content="https://mateuszdabrowski.pl/img/og/og-image-sql-studio.png" />
+</Head>
+
+{/* Hero section */}
+<header className={styles.hero} style={{ borderRadius: '44px', marginTop: '1rem', marginBottom: '2rem' }}>
+  <div className={styles.heroInner}>
+    <div style={{textAlign: 'center', paddingBottom: '2rem'}}>
+      {/* The same MD mark as Diagramforce (the author's decision, 2026-09-29). */}
+      <img
+        src="/img/apps/diagramforce-icon.webp"
+        alt="SQL Studio logo"
+        width={96}
+        height={96}
+        style={{
+          width: 96,
+          height: 96,
+          borderRadius: '16px',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+          marginBottom: '1rem'
+        }}
+      />
+
+      <h1 className={styles.heroProjectTagline} style={{marginBottom: '0.5rem'}}>SQL Studio</h1>
+
+      <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--ifm-color-primary)', margin: '0 0 1.5rem' }}>Query Studio, rebuilt inside your own account</p>
+
+      <p
+        style={{
+          fontSize: '1.15rem',
+          maxWidth: '640px',
+          margin: '0 auto 2rem',
+          lineHeight: 1.55,
+          color: '#ffffff',
+          opacity: 0.9
+        }}
+      >SQL Studio is a free, open-source replacement for Salesforce Labs' Query Studio in Marketing Cloud Engagement (MCE). Write a query, run it, check the results right below it and save it as a Query Activity once it works. It runs inside your own MCE account as a <Link to="/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/">Cloud Page App</Link> your admin deploys once, and everyone signs in with their own MCE login and permissions. No query or result ever leaves your account.</p>
+
+      <p style={{margin: '0 0 1rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap'}}>
+        <a href="https://github.com/MateuszDabrowski/sqlstudio" className="button button--outline button--primary">View on GitHub</a>
+        <a href="#deployment-guide" className="button button--outline button--primary">Read the deployment guide</a>
+      </p>
+      <p style={{margin: '0 0 1.5rem', fontSize: '0.95rem', color: '#ffffff', opacity: 0.75}}>Free and open source. No subscription, no account with me.</p>
+
+      <p
+        style={{
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: '0.9rem',
+          lineHeight: 1.5,
+          margin: 0,
+        }}
+      >Marketing Cloud Engagement, Enterprise 2.0 or Core edition<br/> Deployed once by your admin, with nothing to host</p>
+    </div>
+  </div>
+</header>
+
+{/* Main screenshot */}
+<section className={styles.section}>
+  <div className="container">
+    <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
+      <div className="col col--12" style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apps/sql-studio/hero.webp"
+          alt="SQL Studio in Marketing Cloud Engagement, running the email sends debugging query from my SQL snippets, with its results below and the Data Views on the right"
+          imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '12px'}}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Why SQL Studio */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 2rem' }}>
+
+    <div className="text--center" style={{marginBottom: '1rem'}}>
+
+## <span style={{fontSize: '2.5rem'}}>Why SQL Studio</span>
+
+    </div>
+    {/* Sources: docs/research/01-query-studio-product.md in the SQL Studio dev repo
+        (curl and Wayback CDX checks on 2026-09-19, Salesforce Knowledge article 004867940). */}
+    <p className="text--center" style={{fontSize: '1.2rem', maxWidth: '760px', margin: '0 auto 2rem'}}>Query Studio was the fast, easy way to write and test SQL in MCE. Today it is no longer available on AgentExchange, so you cannot add it to an account that does not have it. Where it is still installed, it works, but Salesforce's support sends you to community resources for setup and bug fixes. And it runs outside your MCE account, on a separate server.</p>
+    <p className="text--center" style={{fontSize: '1.2rem', maxWidth: '760px', margin: '0 auto 2rem'}}>SQL Studio does the same job from inside your own account, with your own login and permissions. It sends your SQL to MCE exactly as you wrote it and runs it as a real Query Activity, so **a query that works in SQL Studio works in Automation Studio**, and the other way round. And as all of its code is open on GitHub, your admin or security team can check what it does before deploying it.</p>
+
+    <div style={{marginTop: '2.5rem', overflowX: 'auto'}}>
+
+| Query Studio | SQL Studio |
+|---|---|
+| Rewrites every column you select (adding `CAST`, `COALESCE` and `RTRIM`) before running your query | Runs your SQL exactly as you wrote it |
+| Refuses valid SQL, such as comments, `TOP PERCENT` or `CAST` in `SELECT` | Runs it, just as a Query Activity does |
+| Validates with its own rules and shows its own error messages | Validates with MCE's own query check and shows MCE's own SQL Server error messages, with an explanation where SQL Studio recognises the error |
+| Stores every column of the temporary Data Extension as Text | Keeps the Date, Number, Decimal and Boolean types of the fields you select |
+| Runs one query at a time | Runs up to four queries at once, each in its own tab |
+| Runs on a separate server, outside your MCE account | Runs inside your MCE account, with its code open for anyone to check |
+
+    </div>
+    <p style={{fontSize: '0.95rem', color: 'var(--ifm-color-emphasis-700)', marginTop: '1rem'}}>Query Studio was a huge timesaver for a quick query or a check on a Data View, as I wrote in my <Link to="/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio">AgentExchange Solutions</Link> overview. SQL Studio keeps what made it useful and fixes the gaps my SQL articles point out, from valid SQL that Query Studio refuses to error messages that are hard to debug.</p>
+  </div>
+</section>
+
+{/* What's inside Header */}
+<div className="container">
+  <div className="text--center" style={{marginTop: '4rem', marginBottom: '1rem'}}>
+
+## <span style={{fontSize: '2.5rem'}}>What's inside</span>
+
+  </div>
+</div>
+
+{/* Feature 1: Query tabs */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Four Queries, Running at Once</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>Four query tabs sit above the editor, and each keeps its own query, results and messages. Every tab runs on its own Query Activity, so you can start a long query in one tab and keep working in another. The tabs also show where each query is at a glance: a spinner while it runs, a check with the row count and run time when it finishes, and an error mark when it fails. Close SQL Studio and come back later, and your tabs in that Business Unit return with their last results, as long as their temporary Data Extensions still exist.</p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apps/sql-studio/tabs.webp"
+        alt="Four query tabs above the editor: one finished with its row count, one running, one failed and one not run yet"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 2: Autocomplete and the sidebar */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Every Data Extension and Data View, One Search Away</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>The sidebar lists the System Data Views and your Business Unit's Data Extensions, and finds any of them as you type. Autocomplete suggests keywords, functions, tables and fields. After `=` or inside `IN (...)`, it even suggests the known values of fields such as status codes and bounce categories, so you do not have to look them up elsewhere. Hover over a table or function to see what it does, with links to my field references for the System Data Views, Salesforce's documentation and Microsoft's T-SQL reference.</p>
+    </div>
+  </div>
+</section>
+
+{/* Feature 3: Lint */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Lint for What Marketing Cloud Engagement Refuses</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>Some SQL looks fine and still fails in MCE, sometimes only once MCE saves or runs it. SQL Studio's lint flags these problems in the editor, before you run anything, and Validate and Run then check your query against MCE's own Query Activity rules. The lint catches an unpaired apostrophe in a comment, which stops MCE from saving the query, and a query that opens with a common table expression, which MCE does not support. It also flags a Text column compared to a Number column in a join, which fails as soon as one value is not a number, and more. Every finding says in plain words what is wrong and how to fix it. Most come with a one-click fix, and **Fix all** applies every safe fix at once.</p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apps/sql-studio/lint.webp"
+        alt="Lint findings in the Status tab, each with a one-click fix, and Fix all"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 4: Run, results and export */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Paged Results and a Full CSV Export</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>Run creates a temporary Data Extension, runs your query into it and opens the results in a paged, sortable grid with a filter on every column. Columns that select a Date, Number, Decimal or Boolean field keep that type, so dates sort as dates and numbers as numbers. Export CSV downloads every row, across all pages. When a run fails, you see MCE's own error message, followed by SQL Studio's explanation and fix wherever it recognises the error. That includes a query that fails while it runs, which would otherwise look like a run that found no rows.</p>
+      {/* Sources: docs/ORG-VERIFICATION.md finding 16 (the SELECT TOP 10, measured on
+          2026-09-28) and CHANGELOG.md 0.6.0 (the 5-minute query). */}
+      <p style={{fontSize: '1.1rem'}}>Every run also shows how many API calls it used, and About shows the total for your session. Why does it matter? Because API calls count against your licence's <Link to="/docs/salesforce/marketing-cloud-engagement/config/licence-limits/">yearly API limit</Link>. In my tests, a simple <code>SELECT TOP 10</code> cost 10 calls in all, and a 5-minute query about 13, as SQL Studio checks on a long query less often the longer it runs.</p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apps/sql-studio/results.webp"
+        alt="A finished run's results grid, with the run summary and Export CSV above it"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 5: Save, open, history, format */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Save, Open, History and Format</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>Save as turns your query into a new Query Activity, with the target Data Extension and the Overwrite, Update or Append action you pick, and checks your columns against the target's fields before it saves. Open loads any saved Query Activity into a tab, and Save then updates it, asking before it overwrites its SQL. History keeps your past runs in your browser. Your admin can also turn on server-side history, which follows you across devices, but anyone with Data Extension access in the Business Unit can read it. Format lays your query out by <Link to="/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/">my SQL style guide</Link>, the one my SQL articles follow.</p>
+    </div>
+  </div>
+</section>
+
+{/* Feature 6: Licence */}
+<section className={styles.section} style={{ margin: '4rem 0' }}>
+  <div className="container app-dark-band" style={{ borderRadius: '16px', padding: '4rem 3rem' }}>
+    <div className="row">
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>Free, Commercial Use Included</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>SQL Studio is free for any Marketing Cloud Engagement account, your company's and your clients' included, under the European Union Public Licence 1.2 (EUPL 1.2). Read the <a href="https://github.com/MateuszDabrowski/sqlstudio/blob/main/LICENSE">full text</a> on GitHub, or the <a href="https://github.com/MateuszDabrowski/sqlstudio#licence">plain-language summary</a> in the README.</p>
+      </div>
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.75rem'}}>Change It, Keep the Credit</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>You can change SQL Studio and share it, changed or not, and installing it in someone else's account, such as a client's, counts as sharing. A shared copy comes with its source code, keeps its copyright and licence notices intact, and stays under the EUPL 1.2. The SQL Studio name and the MD logo are not licensed under the EUPL, so only an unchanged copy may keep them. A changed copy gets its own name and logo, keeps my credit in its notices, and says that it is changed, and when. Filling in the settings sections is not a change.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section className={styles.section}>
+  <div className="container">
+
+## Support {#support}
+
+<p>Need help, found a bug, or want to suggest a feature? Email **<Email user="sqlstudio_feedback" />**. Include your MCE edition, whether you are in a parent or child Business Unit, and the Frontend and Backend versions from Help → About SQL Studio. It makes most issues quicker to diagnose.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Frequently asked questions
+
+    </div>
+
+<details className={styles.faqDetails}>
+  <summary>Does any of my data or SQL reach you?</summary>
+
+  No. Your browser makes two kinds of request outside your MCE account, one for the code editor's files and one for a daily update check. Neither carries your query, your results or your login, and [Your data](#your-data) below says what each one sends.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Which Marketing Cloud Engagement edition and permissions do I need?</summary>
+
+  Enterprise 2.0 or Core edition, with Data Extension and Automation Studio permissions for every user. The "Data Extension | Manage Data Extension Retention" permission is recommended, so temporary Data Extensions expire on their own. Without it, each new run deletes the previous run's temporary Data Extension, and SQL Studio deletes your own leftovers older than six hours when you open it.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Why does SQL Studio ask me to renew my session?</summary>
+
+  Your SQL Studio session lasts about 20 minutes, like MCE's own access token, and SQL Studio renews it in the background while you work and on your first action after a break. If renewing fails, for example because you signed out of MCE, a Session expired dialog asks you to renew, and your query and results stay as they were. Why not a longer session? Because it would need a refresh token, and SQL Studio keeps its tokens in its sign-in log, a Data Extension that anyone with Data Extension access in the Business Unit can read. A leaked refresh token would stay usable for 30 days, an access token for about 20 minutes.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>How do I update to a new release?</summary>
+
+  Replace all of SQL Studio Frontend with the new release's file, as it has no settings. In SQL Studio Backend, and in the SQL Studio Landing Page when the release changed it, replace everything from the "APP CODE - replace from here on update" line down, then publish. Your settings sit above that line and stay as they are. [Updating](#updating) below has the rest.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Can I deploy SQL Studio for a client under my own brand?</summary>
+
+  Yes, as a changed copy. Installing it in a client's account counts as sharing it, so the copy comes with its source code and stays under the EUPL 1.2. Give it your own name and logo, keep my credit in its copyright and licence notices, and say that it is changed, and when. An unchanged copy keeps the SQL Studio name and logo.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Does SQL Studio support [feature X]?</summary>
+
+  What SQL Studio does today is listed above. If the feature you need isn't there, write in, as feature requests inform what ships next.
+
+</details>
+
+<br/>
+
+:::note Reporting a bug
+**Useful details to include:**
+* A short description of what happened, and what you expected instead.
+* The Frontend and Backend versions (Help → About SQL Studio).
+* Your Marketing Cloud Engagement edition, and whether you are in a parent or child Business Unit.
+* Your browser and its version.
+* The query text, if it is not sensitive, and the exact error message.
+* A screenshot, if relevant - with anything private cropped out.
+:::
+
+  </div>
+</section>
+
+{/* Deployment guide, in place of the usual Privacy Policy section.
+    Source: docs/DEPLOYMENT.md in the SQL Studio repo. */}
+<section className={styles.section} style={{ marginBottom: '4rem' }}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '4rem 3rem' }}>
+
+## Deployment guide {#deployment-guide}
+
+<p>SQL Studio is one Cloud Page, two Code Resources and an Installed Package, built on the pattern from my <Link to="/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/">Solve with Cloud Page Apps</Link> article. The release files are ready to paste, so there is no external hosting and no build step. This section gives you the order and what to fill in. For the Data Extension fields, the troubleshooting table and every other detail, follow the full guide in the repository.</p>
+
+<p><a href="https://github.com/MateuszDabrowski/sqlstudio/blob/main/docs/DEPLOYMENT.md">Full deployment guide on GitHub »</a></p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### What you need
+
+    </div>
+
+<ul>
+  <li>Marketing Cloud Engagement, Enterprise 2.0 or Core edition.</li>
+  <li>An admin who can create Installed Packages, Code Resources and Cloud Pages.</li>
+  <li>Data Extension and Automation Studio permissions for every SQL Studio user. The "Data Extension | Manage Data Extension Retention" permission is recommended, so temporary Data Extensions expire on their own. Without it, each new run deletes the previous run's temporary Data Extension, and SQL Studio deletes a user's own leftovers older than six hours when they open it.</li>
+  <li>A modern desktop browser that can reach <code>cdn.jsdelivr.net</code>, where the code editor loads from. If a network policy blocks it, SQL Studio falls back to a plain text box after 15 seconds, and Run and Save still work.</li>
+</ul>
+
+    <div style={{marginTop: '2rem'}}>
+
+### The steps
+
+    </div>
+
+<p><strong>Publish nothing until step 4.</strong> A piece published early, with empty settings, can keep answering with them for a few minutes after you publish the finished version, and sign-in fails until it catches up.</p>
+
+<ol>
+  <li>
+    <strong>Get the code.</strong> Download the three release files and open them in the code editor of your choice:
+    <table>
+      <thead><tr><th>Piece</th><th>File</th></tr></thead>
+      <tbody>
+        <tr><td>SQL Studio Backend</td><td><a href="https://github.com/MateuszDabrowski/sqlstudio/blob/main/src/code-resources/sql-studio-backend.html"><code>sql-studio-backend.html</code></a></td></tr>
+        <tr><td>SQL Studio Frontend</td><td><a href="https://github.com/MateuszDabrowski/sqlstudio/blob/main/src/code-resources/sql-studio-frontend.js"><code>sql-studio-frontend.js</code></a></td></tr>
+        <tr><td>SQL Studio</td><td><a href="https://github.com/MateuszDabrowski/sqlstudio/blob/main/src/cloud-page/sql-studio.html"><code>sql-studio.html</code></a></td></tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <strong>Create the three pieces in Web Studio → CloudPages, without publishing them.</strong> Save each one, open it, copy its URL from the top of the editor and paste the URL into the settings at the top of your files:
+    <table>
+      <thead><tr><th>Name it</th><th>Create it with</th><th>Paste its URL into</th></tr></thead>
+      <tbody>
+        <tr><td>SQL Studio Backend</td><td>Code Resource → JSON</td><td><code>backendURL</code> in both <code>sql-studio-backend.html</code> and <code>sql-studio.html</code></td></tr>
+        <tr><td>SQL Studio Frontend</td><td>Code Resource → JavaScript</td><td><code>frontendURL</code> in <code>sql-studio.html</code></td></tr>
+        <tr><td>SQL Studio</td><td>Landing Page, in Code View, with no layout</td><td><code>pageURL</code> in <code>sql-studio-backend.html</code></td></tr>
+      </tbody>
+    </table>
+    Start SQL Studio from a blank page with no layout, as with any Cloud Page App, since a layout adds its own HTML and styles around SQL Studio and breaks its full-height screen.
+  </li>
+  <li>
+    <strong>Create the Installed Package</strong> in Setup → Platform Tools → Apps → Installed Packages → New, with two components:
+    <ul>
+      <li><strong>Marketing Cloud App:</strong> the login and the logout endpoint are both SQL Studio Backend's URL.</li>
+      <li><strong>API Integration</strong>, Web App type: the Redirect URI is SQL Studio Backend's URL too. Tick Data Extensions read and write, and Automations read, write and execute. Leave "offline access" off.</li>
+    </ul>
+    On its Access tab, pick the Business Units and roles that should see SQL Studio in the AppExchange menu. Then paste three of its values into the settings of <code>sql-studio-backend.html</code>: the Client ID into <code>clientID</code>, the Client Secret into <code>clientSecret</code>, and the tenant subdomain of the API Base URI into <code>clientBase</code>. The subdomain is the 28 characters that start with <code>mc</code>, not the Client ID. Select it by dragging, as a double-click stops at its hyphen.
+  </li>
+  <li>
+    <strong>Paste the code, then publish.</strong> Paste each file, with its settings filled in, into its piece:
+    <table>
+      <thead><tr><th>Piece</th><th>File</th></tr></thead>
+      <tbody>
+        <tr><td>SQL Studio Backend</td><td><code>sql-studio-backend.html</code></td></tr>
+        <tr><td>SQL Studio Frontend</td><td><code>sql-studio-frontend.js</code></td></tr>
+        <tr><td>SQL Studio</td><td><code>sql-studio.html</code></td></tr>
+      </tbody>
+    </table>
+    Leave the other settings as they are, unless you want server-side history, and <code>sql-studio-frontend.js</code> has no settings at all. Publish the two Code Resources first and SQL Studio last. SQL Studio loads the other two, so this way it never opens before they are live.
+  </li>
+  <li>
+    <strong>Open it.</strong> Wait about five minutes after publishing, then open SQL Studio from the AppExchange menu. On this first open, it creates its sign-in log and error log. If it asks you to set their retention by hand, do it straight away, as the sign-in log holds live access tokens: 1 day for SQL Studio Auth Log and 180 days for SQL Studio Error Log. Then run <code>SELECT TOP 10 SubscriberKey FROM _Subscribers</code> to check that rows come back.
+  </li>
+</ol>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Updating {#updating}
+
+    </div>
+
+<p>An update replaces code and keeps your settings, in the same order as the first deployment:</p>
+
+<ol>
+  <li>Replace all of SQL Studio Frontend with the new <code>sql-studio-frontend.js</code>, and publish.</li>
+  <li>In SQL Studio Backend, and in SQL Studio when the release changed it, replace everything from the "APP CODE - replace from here on update" line down, and publish. Your settings sit above that line and stay as they are.</li>
+</ol>
+
+<p>A release that adds or renames a setting says so in the changelog, and until you copy its new settings section across, SQL Studio shows a message that yours is from an older release. You also do not have to watch the repository: once a day, SQL Studio checks for a new release and shows an Update badge in the toolbar, with the key changes and a link to the update guide.</p>
+
+  </div>
+</section>
+
+{/* Your data, in place of the usual Privacy Policy section.
+    Sources: docs/DEPLOYMENT.md step 7, and in src/: the Cloud Page's script tags,
+    UPDATE_CHECK_URL and UpdateCheck in sqlstudio.js, the Backend's API hosts. */}
+<section className={styles.section} style={{ marginBottom: '4rem' }}>
+  <div className="container app-dark-band" style={{ borderRadius: '16px', padding: '4rem 3rem' }}>
+
+## <span style={{color: 'var(--ifm-color-white)'}}>Your data</span> {#your-data}
+
+<p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem', maxWidth: '760px'}}>SQL Studio has no account of its own and no server of mine. Everything it does in Marketing Cloud Engagement runs with your own login, in your own account. The two requests your browser makes outside MCE carry no query and no result.</p>
+
+    <div className="row" style={{marginTop: '2rem'}}>
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.5rem'}}>Where it lives</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.05rem'}}>Your queries and their results stay in MCE, in objects SQL Studio creates in your account:</p>
+        <ul style={{color: 'var(--ifm-color-white)', fontSize: '1.05rem'}}>
+          <li><strong>A sign-in log</strong>, holding a session id, an access token valid for about 20 minutes, and your name and email, with a 1-day retention.</li>
+          <li><strong>An error log</strong>, holding backend error messages cut to 2,000 characters, never with a token, a session id or the client secret, with a 180-day retention.</li>
+          <li><strong>A temporary Data Extension per run</strong>, with a 1-day retention. A new run in the same tab deletes the previous one, and once a day SQL Studio deletes your own leftovers older than six hours when you open it.</li>
+          <li><strong>An optional history Data Extension</strong>, only if your admin turns it on, holding every user's own SQL text with its row count and run time, with a 90-day retention.</li>
+          <li><strong>Up to four Query Activities per user</strong>, each keeping the SQL of the last query it ran. SQL Studio never deletes them.</li>
+        </ul>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '0.95rem', opacity: 0.85}}>Any user with Data Extension access in the Business Unit can read these Data Extensions while they exist, your results and the sign-in log's live tokens included. That is why the sign-in log keeps its rows for one day and SQL Studio uses no refresh tokens. In your browser, SQL Studio keeps your tabs' query text, your local history, the Business Unit's Data Extension list and your settings, in local storage for your Cloud Page's address.</p>
+      </div>
+      <div className="col col--6" style={{padding: '1rem 2rem'}}>
+
+        <div style={{marginBottom: '1rem'}}>
+
+### <span style={{color: 'var(--ifm-color-white)', fontSize: '1.5rem'}}>What leaves your account</span>
+
+        </div>
+
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.05rem'}}>Two kinds of request, both from your browser. The Backend, which runs on MCE's servers, calls only MCE's own APIs.</p>
+        <ul style={{color: 'var(--ifm-color-white)', fontSize: '1.05rem'}}>
+          <li><strong>The code editor</strong>, Monaco, loads from the jsDelivr CDN, pinned to version 0.52.2. Its loader file carries a Subresource Integrity hash, so your browser refuses it if it differs from the file SQL Studio expects, and the loader then fetches the rest of the editor from the same pinned path.</li>
+          <li><strong>An update check</strong>, once a day per browser, reads a small release file from SQL Studio's GitHub repository, sending no cookies and no page address.</li>
+        </ul>
+        {/* CHECK: the Cloud Page's domain on the editor requests is the browser's default
+            referrer policy. Confirm in DevTools (Referer header on loader.js). */}
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.05rem'}}>Neither request carries a query, a result or your login. jsDelivr and GitHub see what any server sees on a request: your IP address and your browser. For the editor's files, that usually includes your Cloud Page's domain as well. There is no analytics, no telemetry and no crash reporting. The links in the Help menu, the About dialog and hover documentation, to my articles, Microsoft Learn and Salesforce Help, open only when you click them.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
