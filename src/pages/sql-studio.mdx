@@ -337,7 +337,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 <details className={styles.faqDetails}>
   <summary>Why does SQL Studio ask me to renew my session?</summary>
 
-  Your SQL Studio session lasts about 20 minutes, like MCE's own access token, and SQL Studio renews it in the background while you work and on your first action after a break. If renewing fails, for example because you signed out of MCE, a Session expired dialog asks you to renew, and your query and results stay as they were. Why not a longer session? Because it would need a refresh token, and SQL Studio keeps its tokens in its sign-in log, a Data Extension that anyone with Data Extension access in the Business Unit can read. A leaked refresh token would stay usable for 30 days, an access token for about 20 minutes.
+  Your SQL Studio session lasts about 20 minutes, like MCE's own access token, and SQL Studio renews it in the background while you work and on your first action after a break. If renewing fails, for example because you signed out of MCE, a Session expired dialog asks you to renew, and your query and results stay as they were. Why not a longer session? Because it would need a refresh token. SQL Studio keeps its tokens encrypted in its sign-in log, but someone who reads the client secret in the Backend could decrypt them, and a refresh token would stay usable for 30 days, against about 20 minutes for an access token.
 
 </details>
 
@@ -454,7 +454,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
     Leave the other settings as they are, unless you want server-side history, and <code>sql-studio-frontend.js</code> has no settings at all. Publish the two Code Resources first and SQL Studio last. SQL Studio loads the other two, so this way it never opens before they are live.
   </li>
   <li>
-    <strong>Open it.</strong> Wait about five minutes after publishing, then open SQL Studio from the AppExchange menu. On this first open, it creates its sign-in log and error log. If it asks you to set their retention by hand, do it straight away, as the sign-in log holds live access tokens: 1 day for SQL Studio Auth Log and 180 days for SQL Studio Error Log. Then run <code>SELECT TOP 10 SubscriberKey FROM _Subscribers</code> to check that rows come back.
+    <strong>Open it.</strong> Wait about five minutes after publishing, then open SQL Studio from the AppExchange menu. On this first open, it creates its sign-in log and error log. If it asks you to set their retention by hand, do it straight away: 1 day for SQL Studio Auth Log and 180 days for SQL Studio Error Log. Then run <code>SELECT TOP 10 SubscriberKey FROM _Subscribers</code> to check that rows come back.
   </li>
 </ol>
 
@@ -497,13 +497,13 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
 
         <p style={{color: 'var(--ifm-color-white)', fontSize: '1.05rem'}}>Your queries and their results stay in MCE, in objects SQL Studio creates in your account:</p>
         <ul style={{color: 'var(--ifm-color-white)', fontSize: '1.05rem'}}>
-          <li><strong>A sign-in log</strong>, holding a session id, an access token valid for about 20 minutes, and your name and email, with a 1-day retention.</li>
+          <li><strong>A sign-in log</strong>, holding a hash of your session id, your access token encrypted and valid for about 20 minutes, and your MCE user id, name and email, with a 1-day retention.</li>
           <li><strong>An error log</strong>, holding backend error messages cut to 2,000 characters, never with a token, a session id or the client secret, with a 180-day retention.</li>
           <li><strong>A temporary Data Extension per run</strong>, with a 1-day retention. A new run in the same tab deletes the previous one, and once a day SQL Studio deletes your own leftovers older than six hours when you open it.</li>
           <li><strong>An optional history Data Extension</strong>, only if your admin turns it on, holding every user's own SQL text with its row count and run time, with a 90-day retention.</li>
           <li><strong>Up to four Query Activities per user</strong>, each keeping the SQL of the last query it ran. SQL Studio never deletes them.</li>
         </ul>
-        <p style={{color: 'var(--ifm-color-white)', fontSize: '0.95rem', opacity: 0.85}}>Any user with Data Extension access in the Business Unit can read these Data Extensions while they exist, your results and the sign-in log's live tokens included. That is why the sign-in log keeps its rows for one day and SQL Studio uses no refresh tokens. In your browser, SQL Studio keeps your tabs' query text, your local history, the Business Unit's Data Extension list and your settings, in local storage for your Cloud Page's address.</p>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '0.95rem', opacity: 0.85}}>Any user with Data Extension access in the Business Unit can read these Data Extensions while they exist, your results included. The sign-in log gives them nothing to use: the session id is stored as a hash, and the token is encrypted with a key derived from the client secret. Its rows still last one day, and SQL Studio requests no refresh tokens, so even someone who reads the client secret in the Backend finds only tokens that expire within 20 minutes. In your browser, SQL Studio keeps your tabs' query text, your local history, the Business Unit's Data Extension list and your settings, in local storage for your Cloud Page's address.</p>
       </div>
       <div className="col col--6" style={{padding: '1rem 2rem'}}>
 
