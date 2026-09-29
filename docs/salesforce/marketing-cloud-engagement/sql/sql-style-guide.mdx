@@ -567,7 +567,7 @@ FROM _Sent AS s
 
 ## Comments
 
-Comments carry the context your query needs, like the reason behind a filter. However, :product[MCE] does not ignore everything inside them, and this one is not a matter of taste.
+Comments carry the context your query needs, like the reason behind a filter. However, :product[MCE] does not ignore everything inside them, and this can break your query.
 
 ### Apostrophes in Comments
 
@@ -580,16 +580,21 @@ __Leave apostrophes out of comments.__
 
 A pair inside a single comment, like `/* Output: 'MATEUSZ' */` in my examples, is safe, as it closes before the comment ends. Still, a comment with no apostrophes is the only kind you do not have to think about.
 
-```sql {1,6}
-/* ✅ Comment without apostrophes: skip internal test addresses */
+```sql {4,9,12,14}
+/* ✅ No apostrophes in comments */
 SELECT SubscriberKey
 FROM Ent._Subscribers
-WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* skip internal test addresses */
 
-/* ❌ Comment with a single apostrophe: don't send to internal test addresses */
+/* ❌ A single apostrophe in a comment fails the save */
 SELECT SubscriberKey
 FROM Ent._Subscribers
-WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* don't send to internal test addresses */
+
+/* ❌ Single apostrophes in two comments change the text value between them */
+SELECT SubscriberKey /* it's the first comment */
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* and here's the second one */
 ```
 
 ## Sum Up
