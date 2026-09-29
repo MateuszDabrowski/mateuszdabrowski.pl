@@ -2,7 +2,7 @@
 id: sql-debugging-email-sends
 title: MCE SQL Debugging Email Sends
 sidebar_label: Debugging Email Sends
-description: Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL with Query Studio to the rescue.
+description: Make finding problems with email delivery in Salesforce Marketing Cloud Engagement (MCE) great again. SQL Studio to the rescue.
 image: img/og/og-image-sf-mce-sql-debugging-email-sends.png
 tags: [Marketing Cloud Engagement, SQL, Snippet, Email, Debugging, Analytics]
 
@@ -12,7 +12,7 @@ import { LeadText } from '/src/components/LeadText.js';
 import Image from '@theme/IdealImage';
 import flowchart from '/static/img/article/article-image-sfmc-debugging-email-sends.png'
 
-<LeadText content='Make finding problems with email delivery in MCE great again. SQL with the Query Studio to the rescue.' />
+<LeadText content='Make finding problems with email delivery in MCE great again. SQL Studio to the rescue.' />
 
 ## Problem with straightforward Email Send analysis
 
@@ -127,13 +127,13 @@ As they say, with great power comes great complexity. And that's definitely true
 
 You don't have to follow the steps below in the same order as presented. You can mix and match them, as long as you leave the Support Ticket creation for when you tried all other options.
 
-I personally debug in that order because, while I wait for the Query Studio to return the output from query, I can check the following steps in parallel.
+I personally debug in that order because, while I wait for SQL Studio to return the output from query, I can check the following steps in parallel.
 
 :::
 
 ### 1. Query System Data Views
 
-I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. Free Salesforce [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) is the best place to execute that little exploratory analysis.
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. [SQL Studio](/sql-studio/), my free replacement for Query Studio, which is no longer available on :product[AgentExchange], is the best place to execute that little exploratory analysis.
 
 Once you see the outcome, there are few possibilities:
 

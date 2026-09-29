@@ -121,7 +121,7 @@ Snippet:
 
 SQL:
   label: "SQL"
-  description: "SQL for Marketing Cloud Engagement Query Activities and Query Studio: syntax, functions, style and ready-to-use queries."
+  description: "SQL for Marketing Cloud Engagement Query Activities and SQL Studio: syntax, functions, style and ready-to-use queries."
 
 SSJS:
   label: "SSJS"
