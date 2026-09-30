@@ -51,13 +51,21 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
   const [status, setStatus] = useState('idle'); // idle | invalid | sending | done | error | challenge
   const widgetHost = useRef(null);
   const widgetId = useRef(null);
+  const [checkShown, setCheckShown] = useState(false); // Turnstile asked for a click
 
   useEffect(() => {
     let cancelled = false;
     loadTurnstile()
       .then((turnstile) => {
         if (cancelled || !widgetHost.current || widgetId.current !== null) return;
-        widgetId.current = turnstile.render(widgetHost.current, { sitekey: turnstileSiteKey, size: 'flexible' });
+        // Hidden unless the check needs a click, so most visitors never see a
+        // Cloudflare box under the field, on the newsletter page or on every doc.
+        widgetId.current = turnstile.render(widgetHost.current, {
+          sitekey: turnstileSiteKey,
+          size: 'flexible',
+          appearance: 'interaction-only',
+          'before-interactive-callback': () => setCheckShown(true),
+        });
       })
       .catch(() => setStatus('challenge'));
     return () => {
@@ -168,7 +176,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
         </fieldset>
       )}
 
-      <div ref={widgetHost} className={styles.turnstile} />
+      <div ref={widgetHost} className={checkShown ? styles.turnstile : undefined} />
 
       {status === 'invalid' && <p className={styles.error}>That does not look like an email address.</p>}
       {status === 'challenge' && <p className={styles.error}>The bot check did not complete. Reload the page and try again, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}

@@ -200,11 +200,9 @@ button.busy:disabled {
   text-decoration: underline;
 }
 
-/* Turnstile renders its own widget here; invisible mode leaves it empty. */
+/* Turnstile renders its own widget here. The class is set only once it shows
+   itself for a click: while it runs hidden, the space would be an empty gap
+   under the field. */
 .turnstile {
   margin-top: 0.75rem;
-}
-
-.turnstile:empty {
-  display: none;
 }
