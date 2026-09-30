@@ -60,7 +60,11 @@ export default function NewsletterAction({ kind }) {
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
-    const found = kind === 'confirm' ? { t: query.get('t') } : { u: query.get('u'), s: query.get('s') };
+    // Signed unsubscribe links carry u and s after #, which never reaches a
+    // server log. Links sent before that carry them in the query, and still work.
+    const hash = new URLSearchParams(window.location.hash.slice(1));
+    const signed = hash.has('u') ? hash : query;
+    const found = kind === 'confirm' ? { t: query.get('t') } : { u: signed.get('u'), s: signed.get('s') };
     const complete = Object.values(found).every(Boolean);
     setParams(found);
     setStatus(!nativeFormEnabled ? 'inactive' : complete ? 'ready' : 'missing');
