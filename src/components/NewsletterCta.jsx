@@ -17,7 +17,7 @@ export default function NewsletterCta() {
       <div className={styles.text}>
         <p id="newsletter-cta-title" className={styles.title}>Stay in the loop</p>
         <p className={styles.pitch}>
-          Get notified about new content, Salesforce Marketing, Data and AI news, and the occasional MarTech find. No fixed cadence, email comes when there is something worth sending.
+          Get notified about new docs and apps, Salesforce Marketing, Data and AI news, and the occasional MarTech find. There is no fixed schedule. An email comes only when I have something worth sending.
         </p>
       </div>
       {nativeFormEnabled ? (
