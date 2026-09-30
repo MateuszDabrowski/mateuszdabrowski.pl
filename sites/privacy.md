@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/sites/privacy/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-18  
+Last updated: 2026-09-30  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Legal stuff. Short and simple.
@@ -15,7 +15,7 @@ Browsing this site leaves no personal data with me. What I get is aggregated, no
 
 ## Cookies
 
-Cookies are small text files that websites place on your computer. They are widely used to make websites work and to give the owner some analytical data. I'm using cookies from two sources: Cloudflare on every page and Google on the newsletter page only.
+Cookies are small text files that websites place on your computer. They are widely used to make websites work and to give the owner some analytical data. I'm using cookies from one source only: Cloudflare, on every page.
 
 > **Note: Check yourself**
 >
@@ -28,16 +28,6 @@ Cloudflare delivers this site and keeps bots away from it.
 | Cookie Name | Expiration | Purpose                                                                              |
 | ----------- | ---------- | ------------------------------------------------------------------------------------ |
 | \_\_cf\_bm  | 30 minutes | Tells browsers from bots to limit automated traffic. Holds no information about you. |
-
-### Google
-
-The newsletter page embeds a Google Form. Google sets these cookies inside it, on its own domain, not mine.
-
-| Cookie Name | Expiration | Purpose                     |
-| ----------- | ---------- | --------------------------- |
-| S           | Your visit | Google Forms session        |
-| COMPASS     | Your visit | Google Forms session        |
-| NID         | 6 months   | Google's preferences cookie |
 
 ## Data processing
 
@@ -53,11 +43,11 @@ If you want to stop even this level of processing, any content blocker will do i
 
 If you subscribe to the newsletter, you give me your email address. That is the only personal data this site collects, and only because you hand it over.
 
-- **What I collect:** your email address and the time you submitted the form. No name, no tracking of what you read.
+- **What I collect:** your email address, the time you asked to subscribe and the time you confirmed it. No name, no tracking of what you read.
 - **Why:** to send you the newsletter. The address is used for nothing else and is never shared or sold.
-- **Legal basis:** your consent, given when you submit the form. Unsubscribing withdraws it.
-- **Where it goes:** the form is a Google Form, so the address goes straight from your browser to Google and nothing passes through this site. The list is a Google Sheet in my Google Workspace account, and the emails go out through Gmail from my own sending tool. Google processes the data on my behalf under its Workspace terms.
-- **How long:** until you unsubscribe. After that I keep the address only as unsubscribed, so a later email never goes to you by accident. If you subscribe again, the newest choice wins. Write to legal \[at] mateuszdabrowski.pl if you want the address gone entirely.
+- **Legal basis:** your consent, given when you confirm the subscription. Unsubscribing withdraws it.
+- **Where it goes:** the form posts straight from your browser to a script in my Google Workspace account, so nothing passes through this site. Cloudflare Turnstile checks first that you are not a bot. You get a confirmation email, and the address is added to the list only when you open its link and confirm on the page it opens. The list and its consent log live in Sling, my own newsletter app, encrypted on my Mac, with a copy of the consent log in a Google Sheet in my Google Workspace account. The emails go out through Gmail. Google processes the data on my behalf under its Workspace terms.
+- **How long:** until you unsubscribe. After that I keep the address only as unsubscribed, so a later email never goes to you by accident. If you subscribe again, the newest choice wins. A sign-up you never confirm expires after 7 days and never reaches the list. Write to legal \[at] mateuszdabrowski.pl if you want the address gone entirely.
 - **Unsubscribing:** the link in any email, the "Unsubscribe" option on the newsletter page, or an email to newsletter \[at] mateuszdabrowski.pl from the subscribed address.
 
 ## Your rights
