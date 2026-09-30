@@ -22,7 +22,7 @@ const PERSON_ID = `${PROFILE_URL}#person`;
 const SAME_AS = [
   'https://www.linkedin.com/in/mateusz-dabrowski-pl/',
   'https://github.com/MateuszDabrowski',
-  'https://trailblazer.me/id/madabrowski',
+  'https://www.salesforce.com/trailblazer/madabrowski',
 ];
 
 /** Newest first by the entry's effective date. */
