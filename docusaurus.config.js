@@ -214,7 +214,7 @@ module.exports = {
                     'aria-label': 'LinkedIn Profile',
                 },
                 {
-                    href: 'https://trailblazer.me/id/madabrowski',
+                    href: 'https://www.salesforce.com/trailblazer/madabrowski',
                     position: 'right',
                     className: 'header-salesforce-link',
                     'aria-label': 'Trailblazer Profile',
