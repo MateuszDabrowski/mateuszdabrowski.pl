@@ -106,7 +106,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
       <div className={clsx(styles.form, compact && styles.compact)} role="status">
         <p className={styles.done}>
           {remove
-            ? 'Done. That address is marked as unsubscribed and gets nothing further.'
+            ? "Done. That address is unsubscribed, and you won't get any more emails from me."
             : `Almost there. A confirmation email is on its way to ${email.trim()}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.`}
         </p>
       </div>
@@ -176,7 +176,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
 
       <p className={styles.notice}>
         {remove ? (
-          <>Submit the address you subscribed with. It is marked as unsubscribed and receives nothing further.</>
+          <>Submit the address you subscribed with, and you won't get any more emails from me.</>
         ) : (
           <>
             By subscribing you agree to receive the newsletter from Mateusz Dąbrowski. The address is used for nothing else and shared with no one.

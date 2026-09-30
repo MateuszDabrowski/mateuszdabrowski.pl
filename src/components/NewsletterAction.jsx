@@ -43,10 +43,10 @@ const COPY = {
   unsubscribe: {
     title: 'Unsubscribe',
     heading: 'Unsubscribe',
-    ready: (address) => <>Press the button to unsubscribe {address} from {newsletter} about Salesforce Marketing, Data and AI. It gets no further issues.</>,
+    ready: (address) => <>Press the button to unsubscribe {address} from {newsletter} about Salesforce Marketing, Data and AI. You won't get any more emails from me.</>,
     button: 'Unsubscribe',
     working: 'Unsubscribing...',
-    done: (address) => `${address} is unsubscribed from my newsletter and gets no further issues. Changed your mind? The newsletter page takes you back.`,
+    done: (address) => `${address} is unsubscribed from my newsletter. You won't get any more emails from me. Changed your mind? The newsletter page takes you back.`,
     expired: <>This link is not valid. Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI with the form below instead.</>,
     invalid: <>This link is not valid. Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI with the form below instead.</>,
     missing: <>Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI.</>, // the form's own notice says what to enter
