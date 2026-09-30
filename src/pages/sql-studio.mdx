@@ -502,7 +502,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
     Leave the other settings as they are, unless you want server-side history, and <code>sql-studio-frontend.js</code> has no settings at all. Publish the two Code Resources first and SQL Studio last. SQL Studio loads the other two, so this way it never opens before they are live.
   </li>
   <li>
-    <strong>Open it.</strong> Wait about five minutes after publishing, then open SQL Studio from the AppExchange menu. On this first open, it creates its sign-in log and error log. If it asks you to set their retention by hand, do it straight away: 1 day for SQL Studio Auth Log and 180 days for SQL Studio Error Log. Then run <code>SELECT TOP 10 SubscriberKey FROM _Subscribers</code> to check that rows come back.
+    <strong>Open it.</strong> Wait about five minutes after publishing, then open SQL Studio from the AppExchange menu. On this first open, it creates its sign-in log and error log and sets their retention, and the Status tab says so once: "First run: SQL Studio created its Data Extensions in the SQL Studio folder." Only if MCE does not let it set the retention does a second notice ask you to set it by hand: 1 day for SQL Studio Auth Log and 180 days for SQL Studio Error Log. Then run <code>SELECT TOP 10 SubscriberKey FROM _Subscribers</code> to check that rows come back.
   </li>
 </ol>
 
