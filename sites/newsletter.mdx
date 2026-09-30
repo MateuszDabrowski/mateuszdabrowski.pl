@@ -8,9 +8,8 @@ custom_edit_url: null
 ---
 
 import { LeadText } from '/src/components/LeadText.js';
-import { Form } from '/src/components/FormEmbed.js';
 import NewsletterForm from '/src/components/NewsletterForm.jsx';
-import { newsletterForm, nativeFormEnabled } from '/src/data/newsletter.js';
+import { newsletterForm } from '/src/data/newsletter.js';
 
 <LeadText content="Get yet another email in your inbox. This time, about Salesforce Marketing, Data & AI." />
 
@@ -27,4 +26,4 @@ What you will **not** get: sponsors, filler, or an email because a calendar said
 
 Sounds good? Here you can join the list (or leave it):
 
-{nativeFormEnabled ? <NewsletterForm {...newsletterForm} /> : <Form formId={newsletterForm.formId} />}
+<NewsletterForm {...newsletterForm} />

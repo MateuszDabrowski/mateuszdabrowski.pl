@@ -914,32 +914,3 @@ html[data-theme='dark'] {
   aspect-ratio: 16 / 9;
   width: 100%;
 }
-
-/* ---------------------------- GOOGLE FORM EMBED ---------------------------- */
-
-/* Sized to the form (Google renders it about 640px wide) and centred, with
-   the page's own card look around Google's white sheet. */
-.form--container {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0.5rem;
-  border-radius: 12px;
-  background-color: #ffffff;
-  box-shadow: var(--ifm-global-shadow-md);
-}
-
-/* Tall enough for the whole Google Form (title, consent text, email, choice,
-   submit, footer) without scrolling inside the frame; narrower screens wrap
-   more lines, so they get extra room. */
-.form--container iframe {
-  display: block;
-  width: 100%;
-  height: 1000px;
-  border: 0;
-}
-
-@media only screen and (max-width: 576px) {
-  .form--container iframe {
-    height: 1150px;
-  }
-}
