@@ -143,10 +143,11 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
         </label>
         <button
           type="submit"
-          className={clsx('button button--lg', styles.button, remove ? styles.unsubscribeButton : pageStyles.newsletterButton)}
+          className={clsx('button button--lg', styles.button, remove ? styles.unsubscribeButton : pageStyles.newsletterButton, status === 'sending' && styles.busy)}
           disabled={status === 'sending'}
+          aria-busy={status === 'sending'}
         >
-          {status === 'sending' ? 'Sending…' : remove ? 'Unsubscribe' : 'Subscribe'}
+          {status === 'sending' ? <><span className={styles.spinner} aria-hidden="true" />Sending…</> : remove ? 'Unsubscribe' : 'Subscribe'}
         </button>
       </div>
 

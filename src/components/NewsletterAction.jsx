@@ -17,16 +17,22 @@ import styles from './NewsletterForm.module.css';
  * clicked. Both pages are noindex and left out of the sitemap.
  *
  * The unsubscribe page without a signed link (a forwarded issue, or an email
- * sent before signed links) shows an email field with Turnstile instead of a
- * dead end, the same unsubscribe the newsletter page offers.
+ * sent before signed links), or with one the script rejects, shows an email
+ * field with Turnstile instead of a dead end, the same unsubscribe the
+ * newsletter page offers.
  *
  * @param {'confirm' | 'unsubscribe'} kind
  */
+
+// Named and linked on every state, so someone who got the link by mistake
+// sees what it is about before pressing anything.
+const newsletter = <Link to="/sites/newsletter/">my newsletter</Link>;
+
 const COPY = {
   confirm: {
     title: 'Confirm subscription',
     heading: 'One more click',
-    ready: () => 'Press the button to confirm your subscription to the newsletter. Nothing happens until you do.',
+    ready: () => <>Press the button to confirm your subscription to {newsletter} about Salesforce Marketing, Data and AI. Nothing happens until you do.</>,
     button: 'Confirm subscription',
     working: 'Confirming...',
     done: () => "You're on the list. A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.",
@@ -36,14 +42,14 @@ const COPY = {
   },
   unsubscribe: {
     title: 'Unsubscribe',
-    heading: 'Leaving?',
-    ready: (address) => `Press the button and ${address} gets nothing further.`,
+    heading: 'Unsubscribe',
+    ready: (address) => <>Press the button to unsubscribe {address} from {newsletter} about Salesforce Marketing, Data and AI. It gets no further issues.</>,
     button: 'Unsubscribe',
     working: 'Unsubscribing...',
-    done: (address) => `Done. ${address} is marked as unsubscribed. Changed your mind? The newsletter page takes you back.`,
-    expired: 'This link is not valid. Use the Unsubscribe option on the newsletter page instead.',
-    invalid: 'This link is not valid. Use the Unsubscribe option on the newsletter page instead.',
-    missing: '', // the form's own notice says what to do
+    done: (address) => `${address} is unsubscribed from my newsletter and gets no further issues. Changed your mind? The newsletter page takes you back.`,
+    expired: <>This link is not valid. Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI with the form below instead.</>,
+    invalid: <>This link is not valid. Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI with the form below instead.</>,
+    missing: <>Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI.</>, // the form's own notice says what to enter
   },
 };
 
@@ -73,6 +79,7 @@ export default function NewsletterAction({ kind }) {
   }
 
   const address = params && params.u ? params.u : '';
+  const showForm = kind === 'unsubscribe' && (status === 'missing' || status === 'invalid' || status === 'expired');
   const message = {
     loading: '',
     inactive: 'This page is not active yet. Use the newsletter page instead.',
@@ -92,24 +99,25 @@ export default function NewsletterAction({ kind }) {
       </Head>
       <main className="container margin-vert--xl" style={{ maxWidth: 640 }}>
         <div className={pageStyles.panel} role="status" aria-live="polite">
-          <h1 className={pageStyles.panelHeading}>{status === 'done' ? (kind === 'confirm' ? 'Welcome' : 'Done') : copy.heading}</h1>
+          <h1 className={pageStyles.panelHeading}>{status === 'done' ? (kind === 'confirm' ? 'Welcome' : 'Unsubscribed') : copy.heading}</h1>
           {message && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}
           {(status === 'ready' || status === 'sending') && (
             <p>
               <button
                 type="button"
-                className={clsx('button button--lg', kind === 'unsubscribe' ? styles.unsubscribeButton : pageStyles.newsletterButton)}
+                className={clsx('button button--lg', kind === 'unsubscribe' ? styles.unsubscribeButton : pageStyles.newsletterButton, status === 'sending' && styles.busy)}
                 onClick={act}
                 disabled={status === 'sending'}
+                aria-busy={status === 'sending'}
               >
-                {status === 'sending' ? copy.working : copy.button}
+                {status === 'sending' ? <><span className={styles.spinner} aria-hidden="true" />{copy.working}</> : copy.button}
               </button>
             </p>
           )}
-          {kind === 'unsubscribe' && status === 'missing' && (
+          {showForm && (
             <NewsletterForm endpoint={newsletterForm.endpoint} turnstileSiteKey={newsletterForm.turnstileSiteKey} unsubscribeOnly />
           )}
-          {status !== 'ready' && status !== 'sending' && status !== 'loading' && !(kind === 'unsubscribe' && status === 'missing') && (
+          {status !== 'ready' && status !== 'sending' && status !== 'loading' && !showForm && (
             <p>
               <Link to="/sites/newsletter/">Newsletter page</Link>
             </p>

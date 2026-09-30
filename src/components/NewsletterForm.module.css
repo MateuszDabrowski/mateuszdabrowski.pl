@@ -1,13 +1,12 @@
 /* Subscribe form: a panel in the site's card grammar, inputs on Infima's
-   variables so both themes work without a second palette. */
+   variables so both themes work without a second palette. It takes the width
+   of the text around it: capped narrower, it looked like a stray box. */
 
 .form {
   padding: 1.5rem;
   border-radius: 8px;
   background-color: var(--ifm-card-background-color);
   box-shadow: var(--ifm-global-shadow-md);
-  max-width: 640px;
-  margin: 0 auto;
 }
 
 html[data-theme='dark'] .form {
@@ -157,6 +156,38 @@ html[data-theme='dark'] .input {
 
 .done {
   margin: 0;
+}
+
+/* While the Apps Script works. A cold start plus the sheet and the email can
+   take several seconds, and a greyed-out button alone looks stuck, so the busy
+   button keeps its colour and spins. */
+button.busy:disabled {
+  opacity: 1;
+  cursor: progress;
+}
+
+.spinner {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: 0.55em;
+  vertical-align: -0.1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
 }
 
 .linkButton {
