@@ -457,17 +457,33 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
     </table>
     Each link downloads the file from the latest release on GitHub. You can also download everything as one ZIP, <a href="https://github.com/MateuszDabrowski/sqlstudio/archive/refs/heads/main.zip"><code>sqlstudio-main.zip</code></a>, and use the three files in its <code>src</code> folder. A file that starts with <code>{'<!DOCTYPE html>'}</code> instead is GitHub's own web page, saved from the browser: download it again from the links above.
   </li>
+</ol>
+
+<p><strong>If your account has private domains</strong>, CloudPages asks for URL settings as you create each piece in step 2: pick your domain, give each piece its own Site Key, such as <code>sql-studio</code>, <code>sql-studio-backend</code> and <code>sql-studio-frontend</code>, never a blank one, and turn HTTPS on.</p>
+
+<ol start="2">
   <li>
-    <strong>Create the three pieces in a folder in Web Studio → CloudPages, without publishing them.</strong> Save each one, open it, copy its URL from the top of the editor and paste it into your downloaded files, on the lines this table names:
+    <strong>Create the three pieces in a folder in Web Studio → CloudPages, without publishing them.</strong> Save each one and open it, then copy its URL from the top of the editor:
     <table>
-      <thead><tr><th>Name it</th><th>Create it with</th><th>Paste its URL into</th></tr></thead>
+      <thead><tr><th>Name it</th><th>Create it with</th></tr></thead>
       <tbody>
-        <tr><td>SQL Studio Backend</td><td>Code Resource → JSON</td><td><code>sql-studio-backend.html</code>, line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code><br/><code>sql-studio.html</code>, line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td></tr>
-        <tr><td>SQL Studio Frontend</td><td>Code Resource → JavaScript</td><td><code>sql-studio.html</code>, line 20: <code>var frontendURL = 'SQL_STUDIO_FRONTEND_URL';</code></td></tr>
-        <tr><td>SQL Studio</td><td>Landing Page, in Code View, with no layout</td><td><code>sql-studio-backend.html</code>, line 18: <code>var pageURL = 'SQL_STUDIO_PAGE_URL';</code></td></tr>
+        <tr><td>SQL Studio Backend</td><td>Code Resource → JSON</td></tr>
+        <tr><td>SQL Studio Frontend</td><td>Code Resource → JavaScript</td></tr>
+        <tr><td>SQL Studio</td><td>Landing Page, in Code View, with no layout</td></tr>
       </tbody>
     </table>
-    These settings are not a menu in MCE. They are lines near the top of each file, under <code>1. CONFIGURATION</code>. Find each one by searching the file for its placeholder with Ctrl+F (Cmd+F on a Mac), paste the URL over the placeholder, keep the quotes, and save the file, so <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code> becomes <code>var backendURL = 'https://pages.example.com/sql-studio-backend';</code>. Start SQL Studio from a blank page with no layout, as with any Cloud Page App, since a layout adds its own HTML and styles around SQL Studio and breaks its full-height screen. If your account has private domains, CloudPages also asks for URL settings: pick your domain, give each piece its own Site Key, such as <code>sql-studio</code>, <code>sql-studio-backend</code> and <code>sql-studio-frontend</code>, never a blank one, and turn HTTPS on.
+    Start SQL Studio from a blank page with no layout, as with any Cloud Page App, since a layout adds its own HTML and styles around SQL Studio and breaks its full-height screen. Then paste the three URLs into two of your downloaded files:
+    <table>
+      <thead><tr><th>In this file</th><th>On this line</th><th>Paste the URL of</th></tr></thead>
+      <tbody>
+        <tr><td rowSpan={2}><code>sql-studio-backend.html</code></td><td>line 18: <code>var pageURL = 'SQL_STUDIO_PAGE_URL';</code></td><td>SQL Studio, the Landing Page</td></tr>
+        <tr><td>line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td><td>SQL Studio Backend</td></tr>
+        <tr><td rowSpan={2}><code>sql-studio.html</code></td><td>line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td><td>SQL Studio Backend</td></tr>
+        <tr><td>line 20: <code>var frontendURL = 'SQL_STUDIO_FRONTEND_URL';</code></td><td>SQL Studio Frontend</td></tr>
+        <tr><td><code>sql-studio-frontend.js</code></td><td>none</td><td>nothing: it has no settings, and you paste it as it is in step 4</td></tr>
+      </tbody>
+    </table>
+    These settings are not a menu in MCE. They are lines near the top of each file, under <code>1. CONFIGURATION</code>. Find each one by searching the file for its placeholder with Ctrl+F (Cmd+F on a Mac), paste the URL over the placeholder, keep the quotes, and save the file, so <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code> becomes <code>var backendURL = 'https://pages.example.com/sql-studio-backend';</code>.
   </li>
   <li>
     <strong>Create the Installed Package</strong> in Setup → Platform Tools → Apps → Installed Packages → New, with two components:
