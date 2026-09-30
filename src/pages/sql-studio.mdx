@@ -479,7 +479,7 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
         <tr><td><code>sql-studio-frontend.js</code></td><td>none</td><td>nothing: it has no settings, and you paste it as it is in step 4</td></tr>
       </tbody>
     </table>
-    These settings are not a menu in MCE. They are lines near the top of each file, under <code>1. CONFIGURATION</code>. Find each one by searching the file for its placeholder with Ctrl+F (Cmd+F on a Mac), paste the URL over the placeholder, keep the quotes, and save the file, so <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code> becomes <code>var backendURL = 'https://pages.example.com/sql-studio-backend';</code>.
+    These settings are not a menu in MCE. They are lines near the top of each file, under <code>1. CONFIGURATION</code>. Find each one by searching the file for its placeholder with Ctrl+F (Cmd+F on a Mac), paste the URL over the placeholder, keep the quotes, and save the file, so <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code> becomes <code>{"var backendURL = 'https://pages.example.com/sql-studio-backend';"}</code>.
   </li>
   <li>
     <strong>Create the Installed Package</strong> in Setup → Platform Tools → Apps → Installed Packages → New, with two components:
