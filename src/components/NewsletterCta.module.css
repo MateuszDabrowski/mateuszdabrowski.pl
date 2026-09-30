@@ -52,6 +52,15 @@ html[data-theme='dark'] .cta {
   }
 }
 
+/* With the native form the panel stacks, pitch on top and the form under it
+   at full width. Side by side, the form's notice squeezed the pitch to one
+   word per line even at 1440px. */
+.stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+}
+
 .formSlot {
-  flex: 1 1 420px;
+  width: 100%;
 }

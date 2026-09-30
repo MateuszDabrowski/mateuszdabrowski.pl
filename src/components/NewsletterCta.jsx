@@ -13,7 +13,7 @@ import { newsletterForm, nativeFormEnabled } from '../data/newsletter';
 
 export default function NewsletterCta() {
   return (
-    <aside className={styles.cta} aria-labelledby="newsletter-cta-title">
+    <aside className={clsx(styles.cta, nativeFormEnabled && styles.stacked)} aria-labelledby="newsletter-cta-title">
       <div className={styles.text}>
         <p id="newsletter-cta-title" className={styles.title}>Stay in the loop</p>
         <p className={styles.pitch}>

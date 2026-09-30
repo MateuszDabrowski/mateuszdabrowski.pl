@@ -4,6 +4,7 @@ import Head from '@docusaurus/Head';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import { newsletterForm, nativeFormEnabled } from '../data/newsletter';
+import NewsletterForm from './NewsletterForm';
 import pageStyles from '../pages/styles.module.css';
 import styles from './NewsletterForm.module.css';
 
@@ -14,6 +15,10 @@ import styles from './NewsletterForm.module.css';
  * page load: enterprise link scanners open every URL in an email, and a
  * link that acted on GET would confirm and unsubscribe people who never
  * clicked. Both pages are noindex and left out of the sitemap.
+ *
+ * The unsubscribe page without a signed link (a forwarded issue, or an email
+ * sent before signed links) shows an email field with Turnstile instead of a
+ * dead end, the same unsubscribe the newsletter page offers.
  *
  * @param {'confirm' | 'unsubscribe'} kind
  */
@@ -38,7 +43,7 @@ const COPY = {
     done: (address) => `Done. ${address} is marked as unsubscribed. Changed your mind? The newsletter page takes you back.`,
     expired: 'This link is not valid. Use the Unsubscribe option on the newsletter page instead.',
     invalid: 'This link is not valid. Use the Unsubscribe option on the newsletter page instead.',
-    missing: 'This page needs the link from one of the newsletter emails.',
+    missing: '', // the form's own notice says what to do
   },
 };
 
@@ -88,7 +93,7 @@ export default function NewsletterAction({ kind }) {
       <main className="container margin-vert--xl" style={{ maxWidth: 640 }}>
         <div className={pageStyles.panel} role="status" aria-live="polite">
           <h1 className={pageStyles.panelHeading}>{status === 'done' ? (kind === 'confirm' ? 'Welcome' : 'Done') : copy.heading}</h1>
-          <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>
+          {message && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}
           {(status === 'ready' || status === 'sending') && (
             <p>
               <button
@@ -101,7 +106,10 @@ export default function NewsletterAction({ kind }) {
               </button>
             </p>
           )}
-          {status !== 'ready' && status !== 'sending' && status !== 'loading' && (
+          {kind === 'unsubscribe' && status === 'missing' && (
+            <NewsletterForm endpoint={newsletterForm.endpoint} turnstileSiteKey={newsletterForm.turnstileSiteKey} unsubscribeOnly />
+          )}
+          {status !== 'ready' && status !== 'sending' && status !== 'loading' && !(kind === 'unsubscribe' && status === 'missing') && (
             <p>
               <Link to="/sites/newsletter/">Newsletter page</Link>
             </p>

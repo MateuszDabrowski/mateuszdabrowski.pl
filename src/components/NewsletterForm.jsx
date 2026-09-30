@@ -13,6 +13,9 @@
  *                      hands over a token that the script verifies
  *   topics           - optional [string]; rendered as checkboxes
  *   compact          - flat variant (email + button, subscribe only)
+ *   unsubscribeOnly  - unsubscribe with no mode switch: the unsubscribe page
+ *                      when it has no signed link (a forwarded issue, or an
+ *                      email sent before signed links)
  */
 import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
@@ -40,9 +43,9 @@ function loadTurnstile() {
   return window.__turnstileLoading;
 }
 
-export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = [], compact = false }) {
+export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = [], compact = false, unsubscribeOnly = false }) {
   const [email, setEmail] = useState('');
-  const [remove, setRemove] = useState(false);
+  const [remove, setRemove] = useState(unsubscribeOnly);
   const [picked, setPicked] = useState([]);
   const [trap, setTrap] = useState(''); // honeypot: humans never see it
   const [status, setStatus] = useState('idle'); // idle | invalid | sending | done | error | challenge
@@ -104,7 +107,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
         <p className={styles.done}>
           {remove
             ? 'Done. That address is marked as unsubscribed and gets nothing further.'
-            : `Almost there. A confirmation email is on its way to ${email.trim()} - click the link in it to finish. If it does not show up in a few minutes, check the spam folder and the address.`}
+            : `Almost there. A confirmation email is on its way to ${email.trim()}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.`}
         </p>
       </div>
     );
@@ -112,7 +115,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
 
   return (
     <form className={clsx(styles.form, compact && styles.compact)} onSubmit={onSubmit} noValidate>
-      {!compact && (
+      {!compact && !unsubscribeOnly && (
         <div className={styles.modes} role="tablist" aria-label="Subscribe or unsubscribe">
           <button type="button" role="tab" aria-selected={!remove} className={clsx(styles.mode, !remove && styles.modeActive)} onClick={() => setRemove(false)}>
             Subscribe
