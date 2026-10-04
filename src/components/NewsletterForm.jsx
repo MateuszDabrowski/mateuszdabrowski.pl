@@ -17,31 +17,14 @@
  *                      when it has no signed link (a forwarded issue, or an
  *                      email sent before signed links)
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
+import useTurnstile from './useTurnstile';
 import styles from './NewsletterForm.module.css';
 import pageStyles from '../pages/styles.module.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-
-/** Loads the Turnstile script once per page and resolves when it is ready. */
-function loadTurnstile() {
-  if (typeof window === 'undefined') return Promise.reject(new Error('no window'));
-  if (window.turnstile) return Promise.resolve(window.turnstile);
-  if (!window.__turnstileLoading) {
-    window.__turnstileLoading = new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = TURNSTILE_SRC;
-      script.async = true;
-      script.onload = () => resolve(window.turnstile);
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-  return window.__turnstileLoading;
-}
 
 export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = [], compact = false, unsubscribeOnly = false }) {
   const [email, setEmail] = useState('');
@@ -49,29 +32,8 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
   const [picked, setPicked] = useState([]);
   const [trap, setTrap] = useState(''); // honeypot: humans never see it
   const [status, setStatus] = useState('idle'); // idle | invalid | sending | done | error | challenge
-  const widgetHost = useRef(null);
-  const widgetId = useRef(null);
-  const [checkShown, setCheckShown] = useState(false); // Turnstile asked for a click
-
-  useEffect(() => {
-    let cancelled = false;
-    loadTurnstile()
-      .then((turnstile) => {
-        if (cancelled || !widgetHost.current || widgetId.current !== null) return;
-        // Hidden unless the check needs a click, so most visitors never see a
-        // Cloudflare box under the field, on the newsletter page or on every doc.
-        widgetId.current = turnstile.render(widgetHost.current, {
-          sitekey: turnstileSiteKey,
-          size: 'flexible',
-          appearance: 'interaction-only',
-          'before-interactive-callback': () => setCheckShown(true),
-        });
-      })
-      .catch(() => setStatus('challenge'));
-    return () => {
-      cancelled = true;
-    };
-  }, [turnstileSiteKey]);
+  // Loads on the first focus in the form; see useTurnstile.
+  const turnstile = useTurnstile(turnstileSiteKey, { onError: () => setStatus('challenge') });
 
   const togglePick = (option) =>
     setPicked((current) => (current.includes(option) ? current.filter((o) => o !== option) : [...current, option]));
@@ -87,7 +49,8 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
       setStatus('invalid');
       return;
     }
-    const token = window.turnstile && widgetId.current !== null ? window.turnstile.getResponse(widgetId.current) : '';
+    setStatus('sending');
+    const token = await turnstile.getToken();
     if (!token) {
       setStatus('challenge');
       return;
@@ -97,7 +60,6 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
     body.set('action', remove ? 'unsubscribe' : 'subscribe');
     if (!remove) picked.forEach((option) => body.append('topics', option));
     body.set('cf-turnstile-response', token);
-    setStatus('sending');
     try {
       const res = await fetch(endpoint, { method: 'POST', body });
       const data = await res.json().catch(() => ({ ok: res.ok }));
@@ -105,9 +67,12 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
     } catch (error) {
       setStatus('error');
     } finally {
-      if (window.turnstile && widgetId.current !== null) window.turnstile.reset(widgetId.current);
+      turnstile.reset();
     }
   }
+
+  const errorId = compact ? 'nl-error-compact' : 'nl-error';
+  const hasError = ['invalid', 'challenge', 'error'].includes(status);
 
   if (status === 'done') {
     return (
@@ -122,13 +87,13 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
   }
 
   return (
-    <form className={clsx(styles.form, compact && styles.compact)} onSubmit={onSubmit} noValidate>
+    <form className={clsx(styles.form, compact && styles.compact)} onSubmit={onSubmit} onFocus={turnstile.arm} noValidate>
       {!compact && !unsubscribeOnly && (
-        <div className={styles.modes} role="tablist" aria-label="Subscribe or unsubscribe">
-          <button type="button" role="tab" aria-selected={!remove} className={clsx(styles.mode, !remove && styles.modeActive)} onClick={() => setRemove(false)}>
+        <div className={styles.modes} role="group" aria-label="Subscribe or unsubscribe">
+          <button type="button" aria-pressed={!remove} className={clsx(styles.mode, !remove && styles.modeActive)} onClick={() => setRemove(false)}>
             Subscribe
           </button>
-          <button type="button" role="tab" aria-selected={remove} className={clsx(styles.mode, remove && styles.modeActive)} onClick={() => setRemove(true)}>
+          <button type="button" aria-pressed={remove} className={clsx(styles.mode, remove && styles.modeActive)} onClick={() => setRemove(true)}>
             Unsubscribe
           </button>
         </div>
@@ -146,6 +111,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
             value={email}
             onChange={(e) => { setEmail(e.target.value); if (status === 'invalid') setStatus('idle'); }}
             aria-invalid={status === 'invalid'}
+            aria-describedby={hasError ? errorId : undefined}
             required
           />
         </label>
@@ -176,11 +142,12 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
         </fieldset>
       )}
 
-      <div ref={widgetHost} className={checkShown ? styles.turnstile : undefined} />
+      <div ref={turnstile.widgetHost} className={turnstile.checkShown ? styles.turnstile : undefined} />
 
-      {status === 'invalid' && <p className={styles.error}>That does not look like an email address.</p>}
-      {status === 'challenge' && <p className={styles.error}>The bot check did not complete. Reload the page and try again, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}
-      {status === 'error' && <p className={styles.error}>Could not reach the sign-up service. Try again in a moment, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}
+      {/* role="alert" makes screen readers announce the message when it appears. */}
+      {status === 'invalid' && <p id={errorId} role="alert" className={styles.error}>That does not look like an email address.</p>}
+      {status === 'challenge' && <p id={errorId} role="alert" className={styles.error}>The bot check did not complete. Reload the page and try again, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}
+      {status === 'error' && <p id={errorId} role="alert" className={styles.error}>Could not reach the sign-up service. Try again in a moment, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}
 
       <p className={styles.notice}>
         {remove ? (

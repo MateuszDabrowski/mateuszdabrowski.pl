@@ -292,6 +292,33 @@ function AboutColumn({ about, newsletter }) {
 }
 
 /**
+ * A wide search box above the panels. It is not a second DocSearch: that would
+ * bind Cmd+K twice and open two modals. It clicks the navbar's Search button,
+ * so the index, the results and the shortcut stay the same as the navbar's.
+ *
+ * @return {JSX.Element} The search box.
+ */
+function HomeSearch() {
+    // DocSearch shows Ctrl on everything but Apple devices; this matches it
+    // after hydration, so the static HTML and the first render agree.
+    const [modifier, setModifier] = useState('⌘');
+    useEffect(() => {
+        if (!/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) setModifier('Ctrl');
+    }, []);
+    const openSearch = () => document.querySelector('.navbar .DocSearch-Button')?.click();
+    return (
+        <button type="button" className={styles.searchBox} onClick={openSearch} aria-label="Search the docs">
+            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M14.386 14.386l4.088 4.088-4.088-4.088c-2.94 2.94-7.707 2.94-10.647 0-2.94-2.94-2.94-7.707 0-10.647 2.94-2.94 7.707-2.94 10.647 0 2.94 2.94 2.94 7.707 0 10.647z" stroke="currentColor" fill="none" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+            <span>Search docs, SQL functions and Data Views</span>
+            <kbd>{modifier}</kbd>
+            <kbd>K</kbd>
+        </button>
+    );
+}
+
+/**
  * Renders the What's new panel. Upcoming events come first, soonest first,
  * and drop out once their day has passed; the newest released items fill
  * the remaining rows, newest first. The row budget is fixed so the panel
@@ -303,7 +330,13 @@ function AboutColumn({ about, newsletter }) {
  * @return {JSX.Element} The rendered panel.
  */
 function WhatsNew({ items, upcoming = [], limit = 6 }) {
-    const today = todayIso();
+    const { siteConfig: { customFields = {} } = {} } = useDocusaurusContext();
+    // The static HTML lists the events still ahead on the day of the build, and
+    // the first browser render must match it. After that the list follows the
+    // visitor's own day, so an event that has passed since the build drops out
+    // and the next release fills its row.
+    const [today, setToday] = useState(customFields.buildDate);
+    useEffect(() => setToday(todayIso()), []);
     const events = upcoming
         .filter((event) => event.date >= today)
         .sort((a, b) => a.date.localeCompare(b.date))
@@ -449,6 +482,7 @@ function Home() {
 
                     <section className={clsx(styles.section, styles.sectionAlt)}>
                         <div className="container">
+                            <HomeSearch />
                             <div className="row">
                                 <AboutColumn about={about} newsletter={newsletter} />
                                 <WhatsNew items={whatsNew} upcoming={events} />
@@ -462,7 +496,7 @@ function Home() {
                                 <h2 className={clsx(styles.sectionHeading, styles.sectionHeadingDark)}>
                                     Most popular docs & snippets
                                 </h2>
-                                <div className='row'>
+                                <div className={clsx('row', styles.popularRow)}>
                                     {highlightedArticles.map((props, idx) => (
                                         <Card key={idx} {...props} />
                                     ))}

@@ -8,8 +8,9 @@ hide_table_of_contents: false
 
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
+import SharedZoomImage from '/src/components/ZoomImage.jsx';
 import { Email } from '/src/components/Email.jsx';
 import styles from './styles.module.css';
 
@@ -53,57 +54,9 @@ export const DownloadFile = ({ path }) => {
   );
 };
 
-{/* Custom Inline React Component for Image Lightbox Overlay */}
-export const ZoomImage = ({ src, alt, imgStyle }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  useEffect(() => {
-    if (!isOpen) return undefined;
-    const onKey = (event) => { if (event.key === 'Escape') setIsOpen(false); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [isOpen]);
-  const versioned = `${src}?v=${ASSETS}`;
-  return (
-    <>
-      <img
-        src={versioned}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        style={{ cursor: 'zoom-in', ...imgStyle }}
-        onClick={() => setIsOpen(true)}
-      />
-      {isOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(0, 0, 0, 0.85)',
-            zIndex: 99999,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            cursor: 'zoom-out',
-            backdropFilter: 'blur(5px)',
-            margin: 0,
-            padding: 0
-          }}
-          onClick={() => setIsOpen(false)}
-        >
-          <div style={{ position: 'absolute', top: '24px', right: '32px', color: '#ffffff', fontSize: '3rem', fontWeight: '300', lineHeight: 1 }}>&times;</div>
-          <img
-            src={versioned}
-            alt={alt}
-            style={{ maxHeight: '90vh', maxWidth: '90vw', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
-          />
-        </div>
-      )}
-    </>
-  );
-};
+{/* The shared screenshot viewer (src/components/ZoomImage.jsx), with this
+    page's ASSETS version for screenshots that have no responsive copies. */}
+export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props} />;
 
 <Head>
   <link rel="canonical" href="https://mateuszdabrowski.pl/sql-studio/" />
@@ -373,6 +326,13 @@ export const ZoomImage = ({ src, alt, imgStyle }) => {
   <summary>Why does SQL Studio ask me to renew my session?</summary>
 
   Your SQL Studio session lasts about 20 minutes, like MCE's own access token, and SQL Studio renews it in the background while you work and on your first action after a break. If renewing fails, for example because you signed out of MCE, a Session expired dialog asks you to renew, and your query and results stay as they were. Why not a longer session? Because it would need a refresh token. SQL Studio keeps its tokens encrypted in its sign-in log, but someone who reads the client secret in the Backend could decrypt them, and a refresh token would stay usable for 30 days, against about 20 minutes for an access token.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>Why did SQL Studio turn blue after Cmd+A?</summary>
+
+  Because the shortcut went to Marketing Cloud Engagement's own page. MCE's page has the keyboard focus right after you click its top bar, for example to switch Business Units, so Cmd+A (Ctrl+A on Windows) selects everything on it, and the browser highlights SQL Studio's whole frame along with it. SQL Studio cannot clear a selection that belongs to MCE's page, and MCE keeps it even as you move between its apps. To clear it, open the Business Unit menu and click the MID number of your current Business Unit, or reload the page. To avoid it, **move the pointer over SQL Studio before you press the shortcut**, as SQL Studio takes the keyboard focus back as soon as the pointer is over it.
 
 </details>
 

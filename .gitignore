@@ -27,3 +27,5 @@ scripts/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# Responsive image copies (plugins/image-variants)
+.image-variants

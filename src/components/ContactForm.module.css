@@ -1,0 +1,62 @@
+/* Layout of the contact form. The panel, inputs, notice and errors come from
+   NewsletterForm.module.css, so both forms look the same. */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.9rem;
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+.field > input,
+.field > textarea {
+  font-weight: var(--ifm-font-weight-normal);
+}
+
+.message {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+.count {
+  margin: -0.6rem 0 0;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer > p {
+  margin: 0;
+  max-width: 28rem;
+}
+
+@media (max-width: 576px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

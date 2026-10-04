@@ -4,6 +4,38 @@
 const { themes } = require('prism-react-renderer');
 const lightTheme = themes.github;
 const darkTheme = themes.vsDark;
+const crypto = require('crypto');
+
+// The announcement bar. Its id is a hash of the message, so a new message shows
+// to everyone, and an edit to the message counts as a new one.
+const announcement = 'Looking for a payment-free, hassle-free diagramming solution? My <a href="https://diagramforce.com" style="text-decoration: underline">Diagramforce</a> got you covered ;)';
+const announcementId = `announcement-${crypto.createHash('sha1').update(announcement).digest('hex').slice(0, 8)}`;
+
+// Docusaurus remembers only the last announcement a visitor saw, so a message
+// dismissed earlier would show again if it came back after another one. This
+// head script keeps every dismissed id and marks the current one as dismissed
+// before Docusaurus's own inline script reads the flag (that one runs at the
+// start of the body, so the bar never flashes).
+const announcementMemoryScript = `(function () {
+  try {
+    var LIST = 'md.announcement.dismissed';
+    var list = JSON.parse(localStorage.getItem(LIST) || '[]');
+    var seen = localStorage.getItem('docusaurus.announcement.id');
+    // Before ids were hashes, the Diagramforce message used this fixed id.
+    if (seen === 'announcementBar') seen = 'announcement-6f2a598d';
+    if (seen && localStorage.getItem('docusaurus.announcement.dismiss') === 'true' && list.indexOf(seen) === -1) {
+      list.push(seen);
+      localStorage.setItem(LIST, JSON.stringify(list.slice(-50)));
+    }
+    if (list.indexOf('${announcementId}') !== -1) {
+      localStorage.setItem('docusaurus.announcement.id', '${announcementId}');
+      localStorage.setItem('docusaurus.announcement.dismiss', 'true');
+    } else if (localStorage.getItem('docusaurus.announcement.id') !== '${announcementId}') {
+      // A new message: shown from the first paint, not hidden until hydration.
+      localStorage.setItem('docusaurus.announcement.dismiss', 'false');
+    }
+  } catch (e) {}
+})();`;
 
 module.exports = {
     title: 'Mateusz Dąbrowski',
@@ -24,12 +56,18 @@ module.exports = {
         { tagName: 'link', attributes: { rel: 'apple-touch-icon', sizes: '152x152', href: '/img/favicon_152.png' } },
         { tagName: 'link', attributes: { rel: 'manifest', href: '/img/site.webmanifest' } },
         { tagName: 'link', attributes: { rel: 'mask-icon', href: '/img/safari-pinned-tab.svg', color: '#DA4E55' } },
+        { tagName: 'script', attributes: {}, innerHTML: announcementMemoryScript },
     ],
+    staticDirectories: ['static', '.image-variants'],
     organizationName: 'MateuszDabrowski',
     projectName: 'mateuszdabrowski.pl',
-    onBrokenLinks: 'warn',
-    onBrokenAnchors: 'warn',
+    onBrokenLinks: 'throw',
+    onBrokenAnchors: 'throw',
     customFields: {
+        // The local day of the build (YYYY-MM-DD). The homepage's What's new
+        // filters its events by this day in the static HTML and the first
+        // browser render, then again by the visitor's own day.
+        buildDate: new Date().toLocaleDateString('sv-SE'),
         description: 'Making the most out of Salesforce Marketing. Docs, SQL, SSJS and AMPScript snippets and apps for Marketing Cloud Engagement, Next and Personalization. let code = do("our job").',
         keywords: [
             'Mateusz Dąbrowski',
@@ -59,8 +97,8 @@ module.exports = {
         format: 'mdx',
         mermaid: true,
         hooks: {
-            onBrokenMarkdownLinks: 'warn',
-            onBrokenMarkdownImages: 'warn',
+            onBrokenMarkdownLinks: 'throw',
+            onBrokenMarkdownImages: 'throw',
         }
     },
     themeConfig: {
@@ -81,9 +119,8 @@ module.exports = {
             sidebar: { autoCollapseCategories: false },
         },
         announcementBar: {
-            id: 'announcementBar',
-            content:
-                'Looking for payment-free, hassle-free diagramming solution? My <a href="https://diagramforce.com" style="text-decoration: underline">Diagramforce</a> got you covered ;)',
+            id: announcementId,
+            content: announcement,
             backgroundColor: '#0176d3',
             textColor: '#fffffe',
         },
@@ -377,6 +414,8 @@ module.exports = {
                     sidebarPath: require.resolve('./docs/docsSidebar.js'),
                     // :product[...] markers: current Salesforce product names (plugins/product-names).
                     beforeDefaultRemarkPlugins: [require('./plugins/product-names').remarkProductNames],
+                    // Tables with four or more columns become one card per row on phones.
+                    rehypePlugins: [require('./plugins/rehype-stack-tables')],
                     // Every page is by the same author: the date alone says what is new.
                     showLastUpdateAuthor: false,
                     showLastUpdateTime: true,
@@ -417,6 +456,7 @@ module.exports = {
                 include: ['**/*.md', '**/*.mdx'],
                 sidebarPath: require.resolve('./sites/sitesSidebar.js'),
                 beforeDefaultRemarkPlugins: [require('./plugins/product-names').remarkProductNames],
+                rehypePlugins: [require('./plugins/rehype-stack-tables')],
                 showLastUpdateAuthor: false,
                 showLastUpdateTime: true,
                 editUrl: 'https://github.com/MateuszDabrowski/mateuszdabrowski.pl/edit/master/',
@@ -433,6 +473,15 @@ module.exports = {
                 max: 1030,      // max resized image's size.
                 min: 640,       // min resized image's size. if original is lower, use that size.
                 steps: 2,       // the max number of images generated between min and max (inclusive)
+            },
+        ],
+        [
+            // AVIF and WebP copies of the app screenshots at several widths, served
+            // by src/components/ResponsiveImage.jsx. The copies live in the gitignored
+            // .image-variants folder, which staticDirectories serves.
+            './plugins/image-variants',
+            {
+                include: ['img/apple', 'img/apps', 'img/article/index-image-tool-diagramforce.webp'],
             },
         ],
         [

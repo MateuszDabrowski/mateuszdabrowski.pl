@@ -336,6 +336,66 @@ html[data-theme='light'] .sectionHeadingDark {
   justify-content: center;
 }
 
+/* Most popular docs: Infima stacks every column below 997 px, which left eight
+   full-width cards one under another on tablets. Two per row from 577 px. */
+@media (min-width: 577px) and (max-width: 996px) {
+  .popularRow > :global(.col) {
+    --ifm-col-width: 50%;
+  }
+}
+
+/* Search box above the About and What's new panels. It opens the navbar's
+   DocSearch modal (see HomeSearch in index.js). */
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(640px, 100%);
+  height: 56px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem 0 1.25rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 28px;
+  background-color: var(--ifm-background-color);
+  box-shadow: var(--ifm-global-shadow-lw);
+  color: var(--ifm-color-emphasis-700);
+  font: inherit;
+  font-size: 1.1rem;
+  cursor: text;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.searchBox:hover,
+.searchBox:focus-visible {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-font-color-base);
+}
+
+.searchBox > span {
+  flex: 1;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searchBox kbd {
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background-color: var(--ifm-color-emphasis-100);
+  box-shadow: none;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 576px) {
+  .searchBox kbd {
+    display: none;
+  }
+}
+
 /* Shared card styles */
 .card {
   margin-bottom: 2rem;

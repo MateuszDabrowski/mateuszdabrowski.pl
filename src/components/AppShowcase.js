@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import ResponsiveImage from '@site/src/components/ResponsiveImage';
 
 import styles from '@site/src/pages/styles.module.css';
 
@@ -19,7 +20,6 @@ import styles from '@site/src/pages/styles.module.css';
  * chips sit beside the store button and the badge beside the name.
  */
 export function AppRow({ title, url, description, tags, platforms, cta, imageUrl, githubUrl, appStoreUrl, badge, reverse = false, subtitle, highlights, fit = 'cover', showTags = true, id }) {
-    const img = useBaseUrl(imageUrl);
     const storeBadge = useBaseUrl('img/apple/appstore.svg');
     const inlineMeta = fit === 'contain';
     const chips = (className) => (
@@ -36,7 +36,8 @@ export function AppRow({ title, url, description, tags, platforms, cta, imageUrl
                     {!inlineMeta && chips(styles.platformChips)}
                     {!inlineMeta && badge && <span className={styles.toolBadge}>{badge}</span>}
                     <Link to={url}>
-                        <img src={img} alt={title} loading="lazy" />
+                        {/* Half the container from 997 px up, full width below. */}
+                        <ResponsiveImage src={imageUrl} alt={title} sizes="(max-width: 996px) 100vw, 600px" />
                     </Link>
                 </div>
                 <div className={styles.appRowBody}>
@@ -105,7 +106,6 @@ export function AppRow({ title, url, description, tags, platforms, cta, imageUrl
  * full-width free web tool, so the section reads as one tool and one family.
  */
 export function AppCard({ title, url, description, tags, platforms, imageUrl, appStoreUrl }) {
-    const img = useBaseUrl(imageUrl);
     const storeBadge = useBaseUrl('img/apple/appstore.svg');
     return (
         <div className={clsx('col col--4', styles.appCardCol)}>
@@ -117,7 +117,8 @@ export function AppCard({ title, url, description, tags, platforms, imageUrl, ap
                         ))}
                     </span>
                     <Link to={url}>
-                        <img src={img} alt={title} loading="lazy" />
+                        {/* A third of the container from 997 px up, full width below. */}
+                        <ResponsiveImage src={imageUrl} alt={title} sizes="(max-width: 996px) 100vw, 400px" />
                     </Link>
                 </div>
                 <div className={styles.appCardBody}>

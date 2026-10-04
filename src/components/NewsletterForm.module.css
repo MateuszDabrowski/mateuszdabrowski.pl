@@ -88,7 +88,8 @@ html[data-theme='dark'] .input {
 }
 
 .input:focus {
-  outline: none;
+  /* Transparent, not none: high-contrast modes drop the box-shadow but draw the outline. */
+  outline: 2px solid transparent;
   border-color: var(--ifm-color-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--ifm-color-primary) 25%, transparent);
 }

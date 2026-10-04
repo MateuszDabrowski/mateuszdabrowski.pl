@@ -8,8 +8,9 @@ hide_table_of_contents: false
 
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
+import SharedZoomImage from '/src/components/ZoomImage.jsx';
 import { Email } from '/src/components/Email.jsx';
 import styles from './styles.module.css';
 
@@ -21,59 +22,9 @@ import styles from './styles.module.css';
     this with the app's version and every screenshot is a new URL. */}
 export const ASSETS = '1.6.0';
 
-{/* Custom Inline React Component for Image Lightbox Overlay */}
-export const ZoomImage = ({ src, alt, imgStyle }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  // Escape closes the enlarged view, like a click on it does.
-  useEffect(() => {
-    if (!isOpen) return undefined;
-    const onKey = (event) => { if (event.key === 'Escape') setIsOpen(false); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [isOpen]);
-  const versioned = `${src}?v=${ASSETS}`;
-  return (
-    <>
-      <img
-        src={versioned}
-        alt={alt}
-        // Screenshots further down the page load when the reader gets near them.
-        loading="lazy"
-        decoding="async"
-        style={{ cursor: 'zoom-in', ...imgStyle }}
-        onClick={() => setIsOpen(true)}
-      />
-      {isOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(0, 0, 0, 0.85)',
-            zIndex: 99999,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            cursor: 'zoom-out',
-            backdropFilter: 'blur(5px)',
-            margin: 0,
-            padding: 0
-          }}
-          onClick={() => setIsOpen(false)}
-        >
-          <div style={{ position: 'absolute', top: '24px', right: '32px', color: '#ffffff', fontSize: '3rem', fontWeight: '300', lineHeight: 1 }}>&times;</div>
-          <img
-            src={versioned}
-            alt={alt}
-            style={{ maxHeight: '90vh', maxWidth: '90vw', borderRadius: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
-          />
-        </div>
-      )}
-    </>
-  );
-};
+{/* The shared screenshot viewer (src/components/ZoomImage.jsx), with this
+    page's ASSETS version for screenshots that have no responsive copies. */}
+export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props} />;
 
 <Head>
   <link rel="canonical" href="https://mateuszdabrowski.pl/slot/" />

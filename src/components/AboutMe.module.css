@@ -332,3 +332,14 @@ html[data-theme='dark'] .darkBand {
   font-family: Courier, monospace;
   font-size: 0.8rem;
 }
+
+/* Contact form at the end of the page, reached from the header's Contact link.
+   The scroll margin keeps the heading clear of the sticky navbar. */
+.contactSection {
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem);
+}
+
+.contactWrap {
+  max-width: 760px;
+  margin: 0 auto;
+}

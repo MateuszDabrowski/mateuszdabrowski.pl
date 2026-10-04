@@ -634,12 +634,6 @@ html[data-theme='dark'] article header>h1 {
   }
 }
 
-@media only screen and (min-width: 997px) {
-  .markdown>.admonition-tip {
-    display: none;
-  }
-}
-
 .markdown>h1,
 .markdown>h2,
 .markdown>h3,
@@ -745,6 +739,78 @@ html[data-theme='dark'] article header>h1 {
   --ifm-alert-foreground-color: var(--ifm-color-secondary-contrast-foreground);
   --ifm-alert-border-color: var(--ifm-color-secondary-dark);
   border-width: 0 0 0 var(--ifm-alert-border-left-width);
+}
+
+/* Phone layout for wide tables (plugins/rehype-stack-tables marks them). On a
+   375 px screen a four-column field table gave the name 261 px and the
+   description 115 px, so one row of System Data Views ran 395 px tall with the
+   data type off-screen. Below 577 px each row becomes a card: the first cell as
+   its title, every other value under its column header. Wider screens keep the
+   table. */
+@media (max-width: 576px) {
+  .markdown table.table--stack,
+  .markdown table.table--stack tbody,
+  .markdown table.table--stack tr,
+  .markdown table.table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Visually hidden: screen readers still read the headers. */
+  .markdown table.table--stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .markdown table.table--stack tr {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--ifm-table-border-color);
+    border-radius: var(--ifm-global-radius);
+    background-color: transparent;
+  }
+
+  .markdown table.table--stack td {
+    padding: 0.3rem 0;
+    border: 0;
+  }
+
+  .markdown table.table--stack td::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--ifm-color-emphasis-700);
+    font-size: 0.75rem;
+    font-weight: var(--ifm-font-weight-bold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .markdown table.table--stack td:first-child {
+    font-size: 1.05rem;
+    font-weight: var(--ifm-font-weight-bold);
+  }
+
+  .markdown table.table--stack td:first-child::before {
+    display: none;
+  }
+
+  /* From the third column on, values are mostly short (data type, nullable,
+     licence tiers), so they sit side by side under their labels. */
+  .markdown table.table--stack td:nth-child(n + 3) {
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+    margin-right: 1.75rem;
+    vertical-align: top;
+  }
+
+  .markdown table.table--stack td:empty {
+    display: none;
+  }
 }
 
 /* ---------------------------------- SEARCH --------------------------------- */

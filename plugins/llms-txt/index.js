@@ -12,7 +12,8 @@
  * what the HTML lacks for a reader without JavaScript: Mermaid diagrams (drawn
  * in the browser only) and clean code blocks. Each MDX component becomes
  * plain markdown: Tabs become one bold label per tab followed by its content,
- * Image becomes a markdown image, Button a link, admonitions a quote. Unknown
+ * Image becomes a markdown image, Button a link, SidebarDocList a list of
+ * links read from the same sidebar, admonitions a quote. Unknown
  * components keep their children and lose the wrapper.
  *
  * Pages built mostly from React components (options.htmlOnly) get no copy;
@@ -115,6 +116,51 @@ function stringAttribute(node, name) {
     if (typeof value === 'string') return value;
     const quoted = value?.expression && /^\s*(['"`])([\s\S]*)\1\s*$/.exec(value.expression);
     return quoted ? quoted[2] : undefined;
+}
+
+/** A string array written as an expression, such as exclude={['/a/', '/b/']}. */
+function stringArrayAttribute(node, name) {
+    const value = attribute(node, name);
+    if (!value?.expression) return [];
+    return [...value.expression.matchAll(/(['"`])(.*?)\1/g)].map((match) => match[2]);
+}
+
+/**
+ * The docs a SidebarDocList shows: every doc under the category with this
+ * generated-index permalink, in sidebar order, minus the excluded permalinks.
+ * Mirrors src/components/SidebarDocList.jsx, which reads the same sidebar.
+ *
+ * @param {object} version - The docs version the page belongs to.
+ * @param {string} category - Permalink of the category's generated index.
+ * @param {string[]} exclude - Permalinks of subcategories or docs to skip.
+ * @return {Array<{label: string, permalink: string}>} The docs.
+ */
+function sidebarDocs(version, category, exclude = []) {
+    const trim = (value = '') => value.replace(/\/+$/, '');
+    const skip = new Set(exclude.map(trim));
+    const byId = new Map(version.docs.map((doc) => [doc.id, doc]));
+    const find = (items) => {
+        for (const item of items) {
+            if (item.type === 'category') {
+                if (trim(item.link?.permalink) === trim(category)) return item;
+                const found = find(item.items);
+                if (found) return found;
+            }
+        }
+        return undefined;
+    };
+    const collect = (items) => items.flatMap((item) => {
+        if (item.type === 'category') return skip.has(trim(item.link?.permalink)) ? [] : collect(item.items);
+        if (item.type !== 'doc' && item.type !== 'ref') return [];
+        const doc = byId.get(item.id);
+        if (!doc || doc.unlisted || doc.draft || skip.has(trim(doc.permalink))) return [];
+        return [{ label: item.label || doc.frontMatter?.sidebar_label || doc.title, permalink: doc.permalink }];
+    });
+    for (const sidebar of Object.values(version.sidebars || {})) {
+        const found = find(sidebar);
+        if (found) return collect(found.items);
+    }
+    return [];
 }
 
 const text = (value) => ({ type: 'text', value });
@@ -229,6 +275,20 @@ async function convertDoc(doc, ctx) {
                         { type: 'link', url: resolveUrl(link), children: [text(label || link)] },
                     ]);
                 return links.length ? place(links) : [];
+            }
+            case 'SidebarDocList': {
+                const listed = sidebarDocs(doc.version, stringAttribute(node, 'category'), stringArrayAttribute(node, 'exclude'));
+                if (!listed.length) return [];
+                return [{
+                    type: 'list',
+                    ordered: false,
+                    spread: false,
+                    children: listed.map((item) => ({
+                        type: 'listItem',
+                        spread: false,
+                        children: [paragraph([{ type: 'link', url: ctx.siteUrl + pagePath(item.permalink), children: [text(item.label)] }])],
+                    })),
+                }];
             }
             case 'Image':
             case 'img': {
