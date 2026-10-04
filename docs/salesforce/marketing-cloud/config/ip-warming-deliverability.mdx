@@ -21,7 +21,7 @@ __:product[Marketing Cloud Next] automates IP-warming, but the looming terror of
 
 Every email marketer knows the IP warming drill: prepare an engaged database, craft perfectly engaging content, plan a volume ramp, throttle your own sends day by day, and hope the inbox service providers (ISPs) are pleased with your efforts. Get the ramp wrong and you spend months rebuilding a reputation to get your emails delivered.
 
-On :product[MC Next]{as-written}, that ritual is (partially) gone. For two reasons. Firstly, Shared IP is the default for most users (and the only option until the Spring '26 release). Secondly, once you obtain Dedicated IP Address(es), Salesforce assigns, warms, and reclaims IPs automatically based on your sending volume. You don't request a dedicated IP, you don't build a ramp schedule, and you don't throttle sends to protect a fresh IP's reputation - the platform does it automatically in the background.
+On :product[MC Next]{as-written}, that ritual is (partially) gone. For two reasons. Firstly, Shared IP is the default for most users (and the only option until the Spring '26 release). Secondly, once your sending volume qualifies for Dedicated IP Address(es), Salesforce assigns, warms, and reclaims IPs automatically based on that volume. On this default path, you don't request a dedicated IP, you don't build a ramp schedule, and you don't throttle sends to protect a fresh IP's reputation - the platform does it automatically in the background. You can still ask for dedicated IPs early, but then part of the ritual comes back (more on that [below](#requesting-a-dedicated-ip-early)).
 
 :::note You Should Know
 
@@ -43,9 +43,9 @@ All :product[Marketing Cloud Next] accounts start on a shared pool of multiple I
 
 ### Transactional vs Promotional IPs
 
-However, :product[MCN] doesn't pool all outbound mail together. Shared sending is split into two separate lanes - Transactional and Promotional. Each has its own separate pool of Shared IPs, and each works toward its own dedicated IP assignment and warming independently.
+However, :product[MCN] doesn't pool all outbound mail together. Shared sending is split into two separate lanes - Transactional and Promotional. Each has its own separate pool of Shared IPs, and each works toward its own dedicated IP assignment and warming independently. :product[MCN] picks the lane from the message purpose you set on each email, so the From domain or brand plays no part in it.
 
-In practice, this means an account with heavy transactional volume (order confirmations, password resets, receipts) but modest promotional volume can end up with a dedicated IP for transactional sends while promotional campaigns keep running on the shared pool, or vice versa. You can check your current state in **Settings > Unified Messaging > Email > Settings > Sending IP Addresses** screen - on a fully shared account this currently just reads as a single "General" line.
+In practice, this means an account with heavy transactional volume (order confirmations, password resets, receipts) but modest promotional volume can end up with a dedicated IP for transactional sends while promotional campaigns keep running on the shared pool, or vice versa. You can check your current state in **Setup > Unified Messaging > Email > Settings > Sending IP Addresses** screen - on a fully shared account this currently just reads as a single "General" line.
 
 ### Shared-to-Dedicated Migration Triggers
 
@@ -57,19 +57,35 @@ First dedicated IP | ~5M emails/month | Salesforce detects sustained volume and 
 Second dedicated IP | ~10M emails/month | A second dedicated IP is added to the same lane.
 Additional IPs | Per each additional ~5M emails/month | More IPs are assigned sequentially, up to a cap of 32 dedicated IPs per account.
 
-These numbers are guidelines, not commitments - treat them as the range where migration typically starts, not a switch that flips the moment you cross 5M.
+These numbers are guidelines: migration typically starts around them, and crossing 5M does not trigger it on the day. Capacity has a daily ceiling too: each dedicated IP carries at most 2 million sends per day, so a higher daily peak needs additional IPs.
+
+### Requesting a Dedicated IP Early
+
+Can you start straight on a dedicated IP? For a long time there was no official way to do it. Since Salesforce published its [Dedicated IP Provisioning](https://help.salesforce.com/s/articleView?id=mktg.mktg_admin_dedicated_ip_provisioning.htm&type=5) guide, there is a Salesforce-sanctioned one, with three paths, all requested through your Account Executive:
+
+Path | What Happens | IP Warming
+-- | -- | --
+Early, 30-day transition | Dedicated IPs before you cross the volume threshold, on the same gradual ramp as the default path. | Automatic, as long as you keep your sends consistent during the 30 days.
+Early, immediate transition | All mail goes through the dedicated IPs from day one. Salesforce still monitors your volume and adds IPs as it grows. | Yours. You acknowledge the risks and follow your own warmup plan.
+Customer-managed | Dedicated IPs from day one, meant only for customers required to use their own. Salesforce doesn't monitor your volume, so you request any additional IPs yourself. | Yours, for IPs and domains alike. :product[MCN] doesn't fix reputation problems caused by uneven traffic.
+
+Whichever path you pick, the request needs a fully implemented org and at least one authenticated sending domain with validated DNS, and any missing value in it only delays provisioning. Once Salesforce has a complete request, provisioning typically takes 5-10 business days ([requirements](https://help.salesforce.com/s/articleView?id=mktg.mktg_admin_dedicated_ip_ref.htm&type=5)).
 
 :::note You Should Know
 
-Can you start straight on a dedicated IP? The docs say no - there's no request path in the platform, and assignment is automatic once volume crosses the threshold. The reality says yes - through your Account Executive, if you have a strong enough use case for an exception.
+The same [requirements](https://help.salesforce.com/s/articleView?id=mktg.mktg_admin_dedicated_ip_ref.htm&type=5) page says a request allocates four IPs at once, two for promotional and two for transactional traffic. That is a bigger start than the [default path](#shared-to-dedicated-migration-triggers), where each lane gets its first dedicated IP at around 5M emails a month and a second one only at around 10M. I'm still trying to find out whether four IPs is now the starting point in both scenarios, or something unique to requesting a dedicated IP early. I'll update this once I have the answer.
 
 :::
+
+I'd ask for the early 30-day transition only when your volume plan needs dedicated IPs before you reach 5M emails/month, and I'd go for an immediate or customer-managed transition only when a contract or security policy forces it. Both hand the IP warming back to you, which is exactly the work :product[MCN] otherwise takes off your plate.
 
 ### Automatic Warming Window
 
 __A single campaign send can be split across multiple IPs at once.__
 
-When migration begins, Salesforce automatically plans and executes the warming - roughly a 35 day ramp - by gradually shifting a growing percentage of volume from the shared pool onto the new dedicated IP. You don't control the curve, and you don't need to: if your sending volume temporarily exceeds what the ramp allows on a given day, the excess is simply routed back through the shared pool rather than overloading the new IP.
+When migration begins, Salesforce automatically plans and executes the warming - a 30-day ramp - by gradually shifting a growing percentage of volume from the shared pool onto the new dedicated IP. You don't control the curve, and you don't need to: if your sending volume temporarily exceeds what the ramp allows on a given day, the excess is simply routed back through the shared pool rather than overloading the new IP.
+
+What you do control is consistency. Salesforce asks you to keep your sends steady during the transition, because uneven volume means the new IPs don't warm up enough to carry your daily volume once the shared pool drops off. You can follow the ramp on the **Sending IP Addresses** screen: the IP Management Type reads `Transition`, the new dedicated IP shows `In Progress` next to the shared row that's still `Active`, and after 30 days the shared row drops off and the dedicated IP turns `Active`. An immediate transition goes straight to `Dedicated`, with no shared row at all.
 
 The practical consequence is worth internalising before you go looking for it in your logs: during the warming window, the same campaign can be delivered to part of its audience via the dedicated IP and the rest via the shared pool, at the same time. If you're inspecting message headers or bounce data from a single send during this period and see two different sending IPs, that's the ramp working as intended, not a routing bug.
 
@@ -78,6 +94,12 @@ The practical consequence is worth internalising before you go looking for it in
 Dedicated IPs aren't permanent once assigned. If you have more than one dedicated IP, Salesforce evaluates a **45-day lookback average** of sending volume against the same threshold used for migration. If the average drops below it, dedicated IPs are reclaimed and the traffic is routed to the rest of your IPs.
 
 If you have just one dedicated IP (be it by design or as a result of reclamation), Salesforce checks whether volume stays below the ~5M/month guideline for **90 days**. If it does, that final dedicated IP is reclaimed too and the lane fully reverts to the shared pool. Reclaimed IPs go through a cooldown period before being reused. You have no guarantee of getting the same IP back, and if you later exceed the threshold again, a new dedicated IP is assigned and warmed from scratch.
+
+:::note You Should Know
+
+Salesforce's [Managed Dedicated IP Addresses](https://help.salesforce.com/s/articleView?id=mktg.um_channel_email_managed_dedicated_ip_addresses.htm&type=5) page gives a different window: it only says IPs are provisioned or recovered based on your 30-day sending history pattern. The 45 and 90 days above are how reclamation has worked so far. I'm still trying to find out whether Salesforce moved reclamation to the 30-day window, or the page simplifies a process that still uses the 45 and 90 days. Until then, check the **Sending IP Addresses** screen if the timing matters to you. I'll update this once I have the answer.
+
+:::
 
 ### The Gray Pool Safety Net
 
@@ -116,7 +138,7 @@ Root domain (`yourcompany.com`) | Human-sent corporate email only | Never touche
 Transactional subdomain (e.g. `mail.yourcompany.com`) | Receipts, password resets, security alerts | Isolated from marketing's higher-variance sending patterns - this is the mail your business genuinely can't afford to have blocked.
 Marketing subdomain (e.g. `m.yourcompany.com`) | Promotional campaigns | Absorbs marketing's higher-risk profile (bigger volume swings, more list-hygiene variance, more complaint exposure) without threatening the other two.
 
-This mirrors the Transactional vs. Promotional split :product[MCN] already runs at the [shared IP pool level](#transactional-vs-promotional-ips) - lining up domain identity with IP lane gives mailbox providers the cleanest possible signal, and turns a bounce or complaint spike into something you can trace back to a single cause instead of three tangled ones.
+This mirrors the Transactional vs. Promotional split :product[MCN] already runs at the [shared IP pool level](#transactional-vs-promotional-ips) - lining up domain identity with IP lane gives mailbox providers the cleanest possible signal, and turns a bounce or complaint spike into something you can trace back to a single cause instead of three tangled ones. Keep an eye on that pairing, as :product[MCN] won't do it for you. IPs and pools belong to the whole org, not to a domain or brand, and the pool follows the message purpose set on each email. So set Transactional on every email from the transactional subdomain and Promotional on every email from the marketing one, or the two signals drift apart.
 
 :::note You Should Know
 
@@ -126,7 +148,7 @@ Subdomain separation is risk reduction, not a firewall. Subdomain reputation isn
 
 #### Domain Assignment in Business Units
 
-On a Business Units org (:product[MCN] Advanced Edition), the three-way split gains one more rule: an authenticated domain is assigned to all Business Units or to exactly one - never a subset. The assign picker locks a taken domain until it's unassigned from its current Business Unit, so per-Business-Unit sending identities mean per-Business-Unit subdomains, each authenticated and warmed on its own. Mind two ceilings while planning: the per-Business-Unit picker allows up to 10 domains, and only one authenticated domain can be used for custom link shortening. Full trade-off in [:product[MC Next]{as-written} Business Units](/docs/salesforce/marketing-cloud/config/business-units.mdx#domains).
+On a Business Units org (:product[MCN] Advanced Edition), the three-way split gains one more rule: an authenticated domain is assigned to all Business Units or to exactly one - never a subset. The assign picker locks a taken domain until it's unassigned from its current Business Unit, so per-Business-Unit sending identities mean per-Business-Unit subdomains, each authenticated and warmed on its own. The IPs don't split that way, though: Salesforce assigns them per org, so every Business Unit sends through the same shared or dedicated pools. Consider two ceilings while planning: the per-Business-Unit picker allows up to 10 domains, and only one authenticated domain can be used for custom link shortening. Full trade-off in [:product[MC Next]{as-written} Business Units](/docs/salesforce/marketing-cloud/config/business-units.mdx#domains).
 
 ### Domain Warming Schedule
 
@@ -443,7 +465,7 @@ When an alert (or the dashboard) flags a spike, work through it in this order:
 
 ## Sum Up
 
-1. **Don't build a manual IP warming plan on :product[MCN]** - it's automated per pool, per lane, and mid-campaign IP splitting during the ramp is expected behaviour, not a bug.
+1. **Don't build a manual IP warming plan on :product[MCN]** unless you asked for an immediate or customer-managed transition - the default path is automated per pool and per lane over 30 days, and mid-campaign IP splitting during the ramp is expected behaviour, not a bug. Just keep your volume steady while it runs.
 2. **Make sure your sending domain is warm regardless of IP automation** - ISPs weight domain reputation when deciding on what will happen with your emails.
 3. **Never send bulk mail from the same domain your team uses for everyday email** - split root domain, transactional subdomain, and marketing subdomain so one bad campaign can't threaten the other two.
 4. **Treat list hygiene as reputation infrastructure, not cleanup** - never re-import addresses that previously hard-bounced or unsubscribed elsewhere, and hold bounce/complaint rate under 2%/0.1% throughout any warming ramp.
