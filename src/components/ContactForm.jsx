@@ -76,7 +76,7 @@ export default function ContactForm({ endpoint, turnstileSiteKey }) {
   if (status === 'done') {
     return (
       <div className={formStyles.form} role="status">
-        <p className={formStyles.done}>Thanks, your message is on its way. I will reply to {email.trim()}.</p>
+        <p className={formStyles.done}>Thanks{name.trim() ? `, ${name.trim()}` : ''}. Your message from {email.trim()} is on its way to me.</p>
       </div>
     );
   }

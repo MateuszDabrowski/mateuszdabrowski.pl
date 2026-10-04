@@ -141,7 +141,7 @@ URL | String | Link to the Item | Redirect target when User clicks on an Item in
 Image URL | String | Link used to display an Image of an Item | Used to showcase a Product. Required to recommend a Product (not needed for other Item types).
 Description | String | Client-friendly description of an Item | Any text beyond 200 characters will be replaced with an ellipsis (`...`).
 Average Rating | Decimal | Average score of an Item based on all Ratings | Useful as a filter for Einstein Recipes and Triggered Campaigns.
-Number of Ratings | Integer | Number of ratings an Item gathered | Can be used in Serverside Code to conditionally hide Rating personalisation when it is based on a single rating.
+Number of Ratings | Integer | Number of ratings an Item gathered | Can be used in [Serverside Code](/docs/salesforce/marketing-cloud-personalization/serverside-code-context.mdx#servicescatalog) to conditionally hide Rating personalisation when it is based on a single rating.
 
 Out of the above Basic Catalog Attributes, the first four are the most important: ID, Name, URL, and Image URL. The Average Rating helps filter products for Campaigns. The rest might be helpful for personalization purposes, but can be skipped in most implementations.
 
@@ -236,7 +236,7 @@ Remember that it is not official or supported and can break anytime. Implementin
 
 ### Catalog Custom Attributes
 
-Outside of the built-in attributes, you can go wild with custom ones until you hit 35 attributes of any type on a single Object. Those are great for personalization - crucial for an Open Time Email campaign where you don't have much wiggle room to manipulate the values.
+Outside of the built-in attributes, you can go wild with custom ones until you hit 35 attributes of any type on a single Object. Those are great for personalization - crucial for an [Open Time Email campaign](/docs/salesforce/marketing-cloud-personalization/open-time-email.mdx#attributes-vs-custom-fields) where you don't have much wiggle room to manipulate the values.
 
 Unfortunately, there is a considerable feature gap related to custom Catalog Attributes, limiting their usefulness. You cannot use them in Einstein Recipes to Include, Exclude, Boost or limit with Variations.
 
@@ -256,7 +256,7 @@ Custom Catalog Objects have three superpowers:
 
 1. You can create relationships between Items from various Catalogs (for example, between specific Products and specific colours in custom "Color" Catalog Object - this doesn't sound awesome now, but the following two points will show you that it is something completely different from custom Attributes).
 2. You can capture the affinity of each User towards those related Items (for example, how much each User likes specific colour).
-3. You can leverage them in Einstein Recipes in multiple ways.
+3. You can leverage them in Einstein Recipes in multiple ways. Open Time Email can use them too, through [related Catalog Objects](/docs/salesforce/marketing-cloud-personalization/open-time-email.mdx#related-catalog-object-support).
 
 This set of features makes custom Catalog Objects a big deal when you want absolute control over your recommendations. Examples? Sure.
 
@@ -264,7 +264,7 @@ This set of features makes custom Catalog Objects a big deal when you want absol
 
 You want to recommend only the products that are on promotion. Create a custom Catalog Object "Promotions" with an Item "Promoted" and assign it (via [ETL](#2-mc-personalization-with-etl) or [Sitemap](#1-mc-personalization-with-sitemap)) to each deserving Product. Then you can use this information in Einstein Recipes » Exclusion tab to Include the "Promotions" Catalog and select "Promoted" using "from explicit selection" option.
 
-You can even go a step further and create additional Items in that Catalog like "0-10%", "11-20%", "21-30%", etc., to be able to include (or prioritize in the Serverside Code of the template) more significant promotions.
+You can even go a step further and create additional Items in that Catalog like "0-10%", "11-20%", "21-30%", etc., to be able to include (or prioritize in the [Serverside Code](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx) of the template) more significant promotions.
 
 More? Extend that Catalog with specific promotion names like "BlackFriday", "CyberMonday", "SpeedyTuesday", "FreeDelivery", "AnotherPromotionBecauseWeNeedToCloseTheQuarterHigherToGetBonus" and assign those to all eligible products. Now you can create different Recipes for each promotion and show each customer the best products for their needs that are currently at a better price.
 
