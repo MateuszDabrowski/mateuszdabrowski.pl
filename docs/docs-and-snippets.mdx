@@ -9,6 +9,7 @@ image: img/og/og-image-docs-and-snippets.png
 
 import { LeadText } from '/src/components/LeadText.js';
 import { Button } from '/src/components/Buttons.js';
+import SidebarDocList from '/src/components/SidebarDocList.jsx';
 
 <LeadText content="All things Salesforce Marketing. Code and Config across Engagement, Personalization and Next." />
 
@@ -18,8 +19,8 @@ import { Button } from '/src/components/Buttons.js';
 
 Salesforce :product[Marketing Cloud Next] is the new kid on the block. It is a new platform built on top of :product[Data 360] and Agentforce Marketing. It is a complex and constantly changing tool, so there are many things to learn about it. Expect articles here to be updated regularly to cover changes.
 
-- [IP Warming & Deliverability](/docs/salesforce/marketing-cloud/config/ip-warming-deliverability.mdx)
-- [Business Units](/docs/salesforce/marketing-cloud/config/business-units.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud/config/' />
+
 
 <Button
     link='/docs/category/salesforce/marketing-cloud/config/'
@@ -41,17 +42,8 @@ Salesforce :product[Marketing Cloud Engagement] is a complex and flexible tool. 
 
 Many things in Salesforce :product[Marketing Cloud Engagement] aren't code-based but have a massive impact on the code. Permissions. System Data Views. Configuration options. Here I focus on the most important ones that are crucial for :product[MCE] developers.
 
-- [Licence Limits](/docs/salesforce/marketing-cloud-engagement/config/licence-limits.mdx)
-- [System Data Views](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx)
-- [Mobile Connect Data Views](/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views.mdx)
-- [MCC Integration Patterns](/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns.mdx)
-- [Contact Deletion Process](/docs/salesforce/marketing-cloud-engagement/config/contact-deletion.mdx)
-- [Enhanced Send Log](/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log.mdx)
-- [Behavioral Triggers](/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers.mdx)
-- [Power of Code Resources](/docs/salesforce/marketing-cloud-engagement/config/code-resource.mdx)
-- [:product[AgentExchange] Solutions](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx)
-- [Features On Demand](/docs/salesforce/marketing-cloud-engagement/config/features-on-demand.mdx)
-- [Export, Import & Document :product[MCE] Roles](/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/config/' />
+
 
 <Button
     link='/docs/category/salesforce/marketing-cloud-engagement/config/'
@@ -64,26 +56,13 @@ To fully leverage the Salesforce :product[Marketing Cloud Engagement] Data Exten
 
 #### SQL Documentation
 
-- [SQL Basics](/docs/salesforce/marketing-cloud-engagement/sql/sql-basics.mdx)
-- [Select](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx)
-- [From](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx)
-- [Join](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx)
-- [Where](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx)
-- [Case](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)
-- [Like](/docs/salesforce/marketing-cloud-engagement/sql/sql-like.mdx)
-- [String Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx)
-- [Date Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx)
-- [Numeric Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx)
-- [Conversion Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx)
-- [Aggregate Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx)
-- [NULL Functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx)
-- [Style Guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/sql/' exclude={['/docs/category/salesforce/marketing-cloud-engagement/sql/snippets/']} />
+
 
 #### SQL Snippets
 
-- [Debugging Email Sends](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends.mdx)
-- [Debugging Value Length](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length.mdx)
-- [Debugging All Contacts](/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/sql/snippets/' />
+
 
 <Button
     link='/docs/category/salesforce/marketing-cloud-engagement/sql/'
@@ -96,18 +75,13 @@ SSJS is an XX-century version of JavaScript paired with proprietary libraries cr
 
 #### SSJS Documentation
 
-- [If & Switch](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch.mdx)
-- [Loops](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops.mdx)
-- [Debugging](/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs.mdx)
-- [Style Guide](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide.mdx)
-- [Performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/ssjs/' exclude={['/docs/category/salesforce/marketing-cloud-engagement/ssjs/snippets/']} />
+
 
 #### SSJS Snippets
 
-- [AMPScript in SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx)
-- [MobileConnect Phone Change](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change.mdx)
-- [SSJS Script Template](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-script-template.mdx)
-- [Solve with Cloud Page Apps](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/ssjs/snippets/' />
+
 
 <Button
     link='/docs/category/salesforce/marketing-cloud-engagement/ssjs/'
@@ -120,16 +94,28 @@ AMPScript is a proprietary scripting language in Salesforce :product[Marketing C
 
 #### AMPScript Documentation
 
-- [Style Guide](/docs/salesforce/marketing-cloud-engagement/ampscript/ampscript-style-guide.mdx)
-- [Performance](/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/ampscript/' exclude={['/docs/category/salesforce/marketing-cloud-engagement/ampscript/snippets/']} />
+
 
 #### AMPScript Snippets
 
-- [AMPScript in SSJS](/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/ampscript/snippets/' />
+
 
 <Button
     link='/docs/category/salesforce/marketing-cloud-engagement/ampscript/'
     text='Read about AMPScript'
+/>
+
+### Webinars
+
+My sessions on various aspects of Salesforce :product[Marketing Cloud Engagement] with summary, recordings, slides, snippets and articles. All-in-one, all for free.
+
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-engagement/webinars/' />
+
+<Button
+    link='/docs/category/salesforce/marketing-cloud-engagement/webinars/'
+    text='Watch MCE Webinars'
 />
 
 ## Marketing Cloud Personalization
@@ -138,15 +124,13 @@ Salesforce :product[Marketing Cloud Personalization] is a cross-channel real-tim
 
 ### MC Personalization Documentation
 
-- [Catalog Objects Architeture](/docs/salesforce/marketing-cloud-personalization/catalog-architecture.mdx)
-- [Open Time Email Template](/docs/salesforce/marketing-cloud-personalization/open-time-email.mdx)
-- [Serverside Code Basics](/docs/salesforce/marketing-cloud-personalization/serverside-code-basics.mdx)
-- [Serverside Code Properties](/docs/salesforce/marketing-cloud-personalization/serverside-code-properties.mdx)
-- [Serverside Code Context](/docs/salesforce/marketing-cloud-personalization/serverside-code-context.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-personalization/' exclude={['/docs/category/salesforce/marketing-cloud-personalization/snippets/', '/docs/salesforce/marketing-cloud-personalization/ideas/']} />
+
 
 ### MC Personalization Snippets
 
-- [Catalog ETL Metadata Viewer](/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer.mdx)
+<SidebarDocList category='/docs/category/salesforce/marketing-cloud-personalization/snippets/' />
+
 
 <Button
     link='/docs/category/salesforce/marketing-cloud-personalization/'
@@ -159,19 +143,24 @@ In this part, I am gathering selected elements of modern vanilla JavaScript that
 
 ### JS Documentation
 
-- [If & Switch](/docs/js/js-if-and-switch.mdx)
-- [Loops](/docs/js/js-loops.mdx)
-- [Document Object Model (DOM)](/docs/js/js-dom.mdx)
+<SidebarDocList category='/docs/category/javascript/' exclude={['/docs/category/javascript/snippets/']} />
+
 
 ### JS Snippets
 
-- [Tailor with Data](/docs/js/snippets/tailor-with-data.mdx)
-- [Engage with Countdown](/docs/js/snippets/engage-with-countdown.mdx)
+<SidebarDocList category='/docs/category/javascript/snippets/' />
+
 
 <Button
     link='/docs/category/javascript/'
     text='Read about JavaScript'
 />
+
+## Ideas
+
+Here you can find all my Salesforce IdeaExchange contributions by solution. Let's make the change!
+
+<SidebarDocList category='/docs/category/ideas/' />
 
 ## Changes
 

@@ -15,6 +15,8 @@ import styles from '/src/pages/styles.module.css';
 import about from '/src/components/AboutMe.module.css';
 import { AboutStats, CredentialList, SpeakingList, IndustryList, AboutJsonLd } from '/src/components/AboutSummary.jsx';
 import { timelineEvents } from '/src/data/aboutMeEvents.js';
+import ContactSection from '/src/components/ContactSection.jsx';
+import { contactFormEnabled } from '/src/data/contact.js';
 
 <Head>
   <body className="page-about-me" />
@@ -46,6 +48,7 @@ import { timelineEvents } from '/src/data/aboutMeEvents.js';
         <Link href="https://github.com/MateuszDabrowski">GitHub</Link>
         <span className={about.aboutHeroSep}> · </span>
         <Link href="https://www.salesforce.com/trailblazer/madabrowski">Trailblazer</Link>
+        {contactFormEnabled && <><span className={about.aboutHeroSep}> · </span><Link to="#contact">Contact</Link></>}
       </p>
     </div>
   </div>
@@ -57,7 +60,7 @@ Twelve years in MarTech, the last six in the Salesforce ecosystem. I started on 
 
 Global campaign operations on Adobe Campaign for a pharma company came next. In 2020 I switched to Salesforce: six years in a Big Four Marketing Cloud practice. Consultant, then architect, team lead, manager and acting practice lead of thirty-plus Salesforce and Adobe experts. A dozen engagements in those years. They ranged from custom Cloud Page apps and Agentforce proofs of concept to Marketing Cloud implementations for fifty-plus business units, in pharma, manufacturing, consumer goods, energy, education and travel.
 
-Today I work as a principal architect on Salesforce MarTech, across Marketing Cloud, Data 360 and Agentforce implementations. AI agents are a growing part of every engagement, and Claude is part of my own daily workflow. I also build tools that make the work simpler for me and others, like [Diagramforce](https://diagramforce.com) for architecture diagrams or [Slot](/slot/) for managing multiple inboxes. And I share my knowledge with the community.
+Today I work as a principal architect on Salesforce MarTech, across Marketing Cloud, Data 360 and Agentforce implementations. AI agents are a growing part of every engagement, and Claude is part of my own daily workflow. I also build tools that make the work simpler for me and others, like [Diagramforce](https://diagramforce.com) for architecture diagrams, [SQL Studio](/sql-studio/) for Marketing Cloud Engagement queries or [Slot](/slot/) for multiple inboxes. And I share my knowledge with the community.
 
 <section className={styles.aboutSection}>
   <h2 className={styles.sectionHeading}>What I do</h2>
@@ -89,7 +92,7 @@ Today I work as a principal architect on Salesforce MarTech, across Marketing Cl
     <div className={clsx('col col--4', styles.gridCol)}>
       <div className={clsx(styles.panel, about.doCard)}>
         <h3 className={styles.panelTitle}>Custom applications</h3>
-        <p><Link to="/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/">Cloud Page apps</Link>, API integrations and internal tools on Marketing Cloud. On my own time: <Link href="https://diagramforce.com">Diagramforce</Link>, <Link to="/slot/">Slot</Link>, <Link to="/shelf/">Shelf</Link> and <Link to="/strum/">Strum</Link>.</p>
+        <p><Link to="/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/">Cloud Page apps</Link>, API integrations and internal tools on Marketing Cloud. On my own time: <Link href="https://diagramforce.com">Diagramforce</Link>, <Link to="/sql-studio/">SQL Studio</Link>, <Link to="/slot/">Slot</Link>, <Link to="/shelf/">Shelf</Link> and <Link to="/strum/">Strum</Link>.</p>
       </div>
     </div>
   </div>
@@ -224,3 +227,5 @@ Today I work as a principal architect on Salesforce MarTech, across Marketing Cl
     </div>
   </div>
 </section>
+
+{contactFormEnabled && <ContactSection />}

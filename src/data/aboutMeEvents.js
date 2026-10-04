@@ -290,6 +290,17 @@ export const timelineEvents = [
    technology: ["Custom App Development"],
   },
   {
+    id: "sql-studio",
+    type: "period",
+    title: "Created SQL Studio - Query Studio Replacement for Marketing Cloud Engagement",
+    startDate: "2026-09",
+    endDate: "Present",
+    description: "Free, open-source replacement for Query Studio that runs as a Cloud Page App inside your own Marketing Cloud Engagement account. Four queries at once, autocomplete for every Data View and Data Extension, lint rules for what MCE refuses, and paged results with a CSV export.",
+    url: "https://mateuszdabrowski.pl/sql-studio/",
+    icon: "Project",
+   technology: ["Marketing Automation", "Custom App Development"],
+  },
+  {
     id: "diagramforce",
     type: "period",
     title: "Created Diagramforce - Salesforce Architecture Diagramming Tool",
