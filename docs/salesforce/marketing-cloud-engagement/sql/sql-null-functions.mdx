@@ -26,9 +26,11 @@ Because `NULL` is unknown, if you try to do any standard operation on the NULL (
 
 ```sql {2-3} title="❌ Functions with NULLs"
 SELECT
-      1 + NULL               AS MathFunctionWithNull    -- Outputs NULL
-    , CONCAT('Hello ', NULL) AS StringFunctionWithNull  -- Outputs NULL
+      1 + NULL          AS MathFunctionWithNull   /* Output: NULL */
+    , 'Hello ' + NULL   AS StringFunctionWithNull /* Output: NULL */
 ```
+
+The one exception is the `CONCAT` function, which treats `NULL` as an empty string, so `CONCAT('Hello ', NULL)` returns `'Hello '`.
 
 ### NULL with relational operators
 
