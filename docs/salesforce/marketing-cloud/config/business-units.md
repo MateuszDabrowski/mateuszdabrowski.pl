@@ -9,7 +9,7 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## MCN vs MCE Business Units
 
-If you've configured [Business Units in Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud)](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/), forget most of it. Marketing Cloud Next (MCN) reuses the name and little else. Marketing Cloud Next Business Units are a ground-up redesign, not an evolution of the MCE model.
+If you've configured [Business Units in Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud)](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture/), forget most of it. Marketing Cloud Next (MCN) reuses the name and little else. Marketing Cloud Next Business Units are a ground-up redesign, not an evolution of the MCE model.
 
 | Area          | Marketing Cloud Engagement                                                                    | Marketing Cloud Next                                                                                          |
 | ------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |

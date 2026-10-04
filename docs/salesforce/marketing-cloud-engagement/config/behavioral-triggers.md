@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## MCE Behavioral Triggers
@@ -185,7 +185,7 @@ The base function is pushing your customer's unique identifier (don't be intimid
 
 > **Note: You Should Know**
 >
-> If you decide to push an Email Address to communicate with people not yet in MCE, be sure to make them Subscribers. You can easily do it using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage SQL Activity to copy the needed data to another Data Extension using this query:
+> If you decide to push an Email Address to communicate with people not yet in MCE, be sure to make them Subscribers. You can easily do it using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage [SQL Activity](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/) to copy the needed data to another Data Extension using this query:
 >
 > ```sql title="Basic Subscriber data preparation"
 > SELECT
@@ -773,7 +773,7 @@ Below you can see two tabs.
 ]%%
 ```
 
-The first four lines of the Behavioral Trigger Content Block code are already interesting. They are using AMPScript, although the rest is in SSJS. It could easily be written in SSJS altogether for more optimised execution.
+The first four lines of the Behavioral Trigger Content Block code are already interesting. They are using AMPScript, although the rest is in SSJS. It could easily be written in SSJS altogether for [more optimised execution](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance/).
 
 You can also see that they are pulling the behavioural data by using a personalisation string on `data` - the Abandoned Engagement Data Extension column containing encrypted information. If you want to have more control over the source of this information, you can think about making a lookup here. It would allow you to even use multiple Content Blocks in one email (or mix browsed, wishlisted and added to cart items in one block).
 
@@ -788,7 +788,7 @@ try {
 }
 ```
 
-The try/catch block is a great idea, but as it has separate scope in SSJS, it means that no SSJS variable from within will be available outside of it. Thankfully the [other part of the code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#6-response-parsing) is sharing the Behavioral Trigger data using AMPScript variables.
+The [try/catch block](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/#try-to-catch-the-error) is a great idea, but as it has separate scope in SSJS, it means that no SSJS variable from within will be available outside of it. Thankfully the [other part of the code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#6-response-parsing) is sharing the Behavioral Trigger data using AMPScript variables.
 
 If you want to access the SSJS ones, you can declare them before the try/catch starts or pull them from the AMPScript.
 

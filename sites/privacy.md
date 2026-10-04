@@ -41,6 +41,8 @@ Algolia receives what you type into the search box and shows me aggregated stati
 
 Both services see your IP address while doing their job, as any web service does. The legal basis is my legitimate interest in running and improving this site. Cloudflare is a US company certified under the EU-US Data Privacy Framework. Algolia is an EU company.
 
+The webinar pages show recordings from YouTube. Nothing loads from YouTube until you press play. From then on the video runs in YouTube's privacy-enhanced mode, under Google's terms.
+
 If you want to stop even this level of processing, any content blocker will do it, and the site works fine without the beacon. If you have questions about data processing on this website, feel free to send me an email.
 
 ## Newsletter

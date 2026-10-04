@@ -17,7 +17,7 @@ On MC Next, that ritual is (partially) gone. For two reasons. Firstly, Shared IP
 
 > **Note: You Should Know**
 >
-> Automated IP warming is unique to Marketing Cloud Next. On Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) and Marketing Cloud Account Engagement (MCAE, formerly Pardot), you still purchase a dedicated IP explicitly and warm it manually, the old-fashioned way.
+> Automated IP warming is unique to Marketing Cloud Next. On Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) and Marketing Cloud Account Engagement (MCAE, formerly Pardot), you still [purchase a dedicated IP](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/features-on-demand/#deliverability-features) explicitly and warm it manually, the old-fashioned way.
 
 What this doesn't remove is the rest of deliverability. Domain reputation, list hygiene, content quality, and bounce monitoring are still entirely on you - and matter even more now, with ISPs enforcing stricter bounce and complaint limits and increasingly looking at domain reputation over IP reputation. The rest of this article covers what MC Next handles for you, what still needs your attention, and where to watch for trouble.
 

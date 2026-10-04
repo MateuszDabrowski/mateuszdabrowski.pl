@@ -83,7 +83,7 @@ On MC Next, that ritual is (partially) gone. For two reasons. Firstly, Shared IP
 
 > **Note: You Should Know**
 >
-> Automated IP warming is unique to Marketing Cloud Next. On Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) and Marketing Cloud Account Engagement (MCAE, formerly Pardot), you still purchase a dedicated IP explicitly and warm it manually, the old-fashioned way.
+> Automated IP warming is unique to Marketing Cloud Next. On Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) and Marketing Cloud Account Engagement (MCAE, formerly Pardot), you still [purchase a dedicated IP](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/features-on-demand/#deliverability-features) explicitly and warm it manually, the old-fashioned way.
 
 What this doesn't remove is the rest of deliverability. Domain reputation, list hygiene, content quality, and bounce monitoring are still entirely on you - and matter even more now, with ISPs enforcing stricter bounce and complaint limits and increasingly looking at domain reputation over IP reputation. The rest of this article covers what MC Next handles for you, what still needs your attention, and where to watch for trouble.
 
@@ -484,7 +484,7 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## MCN vs MCE Business Units
 
-If you've configured [Business Units in Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud)](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/), forget most of it. Marketing Cloud Next (MCN) reuses the name and little else. Marketing Cloud Next Business Units are a ground-up redesign, not an evolution of the MCE model.
+If you've configured [Business Units in Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud)](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture/), forget most of it. Marketing Cloud Next (MCN) reuses the name and little else. Marketing Cloud Next Business Units are a ground-up redesign, not an evolution of the MCE model.
 
 | Area          | Marketing Cloud Engagement                                                                    | Marketing Cloud Next                                                                                          |
 | ------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
@@ -13914,7 +13914,7 @@ List of email Send Log errorCode values from the [official MCE Documentation](ht
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## MCE Behavioral Triggers
@@ -14095,7 +14095,7 @@ The base function is pushing your customer's unique identifier (don't be intimid
 
 > **Note: You Should Know**
 >
-> If you decide to push an Email Address to communicate with people not yet in MCE, be sure to make them Subscribers. You can easily do it using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage SQL Activity to copy the needed data to another Data Extension using this query:
+> If you decide to push an Email Address to communicate with people not yet in MCE, be sure to make them Subscribers. You can easily do it using the classic Export-Transfer-Import Automation on the data stored in the Behavioral Triggers Data Extension. Leverage [SQL Activity](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/) to copy the needed data to another Data Extension using this query:
 >
 > ```sql title="Basic Subscriber data preparation"
 > SELECT
@@ -14683,7 +14683,7 @@ Below you can see two tabs.
 ]%%
 ```
 
-The first four lines of the Behavioral Trigger Content Block code are already interesting. They are using AMPScript, although the rest is in SSJS. It could easily be written in SSJS altogether for more optimised execution.
+The first four lines of the Behavioral Trigger Content Block code are already interesting. They are using AMPScript, although the rest is in SSJS. It could easily be written in SSJS altogether for [more optimised execution](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance/).
 
 You can also see that they are pulling the behavioural data by using a personalisation string on `data` - the Abandoned Engagement Data Extension column containing encrypted information. If you want to have more control over the source of this information, you can think about making a lookup here. It would allow you to even use multiple Content Blocks in one email (or mix browsed, wishlisted and added to cart items in one block).
 
@@ -14698,7 +14698,7 @@ try {
 }
 ```
 
-The try/catch block is a great idea, but as it has separate scope in SSJS, it means that no SSJS variable from within will be available outside of it. Thankfully the [other part of the code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#6-response-parsing) is sharing the Behavioral Trigger data using AMPScript variables.
+The [try/catch block](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/#try-to-catch-the-error) is a great idea, but as it has separate scope in SSJS, it means that no SSJS variable from within will be available outside of it. Thankfully the [other part of the code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#6-response-parsing) is sharing the Behavioral Trigger data using AMPScript variables.
 
 If you want to access the SSJS ones, you can declare them before the try/catch starts or pull them from the AMPScript.
 
@@ -16436,7 +16436,7 @@ Video: [When AppExchange is right and what to do when it's wrong Webinar Recordi
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/catalog-architecture/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Catalog Basics & Limitations
@@ -16565,15 +16565,15 @@ Let's start with what is available out of the box. There are three groups of ava
 
 #### Basic Catalog Attributes
 
-| Attribute         | Data Type | Purpose                                       | Comment                                                                                                                                                 |
-| ----------------- | --------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ID                | String    | Unique identifier for each Item               | It must be unique per Object and can be reused in others (for example, you can use the same ID in Product and Category Objects).                        |
-| Name              | String    | Readable name of an Item                      | Used to identify an Item across the UI. It does not have to be unique; you might have multiple Items with the same name. Required to recommend an Item. |
-| URL               | String    | Link to the Item                              | Redirect target when User clicks on an Item in a Campaign. Required to recommend an Item.                                                               |
-| Image URL         | String    | Link used to display an Image of an Item      | Used to showcase a Product. Required to recommend a Product (not needed for other Item types).                                                          |
-| Description       | String    | Client-friendly description of an Item        | Any text beyond 200 characters will be replaced with an ellipsis (`...`).                                                                               |
-| Average Rating    | Decimal   | Average score of an Item based on all Ratings | Useful as a filter for Einstein Recipes and Triggered Campaigns.                                                                                        |
-| Number of Ratings | Integer   | Number of ratings an Item gathered            | Can be used in Serverside Code to conditionally hide Rating personalisation when it is based on a single rating.                                        |
+| Attribute         | Data Type | Purpose                                       | Comment                                                                                                                                                                                                                                  |
+| ----------------- | --------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ID                | String    | Unique identifier for each Item               | It must be unique per Object and can be reused in others (for example, you can use the same ID in Product and Category Objects).                                                                                                         |
+| Name              | String    | Readable name of an Item                      | Used to identify an Item across the UI. It does not have to be unique; you might have multiple Items with the same name. Required to recommend an Item.                                                                                  |
+| URL               | String    | Link to the Item                              | Redirect target when User clicks on an Item in a Campaign. Required to recommend an Item.                                                                                                                                                |
+| Image URL         | String    | Link used to display an Image of an Item      | Used to showcase a Product. Required to recommend a Product (not needed for other Item types).                                                                                                                                           |
+| Description       | String    | Client-friendly description of an Item        | Any text beyond 200 characters will be replaced with an ellipsis (`...`).                                                                                                                                                                |
+| Average Rating    | Decimal   | Average score of an Item based on all Ratings | Useful as a filter for Einstein Recipes and Triggered Campaigns.                                                                                                                                                                         |
+| Number of Ratings | Integer   | Number of ratings an Item gathered            | Can be used in [Serverside Code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-context/#servicescatalog) to conditionally hide Rating personalisation when it is based on a single rating. |
 
 Out of the above Basic Catalog Attributes, the first four are the most important: ID, Name, URL, and Image URL. The Average Rating helps filter products for Campaigns. The rest might be helpful for personalization purposes, but can be skipped in most implementations.
 
@@ -16660,7 +16660,7 @@ Dedicated Category Catalog attributes focus on the hierarchical relationship bet
 
 ### Catalog Custom Attributes
 
-Outside of the built-in attributes, you can go wild with custom ones until you hit 35 attributes of any type on a single Object. Those are great for personalization - crucial for an Open Time Email campaign where you don't have much wiggle room to manipulate the values.
+Outside of the built-in attributes, you can go wild with custom ones until you hit 35 attributes of any type on a single Object. Those are great for personalization - crucial for an [Open Time Email campaign](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/open-time-email/#attributes-vs-custom-fields) where you don't have much wiggle room to manipulate the values.
 
 Unfortunately, there is a considerable feature gap related to custom Catalog Attributes, limiting their usefulness. You cannot use them in Einstein Recipes to Include, Exclude, Boost or limit with Variations.
 
@@ -16678,7 +16678,7 @@ Custom Catalog Objects have three superpowers:
 
 1. You can create relationships between Items from various Catalogs (for example, between specific Products and specific colours in custom "Color" Catalog Object - this doesn't sound awesome now, but the following two points will show you that it is something completely different from custom Attributes).
 2. You can capture the affinity of each User towards those related Items (for example, how much each User likes specific colour).
-3. You can leverage them in Einstein Recipes in multiple ways.
+3. You can leverage them in Einstein Recipes in multiple ways. Open Time Email can use them too, through [related Catalog Objects](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/open-time-email/#related-catalog-object-support).
 
 This set of features makes custom Catalog Objects a big deal when you want absolute control over your recommendations. Examples? Sure.
 
@@ -16686,7 +16686,7 @@ This set of features makes custom Catalog Objects a big deal when you want absol
 
 You want to recommend only the products that are on promotion. Create a custom Catalog Object "Promotions" with an Item "Promoted" and assign it (via [ETL](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/catalog-architecture/#2-mc-personalization-with-etl) or [Sitemap](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/catalog-architecture/#1-mc-personalization-with-sitemap)) to each deserving Product. Then you can use this information in Einstein Recipes » Exclusion tab to Include the "Promotions" Catalog and select "Promoted" using "from explicit selection" option.
 
-You can even go a step further and create additional Items in that Catalog like "0-10%", "11-20%", "21-30%", etc., to be able to include (or prioritize in the Serverside Code of the template) more significant promotions.
+You can even go a step further and create additional Items in that Catalog like "0-10%", "11-20%", "21-30%", etc., to be able to include (or prioritize in the [Serverside Code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-basics/) of the template) more significant promotions.
 
 More? Extend that Catalog with specific promotion names like "BlackFriday", "CyberMonday", "SpeedyTuesday", "FreeDelivery", "AnotherPromotionBecauseWeNeedToCloseTheQuarterHigherToGetBonus" and assign those to all eligible products. Now you can create different Recipes for each promotion and show each customer the best products for their needs that are currently at a better price.
 
