@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Start boosting conversion rates right now! There are many ways to engage customers, and urgency is the king among them. Learn how to leverage it today.
@@ -29,7 +29,7 @@ Firstly, you will need to create an `id` attribute to mark the container in whic
 
 Next, the spans. Add empty `<span>` elements with the `class` corresponding to the time unit you want to show. JavaScript will swap it for the correct numeric value and dynamically change it as time passes. You can add just hours, or you can go for full spectrum.
 
-For example, did you know there is only  left till 55th anniversary of the first moon landing?
+For example, did you know there is only  left till the next anniversary of the first moon landing?
 
 ```html Sample countdown code for above line
 <p id="counter1">

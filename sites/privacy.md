@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/sites/privacy/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-30  
+Last updated: 2026-10-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Legal stuff. Short and simple.
@@ -45,7 +45,7 @@ If you want to stop even this level of processing, any content blocker will do i
 
 ## Newsletter
 
-If you subscribe to the newsletter, you give me your email address. That is the only personal data this site collects, and only because you hand it over.
+If you subscribe to the newsletter, you give me your email address. Together with what you type into the [contact form](https://mateuszdabrowski.pl/sites/privacy/#contact-form), that is all the personal data this site collects, and only because you hand it over.
 
 - **What I collect:** your email address, the time you asked to subscribe and the time you confirmed it. No name, no tracking of what you read.
 - **Why:** to send you the newsletter. The address is used for nothing else and is never shared or sold.
@@ -53,6 +53,16 @@ If you subscribe to the newsletter, you give me your email address. That is the 
 - **Where it goes:** the form posts straight from your browser to a script in my Google Workspace account, so nothing passes through this site. Cloudflare Turnstile checks first that you are not a bot. You get a confirmation email, and the address is added to the list only when you open its link and confirm on the page it opens. The list and its consent log live in Sling, my own newsletter app, encrypted on my Mac, with a copy of the consent log in a Google Sheet in my Google Workspace account. The emails go out through Gmail. Google processes the data on my behalf under its Workspace terms.
 - **How long:** until you unsubscribe. After that I keep the address only as unsubscribed, so a later email never goes to you by accident. If you subscribe again, the newest choice wins. A sign-up you never confirm expires after 7 days and never reaches the list. Write to legal \[at] mateuszdabrowski.pl if you want the address gone entirely.
 - **Unsubscribing:** the link in any email, the "Unsubscribe" option on the newsletter page, or an email to newsletter \[at] mateuszdabrowski.pl from the subscribed address.
+
+## Contact form
+
+If you write to me through the form at the end of the About Me page, you give me what you type into it.
+
+- **What I collect:** your name if you give it, your email address and your message.
+- **Why:** to read your message and reply to it. The address is used for nothing else and is never shared or sold.
+- **Legal basis:** my legitimate interest in answering a message you chose to send me.
+- **Where it goes:** the form posts straight from your browser to a script in my Google Workspace account, so nothing passes through this site. Cloudflare Turnstile checks first that you are not a bot. The script puts your message straight into my inbox and keeps no copy of it. No email is sent. To stop floods of messages, it keeps the times of the day's messages, and for six hours a one-way hash of your address, which cannot be turned back into it. Google processes the data on my behalf under its Workspace terms.
+- **How long:** the email stays in my inbox for as long as our conversation needs it. Write to legal \[at] mateuszdabrowski.pl if you want it deleted sooner.
 
 ## Your rights
 

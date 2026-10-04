@@ -130,7 +130,7 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 - [Shelf - Your Digital Pocket](https://mateuszdabrowski.pl/shelf/): The small things you keep needing - codes, addresses, IBANs, snippets - encrypted on your device and one tap from your clipboard on iPhone, iPad, Mac and Apple Watch.
 - [Slot - Your Inboxes in One App](https://mateuszdabrowski.pl/slot/): Every Google and Microsoft account in one native Mac app, each with completely isolated data. Mail, Calendar, Drive, Meet, Outlook, Teams and more.
 - [SQL Studio - Query Studio, Rebuilt Inside Your Own Account](https://mateuszdabrowski.pl/sql-studio/): The free, open-source Query Studio replacement for Marketing Cloud Engagement. Write, run and save SQL inside your own account, with no query or result leaving it.
-- [Strum - Tabs Made Easy](https://mateuszdabrowski.pl/strum/): Tablature, chord and strum-pattern editor for ukulele and guitar - for iPhone, iPad, and Mac.
+- [Strum: Tabs Made Easy](https://mateuszdabrowski.pl/strum/): Tablature, chord and strum pattern editor for ukulele and guitar, on iPhone, iPad and Mac.
 
 ## Optional
 

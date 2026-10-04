@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Marketing Cloud Next
@@ -14,7 +14,7 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 Salesforce Marketing Cloud Next (MCN) is the new kid on the block. It is a new platform built on top of Data 360 (formerly Data Cloud) and Agentforce Marketing. It is a complex and constantly changing tool, so there are many things to learn about it. Expect articles here to be updated regularly to cover changes.
 
 - [IP Warming & Deliverability](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/ip-warming-deliverability/)
-- [Business Units](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/business-units/)
+- [Business Units Architecture](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/business-units/)
 
 [Read about MCN Config](https://mateuszdabrowski.pl/docs/category/salesforce/marketing-cloud/config/)
 
@@ -33,12 +33,13 @@ Many things in Salesforce Marketing Cloud Engagement aren't code-based but have 
 - [Licence Limits](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/)
 - [System Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/)
 - [Mobile Connect Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/)
+- [MobilePush Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/)
 - [MCC Integration Patterns](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/)
 - [Contact Deletion Process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/)
 - [Enhanced Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/)
 - [Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/)
 - [Power of Code Resources](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/code-resource/)
-- [AgentExchange (formerly AppExchange) Solutions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/)
+- [AgentExchange Solutions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/)
 - [Features On Demand](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/features-on-demand/)
 - [Export, Import & Document MCE Roles](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles/)
 
@@ -50,7 +51,7 @@ To fully leverage the Salesforce Marketing Cloud Engagement Data Extensions and 
 
 #### SQL Documentation
 
-- [SQL Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/)
+- [Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/)
 - [Select](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/)
 - [From](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/)
 - [Join](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/)
@@ -62,7 +63,7 @@ To fully leverage the Salesforce Marketing Cloud Engagement Data Extensions and 
 - [Numeric Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/)
 - [Conversion Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/)
 - [Aggregate Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/)
-- [NULL Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/)
+- [Null Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/)
 - [Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/)
 
 #### SQL Snippets
@@ -81,16 +82,16 @@ SSJS is an XX-century version of JavaScript paired with proprietary libraries cr
 
 - [If & Switch](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-if-and-switch/)
 - [Loops](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-loops/)
-- [Debugging](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/)
+- [Debugging & Error Handling](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/debugging-ssjs/)
 - [Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-style-guide/)
 - [Performance](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/ssjs-vs-ampscript-performance/)
 
 #### SSJS Snippets
 
-- [AMPScript in SSJS](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs/)
-- [MobileConnect Phone Change](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change/)
 - [SSJS Script Template](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-script-template/)
 - [Solve with Cloud Page Apps](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/)
+- [MobileConnect Phone Change](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ssjs-mobileconnect-phone-change/)
+- [AMPScript in SSJS](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/ampscript-in-ssjs/)
 
 [Read about SSJS](https://mateuszdabrowski.pl/docs/category/salesforce/marketing-cloud-engagement/ssjs/)
 
@@ -109,14 +110,25 @@ AMPScript is a proprietary scripting language in Salesforce Marketing Cloud Enga
 
 [Read about AMPScript](https://mateuszdabrowski.pl/docs/category/salesforce/marketing-cloud-engagement/ampscript/)
 
+### Webinars
+
+My sessions on various aspects of Salesforce Marketing Cloud Engagement with summary, recordings, slides, snippets and articles. All-in-one, all for free.
+
+- [Account Architecture](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-account-architecture/)
+- [SF Data in Journey Builder](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-salesforce-data-in-journey-builder/)
+- [Architecting Web Solutions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-architecting-web-solutions/)
+- [Cloud Page Apps](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps/)
+
+[Watch MCE Webinars](https://mateuszdabrowski.pl/docs/category/salesforce/marketing-cloud-engagement/webinars/)
+
 ## Marketing Cloud Personalization
 
 Salesforce Marketing Cloud Personalization (MCP, formerly Interaction Studio) is a cross-channel real-time hyper-personalisation engine in Salesforce Marketing Cloud Engagement. Behind that cool-looking description is a powerful tool that lets your company adapt every point of contact to each person. Neat!
 
 ### MC Personalization Documentation
 
-- [Catalog Objects Architeture](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/catalog-architecture/)
-- [Open Time Email Template](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/open-time-email/)
+- [Catalog Architecture](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/catalog-architecture/)
+- [Open Time Email](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/open-time-email/)
 - [Serverside Code Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-basics/)
 - [Serverside Code Properties](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-properties/)
 - [Serverside Code Context](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/serverside-code-context/)
@@ -135,7 +147,7 @@ In this part, I am gathering selected elements of modern vanilla JavaScript that
 
 - [If & Switch](https://mateuszdabrowski.pl/docs/js/js-if-and-switch/)
 - [Loops](https://mateuszdabrowski.pl/docs/js/js-loops/)
-- [Document Object Model (DOM)](https://mateuszdabrowski.pl/docs/js/js-dom/)
+- [DOM](https://mateuszdabrowski.pl/docs/js/js-dom/)
 
 ### JS Snippets
 
@@ -143,6 +155,14 @@ In this part, I am gathering selected elements of modern vanilla JavaScript that
 - [Engage with Countdown](https://mateuszdabrowski.pl/docs/js/snippets/engage-with-countdown/)
 
 [Read about JavaScript](https://mateuszdabrowski.pl/docs/category/javascript/)
+
+## Ideas
+
+Here you can find all my Salesforce IdeaExchange contributions by solution. Let's make the change!
+
+- [Marketing Cloud Next](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/ideas/)
+- [Marketing Cloud Engagement](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/)
+- [Marketing Cloud Personalization](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/ideas/)
 
 ## Changes
 

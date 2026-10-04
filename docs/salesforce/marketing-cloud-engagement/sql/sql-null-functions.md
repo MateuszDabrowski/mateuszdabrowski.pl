@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 NULL is a fickle beast, and for the people not accustomed to how it works in SQL, it can create many problems (read: incorrect data output). This is especially true for those coming from nullish-friendly languages (like SSJS). Let's jump into the details.
@@ -21,9 +21,11 @@ Because `NULL` is unknown, if you try to do any standard operation on the NULL (
 
 ```sql {2-3} title="❌ Functions with NULLs"
 SELECT
-      1 + NULL               AS MathFunctionWithNull    -- Outputs NULL
-    , CONCAT('Hello ', NULL) AS StringFunctionWithNull  -- Outputs NULL
+      1 + NULL          AS MathFunctionWithNull   /* Output: NULL */
+    , 'Hello ' + NULL   AS StringFunctionWithNull /* Output: NULL */
 ```
+
+The one exception is the `CONCAT` function, which treats `NULL` as an empty string, so `CONCAT('Hello ', NULL)` returns `'Hello '`.
 
 ### NULL with relational operators
 
