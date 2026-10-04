@@ -476,12 +476,21 @@ module.exports = {
             },
         ],
         [
-            // AVIF and WebP copies of the app screenshots at several widths, served
+            // AVIF and WebP copies of the app screenshots and webinar posters at several widths, served
             // by src/components/ResponsiveImage.jsx. The copies live in the gitignored
             // .image-variants folder, which staticDirectories serves.
             './plugins/image-variants',
             {
-                include: ['img/apple', 'img/apps', 'img/article/index-image-tool-diagramforce.webp'],
+                include: [
+                    'img/apple',
+                    'img/apps',
+                    'img/article/index-image-tool-diagramforce.webp',
+                    // Posters of the click-to-load webinar videos (src/components/VideoEmbed.js).
+                    'img/og/og-image-webinar-sf-mce-account-architecture.png',
+                    'img/og/og-image-webinar-sf-mce-architecting-web-solutions.png',
+                    'img/og/og-image-webinar-sf-mce-cloud-page-apps.png',
+                    'img/og/og-image-webinar-sf-data-in-journey-builder.png',
+                ],
             },
         ],
         [
