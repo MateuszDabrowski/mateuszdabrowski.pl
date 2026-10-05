@@ -146,7 +146,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     {/* Sources: docs/research/01-query-studio-product.md in the SQL Studio dev repo
         (curl and Wayback CDX checks on 2026-09-19, Salesforce Knowledge article 004867940). */}
     <p className="text--center" style={{fontSize: '1.2rem', maxWidth: '760px', margin: '0 auto 2rem'}}>Query Studio was the fast, easy way to write and test SQL in MCE. Today it is no longer available on AgentExchange, so you cannot add it to an account that does not have it. Where it is still installed, it works, but Salesforce's support sends you to community resources for setup and bug fixes. And it runs outside your MCE account, on a separate server.</p>
-    <p className="text--center" style={{fontSize: '1.2rem', maxWidth: '760px', margin: '0 auto 2rem'}}>SQL Studio does the same job from inside your own account, with your own login and permissions. It sends your SQL to MCE exactly as you wrote it and runs it as a real Query Activity, so **a query that works in SQL Studio works in Automation Studio**, and the other way round. And as all of its code is open on GitHub, your admin or security team can check what it does before deploying it.</p>
+    <p className="text--center" style={{fontSize: '1.2rem', maxWidth: '760px', margin: '0 auto 2rem'}}>SQL Studio does the same job from inside your own account. Everything it creates, changes or runs for you uses your own login and permissions. It sends your SQL to MCE exactly as you wrote it and runs it as a real Query Activity, so **a query that works in SQL Studio works in Automation Studio**, and the other way round. And as all of its code is open on GitHub, your admin or security team can check what it does before deploying it.</p>
 
     <div style={{marginTop: '2.5rem', overflowX: 'auto'}}>
 
@@ -411,11 +411,11 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
       <thead><tr><th>Piece</th><th>Download</th><th>Its first line</th></tr></thead>
       <tbody>
         <tr><td>SQL Studio Backend</td><td><DownloadFile path="code-resources/sql-studio-backend.html" /></td><td><code>{'<script runat="server">'}</code></td></tr>
-        <tr><td>SQL Studio Frontend</td><td><DownloadFile path="code-resources/sql-studio-frontend.js" /></td><td><code>/* SQL Studio</code>, then the release's version</td></tr>
+        <tr><td>SQL Studio Frontend</td><td><DownloadFile path="code-resources/sql-studio-frontend.min.js" /></td><td><code>/* SQL Studio</code>, then the release's version</td></tr>
         <tr><td>SQL Studio</td><td><DownloadFile path="cloud-page/sql-studio.html" /></td><td><code>{'<script runat="server">'}</code></td></tr>
       </tbody>
     </table>
-    Each link downloads the file from the latest release on GitHub. You can also download everything as one ZIP, <a href="https://github.com/MateuszDabrowski/sqlstudio/archive/refs/heads/main.zip"><code>sqlstudio-main.zip</code></a>, and use the three files in its <code>src</code> folder.
+    Each link downloads the file from the latest release on GitHub. You can also download everything as one ZIP, <a href="https://github.com/MateuszDabrowski/sqlstudio/archive/refs/heads/main.zip"><code>sqlstudio-main.zip</code></a>, and use the same three files from its <code>src</code> folder. Next to the Frontend's <code>.min.js</code> it also has <code>sql-studio-frontend.js</code>, the same code with its comments, for reading. Paste the <code>.min.js</code>, because MCE serves it in about 2 seconds, against 18 for the commented file on my account.
   </li>
   <li>
     <strong>Create the three pieces in a folder in Web Studio → CloudPages, without publishing them.</strong> Save each one and open it, then copy its URL from the top of the editor.
@@ -436,7 +436,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
         <tr><td>line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td><td>SQL Studio Backend</td></tr>
         <tr><td rowSpan={2}><code>sql-studio.html</code></td><td>line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td><td>SQL Studio Backend</td></tr>
         <tr><td>line 20: <code>var frontendURL = 'SQL_STUDIO_FRONTEND_URL';</code></td><td>SQL Studio Frontend</td></tr>
-        <tr><td><code>sql-studio-frontend.js</code></td><td>none</td><td>nothing: it has no settings, and you paste it as it is in step 4</td></tr>
+        <tr><td><code>sql-studio-frontend.min.js</code></td><td>none</td><td>nothing: it has no settings, and you paste it as it is in step 4</td></tr>
       </tbody>
     </table>
     These settings are not a menu in MCE. They are lines near the top of each file, under <code>1. CONFIGURATION</code>. Find each one by searching the file for its placeholder with Ctrl+F (Cmd+F on a Mac), paste the URL over the placeholder, keep the quotes, and save the file, so <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code> becomes <code>{"var backendURL = 'https://pages.example.com/sql-studio-backend';"}</code>.
@@ -455,11 +455,11 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
       <thead><tr><th>Piece</th><th>File</th></tr></thead>
       <tbody>
         <tr><td>SQL Studio Backend</td><td><code>sql-studio-backend.html</code></td></tr>
-        <tr><td>SQL Studio Frontend</td><td><code>sql-studio-frontend.js</code></td></tr>
+        <tr><td>SQL Studio Frontend</td><td><code>sql-studio-frontend.min.js</code></td></tr>
         <tr><td>SQL Studio</td><td><code>sql-studio.html</code></td></tr>
       </tbody>
     </table>
-    Leave the other settings as they are, unless you want server-side history, and <code>sql-studio-frontend.js</code> has no settings at all. Publish the two Code Resources first and SQL Studio last. SQL Studio loads the other two, so this way it never opens before they are live.
+    Leave the other settings as they are. The one choice to make is <code>historyDE</code>: whether query history stays in each browser, or is also kept in MCE, where anyone with Data Extension access in SQL Studio's Business Unit can read it. <code>sql-studio-frontend.min.js</code> has no settings at all. Publish the two Code Resources first and SQL Studio last. SQL Studio loads the other two, so this way it never opens before they are live.
   </li>
   <li>
     <strong>Open it.</strong> Wait about five minutes after publishing, then open SQL Studio from the AppExchange menu. On this first open, it creates its sign-in log and error log and sets their retention, and the Status tab says so once: "First run: SQL Studio created its Data Extensions in the SQL Studio folder." Only if MCE does not let it set the retention does a second notice ask you to set it by hand: 1 day for SQL Studio Auth Log and 180 days for SQL Studio Error Log. Then run <code>SELECT TOP 10 SubscriberKey FROM _Subscribers</code> to check that rows come back.
@@ -475,7 +475,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <p>An update replaces code and keeps your settings, in the same order as the first deployment:</p>
 
 <ol>
-  <li>Replace all of SQL Studio Frontend with the new <code>sql-studio-frontend.js</code>, and publish.</li>
+  <li>Replace all of SQL Studio Frontend with the new <code>sql-studio-frontend.min.js</code>, and publish. Up to 1.0 the Frontend was <code>sql-studio-frontend.js</code>: the <code>.min.js</code> is the same code without its comments, and opens much faster.</li>
   <li>In SQL Studio Backend, and in SQL Studio when the release changed it, replace everything from the "APP CODE - replace from here on update" line down, and publish. Your settings sit above that line and stay as they are.</li>
 </ol>
 
@@ -492,7 +492,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ## <span style={{color: 'var(--ifm-color-white)'}}>Your data</span> {#your-data}
 
-<p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem', maxWidth: '760px'}}>SQL Studio has no account of its own and no server of mine. Everything it does in Marketing Cloud Engagement runs with your own login, in your own account. The two requests your browser makes outside MCE carry no query and no result.</p>
+<p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem', maxWidth: '760px'}}>SQL Studio has no account of its own and no server of mine. Everything it creates, changes or runs for you in Marketing Cloud Engagement uses your own login, in your own account. It reads the status and results of its own runs, and the names and fields of the parent Business Unit's shared Data Extensions, through WSProxy inside MCE. The two requests your browser makes outside MCE carry no query and no result.</p>
 
     <div className="row" style={{marginTop: '2rem'}}>
       <div className="col col--6" style={{padding: '1rem 2rem'}}>
