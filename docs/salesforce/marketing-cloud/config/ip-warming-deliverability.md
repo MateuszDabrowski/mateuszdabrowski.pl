@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/ip-warming-deliverability/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-04  
+Last updated: 2026-10-05  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Deliverability Next
@@ -41,13 +41,12 @@ In practice, this means an account with heavy transactional volume (order confir
 
 Migration to a dedicated IP is volume-driven, per lane, and sequential as volume keeps growing:
 
-| Milestone           | Threshold                             | What Happens                                                                                     |
-| ------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| First dedicated IP  | \~5M emails/month                     | Salesforce detects sustained volume and begins migrating the lane from shared to a dedicated IP. |
-| Second dedicated IP | \~10M emails/month                    | A second dedicated IP is added to the same lane.                                                 |
-| Additional IPs      | Per each additional \~5M emails/month | More IPs are assigned sequentially, up to a cap of 32 dedicated IPs per account.                 |
+| Milestone          | Threshold                                   | What Happens                                                                                        |
+| ------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| First dedicated IP | More than 5M emails in the last **30 days** | Salesforce begins migrating the lane from shared to a dedicated IP, on a gradual 30-day transition. |
+| Additional IPs     | More than 2M sends per IP in **1 day**      | Salesforce adds IPs to the lane, up to a cap of 32 dedicated IPs per account.                       |
 
-These numbers are guidelines: migration typically starts around them, and crossing 5M does not trigger it on the day. Capacity has a daily ceiling too: each dedicated IP carries at most 2 million sends per day, so a higher daily peak needs additional IPs.
+These numbers are guidelines: migration typically starts around them. The 2M/day is the limit per one dedicated IP. It doesn't start the move off the shared pool, only the 5M in 30 days does. Once you're on dedicated IPs, though, it decides when Salesforce adds another one.
 
 ### Requesting a Dedicated IP Early
 
@@ -59,11 +58,7 @@ Can you start straight on a dedicated IP? For a long time there was no official 
 | Early, immediate transition | All mail goes through the dedicated IPs from day one. Salesforce still monitors your volume and adds IPs as it grows.                                               | Yours. You acknowledge the risks and follow your own warmup plan.                               |
 | Customer-managed            | Dedicated IPs from day one, meant only for customers required to use their own. Salesforce doesn't monitor your volume, so you request any additional IPs yourself. | Yours, for IPs and domains alike. MCN doesn't fix reputation problems caused by uneven traffic. |
 
-Whichever path you pick, the request needs a fully implemented org and at least one authenticated sending domain with validated DNS, and any missing value in it only delays provisioning. Once Salesforce has a complete request, provisioning typically takes 5-10 business days ([requirements](https://help.salesforce.com/s/articleView?id=mktg.mktg_admin_dedicated_ip_ref.htm\&type=5)).
-
-> **Note: You Should Know**
->
-> The same [requirements](https://help.salesforce.com/s/articleView?id=mktg.mktg_admin_dedicated_ip_ref.htm\&type=5) page says a request allocates four IPs at once, two for promotional and two for transactional traffic. That is a bigger start than the [default path](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/ip-warming-deliverability/#shared-to-dedicated-migration-triggers), where each lane gets its first dedicated IP at around 5M emails a month and a second one only at around 10M. I'm still trying to find out whether four IPs is now the starting point in both scenarios, or something unique to requesting a dedicated IP early. I'll update this once I have the answer.
+Whichever path you pick, the request needs a fully implemented org and at least one authenticated sending domain with validated DNS, and any missing value in it only delays provisioning. Once Salesforce has a complete request, provisioning typically takes 5-10 business days ([requirements](https://help.salesforce.com/s/articleView?id=mktg.mktg_admin_dedicated_ip_ref.htm\&type=5)). You get the standard allocation of two IPs, one promotional and one transactional, the same as on the [default path](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud/config/ip-warming-deliverability/#shared-to-dedicated-migration-triggers).
 
 I'd ask for the early 30-day transition only when your volume plan needs dedicated IPs before you reach 5M emails/month, and I'd go for an immediate or customer-managed transition only when a contract or security policy forces it. Both hand the IP warming back to you, which is exactly the work MCN otherwise takes off your plate.
 
@@ -71,9 +66,9 @@ I'd ask for the early 30-day transition only when your volume plan needs dedicat
 
 **A single campaign send can be split across multiple IPs at once.**
 
-When migration begins, Salesforce automatically plans and executes the warming - a 30-day ramp - by gradually shifting a growing percentage of volume from the shared pool onto the new dedicated IP. You don't control the curve, and you don't need to: if your sending volume temporarily exceeds what the ramp allows on a given day, the excess is simply routed back through the shared pool rather than overloading the new IP.
+When migration begins, Salesforce automatically plans and executes the warming - a 30-day ramp (that can run longer, depending on your sending pattern) - by gradually shifting a growing percentage of volume from the shared pool onto the new dedicated IP. You don't control the curve, and you don't need to: if your sending volume temporarily exceeds what the ramp allows on a given day, the excess is simply routed back through the shared pool rather than overloading the new IP.
 
-What you do control is consistency. Salesforce asks you to keep your sends steady during the transition, because uneven volume means the new IPs don't warm up enough to carry your daily volume once the shared pool drops off. You can follow the ramp on the **Sending IP Addresses** screen: the IP Management Type reads `Transition`, the new dedicated IP shows `In Progress` next to the shared row that's still `Active`, and after 30 days the shared row drops off and the dedicated IP turns `Active`. An immediate transition goes straight to `Dedicated`, with no shared row at all.
+What you do control is consistency. Salesforce asks you to keep your sends steady during the transition, because uneven volume means the new IPs don't warm up enough to carry your daily volume once the shared pool drops off. You can follow the ramp on the **Sending IP Addresses** screen: the IP Management Type reads `Transition`, the new dedicated IP shows `In Progress` next to the shared row that's still `Active`, and when the transition ends, typically after 30 days, the shared row drops off and the dedicated IP turns `Active`. An immediate transition goes straight to `Dedicated`, with no shared row at all.
 
 The practical consequence is worth internalising before you go looking for it in your logs: during the warming window, the same campaign can be delivered to part of its audience via the dedicated IP and the rest via the shared pool, at the same time. If you're inspecting message headers or bounce data from a single send during this period and see two different sending IPs, that's the ramp working as intended, not a routing bug.
 
@@ -85,7 +80,9 @@ If you have just one dedicated IP (be it by design or as a result of reclamation
 
 > **Note: You Should Know**
 >
-> Salesforce's [Managed Dedicated IP Addresses](https://help.salesforce.com/s/articleView?id=mktg.um_channel_email_managed_dedicated_ip_addresses.htm\&type=5) page gives a different window: it only says IPs are provisioned or recovered based on your 30-day sending history pattern. The 45 and 90 days above are how reclamation has worked so far. I'm still trying to find out whether Salesforce moved reclamation to the 30-day window, or the page simplifies a process that still uses the 45 and 90 days. Until then, check the **Sending IP Addresses** screen if the timing matters to you. I'll update this once I have the answer.
+> Salesforce confirmed that, as of October 2026, it isn't reclaiming dedicated IPs automatically, even from accounts that aren't actively using them. The 45 and 90 days above don't currently apply. When reclamation comes back, the windows may change too. If your volume drops for a longer time, keep an eye on the **Sending IP Addresses** screen.
+>
+> If you want to move back to Shared IP on purpose - contact your Account Executive.
 
 ### The Gray Pool Safety Net
 
