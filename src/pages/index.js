@@ -104,11 +104,11 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
-        date: '2026-09-29',
+        date: '2026-10-05',
         kind: 'App',
-        title: 'SQL Studio 1.0',
+        title: 'SQL Studio 1.1',
         url: '/sql-studio/',
-        description: 'New app. Query Studio, rebuilt inside your own MCE account. Free and open source, with MCE\'s own validation and four queries running at once.',
+        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: it opens twice as fast, child Business Units see the parent\'s shared Data Extensions, and JOIN autocomplete writes whole joins.',
     },
     {
         date: '2026-09-25',
