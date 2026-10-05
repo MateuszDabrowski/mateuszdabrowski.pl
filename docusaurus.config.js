@@ -8,7 +8,7 @@ const crypto = require('crypto');
 
 // The announcement bar. Its id is a hash of the message, so a new message shows
 // to everyone, and an edit to the message counts as a new one.
-const announcement = 'Looking for a payment-free, hassle-free diagramming solution? My <a href="https://diagramforce.com" style="text-decoration: underline">Diagramforce</a> got you covered ;)';
+const announcement = 'Missing Query Studio? My free <a href="/sql-studio/" style="text-decoration: underline">SQL Studio</a> does everything it did, and then some ;)';
 const announcementId = `announcement-${crypto.createHash('sha1').update(announcement).digest('hex').slice(0, 8)}`;
 
 // Docusaurus remembers only the last announcement a visitor saw, so a message
