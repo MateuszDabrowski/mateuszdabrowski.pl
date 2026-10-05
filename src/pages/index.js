@@ -319,9 +319,9 @@ function HomeSearch() {
 }
 
 /**
- * Renders the What's new panel. Upcoming events come first, soonest first,
- * and drop out once their day has passed; the newest released items fill
- * the remaining rows, newest first. The row budget is fixed so the panel
+ * Renders the What's new panel. Upcoming events come first and drop out once
+ * their day has passed; the newest released items fill the remaining rows.
+ * Both run newest first, so the whole list reads in one date order. The row budget is fixed so the panel
  * keeps its height next to the about panel whether or not an event is on.
  *
  * @param {Array} items - Released entries with date, kind, title, url, description.
@@ -339,7 +339,7 @@ function WhatsNew({ items, upcoming = [], limit = 6 }) {
     useEffect(() => setToday(todayIso()), []);
     const events = upcoming
         .filter((event) => event.date >= today)
-        .sort((a, b) => a.date.localeCompare(b.date))
+        .sort((a, b) => b.date.localeCompare(a.date))
         .map((event) => ({ ...event, kind: 'Event' }));
     const released = [...items].sort((a, b) => b.date.localeCompare(a.date));
     const rows = [...events, ...released].slice(0, limit);
