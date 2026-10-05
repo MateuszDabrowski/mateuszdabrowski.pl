@@ -99,18 +99,18 @@ All Marketing Cloud Next accounts start on a shared pool of multiple IPs. The po
 
 ### Transactional vs Promotional IPs
 
-However, MCN doesn't pool all outbound mail together. Shared sending is split into two separate lanes - Transactional and Promotional. Each has its own separate pool of Shared IPs, and each works toward its own dedicated IP assignment and warming independently. MCN picks the lane from the message purpose you set on each email, so the From domain or brand plays no part in it.
+However, MCN doesn't pool all outbound mail together. Shared sending is split into two separate lanes - Transactional and Promotional. Each has its own separate pool of Shared IPs, and later its own dedicated IPs, warmed separately. MCN picks the lane from the message purpose you set on each email, so the From domain or brand plays no part in it.
 
-In practice, this means an account with heavy transactional volume (order confirmations, password resets, receipts) but modest promotional volume can end up with a dedicated IP for transactional sends while promotional campaigns keep running on the shared pool, or vice versa. You can check your current state in **Setup > Unified Messaging > Email > Settings > Sending IP Addresses** screen - on a fully shared account this currently just reads as a single "General" line.
+The volume that moves you to dedicated IPs is counted across the whole account, though, not per lane. Once you qualify, the standard allocation gives each lane its own dedicated IP. So an account sending 4M promotional and 1.5M transactional emails a month moves both lanes. You can check your current state in **Setup > Unified Messaging > Email > Settings > Sending IP Addresses** screen - on a fully shared account this currently just reads as a single "General" line.
 
 ### Shared-to-Dedicated Migration Triggers
 
-Migration to a dedicated IP is volume-driven, per lane, and sequential as volume keeps growing:
+Migration to dedicated IPs is volume-driven, counted across the whole account, and sequential as volume keeps growing:
 
-| Milestone          | Threshold                                   | What Happens                                                                                        |
-| ------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| First dedicated IP | More than 5M emails in the last **30 days** | Salesforce begins migrating the lane from shared to a dedicated IP, on a gradual 30-day transition. |
-| Additional IPs     | More than 2M sends per IP in **1 day**      | Salesforce adds IPs to the lane, up to a cap of 32 dedicated IPs per account.                       |
+| Milestone           | Threshold                                   | What Happens                                                                                                                                |
+| ------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| First dedicated IPs | More than 5M emails in the last **30 days** | Salesforce begins migrating both marketing and transactional IPs from shared to dedicated, one IP per lane, on a gradual 30-day transition. |
+| Additional IPs      | More than 2M sends per IP in **1 day**      | Salesforce adds IPs to the lane, up to a cap of 32 dedicated IPs per account.                                                               |
 
 These numbers are guidelines: migration typically starts around them. The 2M/day is the limit per one dedicated IP. It doesn't start the move off the shared pool, only the 5M in 30 days does. Once you're on dedicated IPs, though, it decides when Salesforce adds another one.
 
