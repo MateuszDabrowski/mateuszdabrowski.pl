@@ -15,9 +15,9 @@ import styles from '@site/src/pages/styles.module.css';
  * subtitle adds a one-sentence summary under the name, highlights a bullet
  * list under the description, fit="contain" shows the whole screenshot
  * where a tall row would otherwise crop it, and showTags={false} drops the
- * hashtags where the subtitle already says it. A whole screenshot leaves no
- * corner for the platform chips and the badge, so with fit="contain" the
- * chips sit beside the store button and the badge beside the name.
+ * hashtags where the subtitle already says it. The badge (FREE) always sits
+ * beside the name. A whole screenshot leaves no corner for the platform
+ * chips, so with fit="contain" they sit beside the store button.
  */
 export function AppRow({ title, url, description, tags, platforms, cta, imageUrl, githubUrl, appStoreUrl, badge, reverse = false, subtitle, highlights, fit = 'cover', showTags = true, id }) {
     const storeBadge = useBaseUrl('img/apple/appstore.svg');
@@ -34,7 +34,6 @@ export function AppRow({ title, url, description, tags, platforms, cta, imageUrl
             <div className={clsx(styles.appRow, reverse && styles.appRowReverse)}>
                 <div className={clsx(styles.appRowImage, fit === 'contain' && styles.appRowImageContain)}>
                     {!inlineMeta && chips(styles.platformChips)}
-                    {!inlineMeta && badge && <span className={styles.toolBadge}>{badge}</span>}
                     <Link to={url}>
                         {/* Half the container from 997 px up, full width below. */}
                         <ResponsiveImage src={imageUrl} alt={title} sizes="(max-width: 996px) 100vw, 600px" />
@@ -46,7 +45,7 @@ export function AppRow({ title, url, description, tags, platforms, cta, imageUrl
                             <Link className={clsx(styles.cardTitle, styles.appRowTitle)} to={url}>
                                 {title}
                             </Link>
-                            {inlineMeta && badge && <span className={styles.titleBadge}>{badge}</span>}
+                            {badge && <span className={styles.titleBadge}>{badge}</span>}
                         </span>
                         {showTags && (
                             <p className={styles.cardTags}>
