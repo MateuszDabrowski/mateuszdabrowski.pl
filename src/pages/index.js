@@ -104,11 +104,11 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
-        date: '2026-10-05',
+        date: '2026-10-09',
         kind: 'App',
-        title: 'SQL Studio 1.1',
+        title: 'SQL Studio 1.2',
         url: '/sql-studio/',
-        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: it opens twice as fast, child Business Units see the parent\'s shared Data Extensions, and JOIN autocomplete writes whole joins.',
+        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: save a run\'s results to a new Data Extension, snippets shared with your whole Business Unit, and a Join to the query icon on every table.',
     },
     {
         date: '2026-09-25',
@@ -120,7 +120,7 @@ const whatsNew = [
     {
         date: '2026-09-22',
         kind: 'App',
-        title: 'Slot 1.6.0',
+        title: 'Slot 1.6',
         url: '/slot/',
         description: 'Slot works with all your Google and Microsoft accounts in one place. New: Diagramforce as an add-on per account, drawing and privacy for screen sharing, and each account remembering where you left off.',
     },
