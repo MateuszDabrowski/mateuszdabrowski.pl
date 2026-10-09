@@ -8624,7 +8624,7 @@ The final part of the template is where I'm adding the main part of the script. 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-09  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Cloud Page Apps: what and why
@@ -8663,6 +8663,10 @@ So what can you do with such a solution? Possibilities are endless, but to share
 Anything related to MCE that you wish could be a bit more automated or easy can be a good idea for a micro application approach.
 
 ## Cloud Page Apps step by step
+
+> **Note: You Should Know**
+>
+> Want to see how far this pattern can go? [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free Query Studio replacement, is a Cloud Page App built on it: one Cloud Page, two Code Resources and an Installed Package. As all of its code is [open on GitHub](https://github.com/MateuszDabrowski/sqlstudio), you can see every step of this guide at work in a full application.
 
 ### Create your first MCE micro application
 
@@ -16400,7 +16404,7 @@ Video: [Architecting Web Solutions in Marketing Cloud Engagement Webinar Recordi
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-09  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
@@ -16424,6 +16428,7 @@ Video: [When AppExchange is right and what to do when it's wrong Webinar Recordi
 | Slides          | [PDF](https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/pdf/%5B2022-05%5D%20Architecting%20Web%20Solutions%20in%20SFMC.pdf)                                                                                                               |
 | Snippets        | [GitHub](https://github.com/MateuszDabrowski/sfmc-cloud-page-app-template)                                                                                                                                                                                         |
 | Articles        | [Solve with Cloud Page Apps](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/) & [Power of Code Resources](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/code-resource/) |
+| Example App     | [SQL Studio](https://mateuszdabrowski.pl/sql-studio/)                                                                                                                                                                                                              |
 
 ---
 

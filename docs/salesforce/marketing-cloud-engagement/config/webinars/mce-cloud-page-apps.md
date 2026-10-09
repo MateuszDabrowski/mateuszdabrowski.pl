@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/webinars/mce-cloud-page-apps/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-09  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
@@ -28,3 +28,4 @@ Video: [When AppExchange is right and what to do when it's wrong Webinar Recordi
 | Slides          | [PDF](https://github.com/MateuszDabrowski/mateuszdabrowski.pl/blob/master/static/pdf/%5B2022-05%5D%20Architecting%20Web%20Solutions%20in%20SFMC.pdf)                                                                                                               |
 | Snippets        | [GitHub](https://github.com/MateuszDabrowski/sfmc-cloud-page-app-template)                                                                                                                                                                                         |
 | Articles        | [Solve with Cloud Page Apps](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/) & [Power of Code Resources](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/code-resource/) |
+| Example App     | [SQL Studio](https://mateuszdabrowski.pl/sql-studio/)                                                                                                                                                                                                              |
