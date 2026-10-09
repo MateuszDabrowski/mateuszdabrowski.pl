@@ -46,7 +46,7 @@ export const apps = [
         url: '/sql-studio/',
         githubUrl: 'https://github.com/MateuszDabrowski/sqlstudio',
         imageUrl: 'img/apps/sql-studio/hero.webp',
-        description: 'The free replacement for Query Studio, with everything you used it for: run a query into a temporary Data Extension, check the results below your SQL and save it as a Query Activity. And then some, from four queries running at once to MCE\'s own error messages with an explanation of the fix.',
+        description: 'The free replacement for Query Studio, with everything you used it for: run a query into a temporary Data Extension, check the results below your SQL and save it as a Query Activity. And then some: four queries running at once, results saved to a new Data Extension, and MCE\'s own error messages with an explanation of the fix.',
         tags: ['MCE', 'SQL', 'Open Source'],
         platforms: ['MCE'],
         cta: 'Learn More',
@@ -54,9 +54,9 @@ export const apps = [
         layout: 'row',
         features: [
             'Four query tabs, each on its own Query Activity, so you can run multiple queries at the same time',
-            'Autocomplete and a search sidebar for every Data View and Data Extension in your Business Unit',
+            'Autocomplete, one-click joins and a search sidebar for every Data View and Data Extension in your Business Unit, plus snippets shared with your team',
             'Lint rules for what MCE refuses, like an unpaired apostrophe in a comment or a query that opens with a common table expression, most with a one-click fix, and MCE\'s own error messages with an explanation',
-            'Paged, sortable results with no row limit, and a CSV export of every row',
+            'Paged, sortable results with no row limit, a CSV export of every row, and Save to DE to keep them in a new Data Extension',
         ],
     },
     {
