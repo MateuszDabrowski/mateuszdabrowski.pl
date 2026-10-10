@@ -104,6 +104,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-10-10',
+        kind: 'App',
+        title: 'Diagramforce 1.25',
+        url: 'https://diagramforce.com',
+        description: 'Free Salesforce diagramming in your browser, plus a Claude skill that turns your org\'s metadata into editable diagrams. New: the Winter \'27 Flow elements and Groups, PNG and SVG images straight from the Claude skill for your documentation, and your role hierarchy as an Org Chart.',
+    },
+    {
         date: '2026-10-09',
         kind: 'App',
         title: 'SQL Studio 1.2',
