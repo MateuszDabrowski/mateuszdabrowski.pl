@@ -34,6 +34,8 @@ SQL (Structured Query Language) is one of the best ways to work with relational 
 
 The main difference from standard SQL (:product[MCE] uses more or less SQL Server 2022, although Salesforce's [SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm&type=5) still says 2016) is that :product[MCE] supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
 
+Do not expect anything newer than SQL Server 2022, though. I tested functions added in SQL Server 2025, and none of them work, while the [JSON functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.mdx) added in SQL Server 2022 run fine.
+
 Another limiting characteristic of :product[MCE] SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of :product[MCE] are not relational databases.
 
 Finally, the significant limitation you might hit as your :product[MCE] grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in :product[MCE]. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.

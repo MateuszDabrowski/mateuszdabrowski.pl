@@ -105,6 +105,13 @@ const newsletter = {
 const whatsNew = [
     {
         date: '2026-10-10',
+        kind: 'Doc',
+        title: 'MCE SQL JSON Functions',
+        url: '/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/',
+        description: 'Salesforce\'s SQL Reference does not mention JSON, but MCE SQL reads, changes and builds it. Every function tested live, including the broken payload that stops your whole query.',
+    },
+    {
+        date: '2026-10-10',
         kind: 'App',
         title: 'Diagramforce 1.25',
         url: 'https://diagramforce.com',
@@ -245,7 +252,7 @@ function todayIso() {
 }
 
 /**
- * Formats a YYYY-MM-DD string as "Sep 12, 2026" without going through Date,
+ * Formats a YYYY-MM-DD string as "12 Sep 2026" (UK order) without going through Date,
  * so server and client render the same text whatever their timezone.
  *
  * @param {string} isoDate - Date as YYYY-MM-DD.
@@ -253,7 +260,7 @@ function todayIso() {
  */
 function formatFeedDate(isoDate) {
     const [year, month, day] = isoDate.split('-');
-    return `${feedMonths[Number(month) - 1]} ${Number(day)}, ${year}`;
+    return `${Number(day)} ${feedMonths[Number(month) - 1]} ${year}`;
 }
 
 /**

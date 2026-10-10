@@ -86,6 +86,8 @@ FROM Accounts
 
 The above query checks whether there is a space within the `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create a new simplified data point categorising records by type.
 
+If the value you want to cut is JSON, skip the string functions and read it with [JSON functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.mdx). They handle nesting and escaped quotes for you.
+
 :::
 
 ## PATINDEX
