@@ -13,6 +13,8 @@
  *   imgStyle - inline style for the image on the page
  *   version  - appended as ?v= to the source URL, for screenshots without
  *              responsive copies (the copies carry a content hash already)
+ *   priority - set on the first screenshot of a page: it is the largest image
+ *              a visitor sees, so it loads at once and before the rest (LCP)
  */
 import React, { useEffect, useRef, useState } from 'react';
 import ResponsiveImage, { useImageVariants } from './ResponsiveImage';
@@ -24,7 +26,7 @@ function cappedSizes(entry, maxHeight) {
   return entry && px ? `${Math.ceil((px * entry.width) / entry.height)}px` : undefined;
 }
 
-export default function ZoomImage({ src, alt, imgStyle = {}, version }) {
+export default function ZoomImage({ src, alt, imgStyle = {}, version, priority = false }) {
   const [open, setOpen] = useState(false);
   const [zoomSizes, setZoomSizes] = useState('90vw');
   const dialog = useRef(null);
@@ -59,6 +61,8 @@ export default function ZoomImage({ src, alt, imgStyle = {}, version }) {
         // lazy image; the others read the next entry.
         sizes={cappedSizes(entry, imgStyle.maxHeight) ?? 'auto, (max-width: 996px) 100vw, 900px'}
         dimensions={!heightCapped}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : undefined}
         className={styles.trigger}
         style={{ height: 'auto', ...imgStyle }}
         role="button"

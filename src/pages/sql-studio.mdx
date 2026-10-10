@@ -125,6 +125,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
       <div className="col col--12" style={{textAlign: 'center'}}>
         <ZoomImage
+          priority
           src="/img/apps/sql-studio/hero.webp"
           alt="SQL Studio in Marketing Cloud Engagement, running the email sends debugging query from my SQL snippets, with its results below and the Data Views, Data Extensions and Snippets on the right"
           imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '12px'}}

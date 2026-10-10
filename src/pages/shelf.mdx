@@ -103,6 +103,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
       <div className="col col--12" style={{textAlign: 'center'}}>
         <ZoomImage
+          priority
           src="/img/apple/shelf/Shelf-Mac-Main.webp"
           alt="Shelf on the Mac - folders in the sidebar, stuff in the list"
           imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '12px'}}

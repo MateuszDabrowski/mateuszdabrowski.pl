@@ -16,16 +16,16 @@
     "redirects-check": "node plugins/cloudflare-redirects.mjs --check"
   },
   "dependencies": {
-    "@docusaurus/core": "3.10.1",
-    "@docusaurus/plugin-client-redirects": "3.10.1",
-    "@docusaurus/plugin-ideal-image": "3.10.1",
-    "@docusaurus/preset-classic": "3.10.1",
-    "@docusaurus/theme-mermaid": "3.10.1",
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/plugin-client-redirects": "3.10.2",
+    "@docusaurus/plugin-ideal-image": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@docusaurus/theme-mermaid": "3.10.2",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@docusaurus/eslint-plugin": "3.10.1"
+    "@docusaurus/eslint-plugin": "3.10.2"
   },
   "browserslist": {
     "production": [

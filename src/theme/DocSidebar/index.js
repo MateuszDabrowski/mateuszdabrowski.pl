@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import DocSidebar from '@theme-original/DocSidebar';
 import { useActivePlugin } from '@docusaurus/plugin-content-docs/client';
 
@@ -9,6 +9,9 @@ import { useActivePlugin } from '@docusaurus/plugin-content-docs/client';
 //   total, open those folders too, so small sections (MC Next -> Config, MC Personalization ->
 //   Serverside Code + Snippets) show their articles at once while MCE stays a menu of folders.
 // The sidebar remounts only when the resulting pattern changes, so manual toggles survive reading.
+// The tree is memoised: the layout re-renders this wrapper on every location change, including
+// TOC clicks, and a new tree each time would defeat the memo on DocSidebarItems and re-render
+// the whole sidebar (the slow INP Cloudflare reported on long pages, October 2026).
 const ROOT_EXPAND_DEPTH = 2;
 const DRILL_MAX_ROWS = 12;
 
@@ -39,7 +42,10 @@ function expandTree(items, path, isRoot, level = 1, parentDrills = false, opened
 export default function DocSidebarWrapper(props) {
     const pluginPath = useActivePlugin()?.pluginData.path;
     const isRoot = samePath(props.path, pluginPath);
-    const opened = [];
-    const sidebar = expandTree(props.sidebar, props.path, isRoot, 1, false, opened);
-    return <DocSidebar key={opened.join('|')} {...props} sidebar={sidebar} />;
+    const { sidebar, key } = useMemo(() => {
+        const opened = [];
+        const tree = expandTree(props.sidebar, props.path, isRoot, 1, false, opened);
+        return { sidebar: tree, key: opened.join('|') };
+    }, [props.sidebar, props.path, isRoot]);
+    return <DocSidebar key={key} {...props} sidebar={sidebar} />;
 }

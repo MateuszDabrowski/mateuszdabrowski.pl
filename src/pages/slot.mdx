@@ -114,6 +114,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <div className={clsx('row', styles.centeredRow)} style={{alignItems: 'center'}}>
       <div className="col col--12" style={{textAlign: 'center'}}>
         <ZoomImage
+          priority
           src="/img/apple/slot/Slot-Mac-Mail.webp"
           alt="Slot showing a Gmail account, with the account rail on the left"
           imgStyle={{maxWidth: '100%', height: 'auto', boxShadow: 'var(--ifm-global-shadow-md)', borderRadius: '12px'}}

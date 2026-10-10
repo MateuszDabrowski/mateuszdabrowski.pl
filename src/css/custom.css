@@ -642,10 +642,22 @@ html[data-theme='dark'] article header>h1 {
   color: var(--ifm-color-secondary);
 }
 
+/* Each Mermaid diagram sits in a frame that reserves its size before it draws
+   (src/theme/Mermaid). A block svg leaves no gap under it, so the frame matches
+   the drawing exactly. */
+.mermaid-frame {
+  margin-inline: auto;
+}
+
+.mermaid-frame svg {
+  display: block;
+  margin-inline: auto;
+}
+
 /* The one-sentence "Diagram:" paragraph written under each Mermaid diagram
    reads as its caption. Mermaid draws in the browser only, so for readers
    without JavaScript and for the markdown copies the sentence is the diagram. */
-.markdown .docusaurus-mermaid-container + p {
+.markdown .mermaid-frame + p {
   margin-top: 0.5rem;
   font-size: 0.9rem;
   color: var(--ifm-color-emphasis-700);
