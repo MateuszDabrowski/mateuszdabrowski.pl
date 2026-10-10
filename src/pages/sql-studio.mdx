@@ -17,7 +17,7 @@ import styles from './styles.module.css';
 {/* The release these screenshots belong to, appended to every screenshot URL
     below, the same cache-busting trick the other app pages use. Bump this
     with SQL Studio's version and every screenshot becomes a new URL. */}
-export const ASSETS = '1.2.0';
+export const ASSETS = '1.2.1';
 
 {/* Downloads one release file from the public repository's main branch, under its own name. A plain
     link cannot: browsers ignore the download attribute on another domain, and GitHub serves raw files
@@ -285,7 +285,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Lint for What Marketing Cloud Engagement Refuses</span> {#lint}
 
       </div>
-      <p style={{fontSize: '1.1rem'}}>Some SQL looks fine and still fails in MCE, sometimes only once MCE saves or runs it. SQL Studio's lint flags these problems in the editor, before you run anything, and Validate and Run then check your query against MCE's own Query Activity rules. The lint catches an unpaired apostrophe in a comment, which stops MCE from saving the query, and a query that opens with a common table expression, which MCE does not support. It also flags a Text column compared to a Number column in a join, which fails as soon as one value is not a number, and more. Every finding says in plain words what is wrong and how to fix it. Most come with a one-click fix, and **Fix all** applies every safe fix at once.</p>
+      <p style={{fontSize: '1.1rem'}}>Some SQL looks fine and still fails in MCE, sometimes only once MCE saves or runs it. SQL Studio's lint flags these problems in the editor, before you run anything, and Validate and Run then check your query against MCE's own Query Activity rules. The lint catches an unpaired apostrophe in a comment, which stops MCE from saving the query, and a query that opens with a common table expression, which MCE does not support. It flags functions newer than the SQL Server 2022 that MCE runs, such as REGEXP_LIKE, and a Text column compared to a Number column in a join, which fails as soon as one value is not a number, and more. Every finding says in plain words what is wrong and how to fix it. Most come with a one-click fix, and **Fix all** applies every safe fix at once.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
