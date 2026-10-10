@@ -35,6 +35,7 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 - [MCE SQL Conversion Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.md): Break from the limits of Data Extension data types. Use full power of SQL to control your values.
 - [MCE SQL Aggregate Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.md): Group rows and apply aggregate functions to see the big picture in your data extensions.
 - [MCE SQL NULL Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.md): IS NULL, or IS NOT NULL, that is the question. Ways of working with NULL values in Marketing Cloud Engagement (MCE) SQL.
+- [MCE SQL JSON Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.md): Read, change and use JSON stored in Data Extensions with Salesforce Marketing Cloud Engagement SQL.
 - [MCE SQL Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.md): Query with style. Readable, bug-free code is a few shifts & spaces away.
 
 ## Salesforce > Marketing Cloud Engagement > SQL > Snippets

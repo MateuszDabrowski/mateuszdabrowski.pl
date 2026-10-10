@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-10  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -78,6 +78,8 @@ CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
 > ```
 >
 > The above query checks whether there is a space within the `InstitutionName` value and if yes - it captures only the first word. Think about all the educational institution names with `University of...`, `School of...` - by taking only the first part, we can create a new simplified data point categorising records by type.
+>
+> If the value you want to cut is JSON, skip the string functions and read it with [JSON functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/). They handle nesting and escaped quotes for you.
 
 ## PATINDEX
 

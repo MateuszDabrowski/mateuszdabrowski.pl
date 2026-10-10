@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-10  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -24,6 +24,8 @@ You can check my comparison of all the above options in my [here](https://mateus
 SQL (Structured Query Language) is one of the best ways to work with relational databases. And MCE's Data Extensions, with the help of Data Designer, offer precisely that. A relational database. The same is valid for system Data Views containing tracking data. Because of this, SQL is used in MCE whenever powerful segmentation is needed (mainly using Automation Studio).
 
 The main difference from standard SQL (MCE uses more or less SQL Server 2022, although Salesforce's [SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm\&type=5) still says 2016) is that MCE supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
+
+Do not expect anything newer than SQL Server 2022, though. I tested functions added in SQL Server 2025, and none of them work, while the [JSON functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/) added in SQL Server 2022 run fine.
 
 Another limiting characteristic of MCE SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of MCE are not relational databases.
 
