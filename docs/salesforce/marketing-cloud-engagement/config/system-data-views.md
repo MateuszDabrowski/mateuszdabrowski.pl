@@ -183,7 +183,7 @@ Stores information about your Email Sends Jobs. Great for capturing detailed dat
 `JobType` - 2 values
 
 - `null`
-- MULTIPLE\_SEND
+- MULTIPLE_SEND
 
 `JobStatus` - 2 values
 
@@ -195,7 +195,7 @@ Stores information about your Email Sends Jobs. Great for capturing detailed dat
 - Test Send Emails
 - Triggered Sends
 - Version XX (where XX is a number)
-- GUID\_VXX (36 character hyphen separated GUID followed by underscore and VXX where XX is a number)
+- GUID_VXX (36 character hyphen separated GUID followed by underscore and VXX where XX is a number)
 
 `CharacterSet` - 1 value
 
@@ -1082,25 +1082,25 @@ Provides historical information about Automation runs.
 
 **Fields**
 
-| Name                                      | Description                                                                                                                                           | Data Type | Nullable |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------- |
-| MemberID                                  | The Account ID for the Business Unit                                                                                                                  | Number    |          |
-| AutomationName                            | The name of the automation                                                                                                                            | Text      |          |
-| AutomationDescription                     | The description of the automation                                                                                                                     | Text      | X        |
-| AutomationCustomerKey                     | The unique ID of the automation                                                                                                                       | Text      |          |
-| AutomationInstanceID                      | The unique ID of the specific automation run                                                                                                          | Text      |          |
-| AutomationType                            | The type of starting source used in automation                                                                                                        | Text      |          |
-| AutomationNotificationRecipient\_Complete | Email(s) receiving notification about completed runs                                                                                                  | Text      | X        |
-| AutomationNotificationRecipient\_Error    | Email(s) receiving notification about errored runs                                                                                                    | Text      | X        |
-| AutomationNotificationRecipient\_Skip     | Email(s) receiving notification about skipped runs                                                                                                    | Text      | X        |
-| AutomationStepCount                       | The number of steps in the automation                                                                                                                 | Number    |          |
-| AutomationInstanceIsRunOnce               | Was this specific automation run executed with Run Once? 1 for true, 0 for false in File Drop and Triggered automations. Null in Schedule automations | Boolean   |          |
-| FilenameFromTrigger                       | Name of the file that triggered the automation for Triggered and File Drop automations. Null for Schedule automations                                 | Text      | X        |
-| AutomationInstanceScheduledTime\_UTC      | Starting schedule datetime in UTC timezone for Schedule automations. Null for Triggered and File Drop automation                                      | Date      | X        |
-| AutomationInstanceStartTime\_UTC          | Automation run start datetime in UTC timezone. Null if run is skipped                                                                                 | Date      | X        |
-| AutomationInstanceEndTime\_UTC            | Automation run end datetime in UTC timezone. Null if run is skipped or still running                                                                  | Date      | X        |
-| AutomationInstanceStatus                  | The status of the automation run at the time of querying                                                                                              | Text      |          |
-| AutomationInstanceActivityErrorDetails    | The first error message encountered in the automation run                                                                                             | Text      | X        |
+| Name                                     | Description                                                                                                                                           | Data Type | Nullable |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------- |
+| MemberID                                 | The Account ID for the Business Unit                                                                                                                  | Number    |          |
+| AutomationName                           | The name of the automation                                                                                                                            | Text      |          |
+| AutomationDescription                    | The description of the automation                                                                                                                     | Text      | X        |
+| AutomationCustomerKey                    | The unique ID of the automation                                                                                                                       | Text      |          |
+| AutomationInstanceID                     | The unique ID of the specific automation run                                                                                                          | Text      |          |
+| AutomationType                           | The type of starting source used in automation                                                                                                        | Text      |          |
+| AutomationNotificationRecipient_Complete | Email(s) receiving notification about completed runs                                                                                                  | Text      | X        |
+| AutomationNotificationRecipient_Error    | Email(s) receiving notification about errored runs                                                                                                    | Text      | X        |
+| AutomationNotificationRecipient_Skip     | Email(s) receiving notification about skipped runs                                                                                                    | Text      | X        |
+| AutomationStepCount                      | The number of steps in the automation                                                                                                                 | Number    |          |
+| AutomationInstanceIsRunOnce              | Was this specific automation run executed with Run Once? 1 for true, 0 for false in File Drop and Triggered automations. Null in Schedule automations | Boolean   |          |
+| FilenameFromTrigger                      | Name of the file that triggered the automation for Triggered and File Drop automations. Null for Schedule automations                                 | Text      | X        |
+| AutomationInstanceScheduledTime_UTC      | Starting schedule datetime in UTC timezone for Schedule automations. Null for Triggered and File Drop automation                                      | Date      | X        |
+| AutomationInstanceStartTime_UTC          | Automation run start datetime in UTC timezone. Null if run is skipped                                                                                 | Date      | X        |
+| AutomationInstanceEndTime_UTC            | Automation run end datetime in UTC timezone. Null if run is skipped or still running                                                                  | Date      | X        |
+| AutomationInstanceStatus                 | The status of the automation run at the time of querying                                                                                              | Text      |          |
+| AutomationInstanceActivityErrorDetails   | The first error message encountered in the automation run                                                                                             | Text      | X        |
 
 **Field Picklist Values**
 
@@ -1165,23 +1165,23 @@ Provides historical information about Automation Studio Activity runs.
 
 **Fields**
 
-| Name                           | Description                                                                              | Data Type | Nullable |
-| ------------------------------ | ---------------------------------------------------------------------------------------- | --------- | -------- |
-| MemberID                       | The Account ID for the Business Unit                                                     | Number    |          |
-| JobID                          | The job ID number for the email send                                                     | Number    |          |
-| AutomationName                 | The name of the automation                                                               | Text      |          |
-| AutomationCustomerKey          | The unique ID of the automation                                                          | Text      |          |
-| AutomationInstanceID           | The unique ID of the specific automation run                                             | Text      |          |
-| ActivityCustomerKey            | The unique ID of the activity                                                            | Text      |          |
-| ActivityInstanceID             | The unique ID of the specific activity execution                                         | Text      |          |
-| ActivityType                   | The type of the activity (numeric ID)                                                    | Number    |          |
-| ActivityName                   | The name of the activity                                                                 | Text      |          |
-| ActivityDescription            | The description of the activity                                                          | Text      | X        |
-| ActivityInstanceStep           | The two-dimensional description where in automation the activity is located              | Text      |          |
-| ActivityInstanceStartTime\_UTC | Activity execution start datetime in UTC timezone. Null if run is skipped                | Date      | X        |
-| ActivityInstanceEndTime\_UTC   | Activity execution end datetime in UTC timezone. Null if run is skipped or still running | Date      | X        |
-| ActivityInstanceStatus         | The status of the activity run at the time of querying                                   | Text      |          |
-| ActivityInstanceStatusDetails  | The error message encountered in the activity execution                                  | Text      | X        |
+| Name                          | Description                                                                              | Data Type | Nullable |
+| ----------------------------- | ---------------------------------------------------------------------------------------- | --------- | -------- |
+| MemberID                      | The Account ID for the Business Unit                                                     | Number    |          |
+| JobID                         | The job ID number for the email send                                                     | Number    |          |
+| AutomationName                | The name of the automation                                                               | Text      |          |
+| AutomationCustomerKey         | The unique ID of the automation                                                          | Text      |          |
+| AutomationInstanceID          | The unique ID of the specific automation run                                             | Text      |          |
+| ActivityCustomerKey           | The unique ID of the activity                                                            | Text      |          |
+| ActivityInstanceID            | The unique ID of the specific activity execution                                         | Text      |          |
+| ActivityType                  | The type of the activity (numeric ID)                                                    | Number    |          |
+| ActivityName                  | The name of the activity                                                                 | Text      |          |
+| ActivityDescription           | The description of the activity                                                          | Text      | X        |
+| ActivityInstanceStep          | The two-dimensional description where in automation the activity is located              | Text      |          |
+| ActivityInstanceStartTime_UTC | Activity execution start datetime in UTC timezone. Null if run is skipped                | Date      | X        |
+| ActivityInstanceEndTime_UTC   | Activity execution end datetime in UTC timezone. Null if run is skipped or still running | Date      | X        |
+| ActivityInstanceStatus        | The status of the activity run at the time of querying                                   | Text      |          |
+| ActivityInstanceStatusDetails | The error message encountered in the activity execution                                  | Text      | X        |
 
 **Field Picklist Values**
 

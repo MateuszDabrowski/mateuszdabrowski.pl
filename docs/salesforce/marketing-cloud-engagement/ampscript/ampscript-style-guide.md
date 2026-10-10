@@ -50,12 +50,12 @@ SET @supressed = Now();
 
 AMPScript letter case is a minefield. I have seen all possible combinations of letter case used for variables and AMPScript functions - both in shared snippets and official documentation.
 
-I even created a [survey](https://www.linkedin.com/feed/update/urn\:li\:activity:6807595457716518912/) to check which approach is the most popular. Outcomes from 168 votes?
+I even created a [survey](https://www.linkedin.com/feed/update/urn\:li\:activity\:6807595457716518912/) to check which approach is the most popular. Outcomes from 168 votes?
 
 - 45%: Mix of `ProperCase` and `UPPERCASE` for various elements.
 - 30%: `ProperCase` for everything.
 - 15%: `UPPERCASE` for everything.
-- 10%: Other conventions (including `lowercase` with some `camelCase` for functions and `snake_case` for variables by [Adam Spriggs](https://www.linkedin.com/feed/update/urn\:li\:ugcPost:6807595457297084416?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807673667259125762%29\&replyUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807687826575110145%29), co-author of the AMPScript bible - [ampscript.guide](https://ampscript.guide)).
+- 10%: Other conventions (including `lowercase` with some `camelCase` for functions and `snake_case` for variables by [Adam Spriggs](https://www.linkedin.com/feed/update/urn\:li\:ugcPost\:6807595457297084416?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807673667259125762%29\&replyUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807687826575110145%29), co-author of the AMPScript bible - [ampscript.guide](https://ampscript.guide)).
 
 So the best recommendation for you (and your team) to decide on one style - whichever it will be - and stay consistent.
 

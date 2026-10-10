@@ -37,7 +37,7 @@ SELECT
     , ISJSON('49.99')                           AS IsPriceJson          /* Output: 0 */
 ```
 
-## JSON\_VALUE
+## JSON_VALUE
 
 `JSON_VALUE` pulls a single value - text, number or boolean - out of JSON. It takes the JSON and a path that starts with `$`, the root of the document. From there, you name each key after a dot, pick array items by their position (counting from zero) and wrap keys with spaces in double quotes:
 
@@ -95,7 +95,7 @@ In most Marketing Automation cases, I would stay with the default lax mode and c
 >
 > For a broken record, [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) returns `NULL` and the query keeps running. Turn the check around (`WHERE ISJSON(orderEvent.Payload) = 0`), and you get the list of broken records, which makes a good regular health check for any Data Extension storing JSON.
 
-### JSON\_PATH\_EXISTS
+### JSON_PATH_EXISTS
 
 Checking for `NULL` has one catch. A key holding `null` returns the same `NULL` as a key that is not there at all, so the output alone will not tell you which one you got. `JSON_PATH_EXISTS` will, as it returns `1` for the first and `0` for the second:
 
@@ -107,7 +107,7 @@ SELECT
     , JSON_PATH_EXISTS('{"orderId":"ORD-1042"}', '$.couponCode')    AS DoesMissingCouponCodeExist   /* Output: 0 */
 ```
 
-## JSON\_QUERY
+## JSON_QUERY
 
 `JSON_QUERY` does what `JSON_VALUE` does, for objects and arrays. It returns them as JSON text, which you can store in a Data Extension or pass to another JSON function. Unlike `JSON_VALUE`, it has no 4000-character limit - in my test, it returned a 5004-character array without a problem.
 
@@ -117,7 +117,7 @@ SELECT
     , JSON_QUERY('{"tags":["music","wood"]}', '$.tags')                     AS TagArray         /* Output: '["music","wood"]' */
 ```
 
-## JSON\_MODIFY
+## JSON_MODIFY
 
 `JSON_MODIFY` returns a copy of your JSON with one change. The path decides where the change goes, and the third argument is the new value:
 
@@ -175,7 +175,7 @@ The `- 1` is there because JSON counts array positions from zero, while `ROW_NUM
 
 `TOP 10` sets the maximum number of items you read, so raise it if your arrays are longer (and make sure the Data View has at least that many rows). The `JSON_QUERY` in the join fits arrays of objects. For an array of plain values, like `["music","wood"]`, use `JSON_VALUE` in the join, as `JSON_QUERY` returns `NULL` for anything that is not an object or an array.
 
-## JSON\_OBJECT and JSON\_ARRAY
+## JSON_OBJECT and JSON_ARRAY
 
 So far, we have been reading and changing JSON. `JSON_OBJECT` and `JSON_ARRAY` go the other way, which you need whenever the next step expects JSON. The most important case is a file export to SFTP, where an external system picks up data from your Data Extension, and a query is the natural place to prepare it. A Script Activity that sends records to an external API could build the JSON in SSJS on its own. However, on larger volumes it gets slow and risks the [30-minute auto-kill](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#limits-and-guardrails) in Automation Studio, so preparing the JSON with a query first helps there as well.
 

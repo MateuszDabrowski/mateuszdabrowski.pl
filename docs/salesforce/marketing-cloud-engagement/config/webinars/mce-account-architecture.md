@@ -9,12 +9,12 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
 
-1. MCE Business Units ([5:53](https://youtu.be/dRxcbwIA1K0?t=353))
-2. Business Units Setup Patterns ([21:02](https://youtu.be/dRxcbwIA1K0?t=1262))
-3. Single-Org vs Multi-Org ([27:31](https://youtu.be/dRxcbwIA1K0?t=1651))
-4. Marketing Cloud Connect Patterns ([41:36](https://youtu.be/dRxcbwIA1K0?t=2496))
-5. SAP, Private Domains & IPs ([50:21](https://youtu.be/dRxcbwIA1K0?t=3021))
-6. Deliverability & IP Warmup ([56:22](https://youtu.be/dRxcbwIA1K0?t=3382))
+1. MCE Business Units ([5\:53](https://youtu.be/dRxcbwIA1K0?t=353))
+2. Business Units Setup Patterns ([21\:02](https://youtu.be/dRxcbwIA1K0?t=1262))
+3. Single-Org vs Multi-Org ([27\:31](https://youtu.be/dRxcbwIA1K0?t=1651))
+4. Marketing Cloud Connect Patterns ([41\:36](https://youtu.be/dRxcbwIA1K0?t=2496))
+5. SAP, Private Domains & IPs ([50\:21](https://youtu.be/dRxcbwIA1K0?t=3021))
+6. Deliverability & IP Warmup ([56\:22](https://youtu.be/dRxcbwIA1K0?t=3382))
 
 ## Video
 

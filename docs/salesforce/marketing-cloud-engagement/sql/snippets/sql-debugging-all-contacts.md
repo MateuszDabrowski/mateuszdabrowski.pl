@@ -88,7 +88,7 @@ FROM AllContactsList
 
 > **Note: You Should Know**
 >
-> If you see this query running very long or timing out, remove the least important and non-sargable (non-index-or-performance-friendly) GUID\_Format column:
+> If you see this query running very long or timing out, remove the least important and non-sargable (non-index-or-performance-friendly) GUID_Format column:
 >
 > ```sql
 >     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL, 1, 0))      AS GUID_Format
@@ -104,11 +104,11 @@ FROM AllContactsList
 
 This query will give you a breakdown of the different formats of Subscriber Keys in your All Contacts list, which can help you identify any issues or anomalies.
 
-### Total\_Count
+### Total_Count
 
 `Total_Count` let's you verify whether your query is operating on the full list of Contacts - just compare that number with what you see in All Contacts view in Contact Builder.
 
-### SF\_Contact
+### SF_Contact
 
 `SF_Contact` will show you how many Subscriber Keys are in the format of Salesforce Contact IDs (start with '003' and are 18 characters long) - these records were likely created through a Salesforce CRM integration or imported with Contact IDs as Subscriber Keys.
 
@@ -118,13 +118,13 @@ Verify this number against the number of records in your Synchronized Data Exten
 2. If the number is matching, but is very high - you might check whether you truly need all those Contacts in your MCE instance, and consider [filtering out](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#manage-the-data) those that do not support your marketing use cases.
 3. If the number is higher in the `SF_Contact` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/) in place, which means that all the Contacts that were ever created in your MCE instance are still there, even if they are no longer synchronized.
 
-### SF\_Account
+### SF_Account
 
 `SF_Account` will show you how many Subscriber Keys are in the format of Salesforce Account IDs (start with '001' and are 18 characters long). You shouldn't have any of those in your All Contacts list, and in most cases it's data architecture issue related to how you manage Person Accounts in your Salesforce CRM and how you set up your integration. For Marketing purposes you should be using Contact ID of the Person Account as Subscriber Key, not the Account ID.
 
 Check your integration setup, fix it to leverage a Person Contact ID, and clean up those records from your All Contacts list as they are not valid for marketing purposes and just inflate your contact count.
 
-### SF\_Lead
+### SF_Lead
 
 `SF_Lead` will show you how many Subscriber Keys are in the format of Salesforce Lead IDs (start with '00Q' and are 18 characters long). Similar to `SF_Contact`, you should check that number against your Synchronized Data Extension(s) for Lead Object:
 
@@ -149,13 +149,13 @@ Check your integration setup, fix it to leverage a Person Contact ID, and clean 
 >     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')
 > ```
 
-### SF\_User
+### SF_User
 
 `SF_User` will show you how many Subscriber Keys are in the format of Salesforce User IDs (start with '005' and are 18 characters long). Unless you have a very specific use case around personalizing or impersonating your emails with Salesforce User information, you do not need any of those in your All Contacts list.
 
 A simple way to manage it is to [add a checkbox on your User object](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#manage-the-data) to identify which (if any) Users should be synced to MCE, and then update your integration to only sync those that are relevant for marketing purposes. Then you can clean up the rest of the records from your All Contacts list.
 
-### Email\_Format
+### Email_Format
 
 `Email_Format` will show you how many Subscriber Keys are in the format of email addresses (contain '@' symbol).
 
@@ -187,7 +187,7 @@ In short: if there are none, celebrate. If there are some, check how they got th
 >
 > P.S. If you are running it from Parent BU, you won't need [`Ent.` prefix](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/#enterprise-data-extension) for `_Subscribers` System Data View.
 
-### MobileConnect\_Format
+### MobileConnect_Format
 
 `MobileConnect_Format` will show you how many Subscriber Keys are in the format of mobile numbers (contain only digits and are at least 7 characters long).
 
@@ -229,13 +229,13 @@ If you see such records in your system, check whether you are using SMS keywords
 >
 > This query will check 1-digit calling codes for Russia and North American Numbering Plan (NANP) countries (like USA, Canada), then 2-digit calling codes for the lucky few with shorter calling numbers, and finally will pull 3 characters for any other numbers. This way you can get a better understanding of which countries are contributing to mobile number Subscriber Keys in your All Contacts list.
 
-### Test\_Records
+### Test_Records
 
 `Test_Records` will show you how many Subscriber Keys contain the word "test". While this is not a very sophisticated way to identify test records, it can be a good starting point to identify some of them and then check the Source and Modified column in All Contacts view in Contact Builder to understand how they got there and fix the process.
 
 If there is a bit too much there, consider adding this scenario to your [automated contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio) to remove such records on an ongoing basis.
 
-### GUID\_Format
+### GUID_Format
 
 `GUID_Format` will show you how many Subscriber Keys are in the format of GUIDs (Globally Unique Identifiers). While having some GUIDs as Subscriber Keys is not necessarily a problem, check whether you know where they are coming from and whether they are valid Subscriber Keys that you are using in your marketing efforts.
 
@@ -243,7 +243,7 @@ In some cases those might be valid Subscriber Keys for your non-Salesforce CRM c
 
 If you don't recognize the source of those GUID Subscriber Keys, check the Source and Modified column in All Contacts view in Contact Builder to understand how they got there and fix the process.
 
-### Other\_Format
+### Other_Format
 
 `Other_Format` will show you how many Subscriber Keys are in formats other than the ones mentioned above. If you have a significant number of such records, it is worth investigating them further to understand what they are and whether they are valid Subscriber Keys that you should keep in your All Contacts list.
 

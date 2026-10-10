@@ -124,14 +124,14 @@ The [Behavioral Triggers Content Block](https://mateuszdabrowski.pl/docs/salesfo
 It is already available in the form of:
 
 - Einstein User Attributes that we can pass through the `setUserInfo` data layer.
-- The [request](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#5-building-the-api-query) used in the back end of the current Behavioral Triggers Content Block; by adding "\&user\_attributes=attributeName" to the endpoint.
+- The [request](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#5-building-the-api-query) used in the back end of the current Behavioral Triggers Content Block; by adding "\&user_attributes=attributeName" to the endpoint.
 - [Code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#6-response-parsing) of the existing Behavioral Triggers Content Block responsible for creating AMPScript variables based on the Einstein User Attributes data.
 
 However, as the Einstein User Attributes are neither added to the request by default nor configured in the User Integrace of the Content Block, to get this data in the email, one must create yet another, the same call with the above query parameter added. Neither user friendly nor optimal due to expensive `HTTP.Get` function running twice in such a scenario.
 
 Salesforce can fix it. Below are two solution tiers:
 
-1. **Minimum Valuable Solution**: Add the required query string ("\&user\_attributes=X,Y") with all potential Custom Einsteins User Attributes to the request URL built within the Content Block code.
+1. **Minimum Valuable Solution**: Add the required query string ("\&user_attributes=X,Y") with all potential Custom Einsteins User Attributes to the request URL built within the Content Block code.
 2. **Solution Deluxe**: Improve the above with the UI-enabled selection of needed Profile Attributes, just as available with Product Attributes.
 
 [Vote on IdeaExchange](https://ideas.salesforce.com/s/idea/a0B8W00000GddaZUAR/einstein-user-attributes-available-in-behavioral-trigger-content-block)

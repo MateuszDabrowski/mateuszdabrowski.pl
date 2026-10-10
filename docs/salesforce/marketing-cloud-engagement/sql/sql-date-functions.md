@@ -377,19 +377,19 @@ The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CAS
 
 Above, you have seen three different format specifiers used to manipulate the date, but many more are available. You can find the most useful below:
 
-| Format specifier | Description        | Example (for US culture)            |
-| ---------------- | ------------------ | ----------------------------------- |
-| 'd'              | Short date         | 10/30/2020                          |
-| 'D'              | Long date          | Friday, October 30, 2020            |
-| 'm'/'M'          | Month Day          | October 30                          |
-| 'y'/'Y'          | Year Month         | October 2020                        |
-| 't'              | Short time         | 2:15 PM                             |
-| 'T'              | Long time          | 2:15:30 PM                          |
-| 'g'              | General short time | 10/30/2020 2:15 PM                  |
-| 'G'              | General long time  | 10/30/2020 2:15:30 PM               |
-| 'f'              | Full short time    | Friday, October 30, 2020 2:15 PM    |
-| 'F'              | Full long time     | Friday, October 30, 2020 2:15:30 PM |
-| 'r'/'R'          | RFC1123            | Fri, 30 Oct 2020 14:15:30 GMT       |
+| Format specifier | Description        | Example (for US culture)              |
+| ---------------- | ------------------ | ------------------------------------- |
+| 'd'              | Short date         | 10/30/2020                            |
+| 'D'              | Long date          | Friday, October 30, 2020              |
+| 'm'/'M'          | Month Day          | October 30                            |
+| 'y'/'Y'          | Year Month         | October 2020                          |
+| 't'              | Short time         | 2\:15 PM                              |
+| 'T'              | Long time          | 2\:15\:30 PM                          |
+| 'g'              | General short time | 10/30/2020 2\:15 PM                   |
+| 'G'              | General long time  | 10/30/2020 2\:15\:30 PM               |
+| 'f'              | Full short time    | Friday, October 30, 2020 2\:15 PM     |
+| 'F'              | Full long time     | Friday, October 30, 2020 2\:15\:30 PM |
+| 'r'/'R'          | RFC1123            | Fri, 30 Oct 2020 14\:15\:30 GMT       |
 
 As highlighted in the table header - the examples are for the MCE default US culture formating. If you add a specific culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order and separator style.
 

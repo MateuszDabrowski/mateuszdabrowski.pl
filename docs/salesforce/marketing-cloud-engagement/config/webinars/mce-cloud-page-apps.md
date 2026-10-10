@@ -9,12 +9,12 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
 
-1. MCE Solutioning 101 ([4:15](https://youtu.be/3ngC9OLKaEI?t=256))
-2. Cloud Page App 101  ([12:11](https://youtu.be/3ngC9OLKaEI?t=731))
-3. AppExchange Menu Magic ([14:20](https://youtu.be/3ngC9OLKaEI?t=860))
-4. Cloud Page App SSO ([22:06](https://youtu.be/3ngC9OLKaEI?t=1326))
-5. Simple Cloud Page App ([26:53](https://youtu.be/3ngC9OLKaEI?t=1613))
-6. Complex Cloud Page App ([43:36](https://youtu.be/3ngC9OLKaEI?t=2796))
+1. MCE Solutioning 101 ([4\:15](https://youtu.be/3ngC9OLKaEI?t=256))
+2. Cloud Page App 101  ([12\:11](https://youtu.be/3ngC9OLKaEI?t=731))
+3. AppExchange Menu Magic ([14\:20](https://youtu.be/3ngC9OLKaEI?t=860))
+4. Cloud Page App SSO ([22\:06](https://youtu.be/3ngC9OLKaEI?t=1326))
+5. Simple Cloud Page App ([26\:53](https://youtu.be/3ngC9OLKaEI?t=1613))
+6. Complex Cloud Page App ([43\:36](https://youtu.be/3ngC9OLKaEI?t=2796))
 
 ## Video
 

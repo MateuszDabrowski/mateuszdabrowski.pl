@@ -642,7 +642,7 @@ There was much information to digest, so it's time for a streamlined step by ste
    2. On the main menu pane of MCE, hover over AppExchange to see your application.
 5. **Secured Template**
    1. Copy the [template](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/#secured-cloud-page-app-template) in the prefered language to the Cloud Page from step 2.i.
-   2. Update the unique values in the variables at the top part of the template (CAPS\_LOCK placeholders).
+   2. Update the unique values in the variables at the top part of the template (CAPS_LOCK placeholders).
 6. **Build your solution**
 
 ## Learn more

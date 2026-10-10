@@ -507,7 +507,7 @@ The other structural change: a Business Unit in MCN is a thin, marketing-focused
 
 Before touching anything in Salesforce, check the constraint that makes this a real architecture decision rather than a config toggle:
 
-1. Each Business Unit is connected 1:1 to a Data Space.
+1. Each Business Unit is connected 1\:1 to a Data Space.
 2. Once Business Unit is created, it **cannot be deleted - only deactivated**
 3. Deactivation is permanent and [can't be undone](https://help.salesforce.com/s/articleView?id=mktg.mktg_bu_deactivate_business_units.htm\&type=5).
 4. Deactivation doesn't free up a related Data Space - **it can't be reused by any other Business Unit, active or new**.
@@ -737,10 +737,10 @@ The result of that split isn't a merge - it's two disconnected records: an orpha
 
 Cost shouldn't be the key point that decides the architecture on its own, but it needs to be taken into consideration when deciding. It might be worth paying for a hard governance or isolation requirement, but not for "we might want another Business Unit someday."
 
-| Licensing | **Single Business Unit**                                                                                                                                                                                               | **Multiple Business Units**                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Pros**  | No licensing beyond the two Business Units included with Advanced Edition - no Data Spaces add-on, one Identity Resolution ruleset and one Segmentation/Calculated Insight publish schedule to build, run and monitor. | None. Splitting adds licencing costs - but it can save you from compliance penalties ;)                                                                                                                                                                                                                                                                                                                                                                                                 |
-| **Cons**  | None                                                                                                                                                                                                                   | Every Business Unit beyond the first two needs **two** account-executive-quoted add-ons moving in together - a MC Next Business Unit SKU and a Data 360 **Data Spaces** SKU, since the two are strictly 1:1. On top of that flat licensing cost, Identity Resolution, Segmentation and Calculated Insight credits don't multiply per record with Business Unit count, but they do multiply **operationally** - and that might hurt especially around unification and real-time actions. |
+| Licensing | **Single Business Unit**                                                                                                                                                                                               | **Multiple Business Units**                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pros**  | No licensing beyond the two Business Units included with Advanced Edition - no Data Spaces add-on, one Identity Resolution ruleset and one Segmentation/Calculated Insight publish schedule to build, run and monitor. | None. Splitting adds licencing costs - but it can save you from compliance penalties ;)                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Cons**  | None                                                                                                                                                                                                                   | Every Business Unit beyond the first two needs **two** account-executive-quoted add-ons moving in together - a MC Next Business Unit SKU and a Data 360 **Data Spaces** SKU, since the two are strictly 1\:1. On top of that flat licensing cost, Identity Resolution, Segmentation and Calculated Insight credits don't multiply per record with Business Unit count, but they do multiply **operationally** - and that might hurt especially around unification and real-time actions. |
 
 ---
 
@@ -832,13 +832,13 @@ graph LR
 
 *Diagram: Business Units A and B each map to their own Data Space in one Data 360 org.*
 
-The only way to scale Business Units within one org: each new Business Unit gets its own dedicated, never-shared Data Space. This isn't one option among several - it's the platform's sole mechanism, so "1:1 Mapping" is what Multi BU *means* in practice. Reach for it once you know you need more than one Business Unit for separate teams or brands, and budget your Business Unit entitlement accordingly - there's no cheaper multi-BU variant to fall back on.
+The only way to scale Business Units within one org: each new Business Unit gets its own dedicated, never-shared Data Space. This isn't one option among several - it's the platform's sole mechanism, so "1\:1 Mapping" is what Multi BU *means* in practice. Reach for it once you know you need more than one Business Unit for separate teams or brands, and budget your Business Unit entitlement accordingly - there's no cheaper multi-BU variant to fall back on.
 
 #### MC Next Global BU Pattern
 
 A common ask once a Multi BU rollout is on the table: add one more Business Unit, call it Global, and run worldwide campaigns out of it alongside the regional ones. It's a real pattern with a hard ceiling, not a documented feature with its own rules.
 
-**There's no such thing as a Global Business Unit, technically.** No distinct Business Unit type, edition gate, or setup path exists for it - it's an ordinary Business Unit that a team has agreed to use for worldwide campaigns, bound by exactly the same 1:1 Data Space relationship as every other Business Unit in the org.
+**There's no such thing as a Global Business Unit, technically.** No distinct Business Unit type, edition gate, or setup path exists for it - it's an ordinary Business Unit that a team has agreed to use for worldwide campaigns, bound by exactly the same 1\:1 Data Space relationship as every other Business Unit in the org.
 
 **The ceiling**: a Global Business Unit's Data Space is exactly as walled off from every regional Data Space as any other Business Unit's. It cannot assemble a live, unified segment out of every region's underlying customer data. You can use Data Kits to deploy a *copy* of a segment or Calculated Insight into another Data Space, but first you need to bring the copy of the data to that Data Space - and the only way to do that is to ingest it a second time, in parallel with its regional ingestion.
 
@@ -1557,14 +1557,14 @@ The [Behavioral Triggers Content Block](https://mateuszdabrowski.pl/docs/salesfo
 It is already available in the form of:
 
 - Einstein User Attributes that we can pass through the `setUserInfo` data layer.
-- The [request](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#5-building-the-api-query) used in the back end of the current Behavioral Triggers Content Block; by adding "\&user\_attributes=attributeName" to the endpoint.
+- The [request](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#5-building-the-api-query) used in the back end of the current Behavioral Triggers Content Block; by adding "\&user_attributes=attributeName" to the endpoint.
 - [Code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#6-response-parsing) of the existing Behavioral Triggers Content Block responsible for creating AMPScript variables based on the Einstein User Attributes data.
 
 However, as the Einstein User Attributes are neither added to the request by default nor configured in the User Integrace of the Content Block, to get this data in the email, one must create yet another, the same call with the above query parameter added. Neither user friendly nor optimal due to expensive `HTTP.Get` function running twice in such a scenario.
 
 Salesforce can fix it. Below are two solution tiers:
 
-1. **Minimum Valuable Solution**: Add the required query string ("\&user\_attributes=X,Y") with all potential Custom Einsteins User Attributes to the request URL built within the Content Block code.
+1. **Minimum Valuable Solution**: Add the required query string ("\&user_attributes=X,Y") with all potential Custom Einsteins User Attributes to the request URL built within the Content Block code.
 2. **Solution Deluxe**: Improve the above with the UI-enabled selection of needed Profile Attributes, just as available with Product Attributes.
 
 [Vote on IdeaExchange](https://ideas.salesforce.com/s/idea/a0B8W00000GddaZUAR/einstein-user-attributes-available-in-behavioral-trigger-content-block)
@@ -4268,19 +4268,19 @@ The last line outputs `Freitag, 7. Februar 2020`. Neat for running it with [`CAS
 
 Above, you have seen three different format specifiers used to manipulate the date, but many more are available. You can find the most useful below:
 
-| Format specifier | Description        | Example (for US culture)            |
-| ---------------- | ------------------ | ----------------------------------- |
-| 'd'              | Short date         | 10/30/2020                          |
-| 'D'              | Long date          | Friday, October 30, 2020            |
-| 'm'/'M'          | Month Day          | October 30                          |
-| 'y'/'Y'          | Year Month         | October 2020                        |
-| 't'              | Short time         | 2:15 PM                             |
-| 'T'              | Long time          | 2:15:30 PM                          |
-| 'g'              | General short time | 10/30/2020 2:15 PM                  |
-| 'G'              | General long time  | 10/30/2020 2:15:30 PM               |
-| 'f'              | Full short time    | Friday, October 30, 2020 2:15 PM    |
-| 'F'              | Full long time     | Friday, October 30, 2020 2:15:30 PM |
-| 'r'/'R'          | RFC1123            | Fri, 30 Oct 2020 14:15:30 GMT       |
+| Format specifier | Description        | Example (for US culture)              |
+| ---------------- | ------------------ | ------------------------------------- |
+| 'd'              | Short date         | 10/30/2020                            |
+| 'D'              | Long date          | Friday, October 30, 2020              |
+| 'm'/'M'          | Month Day          | October 30                            |
+| 'y'/'Y'          | Year Month         | October 2020                          |
+| 't'              | Short time         | 2\:15 PM                              |
+| 'T'              | Long time          | 2\:15\:30 PM                          |
+| 'g'              | General short time | 10/30/2020 2\:15 PM                   |
+| 'G'              | General long time  | 10/30/2020 2\:15\:30 PM               |
+| 'f'              | Full short time    | Friday, October 30, 2020 2\:15 PM     |
+| 'F'              | Full long time     | Friday, October 30, 2020 2\:15\:30 PM |
+| 'r'/'R'          | RFC1123            | Fri, 30 Oct 2020 14\:15\:30 GMT       |
 
 As highlighted in the table header - the examples are for the MCE default US culture formating. If you add a specific culture code as a third parameter, the outcome will be different, as various countries have different defaults of elements order and separator style.
 
@@ -5334,7 +5334,7 @@ SELECT
     , ISJSON('49.99')                           AS IsPriceJson          /* Output: 0 */
 ```
 
-## JSON\_VALUE
+## JSON_VALUE
 
 `JSON_VALUE` pulls a single value - text, number or boolean - out of JSON. It takes the JSON and a path that starts with `$`, the root of the document. From there, you name each key after a dot, pick array items by their position (counting from zero) and wrap keys with spaces in double quotes:
 
@@ -5392,7 +5392,7 @@ In most Marketing Automation cases, I would stay with the default lax mode and c
 >
 > For a broken record, [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) returns `NULL` and the query keeps running. Turn the check around (`WHERE ISJSON(orderEvent.Payload) = 0`), and you get the list of broken records, which makes a good regular health check for any Data Extension storing JSON.
 
-### JSON\_PATH\_EXISTS
+### JSON_PATH_EXISTS
 
 Checking for `NULL` has one catch. A key holding `null` returns the same `NULL` as a key that is not there at all, so the output alone will not tell you which one you got. `JSON_PATH_EXISTS` will, as it returns `1` for the first and `0` for the second:
 
@@ -5404,7 +5404,7 @@ SELECT
     , JSON_PATH_EXISTS('{"orderId":"ORD-1042"}', '$.couponCode')    AS DoesMissingCouponCodeExist   /* Output: 0 */
 ```
 
-## JSON\_QUERY
+## JSON_QUERY
 
 `JSON_QUERY` does what `JSON_VALUE` does, for objects and arrays. It returns them as JSON text, which you can store in a Data Extension or pass to another JSON function. Unlike `JSON_VALUE`, it has no 4000-character limit - in my test, it returned a 5004-character array without a problem.
 
@@ -5414,7 +5414,7 @@ SELECT
     , JSON_QUERY('{"tags":["music","wood"]}', '$.tags')                     AS TagArray         /* Output: '["music","wood"]' */
 ```
 
-## JSON\_MODIFY
+## JSON_MODIFY
 
 `JSON_MODIFY` returns a copy of your JSON with one change. The path decides where the change goes, and the third argument is the new value:
 
@@ -5472,7 +5472,7 @@ The `- 1` is there because JSON counts array positions from zero, while `ROW_NUM
 
 `TOP 10` sets the maximum number of items you read, so raise it if your arrays are longer (and make sure the Data View has at least that many rows). The `JSON_QUERY` in the join fits arrays of objects. For an array of plain values, like `["music","wood"]`, use `JSON_VALUE` in the join, as `JSON_QUERY` returns `NULL` for anything that is not an object or an array.
 
-## JSON\_OBJECT and JSON\_ARRAY
+## JSON_OBJECT and JSON_ARRAY
 
 So far, we have been reading and changing JSON. `JSON_OBJECT` and `JSON_ARRAY` go the other way, which you need whenever the next step expects JSON. The most important case is a file export to SFTP, where an external system picks up data from your Data Extension, and a query is the natural place to prepare it. A Script Activity that sends records to an external API could build the JSON in SSJS on its own. However, on larger volumes it gets slow and risks the [30-minute auto-kill](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#limits-and-guardrails) in Automation Studio, so preparing the JSON with a query first helps there as well.
 
@@ -6696,7 +6696,7 @@ FROM AllContactsList
 
 > **Note: You Should Know**
 >
-> If you see this query running very long or timing out, remove the least important and non-sargable (non-index-or-performance-friendly) GUID\_Format column:
+> If you see this query running very long or timing out, remove the least important and non-sargable (non-index-or-performance-friendly) GUID_Format column:
 >
 > ```sql
 >     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL, 1, 0))      AS GUID_Format
@@ -6712,11 +6712,11 @@ FROM AllContactsList
 
 This query will give you a breakdown of the different formats of Subscriber Keys in your All Contacts list, which can help you identify any issues or anomalies.
 
-### Total\_Count
+### Total_Count
 
 `Total_Count` let's you verify whether your query is operating on the full list of Contacts - just compare that number with what you see in All Contacts view in Contact Builder.
 
-### SF\_Contact
+### SF_Contact
 
 `SF_Contact` will show you how many Subscriber Keys are in the format of Salesforce Contact IDs (start with '003' and are 18 characters long) - these records were likely created through a Salesforce CRM integration or imported with Contact IDs as Subscriber Keys.
 
@@ -6726,13 +6726,13 @@ Verify this number against the number of records in your Synchronized Data Exten
 2. If the number is matching, but is very high - you might check whether you truly need all those Contacts in your MCE instance, and consider [filtering out](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#manage-the-data) those that do not support your marketing use cases.
 3. If the number is higher in the `SF_Contact` column than in your Synchronized Data Extension(s) - you might not have a [contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/) in place, which means that all the Contacts that were ever created in your MCE instance are still there, even if they are no longer synchronized.
 
-### SF\_Account
+### SF_Account
 
 `SF_Account` will show you how many Subscriber Keys are in the format of Salesforce Account IDs (start with '001' and are 18 characters long). You shouldn't have any of those in your All Contacts list, and in most cases it's data architecture issue related to how you manage Person Accounts in your Salesforce CRM and how you set up your integration. For Marketing purposes you should be using Contact ID of the Person Account as Subscriber Key, not the Account ID.
 
 Check your integration setup, fix it to leverage a Person Contact ID, and clean up those records from your All Contacts list as they are not valid for marketing purposes and just inflate your contact count.
 
-### SF\_Lead
+### SF_Lead
 
 `SF_Lead` will show you how many Subscriber Keys are in the format of Salesforce Lead IDs (start with '00Q' and are 18 characters long). Similar to `SF_Contact`, you should check that number against your Synchronized Data Extension(s) for Lead Object:
 
@@ -6757,13 +6757,13 @@ Check your integration setup, fix it to leverage a Person Contact ID, and clean 
 >     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')
 > ```
 
-### SF\_User
+### SF_User
 
 `SF_User` will show you how many Subscriber Keys are in the format of Salesforce User IDs (start with '005' and are 18 characters long). Unless you have a very specific use case around personalizing or impersonating your emails with Salesforce User information, you do not need any of those in your All Contacts list.
 
 A simple way to manage it is to [add a checkbox on your User object](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mcc-integration-patterns/#manage-the-data) to identify which (if any) Users should be synced to MCE, and then update your integration to only sync those that are relevant for marketing purposes. Then you can clean up the rest of the records from your All Contacts list.
 
-### Email\_Format
+### Email_Format
 
 `Email_Format` will show you how many Subscriber Keys are in the format of email addresses (contain '@' symbol).
 
@@ -6795,7 +6795,7 @@ In short: if there are none, celebrate. If there are some, check how they got th
 >
 > P.S. If you are running it from Parent BU, you won't need [`Ent.` prefix](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/#enterprise-data-extension) for `_Subscribers` System Data View.
 
-### MobileConnect\_Format
+### MobileConnect_Format
 
 `MobileConnect_Format` will show you how many Subscriber Keys are in the format of mobile numbers (contain only digits and are at least 7 characters long).
 
@@ -6837,13 +6837,13 @@ If you see such records in your system, check whether you are using SMS keywords
 >
 > This query will check 1-digit calling codes for Russia and North American Numbering Plan (NANP) countries (like USA, Canada), then 2-digit calling codes for the lucky few with shorter calling numbers, and finally will pull 3 characters for any other numbers. This way you can get a better understanding of which countries are contributing to mobile number Subscriber Keys in your All Contacts list.
 
-### Test\_Records
+### Test_Records
 
 `Test_Records` will show you how many Subscriber Keys contain the word "test". While this is not a very sophisticated way to identify test records, it can be a good starting point to identify some of them and then check the Source and Modified column in All Contacts view in Contact Builder to understand how they got there and fix the process.
 
 If there is a bit too much there, consider adding this scenario to your [automated contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio) to remove such records on an ongoing basis.
 
-### GUID\_Format
+### GUID_Format
 
 `GUID_Format` will show you how many Subscriber Keys are in the format of GUIDs (Globally Unique Identifiers). While having some GUIDs as Subscriber Keys is not necessarily a problem, check whether you know where they are coming from and whether they are valid Subscriber Keys that you are using in your marketing efforts.
 
@@ -6851,7 +6851,7 @@ In some cases those might be valid Subscriber Keys for your non-Salesforce CRM c
 
 If you don't recognize the source of those GUID Subscriber Keys, check the Source and Modified column in All Contacts view in Contact Builder to understand how they got there and fix the process.
 
-### Other\_Format
+### Other_Format
 
 `Other_Format` will show you how many Subscriber Keys are in formats other than the ones mentioned above. If you have a significant number of such records, it is worth investigating them further to understand what they are and whether they are valid Subscriber Keys that you should keep in your All Contacts list.
 
@@ -9564,7 +9564,7 @@ There was much information to digest, so it's time for a streamlined step by ste
    2. On the main menu pane of MCE, hover over AppExchange to see your application.
 5. **Secured Template**
    1. Copy the [template](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/#secured-cloud-page-app-template) in the prefered language to the Cloud Page from step 2.i.
-   2. Update the unique values in the variables at the top part of the template (CAPS\_LOCK placeholders).
+   2. Update the unique values in the variables at the top part of the template (CAPS_LOCK placeholders).
 6. **Build your solution**
 
 ## Learn more
@@ -9897,12 +9897,12 @@ SET @supressed = Now();
 
 AMPScript letter case is a minefield. I have seen all possible combinations of letter case used for variables and AMPScript functions - both in shared snippets and official documentation.
 
-I even created a [survey](https://www.linkedin.com/feed/update/urn\:li\:activity:6807595457716518912/) to check which approach is the most popular. Outcomes from 168 votes?
+I even created a [survey](https://www.linkedin.com/feed/update/urn\:li\:activity\:6807595457716518912/) to check which approach is the most popular. Outcomes from 168 votes?
 
 - 45%: Mix of `ProperCase` and `UPPERCASE` for various elements.
 - 30%: `ProperCase` for everything.
 - 15%: `UPPERCASE` for everything.
-- 10%: Other conventions (including `lowercase` with some `camelCase` for functions and `snake_case` for variables by [Adam Spriggs](https://www.linkedin.com/feed/update/urn\:li\:ugcPost:6807595457297084416?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807673667259125762%29\&replyUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807687826575110145%29), co-author of the AMPScript bible - [ampscript.guide](https://ampscript.guide)).
+- 10%: Other conventions (including `lowercase` with some `camelCase` for functions and `snake_case` for variables by [Adam Spriggs](https://www.linkedin.com/feed/update/urn\:li\:ugcPost\:6807595457297084416?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807673667259125762%29\&replyUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A6807595457297084416%2C6807687826575110145%29), co-author of the AMPScript bible - [ampscript.guide](https://ampscript.guide)).
 
 So the best recommendation for you (and your team) to decide on one style - whichever it will be - and stay consistent.
 
@@ -10811,7 +10811,7 @@ Stores information about your Email Sends Jobs. Great for capturing detailed dat
 `JobType` - 2 values
 
 - `null`
-- MULTIPLE\_SEND
+- MULTIPLE_SEND
 
 `JobStatus` - 2 values
 
@@ -10823,7 +10823,7 @@ Stores information about your Email Sends Jobs. Great for capturing detailed dat
 - Test Send Emails
 - Triggered Sends
 - Version XX (where XX is a number)
-- GUID\_VXX (36 character hyphen separated GUID followed by underscore and VXX where XX is a number)
+- GUID_VXX (36 character hyphen separated GUID followed by underscore and VXX where XX is a number)
 
 `CharacterSet` - 1 value
 
@@ -11710,25 +11710,25 @@ Provides historical information about Automation runs.
 
 **Fields**
 
-| Name                                      | Description                                                                                                                                           | Data Type | Nullable |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------- |
-| MemberID                                  | The Account ID for the Business Unit                                                                                                                  | Number    |          |
-| AutomationName                            | The name of the automation                                                                                                                            | Text      |          |
-| AutomationDescription                     | The description of the automation                                                                                                                     | Text      | X        |
-| AutomationCustomerKey                     | The unique ID of the automation                                                                                                                       | Text      |          |
-| AutomationInstanceID                      | The unique ID of the specific automation run                                                                                                          | Text      |          |
-| AutomationType                            | The type of starting source used in automation                                                                                                        | Text      |          |
-| AutomationNotificationRecipient\_Complete | Email(s) receiving notification about completed runs                                                                                                  | Text      | X        |
-| AutomationNotificationRecipient\_Error    | Email(s) receiving notification about errored runs                                                                                                    | Text      | X        |
-| AutomationNotificationRecipient\_Skip     | Email(s) receiving notification about skipped runs                                                                                                    | Text      | X        |
-| AutomationStepCount                       | The number of steps in the automation                                                                                                                 | Number    |          |
-| AutomationInstanceIsRunOnce               | Was this specific automation run executed with Run Once? 1 for true, 0 for false in File Drop and Triggered automations. Null in Schedule automations | Boolean   |          |
-| FilenameFromTrigger                       | Name of the file that triggered the automation for Triggered and File Drop automations. Null for Schedule automations                                 | Text      | X        |
-| AutomationInstanceScheduledTime\_UTC      | Starting schedule datetime in UTC timezone for Schedule automations. Null for Triggered and File Drop automation                                      | Date      | X        |
-| AutomationInstanceStartTime\_UTC          | Automation run start datetime in UTC timezone. Null if run is skipped                                                                                 | Date      | X        |
-| AutomationInstanceEndTime\_UTC            | Automation run end datetime in UTC timezone. Null if run is skipped or still running                                                                  | Date      | X        |
-| AutomationInstanceStatus                  | The status of the automation run at the time of querying                                                                                              | Text      |          |
-| AutomationInstanceActivityErrorDetails    | The first error message encountered in the automation run                                                                                             | Text      | X        |
+| Name                                     | Description                                                                                                                                           | Data Type | Nullable |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------- |
+| MemberID                                 | The Account ID for the Business Unit                                                                                                                  | Number    |          |
+| AutomationName                           | The name of the automation                                                                                                                            | Text      |          |
+| AutomationDescription                    | The description of the automation                                                                                                                     | Text      | X        |
+| AutomationCustomerKey                    | The unique ID of the automation                                                                                                                       | Text      |          |
+| AutomationInstanceID                     | The unique ID of the specific automation run                                                                                                          | Text      |          |
+| AutomationType                           | The type of starting source used in automation                                                                                                        | Text      |          |
+| AutomationNotificationRecipient_Complete | Email(s) receiving notification about completed runs                                                                                                  | Text      | X        |
+| AutomationNotificationRecipient_Error    | Email(s) receiving notification about errored runs                                                                                                    | Text      | X        |
+| AutomationNotificationRecipient_Skip     | Email(s) receiving notification about skipped runs                                                                                                    | Text      | X        |
+| AutomationStepCount                      | The number of steps in the automation                                                                                                                 | Number    |          |
+| AutomationInstanceIsRunOnce              | Was this specific automation run executed with Run Once? 1 for true, 0 for false in File Drop and Triggered automations. Null in Schedule automations | Boolean   |          |
+| FilenameFromTrigger                      | Name of the file that triggered the automation for Triggered and File Drop automations. Null for Schedule automations                                 | Text      | X        |
+| AutomationInstanceScheduledTime_UTC      | Starting schedule datetime in UTC timezone for Schedule automations. Null for Triggered and File Drop automation                                      | Date      | X        |
+| AutomationInstanceStartTime_UTC          | Automation run start datetime in UTC timezone. Null if run is skipped                                                                                 | Date      | X        |
+| AutomationInstanceEndTime_UTC            | Automation run end datetime in UTC timezone. Null if run is skipped or still running                                                                  | Date      | X        |
+| AutomationInstanceStatus                 | The status of the automation run at the time of querying                                                                                              | Text      |          |
+| AutomationInstanceActivityErrorDetails   | The first error message encountered in the automation run                                                                                             | Text      | X        |
 
 **Field Picklist Values**
 
@@ -11793,23 +11793,23 @@ Provides historical information about Automation Studio Activity runs.
 
 **Fields**
 
-| Name                           | Description                                                                              | Data Type | Nullable |
-| ------------------------------ | ---------------------------------------------------------------------------------------- | --------- | -------- |
-| MemberID                       | The Account ID for the Business Unit                                                     | Number    |          |
-| JobID                          | The job ID number for the email send                                                     | Number    |          |
-| AutomationName                 | The name of the automation                                                               | Text      |          |
-| AutomationCustomerKey          | The unique ID of the automation                                                          | Text      |          |
-| AutomationInstanceID           | The unique ID of the specific automation run                                             | Text      |          |
-| ActivityCustomerKey            | The unique ID of the activity                                                            | Text      |          |
-| ActivityInstanceID             | The unique ID of the specific activity execution                                         | Text      |          |
-| ActivityType                   | The type of the activity (numeric ID)                                                    | Number    |          |
-| ActivityName                   | The name of the activity                                                                 | Text      |          |
-| ActivityDescription            | The description of the activity                                                          | Text      | X        |
-| ActivityInstanceStep           | The two-dimensional description where in automation the activity is located              | Text      |          |
-| ActivityInstanceStartTime\_UTC | Activity execution start datetime in UTC timezone. Null if run is skipped                | Date      | X        |
-| ActivityInstanceEndTime\_UTC   | Activity execution end datetime in UTC timezone. Null if run is skipped or still running | Date      | X        |
-| ActivityInstanceStatus         | The status of the activity run at the time of querying                                   | Text      |          |
-| ActivityInstanceStatusDetails  | The error message encountered in the activity execution                                  | Text      | X        |
+| Name                          | Description                                                                              | Data Type | Nullable |
+| ----------------------------- | ---------------------------------------------------------------------------------------- | --------- | -------- |
+| MemberID                      | The Account ID for the Business Unit                                                     | Number    |          |
+| JobID                         | The job ID number for the email send                                                     | Number    |          |
+| AutomationName                | The name of the automation                                                               | Text      |          |
+| AutomationCustomerKey         | The unique ID of the automation                                                          | Text      |          |
+| AutomationInstanceID          | The unique ID of the specific automation run                                             | Text      |          |
+| ActivityCustomerKey           | The unique ID of the activity                                                            | Text      |          |
+| ActivityInstanceID            | The unique ID of the specific activity execution                                         | Text      |          |
+| ActivityType                  | The type of the activity (numeric ID)                                                    | Number    |          |
+| ActivityName                  | The name of the activity                                                                 | Text      |          |
+| ActivityDescription           | The description of the activity                                                          | Text      | X        |
+| ActivityInstanceStep          | The two-dimensional description where in automation the activity is located              | Text      |          |
+| ActivityInstanceStartTime_UTC | Activity execution start datetime in UTC timezone. Null if run is skipped                | Date      | X        |
+| ActivityInstanceEndTime_UTC   | Activity execution end datetime in UTC timezone. Null if run is skipped or still running | Date      | X        |
+| ActivityInstanceStatus        | The status of the activity run at the time of querying                                   | Text      |          |
+| ActivityInstanceStatusDetails | The error message encountered in the activity execution                                  | Text      | X        |
 
 **Field Picklist Values**
 
@@ -14240,7 +14240,7 @@ Before you use the Behavioral Triggers, be sure to fulfil pre-requisites:
 
 1. As Behavioral Triggers are extending the **Einstein Recommendations**, **get a license and [enable](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#email-recommendations-configuration)** it in your Business Unit.
 2. Many data leveraged by Triggers is coming from the **Product Catalog**, so be sure to **[configure](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#initial-catalog-upload)** it before capturing the events.
-3. Behavioural data is saved only for records that have Einstein Profile (IGO\_PROFILE), so you need to **enable Einstein Data Extensions**.
+3. Behavioural data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to **enable Einstein Data Extensions**.
 4. **Implement the [Collect.js](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#collectjs)** script on your e-commerce to capture session and engagement data.
 5. Finally, **configure Behavioral Triggers** to bring relevant data to MCE Data Extensions.
 
@@ -16587,12 +16587,12 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
 
-1. MCE Business Units ([5:53](https://youtu.be/dRxcbwIA1K0?t=353))
-2. Business Units Setup Patterns ([21:02](https://youtu.be/dRxcbwIA1K0?t=1262))
-3. Single-Org vs Multi-Org ([27:31](https://youtu.be/dRxcbwIA1K0?t=1651))
-4. Marketing Cloud Connect Patterns ([41:36](https://youtu.be/dRxcbwIA1K0?t=2496))
-5. SAP, Private Domains & IPs ([50:21](https://youtu.be/dRxcbwIA1K0?t=3021))
-6. Deliverability & IP Warmup ([56:22](https://youtu.be/dRxcbwIA1K0?t=3382))
+1. MCE Business Units ([5\:53](https://youtu.be/dRxcbwIA1K0?t=353))
+2. Business Units Setup Patterns ([21\:02](https://youtu.be/dRxcbwIA1K0?t=1262))
+3. Single-Org vs Multi-Org ([27\:31](https://youtu.be/dRxcbwIA1K0?t=1651))
+4. Marketing Cloud Connect Patterns ([41\:36](https://youtu.be/dRxcbwIA1K0?t=2496))
+5. SAP, Private Domains & IPs ([50\:21](https://youtu.be/dRxcbwIA1K0?t=3021))
+6. Deliverability & IP Warmup ([56\:22](https://youtu.be/dRxcbwIA1K0?t=3382))
 
 ## Video
 
@@ -16630,12 +16630,12 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
 
-1. Salesforce Data Entry ([3:29](https://youtu.be/Ru4Qh__3xdA?t=209))
-2. Salesforce Data Bindings ([24:54](https://youtu.be/Ru4Qh__3xdA?t=1494))
-3. Synchronized Data Extensions ([29:40](https://youtu.be/Ru4Qh__3xdA?t=1780))
-4. Salesforce Data through API ([34:31](https://youtu.be/Ru4Qh__3xdA?t=2071))
-5. Salesforce AMPScript functions ([37:11](https://youtu.be/Ru4Qh__3xdA?t=2231))
-6. Salesforce Journey Builder Activities ([41:31](https://youtu.be/Ru4Qh__3xdA?t=2491))
+1. Salesforce Data Entry ([3\:29](https://youtu.be/Ru4Qh__3xdA?t=209))
+2. Salesforce Data Bindings ([24\:54](https://youtu.be/Ru4Qh__3xdA?t=1494))
+3. Synchronized Data Extensions ([29\:40](https://youtu.be/Ru4Qh__3xdA?t=1780))
+4. Salesforce Data through API ([34\:31](https://youtu.be/Ru4Qh__3xdA?t=2071))
+5. Salesforce AMPScript functions ([37\:11](https://youtu.be/Ru4Qh__3xdA?t=2231))
+6. Salesforce Journey Builder Activities ([41\:31](https://youtu.be/Ru4Qh__3xdA?t=2491))
 
 ## Video
 
@@ -16677,14 +16677,14 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
 
-1. Web Studio 101 ([3:07](https://youtu.be/a8RPRvVOXak?t=187))
-2. AMPScript vs SSJS in Web Studio ([12:38](https://youtu.be/a8RPRvVOXak?t=758))
-3. Web Studio Patterns ([19:53](https://youtu.be/a8RPRvVOXak?t=1193))
-   1. Landing Page ([20:10](https://youtu.be/a8RPRvVOXak?t=1210))
-   2. Web Form ([33:50](https://youtu.be/a8RPRvVOXak?t=2030))
-   3. Preference Center ([46:32](https://youtu.be/a8RPRvVOXak?t=2792))
-   4. Cloud Page App ([57:30](https://youtu.be/a8RPRvVOXak?t=3450))
-4. Web Studio Security ([1:03:17](https://youtu.be/a8RPRvVOXak?t=3797))
+1. Web Studio 101 ([3\:07](https://youtu.be/a8RPRvVOXak?t=187))
+2. AMPScript vs SSJS in Web Studio ([12\:38](https://youtu.be/a8RPRvVOXak?t=758))
+3. Web Studio Patterns ([19\:53](https://youtu.be/a8RPRvVOXak?t=1193))
+   1. Landing Page ([20\:10](https://youtu.be/a8RPRvVOXak?t=1210))
+   2. Web Form ([33\:50](https://youtu.be/a8RPRvVOXak?t=2030))
+   3. Preference Center ([46\:32](https://youtu.be/a8RPRvVOXak?t=2792))
+   4. Cloud Page App ([57\:30](https://youtu.be/a8RPRvVOXak?t=3450))
+4. Web Studio Security ([1\:03\:17](https://youtu.be/a8RPRvVOXak?t=3797))
 
 ## Video
 
@@ -16711,12 +16711,12 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
 
-1. MCE Solutioning 101 ([4:15](https://youtu.be/3ngC9OLKaEI?t=256))
-2. Cloud Page App 101  ([12:11](https://youtu.be/3ngC9OLKaEI?t=731))
-3. AppExchange Menu Magic ([14:20](https://youtu.be/3ngC9OLKaEI?t=860))
-4. Cloud Page App SSO ([22:06](https://youtu.be/3ngC9OLKaEI?t=1326))
-5. Simple Cloud Page App ([26:53](https://youtu.be/3ngC9OLKaEI?t=1613))
-6. Complex Cloud Page App ([43:36](https://youtu.be/3ngC9OLKaEI?t=2796))
+1. MCE Solutioning 101 ([4\:15](https://youtu.be/3ngC9OLKaEI?t=256))
+2. Cloud Page App 101  ([12\:11](https://youtu.be/3ngC9OLKaEI?t=731))
+3. AppExchange Menu Magic ([14\:20](https://youtu.be/3ngC9OLKaEI?t=860))
+4. Cloud Page App SSO ([22\:06](https://youtu.be/3ngC9OLKaEI?t=1326))
+5. Simple Cloud Page App ([26\:53](https://youtu.be/3ngC9OLKaEI?t=1613))
+6. Complex Cloud Page App ([43\:36](https://youtu.be/3ngC9OLKaEI?t=2796))
 
 ## Video
 

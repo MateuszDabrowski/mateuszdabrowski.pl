@@ -27,7 +27,7 @@ Cloudflare delivers this site and keeps bots away from it.
 
 | Cookie Name | Expiration | Purpose                                                                              |
 | ----------- | ---------- | ------------------------------------------------------------------------------------ |
-| \_\_cf\_bm  | 30 minutes | Tells browsers from bots to limit automated traffic. Holds no information about you. |
+| \_\_cf_bm   | 30 minutes | Tells browsers from bots to limit automated traffic. Holds no information about you. |
 
 ### Local storage
 

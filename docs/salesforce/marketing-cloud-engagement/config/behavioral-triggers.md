@@ -27,7 +27,7 @@ Before you use the Behavioral Triggers, be sure to fulfil pre-requisites:
 
 1. As Behavioral Triggers are extending the **Einstein Recommendations**, **get a license and [enable](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#email-recommendations-configuration)** it in your Business Unit.
 2. Many data leveraged by Triggers is coming from the **Product Catalog**, so be sure to **[configure](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#initial-catalog-upload)** it before capturing the events.
-3. Behavioural data is saved only for records that have Einstein Profile (IGO\_PROFILE), so you need to **enable Einstein Data Extensions**.
+3. Behavioural data is saved only for records that have Einstein Profile (IGO_PROFILE), so you need to **enable Einstein Data Extensions**.
 4. **Implement the [Collect.js](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/#collectjs)** script on your e-commerce to capture session and engagement data.
 5. Finally, **configure Behavioral Triggers** to bring relevant data to MCE Data Extensions.
 

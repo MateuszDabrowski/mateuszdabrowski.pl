@@ -9,12 +9,12 @@ Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Table of Contents
 
-1. Salesforce Data Entry ([3:29](https://youtu.be/Ru4Qh__3xdA?t=209))
-2. Salesforce Data Bindings ([24:54](https://youtu.be/Ru4Qh__3xdA?t=1494))
-3. Synchronized Data Extensions ([29:40](https://youtu.be/Ru4Qh__3xdA?t=1780))
-4. Salesforce Data through API ([34:31](https://youtu.be/Ru4Qh__3xdA?t=2071))
-5. Salesforce AMPScript functions ([37:11](https://youtu.be/Ru4Qh__3xdA?t=2231))
-6. Salesforce Journey Builder Activities ([41:31](https://youtu.be/Ru4Qh__3xdA?t=2491))
+1. Salesforce Data Entry ([3\:29](https://youtu.be/Ru4Qh__3xdA?t=209))
+2. Salesforce Data Bindings ([24\:54](https://youtu.be/Ru4Qh__3xdA?t=1494))
+3. Synchronized Data Extensions ([29\:40](https://youtu.be/Ru4Qh__3xdA?t=1780))
+4. Salesforce Data through API ([34\:31](https://youtu.be/Ru4Qh__3xdA?t=2071))
+5. Salesforce AMPScript functions ([37\:11](https://youtu.be/Ru4Qh__3xdA?t=2231))
+6. Salesforce Journey Builder Activities ([41\:31](https://youtu.be/Ru4Qh__3xdA?t=2491))
 
 ## Video
 
