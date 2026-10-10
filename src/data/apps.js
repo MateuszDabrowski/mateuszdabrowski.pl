@@ -24,7 +24,7 @@ export const apps = [
         url: 'https://diagramforce.com',
         githubUrl: 'https://github.com/MateuszDabrowski/diagramforce',
         imageUrl: 'img/article/index-image-tool-diagramforce.webp',
-        description: 'Every diagram a Salesforce project needs, in one free tool with no account to create. When drawing by hand would take too long, Claude builds the first version for you.',
+        description: 'Salesforce diagrams are usually drawn by hand and out of date by the next release. Diagramforce is free in your browser with no account to create, and its Claude skill draws your Flows, data model and Data 360 mappings straight from your org\'s metadata.',
         tags: ['Salesforce', 'Diagrams', 'Data 360', 'Claude'],
         platforms: ['Web'],
         cta: 'Open App',
