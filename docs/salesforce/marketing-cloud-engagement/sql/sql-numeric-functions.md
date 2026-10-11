@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -50,7 +50,7 @@ SELECT
 FROM Contact_Salesforce AS c
 ```
 
-This query can be used *ad hoc* in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation.
+This query can be used *ad hoc* in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free SQL editor that runs inside your own MCE account) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation. For a ready check of the whole Contact object, and a way to run it automatically before every transfer, see my [Debugging Value Length snippet](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/).
 
 You can also extend it with [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) containing current lengths of fields in that data extension and make it part of your automation. It will find the records too long for the data extension, log them into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
 

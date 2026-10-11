@@ -63,6 +63,7 @@ To fully leverage the Salesforce Marketing Cloud Engagement Data Extensions and 
 - [Numeric Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/)
 - [Conversion Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/)
 - [Aggregate Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/)
+- [Window Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/)
 - [Null Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/)
 - [JSON Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/)
 - [Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/)

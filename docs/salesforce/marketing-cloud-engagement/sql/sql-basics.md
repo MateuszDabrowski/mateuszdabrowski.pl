@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-10  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -25,20 +25,20 @@ SQL (Structured Query Language) is one of the best ways to work with relational 
 
 The main difference from standard SQL (MCE uses more or less SQL Server 2022, although Salesforce's [SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm\&type=5) still says 2016) is that MCE supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
 
-Do not expect anything newer than SQL Server 2022, though. I tested functions added in SQL Server 2025, and none of them work, while the [JSON functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/) added in SQL Server 2022 run fine.
+Do not expect anything newer than SQL Server 2022, though. I tested functions added in SQL Server 2025, and none of them work, while the [JSON functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/) added in SQL Server 2022 run fine. Some 2022 additions fail as well, such as the `WINDOW` clause of [window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by), while others, such as their `IGNORE NULLS`, work.
 
 Another limiting characteristic of MCE SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of MCE are not relational databases.
 
-Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
+Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data. Another is to [split the query into parts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#random-test-groups) that run in separate Query Activities.
 
 ## Where to learn MCE SQL
 
-Before we start with the real deal, let's cover where to learn to write SQL. I recommend [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange). It runs inside your own MCE account and sends your SQL to MCE unchanged, which makes it perfect for quickly learning how to query.
+Before we start with the real deal, let's cover where to learn to write SQL. I recommend [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor for MCE. It runs inside your own account and passes your SQL on unchanged, which makes it perfect for quickly learning how to query. On top of that, its [lint](https://mateuszdabrowski.pl/sql-studio/#lint) flags what would fail before you run anything and suggests a one-click fix. You learn faster that way, both how SQL works and where the SQL Server behind MCE behaves differently.
 
-If you cannot deploy SQL Studio in your MCE, there are still two ways to learn MCE SQL:
+If you cannot deploy SQL Studio, there are still two other ways to learn:
 
 1. Query Activities in Automation Studio. It will be much less user-friendly because for each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results. But it will let you train using the data you have in your platform.
-2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to MCE. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
+2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to the platform. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
 
 I always start in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), and only once my SQL Query is complete and validated do I move it to Automation Studio.
 
@@ -318,7 +318,7 @@ If you send huge volumes, feel free to change the timeframe from last month to l
 5. Unfortunately, in MCE, you cannot use alias in WHERE/HAVING/ORDER BY and similar places - you have to use the function/calculation.
 6. When calculating Bounce Rate, do it so that the outcome is an integer equal to a percent.
 
-Important: Because of the Query Studio bug, you cannot have spaces around the multiplication symbol (`*`); otherwise, you will see an error related to a bad practice blanket SELECTs. SQL Studio sends your query to MCE unchanged, so it does not have this problem.
+Important: Because of a bug in [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2), as in the original Query Studio, you cannot have spaces around the multiplication symbol (`*`). Otherwise, it refuses the query with "'SELECT \*' statements are not allowed." SQL Studio sends your query to MCE unchanged, so it does not have this problem.
 
 **Solution**
 
@@ -345,9 +345,65 @@ Bonus: This query might be performance heavy. One option to make it perform bett
 
 ---
 
-### Level 7 - coming soon-ish
+### Level 7 - PARTITION BY, ROW_NUMBER and LAG
 
-I will add more levels once I finish writing supporting learning materials :)
+Find the latest record of each subscriber or the time between two events in a single query. Window functions compare rows without collapsing them, which saves you a chain of Query Activities and a staging Data Extension.
+
+#### Learning materials
+
+- [Window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/) - focus on [OVER and PARTITION BY](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by), [ROW_NUMBER](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) with its [ties](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ties-in-row_number), and [LAG and LEAD](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#lag-and-lead).
+- [Order of operations](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/#order-of-operations) - window functions run after `HAVING`, which decides where you can filter on them.
+- [Open](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_open) and [Job](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_job) Data Views.
+
+#### Check your skills
+
+**Exercise**
+
+Find the last email each Subscriber opened in the last 30 days. Return their Subscriber Key, the name of that email, the date they opened it and how many days passed since the email they opened before it.
+
+If you send huge volumes, feel free to change the timeframe from the last 30 days to the last week for the exercise.
+
+**Hints**
+
+1. Start with `_Open` alone. Number the opens of each Subscriber with [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number), newest first, and check the numbers before you add anything else.
+2. Window functions cannot go into `WHERE`, and MCE does not accept `WITH`, so keep only number 1 with a `WHERE` in an outer query around a subquery.
+3. Calculate [`LAG`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#lag-and-lead) in the same subquery. Once the outer `WHERE` keeps only the latest open, the earlier ones are gone, and `LAG` has nothing to look back at.
+4. Use only unique opens (`IsUnique = 1`). Otherwise, the previous open is often the same email opened twice.
+5. Two opens can share the same time, so end both `ORDER BY`s with `JobID` to [settle the ties](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ties-in-row_number).
+6. Join `_Job` on `JobID` to get the email name.
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit"
+SELECT
+      lastOpen.SubscriberKey
+    , j.EmailName           AS LastOpenedEmailName
+    , lastOpen.EventDate    AS LastOpenDate
+    , DATEDIFF(DAY, lastOpen.PreviousOpenDate, lastOpen.EventDate) AS DaysSincePreviousOpen
+FROM (
+    SELECT
+          SubscriberKey
+        , JobID
+        , EventDate
+        , ROW_NUMBER() OVER (
+            PARTITION BY SubscriberKey
+            ORDER BY EventDate DESC, JobID DESC
+          ) AS OpenRecency
+        , LAG(EventDate) OVER (
+            PARTITION BY SubscriberKey
+            ORDER BY EventDate, JobID
+          ) AS PreviousOpenDate
+    FROM _Open
+    WHERE
+        EventDate >= DATEADD(DAY, -30, GETDATE())
+        AND IsUnique = 1
+) AS lastOpen
+    INNER JOIN _Job AS j
+        ON j.JobID = lastOpen.JobID
+WHERE lastOpen.OpenRecency = 1
+```
+
+Bonus: swap `_Open` for `_Click`, and you get the last clicked email. Need the average number of days between opens instead? `AVG` cannot wrap `LAG` directly, so add one more query level around the subquery - [here is why](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#lag-and-lead).
 
 ---
 
@@ -359,8 +415,8 @@ Knowing the available functions is one thing. Writing good and readable queries 
 
 One of the key things to remember when building more complex queries is the order of operations, as it will decide what is in the output:
 
-[`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) > [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) > [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by) > [`HAVING`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#having) > [`DISTINCT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#distinct) > [`ORDER BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-with-order-by)
+[`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) > [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) > [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by) > [`HAVING`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#having) > [window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/) > [`DISTINCT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#distinct) > [`ORDER BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-with-order-by)
 
-It means that rows filtered with `WHERE` will not be considered for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
+It means that rows filtered with `WHERE` will not be considered for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data. Window functions see only the rows left after `HAVING`, which is why filtering on them needs a [subquery](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number).
 
 ## All SQL Guides

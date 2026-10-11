@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-10  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 JSON ends up in Data Extensions more often than you would think: API payloads, CloudPages form submissions, product feeds or recommendations pushed from other systems. Most of us reach for SSJS or AMPscript to read it. However, the SQL behind MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) Query Activities understands JSON as well, so you can pull a single value, grab a whole object, change the JSON or even build it without leaving your query.
@@ -88,12 +88,12 @@ In most Marketing Automation cases, I would stay with the default lax mode and c
 >
 > ```sql {3} title="✅ Read values only from valid JSON"
 > SELECT
->       orderEvent.EventId                                                                        AS EventId
->     , IIF(ISJSON(orderEvent.Payload) = 1, JSON_VALUE(orderEvent.Payload, '$.orderId'), NULL)    AS OrderId
-> FROM OrderEvents AS orderEvent
+>       EventId
+>     , IIF(ISJSON(Payload) = 1, JSON_VALUE(Payload, '$.orderId'), NULL) AS OrderId
+> FROM OrderEvents
 > ```
 >
-> For a broken record, [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) returns `NULL` and the query keeps running. Turn the check around (`WHERE ISJSON(orderEvent.Payload) = 0`), and you get the list of broken records, which makes a good regular health check for any Data Extension storing JSON.
+> For a broken record, [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) returns `NULL` and the query keeps running. Turn the check around (`WHERE ISJSON(Payload) = 0`), and you get the list of broken records, which makes a good regular health check for any Data Extension storing JSON.
 
 ### JSON_PATH_EXISTS
 
@@ -142,12 +142,12 @@ SELECT
       orderItem.[key]   AS ItemKey
     , orderItem.[value] AS ItemValue
     , orderItem.[type]  AS ItemType
-FROM (SELECT TOP 1 sub.SubscriberID FROM _Subscribers AS sub) AS oneRow
+FROM (SELECT TOP 1 SubscriberID FROM _Subscribers) AS oneRow
     CROSS APPLY OPENJSON('["Ukulele","Łódź tour"]') AS orderItem
 /* Error: OPENJSON(N'["Ukulele","Łódź tour"]' is not a known data extension or system data view. You can only query existing data extensions or system data views. */
 ```
 
-However, there is a workaround. MCE accepts a JSON path built while the query runs (older answers online say the path must be fixed text, which was true in SQL Server 2016 but changed in SQL Server 2017). Thanks to that, you can ask for the first, second and third item yourself. All you need is a list of numbers to join, and `ROW_NUMBER` over any [Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/) gives you one. Each number becomes a position in the array, and the join keeps only the positions that exist:
+However, there is a workaround. MCE accepts a JSON path built while the query runs (older answers online say the path must be fixed text, which was true in SQL Server 2016 but changed in SQL Server 2017). Thanks to that, you can ask for the first, second and third item yourself. All you need is a list of numbers to join, and [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) over any [Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/) gives you one. Each number becomes a position in the array, and the join keeps only the positions that exist:
 
 ```sql {4,8,12} title="✅ Turn a JSON array into rows without OPENJSON"
 SELECT
@@ -157,8 +157,8 @@ SELECT
 FROM OrderEvents AS orderEvent
     INNER JOIN (
         SELECT TOP 10
-              ROW_NUMBER() OVER (ORDER BY sub.SubscriberID) - 1 AS Position
-        FROM _Subscribers AS sub
+              ROW_NUMBER() OVER (ORDER BY SubscriberID) - 1 AS Position
+        FROM _Subscribers
         ORDER BY Position
     ) AS itemPosition
         ON JSON_QUERY(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, ']')) IS NOT NULL
@@ -183,9 +183,9 @@ Both functions take any expression as a value, so in a real query you pass the f
 
 ```sql {3} title="Build JSON from Data View fields"
 SELECT
-      sub.SubscriberKey                                             AS SubscriberKey
-    , JSON_OBJECT('email': sub.EmailAddress, 'status': sub.Status)  AS SubscriberJson
-FROM _Subscribers AS sub
+      SubscriberKey
+    , JSON_OBJECT('email': EmailAddress, 'status': Status) AS SubscriberJson
+FROM _Subscribers
 
 /* Output:
 SubscriberKey | SubscriberJson
@@ -207,9 +207,9 @@ Watch out for empty fields, as the two functions treat `NULL` in opposite ways. 
 
 ```sql {3} title="Drop the keys of empty fields"
 SELECT
-      JSON_OBJECT('cartId': cart.CartId, 'couponCode': cart.CouponCode)                 AS KeepEmptyKey
-    , JSON_OBJECT('cartId': cart.CartId, 'couponCode': cart.CouponCode ABSENT ON NULL)  AS DropEmptyKey
-FROM AbandonedCarts AS cart
+      JSON_OBJECT('cartId': CartId, 'couponCode': CouponCode)                   AS KeepEmptyKey
+    , JSON_OBJECT('cartId': CartId, 'couponCode': CouponCode ABSENT ON NULL)    AS DropEmptyKey
+FROM AbandonedCarts
 
 /* Output:
 KeepEmptyKey                             | DropEmptyKey
@@ -255,9 +255,9 @@ anna-1042     | [{"sku":"UKU-01","name":"Ukulele"},{"sku":"TOUR-LDZ","name":"Ł�
 >
 > ```sql {5} title="❌ FOR JSON on the main SELECT fails the syntax check"
 > SELECT TOP 1
->       sub.SubscriberKey AS subscriberKey
->     , sub.EmailAddress  AS email
-> FROM _Subscribers AS sub
+>       SubscriberKey AS subscriberKey
+>     , EmailAddress  AS email
+> FROM _Subscribers
 > FOR JSON PATH /* Error: No column name was specified for column 1 of 'Qry'. */
 > ```
 

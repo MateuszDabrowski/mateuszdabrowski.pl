@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -29,7 +29,7 @@ All good, until one of the values, exceed the maximum length you set for its fie
 
 ## Short Term Solution
 
-You can make quick manual check with a simple SQL query. Open [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) and copy-paste the below code:
+You can make quick manual check with a simple SQL query. Open [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free SQL editor that runs inside your own MCE account) and copy-paste the below code:
 
 ```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
 SELECT

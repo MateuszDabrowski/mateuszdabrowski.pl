@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -197,7 +197,7 @@ WHERE
 
 **Align main SQL keywords to the left.**
 
-This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in MCE is a pain, as there is no autoformatter supporting it in the Query Studio or Query Activity. The Format button in my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (a free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) follows this guide, so it will not add them either. We would have to add all those additional spaces manually. It's just not worth it.
+This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in MCE is a pain, as there is no autoformatter supporting it in Query Activity. The Format button in my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (a free SQL editor that runs inside your own MCE account) follows this guide, so it will not add them either. We would have to add all those additional spaces manually. It's just not worth it.
 
 ```sql
 /* ✅ Left Aligned Keywords */

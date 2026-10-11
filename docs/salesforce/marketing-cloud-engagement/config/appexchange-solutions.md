@@ -1,17 +1,15 @@
 # MCE AgentExchange Solutions
 
-> Fill the feature gaps with plug-and-play apps. Salesforce Marketing Cloud Engagement AgentExchange ready-to-use solution highlights.
+> Fill the feature gaps with plug-and-play apps. Salesforce Marketing Cloud Engagement solution highlights from AgentExchange.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
-
-Fill the feature gaps with plug-and-play apps. Solution highlights from Salesforce MCE's AgentExchange.
 
 AgentExchange (formerly AppExchange) is an app store for various Clouds within Salesforce Customer 360 platform. You will find in-house solutions from Salesforce Labs and 3rd party. Free and paid. Good and bad. But all - validated by [Salesforce Security Review](https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm).
 
-The new name arrived in 2026, when Salesforce unified AppExchange, Slack Marketplace, and Agentforce components - agents, actions, and prompt templates now sit next to the classic apps. For the solutions below, the rebrand changed nothing: existing listings, reviews, and links carried over untouched.
+The new name arrived in 2026, when Salesforce merged Slack Marketplace and Agentforce components into the same store, so agents, actions and prompt templates now sit next to the classic apps. The listings, reviews and links of the solutions below carried over unchanged.
 
 From over 4500 solutions available there, only around 100 are for [Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud)](https://appexchange.salesforce.com/category/marketing). Here, I will focus only on those I had some experience with.
 
@@ -58,7 +56,7 @@ Else, it's time to look somewhere... else.
 
 Time to check whether there is any free solution available on demand. You can do it by going to [marketing AgentExchange](https://appexchange.salesforce.com/category/marketing) and applying filters to get Free solutions dedicated to MCE.
 
-To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) covered below, before it left the AgentExchange) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#deselect-search).
+To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2) covered below) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#deselect-search).
 
 If you are lucky enough to find something free in AgentExchange related to your requirements, check whether it is good enough. Just as you did in the [previous step](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#2-validate-out-of-the-box-options).
 
@@ -130,7 +128,7 @@ SQL Query Activities are free, require no implementation, work directly in MCE a
 
 **3. Free AgentExchange**
 
-Filtering the AgentExchange for free solutions used to show only one related to segmentation - [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio), which is no longer available there. My free replacement for it, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), is a great tool, but it's still a SQL-based solution. It's also not an end-to-end tool for segmentation purposes. Not good enough.
+Filtering the AgentExchange for free solutions shows only one related to segmentation - [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2), the successor of the original Query Studio. It is a great tool, and so is my free [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), but both are SQL-based solutions. Neither is an end-to-end tool for segmentation purposes. Not good enough.
 
 **4. Custom Solution**
 
@@ -154,58 +152,48 @@ I hope it is now easier to find when AgentExchange can solve MCE requirements. W
 
 ## AgentExchange Solutions for MCE
 
-### Query Studio
+### Query Studio 2
 
-> **Note: You Should Know**
->
-> Query Studio is no longer available on AgentExchange. Installed copies still work, but Salesforce's support now sends you to community resources for setup and fixes. So I built [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), a free, open-source replacement that runs inside your own MCE account and validates your SQL exactly like a Query Activity.
-
-![Screenshot of the Query Studio User Interface](https://mateuszdabrowski.pl/img/article/article-image-appexchange-query-studio.png)
+![Screenshot of the Query Studio 2 user interface, with a query on \_Subscribers, the Query Builder, the Action Log and the results below the SQL](https://mateuszdabrowski.pl/img/article/article-image-appexchange-query-studio-2.png)
 
 | Creator         | Pricing |
 | --------------- | ------- |
 | Salesforce Labs | Free    |
 
-#### The Good
+> **Note: You Should Know**
+>
+> The original Query Studio is no longer available on AgentExchange. Installed copies still work, but Salesforce's support sends you to community resources for setup and fixes. When it was removed, I built [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) to replace it. Then, on 9 October 2026, Salesforce Labs put Query Studio 2 on AgentExchange in its place.
 
-Query Studio solves two problems:
+Query Studio 2 solves the same two problems as its predecessor:
 
 1. MCE SQL Query Testing
 2. MCE SQL Data Exploratory Analysis
 
-Why did I call it problems?
+Why do I call them problems? Because the only out-of-the-box way to work with SQL in MCE is a Query Activity in Automation Studio. It tells you whether your query is valid, but to see what it returns, you first have to create a Data Extension with the correct fields (names, data types, lengths) and run the activity. Outcomes are not what you expected? The Data Extension needs a rework. It happens sometimes when you write a new query, and all the time when you explore the data.
 
-Because the only out-of-the-box solution for working with SQL in MCE is Query Activity in Automation Studio. It allows you to validate whether your query is valid, but checking if the outcomes are as expected is a pain.
+Query Studio 2 runs your query into a temporary Data Extension it creates for you and shows the results below your SQL.
 
-You can see the results only after manually creating a data extension with the correct columns (names, data types, lengths) and executing the Query Activity. Outcomes are suboptimal and need to make some changes? The Data Extension needs a rework.
+#### The Good
 
-It sometimes happens when you are writing and testing a new query. It happens all the time when you are doing exploratory analysis.
+It installs from AgentExchange as an Installed Package in a few clicks and opens from an MCE menu. Next to the editor, it brings a Query Builder: search for a Data Extension or a Data View, then click a table or a field to add it to your query. A table added as a JOIN asks for the field to join on and starts the ON with it, and you write the rest. Its checks mark the problems they find in the editor, with a Fix all for the ones they can repair. And it accepts what the original refused in my tests: parentheses in the first line of `SELECT`, `TOP PERCENT` and `CAST` in `SELECT` all pass its Check Query.
 
-Query Studio automatically builds a temporary Data Extension to store the query's output on every execution. It also displays a subset of outcomes below your SQL so you can quickly check whether it aligns with your expectations.
-
-And that's not all - Query Studio lets you save your work as ready-to-use Query Activities. Even in a way that is impossible through the Automation Studio (like query targeting Auto-Suppression List)!
+When you click Run, it lists the fields it will create in the target Data Extension and asks you to confirm, with an Edit link next to the list. A field of a Data View keeps its type, such as SubscriberID as a Number, while a column of a subquery or one your query computes becomes Text (255). Its action log then shows each step of the run, and the results come below your SQL, from 50 to 1,000 rows per page. That Data Extension deletes itself after a while, so Convert DE renames it and removes its retention policy when you want to keep the results, and Extract to File writes it to the Export folder of your Enhanced FTP.
 
 #### The Bad
 
-However, Query Studio is not perfect. The main issue is that it has implemented a different (and not that good) query validation. The outcome?
+Like every Salesforce Labs app, it comes with no official or guaranteed support from Salesforce, only the community boards. It also runs on its own server, a Heroku app between your browser and MCE, so your queries and their results pass through it. And if your account restricts logins by IP, you first have to add the four IP addresses from its Specs tab to the login allowlist.
 
-While every query you write in Query Studio will work in Query Activity, it is not always true the other way round. For example, Query Studio won't let you use comments, parentheses in the first line of the [SELECT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) statement, [TOP PERCENT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-percent), [CAST](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#cast) in [SELECT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) and more that are not a problem in Query Activity.
+Its own parser brings back the main weakness of the original Query Studio in a milder form: it refuses some valid SQL. The most common case is a comment. A `--` comment gets "Please use /\* comments \*/ rather than --comments.", and a `/* ... */` comment then gets "'SELECT \*' statements are not allowed.", while a Query Activity runs both.
 
-It also has very poor error messages making it hard to debug your queries properly. Sometimes it is helpful to copy the SQL to Query Activity and validate there to get a better response.
+The other way round, Run does not stop at everything Check Query flags. When its Query Builder added a field of a second table without joining that table, Check Query flagged the unknown alias, but Run sent the query to MCE anyway, which refused it with "The multi-part identifier could not be bound". It is a young app, at version 2.2 within days of its release, so expect such gaps to close quickly.
 
-Finally, while it creates a temporary Data Extension on execution, it is not helpful as a template for the final solution because all fields have a Text data type regardless of the real data.
+It has one editor, and Run sends all of its text, so you cannot keep a few queries there and run the one you select: with two queries in the editor, Run reports a syntax error at the second one. It has no dark mode either. And its code is not published on the Salesforce Labs GitHub, so your security team has only the listing and its Security Review to go on.
 
 #### The Sum Up
 
-Despite some quirks, Query Studio was a huge timesaver and quality of life improvement. Useful for creating queries, debugging outcomes, and quick checks on Data Views. Free. A must-have for any SQL-enabled or learning-to-be-enabled team.
+If you want a free SQL editor that installs in minutes and stays up to date with a package upgrade, Query Studio 2 is the easiest pick. If you want the syntax check of MCE itself, so that your editor runs exactly what a Query Activity runs, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) is my free, open-source alternative. It also keeps every query and result inside your own account, needs no allowlist entries and lets you keep several queries in one tab. It needs a short deployment by your admin first, as it is not on AgentExchange.
 
-However, it is no longer available on AgentExchange, so the option you can get now is [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement. It keeps the core of Query Studio: a temporary Data Extension on every run, results below your SQL and saving your work as a Query Activity. And it fixes the bad parts:
-
-- It sends your SQL to MCE unchanged, and MCE's own syntax check validates it. Comments, parentheses in the first line of `SELECT`, `TOP PERCENT` and `CAST` in `SELECT` work just as in a Query Activity.
-- It shows MCE's own error messages, with an explanation and a fix wherever it recognises the error.
-- Its temporary Data Extension keeps the Date, Number, Decimal and Boolean types of the fields your query selects. Every other column is still Text.
-
-[SQL Studio](https://mateuszdabrowski.pl/sql-studio/)
+[Query Studio 2](https://appexchange.salesforce.com/appxListingDetail?listingId=37382c71-88a7-4907-aef9-034f6100c447) | [SQL Studio](https://mateuszdabrowski.pl/sql-studio/)
 
 ---
 

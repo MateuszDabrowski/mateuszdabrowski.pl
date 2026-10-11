@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Make finding problems with email delivery in MCE great again. SQL Studio to the rescue.
@@ -124,7 +124,7 @@ As they say, with great power comes great complexity. And that's definitely true
 
 ### 1. Query System Data Views
 
-I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange), is the best place to execute that little exploratory analysis.
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account, is the best place to execute that little exploratory analysis.
 
 Once you see the outcome, there are few possibilities:
 

@@ -1016,7 +1016,7 @@ The diagram above deliberately shows Org 1 running Single BU and Org 2 running M
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 I'm a massive fan of Tim Peters' [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
@@ -1381,7 +1381,7 @@ And - considering the quality of out-of-the-box MCE errors - always provide cust
 
 With the complexity of Marketing Cloud Engagement, cross-cloud integrations, constant platform updates and solution development, there is much room for ambiguity. It's even more significant when you consider how the MCE is growing - by 3rd party acquisitions and building new features on top of the legacy ones. There is a constant technical debt and multiple frameworks co-existing at the same time. With updates hitting the platform multiple times a year, even with stuff you have already done numerous times in the past - don't assume it will work the same. Don't guess. Check.
 
-There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2022, documented as 2016, with different behaviour in Query Activity and the late Query Studio (my replacement, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), fixes this). There are inconsistent approaches within the same solution (for example [shared folder permissions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
+There are multiple examples of this risk. SSJS is not-fully-supported ES3 limited by the .NET backend, so you never know which feature will work. SQL is a partial SQL Server 2022, documented as 2016, with different behaviour in Query Activity and in [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2) (my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) fixes this). There are inconsistent approaches within the same solution (for example [shared folder permissions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#content-builder-shared-folders-permissions)). Unexpected bugs (like incorrect rendering of [Behavioral Triggers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ideas/#behavioral-trigger-content-block-rendering-on-yahoo-aol-windows-outlook)). Temporary issues that change the SSJS function responses for few days.
 
 With all this ambiguity in the system, always check during development and always check again before go-live.
 
@@ -1700,7 +1700,7 @@ Bonus Solution: Create a Limit Allocation Manager in Setup. This would be a new 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-10  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -1721,20 +1721,20 @@ SQL (Structured Query Language) is one of the best ways to work with relational 
 
 The main difference from standard SQL (MCE uses more or less SQL Server 2022, although Salesforce's [SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm\&type=5) still says 2016) is that MCE supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
 
-Do not expect anything newer than SQL Server 2022, though. I tested functions added in SQL Server 2025, and none of them work, while the [JSON functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/) added in SQL Server 2022 run fine.
+Do not expect anything newer than SQL Server 2022, though. I tested functions added in SQL Server 2025, and none of them work, while the [JSON functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/) added in SQL Server 2022 run fine. Some 2022 additions fail as well, such as the `WINDOW` clause of [window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by), while others, such as their `IGNORE NULLS`, work.
 
 Another limiting characteristic of MCE SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of MCE are not relational databases.
 
-Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data.
+Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data. Another is to [split the query into parts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#random-test-groups) that run in separate Query Activities.
 
 ## Where to learn MCE SQL
 
-Before we start with the real deal, let's cover where to learn to write SQL. I recommend [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange). It runs inside your own MCE account and sends your SQL to MCE unchanged, which makes it perfect for quickly learning how to query.
+Before we start with the real deal, let's cover where to learn to write SQL. I recommend [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor for MCE. It runs inside your own account and passes your SQL on unchanged, which makes it perfect for quickly learning how to query. On top of that, its [lint](https://mateuszdabrowski.pl/sql-studio/#lint) flags what would fail before you run anything and suggests a one-click fix. You learn faster that way, both how SQL works and where the SQL Server behind MCE behaves differently.
 
-If you cannot deploy SQL Studio in your MCE, there are still two ways to learn MCE SQL:
+If you cannot deploy SQL Studio, there are still two other ways to learn:
 
 1. Query Activities in Automation Studio. It will be much less user-friendly because for each change in the query, you will have to update the target Data Extension manually and go through multiple steps across the platform to see the results. But it will let you train using the data you have in your platform.
-2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to MCE. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
+2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to the platform. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
 
 I always start in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), and only once my SQL Query is complete and validated do I move it to Automation Studio.
 
@@ -2014,7 +2014,7 @@ If you send huge volumes, feel free to change the timeframe from last month to l
 5. Unfortunately, in MCE, you cannot use alias in WHERE/HAVING/ORDER BY and similar places - you have to use the function/calculation.
 6. When calculating Bounce Rate, do it so that the outcome is an integer equal to a percent.
 
-Important: Because of the Query Studio bug, you cannot have spaces around the multiplication symbol (`*`); otherwise, you will see an error related to a bad practice blanket SELECTs. SQL Studio sends your query to MCE unchanged, so it does not have this problem.
+Important: Because of a bug in [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2), as in the original Query Studio, you cannot have spaces around the multiplication symbol (`*`). Otherwise, it refuses the query with "'SELECT \*' statements are not allowed." SQL Studio sends your query to MCE unchanged, so it does not have this problem.
 
 **Solution**
 
@@ -2041,9 +2041,65 @@ Bonus: This query might be performance heavy. One option to make it perform bett
 
 ---
 
-### Level 7 - coming soon-ish
+### Level 7 - PARTITION BY, ROW_NUMBER and LAG
 
-I will add more levels once I finish writing supporting learning materials :)
+Find the latest record of each subscriber or the time between two events in a single query. Window functions compare rows without collapsing them, which saves you a chain of Query Activities and a staging Data Extension.
+
+#### Learning materials
+
+- [Window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/) - focus on [OVER and PARTITION BY](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by), [ROW_NUMBER](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) with its [ties](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ties-in-row_number), and [LAG and LEAD](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#lag-and-lead).
+- [Order of operations](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/#order-of-operations) - window functions run after `HAVING`, which decides where you can filter on them.
+- [Open](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_open) and [Job](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_job) Data Views.
+
+#### Check your skills
+
+**Exercise**
+
+Find the last email each Subscriber opened in the last 30 days. Return their Subscriber Key, the name of that email, the date they opened it and how many days passed since the email they opened before it.
+
+If you send huge volumes, feel free to change the timeframe from the last 30 days to the last week for the exercise.
+
+**Hints**
+
+1. Start with `_Open` alone. Number the opens of each Subscriber with [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number), newest first, and check the numbers before you add anything else.
+2. Window functions cannot go into `WHERE`, and MCE does not accept `WITH`, so keep only number 1 with a `WHERE` in an outer query around a subquery.
+3. Calculate [`LAG`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#lag-and-lead) in the same subquery. Once the outer `WHERE` keeps only the latest open, the earlier ones are gone, and `LAG` has nothing to look back at.
+4. Use only unique opens (`IsUnique = 1`). Otherwise, the previous open is often the same email opened twice.
+5. Two opens can share the same time, so end both `ORDER BY`s with `JobID` to [settle the ties](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ties-in-row_number).
+6. Join `_Job` on `JobID` to get the email name.
+
+**Solution**
+
+```sql title="Solution working on Parent Business Unit"
+SELECT
+      lastOpen.SubscriberKey
+    , j.EmailName           AS LastOpenedEmailName
+    , lastOpen.EventDate    AS LastOpenDate
+    , DATEDIFF(DAY, lastOpen.PreviousOpenDate, lastOpen.EventDate) AS DaysSincePreviousOpen
+FROM (
+    SELECT
+          SubscriberKey
+        , JobID
+        , EventDate
+        , ROW_NUMBER() OVER (
+            PARTITION BY SubscriberKey
+            ORDER BY EventDate DESC, JobID DESC
+          ) AS OpenRecency
+        , LAG(EventDate) OVER (
+            PARTITION BY SubscriberKey
+            ORDER BY EventDate, JobID
+          ) AS PreviousOpenDate
+    FROM _Open
+    WHERE
+        EventDate >= DATEADD(DAY, -30, GETDATE())
+        AND IsUnique = 1
+) AS lastOpen
+    INNER JOIN _Job AS j
+        ON j.JobID = lastOpen.JobID
+WHERE lastOpen.OpenRecency = 1
+```
+
+Bonus: swap `_Open` for `_Click`, and you get the last clicked email. Need the average number of days between opens instead? `AVG` cannot wrap `LAG` directly, so add one more query level around the subquery - [here is why](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#lag-and-lead).
 
 ---
 
@@ -2055,9 +2111,9 @@ Knowing the available functions is one thing. Writing good and readable queries 
 
 One of the key things to remember when building more complex queries is the order of operations, as it will decide what is in the output:
 
-[`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) > [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) > [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by) > [`HAVING`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#having) > [`DISTINCT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#distinct) > [`ORDER BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-with-order-by)
+[`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) > [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) > [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by) > [`HAVING`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#having) > [window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/) > [`DISTINCT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#distinct) > [`ORDER BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-with-order-by)
 
-It means that rows filtered with `WHERE` will not be considered for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data.
+It means that rows filtered with `WHERE` will not be considered for `GROUP BY` and that `DISTINCT` deduplication will be applied to results grouped and filtered by `HAVING` - not the source data. Window functions see only the rows left after `HAVING`, which is why filtering on them needs a [subquery](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number).
 
 ## All SQL Guides
 
@@ -2069,14 +2125,14 @@ It means that rows filtered with `WHERE` will not be considered for `GROUP BY` a
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Selected information on the SELECT statement in Marketing Cloud Engagement SQL
 
 The `SELECT` statement opens each query. It picks the columns from the source data extensions and system data views and allows you to create entirely new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) does not support this shortcut. Don't use `*`.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2) refuses this shortcut, as the original Query Studio did. Don't use `*`. And if you start a query with it anyway, my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) expands it for you: one click on its lint hint writes out the columns of the table.
 
 The prefered method is targeting columns explicitly by their names:
 
@@ -2164,10 +2220,6 @@ SELECT TOP 10 PERCENT
 
 The number of rows will be rounded up to the nearest integer (so `TOP 50 PERCENT` from Data Extension with 101 rows will return 51 rows).
 
-> **Note: You Should Know**
->
-> `PERCENT` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity and in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange).
-
 ### TOP with ORDER BY
 
 The `TOP` clause best practice is to always use it with `ORDER BY`. Only with sorted data, you will understand rows selection logic.
@@ -2239,6 +2291,8 @@ ORDER BY QuizScore DESC, QuizFilledDate ASC
 
 The query will first sort using QuizScore to find people with the most points. Next, it will apply the second sort on the date of quiz completion. As an outcome, we will have the highest scorers sorted from first to last within each high score.
 
+`TOP` limits the whole result. Need the best scorers of each quiz, or the latest order of each subscriber, instead? `TOP` cannot do that, but [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) in a subquery can.
+
 ### TOP WITH TIES
 
 Sometimes even such complex sorting might not be enough.
@@ -2283,7 +2337,7 @@ With those two words added after the `TOP` clause, our query will return all row
 
 > **Note: You Should Know**
 >
-> `WITH TIES` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity and in SQL Studio.
+> `WITH TIES` modifier doesn't work in [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2), as it did not in the original Query Studio, and produces a syntax error there. However, it works perfectly in Automation Studio Query Activity and in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account.
 
 ## DISTINCT
 
@@ -4338,7 +4392,7 @@ You can find the complete list of custom date format specifiers on [Microsoft .N
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -4384,7 +4438,7 @@ SELECT
 FROM Contact_Salesforce AS c
 ```
 
-This query can be used *ad hoc* in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation.
+This query can be used *ad hoc* in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free SQL editor that runs inside your own MCE account) to quickly show your current maximum lengths of the values coming from Sales Cloud. Compare them to the length of your fields in the destination data extension to see which column is crashing your automation. For a ready check of the whole Contact object, and a way to run it automatically before every transfer, see my [Debugging Value Length snippet](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/).
 
 You can also extend it with [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) containing current lengths of fields in that data extension and make it part of your automation. It will find the records too long for the data extension, log them into data extension and allow you to leverage Verification Activity to alert you about the issue. Nice and clean.
 
@@ -4515,7 +4569,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Break from the limits of source data types. Use the full power of SQL to transform your values.
@@ -4540,7 +4594,7 @@ WHERE DateJoined > CAST('2020-10-30' AS DATE)
 
 It takes a value and expected datatype with `AS` operator in between.
 
-However, in MCE, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. It is also better supported by the [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) (for example, you cannot use `CAST` in a `SELECT` part of the query there). [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange), runs both.
+However, in MCE, it is much better to use `CONVERT` function instead. It covers all features of `CAST` plus adds quite a lot more. Whichever you use, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account, flags a `DECIMAL` with no precision, which rounds every value to a whole number, and adds `(18, 2)` with one click.
 
 ### CONVERT
 
@@ -4705,7 +4759,7 @@ You can find the full list of style codes on [Microsoft .Net Doc Pages](https://
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Group rows and apply aggregate functions to see the big picture in your data.
@@ -4715,6 +4769,8 @@ Group rows and apply aggregate functions to see the big picture in your data.
 `GROUP BY` allows you to create aggregation by grouping the input data on selected column(s).
 
 It limits the data you can [`SELECT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) to either `GROUP BY` column(s) or aggregate functions.
+
+Need the totals next to every row instead, for example the number of orders of a subscriber on each of their orders? [Window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by) do that without collapsing the rows.
 
 Let's say you want to check which email domains are most popular in your database.
 
@@ -4976,6 +5032,8 @@ SELECT
 FROM _Subscribers
 ```
 
+`COUNT(DISTINCT ...)` does not work with `OVER`, so to keep every row next to its distinct count, [count in a subquery and join the counts back](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#count-distinct-values-per-window).
+
 ## HAVING
 
 `HAVING` works nearly the same as [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) and allows you to filter outcomes of your [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by).
@@ -5110,6 +5168,632 @@ ORDER BY SUM(Price) DESC
 | Course          | 12          | 5500        |
 | Webinar         | 76          | 5120        |
 | Ebook           | 136         | 3450        |
+
+---
+
+# MCE SQL Window Functions
+
+> A row with a view. Use PARTITION BY and ROW_NUMBER to deduplicate, rank and compare rows in Salesforce Marketing Cloud Engagement SQL.
+
+Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/  
+Author: Mateusz Dąbrowski  
+Last updated: 2026-10-11  
+Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+Queries in MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) have no variables, no loops and no temporary tables. So whenever a row needs to know something about its neighbours - is this the latest order of the subscriber, how many days passed since the previous one, how much did they spend in total - the classic answer is a chain of Query Activities with a staging Data Extension or two in between. Window functions answer it in a single query. They look at a group of related rows, called the window, calculate a value for each row and, unlike [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by), keep every row in the output.
+
+All examples below use one small `Orders` Data Extension with one row per order:
+
+**Orders Data Extension**
+
+| SubscriberKey | OrderId  | OrderDate  | OrderTotal | Category | CouponCode |
+| ------------- | -------- | ---------- | ---------- | -------- | ---------- |
+| anna-1042     | ORD-1042 | 2026-03-02 | 74.98      | Music    | SPRING10   |
+| anna-1042     | ORD-1187 | 2026-04-15 | 24.99      | Travel   | NULL       |
+| anna-1042     | ORD-1305 | 2026-06-01 | 120.00     | Books    | NULL       |
+| ben-2077      | ORD-1100 | 2026-03-20 | 59.00      | Books    | WELCOME5   |
+| ben-2077      | ORD-1250 | 2026-05-10 | 59.00      | Books    | NULL       |
+| ben-2077      | ORD-1311 | 2026-06-03 | 15.50      | Books    | NULL       |
+| ben-2077      | ORD-1312 | 2026-06-03 | 9.99       | Music    | NULL       |
+| chloe-3101    | ORD-1199 | 2026-04-18 | 210.00     | Travel   | NULL       |
+
+**Create It with SQL**
+
+Want to run the examples in your own account? Run this query in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) and keep its results with [Save to DE](https://mateuszdabrowski.pl/sql-studio/#save-to-de) as a Data Extension named `Orders`. In the form, make sure `OrderDate` is a Date and `OrderTotal` a Decimal with 2 decimal places before you save, as `SUM`, `AVG` and the percentiles need numbers.
+
+```sql title="Orders, ready for Save to DE"
+SELECT
+      'anna-1042'   AS SubscriberKey
+    , 'ORD-1042'    AS OrderId
+    , '2026-03-02'  AS OrderDate
+    , 74.98         AS OrderTotal
+    , 'Music'       AS Category
+    , 'SPRING10'    AS CouponCode
+UNION ALL SELECT 'anna-1042', 'ORD-1187', '2026-04-15', 24.99, 'Travel', NULL
+UNION ALL SELECT 'anna-1042', 'ORD-1305', '2026-06-01', 120.00, 'Books', NULL
+UNION ALL SELECT 'ben-2077', 'ORD-1100', '2026-03-20', 59.00, 'Books', 'WELCOME5'
+UNION ALL SELECT 'ben-2077', 'ORD-1250', '2026-05-10', 59.00, 'Books', NULL
+UNION ALL SELECT 'ben-2077', 'ORD-1311', '2026-06-03', 15.50, 'Books', NULL
+UNION ALL SELECT 'ben-2077', 'ORD-1312', '2026-06-03', 9.99, 'Music', NULL
+UNION ALL SELECT 'chloe-3101', 'ORD-1199', '2026-04-18', 210.00, 'Travel', NULL
+```
+
+Anna is a returning customer with a different category each time, Ben buys often and placed two orders on the same day, and Chloe placed one big order. Each of them sets off a different trap, so keep the table at hand.
+
+## OVER and PARTITION BY
+
+**`OVER` turns an aggregate function into a window function, and `PARTITION BY` decides which rows it looks at.**
+
+Take an order confirmation that also shows how many orders the subscriber placed with you and how much they spent in total. `GROUP BY` gets you the totals, but it collapses the orders into one row per subscriber, so you would need a second query and a join to put them back together. Add `OVER` to the same [aggregate functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/), and every order keeps its row with the totals next to it:
+
+```sql {5-6} title="Totals per subscriber next to every order"
+SELECT
+      SubscriberKey
+    , OrderId
+    , OrderTotal
+    , COUNT(*) OVER (PARTITION BY SubscriberKey)        AS OrdersPerSubscriber
+    , SUM(OrderTotal) OVER (PARTITION BY SubscriberKey) AS SpendPerSubscriber
+FROM Orders
+
+/* Output:
+SubscriberKey | OrderId  | OrderTotal | OrdersPerSubscriber | SpendPerSubscriber
+anna-1042     | ORD-1042 | 74.98      | 3                   | 219.97
+anna-1042     | ORD-1187 | 24.99      | 3                   | 219.97
+anna-1042     | ORD-1305 | 120.00     | 3                   | 219.97
+ben-2077      | ORD-1100 | 59.00      | 4                   | 143.49
+ben-2077      | ORD-1250 | 59.00      | 4                   | 143.49
+ben-2077      | ORD-1311 | 15.50      | 4                   | 143.49
+ben-2077      | ORD-1312 | 9.99       | 4                   | 143.49
+chloe-3101    | ORD-1199 | 210.00     | 1                   | 210.00
+*/
+```
+
+`PARTITION BY SubscriberKey` splits the orders into one window per subscriber, so `COUNT` and `SUM` see only the orders of that subscriber. Leave `PARTITION BY` out, as in `SUM(OrderTotal) OVER ()`, and the window covers every row of the result, so each order gets the total of all orders, 573.46. Divide the total of an order by it, and you get its share of all sales:
+
+```sql {4-5} title="Share of each order in all sales"
+SELECT
+      OrderId
+    , OrderTotal
+    , SUM(OrderTotal) OVER () AS AllOrdersTotal
+    , CAST(100 * OrderTotal / SUM(OrderTotal) OVER () AS DECIMAL(5, 2)) AS SalesShare
+FROM Orders
+
+/* Output:
+OrderId  | OrderTotal | AllOrdersTotal | SalesShare
+ORD-1042 | 74.98      | 573.46         | 13.08
+ORD-1187 | 24.99      | 573.46         | 4.36
+ORD-1305 | 120.00     | 573.46         | 20.93
+ORD-1100 | 59.00      | 573.46         | 10.29
+ORD-1250 | 59.00      | 573.46         | 10.29
+ORD-1311 | 15.50      | 573.46         | 2.70
+ORD-1312 | 9.99       | 573.46         | 1.74
+ORD-1199 | 210.00     | 573.46         | 36.62
+*/
+```
+
+Chloe's single order brings in over a third of all sales. Rounded to two decimal places, the shares add up to 100.01, so keep the unrounded value for any further calculation.
+
+When does SQL Server calculate all that? In the [order of operations](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/#order-of-operations), after `WHERE`, `GROUP BY` and `HAVING`, but before [`DISTINCT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#distinct). Window functions see only the rows your filters left, and they can work on the results of `GROUP BY`, which you will use to [rank your customers](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#rank-grouped-results).
+
+It would be handy to write a window shared by several columns only once. SQL Server 2022 added the `WINDOW` clause for that: you name the window at the end of the query, and each `OVER` refers to the name. Unfortunately, MCE stops it during the syntax check:
+
+```sql {5} title="❌ The WINDOW clause fails the syntax check"
+SELECT
+      OrderId
+    , COUNT(*) OVER subscriberOrders AS OrdersPerSubscriber
+FROM Orders
+WINDOW subscriberOrders AS (PARTITION BY SubscriberKey) /* Error: Incorrect syntax near 'WINDOW'. */
+```
+
+Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. It looks like MCE runs SQL Server 2022 with an older compatibility level, as SQL Server accepts `WINDOW` only [from level 160](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), while other 2022 additions, such as [`IGNORE NULLS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ignore-nulls), work fine. So whenever several columns share a window, write it out in each `OVER`.
+
+### Count Distinct Values per Window
+
+**`COUNT(DISTINCT ...)` does not work with `OVER`, so count in a subquery and join the counts back.**
+
+A cross-sell campaign might target subscribers who bought from a single category and show them their past orders. That needs every order, with the number of categories of its subscriber next to it. `COUNT(DISTINCT Category) OVER (PARTITION BY SubscriberKey)` looks like the answer, but SQL Server stops it with "Use of DISTINCT is not allowed with the OVER clause." So for distinct values, you are back to the `GROUP BY` and the join that `OVER` saves you elsewhere. Count the categories of each subscriber in a subquery, and join the counts to the orders:
+
+```sql {7-14} title="Every order with the number of categories its subscriber bought from"
+SELECT
+      ord.SubscriberKey
+    , ord.OrderId
+    , ord.Category
+    , categories.CategoryCount
+FROM Orders AS ord
+    INNER JOIN (
+        SELECT
+              SubscriberKey
+            , COUNT(DISTINCT Category) AS CategoryCount
+        FROM Orders
+        GROUP BY SubscriberKey
+    ) AS categories
+        ON categories.SubscriberKey = ord.SubscriberKey
+
+/* Output:
+SubscriberKey | OrderId  | Category | CategoryCount
+anna-1042     | ORD-1042 | Music    | 3
+anna-1042     | ORD-1187 | Travel   | 3
+anna-1042     | ORD-1305 | Books    | 3
+ben-2077      | ORD-1100 | Books    | 2
+ben-2077      | ORD-1250 | Books    | 2
+ben-2077      | ORD-1311 | Books    | 2
+ben-2077      | ORD-1312 | Music    | 2
+chloe-3101    | ORD-1199 | Travel   | 1
+*/
+```
+
+For the campaign itself, add `HAVING COUNT(DISTINCT Category) = 1` to the subquery. The `INNER JOIN` then keeps only the orders of single-category buyers, here the Travel order of Chloe.
+
+Search for that error, and you will find a trick with two [`DENSE_RANK`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#rank-and-dense_rank)s instead: `DENSE_RANK() OVER (PARTITION BY SubscriberKey ORDER BY Category) + DENSE_RANK() OVER (PARTITION BY SubscriberKey ORDER BY Category DESC) - 1`. It works in MCE, but I do not recommend it. Each `DENSE_RANK` sorts all the rows on its own, which adds up on a large Data Extension, and the trick counts `NULL` as one more category, which takes a third window function to correct. The join reads like the question it answers and counts exactly as `COUNT(DISTINCT ...)` does.
+
+## ROW_NUMBER
+
+**`ROW_NUMBER` numbers the rows of each window, which makes it the tool for keeping one row per subscriber.**
+
+Sendable Data Extensions need one row per subscriber, while order data has one row per order, so Anna comes with three rows. Say you want to ask for a review of the latest order only. Number the orders of each subscriber from the newest one, then keep number 1:
+
+```sql {10-13,16} title="Keep the latest order of each subscriber"
+SELECT
+      SubscriberKey
+    , OrderId
+    , OrderDate
+FROM (
+    SELECT
+          SubscriberKey
+        , OrderId
+        , OrderDate
+        , ROW_NUMBER() OVER (
+            PARTITION BY SubscriberKey
+            ORDER BY OrderDate DESC, OrderId DESC
+          ) AS OrderRecency
+    FROM Orders
+) AS latestOrder
+WHERE OrderRecency = 1
+
+/* Output:
+SubscriberKey | OrderId  | OrderDate
+anna-1042     | ORD-1305 | 2026-06-01
+ben-2077      | ORD-1312 | 2026-06-03
+chloe-3101    | ORD-1199 | 2026-04-18
+*/
+```
+
+`PARTITION BY` restarts the numbering for each subscriber, and `ORDER BY ... DESC` gives number 1 to the newest order. The outer query then keeps only those rows. Change `= 1` to `<= 3`, and you get the three latest orders of each subscriber. Keep the `ORDER BY` even when you do not care which row wins, as `ROW_NUMBER` refuses to work without it ("The function 'ROW_NUMBER' must have an OVER clause with ORDER BY.").
+
+> **Note: You Should Know**
+>
+> Why the subquery? Window functions run after `WHERE`, so `WHERE ROW_NUMBER() OVER (...) = 1` cannot work and fails with "Windowed functions can only appear in the SELECT or ORDER BY clauses." In SQL Server, you would usually name such a step with `WITH` (a common table expression). MCE does not accept that either, as its syntax check wants `SELECT` as the first word of every query ("Only SELECT queries are valid. Select must be the first word of the query."). So a subquery in `FROM` is the way to filter on a window function. If you write your queries in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), it catches the `WITH` before MCE does and offers to rewrite it into a subquery for you.
+
+### Ties in ROW_NUMBER
+
+**End the `ORDER BY` of `ROW_NUMBER` with a column that is unique, so ties cannot happen.**
+
+Ben placed two orders on 3 June, and dates in Data Extensions often come without the time. Order by the date alone, and both orders tie for number 1. `ROW_NUMBER` still has to give it to one of them, and SQL Server picks either, so the same query can keep `ORD-1311` in one run and `ORD-1312` in the next. That is hard to spot and harder to debug once the result lands in a sendable Data Extension. `OrderId` is unique, so adding it after the date settles every tie:
+
+```sql title="Break the ties yourself"
+/* ❌ Ben gets ORD-1311 or ORD-1312, depending on the run */
+ROW_NUMBER() OVER (PARTITION BY SubscriberKey ORDER BY OrderDate DESC)
+
+/* ✅ OrderId settles the tie, so Ben always gets ORD-1312 */
+ROW_NUMBER() OVER (PARTITION BY SubscriberKey ORDER BY OrderDate DESC, OrderId DESC)
+```
+
+The same goes for every window function that depends on the order of rows, which includes all the remaining sections of this article.
+
+### Latest Open with Its Email
+
+**On Data Views, `ROW_NUMBER` keeps the whole row of the latest event, not only its date.**
+
+The same pattern works on [Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/). If you need only the date of the last open, [`MAX`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#min-and-max) with `GROUP BY` is enough. `ROW_NUMBER` comes in when you also need other fields of that open, for example the `JobID` that tells you which email it was:
+
+```sql {10-13} title="The last open of each subscriber, with its JobID"
+SELECT
+      SubscriberKey
+    , JobID     AS LastOpenedJobId
+    , EventDate AS LastOpenDate
+FROM (
+    SELECT
+          SubscriberKey
+        , JobID
+        , EventDate
+        , ROW_NUMBER() OVER (
+            PARTITION BY SubscriberKey
+            ORDER BY EventDate DESC, JobID DESC
+          ) AS OpenRecency
+    FROM _Open
+    WHERE EventDate >= DATEADD(DAY, -30, GETDATE())
+) AS lastOpen
+WHERE OpenRecency = 1
+```
+
+The `WHERE` inside the subquery is there for a reason. On a busy account, [`_Open`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_open) holds millions of rows, and numbering all of them takes time. Narrow it down before `ROW_NUMBER` gets to work, and the query stays far from the [30-minute limit](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#limits-and-guardrails) of Automation Studio.
+
+## RANK and DENSE_RANK
+
+**`RANK` and `DENSE_RANK` number rows like `ROW_NUMBER`, but they give tied rows the same number.**
+
+Ties are everywhere in marketing data: the same order value, the same score, the same date. Take a year-in-review email that shows the two biggest orders of each subscriber. Ben has two orders for exactly 59.00, so which one comes second? Compare how the three functions handle it:
+
+```sql {4-6} title="Three ways to number the orders of Ben by value"
+SELECT
+      OrderId
+    , OrderTotal
+    , ROW_NUMBER() OVER (ORDER BY OrderTotal DESC)  AS OrderRowNumber
+    , RANK() OVER (ORDER BY OrderTotal DESC)        AS OrderRank
+    , DENSE_RANK() OVER (ORDER BY OrderTotal DESC)  AS OrderDenseRank
+FROM Orders
+WHERE SubscriberKey = 'ben-2077'
+
+/* Output:
+OrderId  | OrderTotal | OrderRowNumber | OrderRank | OrderDenseRank
+ORD-1100 | 59.00      | 1              | 1         | 1
+ORD-1250 | 59.00      | 2              | 1         | 1
+ORD-1311 | 15.50      | 3              | 3         | 2
+ORD-1312 | 9.99       | 4              | 4         | 3
+*/
+```
+
+`ROW_NUMBER` splits the tie in any order it likes, so the 1 and 2 of the two 59.00 orders can swap between runs. `RANK` gives both of them 1 and skips 2, like a sports league table. `DENSE_RANK` skips nothing, so the next value gets 2.
+
+The difference matters once you filter. Keep the rows numbered 2 or lower, and `RANK` returns the two 59.00 orders, while `DENSE_RANK` adds `ORD-1311` as well. For "top N" lists, I prefer `RANK`: tied rows stay together, and the list grows past N only when a tie crosses the cut-off.
+
+### Rank Grouped Results
+
+**Window functions run after `GROUP BY`, so they can rank the groups themselves.**
+
+A VIP campaign needs your top customers by lifetime spend, not your top orders. Group the orders by subscriber and rank the sums in the same query:
+
+```sql {4} title="Rank subscribers by lifetime spend"
+SELECT
+      SubscriberKey
+    , SUM(OrderTotal)                               AS LifetimeSpend
+    , RANK() OVER (ORDER BY SUM(OrderTotal) DESC)   AS SpendRank
+FROM Orders
+GROUP BY SubscriberKey
+
+/* Output:
+SubscriberKey | LifetimeSpend | SpendRank
+anna-1042     | 219.97        | 1
+chloe-3101    | 210.00        | 2
+ben-2077      | 143.49        | 3
+*/
+```
+
+The `ORDER BY` inside `OVER` reads the sum of each group, as `GROUP BY` has already done its work. Wrap the query in a subquery with `WHERE SpendRank <= 100`, and you have the list for your top 100 customers.
+
+## NTILE
+
+**`NTILE` splits the rows into the number of groups you ask for, as equal in size as the rows allow.**
+
+Segmentation often needs tiers: the top half of your customers, quintiles for an RFM model or test groups of equal size. `NTILE(2)` over the lifetime spend from the previous example puts each subscriber into the top or the bottom half:
+
+```sql {4} title="Split subscribers into two halves by spend"
+SELECT
+      SubscriberKey
+    , SUM(OrderTotal)                               AS LifetimeSpend
+    , NTILE(2) OVER (ORDER BY SUM(OrderTotal) DESC) AS SpendHalf
+FROM Orders
+GROUP BY SubscriberKey
+
+/* Output:
+SubscriberKey | LifetimeSpend | SpendHalf
+anna-1042     | 219.97        | 1
+chloe-3101    | 210.00        | 1
+ben-2077      | 143.49        | 2
+*/
+```
+
+Three subscribers do not split evenly into two groups, so `NTILE` gives the extra row to the first group. With real volumes, the groups differ by one row at most.
+
+### Random Test Groups
+
+**Order by `NEWID()`, and `NTILE` assigns subscribers to random test groups.**
+
+Journey Builder has a Random Split activity for A/B tests. However, when you need the same groups across several sends or channels, or want to report on them later, the split should live in a Data Extension. `NEWID()` returns a new random value for every row, so ordering by it shuffles the subscribers before `NTILE` cuts them into groups:
+
+```sql {3} title="Assign subscribers to three random test groups"
+SELECT
+      SubscriberKey
+    , NTILE(3) OVER (ORDER BY NEWID()) AS TestGroup
+FROM _Subscribers
+```
+
+Every run shuffles the subscribers again. Run the query once, then use the stored groups. If it runs on a schedule, subscribers keep moving between groups, and your test compares nothing.
+
+> **Note: You Should Know**
+>
+> `NTILE` also looks like a good way to split a huge query into several Query Activities, each safely below the [30-minute limit](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#limits-and-guardrails) of Automation Studio. I do not recommend it, as its groups move here too. If new rows arrive between the activities, the group boundaries shift, so some rows land in two parts and others in none. On top of that, every part has to number all the rows before `WHERE` can drop the other groups, so each Query Activity still orders the whole source.
+>
+> Split by a value calculated from each row instead. `CHECKSUM` turns the key into a number, and the remainder of dividing it by the number of parts picks the part:
+>
+> ```sql {5} title="The first of four parts of a large Data Extension"
+> SELECT
+>       SubscriberKey
+>     , EmailAddress
+> FROM ContactMasterDE
+> WHERE ABS(CHECKSUM(SubscriberKey) % 4) = 0
+> ```
+>
+> The next three Query Activities take 1, 2 and 3. `ABS` is there because `CHECKSUM` can return a negative number. A subscriber always lands in the same part, whatever happens to the other rows, and no part has to order the whole source first. The parts are not exactly equal, as my 181 test subscribers split into 45, 31, 48 and 57, so leave some headroom when you pick the number of parts. On Data Views, ranges of `EventDate` split the rows just as well.
+
+## Running Totals and Frames
+
+**Add `ORDER BY` to the `OVER` of an aggregate function, and the total runs row by row.**
+
+Loyalty programmes often promote subscribers once their spend crosses a threshold, say 100.00, and send a welcome-to-VIP email right after the order that crossed it. The lifetime total tells you who is a VIP today, but not which order made them one. For that, each order needs the total of all orders up to and including it. `SUM` with an ordered window gives you exactly that:
+
+```sql {5-9} title="Spend so far at each order"
+SELECT
+      SubscriberKey
+    , OrderId
+    , OrderTotal
+    , SUM(OrderTotal) OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+      ) AS SpendSoFar
+FROM Orders
+
+/* Output:
+SubscriberKey | OrderId  | OrderTotal | SpendSoFar
+anna-1042     | ORD-1042 | 74.98      | 74.98
+anna-1042     | ORD-1187 | 24.99      | 99.97
+anna-1042     | ORD-1305 | 120.00     | 219.97
+ben-2077      | ORD-1100 | 59.00      | 59.00
+ben-2077      | ORD-1250 | 59.00      | 118.00
+ben-2077      | ORD-1311 | 15.50      | 133.50
+ben-2077      | ORD-1312 | 9.99       | 143.49
+chloe-3101    | ORD-1199 | 210.00     | 210.00
+*/
+```
+
+With the 100.00 threshold, Anna gets there with her third order (after the second, she was 0.03 short), Ben with his second and Chloe with her first.
+
+The `ROWS BETWEEN` line sets the frame: the part of the window that `SUM` adds up for each row. Here, it runs from the first row of the window (`UNBOUNDED PRECEDING`) to the current one. Count a fixed number of rows back instead, for example with `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW`, and `AVG` gives you a moving average of the last three orders.
+
+> **Note: You Should Know**
+>
+> **Write the frame yourself whenever the window has an `ORDER BY`.** Leave it out, and SQL Server uses `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`, which treats rows with the same `ORDER BY` value as one. Order the orders of Ben by date alone, and his two orders from 3 June both show the total after the second one:
+>
+> ```sql {3} title="❌ The default frame with two orders on one day"
+> SELECT
+>       OrderId
+>     , SUM(OrderTotal) OVER (PARTITION BY SubscriberKey ORDER BY OrderDate) AS SpendSoFar
+> FROM Orders
+> WHERE SubscriberKey = 'ben-2077'
+>
+> /* Output:
+> OrderId  | SpendSoFar
+> ORD-1100 | 59.00
+> ORD-1250 | 118.00
+> ORD-1311 | 143.49
+> ORD-1312 | 143.49
+> */
+> ```
+>
+> `ROWS` is also the faster of the two in SQL Server, which matters on large Data Extensions.
+
+## LAG and LEAD
+
+**`LAG` reads a value from an earlier row of the window, and `LEAD` from a later one.**
+
+Replenishment and win-back campaigns depend on how often a subscriber buys. With `LAG`, each order can see the order before it, for example its date and category:
+
+```sql {5-12} title="The previous order next to each order"
+SELECT
+      SubscriberKey
+    , OrderId
+    , OrderDate
+    , LAG(OrderDate) OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+      ) AS PreviousOrderDate
+    , LAG(Category, 1, 'First order') OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+      ) AS PreviousCategory
+FROM Orders
+
+/* Output:
+SubscriberKey | OrderId  | OrderDate  | PreviousOrderDate | PreviousCategory
+anna-1042     | ORD-1042 | 2026-03-02 | NULL              | First order
+anna-1042     | ORD-1187 | 2026-04-15 | 2026-03-02        | Music
+anna-1042     | ORD-1305 | 2026-06-01 | 2026-04-15        | Travel
+ben-2077      | ORD-1100 | 2026-03-20 | NULL              | First order
+ben-2077      | ORD-1250 | 2026-05-10 | 2026-03-20        | Books
+ben-2077      | ORD-1311 | 2026-06-03 | 2026-05-10        | Books
+ben-2077      | ORD-1312 | 2026-06-03 | 2026-06-03        | Books
+chloe-3101    | ORD-1199 | 2026-04-18 | NULL              | First order
+*/
+```
+
+`LAG` returns [`NULL`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/) for the first order of each subscriber, as there is no order before it. If you prefer a value, pass it as the third argument, after the number of rows to go back. That is how `PreviousCategory` says "First order", which also makes category switches easy to spot: Anna went from Music to Travel to Books. The default gets the data type of the column, length included, so keep it within the field length, or it gets cut off.
+
+Now for the timing of the reminder. [`DATEDIFF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/) turns the two dates into the number of days between orders, and [`AVG`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#avg) averages them per subscriber. Put `LAG` straight into `AVG` with a `GROUP BY`, and you get an error saying that `OrderDate` "is invalid in the select list because it is not contained in either an aggregate function or the GROUP BY clause." The message is confusing, as `OrderDate` sits inside `AVG`. The reason is the order of operations: window functions run after `GROUP BY`, so by the time `LAG` wants the dates, the orders are already grouped. Calculate `LAG` in a subquery first, and `AVG` works on its output:
+
+```sql {3,8-11} title="Average number of days between orders"
+SELECT
+      SubscriberKey
+    , AVG(DATEDIFF(DAY, PreviousOrderDate, OrderDate)) AS AverageDaysBetweenOrders
+FROM (
+    SELECT
+          SubscriberKey
+        , OrderDate
+        , LAG(OrderDate) OVER (
+            PARTITION BY SubscriberKey
+            ORDER BY OrderDate, OrderId
+          ) AS PreviousOrderDate
+    FROM Orders
+) AS orderGap
+GROUP BY SubscriberKey
+
+/* Output:
+SubscriberKey | AverageDaysBetweenOrders
+anna-1042     | 45
+ben-2077      | 25
+chloe-3101    | NULL
+*/
+```
+
+Anna orders every 45 days on average, which tells you when to send her a reminder. SQL Server averages whole numbers into a whole number, so her 45.5 days show as 45. Write `AVG(1.0 * DATEDIFF(...))` if you need the decimals. Chloe has a single order and no gap to average, so she gets `NULL`. And Ben? His two orders from 3 June add a gap of 0 days, which pulls his average down. If same-day orders are split shipments in your data, leave such gaps out with a `WHERE` in the subquery.
+
+`LEAD` looks forward the same way. An order with no next order is the latest one of its subscriber, so [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) around `LEAD(OrderId) OVER (...) IS NULL`, with the same window, flags it with `1`. That is another way to get what [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) did earlier.
+
+## FIRST_VALUE and LAST_VALUE
+
+**`FIRST_VALUE` and `LAST_VALUE` return a value from the first or the last row of the frame.**
+
+The category of the first order tells you what brought a subscriber to you, which makes a good segment for a welcome series or a cohort report. `FIRST_VALUE` returns it on every order of the subscriber, and `DISTINCT` leaves one row each:
+
+```sql {3} title="The category of the first order"
+SELECT DISTINCT
+      SubscriberKey
+    , FIRST_VALUE(Category) OVER (PARTITION BY SubscriberKey ORDER BY OrderDate, OrderId) AS FirstCategory
+FROM Orders
+
+/* Output:
+SubscriberKey | FirstCategory
+anna-1042     | Music
+ben-2077      | Books
+chloe-3101    | Travel
+*/
+```
+
+`LAST_VALUE` looks like its mirror image, so you would expect Books, the category of Anna's latest order, in all three rows. With the same window, however, you get the category of each order itself, and no error tells you something is wrong:
+
+```sql {4-7} title="❌ The default frame makes LAST_VALUE return the current row"
+SELECT
+      OrderId
+    , Category
+    , LAST_VALUE(Category) OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+      ) AS LastCategory
+FROM Orders
+WHERE SubscriberKey = 'anna-1042'
+
+/* Output:
+OrderId  | Category | LastCategory
+ORD-1042 | Music    | Music
+ORD-1187 | Travel   | Travel
+ORD-1305 | Books    | Books
+*/
+```
+
+Remember the default frame from the [running totals](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#running-totals-and-frames)? It ends at the current row, so for every row, the last row of the frame is the row itself. Stretch the frame to the end of the window, and `LAST_VALUE` does what its name says:
+
+```sql {7} title="✅ LAST_VALUE with the whole window as the frame"
+SELECT
+      OrderId
+    , Category
+    , LAST_VALUE(Category) OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+      ) AS LastCategory
+FROM Orders
+WHERE SubscriberKey = 'anna-1042'
+
+/* Output:
+OrderId  | Category | LastCategory
+ORD-1042 | Music    | Books
+ORD-1187 | Travel   | Books
+ORD-1305 | Books    | Books
+*/
+```
+
+Drop the `WHERE` and add `DISTINCT`, as with `FIRST_VALUE`, and you get the last category of every subscriber: Books for Anna, Music for Ben and Travel for Chloe. Ben shows once more why ties matter. His last two orders share a date, so without `OrderId` in the `ORDER BY`, his last category could be Books or Music, depending on the run.
+
+### IGNORE NULLS
+
+**Since SQL Server 2022, `IGNORE NULLS` makes `FIRST_VALUE`, `LAST_VALUE`, `LAG` and `LEAD` skip empty values.**
+
+Not every order has a coupon code, and the latest order often has none. To avoid offering the same coupon again, you need the last coupon each subscriber used, not the empty value of their latest order. Add `IGNORE NULLS` between the function and `OVER`:
+
+```sql {8} title="The last coupon each subscriber used"
+SELECT DISTINCT
+      SubscriberKey
+    , LAST_VALUE(CouponCode) OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+      ) AS LatestOrderCoupon
+    , LAST_VALUE(CouponCode) IGNORE NULLS OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+      ) AS LastUsedCoupon
+FROM Orders
+
+/* Output:
+SubscriberKey | LatestOrderCoupon | LastUsedCoupon
+anna-1042     | NULL              | SPRING10
+ben-2077      | NULL              | WELCOME5
+chloe-3101    | NULL              | NULL
+*/
+```
+
+Chloe never used a coupon, so even `IGNORE NULLS` has nothing to return for her.
+
+`LAG` and `LEAD` take `IGNORE NULLS` the same way. With it, `LAG(CouponCode)` returns the last coupon used before each order, skipping orders without one, so ORD-1305 of Anna gets SPRING10, even though ORD-1187 in between had none.
+
+## PERCENTILE_CONT and PERCENTILE_DISC
+
+**`PERCENTILE_CONT(0.5)` returns the median, which describes a typical order better than the average does.**
+
+Say you plan a free shipping offer above an amount that a typical order almost reaches. The average order value looks like the right base, but a single large order pulls it up, and the 210.00 order of Chloe does exactly that in our data:
+
+```sql {3} title="Median and average order value"
+SELECT DISTINCT
+      CAST(AVG(OrderTotal) OVER () AS DECIMAL(10, 2)) AS AverageOrderValue
+    , CAST(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY OrderTotal) OVER () AS DECIMAL(10, 2)) AS MedianOrderValue
+FROM Orders
+
+/* Output:
+AverageOrderValue | MedianOrderValue
+71.68             | 59.00
+*/
+```
+
+Half of the orders are 59.00 or less, while the average suggests over 70.00. `PERCENTILE_CONT` takes the percentile as a fraction (`0.5` for the median) and the column to sort in `WITHIN GROUP`. It is a window function only, so it always needs `OVER`, which is why the query uses `DISTINCT` to keep a single row. It also returns a float, hence the [`CAST`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#cast) to two decimal places. Leave `OVER` out, and you get "The function 'PERCENTILE_CONT' must have an OVER clause."
+
+`PERCENTILE_DISC` works the same way, with one difference that shows with an even number of rows. `PERCENTILE_CONT` returns the midpoint between the two middle values, while `PERCENTILE_DISC` returns a value that exists in the data:
+
+```sql {3-4} title="Median order value of each subscriber"
+SELECT DISTINCT
+      SubscriberKey
+    , PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY OrderTotal) OVER (PARTITION BY SubscriberKey) AS MedianOrderValue
+    , PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY OrderTotal) OVER (PARTITION BY SubscriberKey) AS MedianExistingOrderValue
+FROM Orders
+
+/* Output:
+SubscriberKey | MedianOrderValue | MedianExistingOrderValue
+anna-1042     | 74.98            | 74.98
+ben-2077      | 37.25            | 15.50
+chloe-3101    | 210              | 210.00
+*/
+```
+
+Ben has four orders, so his middle two are 15.50 and 59.00. Chloe shows the float again: without a `CAST`, her median comes back as 210, with no decimals. `PERCENTILE_CONT` returns 37.25, an amount he never spent, and `PERCENTILE_DISC` returns 15.50, the lower of the two.
+
+SQL Server has two more distribution functions, `PERCENT_RANK` and `CUME_DIST`, which return the position of each row as a fraction between 0 and 1. Both work in MCE. For segmentation, I find [`NTILE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ntile) simpler, as it gives you the groups directly.
+
+---
+
+## Sum Up
+
+1. Add `OVER` to an aggregate function to keep every row and get the totals next to it [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by)
+2. Write the window out in each `OVER`, as MCE rejects the `WINDOW` clause [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by)
+3. Count distinct values in a `GROUP BY` subquery and join them back, as `COUNT(DISTINCT ...)` fails with `OVER` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#count-distinct-values-per-window)
+4. Keep one row per subscriber with `ROW_NUMBER` in a subquery [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number)
+5. End every `ORDER BY` inside `OVER` with a unique column [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ties-in-row_number)
+6. Narrow Data Views down before numbering their rows [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#latest-open-with-its-email)
+7. Use `RANK` for top N lists with ties [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#rank-and-dense_rank)
+8. Split subscribers into tiers with `NTILE`, and into random test groups with `NEWID()` - stored once [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ntile)
+9. Write the `ROWS BETWEEN` frame yourself whenever the window has an `ORDER BY` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#running-totals-and-frames)
+10. Measure the time between orders with `LAG` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#lag-and-lead)
+11. Stretch the frame of `LAST_VALUE` to the end of the window, and skip empty values with `IGNORE NULLS` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#first_value-and-last_value)
+12. Describe a typical order with the median from `PERCENTILE_CONT` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#percentile_cont-and-percentile_disc)
 
 ---
 
@@ -5301,7 +5985,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-10  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 JSON ends up in Data Extensions more often than you would think: API payloads, CloudPages form submissions, product feeds or recommendations pushed from other systems. Most of us reach for SSJS or AMPscript to read it. However, the SQL behind MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) Query Activities understands JSON as well, so you can pull a single value, grab a whole object, change the JSON or even build it without leaving your query.
@@ -5385,12 +6069,12 @@ In most Marketing Automation cases, I would stay with the default lax mode and c
 >
 > ```sql {3} title="✅ Read values only from valid JSON"
 > SELECT
->       orderEvent.EventId                                                                        AS EventId
->     , IIF(ISJSON(orderEvent.Payload) = 1, JSON_VALUE(orderEvent.Payload, '$.orderId'), NULL)    AS OrderId
-> FROM OrderEvents AS orderEvent
+>       EventId
+>     , IIF(ISJSON(Payload) = 1, JSON_VALUE(Payload, '$.orderId'), NULL) AS OrderId
+> FROM OrderEvents
 > ```
 >
-> For a broken record, [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) returns `NULL` and the query keeps running. Turn the check around (`WHERE ISJSON(orderEvent.Payload) = 0`), and you get the list of broken records, which makes a good regular health check for any Data Extension storing JSON.
+> For a broken record, [`IIF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#iif-shorthand) returns `NULL` and the query keeps running. Turn the check around (`WHERE ISJSON(Payload) = 0`), and you get the list of broken records, which makes a good regular health check for any Data Extension storing JSON.
 
 ### JSON_PATH_EXISTS
 
@@ -5439,12 +6123,12 @@ SELECT
       orderItem.[key]   AS ItemKey
     , orderItem.[value] AS ItemValue
     , orderItem.[type]  AS ItemType
-FROM (SELECT TOP 1 sub.SubscriberID FROM _Subscribers AS sub) AS oneRow
+FROM (SELECT TOP 1 SubscriberID FROM _Subscribers) AS oneRow
     CROSS APPLY OPENJSON('["Ukulele","Łódź tour"]') AS orderItem
 /* Error: OPENJSON(N'["Ukulele","Łódź tour"]' is not a known data extension or system data view. You can only query existing data extensions or system data views. */
 ```
 
-However, there is a workaround. MCE accepts a JSON path built while the query runs (older answers online say the path must be fixed text, which was true in SQL Server 2016 but changed in SQL Server 2017). Thanks to that, you can ask for the first, second and third item yourself. All you need is a list of numbers to join, and `ROW_NUMBER` over any [Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/) gives you one. Each number becomes a position in the array, and the join keeps only the positions that exist:
+However, there is a workaround. MCE accepts a JSON path built while the query runs (older answers online say the path must be fixed text, which was true in SQL Server 2016 but changed in SQL Server 2017). Thanks to that, you can ask for the first, second and third item yourself. All you need is a list of numbers to join, and [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) over any [Data View](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/) gives you one. Each number becomes a position in the array, and the join keeps only the positions that exist:
 
 ```sql {4,8,12} title="✅ Turn a JSON array into rows without OPENJSON"
 SELECT
@@ -5454,8 +6138,8 @@ SELECT
 FROM OrderEvents AS orderEvent
     INNER JOIN (
         SELECT TOP 10
-              ROW_NUMBER() OVER (ORDER BY sub.SubscriberID) - 1 AS Position
-        FROM _Subscribers AS sub
+              ROW_NUMBER() OVER (ORDER BY SubscriberID) - 1 AS Position
+        FROM _Subscribers
         ORDER BY Position
     ) AS itemPosition
         ON JSON_QUERY(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, ']')) IS NOT NULL
@@ -5480,9 +6164,9 @@ Both functions take any expression as a value, so in a real query you pass the f
 
 ```sql {3} title="Build JSON from Data View fields"
 SELECT
-      sub.SubscriberKey                                             AS SubscriberKey
-    , JSON_OBJECT('email': sub.EmailAddress, 'status': sub.Status)  AS SubscriberJson
-FROM _Subscribers AS sub
+      SubscriberKey
+    , JSON_OBJECT('email': EmailAddress, 'status': Status) AS SubscriberJson
+FROM _Subscribers
 
 /* Output:
 SubscriberKey | SubscriberJson
@@ -5504,9 +6188,9 @@ Watch out for empty fields, as the two functions treat `NULL` in opposite ways. 
 
 ```sql {3} title="Drop the keys of empty fields"
 SELECT
-      JSON_OBJECT('cartId': cart.CartId, 'couponCode': cart.CouponCode)                 AS KeepEmptyKey
-    , JSON_OBJECT('cartId': cart.CartId, 'couponCode': cart.CouponCode ABSENT ON NULL)  AS DropEmptyKey
-FROM AbandonedCarts AS cart
+      JSON_OBJECT('cartId': CartId, 'couponCode': CouponCode)                   AS KeepEmptyKey
+    , JSON_OBJECT('cartId': CartId, 'couponCode': CouponCode ABSENT ON NULL)    AS DropEmptyKey
+FROM AbandonedCarts
 
 /* Output:
 KeepEmptyKey                             | DropEmptyKey
@@ -5552,9 +6236,9 @@ anna-1042     | [{"sku":"UKU-01","name":"Ukulele"},{"sku":"TOUR-LDZ","name":"Ł�
 >
 > ```sql {5} title="❌ FOR JSON on the main SELECT fails the syntax check"
 > SELECT TOP 1
->       sub.SubscriberKey AS subscriberKey
->     , sub.EmailAddress  AS email
-> FROM _Subscribers AS sub
+>       SubscriberKey AS subscriberKey
+>     , EmailAddress  AS email
+> FROM _Subscribers
 > FOR JSON PATH /* Error: No column name was specified for column 1 of 'Qry'. */
 > ```
 
@@ -5599,7 +6283,7 @@ Keep an eye on empty fields. Unlike `JSON_OBJECT`, `FOR JSON` leaves out keys wi
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -5792,7 +6476,7 @@ WHERE
 
 **Align main SQL keywords to the left.**
 
-This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in MCE is a pain, as there is no autoformatter supporting it in the Query Studio or Query Activity. The Format button in my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (a free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) follows this guide, so it will not add them either. We would have to add all those additional spaces manually. It's just not worth it.
+This rule focuses on writing speed. While I prefer the Vertically Aligned Space approach's aesthetics, I don't see any significant readability gains. On the other hand, writing in this style in MCE is a pain, as there is no autoformatter supporting it in Query Activity. The Format button in my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (a free SQL editor that runs inside your own MCE account) follows this guide, so it will not add them either. We would have to add all those additional spaces manually. It's just not worth it.
 
 ```sql
 /* ✅ Left Aligned Keywords */
@@ -6221,7 +6905,7 @@ Looking for more MCE style? Check out my:
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-email-sends/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Make finding problems with email delivery in MCE great again. SQL Studio to the rescue.
@@ -6341,7 +7025,7 @@ As they say, with great power comes great complexity. And that's definitely true
 
 ### 1. Query System Data Views
 
-I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange), is the best place to execute that little exploratory analysis.
+I like to start with the query described in this guide - filtered down to problematic subscriber - to get a high-level picture of the situation. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account, is the best place to execute that little exploratory analysis.
 
 Once you see the outcome, there are few possibilities:
 
@@ -6399,7 +7083,7 @@ Prefer complex processes visualised? Got you covered:
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -6424,7 +7108,7 @@ All good, until one of the values, exceed the maximum length you set for its fie
 
 ## Short Term Solution
 
-You can make quick manual check with a simple SQL query. Open [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) and copy-paste the below code:
+You can make quick manual check with a simple SQL query. Open [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free SQL editor that runs inside your own MCE account) and copy-paste the below code:
 
 ```sql title="Sample maximum length checking query on Contact object Synchronized Data Extension"
 SELECT
@@ -6612,7 +7296,7 @@ WHERE
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Why should you care about All Contacts list?
@@ -6632,7 +7316,7 @@ In this article, I will walk through a step-by-step guide to identify and clean 
 Before we dive into the job, let's check whether you have the necessary permissions and access to perform the cleanup. You will need:
 
 - Access to Contact Builder and All Contacts list.
-- Access to [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) or at least Automation Studio to run Query Activities.
+- Access to [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free SQL editor that runs inside your own MCE account) or at least Automation Studio to run Query Activities.
 - While not necessary, having Mobile Connect licence (regardless of whether you use it or not) makes it so much easier to work with All Contacts list in a programmatic way.
 - At least basic understanding of SQL and how to write queries in Salesforce Marketing Cloud Engagement. If you are new to SQL or not sure on some specific element, I recommend checking out my [MCE SQL Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/) article before proceeding.
 
@@ -8926,7 +9610,7 @@ The final part of the template is where I'm adding the main part of the script. 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-09  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Cloud Page Apps: what and why
@@ -8968,7 +9652,7 @@ Anything related to MCE that you wish could be a bit more automated or easy can 
 
 > **Note: You Should Know**
 >
-> Want to see how far this pattern can go? [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free Query Studio replacement, is a Cloud Page App built on it: one Cloud Page, two Code Resources and an Installed Package. As all of its code is [open on GitHub](https://github.com/MateuszDabrowski/sqlstudio), you can see every step of this guide at work in a full application.
+> Want to see how far this pattern can go? [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor for MCE, is a Cloud Page App built on it: one Cloud Page, two Code Resources and an Installed Package. As all of its code is [open on GitHub](https://github.com/MateuszDabrowski/sqlstudio), you can see every step of this guide at work in a full application.
 
 ### Create your first MCE micro application
 
@@ -10208,7 +10892,7 @@ Looking for more MCE style? Check out my:
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Limits and Guardrails
@@ -10541,7 +11225,7 @@ The good part? You can capture 6 months of data at once.
 
 The bad part?
 
-1. You will need to use an SQL query to count the executions. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange), is your friend here.
+1. You will need to use an SQL query to count the executions. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account, is your friend here.
 2. There is only 6 months of data available, so you will need to store the results somewhere else to get a full-year overview. [External Data Warehouse](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-export--archive) perhaps?
 
 #### Automation Execution Optimizations
@@ -10632,12 +11316,12 @@ Optimisation? Not much you can do here. Just be sure to regularly review your us
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
 
-System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) or outputting to the standard Data Extension. They are excellent fuel for SSJS logic.
+System Data Views are **built-in backend Data Extensions** that you can use to find information about your subscribers and sends. You **cannot change them**, but you can leverage their data in SQL queries for quick reports in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) (my free SQL editor that runs inside your own account) or outputting to the standard Data Extension. They are excellent fuel for SSJS logic.
 
 Data Views have **data retention settings set to 6 months**. If you want to store any data for a more extended period, you must create an Automation that will be copying data to your Data Extension.
 
@@ -13414,7 +14098,7 @@ Of course, there is one downside to this approach. As you need to use Automation
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
@@ -13768,7 +14452,7 @@ You should always align this question with the specific business needs of your c
 
 You can add them within the same Automation as the [Contact Deletion Script Activity](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-script-activity) to ensure they are captured right before cleanup. You may also create separate Automations on your child Business Unit to capture BU-specific candidates for cleanup using data available only there.
 
-Remember to test those recommendations and queries (for example, using [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement for Query Studio, which is no longer available on AgentExchange (formerly AppExchange)) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
+Remember to test those recommendations and queries (for example, using [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account) before implementing them in your Contact Deletion Process, as even a small mistake might lead to irreversible data loss.
 
 [Find Problematic Contacts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts)
 
@@ -15742,18 +16426,16 @@ Looking for more? Check out follow up materials for added context and deeper div
 
 # MCE AgentExchange Solutions
 
-> Fill the feature gaps with plug-and-play apps. Salesforce Marketing Cloud Engagement AgentExchange ready-to-use solution highlights.
+> Fill the feature gaps with plug-and-play apps. Salesforce Marketing Cloud Engagement solution highlights from AgentExchange.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-29  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
-
-Fill the feature gaps with plug-and-play apps. Solution highlights from Salesforce MCE's AgentExchange.
 
 AgentExchange (formerly AppExchange) is an app store for various Clouds within Salesforce Customer 360 platform. You will find in-house solutions from Salesforce Labs and 3rd party. Free and paid. Good and bad. But all - validated by [Salesforce Security Review](https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm).
 
-The new name arrived in 2026, when Salesforce unified AppExchange, Slack Marketplace, and Agentforce components - agents, actions, and prompt templates now sit next to the classic apps. For the solutions below, the rebrand changed nothing: existing listings, reviews, and links carried over untouched.
+The new name arrived in 2026, when Salesforce merged Slack Marketplace and Agentforce components into the same store, so agents, actions and prompt templates now sit next to the classic apps. The listings, reviews and links of the solutions below carried over unchanged.
 
 From over 4500 solutions available there, only around 100 are for [Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud)](https://appexchange.salesforce.com/category/marketing). Here, I will focus only on those I had some experience with.
 
@@ -15800,7 +16482,7 @@ Else, it's time to look somewhere... else.
 
 Time to check whether there is any free solution available on demand. You can do it by going to [marketing AgentExchange](https://appexchange.salesforce.com/category/marketing) and applying filters to get Free solutions dedicated to MCE.
 
-To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio) covered below, before it left the AgentExchange) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#deselect-search).
+To manage your expectations: for Salesforce MCE, the list won't be long. And even then, you have to make sure the app is genuinely offering a meaningful free tier. Expect free Salesforce Labs solutions (like [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2) covered below) and little pearls made by 3rd parties - like Content Builder asset finder [DESelect Search](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#deselect-search).
 
 If you are lucky enough to find something free in AgentExchange related to your requirements, check whether it is good enough. Just as you did in the [previous step](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#2-validate-out-of-the-box-options).
 
@@ -15872,7 +16554,7 @@ SQL Query Activities are free, require no implementation, work directly in MCE a
 
 **3. Free AgentExchange**
 
-Filtering the AgentExchange for free solutions used to show only one related to segmentation - [Query Studio](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio), which is no longer available there. My free replacement for it, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), is a great tool, but it's still a SQL-based solution. It's also not an end-to-end tool for segmentation purposes. Not good enough.
+Filtering the AgentExchange for free solutions shows only one related to segmentation - [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2), the successor of the original Query Studio. It is a great tool, and so is my free [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), but both are SQL-based solutions. Neither is an end-to-end tool for segmentation purposes. Not good enough.
 
 **4. Custom Solution**
 
@@ -15896,58 +16578,48 @@ I hope it is now easier to find when AgentExchange can solve MCE requirements. W
 
 ## AgentExchange Solutions for MCE
 
-### Query Studio
+### Query Studio 2
 
-> **Note: You Should Know**
->
-> Query Studio is no longer available on AgentExchange. Installed copies still work, but Salesforce's support now sends you to community resources for setup and fixes. So I built [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), a free, open-source replacement that runs inside your own MCE account and validates your SQL exactly like a Query Activity.
-
-![Screenshot of the Query Studio User Interface](https://mateuszdabrowski.pl/img/article/article-image-appexchange-query-studio.png)
+![Screenshot of the Query Studio 2 user interface, with a query on \_Subscribers, the Query Builder, the Action Log and the results below the SQL](https://mateuszdabrowski.pl/img/article/article-image-appexchange-query-studio-2.png)
 
 | Creator         | Pricing |
 | --------------- | ------- |
 | Salesforce Labs | Free    |
 
-#### The Good
+> **Note: You Should Know**
+>
+> The original Query Studio is no longer available on AgentExchange. Installed copies still work, but Salesforce's support sends you to community resources for setup and fixes. When it was removed, I built [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) to replace it. Then, on 9 October 2026, Salesforce Labs put Query Studio 2 on AgentExchange in its place.
 
-Query Studio solves two problems:
+Query Studio 2 solves the same two problems as its predecessor:
 
 1. MCE SQL Query Testing
 2. MCE SQL Data Exploratory Analysis
 
-Why did I call it problems?
+Why do I call them problems? Because the only out-of-the-box way to work with SQL in MCE is a Query Activity in Automation Studio. It tells you whether your query is valid, but to see what it returns, you first have to create a Data Extension with the correct fields (names, data types, lengths) and run the activity. Outcomes are not what you expected? The Data Extension needs a rework. It happens sometimes when you write a new query, and all the time when you explore the data.
 
-Because the only out-of-the-box solution for working with SQL in MCE is Query Activity in Automation Studio. It allows you to validate whether your query is valid, but checking if the outcomes are as expected is a pain.
+Query Studio 2 runs your query into a temporary Data Extension it creates for you and shows the results below your SQL.
 
-You can see the results only after manually creating a data extension with the correct columns (names, data types, lengths) and executing the Query Activity. Outcomes are suboptimal and need to make some changes? The Data Extension needs a rework.
+#### The Good
 
-It sometimes happens when you are writing and testing a new query. It happens all the time when you are doing exploratory analysis.
+It installs from AgentExchange as an Installed Package in a few clicks and opens from an MCE menu. Next to the editor, it brings a Query Builder: search for a Data Extension or a Data View, then click a table or a field to add it to your query. A table added as a JOIN asks for the field to join on and starts the ON with it, and you write the rest. Its checks mark the problems they find in the editor, with a Fix all for the ones they can repair. And it accepts what the original refused in my tests: parentheses in the first line of `SELECT`, `TOP PERCENT` and `CAST` in `SELECT` all pass its Check Query.
 
-Query Studio automatically builds a temporary Data Extension to store the query's output on every execution. It also displays a subset of outcomes below your SQL so you can quickly check whether it aligns with your expectations.
-
-And that's not all - Query Studio lets you save your work as ready-to-use Query Activities. Even in a way that is impossible through the Automation Studio (like query targeting Auto-Suppression List)!
+When you click Run, it lists the fields it will create in the target Data Extension and asks you to confirm, with an Edit link next to the list. A field of a Data View keeps its type, such as SubscriberID as a Number, while a column of a subquery or one your query computes becomes Text (255). Its action log then shows each step of the run, and the results come below your SQL, from 50 to 1,000 rows per page. That Data Extension deletes itself after a while, so Convert DE renames it and removes its retention policy when you want to keep the results, and Extract to File writes it to the Export folder of your Enhanced FTP.
 
 #### The Bad
 
-However, Query Studio is not perfect. The main issue is that it has implemented a different (and not that good) query validation. The outcome?
+Like every Salesforce Labs app, it comes with no official or guaranteed support from Salesforce, only the community boards. It also runs on its own server, a Heroku app between your browser and MCE, so your queries and their results pass through it. And if your account restricts logins by IP, you first have to add the four IP addresses from its Specs tab to the login allowlist.
 
-While every query you write in Query Studio will work in Query Activity, it is not always true the other way round. For example, Query Studio won't let you use comments, parentheses in the first line of the [SELECT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) statement, [TOP PERCENT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#top-percent), [CAST](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#cast) in [SELECT](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) and more that are not a problem in Query Activity.
+Its own parser brings back the main weakness of the original Query Studio in a milder form: it refuses some valid SQL. The most common case is a comment. A `--` comment gets "Please use /\* comments \*/ rather than --comments.", and a `/* ... */` comment then gets "'SELECT \*' statements are not allowed.", while a Query Activity runs both.
 
-It also has very poor error messages making it hard to debug your queries properly. Sometimes it is helpful to copy the SQL to Query Activity and validate there to get a better response.
+The other way round, Run does not stop at everything Check Query flags. When its Query Builder added a field of a second table without joining that table, Check Query flagged the unknown alias, but Run sent the query to MCE anyway, which refused it with "The multi-part identifier could not be bound". It is a young app, at version 2.2 within days of its release, so expect such gaps to close quickly.
 
-Finally, while it creates a temporary Data Extension on execution, it is not helpful as a template for the final solution because all fields have a Text data type regardless of the real data.
+It has one editor, and Run sends all of its text, so you cannot keep a few queries there and run the one you select: with two queries in the editor, Run reports a syntax error at the second one. It has no dark mode either. And its code is not published on the Salesforce Labs GitHub, so your security team has only the listing and its Security Review to go on.
 
 #### The Sum Up
 
-Despite some quirks, Query Studio was a huge timesaver and quality of life improvement. Useful for creating queries, debugging outcomes, and quick checks on Data Views. Free. A must-have for any SQL-enabled or learning-to-be-enabled team.
+If you want a free SQL editor that installs in minutes and stays up to date with a package upgrade, Query Studio 2 is the easiest pick. If you want the syntax check of MCE itself, so that your editor runs exactly what a Query Activity runs, [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) is my free, open-source alternative. It also keeps every query and result inside your own account, needs no allowlist entries and lets you keep several queries in one tab. It needs a short deployment by your admin first, as it is not on AgentExchange.
 
-However, it is no longer available on AgentExchange, so the option you can get now is [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free replacement. It keeps the core of Query Studio: a temporary Data Extension on every run, results below your SQL and saving your work as a Query Activity. And it fixes the bad parts:
-
-- It sends your SQL to MCE unchanged, and MCE's own syntax check validates it. Comments, parentheses in the first line of `SELECT`, `TOP PERCENT` and `CAST` in `SELECT` work just as in a Query Activity.
-- It shows MCE's own error messages, with an explanation and a fix wherever it recognises the error.
-- Its temporary Data Extension keeps the Date, Number, Decimal and Boolean types of the fields your query selects. Every other column is still Text.
-
-[SQL Studio](https://mateuszdabrowski.pl/sql-studio/)
+[Query Studio 2](https://appexchange.salesforce.com/appxListingDetail?listingId=37382c71-88a7-4907-aef9-034f6100c447) | [SQL Studio](https://mateuszdabrowski.pl/sql-studio/)
 
 ---
 
@@ -21700,6 +22372,7 @@ To fully leverage the Salesforce Marketing Cloud Engagement Data Extensions and 
 - [Numeric Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/)
 - [Conversion Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/)
 - [Aggregate Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/)
+- [Window Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/)
 - [Null Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/)
 - [JSON Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/)
 - [Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/)

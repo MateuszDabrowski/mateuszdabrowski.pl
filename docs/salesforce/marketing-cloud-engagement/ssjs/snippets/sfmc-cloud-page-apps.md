@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/ssjs/snippets/sfmc-cloud-page-apps/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-09  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Cloud Page Apps: what and why
@@ -46,7 +46,7 @@ Anything related to MCE that you wish could be a bit more automated or easy can 
 
 > **Note: You Should Know**
 >
-> Want to see how far this pattern can go? [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free Query Studio replacement, is a Cloud Page App built on it: one Cloud Page, two Code Resources and an Installed Package. As all of its code is [open on GitHub](https://github.com/MateuszDabrowski/sqlstudio), you can see every step of this guide at work in a full application.
+> Want to see how far this pattern can go? [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor for MCE, is a Cloud Page App built on it: one Cloud Page, two Code Resources and an Installed Package. As all of its code is [open on GitHub](https://github.com/MateuszDabrowski/sqlstudio), you can see every step of this guide at work in a full application.
 
 ### Create your first MCE micro application
 

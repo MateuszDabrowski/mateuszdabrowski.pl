@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-11  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Group rows and apply aggregate functions to see the big picture in your data.
@@ -14,6 +14,8 @@ Group rows and apply aggregate functions to see the big picture in your data.
 `GROUP BY` allows you to create aggregation by grouping the input data on selected column(s).
 
 It limits the data you can [`SELECT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) to either `GROUP BY` column(s) or aggregate functions.
+
+Need the totals next to every row instead, for example the number of orders of a subscriber on each of their orders? [Window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by) do that without collapsing the rows.
 
 Let's say you want to check which email domains are most popular in your database.
 
@@ -274,6 +276,8 @@ SELECT
     , COUNT(DISTINCT EmailAddress) AS UniqueEmailCount
 FROM _Subscribers
 ```
+
+`COUNT(DISTINCT ...)` does not work with `OVER`, so to keep every row next to its distinct count, [count in a subquery and join the counts back](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#count-distinct-values-per-window).
 
 ## HAVING
 
