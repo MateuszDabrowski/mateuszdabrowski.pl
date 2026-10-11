@@ -20,6 +20,8 @@ import { LeadText } from '/src/components/LeadText.js';
 
 It limits the data you can [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) to either `GROUP BY` column(s) or aggregate functions.
 
+Need the totals next to every row instead, for example the number of orders of a subscriber on each of their orders? [Window functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions.mdx#over-and-partition-by) do that without collapsing the rows.
+
 Let's say you want to check which email domains are most popular in your database.
 
 <Tabs
@@ -351,6 +353,8 @@ SELECT
     , COUNT(DISTINCT EmailAddress) AS UniqueEmailCount
 FROM _Subscribers
 ```
+
+`COUNT(DISTINCT ...)` does not work with `OVER`, so to keep every row next to its distinct count, [count in a subquery and join the counts back](/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions.mdx#count-distinct-values-per-window).
 
 ## HAVING
 

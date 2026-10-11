@@ -92,6 +92,7 @@ module.exports = {
                                 'salesforce/marketing-cloud-engagement/sql/sql-numeric-functions',
                                 'salesforce/marketing-cloud-engagement/sql/sql-conversion-functions',
                                 'salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions',
+                                'salesforce/marketing-cloud-engagement/sql/sql-window-functions',
                                 'salesforce/marketing-cloud-engagement/sql/sql-null-functions',
                                 'salesforce/marketing-cloud-engagement/sql/sql-json-functions',
                                 'salesforce/marketing-cloud-engagement/sql/sql-style-guide',

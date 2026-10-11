@@ -32,7 +32,7 @@
 .heroCodeVariable {
   color: var(--ifm-color-secondary);
   display: inline-block;
-  transition: width 300ms ease;
+  text-align: center;
 }
 
 .heroWordSwap {
@@ -52,10 +52,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroCodeVariable {
-    transition: none;
-  }
-
   .heroWordSwap {
     animation: none;
   }

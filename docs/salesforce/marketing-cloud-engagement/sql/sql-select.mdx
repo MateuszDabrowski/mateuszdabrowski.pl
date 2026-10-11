@@ -14,7 +14,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 The `SELECT` statement opens each query. It picks the columns from the source data extensions and system data views and allows you to create entirely new data points.
 
-The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As :product[MCE] caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio) does not support this shortcut. Don't use `*`.
+The simplest version of this statement is `SELECT *`, which targets all available columns from the source. I do not recommend this approach, as it is terrible for your query's readability and performance. As :product[MCE] caches the source Data Extension column names when you save SQL Query Activity, you won't have added value of flexible selection. You will still have to edit and save the activity. Also, [Query Studio 2](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio-2) refuses this shortcut, as the original Query Studio did. Don't use `*`. And if you start a query with it anyway, my [SQL Studio](/sql-studio/) expands it for you: one click on its lint hint writes out the columns of the table.
 
 The prefered method is targeting columns explicitly by their names:
 
@@ -104,12 +104,6 @@ SELECT TOP 10 PERCENT
 
 The number of rows will be rounded up to the nearest integer (so `TOP 50 PERCENT` from Data Extension with 101 rows will return 51 rows).
 
-:::note You Should Know
-
-`PERCENT` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity and in [SQL Studio](/sql-studio/), my free replacement for Query Studio, which is no longer available on :product[AgentExchange].
-
-:::
-
 ### TOP with ORDER BY
 
 The `TOP` clause best practice is to always use it with `ORDER BY`. Only with sorted data, you will understand rows selection logic.
@@ -183,6 +177,8 @@ ORDER BY QuizScore DESC, QuizFilledDate ASC
 
 The query will first sort using QuizScore to find people with the most points. Next, it will apply the second sort on the date of quiz completion. As an outcome, we will have the highest scorers sorted from first to last within each high score.
 
+`TOP` limits the whole result. Need the best scorers of each quiz, or the latest order of each subscriber, instead? `TOP` cannot do that, but [`ROW_NUMBER`](/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions.mdx#row_number) in a subquery can.
+
 ### TOP WITH TIES
 
 Sometimes even such complex sorting might not be enough.
@@ -227,7 +223,7 @@ With those two words added after the `TOP` clause, our query will return all row
 
 :::note You Should Know
 
-`WITH TIES` modifier doesn't work in Query Studio and will produce an error there. However, it works perfectly in Automation Studio Query Activity and in SQL Studio.
+`WITH TIES` modifier doesn't work in [Query Studio 2](/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions.mdx#query-studio-2), as it did not in the original Query Studio, and produces a syntax error there. However, it works perfectly in Automation Studio Query Activity and in [SQL Studio](/sql-studio/), my free SQL editor that runs inside your own :product[MCE] account.
 
 :::
 

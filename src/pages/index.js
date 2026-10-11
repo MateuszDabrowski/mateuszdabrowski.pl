@@ -16,6 +16,10 @@ import { AppRow, AppCard } from '@site/src/components/AppShowcase';
 import styles from './styles.module.css';
 
 const dynamicHeroWords = ['code', 'agent', 'flow'];
+// The word box is as wide as the longest word, so the line keeps its length.
+// A box that followed each word let the line rewrap between 798 and 822 px and
+// between 522 and 538 px, moving the whole page every five seconds (CLS).
+const heroWordWidth = Math.max(...dynamicHeroWords.map((word) => word.length));
 
 /**
  * Hero Component with dynamic word-switching and scrolling animation.
@@ -52,12 +56,11 @@ function Hero() {
                     {/* Decorative: not a live region, or screen readers would
                         announce the new word every five seconds for as long as
                         the page is open. */}
-                    {/* The box is sized in ch so the rest of the line slides
-                        with the word length instead of snapping; the key
-                        remounts the word so its fade-in runs on every swap. */}
+                    {/* The box keeps the longest word's width. The key remounts
+                        the word so its fade-in runs on every swap. */}
                     <span
                         className={styles.heroCodeVariable}
-                        style={{ width: `${dynamicHeroWords[currentToolIndex].length}ch` }}
+                        style={{ width: `${heroWordWidth}ch` }}
                         aria-hidden="true"
                     >
                         <span key={dynamicHeroWords[currentToolIndex]} className={styles.heroWordSwap}>
@@ -104,11 +107,18 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-10-12',
+        kind: 'Doc',
+        title: 'MCE SQL Window Functions',
+        url: '/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/',
+        description: 'A row with a view. Deduplicate with PARTITION BY and ROW_NUMBER, build top N lists and measure the days between orders in MCE SQL, all without losing a row.',
+    },
+    {
         date: '2026-10-10',
         kind: 'Doc',
         title: 'MCE SQL JSON Functions',
         url: '/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/',
-        description: 'Salesforce\'s SQL Reference does not mention JSON, but MCE SQL reads, changes and builds it. Every function tested live, including the broken payload that stops your whole query.',
+        description: 'Salesforce\'s SQL Reference never mentions JSON, yet MCE SQL reads, changes and builds it - and one broken payload can stop the whole query.',
     },
     {
         date: '2026-10-10',
