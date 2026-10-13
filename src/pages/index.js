@@ -107,6 +107,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-10-13',
+        kind: 'App',
+        title: 'SQL Studio 1.3',
+        url: '/sql-studio/',
+        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: save results into a Data Extension you already have, several queries in one tab, and SF MCE SQL, a Claude skill with the same lint, fixes and Format.',
+    },
+    {
         date: '2026-10-12',
         kind: 'Doc',
         title: 'MCE SQL Window Functions',
@@ -126,13 +133,6 @@ const whatsNew = [
         title: 'Diagramforce 1.25',
         url: 'https://diagramforce.com',
         description: 'Free Salesforce diagramming in your browser, plus a Claude skill that turns your org\'s metadata into editable diagrams. New: the Winter \'27 Flow elements and Groups, PNG and SVG images straight from the Claude skill for your documentation, and your role hierarchy as an Org Chart.',
-    },
-    {
-        date: '2026-10-09',
-        kind: 'App',
-        title: 'SQL Studio 1.2',
-        url: '/sql-studio/',
-        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: save a run\'s results to a new Data Extension, snippets shared with your whole Business Unit, and a Join to the query icon on every table.',
     },
     {
         date: '2026-09-25',
