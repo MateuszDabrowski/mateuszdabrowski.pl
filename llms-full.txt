@@ -1700,7 +1700,7 @@ Bonus Solution: Create a Limit Allocation Manager in Setup. This would be a new 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-13  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -1737,6 +1737,12 @@ If you cannot deploy SQL Studio, there are still two other ways to learn:
 2. [MC Snippets SQL Playground](https://mcsnippets.herokuapp.com/sql) created by Salesforce MVP Pato Sapir. It allows you to learn MCE SQL even if you don’t have access to the platform. It’s limited to the Data Views (on Pato’s instance) and a Data Extension that you can create within the Playground itself. But you can spin it quickly and have everything on one screen. It’s a perfect tool for quick experimentation or sharing tested data transformations on sample data with colleagues.
 
 I always start in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), and only once my SQL Query is complete and validated do I move it to Automation Studio.
+
+> **Note: You Should Know**
+>
+> Writing SQL with Claude? Using [MCP Server for MCE](https://developer.salesforce.com/docs/marketing/mce-mcp/guide/mce-mcp.html)? My SF MCE SQL skill gives it the lint, fixes and format of SQL Studio, so the queries Claude writes for you already avoid what MCE refuses and follow my style guide. It also knows the Data Views with their fields, and with the fields of your Data Extensions it checks your columns against the target. [See how it works](https://mateuszdabrowski.pl/sql-studio/#claude-skill).
+>
+> Download the SF MCE SQL skill
 
 Once you have the right tool, it’s time to get the right knowledge. There are few formats available. If you like reading followed by small knowledge checks - this page is the right choice. But if you prefer watching a video or a doing a challenge - Cameron Roberts and Sabuhi Yahya got you covered:
 
