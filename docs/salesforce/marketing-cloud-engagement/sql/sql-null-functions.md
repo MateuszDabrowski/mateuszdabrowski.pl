@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-04  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 NULL is a fickle beast, and for the people not accustomed to how it works in SQL, it can create many problems (read: incorrect data output). This is especially true for those coming from nullish-friendly languages (like SSJS). Let's jump into the details.
@@ -175,5 +175,5 @@ I personally find the standard [`IIF`](https://mateuszdabrowski.pl/docs/salesfor
 SELECT
       SubscriberKey
     , EmailAddress
-    , IIF(WorkEmailAddress = EmailAddress, NULL, EmailAddress) AS WorkEmailAddress
+    , IIF(WorkEmailAddress = EmailAddress, NULL, WorkEmailAddress) AS WorkEmailAddress
 ```

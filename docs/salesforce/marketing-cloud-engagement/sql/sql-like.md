@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 `LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#like-in-case) and [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#like-operator) statements.
@@ -36,8 +36,8 @@ You can change this filter to `%@mateuszdabrowski.%`. With the second wildcard a
 SELECT
       SubscriberKey
     , EmailAddress
-  FROM _Subscribers
- WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
+FROM _Subscribers
+WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
 ```
 
 In the above example, I used two wildcards - one before and one just after `@` symbol. It allows not only to catch contacts in `@mateuszdabrowski.pl` domain, but also any subdomain, like `@dev.mateuszdabrowski.pl`.
@@ -89,10 +89,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '_'
-    OR RecommendedProducts  LIKE '_,%'
-    OR RecommendedProducts  LIKE '%,_,%'
-    OR RecommendedProducts  LIKE '%,_'
+    RecommendedProducts LIKE '_'
+    OR RecommendedProducts LIKE '_,%'
+    OR RecommendedProducts LIKE '%,_,%'
+    OR RecommendedProducts LIKE '%,_'
 ```
 
 In the query above, we are filtering our database with `RecommendedProducts` field. To add a contact to our segment, in four steps, we check if at least one condition is true:
@@ -107,7 +107,7 @@ SELECT
         WHEN RecommendedProducts LIKE '_'       THEN 'True'
         WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
         WHEN RecommendedProducts LIKE '%,_,%'   THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_'     THEN 'True'
         ELSE 'False'
       END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
@@ -167,10 +167,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '[1234]'
-    OR RecommendedProducts  LIKE '[1234],%'
-    OR RecommendedProducts  LIKE '%,[1234],%'
-    OR RecommendedProducts  LIKE '%,[1234]'
+    RecommendedProducts LIKE '[1234]'
+    OR RecommendedProducts LIKE '[1234],%'
+    OR RecommendedProducts LIKE '%,[1234],%'
+    OR RecommendedProducts LIKE '%,[1234]'
 ```
 
 **SELECT**
@@ -207,11 +207,11 @@ SELECT
         WHEN RecommendedProducts LIKE '[1234]'      THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1234],%'  THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1234]'    THEN 'Premium'
         WHEN RecommendedProducts LIKE '[56789]'     THEN 'Standard'
         WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
         WHEN RecommendedProducts LIKE '%,[56789],%' THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[56789]'   THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -253,10 +253,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '[1-4]'
-    OR RecommendedProducts  LIKE '[1-4],%'
-    OR RecommendedProducts  LIKE '%,[1-4],%'
-    OR RecommendedProducts  LIKE '%,[1-4]'
+    RecommendedProducts LIKE '[1-4]'
+    OR RecommendedProducts LIKE '[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4]'
 ```
 
 **SELECT**
@@ -269,11 +269,11 @@ SELECT
         WHEN RecommendedProducts LIKE '[1-4]'       THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4]'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '[5-9]'       THEN 'Standard'
         WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
         WHEN RecommendedProducts LIKE '%,[5-9],%'   THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9]'     THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -297,7 +297,7 @@ If you want to search for a hyphen '-' within a grouping operator that uses a ra
 >         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'       THEN 'Management'
 >         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%'    THEN 'Specialists'
 >       END AS CorporateJobTitleGroup
-> FROM _Subscriber
+> FROM ContactMasterDE
 > ```
 
 ### ^ Operator

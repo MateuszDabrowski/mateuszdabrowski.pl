@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -176,28 +176,22 @@ After applying both of the above options to the [Basic SQL Snippet](https://mate
 SELECT
       c.Id AS ContactID
     , CASE
-        WHEN 18 - LEN(c.Id) < 0
-        THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
+        WHEN 18 - LEN(c.Id) < 0 THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
       END AS SubscriberKey
     , CASE
-        WHEN 40 - LEN(c.FirstName) < 0
-        THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
+        WHEN 40 - LEN(c.FirstName) < 0 THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
       END AS FirstName
     , CASE
-        WHEN 80 - LEN(c.LastName) < 0
-        THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
+        WHEN 80 - LEN(c.LastName) < 0 THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
       END AS LastName
     , CASE
-        WHEN 254 - LEN(c.Email) < 0
-        THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 254, ' over limit)')
+        WHEN 254 - LEN(c.Email) < 0 THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 254, ' over limit)')
       END AS EmailAddress
     , CASE
-        WHEN 80 - LEN(c.JobTitle__c) < 0
-        THEN CONCAT(LEN(c.JobTitle__c), '(', LEN(c.JobTitle__c) - 80, ' over limit)')
+        WHEN 80 - LEN(c.JobTitle__c) < 0 THEN CONCAT(LEN(c.JobTitle__c), '(', LEN(c.JobTitle__c) - 80, ' over limit)')
       END AS JobTitle
     , CASE
-        WHEN 40 - LEN(c.Industry__c) < 0
-        THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
+        WHEN 40 - LEN(c.Industry__c) < 0 THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
       END AS Industry
 FROM Contact_Salesforce AS c
 WHERE

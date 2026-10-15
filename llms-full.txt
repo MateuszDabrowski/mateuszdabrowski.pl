@@ -1016,7 +1016,7 @@ The diagram above deliberately shows Org 1 running Single BU and Org 2 running M
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/zen-of-marketing-cloud/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 I'm a massive fan of Tim Peters' [PEP20 - Zen of Python](https://www.python.org/dev/peps/pep-0020/). In 19 short lines, he described his recommendations for writing good Python code. The outcome transcended the specific language, and I see it as a universal guide on software engineering.
@@ -1073,7 +1073,7 @@ SELECT
     , o.EventDate       AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open        AS o
-    ON o.SubscriberKey = wel.SubscriberKey
+        ON o.SubscriberKey = wel.SubscriberKey
 
 /* and the Beast */
 Select a.subscriberkey, a.emailaddress, b.eventdate
@@ -1171,9 +1171,9 @@ Think about KISS and YAGNI whenever you are coding, and it will help you deliver
 SELECT
       SubscriberKey
     , CASE
-        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE()) THEN 1
-        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE()) THEN 0
-    END AS IsNewJoiner
+        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE())    THEN 1
+        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE())     THEN 0
+      END AS IsNewJoiner
 FROM Ent._Subscribers
 /* When you only need two opposite CASE rules, simple IIF shorthand is better */
 SELECT
@@ -1700,7 +1700,7 @@ Bonus Solution: Create a Limit Allocation Manager in Setup. This would be a new 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-13  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -2029,9 +2029,9 @@ SELECT TOP 20
       s.Domain
     , COUNT(s.EventDate)    AS SendCount
     , COUNT(b.EventDate)    AS BounceCount
-    , COUNT(b.EventDate)*100/COUNT(s.EventDate) AS BounceRate
-FROM _Sent AS s
-    LEFT JOIN _Bounce AS b
+    , COUNT(b.EventDate) * 100 / COUNT(s.EventDate) AS BounceRate
+FROM _Sent              AS s
+    LEFT JOIN _Bounce   AS b
         ON b.JobID = s.JobID
         AND b.ListID = s.ListID
         AND b.BatchID = s.BatchID
@@ -2040,7 +2040,7 @@ FROM _Sent AS s
 WHERE s.EventDate >= DATEADD(MONTH, -1, GETDATE())
 GROUP BY s.Domain
 HAVING COUNT(s.EventDate) >= 100
-ORDER BY COUNT(b.EventDate)*100/COUNT(s.EventDate) DESC
+ORDER BY COUNT(b.EventDate) * 100 / COUNT(s.EventDate) DESC
 ```
 
 Bonus: This query might be performance heavy. One option to make it perform better is to shorten the timeframe in the WHERE filter. Another would be to split this query into two - one getting cumulative counts and the second responsible for doing math for Bounce Rate. Also, check how the numbers change when selecting only Hard Bounces.
@@ -2131,7 +2131,7 @@ It means that rows filtered with `WHERE` will not be considered for `GROUP BY` a
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Selected information on the SELECT statement in Marketing Cloud Engagement SQL
@@ -2145,7 +2145,7 @@ The prefered method is targeting columns explicitly by their names:
 ```sql title="Select ContactKey and EmailAddress columns"
 SELECT
       ContactKey
-    , EmailAddres
+    , EmailAddress
 ```
 
 If a column name contains a space, hyphen or is a SQL's reserved keyword, you need to capture it with squared brackets:
@@ -2153,7 +2153,7 @@ If a column name contains a space, hyphen or is a SQL's reserved keyword, you ne
 ```sql {4} title="Let's add another column with whitespace in its name"
 SELECT
       ContactKey
-    , EmailAddres
+    , EmailAddress
     , [External Contact Id]
 ```
 
@@ -2288,11 +2288,13 @@ And you can even sort using multiple values - each can have different sorting or
 
 SQL will sort using the first provided column and then, while maintaining the order of the previous column, will sort again using the next value. Let's jump to an example:
 
-```sql {4} title="Top 10% with highest Quiz Score, first to solve"
+```sql {4-6} title="Top 10% with highest Quiz Score, first to solve"
 SELECT TOP 10 PERCENT
       SubscriberKey
     , QuizScore
-ORDER BY QuizScore DESC, QuizFilledDate ASC
+ORDER BY
+      QuizScore DESC
+    , QuizFilledDate ASC
 ```
 
 The query will first sort using QuizScore to find people with the most points. Next, it will apply the second sort on the date of quiz completion. As an outcome, we will have the highest scorers sorted from first to last within each high score.
@@ -2307,7 +2309,7 @@ For example, let's capture three top scorers of our quiz:
 
 ```sql title="Three top scorers"
 SELECT TOP 3
-    SubscriberKey
+      SubscriberKey
     , QuizScore
 ORDER BY QuizScore DESC
 ```
@@ -2334,7 +2336,7 @@ What can we do to capture everyone with a score good enough for the Top 3 status
 
 ```sql title="Despite asking for TOP 3, it will return 5 rows due to ties"
 SELECT TOP 3 WITH TIES
-    SubscriberKey
+      SubscriberKey
     , QuizScore
 ORDER BY QuizScore DESC
 ```
@@ -2344,6 +2346,40 @@ With those two words added after the `TOP` clause, our query will return all row
 > **Note: You Should Know**
 >
 > `WITH TIES` modifier doesn't work in [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2), as it did not in the original Query Studio, and produces a syntax error there. However, it works perfectly in Automation Studio Query Activity and in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account.
+
+### ORDER BY without TOP
+
+Sorted output looks tidy, so it is tempting to end every query with `ORDER BY`. In MCE, a query with `ORDER BY` but no `TOP` fails:
+
+```sql {5} title="❌ ORDER BY without TOP"
+SELECT
+      SubscriberKey
+    , QuizScore
+FROM QuizResults
+ORDER BY QuizScore DESC
+/* Error: The ORDER BY clause is invalid in views, inline functions, derived tables, subqueries, and common table expressions, unless TOP, OFFSET or FOR XML is also specified. */
+```
+
+Your query has no derived table, so why the complaint? Because MCE wraps every query in one before it runs it. SQL Server accepts `ORDER BY` inside a derived table only when it decides which rows to keep, as it does with `TOP`.
+
+You do not lose anything by it. A Data Extension does not promise any order of its rows, so a sorted result would land there in no particular order anyway. Sort when you read the data instead, for example with AMPscript's `LookupOrderedRows` in an email, and keep `ORDER BY` in your queries for picking rows with `TOP`.
+
+Coming from MySQL or PostgreSQL? There, `LIMIT 10` at the end of the query picks the rows. SQL Server does not know it and stops the query with "Incorrect syntax near 'LIMIT'." Use `TOP 10` after `SELECT` instead.
+
+You may also see `OFFSET 0 ROWS` after the `ORDER BY` suggested as a fix, as the error message itself lists `OFFSET`. It runs, and in my test, the rows even came back in that order. However, the Data Extension does not promise it, so the next run or a bigger table can return them in any order. `OFFSET` has a better use. Together with `FETCH`, it skips rows before it takes them, which `TOP` cannot do. Consolation prizes for places 4 to 10 of your quiz?
+
+```sql {8} title="Places 4 to 10 of the quiz"
+SELECT
+      SubscriberKey
+    , QuizScore
+FROM QuizResults
+ORDER BY
+      QuizScore DESC
+    , QuizFilledDate ASC
+OFFSET 3 ROWS FETCH NEXT 7 ROWS ONLY
+```
+
+`OFFSET 3 ROWS` skips the three winners, and `FETCH NEXT 7 ROWS ONLY` takes the next seven. As with `TOP`, a tied score can fall on both sides of the cut-off. End the `ORDER BY` with a column that settles the ties, or use [`RANK`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#rank-and-dense_rank) when tied scores should share a place.
 
 ## DISTINCT
 
@@ -2529,7 +2565,7 @@ When selecting Data Extensions to pull data from, remember the best practice to 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 There are cases where all you need is to pull (and maybe transform) data [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
@@ -2540,7 +2576,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -2564,7 +2600,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -2584,7 +2620,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    LEFT JOIN _Open AS o
+    LEFT JOIN _Open         AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -2602,7 +2638,7 @@ Due to the similarity of `LEFT JOIN` and `RIGHT JOIN`, I highly recommend choosi
 >     , wel.EmailAddress
 >     , o.EventDate AS OpenDate
 > FROM WelcomeCampaignSegment AS wel
->     LEFT JOIN _Open AS o
+>     LEFT JOIN _Open         AS o
 >         ON o.SubscriberKey = wel.SubscriberKey
 > WHERE o.SubscriberKey IS NULL
 > ```
@@ -2621,7 +2657,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    FULL JOIN _Open AS o
+    FULL JOIN _Open         AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -2647,8 +2683,8 @@ In such a scenario, you can use Self-join to build a more readable table that mi
 SELECT
       c.CategoryName    AS Category
     , pc.CategoryName   AS ParentCategory
-FROM WristwatchesDE AS c
-    INNER JOIN WristwatchesDE AS pc
+FROM WristwatchesDE             AS c
+    INNER JOIN WristwatchesDE   AS pc
         ON pc.ParentCategoryID = c.CategoryID
 ```
 
@@ -2677,10 +2713,10 @@ You won't be using Self-join a lot, but it might be a colossal timesaver when ne
 >     , a2.Name   AS Level2AccountName
 >     , a3.Id     AS Level3AccountId
 >     , a3.Name   AS Level3AccountName
-> FROM Account_Salesforce AS a1
->     LEFT JOIN Account_Salesforce AS a2
+> FROM Account_Salesforce             AS a1
+>     LEFT JOIN Account_Salesforce    AS a2
 >         ON a2.Id = a1.ParentId
->     LEFT JOIN Account_Salesforce AS a3
+>     LEFT JOIN Account_Salesforce    AS a3
 >         ON a3.Id = a2.ParentId
 > ```
 
@@ -2709,8 +2745,8 @@ You can also add a bit of logic to it by leveraging `AND`/`OR` statements. It is
 >       wel.SubscriberKey
 >     , sms.OptInStatusID
 >     , sms.OptOutStatusID
-> FROM WelcomeCampaignSegment AS wel
->     LEFT JOIN _SMSSubscriptionLog AS sms
+> FROM WelcomeCampaignSegment         AS wel
+>     LEFT JOIN _SMSSubscriptionLog   AS sms
 >         ON sms.MobileNumber LIKE CONCAT('%', wel.MobilePhone)
 > ```
 >
@@ -2737,7 +2773,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -2771,10 +2807,10 @@ SELECT
     , wel.EmailAddress
     , nsl.PhoneNumber
     , ebo.EbookName
-FROM WelcomeCampaignSegment AS wel
-    INNER JOIN NewsletterPromoCampaignSegment AS nsl
+FROM WelcomeCampaignSegment                     AS wel
+    INNER JOIN NewsletterPromoCampaignSegment   AS nsl
         ON nsl.SubscriberKey = wel.SubscriberKey
-    INNER JOIN EbookDownloadCampaignSegment AS ebo
+    INNER JOIN EbookDownloadCampaignSegment     AS ebo
         ON ebo.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -2791,10 +2827,10 @@ SELECT
     , prod.ProductName
     , prod.ProductPrice
     , promo.Offer
-FROM UpSellCampaignSegment AS up
-    LEFT JOIN ProductDetailsList AS prod
+FROM UpSellCampaignSegment          AS up
+    LEFT JOIN ProductDetailsList    AS prod
         ON prod.ProductId = up.OfferedProduct
-    LEFT JOIN CustomOfferList AS promo
+    LEFT JOIN CustomOfferList       AS promo
         ON promo.PromotionId = up.OfferedPromotion
 ```
 
@@ -2811,10 +2847,10 @@ SELECT
     , prod.ProductName
     , prod.ProductPrice
     , promo.Offer
-FROM UpSellCampaignSegment AS up
-    INNER JOIN ProductDetailsList AS prod
+FROM UpSellCampaignSegment          AS up
+    INNER JOIN ProductDetailsList   AS prod
         ON prod.ProductId = up.OfferedProduct
-    LEFT JOIN CustomOfferList AS promo
+    LEFT JOIN CustomOfferList       AS promo
         ON promo.PromotionId = up.OfferedPromotion
 ```
 
@@ -2918,8 +2954,8 @@ In the example above, we add the Seedlist to the master segment and provide stat
 >     , wel.EmailAddress
 >     , wel.FirstName
 >     , i.Interest
-> FROM WelcomeCampaignSegment AS wel
->     LEFT JOIN InterestsDataPoint AS i
+> FROM WelcomeCampaignSegment         AS wel
+>     LEFT JOIN InterestsDataPoint    AS i
 >         ON i.SubscriberKey = wel.SubscriberKey
 >
 > UNION
@@ -3004,7 +3040,7 @@ All standard SQL JOINs in a single image with name, example Marketing Cloud Enga
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 With just [`SELECT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) and [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) statements, you can already start building your queries. With the addition of [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), you can do much more than in the Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) UI. `WHERE` grants you even more power by allowing you to filter your queries' outcomes.
@@ -3124,8 +3160,8 @@ FROM MasterSubscriberDE
 WHERE
     (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%')
     AND CONVERT(DATE, SubscriptionStart)
-       BETWEEN DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
-       AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
+        BETWEEN DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
+        AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
 ```
 
 The `BETWEEN` is replacing only a range greater or equal to the first value and smaller or equal to the second value. Additionally, it behaves weird when working with dates or datetime values.
@@ -3206,14 +3242,14 @@ It works, but you can write it better with other means mentioned above in most c
 >
 > ```sql {6-9} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 > SELECT
->      SubscriberKey
->    , EmailAddress
+>       SubscriberKey
+>     , EmailAddress
 > FROM _Subscribers
 > WHERE
->    1 = CASE
->        WHEN Status = 'active'                              THEN 1
->        WHEN Status IN ('held', 'unsubscribed', 'bounced')  THEN 0
->    END
+>     1 = CASE
+>         WHEN Status = 'active'                              THEN 1
+>         WHEN Status IN ('held', 'unsubscribed', 'bounced')  THEN 0
+>     END
 > ```
 >
 > Notice the lack of `Status` column name right after `CASE` keyword and its addition in each `WHEN`.
@@ -3250,7 +3286,7 @@ To learn more about the possibilities and [shorthands](https://mateuszdabrowski.
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Conditional values with CASE
@@ -3342,22 +3378,20 @@ As you can see, thanks to search `CASE` statements, we can check conditions on m
 >
 > You can use `CASE` statements inside a `CASE` statement to have an even more dynamic query.
 >
-> ```sql {3-16} title="Let's add another dimension of membership level to differentiate available channels"
+> ```sql {3-14} title="Let's add another dimension of membership level to differentiate available channels"
 > SELECT
 >       ContactKey
 >     , CASE
->         WHEN MemberType = 'Platinum'                        THEN 'Key Account Manager'
->         WHEN MemberType = 'Gold' OR MemberType = 'Silver'   THEN
->             CASE
->                 WHEN IsAppInstalled = 1                             THEN 'Push'
->                 WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
->                 WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL          THEN 'Phone'
->             END
->         WHEN MemberType = 'Bronze'                          THEN
->             CASE
->                 WHEN IsAppInstalled = 1                             THEN 'Push'
->                 WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
->             END
+>         WHEN MemberType = 'Platinum' THEN 'Key Account Manager'
+>         WHEN MemberType = 'Gold' OR MemberType = 'Silver' THEN CASE
+>             WHEN IsAppInstalled = 1                             THEN 'Push'
+>             WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
+>             WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL          THEN 'Phone'
+>         END
+>         WHEN MemberType = 'Bronze' THEN CASE
+>             WHEN IsAppInstalled = 1                             THEN 'Push'
+>             WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
+>         END
 >       END AS PreferredChannel
 > ```
 
@@ -3390,9 +3424,9 @@ With it, instead of multiline `CASE`:
 
 ```sql {3-6}
 SELECT
-      _Subscriber.SubscriberKey
+      _Subscribers.SubscriberKey
     , CASE
-        WHEN _Subscriber.Status = 'active' THEN 'TRUE'
+        WHEN _Subscribers.Status = 'active' THEN 'TRUE'
         ELSE 'FALSE'
       END AS Sendable
 ```
@@ -3401,8 +3435,8 @@ You can have the same outcome in a single, more readable `IIF` line:
 
 ```sql {3}
 SELECT
-      _Subscriber,SubscriberKey,
-    , IIF(_Subscriber.Status = 'active', 'TRUE', 'FALSE') AS Sendable
+      _Subscribers.SubscriberKey
+    , IIF(_Subscribers.Status = 'active', 'TRUE', 'FALSE') AS Sendable
 ```
 
 Whenever you have a single condition - go with `IIF`.
@@ -3434,7 +3468,7 @@ The `CASE` statement is not only useful in a [`SELECT`](https://mateuszdabrowski
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 `LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#like-in-case) and [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#like-operator) statements.
@@ -3466,8 +3500,8 @@ You can change this filter to `%@mateuszdabrowski.%`. With the second wildcard a
 SELECT
       SubscriberKey
     , EmailAddress
-  FROM _Subscribers
- WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
+FROM _Subscribers
+WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
 ```
 
 In the above example, I used two wildcards - one before and one just after `@` symbol. It allows not only to catch contacts in `@mateuszdabrowski.pl` domain, but also any subdomain, like `@dev.mateuszdabrowski.pl`.
@@ -3519,10 +3553,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '_'
-    OR RecommendedProducts  LIKE '_,%'
-    OR RecommendedProducts  LIKE '%,_,%'
-    OR RecommendedProducts  LIKE '%,_'
+    RecommendedProducts LIKE '_'
+    OR RecommendedProducts LIKE '_,%'
+    OR RecommendedProducts LIKE '%,_,%'
+    OR RecommendedProducts LIKE '%,_'
 ```
 
 In the query above, we are filtering our database with `RecommendedProducts` field. To add a contact to our segment, in four steps, we check if at least one condition is true:
@@ -3537,7 +3571,7 @@ SELECT
         WHEN RecommendedProducts LIKE '_'       THEN 'True'
         WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
         WHEN RecommendedProducts LIKE '%,_,%'   THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_'     THEN 'True'
         ELSE 'False'
       END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
@@ -3597,10 +3631,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '[1234]'
-    OR RecommendedProducts  LIKE '[1234],%'
-    OR RecommendedProducts  LIKE '%,[1234],%'
-    OR RecommendedProducts  LIKE '%,[1234]'
+    RecommendedProducts LIKE '[1234]'
+    OR RecommendedProducts LIKE '[1234],%'
+    OR RecommendedProducts LIKE '%,[1234],%'
+    OR RecommendedProducts LIKE '%,[1234]'
 ```
 
 **SELECT**
@@ -3637,11 +3671,11 @@ SELECT
         WHEN RecommendedProducts LIKE '[1234]'      THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1234],%'  THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1234]'    THEN 'Premium'
         WHEN RecommendedProducts LIKE '[56789]'     THEN 'Standard'
         WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
         WHEN RecommendedProducts LIKE '%,[56789],%' THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[56789]'   THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -3683,10 +3717,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '[1-4]'
-    OR RecommendedProducts  LIKE '[1-4],%'
-    OR RecommendedProducts  LIKE '%,[1-4],%'
-    OR RecommendedProducts  LIKE '%,[1-4]'
+    RecommendedProducts LIKE '[1-4]'
+    OR RecommendedProducts LIKE '[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4]'
 ```
 
 **SELECT**
@@ -3699,11 +3733,11 @@ SELECT
         WHEN RecommendedProducts LIKE '[1-4]'       THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4]'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '[5-9]'       THEN 'Standard'
         WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
         WHEN RecommendedProducts LIKE '%,[5-9],%'   THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9]'     THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -3727,7 +3761,7 @@ If you want to search for a hyphen '-' within a grouping operator that uses a ra
 >         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'       THEN 'Management'
 >         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%'    THEN 'Specialists'
 >       END AS CorporateJobTitleGroup
-> FROM _Subscriber
+> FROM ContactMasterDE
 > ```
 
 ### ^ Operator
@@ -3767,7 +3801,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-10  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -3810,10 +3844,10 @@ It is less useful for segmentation but awesome for various administrative purpos
 `CHARINDEX` function lets you find if and where one string is in another. You pass the value you want to find, the value in which you wish to search and, optionally, the index from which you want to start the search.
 
 ```sql title="Search for 'Manager' in the JobTitle column starting with the first index"
-CHARINDEX("Manager", JobTitle, 1)
+CHARINDEX('Manager', JobTitle, 1)
 ```
 
-I used the optional starting index in the example above, but you will not be using it in most cases. The `CHARINDEX` defaults to starting from the beginning so that we can write the above line shorter as `CHARINDEX("Manager", JobTitle)`.
+I used the optional starting index in the example above, but you will not be using it in most cases. The `CHARINDEX` defaults to starting from the beginning so that we can write the above line shorter as `CHARINDEX('Manager', JobTitle)`.
 
 The function returns one of the three possible values:
 
@@ -3824,7 +3858,7 @@ The function returns one of the three possible values:
 By default, `CHARINDEX` in MCE is case-insensitive in its searches. You can, however, enforce case sensitivity by adding `COLLATE`:
 
 ```sql title="Case sensitive CHARINDEX search - note lack of a comma between the value and COLLATE"
-CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
+CHARINDEX('Manager', JobTitle COLLATE Latin1_General_CS_AS)
 ```
 
 > **Note: You Should Know**
@@ -3864,6 +3898,46 @@ PATINDEX('%C_O%', JobTitle)
 
 While wildcards give `PATINDEX` an edge over [`CHARINDEX`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#charindex), it misses one feature of the latter - an optional argument for starting the search from a specific string. Either can be better depending on the use case at hand.
 
+## SUBSTRING
+
+`SUBSTRING` cuts a part out of the middle of a value. You pass the value, the index of the first character you want and the number of characters to take. Paired with [`CHARINDEX`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#charindex), it takes everything after a character, such as the domain of an email address, which you need for deliverability reports by mailbox provider:
+
+```sql {3} title="Email domain of each subscriber"
+SELECT
+      SubscriberKey
+    , SUBSTRING(EmailAddress, CHARINDEX('@', EmailAddress) + 1, LEN(EmailAddress)) AS EmailDomain
+FROM _Subscribers
+/* EmailAddress: 'anna@example.com', Output: 'example.com' */
+```
+
+`LEN(EmailAddress)` asks for more characters than are left after the `@`, and that is fine, as `SUBSTRING` stops at the end of the value.
+
+For the part before the `@`, use `LEFT(EmailAddress, CHARINDEX('@', EmailAddress) - 1)`, but only on values that have the `@`, for example with `WHERE EmailAddress LIKE '%@%'`. Without it, `CHARINDEX` returns 0, `LEFT` gets -1 as the number of characters, and the query fails during the run with no reason given. `SUBSTRING` is safe here, as a missing `@` makes it start from the first character and return the whole value.
+
+## REPLACE and TRANSLATE
+
+`REPLACE` swaps every occurrence of one text for another, so it is the find and replace of SQL. Mobile numbers from web forms are a good use, as people type them with spaces, while your SMS sends and deduplication need one format:
+
+```sql {3} title="Remove spaces from mobile numbers"
+SELECT
+      SubscriberKey
+    , REPLACE(MobileNumber, ' ', '') AS CleanMobileNumber
+FROM Leads
+/* MobileNumber: '+48 601 234 567', Output: '+48601234567' */
+```
+
+Real numbers come with brackets and hyphens as well. You could nest one `REPLACE` in another for each character, but `TRANSLATE` swaps many characters in one go. It takes the characters to find and the same number of replacements, so turn them all into one placeholder and remove it with a single `REPLACE`:
+
+```sql {3} title="Remove spaces, brackets and hyphens at once"
+SELECT
+      SubscriberKey
+    , REPLACE(TRANSLATE(MobileNumber, ' ()-', '####'), '#', '') AS CleanMobileNumber
+FROM Leads
+/* MobileNumber: '+48 (601) 234-567', Output: '+48601234567' */
+```
+
+Pick a placeholder that never appears in the real values.
+
 ## CONCAT
 
 `CONCAT` function allows you to join two or more strings together.
@@ -3895,16 +3969,91 @@ You can concatenate any number of strings by just adding them comma-separated.
 > 1. With the plus notation, if at least one provided value is `NULL`, the outcome becomes `NULL`. `CONCAT` function treats such values as empty strings.
 > 2. If you want to join a string with a date type value, you need to use [`CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#cast--convert), but `CONCAT` will do the implicit conversion for you.
 
+## STRING_AGG
+
+`CONCAT` joins values from one row. `STRING_AGG` joins values from many rows into one, which you need whenever an email should list them, such as the categories a customer bought from:
+
+```sql {3} title="Categories of each subscriber in one field"
+SELECT
+      SubscriberKey
+    , STRING_AGG(Category, ', ') WITHIN GROUP (ORDER BY Category) AS Categories
+FROM (
+    SELECT DISTINCT
+          SubscriberKey
+        , Category
+    FROM Orders
+) AS subscriberCategory
+GROUP BY SubscriberKey
+
+/* Output:
+SubscriberKey | Categories
+anna-1042     | Books, Music, Travel
+ben-2077      | Books, Music
+chloe-3101    | Travel
+*/
+```
+
+`STRING_AGG` works like the [aggregate functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/), so it needs `GROUP BY`. `WITHIN GROUP` sets the order of the values, as without it, the order can change between runs. There is no `DISTINCT` inside `STRING_AGG`, so the subquery removes the repeated categories first. Without it, Ben would get Books three times.
+
+Two limits apply. On a `VARCHAR` field, such as `Status` of `_Subscribers`, `STRING_AGG` fails with "Argument data type nvarchar is invalid for argument 2 of string_agg function.", as MCE [adds an `N`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments) to every text value in your query, the separator included. And on a Text field, the result stops at 4,000 characters, so a longer list fails the run. Convert the field to `NVARCHAR(MAX)` first, as in `STRING_AGG(CONVERT(NVARCHAR(MAX), Status), ', ')`, and neither limit applies.
+
+## STRING_SPLIT
+
+Web forms often save the answers of a checkbox list as one value, such as `music,travel,books`. In SQL Server, `STRING_SPLIT` turns such a value into rows. In MCE, it fails just like [`OPENJSON`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/#openjson), as the syntax check takes it for a Data Extension name:
+
+```sql {5} title="❌ STRING_SPLIT fails the syntax check"
+SELECT
+      preference.SubscriberKey
+    , interest.value AS Interest
+FROM Preferences AS preference
+    CROSS APPLY STRING_SPLIT(preference.Interests, ',') AS interest
+/* Error: The STRING_SPLIT(preference.Interests, table has a multi-part specification. This is not allowed.
+STRING_SPLIT(preference.Interests, is not a known data extension or system data view. You can only query existing data extensions or system data views. */
+```
+
+The workaround goes through JSON. Turn the list into a JSON array with `REPLACE`, and read its items with the [array trick from my JSON article](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/#openjson):
+
+```sql {3,7,16} title="✅ Split a comma-separated value into rows"
+SELECT
+      preference.SubscriberKey
+    , TRIM(JSON_VALUE(preference.InterestsJson, CONCAT('$[', interestPosition.Position, ']'))) AS Interest
+FROM (
+    SELECT
+          SubscriberKey
+        , CONCAT('["', REPLACE(STRING_ESCAPE(Interests, 'json'), ',', '","'), '"]') AS InterestsJson
+    FROM Preferences
+) AS preference
+    INNER JOIN (
+        SELECT TOP 10
+              ROW_NUMBER() OVER (ORDER BY SubscriberID) - 1 AS Position
+        FROM _Subscribers
+        ORDER BY Position
+    ) AS interestPosition
+        ON JSON_VALUE(preference.InterestsJson, CONCAT('$[', interestPosition.Position, ']')) IS NOT NULL
+
+/* Interests: 'music, travel,books'
+Output:
+SubscriberKey | Interest
+anna-1042     | music
+anna-1042     | travel
+anna-1042     | books
+*/
+```
+
+`STRING_ESCAPE` adds a backslash before quotes and the other characters JSON does not allow as they are. That way, one value with a quote cannot break the array and stop the whole query. `TRIM` removes the spaces people type after commas. `TOP 10` sets the maximum number of items per value, so raise it for longer lists.
+
 ## LTRIM, RTRIM and TRIM
 
 `LTRIM` and `RTRIM` functions allow you to quickly clean your data by deleting unneeded spaces from the beginning or the end of the provided string.
 
 ```sql title="Noone likes useless whitespace in their database"
 SELECT
-      LTRIM('   data from webform ')        AS CleanLeftSide    /* Output: 'data from webform ' */
-    , RTRIM('   data from webform ')        AS CleanRightSide   /* Output: '   data from webform' */
-    , TRIM('   data from webform ')         AS CleanBothSides   /* Output: 'data from webform' */
+      LTRIM('   data from webform ')    AS CleanLeftSide    /* Output: 'data from webform ' */
+    , RTRIM('   data from webform ')    AS CleanRightSide   /* Output: '   data from webform' */
+    , TRIM('   data from webform ')     AS CleanBothSides   /* Output: 'data from webform' */
 ```
+
+Since SQL Server 2022, `LTRIM` and `RTRIM` also take the characters to remove as a second argument, which helps with zero-padded IDs from other systems: `LTRIM('007', '0')` returns `7`. `TRIM` has its own syntax for the same job, `TRIM(LEADING '0' FROM '007')`, but MCE refuses it, as its syntax check reads that `FROM` as the start of a table list: "N'007' is not a known data extension or system data view."
 
 ## NEWID
 
@@ -3924,9 +4073,9 @@ Thankfully, SQL can clean up such data with built-in `LOWER` and `UPPER`.
 
 ```sql {3-4}
 SELECT
-      'DIRTY Data' AS SampleData
-    , LOWER('DIRTY Data') AS Lowercase /* Output: 'dirty data' */
-    , UPPER('DIRTY Data') AS Uppercase /* Output: 'DIRTY DATA' */
+      'DIRTY Data'          AS SampleData
+    , LOWER('DIRTY Data')   AS Lowercase    /* Output: 'dirty data' */
+    , UPPER('DIRTY Data')   AS Uppercase    /* Output: 'DIRTY DATA' */
 ```
 
 However, there is no out-of-the-box function for Proper Case - a popular requirement, especially around names and titles. The basic solution for single-word strings is straightforward:
@@ -3955,7 +4104,7 @@ The `FORMAT` works only with datetime and numeric values. Why I'm writing about 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -4055,10 +4204,11 @@ FROM Ent._Subscribers
 
 It might help quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the day's name for a given date, thanks to the `WEEKDAY` [date part](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#date-parts).
 
-```sql {3} title="Create an automation that will capture weekend meetings for Friday reminder"
+```sql {3-4} title="Create an automation that will capture weekend meetings for Friday reminder"
 SELECT SubscriberKey
 FROM SalesMeetings
-WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
+WHERE
+    DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
     AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
 ```
 
@@ -4159,11 +4309,13 @@ FROM Ent._Subscribers
 
 You may use it in the [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) statement:
 
-```sql {3} title="Get everyone that hit one year on the subscription list"
+```sql {3} title="Get everyone who joined 30 days ago, for a day-30 welcome email"
 SELECT SubscriberKey
 FROM Ent._Subscribers
-WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
+WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 30
 ```
+
+`DATEDIFF` counts the midnights between the two dates, so the time of day does not matter here. For anniversaries, count years instead of days, as a year that includes 29 February has 366 of them. The [anniversary recipe](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#birthdays-and-anniversaries) below does that.
 
 > **Note: You Should Know**
 >
@@ -4171,8 +4323,8 @@ WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
 >
 > ```sql
 > SELECT
->       DATEDIFF(DAY, DATEADD(DAY, -1, GETDATE()), GETDATE()) AS YesterdayPostive  /* Output: 1 */
->     , DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative /* Output: -1 */
+>       DATEDIFF(DAY, DATEADD(DAY, -1, GETDATE()), GETDATE()) AS YesterdayPostive     /* Output: 1 */
+>     , DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative    /* Output: -1 */
 > ```
 >
 > It is crucial for creating correct comparisons within [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/).
@@ -4193,8 +4345,8 @@ It is shorter than [`DATEADD`](https://mateuszdabrowski.pl/docs/salesforce/marke
 
 ```sql {2-3} title="Different ranges, same outcome"
 SELECT
-     DATEDIFF(MONTH, 'Mar 31 2021', 'Apr 01 2021') AS ShortDiff /* Output: 1 */
-   , DATEDIFF(MONTH, 'Mar 01 2021', 'Apr 30 2021') AS LongDiff  /* Output: 1 */
+      DATEDIFF(MONTH, 'Mar 31 2021', 'Apr 01 2021') AS ShortDiff    /* Output: 1 */
+    , DATEDIFF(MONTH, 'Mar 01 2021', 'Apr 30 2021') AS LongDiff     /* Output: 1 */
 ```
 
 Despite dates in the first `DATEDIFF` being just a day apart and in the second nearly two months apart, both return `1`. The reason is that `DATEDIFF` compares only the month date part - March to April is a single month of difference.
@@ -4228,8 +4380,8 @@ You can quickly fix it with `AT TIME ZONE`. When you apply this function to a ti
 
 ```sql title="Daylight Saving Time magic"
 SELECT
-      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST /* Output: 2020-01-01 18:00:00 -06:00 */
-    , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT /* Output: 2020-07-01 18:00:00 -05:00 */
+      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST  /* Output: 2020-01-01 18:00:00 -06:00 */
+    , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT  /* Output: 2020-07-01 18:00:00 -05:00 */
 ```
 
 In the above snippet, we [`CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function adds the offset and calculates the Daylight Saving Time offset change for you.
@@ -4250,7 +4402,7 @@ There are, however, two workarounds:
 
 ```sql title="No Daylight Saving Time magic"
 SELECT
-      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central America Standard Time' AS CST     /* Output: 2020-01-01 18:00:00 -06:00 */
+      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central America Standard Time' AS CST      /* Output: 2020-01-01 18:00:00 -06:00 */
     , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central America Standard Time' AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
 ```
 
@@ -4260,8 +4412,8 @@ To use it, provide a datetime and an offset (for example, `'-06:00'` or `'+01:00
 
 ```sql title="No Daylight Saving Time magic"
 SELECT
-      TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST     /* Output: 2020-01-01 18:00:00 -06:00 */
-    , TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
+      TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00')  AS CST      /* Output: 2020-01-01 18:00:00 -06:00 */
+    , TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00')  AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
 ```
 
 Of course, for any datetime values that include the Daylight Saving Time - pushed from a website or your data warehouse - [`AT TIME ZONE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#add-offset-with-at-time-zone) will be the better solution.
@@ -4283,7 +4435,7 @@ It will also automatically consider any differences between Daylight Saving Time
 > You can leverage both features of the `AT THE TIMEZONE` in one line to apply the timezone to offset-less datetime and convert it to another timezone by using the function twice:
 >
 > ```sql title="First, apply the timezone. Then change the timezone"
-> SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET, /* Output: 2020-01-02 01:00:00 +01:00 */
+> SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET /* Output: 2020-01-02 01:00:00 +01:00 */
 > ```
 >
 > It works because the function's first execution [adds the offset with `AT TIME ZONE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#add-offset-with-at-time-zone). The second uses the output with an offset applied and [change the timezone](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#change-timezone-with-at-time-zone).
@@ -4390,6 +4542,115 @@ You can find the complete list of custom date format specifiers on [Microsoft .N
 >
 > AMPScript uses very similar custom formatting with `FORMAT()` and `FORMATDATE()` functions. Depending on the use case, consider whether you want to manipulate the date visual representation in the Data Extension or only in the communication.
 
+## Date Recipes
+
+The functions above are the building blocks. Below, you will find how to combine them for the date questions that come up most often in MCE.
+
+### Today and Yesterday
+
+`GETDATE` returns the current date and time, so `DATEADD(DAY, -1, GETDATE())` gives you the last 24 hours, not yesterday. Run it at 9\:00, and it skips the opens from yesterday morning while it includes the ones from this morning. Cut the time off with [`CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert) to `DATE`, and the boundaries fall on midnight:
+
+```sql {5-7} title="Opens from yesterday"
+SELECT
+      SubscriberKey
+    , EventDate
+FROM _Open
+WHERE
+    EventDate >= DATEADD(DAY, -1, CONVERT(DATE, GETDATE()))
+    AND EventDate < CONVERT(DATE, GETDATE())
+```
+
+For today, keep only `EventDate >= CONVERT(DATE, GETDATE())`.
+
+The range starts with `>=` and ends with `<` on the next midnight. It catches every moment of the last day, while `BETWEEN` with `23:59:59` at the end would miss an open at 23\:59\:59.500. The same pattern works for any period, as you will see in a moment.
+
+The midnight here is the server's, in Central Standard Time without Daylight Saving Time. For subscribers in Poland, the server's yesterday runs from 7\:00 to 7\:00 their time in winter, and from 8\:00 in summer. If your report must follow their calendar, convert the dates first with [`AT TIME ZONE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#at-time-zone-vs-todatetimeoffset).
+
+### Last Full Month
+
+Monthly reports need the previous calendar month, whichever day the automation runs. SQL Server 2022 added `DATETRUNC`, which cuts a date down to the start of its month (or any other [date part](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#date-parts)), and it works in MCE:
+
+```sql {5-7} title="Opens from the last full month"
+SELECT
+      SubscriberKey
+    , EventDate
+FROM _Open
+WHERE
+    EventDate >= DATEADD(MONTH, -1, DATETRUNC(MONTH, GETDATE()))
+    AND EventDate < DATETRUNC(MONTH, GETDATE())
+```
+
+Run it on 14 October, and it returns the opens from 1 to 30 September. For the last 12 full months, change `-1` to `-12`. Data Views keep only [six months of data](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#data-views-basics), so a report that long needs your own copy of the events.
+
+### Birthdays and Anniversaries
+
+Birthday emails need everyone whose birth date falls on today's day and month, in any year. Move the birth date into the current year with [`DATEADD`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#dateadd) and [`DATEDIFF`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#datediff), and compare it with today:
+
+```sql {5} title="Customers with a birthday today"
+SELECT
+      SubscriberKey
+    , FirstName
+FROM Customers
+WHERE DATEADD(YEAR, DATEDIFF(YEAR, BirthDate, GETDATE()), BirthDate) = CONVERT(DATE, GETDATE())
+```
+
+`DATEDIFF` counts the calendar years between the birth date and today, and `DATEADD` adds them back, which lands on this year's birthday. It also takes care of 29 February. In other years, `DATEADD` moves it to 28 February, as it [falls back to the last day of a shorter month](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#dateadd), so those customers get their email on 28 February.
+
+The same pattern sends subscription anniversaries from [`_Subscribers`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/#_subscribers):
+
+```sql {5-7} title="Subscription anniversaries today"
+SELECT
+      SubscriberKey
+    , DateJoined
+FROM _Subscribers
+WHERE
+    DATEADD(YEAR, DATEDIFF(YEAR, DateJoined, GETDATE()), CONVERT(DATE, DateJoined)) = CONVERT(DATE, GETDATE())
+    AND DATEDIFF(YEAR, DateJoined, GETDATE()) > 0
+```
+
+`DateJoined` has a time, so `CONVERT` cuts it off before the comparison. The second condition skips everyone who joined today, as zero years after today is still today.
+
+### Unix Timestamps
+
+Apps and web forms often send dates as Unix timestamps: the number of seconds since midnight on 1 January 1970 in UTC, such as `1791936000`. [`DATEADD`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#dateadd) turns them into a date:
+
+```sql {3} title="Unix timestamps as dates"
+SELECT
+      EventId
+    , DATEADD(SECOND, CreatedAt, '1970-01-01') AS CreatedAtUTC
+FROM AppEvents
+/* CreatedAt: 1791936000, Output: 2026-10-14 00:00:00.000 */
+```
+
+JavaScript and many APIs count milliseconds instead, which gives a 13-digit number. It is too big for `DATEADD`, which takes only an `INT`, and MCE does not tell you so. The query passes the syntax check, then fails during the run, and Automation Studio says only "Automation failed due to system error". The value is also too big for a Number field, so store such timestamps in a Text or Decimal field. Convert the value to `BIGINT`, and split it into the seconds and the remaining milliseconds:
+
+```sql {3-7} title="Unix timestamps in milliseconds as dates"
+SELECT
+      EventId
+    , DATEADD(
+        MILLISECOND,
+        CONVERT(BIGINT, CreatedAtMs) % 1000,
+        DATEADD(SECOND, CONVERT(BIGINT, CreatedAtMs) / 1000, '1970-01-01')
+      ) AS CreatedAtUTC
+FROM AppEvents
+/* CreatedAtMs: 1791936000123, Output: 2026-10-14 00:00:00.123 */
+```
+
+Both outputs are in UTC. To compare them with MCE dates, subtract six hours with `DATEADD(HOUR, -6, ...)`, as the server stays at UTC-6 all year. Going the other way, `DATEDIFF(SECOND, '1970-01-01', GETUTCDATE())` returns the current Unix timestamp. For milliseconds, use `DATEDIFF_BIG`, as their number does not fit the `INT` of `DATEDIFF` either.
+
+### ISO 8601 for APIs
+
+APIs and data warehouses often expect dates as ISO 8601 text in UTC, such as `2026-10-14T09:05:07.123Z`. Build it with [`FORMAT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#custom-date-formats). `T` and `Z` are not format specifiers, so `FORMAT` copies them as they are. MCE dates are in UTC-6, so add six hours before the `Z` claims UTC:
+
+```sql {3} title="Open dates for an API"
+SELECT
+      SubscriberKey
+    , FORMAT(DATEADD(HOUR, 6, EventDate), 'yyyy-MM-ddTHH:mm:ss.fffZ') AS EventDateISO
+FROM _Open
+```
+
+`FORMAT` calls .NET for every row, which makes it slow on a large Data View. `CONCAT(CONVERT(VARCHAR(23), DATEADD(HOUR, 6, EventDate), 126), 'Z')` gives the same text faster, with one catch: [style 126](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert-date-style-codes) drops `.000` when the milliseconds are zero, so the length of the output varies. Use it when the receiving system accepts both forms.
+
 ---
 
 # Marketing Cloud Engagement SQL Numeric Functions
@@ -4398,7 +4659,7 @@ You can find the complete list of custom date format specifiers on [Microsoft .N
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -4468,10 +4729,14 @@ FROM _Subscribers
 
 However, `AVG` shows its true power with [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) filtering:
 
-```sql {3} title="Let's get your above-average spenders for an e-commerce up-sell campaign"
+```sql {3-7} title="Let's get your above-average spenders for an e-commerce up-sell campaign"
 SELECT SubscriberKey
 FROM Purchases
-WHERE Price > AVG(Price)
+WHERE
+    Price > (
+        SELECT AVG(Price)
+        FROM Purchases
+    )
 ```
 
 You can mix two previous queries to create separate segments for your fresh and old subscribers.
@@ -4507,8 +4772,8 @@ The required one is the format specifier - which tells what the outcome should b
 
 ```sql title="Precision might lead to rounding. Note also the US thousands separator"
 SELECT
-      FORMAT(1234.56, 'N')  AS WithoutCustomPrecision     /* Output: 1,234.56 */
-    , FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
+      FORMAT(1234.56, 'N')  AS WithoutCustomPrecision       /* Output: 1,234.56 */
+    , FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision   /* Output: 1,234.6 */
 ```
 
 There are nine standard formats available, but only a few are useful on a day-to-day basis in MCE:
@@ -4550,8 +4815,8 @@ Let's say you want your customers to validate their phone numbers before you lev
 SELECT
       s.SubscriberKey
     , FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone /* Output: (48) 520 935 815 */
-FROM _Subscribers AS s
-    INNER JOIN EnterpriseAttribute AS ea
+FROM _Subscribers                   AS s
+    INNER JOIN _EnterpriseAttribute AS ea
         ON ea._SubscriberID = s.SubscriberID
 ```
 
@@ -4563,8 +4828,8 @@ However, showing the customer that he has a `0.33` discount is not a good idea. 
 
 ```sql title="Depending on your needs you may use Standard format or a Custom one"
 SELECT
-      FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount /* Output: 33.00 % */
-    , FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount   /* Output: -33% */
+      FORMAT(VIPDiscount, 'P')          AS StandardFormattedVIPDiscount /* Output: 33.00 % */
+    , FORMAT(VIPDiscount, '-00.##%')    AS CustomFormattedVIPDiscount   /* Output: -33% */
 ```
 
 ---
@@ -4575,7 +4840,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Break from the limits of source data types. Use the full power of SQL to transform your values.
@@ -4615,7 +4880,7 @@ WHERE DateJoined > CONVERT(DATE, '2020-10-30')
 With both functions you can stack functions within for more complex calculations:
 
 ```sql {2} title="Calculate the end of the trial period and output date only"
-SELECT CONVERT(DATE, DATEADD(MM, 1, GETUTCDATE())) AS TrialPeriodEndDate
+SELECT CONVERT(DATE, DATEADD(MONTH, 1, GETUTCDATE())) AS TrialPeriodEndDate
 ```
 
 Up to this point, `CAST` and `CONVERT` seem similar in the features.
@@ -4644,29 +4909,30 @@ It is not possible with `CAST`.
 >
 > ```sql
 > SELECT
->       CONVERT(NVARCHAR, GETDATE(), 101) AS DateFormat1   /* Output: 10/30/2020 */
->     , CONVERT(NVARCHAR, GETDATE(), 102) AS DateFormat2   /* Output: 2020.10.30 */
->     , CONVERT(NVARCHAR, GETDATE(), 107) AS DateFormat3   /* Output: Oct 30, 2020 */
+>       CONVERT(NVARCHAR, GETDATE(), 101) AS DateFormat1  /* Output: 10/30/2020 */
+>     , CONVERT(NVARCHAR, GETDATE(), 102) AS DateFormat2  /* Output: 2020.10.30 */
+>     , CONVERT(NVARCHAR, GETDATE(), 107) AS DateFormat3  /* Output: Oct 30, 2020 */
 > ```
 
 ### Data Types
 
 There are over 30 data types available for conversion, but there are only a few that are useful on a day-to-day basis in MCE:
 
-| Data Type       | Description                                 | Comment                                                        |
-| --------------- | ------------------------------------------- | -------------------------------------------------------------- |
-| CHAR            | Fixed-length string                         |                                                                |
-| NCHAR           | Fixed-length string with Unicode support    |                                                                |
-| VARCHAR         | Variable-length string                      |                                                                |
-| NVARCHAR        | Variable-length string with Unicode support | Best option for most MCE string use cases                      |
-| DECIMAL/NUMERIC | Decimal number with big precision           | Best option if you need a decimal number                       |
-| INT             | Integer number                              | Best option if your number is not decimal                      |
-| BIGINT          | Big integer number                          | When your number is bigger than 2,147,483,647, you need BIGINT |
-| DATETIME        | Legacy date and time                        | More friendly default formatting                               |
-| DATETIME2       | Modern date and time                        | Best when you need both date and time                          |
-| DATETIMEOFFSET  | Date with offset                            | When you need timezone offset                                  |
-| DATE            | Only date                                   | Best when you need date only                                   |
-| TIME            | Only time                                   | Best when you need time only                                   |
+| Data Type       | Description                                 | Comment                                                                                                                                                 |
+| --------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CHAR            | Fixed-length string                         |                                                                                                                                                         |
+| NCHAR           | Fixed-length string with Unicode support    |                                                                                                                                                         |
+| VARCHAR         | Variable-length string                      |                                                                                                                                                         |
+| NVARCHAR        | Variable-length string with Unicode support | Best option for most MCE string use cases                                                                                                               |
+| DECIMAL/NUMERIC | Decimal number with big precision           | Best option if you need a decimal number                                                                                                                |
+| INT             | Integer number                              | Best option if your number is not decimal                                                                                                               |
+| BIGINT          | Big integer number                          | When your number is bigger than 2,147,483,647, you need BIGINT                                                                                          |
+| DATETIME        | Legacy date and time                        | More friendly default formatting                                                                                                                        |
+| DATETIME2       | Modern date and time                        | Best when you need both date and time                                                                                                                   |
+| DATETIMEOFFSET  | Date with offset                            | When you need timezone offset                                                                                                                           |
+| DATE            | Only date                                   | Best when you need date only                                                                                                                            |
+| TIME            | Only time                                   | Best when you need time only                                                                                                                            |
+| BIT             | 1, 0 or `NULL`                              | What Boolean fields hold, see [Booleans](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#booleans) |
 
 > **Note: You Should Know**
 >
@@ -4680,8 +4946,8 @@ For example, you may have a string field containing a product price - `'123.99'`
 
 ```sql
 SELECT
-      CONVERT(DECIMAL, '123.99')      AS RoundedConversion /* Output: 124 */
-    , CONVERT(DECIMAL(5,2), '123.99') AS FullConversion    /* Output: 123.99 */
+      CONVERT(DECIMAL, '123.99')        AS RoundedConversion    /* Output: 124 */
+    , CONVERT(DECIMAL(5, 2), '123.99')  AS FullConversion       /* Output: 123.99 */
 ```
 
 Be sure to add correct precision. If it is smaller then the values in your source, it will lead to an error. It's better to have too big precision than too small.
@@ -4706,27 +4972,46 @@ You can also use the single argument with `DATETIME`, `DATETIME2`, `DATETIMEOFFS
 >
 > It is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are truncated. The rest is rounded if no specific precision/scale argument is available.
 
+### Data Extension Field Types
+
+Behind each Data Extension field type, there is one of the SQL Server types above. It tells you what your query gets when it reads the field, and what fits when the query writes into it:
+
+| Field type   | SQL Server type        | What it means for your queries                                                                                                                |
+| ------------ | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Text         | NVARCHAR(length)       | Unicode text up to the length you set                                                                                                         |
+| Number       | INT                    | Whole numbers up to 2,147,483,647, so no Unix timestamps in milliseconds                                                                      |
+| Decimal      | DECIMAL(length, scale) | Exact decimals, with the scale as the digits after the point                                                                                  |
+| Date         | DATETIME               | Always has a time, which is 00\:00 when you load a date alone                                                                                 |
+| Boolean      | BIT                    | 1, 0 or `NULL`, see [Booleans](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#booleans) |
+| EmailAddress | NVARCHAR(254)          | Unicode text up to 254 characters                                                                                                             |
+| Phone        | NVARCHAR(50)           | Unicode text up to 50 characters                                                                                                              |
+| Locale       | VARCHAR(5)             | Codes such as `en-GB`, without Unicode                                                                                                        |
+
+Data Views follow their own types. In `_Subscribers`, `DateJoined` is a `SMALLDATETIME`, which has no seconds, and `Status` is a `VARCHAR`, while `EventDate` of `_Sent` is a `DATETIME` with milliseconds.
+
 ### CONVERT Date Style Codes
 
 Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#custom-date-formats)):
 
-| Date format           | Style code |
-| --------------------- | ---------- |
-| MMM dd yyyy hh:mmtt   | 100        |
-| MM/dd/yyyy            | 101        |
-| yyyy.mm.dd            | 102        |
-| dd/mm/yyyy            | 103        |
-| dd.mm.yyyy            | 104        |
-| dd-mm-yyyy            | 105        |
-| dd MMM yyyy           | 106        |
-| MMM dd, yyyy          | 107        |
-| HH\:mm:ss             | 108        |
-| MM-dd-yyyy            | 110        |
-| yyyy/MM/dd            | 111        |
-| yyyyMMdd              | 112        |
-| yyyy-MM-dd HH\:mm:ss  | 120        |
-| MM/dd/yy hh\:mm:ss tt | 22         |
-| yyyy-mm-dd            | 23         |
+| Date format                         | Style code |
+| ----------------------------------- | ---------- |
+| MMM dd yyyy hh:mmtt                 | 100        |
+| MM/dd/yyyy                          | 101        |
+| yyyy.mm.dd                          | 102        |
+| dd/mm/yyyy                          | 103        |
+| dd.mm.yyyy                          | 104        |
+| dd-mm-yyyy                          | 105        |
+| dd MMM yyyy                         | 106        |
+| MMM dd, yyyy                        | 107        |
+| HH\:mm:ss                           | 108        |
+| MM-dd-yyyy                          | 110        |
+| yyyy/MM/dd                          | 111        |
+| yyyyMMdd                            | 112        |
+| yyyy-MM-dd HH\:mm:ss                | 120        |
+| yyyy-MM-dd HH\:mm:ss.fff            | 121        |
+| yyyy-MM-ddTHH\:mm:ss.fff (ISO 8601) | 126        |
+| MM/dd/yy hh\:mm:ss tt               | 22         |
+| yyyy-mm-dd                          | 23         |
 
 Use it by adding the style code as the third argument of the [`CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert) function:
 
@@ -4757,6 +5042,60 @@ You can find the full list of style codes on [Microsoft .Net Doc Pages](https://
 >
 > If you have specific parts of your date stored in separte fields, you can leverage [`DATETIMEFROMPARTS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#datefromparts--datetimefromparts) function as well.
 
+## TRY_CONVERT
+
+`CONVERT` stops the whole query when a single value does not fit the target type, such as a birth date typed as `31/02/1990` in a web form. In MCE, it happens during the run, so you do not even get SQL Server's message. Automation Studio says only "Automation failed due to system error", and one bad row out of a million is enough.
+
+`TRY_CONVERT` takes the same arguments, [style code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert-date-style-codes) included, but returns `NULL` for a value it cannot convert, so the query keeps running:
+
+```sql {3} title="Birth dates from a web form, with NULL for the invalid ones"
+SELECT
+      SubscriberKey
+    , TRY_CONVERT(DATE, BirthDateText, 103) AS BirthDate
+FROM WebFormLeads
+/* BirthDateText: '31/12/1990', Output: 1990-12-31 */
+/* BirthDateText: '31/02/1990', Output: NULL */
+```
+
+The same function finds the values you need to fix at the source:
+
+```sql {5-6} title="Birth dates that will not convert"
+SELECT
+      SubscriberKey
+    , BirthDateText
+FROM WebFormLeads
+WHERE TRY_CONVERT(DATE, BirthDateText, 103) IS NULL
+    AND BirthDateText IS NOT NULL
+```
+
+`TRY_CAST` does the same for `CAST`.
+
+## Booleans
+
+Boolean fields hold `BIT` values: 1 for true, 0 for false, or `NULL` when empty. SQL Server also converts the text `'True'` and `'False'`, so `WHERE IsVip = 1` and `WHERE IsVip = 'True'` return the same rows.
+
+The trap is the empty value. `WHERE IsVip != 'True'` looks like it returns everyone who is not a VIP, but it skips the customers with an empty field, as any comparison with [`NULL`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/#null-with-relational-operators) is neither true nor false. Treat empty as false with [`ISNULL`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/#isnull):
+
+```sql {3} title="Everyone who is not a VIP, empty values included"
+SELECT SubscriberKey
+FROM Customers
+WHERE ISNULL(IsVip, 0) = 0
+```
+
+To write a Boolean field from text, `CONVERT(BIT, ...)` understands `'True'`, `'False'`, `'1'` and `'0'`. Form answers such as `'Yes'` make it fail, as silently as any other conversion, so translate them with [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/):
+
+```sql {3-6} title="Text answers into a Boolean field"
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN NewsletterOptIn IN ('Yes', 'Y', 'True', '1') THEN 1
+        ELSE 0
+      END AS IsOptedIn
+FROM WebFormLeads
+```
+
+`IN` compares text without regard to case in MCE, so `'yes'` matches as well.
+
 ---
 
 # MCE SQL Aggregate Functions
@@ -4765,7 +5104,7 @@ You can find the full list of style codes on [Microsoft .Net Doc Pages](https://
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Group rows and apply aggregate functions to see the big picture in your data.
@@ -4979,7 +5318,7 @@ It rolls data like [`ROLLUP`](https://mateuszdabrowski.pl/docs/salesforce/market
 Let's get the count of our Subscribers in Master Data Extension.
 
 ```sql {1} title="Count all rows in the _Subscribers Data View"
-SELECT COUNT(*)
+SELECT COUNT(*) AS SubscriberCount
 FROM ContactMasterDE
 ```
 
@@ -5033,8 +5372,8 @@ There are three approaches to using `COUNT` that differ slightly from each other
 
 ```sql {2-4} title="Let's find out whether we have multiple Subscribers with the same Email Address"
 SELECT
-      COUNT(EmailAddress) AS EmailCount
-    , COUNT(DISTINCT EmailAddress) AS UniqueEmailCount
+      COUNT(EmailAddress)           AS EmailCount
+    , COUNT(DISTINCT EmailAddress)  AS UniqueEmailCount
 FROM _Subscribers
 ```
 
@@ -5159,7 +5498,7 @@ It ignores `NULL` values for the calculation and we can use it in [`SELECT`](htt
 SELECT TOP 3
       ProductCategory
     , COUNT(Orders) AS TotalOrders
-    , SUM(Price) AS TotalIncome
+    , SUM(Price)    AS TotalIncome
 FROM Purchases
 WHERE Status = 'Complete'
 GROUP BY ProductCategory
@@ -5183,7 +5522,7 @@ ORDER BY SUM(Price) DESC
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Queries in MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) have no variables, no loops and no temporary tables. So whenever a row needs to know something about its neighbours - is this the latest order of the subscriber, how many days passed since the previous one, how much did they spend in total - the classic answer is a chain of Query Activities with a staging Data Extension or two in between. Window functions answer it in a single query. They look at a group of related rows, called the window, calculate a value for each row and, unlike [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by), keep every row in the output.
@@ -5291,7 +5630,7 @@ FROM Orders
 WINDOW subscriberOrders AS (PARTITION BY SubscriberKey) /* Error: Incorrect syntax near 'WINDOW'. */
 ```
 
-Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. It looks like MCE runs SQL Server 2022 with an older compatibility level, as SQL Server accepts `WINDOW` only [from level 160](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), while other 2022 additions, such as [`IGNORE NULLS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ignore-nulls), work fine. So whenever several columns share a window, write it out in each `OVER`.
+Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. The engine is not to blame. MCE runs SQL Server 2022 at compatibility level 160, which is the level `WINDOW` [needs](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), and other 2022 additions, such as [`IGNORE NULLS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ignore-nulls), work fine. It looks like the clause clashes with the way MCE wraps every query before it runs it, the same wrapper that [refuses `ORDER BY` without `TOP`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#order-by-without-top). So whenever several columns share a window, write it out in each `OVER`.
 
 ### Count Distinct Values per Window
 
@@ -5452,8 +5791,8 @@ A VIP campaign needs your top customers by lifetime spend, not your top orders. 
 ```sql {4} title="Rank subscribers by lifetime spend"
 SELECT
       SubscriberKey
-    , SUM(OrderTotal)                               AS LifetimeSpend
-    , RANK() OVER (ORDER BY SUM(OrderTotal) DESC)   AS SpendRank
+    , SUM(OrderTotal) AS LifetimeSpend
+    , RANK() OVER (ORDER BY SUM(OrderTotal) DESC) AS SpendRank
 FROM Orders
 GROUP BY SubscriberKey
 
@@ -5476,7 +5815,7 @@ Segmentation often needs tiers: the top half of your customers, quintiles for an
 ```sql {4} title="Split subscribers into two halves by spend"
 SELECT
       SubscriberKey
-    , SUM(OrderTotal)                               AS LifetimeSpend
+    , SUM(OrderTotal) AS LifetimeSpend
     , NTILE(2) OVER (ORDER BY SUM(OrderTotal) DESC) AS SpendHalf
 FROM Orders
 GROUP BY SubscriberKey
@@ -5651,10 +5990,13 @@ Anna orders every 45 days on average, which tells you when to send her a reminde
 
 The category of the first order tells you what brought a subscriber to you, which makes a good segment for a welcome series or a cohort report. `FIRST_VALUE` returns it on every order of the subscriber, and `DISTINCT` leaves one row each:
 
-```sql {3} title="The category of the first order"
+```sql {3-6} title="The category of the first order"
 SELECT DISTINCT
       SubscriberKey
-    , FIRST_VALUE(Category) OVER (PARTITION BY SubscriberKey ORDER BY OrderDate, OrderId) AS FirstCategory
+    , FIRST_VALUE(Category) OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+      ) AS FirstCategory
 FROM Orders
 
 /* Output:
@@ -5809,7 +6151,7 @@ SQL Server has two more distribution functions, `PERCENT_RANK` and `CUME_DIST`, 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-04  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 NULL is a fickle beast, and for the people not accustomed to how it works in SQL, it can create many problems (read: incorrect data output). This is especially true for those coming from nullish-friendly languages (like SSJS). Let's jump into the details.
@@ -5980,7 +6322,7 @@ I personally find the standard [`IIF`](https://mateuszdabrowski.pl/docs/salesfor
 SELECT
       SubscriberKey
     , EmailAddress
-    , IIF(WorkEmailAddress = EmailAddress, NULL, EmailAddress) AS WorkEmailAddress
+    , IIF(WorkEmailAddress = EmailAddress, NULL, WorkEmailAddress) AS WorkEmailAddress
 ```
 
 ---
@@ -5991,7 +6333,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 JSON ends up in Data Extensions more often than you would think: API payloads, CloudPages form submissions, product feeds or recommendations pushed from other systems. Most of us reach for SSJS or AMPscript to read it. However, the SQL behind MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) Query Activities understands JSON as well, so you can pull a single value, grab a whole object, change the JSON or even build it without leaving your query.
@@ -6138,9 +6480,9 @@ However, there is a workaround. MCE accepts a JSON path built while the query ru
 
 ```sql {4,8,12} title="✅ Turn a JSON array into rows without OPENJSON"
 SELECT
-      orderEvent.EventId                                                                    AS EventId
-    , itemPosition.Position                                                                 AS ItemPosition
-    , JSON_VALUE(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, '].name'))   AS ItemName
+      orderEvent.EventId    AS EventId
+    , itemPosition.Position AS ItemPosition
+    , JSON_VALUE(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, '].name')) AS ItemName
 FROM OrderEvents AS orderEvent
     INNER JOIN (
         SELECT TOP 10
@@ -6289,7 +6631,7 @@ Keep an eye on empty fields. Unlike `JSON_OBJECT`, `FOR JSON` leaves out keys wi
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -6351,7 +6693,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ✅ Pascal Case for Column names and custom consistent covention for Table names */
@@ -6359,8 +6701,8 @@ SELECT
       wel.SubscriberKey
     , wel.EmailAddress
     , o.EventDate AS OpenDate
-FROM WEL_WelcomeCampaignSegment_20201011_OTH AS wel
-    INNER JOIN _Open AS o
+FROM WEL_WelcomeCampaignSegment_20201011_OTH    AS wel
+    INNER JOIN _Open                            AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ Lower Case for Table and Column names */
@@ -6391,8 +6733,8 @@ FROM WELCOMECAMPAIGNSEGMENT AS WEL
 >       [wel].[SubscriberKey]
 >     , [wel].[EmailAddress]
 >     , [o].[EventDate] AS [OpenDate]
-> FROM [WelcomeCampaignSegment] AS [wel]
->     INNER JOIN [_Open] AS [o]
+> FROM [WelcomeCampaignSegment]   AS [wel]
+>     INNER JOIN [_Open]          AS [o]
 >         ON [o].[SubscriberKey] = [wel].[SubscriberKey]
 > ```
 
@@ -6423,8 +6765,8 @@ SELECT
     , s.EventDate       AS SentDate
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -6478,6 +6820,44 @@ WHERE
 > FROM ContenstSubmissions
 > ```
 
+The same goes for `GROUP BY` and `ORDER BY` with more than one item. A list inside `ROLLUP` or `CUBE` gets one item per line as well, indented inside its parentheses:
+
+```sql
+/* ✅ One grouping item per line, inside ROLLUP too */
+SELECT TOP 20 PERCENT
+      Domain
+    , DATEPART(YEAR, DateJoined) AS YearJoined
+    , COUNT(*) AS SubscriberCount
+FROM _Subscribers
+GROUP BY ROLLUP (
+          Domain
+        , DATEPART(YEAR, DateJoined)
+    )
+ORDER BY COUNT(*) DESC
+
+/* ❌ The whole ROLLUP list in one line */
+SELECT TOP 20 PERCENT
+      Domain
+    , DATEPART(YEAR, DateJoined) AS YearJoined
+    , COUNT(*) AS SubscriberCount
+FROM _Subscribers
+GROUP BY ROLLUP (Domain, DATEPART(YEAR, DateJoined))
+ORDER BY COUNT(*) DESC
+```
+
+There is one exception I make on purpose: rows of sample values. When I build a small table to test a query against, the first `SELECT` names the Columns as usual, and every next row goes in one `UNION ALL SELECT` line. That way, it reads like the table it stands for:
+
+```sql
+/* ✅ Sample rows, one per line */
+SELECT
+      'anna-1042'   AS SubscriberKey
+    , 'ORD-1042'    AS OrderId
+    , 74.98         AS OrderTotal
+UNION ALL SELECT 'anna-1042', 'ORD-1187', 24.99
+UNION ALL SELECT 'ben-2077', 'ORD-1100', 59.00
+UNION ALL SELECT 'chloe-3101', 'ORD-1199', 210.00
+```
+
 ### Left Aligned Keywords
 
 **Align main SQL keywords to the left.**
@@ -6522,8 +6902,8 @@ SELECT
     , s.EventDate       AS SentDate
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -6569,7 +6949,7 @@ However, there is another place where spacing is beneficial for readability but 
 
 I try to use it whenever possible, but when there is huge imbalance in length (for example one Column requires multi-function calculation or there is a single complex `WHEN` in [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
 
-When you equalize aliases or `THEN` keywords, put them at the first tab stop after the longest line. With the 4-spaces indent, it is exactly where a single press of the Tab key at the end of that line takes you, so you get the alignment without counting spaces. If you also equalize Table aliases in [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) and [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), treat them as a separate group with its own longest line.
+When you equalize aliases or `THEN` keywords, put them at the first tab stop after the longest line. With the 4-spaces indent, it is exactly where a single press of the Tab key at the end of that line takes you, so you get the alignment without counting spaces. Do the same with Table aliases in [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) and [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), but treat them as a separate group with its own longest line. The `ON` lines do not count, as they carry no alias.
 
 ```sql
 /* ✅ Spacing around operators plus equalizing aliases and THEN */
@@ -6579,8 +6959,8 @@ SELECT
     , s.EventDate       AS SentDate
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -6604,8 +6984,8 @@ SELECT
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
     , DATEDIFF(HOUR, s.EventDate, o.EventDate) AS TimeToOpen
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -6644,6 +7024,70 @@ WHERE
         WHEN j.EmailName='OTH_SeedList' THEN 1
         ELSE 0
     END
+```
+
+Comments at the end of the lines follow the same rule, exception included. When two or more lines of the select list carry one, put them all at the first tab stop after the longest of those lines, so they read as one more column. If one of those lines is far longer than the rest, leave its comment one space after it, and align the others:
+
+```sql
+/* ✅ Equalized comments at the end of the lines */
+SELECT
+      ISJSON('{"orderId":"ORD-1042"}')  AS IsCompleteJsonValid  /* Output: 1 */
+    , ISJSON('{"orderId":"ORD-1042"')   AS IsBrokenJsonValid    /* Output: 0 */
+
+/* ❌ Comments one space after each line */
+SELECT
+      ISJSON('{"orderId":"ORD-1042"}')  AS IsCompleteJsonValid /* Output: 1 */
+    , ISJSON('{"orderId":"ORD-1042"')   AS IsBrokenJsonValid /* Output: 0 */
+```
+
+### Blank Lines
+
+**Use blank lines to separate the parts of a query that stand on their own.**
+
+Within a single query, I keep the lines together, as the indentation already shows its structure. A blank line helps in two places only.
+
+The first is around [`UNION`, `UNION ALL`, `INTERSECT` and `EXCEPT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/). Each query they put together keeps its own block, so you can see at a glance where one ends and the next one starts. Rows of sample values are the exception again, as they read better as one table.
+
+```sql
+/* ✅ Blank lines around UNION ALL */
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM JanuaryEventParticipantsSegment
+
+UNION ALL
+
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM FebruaryEventParticipantsSegment
+
+/* ❌ UNION ALL squeezed between the queries */
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM JanuaryEventParticipantsSegment
+UNION ALL
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM FebruaryEventParticipantsSegment
+```
+
+The second is before a comment of several lines that closes the query, like the `Output` block I add under examples. A one-line comment at the end stays right under the query.
+
+```sql
+/* ✅ Blank line before a closing comment block */
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM Ent._Subscribers
+WHERE Domain = 'example.com'
+
+/* Output:
+SubscriberKey | EmailAddress
+anna-1042     | anna@example.com
+*/
 ```
 
 ### Commas Placement
@@ -6718,7 +7162,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ Implicit Inner Join and Column from new Table on the right side of the ON condition */
@@ -6761,7 +7205,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ No aliasing and no prefix in multi Table query */
@@ -6820,8 +7264,8 @@ SELECT
     , j.DeliveredTime       AS DeliveryDate
     , o.EventDate           AS OpenDate
     , j.SuppressTracking    AS IsTrackingSuppressed
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -6844,6 +7288,35 @@ FROM _Sent AS s
 ## Comments
 
 Comments carry the context your query needs, like the reason behind a filter. However, MCE does not ignore everything inside them, and this can break your query.
+
+### Line Comments
+
+**Use block comments, never line comments.**
+
+A `--` line comment looks harmless, and the syntax check passes it. However, when MCE saves your query as a Query Activity, which my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) also does behind every run, it loses everything that follows the comment. What breaks depends on where the comment sits:
+
+1. In the middle of the query, it takes the rest of the query with it, `FROM` included. The save fails with an error about a Column that has nothing wrong with it, like "Invalid column name 'SubscriberKey'" or "The multi-part identifier "s.SubscriberKey" could not be bound".
+2. Before `SELECT`, it takes the whole query, and the save fails with "Cannot find table 0."
+3. At the very end, the save goes through, but the run fails without any reason given. Pressing Enter after the comment does not help.
+
+In my tests, a comment in the middle of the query failed the same way in Automation Studio and through the API. Block comments, `/* */`, have none of these problems, so I use them everywhere, even for a quick note at the end of a line.
+
+```sql
+/* ✅ Block comment */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* skip internal test addresses */
+
+/* ❌ Line comment in the middle hides the rest of the query */
+SELECT SubscriberKey -- every subscriber but the internal ones
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+
+/* ❌ Line comment at the end fails the run */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' -- skip internal test addresses
+```
 
 ### Apostrophes in Comments
 
@@ -6880,21 +7353,23 @@ It is a long article, so let's gather all the recommendations in one place:
 1. Be consistent
 2. Strive for readability
 3. Use comments to provide required context to your query
-4. Leave apostrophes out of comments [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments)
-5. Use `UPPERCASE` for SQL syntax [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#sql-syntax-case)
-6. Use `PascalCase` for Table & Column names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#column--table-names-case)
-7. Limit information per line to one [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#single-information-per-line)
-8. Align main SQL keywords to the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#left-aligned-keywords)
-9. Use indentation to highlight the relationship between SQL keywords [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#consistent-indentation)
-10. Use spaces wherever it makes the query more readable [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#intentional-spacing)
-11. Use commas at the beginning of the line [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#commas-placement)
-12. Use full Date Parts names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#date-parts)
-13. Use `INNER JOIN` name over `JOIN` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-14. In `JOIN ON` reference Column from newly joined Table on the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-15. When using `JOIN`, add meaningful aliases for Tables and prefix all Columns [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-16. Always use `AS` keyword between the Table name and the alias [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
-17. Use `!=` instead of `<>` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#not-equal-to-symbol)
-18. Use Column names that suggest the data type [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#meaningful-column-names)
+4. Use block comments, never line comments [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#line-comments)
+5. Leave apostrophes out of comments [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments)
+6. Use `UPPERCASE` for SQL syntax [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#sql-syntax-case)
+7. Use `PascalCase` for Table & Column names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#column--table-names-case)
+8. Limit information per line to one [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#single-information-per-line)
+9. Align main SQL keywords to the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#left-aligned-keywords)
+10. Use indentation to highlight the relationship between SQL keywords [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#consistent-indentation)
+11. Use spaces wherever it makes the query more readable [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#intentional-spacing)
+12. Use blank lines to separate the parts of a query that stand on their own [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#blank-lines)
+13. Use commas at the beginning of the line [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#commas-placement)
+14. Use full Date Parts names [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#date-parts)
+15. Use `INNER JOIN` name over `JOIN` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+16. In `JOIN ON` reference Column from newly joined Table on the left [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+17. When using `JOIN`, add meaningful aliases for Tables and prefix all Columns [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+18. Always use `AS` keyword between the Table name and the alias [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#join-and-on)
+19. Use `!=` instead of `<>` [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#not-equal-to-symbol)
+20. Use Column names that suggest the data type [🔗](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#meaningful-column-names)
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-pl/).
 
@@ -7089,7 +7564,7 @@ Prefer complex processes visualised? Got you covered:
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -7261,28 +7736,22 @@ After applying both of the above options to the [Basic SQL Snippet](https://mate
 SELECT
       c.Id AS ContactID
     , CASE
-        WHEN 18 - LEN(c.Id) < 0
-        THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
+        WHEN 18 - LEN(c.Id) < 0 THEN CONCAT(LEN(c.Id), '(', LEN(c.Id) - 18, ' over limit)')
       END AS SubscriberKey
     , CASE
-        WHEN 40 - LEN(c.FirstName) < 0
-        THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
+        WHEN 40 - LEN(c.FirstName) < 0 THEN CONCAT(LEN(c.FirstName), '(', LEN(c.FirstName) - 40, ' over limit)')
       END AS FirstName
     , CASE
-        WHEN 80 - LEN(c.LastName) < 0
-        THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
+        WHEN 80 - LEN(c.LastName) < 0 THEN CONCAT(LEN(c.LastName), '(', LEN(c.LastName) - 80, ' over limit)')
       END AS LastName
     , CASE
-        WHEN 254 - LEN(c.Email) < 0
-        THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 254, ' over limit)')
+        WHEN 254 - LEN(c.Email) < 0 THEN CONCAT(LEN(c.Email), '(', LEN(c.Email) - 254, ' over limit)')
       END AS EmailAddress
     , CASE
-        WHEN 80 - LEN(c.JobTitle__c) < 0
-        THEN CONCAT(LEN(c.JobTitle__c), '(', LEN(c.JobTitle__c) - 80, ' over limit)')
+        WHEN 80 - LEN(c.JobTitle__c) < 0 THEN CONCAT(LEN(c.JobTitle__c), '(', LEN(c.JobTitle__c) - 80, ' over limit)')
       END AS JobTitle
     , CASE
-        WHEN 40 - LEN(c.Industry__c) < 0
-        THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
+        WHEN 40 - LEN(c.Industry__c) < 0 THEN CONCAT(LEN(c.Industry__c), '(', LEN(c.Industry__c) - 40, ' over limit)')
       END AS Industry
 FROM Contact_Salesforce AS c
 WHERE
@@ -7302,7 +7771,7 @@ WHERE
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Why should you care about All Contacts list?
@@ -7376,7 +7845,7 @@ SELECT
     , SUM(IIF(
         SubscriberKey LIKE '%@%'
         OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
-        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
+        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
         OR SubscriberKey LIKE '%test%'
         OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
         , 0, 1)
@@ -7439,9 +7908,9 @@ Check your integration setup, fix it to leverage a Person Contact ID, and clean 
 >       IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')                     AS Account_Conversion_Status
 >     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')                     AS Contact_Conversion_Status
 >     , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))   AS SF_Lead
-> FROM AllContactsList            AS allC
-> INNER JOIN Ent.Lead_Salesforce  AS l
->     ON allC.SubscriberKey = l.Id
+> FROM AllContactsList                AS allC
+>     INNER JOIN Ent.Lead_Salesforce  AS l
+>         ON allC.SubscriberKey = l.Id
 > GROUP BY
 >       IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')
 >     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')
@@ -7472,7 +7941,7 @@ In short: if there are none, celebrate. If there are some, check how they got th
 > ```sql
 > SELECT TOP 100
 >       LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1)) AS TLD
->     , COUNT(allC.SubscriberKey)                                                     AS Subscriber_Count
+>     , COUNT(allC.SubscriberKey) AS Subscriber_Count
 > FROM AllContactsList        AS allC
 >     LEFT JOIN _Subscribers  AS sub
 >         ON sub.SubscriberKey = allC.SubscriberKey
@@ -7503,7 +7972,7 @@ If you see such records in your system, check whether you are using SMS keywords
 >     , COUNT(*) AS Subscriber_Count
 > FROM (
 >     SELECT
->         CASE
+>           CASE
 >             WHEN SubscriberKey LIKE '1%' THEN LEFT(SubscriberKey, 1)
 >             WHEN SubscriberKey LIKE '7%' THEN LEFT(SubscriberKey, 1)
 >             WHEN SubscriberKey LIKE '20%' OR SubscriberKey LIKE '27%' THEN LEFT(SubscriberKey, 2)
@@ -7514,7 +7983,7 @@ If you see such records in your system, check whether you are using SMS keywords
 >             WHEN SubscriberKey LIKE '8[1,2,4,6]%' THEN LEFT(SubscriberKey, 2)
 >             WHEN SubscriberKey LIKE '9[0-5,8]%' THEN LEFT(SubscriberKey, 2)
 >             ELSE LEFT(SubscriberKey, 3)
->         END AS CallingCode
+>           END AS CallingCode
 >     FROM AllContactsList
 >     WHERE
 >         SubscriberKey NOT LIKE '%[^0-9]%'
@@ -7551,13 +8020,14 @@ I would start that investigation by pulling a sample of those Subscriber Keys to
 SELECT TOP 100
       SubscriberKey
 FROM AllContactsList
-WHERE NOT (
-    SubscriberKey LIKE '%@%'
-    OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
-    OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
-    OR SubscriberKey LIKE '%test%'
-    OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
-)
+WHERE
+    NOT (
+        SubscriberKey LIKE '%@%'
+        OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
+        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+        OR SubscriberKey LIKE '%test%'
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
+    )
 ```
 
 If you see a specific recurring pattern in those Subscriber Keys, you can then adjust the initial query to add another column with a count of that specific pattern to understand how many records are affected and whether it is worth creating a specific scenario in your [automated contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio) to remove such records on an ongoing basis.
@@ -7580,19 +8050,20 @@ SELECT
     , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
     , SUM(IIF(
-          allC.SubscriberKey LIKE '%@%'
-          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
-          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
-          OR allC.SubscriberKey LIKE '%test%'
-          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
-          , 0, 1)
+        allC.SubscriberKey LIKE '%@%'
+        OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+        OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+        OR allC.SubscriberKey LIKE '%test%'
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+        , 0, 1)
       )                                                                                         AS Other_Format
 FROM AllContactsList AS allC
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM _Sent AS sent
-    WHERE allC.SubscriberKey = sent.SubscriberKey
-)
+WHERE
+    NOT EXISTS (
+        SELECT 1
+        FROM _Sent AS sent
+        WHERE allC.SubscriberKey = sent.SubscriberKey
+    )
 ```
 
 By using this query, you can identify how many records in your All Contacts list have not been sent any emails in the last 6 months and potentially just bloat your list (be sure to check against other channels as well, such as MobileConnect, Push, etc. if you are using them).
@@ -7604,17 +8075,18 @@ Finally, you can check for duplicate Subscribers in your All Contacts list to id
 ```sql
 SELECT TOP 50
       Records_Per_Email
-    , COUNT(EmailAddress)           AS Unique_Emails
-    , SUM(Records_Per_Email)        AS Total_Subscriber_Records
+    , COUNT(EmailAddress)       AS Unique_Emails
+    , SUM(Records_Per_Email)    AS Total_Subscriber_Records
 FROM (
     SELECT
           sub.EmailAddress
         , COUNT(allC.SubscriberKey) AS Records_Per_Email
     FROM AllContactsList            AS allC
-    INNER JOIN Ent._Subscribers         AS sub
-        ON allC.SubscriberKey = sub.SubscriberKey
-    WHERE sub.EmailAddress IS NOT NULL
-      AND sub.EmailAddress != ''
+        INNER JOIN Ent._Subscribers AS sub
+            ON allC.SubscriberKey = sub.SubscriberKey
+    WHERE
+        sub.EmailAddress IS NOT NULL
+        AND sub.EmailAddress != ''
     GROUP BY sub.EmailAddress
 ) AS EmailCounts
 WHERE Records_Per_Email > 1
@@ -7636,25 +8108,26 @@ SELECT
     , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
     , SUM(IIF(
-          allC.SubscriberKey LIKE '%@%'
-          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
-          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
-          OR allC.SubscriberKey LIKE '%test%'
-          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
-          , 0, 1)
+        allC.SubscriberKey LIKE '%@%'
+        OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+        OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+        OR allC.SubscriberKey LIKE '%test%'
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+        , 0, 1)
       )                                                                                         AS Other_Format
-FROM AllContactsList        AS allC
-INNER JOIN Ent._Subscribers AS sub
-    ON allC.SubscriberKey = sub.SubscriberKey
-INNER JOIN (
-    SELECT EmailAddress
-    FROM Ent._Subscribers
-    WHERE EmailAddress IS NOT NULL
-      AND EmailAddress != ''
-    GROUP BY EmailAddress
-    HAVING COUNT(SubscriberKey) > 1
-)                           AS Duplicates
-    ON sub.EmailAddress = Duplicates.EmailAddress
+FROM AllContactsList            AS allC
+    INNER JOIN Ent._Subscribers AS sub
+        ON allC.SubscriberKey = sub.SubscriberKey
+    INNER JOIN (
+        SELECT EmailAddress
+        FROM Ent._Subscribers
+        WHERE
+            EmailAddress IS NOT NULL
+            AND EmailAddress != ''
+        GROUP BY EmailAddress
+        HAVING COUNT(SubscriberKey) > 1
+    ) AS Duplicates
+        ON sub.EmailAddress = Duplicates.EmailAddress
 ```
 
 This way, you can identify whether it's isolated issue with, for example, duplicate Leads, or a more systemic issue with your integration or data management processes that is creating duplicates across multiple channels.
@@ -7675,30 +8148,32 @@ This way, you can identify whether it's isolated issue with, for example, duplic
 >     , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
 >     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
 >     , SUM(IIF(
->           allC.SubscriberKey LIKE '%@%'
->           OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
->           OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
->           OR allC.SubscriberKey LIKE '%test%'
->           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
->           , 0, 1)
+>         allC.SubscriberKey LIKE '%@%'
+>         OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+>         OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+>         OR allC.SubscriberKey LIKE '%test%'
+>         OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+>         , 0, 1)
 >       )                                                                                         AS Other_Format
-> FROM AllContactsList        AS allC
-> INNER JOIN Ent._Subscribers AS sub
->     ON allC.SubscriberKey = sub.SubscriberKey
-> INNER JOIN (
->     SELECT EmailAddress
->     FROM Ent._Subscribers
->     WHERE EmailAddress IS NOT NULL
->       AND EmailAddress != ''
->     GROUP BY EmailAddress
->     HAVING COUNT(SubscriberKey) > 1
-> )                           AS Duplicates
->     ON sub.EmailAddress = Duplicates.EmailAddress
-> WHERE EXISTS (
->     SELECT 1
->     FROM Ent._Sent          AS sent
->     WHERE allC.SubscriberKey = sent.SubscriberKey
-> )
+> FROM AllContactsList            AS allC
+>     INNER JOIN Ent._Subscribers AS sub
+>         ON allC.SubscriberKey = sub.SubscriberKey
+>     INNER JOIN (
+>         SELECT EmailAddress
+>         FROM Ent._Subscribers
+>         WHERE
+>             EmailAddress IS NOT NULL
+>             AND EmailAddress != ''
+>         GROUP BY EmailAddress
+>         HAVING COUNT(SubscriberKey) > 1
+>     ) AS Duplicates
+>         ON sub.EmailAddress = Duplicates.EmailAddress
+> WHERE
+>     EXISTS (
+>         SELECT 1
+>         FROM Ent._Sent AS sent
+>         WHERE allC.SubscriberKey = sent.SubscriberKey
+>     )
 > ```
 
 Remember that you shouldn't just delete duplicates without understanding the root cause of why they were created in the first place. Make sure to fix the processes that led to those duplicates, and set up ongoing monitoring and automated deletion for any recurring issues. Otherwise, you will just end up with the same problem again in the future.
@@ -12619,7 +13094,7 @@ You can certainly come up with other use cases that could be solved if only you 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -13241,8 +13716,8 @@ SELECT
     , smsTracking.Name
     , smsTracking.Delivered
     , smsTracking.ActionDateTime
-FROM [SMS Send Log] AS sendLog
-    INNER JOIN _SMSMessageTracking AS smsTracking
+FROM [SMS Send Log]                 AS sendLog
+    INNER JOIN _SMSMessageTracking  AS smsTracking
         ON smsTracking.SubscriberID = sendLog.SubID
         AND smsTracking.SMSJobID = sendLog.SmsJobID
         AND smsTracking.SMSBatchID = sendLog.SmsBatchID
@@ -13258,7 +13733,7 @@ Replace `[SMS Send Log]` with the name of your Data Extension and add your custo
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -13575,8 +14050,8 @@ SELECT
     , pushExtract.Status
     , pushExtract.MessageOpened
     , pushExtract.OpenDate
-FROM [Push Send Log] AS sendLog
-    INNER JOIN [MobilePush Detail Extract] AS pushExtract
+FROM [Push Send Log]                        AS sendLog
+    INNER JOIN [MobilePush Detail Extract]  AS pushExtract
         ON pushExtract.PushJobId = sendLog.PushJobID
         AND pushExtract.RequestId = sendLog.PushTriggeredSendRequestID
         AND pushExtract.DeviceId = sendLog.DeviceId
@@ -13606,7 +14081,7 @@ SELECT
     , journey.LastPublishedDate
     , journeyActivity.ActivityName
     , journeyActivity.ActivityExternalKey
-FROM _JourneyActivity AS journeyActivity
+FROM _JourneyActivity   AS journeyActivity
     INNER JOIN _Journey AS journey
         ON journey.VersionID = journeyActivity.VersionID
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
@@ -13625,10 +14100,10 @@ SELECT DISTINCT
       pushExtract.MessageID
     , pushExtract.MessageName
     , journey.JourneyName
-FROM [MobilePush Detail Extract] AS pushExtract
-    INNER JOIN _JourneyActivity AS journeyActivity
+FROM [MobilePush Detail Extract]    AS pushExtract
+    INNER JOIN _JourneyActivity     AS journeyActivity
         ON journeyActivity.ActivityName = pushExtract.MessageName
-    INNER JOIN _Journey AS journey
+    INNER JOIN _Journey             AS journey
         ON journey.VersionID = journeyActivity.VersionID
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
 ```
@@ -14104,7 +14579,7 @@ Of course, there is one downside to this approach. As you need to use Automation
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
@@ -14471,7 +14946,7 @@ You can, however, add this using Query Activity in Automation Studio. For the em
 ```sql title="Find subscribers deleted in SF CRM"
 SELECT
       subscriber.SubscriberKey
-    , 'Deleted in SF CRM'       AS DeletionReason
+    , 'Deleted in SF CRM' AS DeletionReason
 FROM _Subscribers                   AS subscriber
     LEFT JOIN Contact_Salesforce    AS contact
         ON contact.Id = subscriber.SubscriberKey
@@ -14541,12 +15016,12 @@ SELECT contact.SubscriberKey
 FROM AllContactsList            AS contact
     LEFT JOIN Leads_Salesforce  AS lead
         ON contact.SubscriberKey = lead.ID
-    LEFT JOIN Users_Salesforce  AS user
-        ON contact.SubscriberKey = user.ID
+    LEFT JOIN Users_Salesforce  AS sfUser
+        ON contact.SubscriberKey = sfUser.ID
 WHERE
     (
         SubscriberKey LIKE '005%'
-        AND user.ID IS NULL
+        AND sfUser.ID IS NULL
     )
     OR
     (
@@ -14627,9 +15102,9 @@ It will leverage the `HASHBYTES` function to hash the Email Address. On the one 
 ```sql title="Archive your deletions on schedule"
 SELECT
       pending.SubscriberKey
-    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2)    AS HashedEmail
+    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2) AS HashedEmail
     , pending.DeletionReason
-    , pending.DeletionDate                                                  AS LastDeletionDate
+    , pending.DeletionDate AS LastDeletionDate
 FROM [Contact Deletion Pending DE]  AS pending
     INNER JOIN _Subscribers         AS sub
         ON sub.SubscriberKey = pending.SubscriberKey
@@ -14645,7 +15120,7 @@ This new Query Activity should be put in the Contact Deletion Automation between
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## What is Send Log
@@ -14801,9 +15276,9 @@ SELECT
     , CASE
         WHEN s.EventDate IS NULL THEN 'False'
         WHEN job.DeliveredTime IS NOT NULL THEN CONVERT(NVARCHAR, job.DeliveredTime)
-        WHEN  b.EventDate IS NOT NULL THEN 'False'
-        WHEN  o.EventDate IS NOT NULL OR  c.EventDate IS NOT NULL THEN 'True'
-        WHEN  s.EventDate > DATEADD(MINUTE, -15, GETDATE()) THEN 'Pending'
+        WHEN b.EventDate IS NOT NULL THEN 'False'
+        WHEN o.EventDate IS NOT NULL OR c.EventDate IS NOT NULL THEN 'True'
+        WHEN s.EventDate > DATEADD(MINUTE, -15, GETDATE()) THEN 'Pending'
         ELSE 'True'
       END                       AS Delivered
     , CASE
@@ -14817,35 +15292,35 @@ SELECT
     , sl.BatchID                AS BatchID
     , sl.TriggeredSendID        AS TriggeredSendID
     , sl.ErrorCode              AS ErrorCode
-FROM TechnicalSendLog AS sl
-    LEFT JOIN _Job AS job
+FROM TechnicalSendLog           AS sl
+    LEFT JOIN _Job              AS job
         ON sl.JobID = job.JobID
-    LEFT JOIN _Sent AS s
+    LEFT JOIN _Sent             AS s
         ON sl.JobID = s.JobID
         AND sl.ListID = s.ListID
         AND sl.BatchID = s.BatchID
         AND sl.SubID = s.SubscriberID
-    LEFT JOIN _Open AS o
+    LEFT JOIN _Open             AS o
         ON s.JobID = o.JobID
         AND s.ListID = o.ListID
         AND s.BatchID = o.BatchID
         AND s.SubscriberID = o.SubscriberID
         AND o.IsUnique = 1
-    LEFT JOIN _Click AS c
+    LEFT JOIN _Click            AS c
         ON s.JobID = c.JobID
         AND s.ListID = c.ListID
         AND s.BatchID = c.BatchID
         AND s.SubscriberID = c.SubscriberID
         AND c.IsUnique = 1
-    LEFT JOIN _Bounce AS b
+    LEFT JOIN _Bounce           AS b
         ON s.JobID = b.JobID
         AND s.ListID = b.ListID
         AND s.BatchID = b.BatchID
         AND s.SubscriberID = b.SubscriberID
         AND b.IsUnique = 1
-    LEFT JOIN _JourneyActivity AS ja
+    LEFT JOIN _JourneyActivity  AS ja
         ON s.TriggererSendDefinitionObjectID = ja.JourneyActivityObjectID
-    LEFT JOIN _Journey AS j
+    LEFT JOIN _Journey          AS j
         ON ja.VersionID = j.VersionID
 WHERE
     sl.SubscriberKey IS NOT NULL
@@ -14907,7 +15382,7 @@ List of email Send Log errorCode values from the [official MCE Documentation](ht
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-04  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## MCE Behavioral Triggers
@@ -15092,8 +15567,8 @@ The base function is pushing your customer's unique identifier (don't be intimid
 >
 > ```sql title="Basic Subscriber data preparation"
 > SELECT
->     GUID() AS SubscriberKey, // OR: subscriber_key AS SubscriberKey,
->     subscriber_key AS EmailAddress
+>       NEWID()           AS SubscriberKey /* OR: subscriber_key AS SubscriberKey */
+>     , subscriber_key    AS EmailAddress
 > FROM abandoned_cart_123456789
 > ```
 >
@@ -16436,7 +16911,7 @@ Looking for more? Check out follow up materials for added context and deeper div
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-12  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 AgentExchange (formerly AppExchange) is an app store for various Clouds within Salesforce Customer 360 platform. You will find in-house solutions from Salesforce Labs and 3rd party. Free and paid. Good and bad. But all - validated by [Salesforce Security Review](https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm).
@@ -16615,7 +17090,7 @@ When you click Run, it lists the fields it will create in the target Data Extens
 
 Like every Salesforce Labs app, it comes with no official or guaranteed support from Salesforce, only the community boards. It also runs on its own server, a Heroku app between your browser and MCE, so your queries and their results pass through it. It keeps neither in a database of its own, as [Nobuyuki Watanabe's review](https://medium.com/@marketingcloudtips/query-studio-2-arrives-in-marketing-cloud-engagement-751313246455) notes. And if your account restricts logins by IP, you first have to add the four IP addresses from its Specs tab to the login allowlist.
 
-Its own parser brings back the main weakness of the original Query Studio in a milder form: it refuses some valid SQL. The most common case is a comment. A `--` comment gets "Please use /\* comments \*/ rather than --comments.", and a `/* ... */` comment then gets "'SELECT \*' statements are not allowed.", while a Query Activity runs both.
+Its own parser brings back the main weakness of the original Query Studio in a milder form: it refuses some valid SQL. The most common case is a comment. A `--` comment gets "Please use /\* comments \*/ rather than --comments.", which is right, as a Query Activity [loses everything after a line comment](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#line-comments) when it saves your query. Follow the advice, and the `/* ... */` comment then gets "'SELECT \*' statements are not allowed.", while a Query Activity runs it fine.
 
 The other way round, Run does not stop at everything Check Query flags. When its Query Builder added a field of a second table without joining that table, Check Query flagged the unknown alias, but Run sent the query to MCE anyway, which refused it with "The multi-part identifier could not be bound". It is a young app, at version 2.2 within days of its release, so expect such gaps to close quickly.
 

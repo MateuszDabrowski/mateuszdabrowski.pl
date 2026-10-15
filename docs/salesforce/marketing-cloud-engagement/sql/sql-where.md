@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 With just [`SELECT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) and [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) statements, you can already start building your queries. With the addition of [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), you can do much more than in the Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) UI. `WHERE` grants you even more power by allowing you to filter your queries' outcomes.
@@ -124,8 +124,8 @@ FROM MasterSubscriberDE
 WHERE
     (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%')
     AND CONVERT(DATE, SubscriptionStart)
-       BETWEEN DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
-       AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
+        BETWEEN DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
+        AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
 ```
 
 The `BETWEEN` is replacing only a range greater or equal to the first value and smaller or equal to the second value. Additionally, it behaves weird when working with dates or datetime values.
@@ -206,14 +206,14 @@ It works, but you can write it better with other means mentioned above in most c
 >
 > ```sql {6-9} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 > SELECT
->      SubscriberKey
->    , EmailAddress
+>       SubscriberKey
+>     , EmailAddress
 > FROM _Subscribers
 > WHERE
->    1 = CASE
->        WHEN Status = 'active'                              THEN 1
->        WHEN Status IN ('held', 'unsubscribed', 'bounced')  THEN 0
->    END
+>     1 = CASE
+>         WHEN Status = 'active'                              THEN 1
+>         WHEN Status IN ('held', 'unsubscribed', 'bounced')  THEN 0
+>     END
 > ```
 >
 > Notice the lack of `Status` column name right after `CASE` keyword and its addition in each `WHEN`.

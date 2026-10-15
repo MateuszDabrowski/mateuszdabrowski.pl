@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 JSON ends up in Data Extensions more often than you would think: API payloads, CloudPages form submissions, product feeds or recommendations pushed from other systems. Most of us reach for SSJS or AMPscript to read it. However, the SQL behind MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) Query Activities understands JSON as well, so you can pull a single value, grab a whole object, change the JSON or even build it without leaving your query.
@@ -151,9 +151,9 @@ However, there is a workaround. MCE accepts a JSON path built while the query ru
 
 ```sql {4,8,12} title="✅ Turn a JSON array into rows without OPENJSON"
 SELECT
-      orderEvent.EventId                                                                    AS EventId
-    , itemPosition.Position                                                                 AS ItemPosition
-    , JSON_VALUE(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, '].name'))   AS ItemName
+      orderEvent.EventId    AS EventId
+    , itemPosition.Position AS ItemPosition
+    , JSON_VALUE(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, '].name')) AS ItemName
 FROM OrderEvents AS orderEvent
     INNER JOIN (
         SELECT TOP 10

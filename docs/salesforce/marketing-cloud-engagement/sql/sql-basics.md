@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-13  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -333,9 +333,9 @@ SELECT TOP 20
       s.Domain
     , COUNT(s.EventDate)    AS SendCount
     , COUNT(b.EventDate)    AS BounceCount
-    , COUNT(b.EventDate)*100/COUNT(s.EventDate) AS BounceRate
-FROM _Sent AS s
-    LEFT JOIN _Bounce AS b
+    , COUNT(b.EventDate) * 100 / COUNT(s.EventDate) AS BounceRate
+FROM _Sent              AS s
+    LEFT JOIN _Bounce   AS b
         ON b.JobID = s.JobID
         AND b.ListID = s.ListID
         AND b.BatchID = s.BatchID
@@ -344,7 +344,7 @@ FROM _Sent AS s
 WHERE s.EventDate >= DATEADD(MONTH, -1, GETDATE())
 GROUP BY s.Domain
 HAVING COUNT(s.EventDate) >= 100
-ORDER BY COUNT(b.EventDate)*100/COUNT(s.EventDate) DESC
+ORDER BY COUNT(b.EventDate) * 100 / COUNT(s.EventDate) DESC
 ```
 
 Bonus: This query might be performance heavy. One option to make it perform better is to shorten the timeframe in the WHERE filter. Another would be to split this query into two - one getting cumulative counts and the second responsible for doing math for Bounce Rate. Also, check how the numbers change when selecting only Hard Bounces.

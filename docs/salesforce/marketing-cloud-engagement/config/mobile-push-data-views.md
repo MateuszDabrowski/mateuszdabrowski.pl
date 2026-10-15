@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -321,8 +321,8 @@ SELECT
     , pushExtract.Status
     , pushExtract.MessageOpened
     , pushExtract.OpenDate
-FROM [Push Send Log] AS sendLog
-    INNER JOIN [MobilePush Detail Extract] AS pushExtract
+FROM [Push Send Log]                        AS sendLog
+    INNER JOIN [MobilePush Detail Extract]  AS pushExtract
         ON pushExtract.PushJobId = sendLog.PushJobID
         AND pushExtract.RequestId = sendLog.PushTriggeredSendRequestID
         AND pushExtract.DeviceId = sendLog.DeviceId
@@ -352,7 +352,7 @@ SELECT
     , journey.LastPublishedDate
     , journeyActivity.ActivityName
     , journeyActivity.ActivityExternalKey
-FROM _JourneyActivity AS journeyActivity
+FROM _JourneyActivity   AS journeyActivity
     INNER JOIN _Journey AS journey
         ON journey.VersionID = journeyActivity.VersionID
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
@@ -371,10 +371,10 @@ SELECT DISTINCT
       pushExtract.MessageID
     , pushExtract.MessageName
     , journey.JourneyName
-FROM [MobilePush Detail Extract] AS pushExtract
-    INNER JOIN _JourneyActivity AS journeyActivity
+FROM [MobilePush Detail Extract]    AS pushExtract
+    INNER JOIN _JourneyActivity     AS journeyActivity
         ON journeyActivity.ActivityName = pushExtract.MessageName
-    INNER JOIN _Journey AS journey
+    INNER JOIN _Journey             AS journey
         ON journey.VersionID = journeyActivity.VersionID
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
 ```

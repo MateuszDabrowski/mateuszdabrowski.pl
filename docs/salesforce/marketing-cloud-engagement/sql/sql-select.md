@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Selected information on the SELECT statement in Marketing Cloud Engagement SQL
@@ -18,7 +18,7 @@ The prefered method is targeting columns explicitly by their names:
 ```sql title="Select ContactKey and EmailAddress columns"
 SELECT
       ContactKey
-    , EmailAddres
+    , EmailAddress
 ```
 
 If a column name contains a space, hyphen or is a SQL's reserved keyword, you need to capture it with squared brackets:
@@ -26,7 +26,7 @@ If a column name contains a space, hyphen or is a SQL's reserved keyword, you ne
 ```sql {4} title="Let's add another column with whitespace in its name"
 SELECT
       ContactKey
-    , EmailAddres
+    , EmailAddress
     , [External Contact Id]
 ```
 
@@ -161,11 +161,13 @@ And you can even sort using multiple values - each can have different sorting or
 
 SQL will sort using the first provided column and then, while maintaining the order of the previous column, will sort again using the next value. Let's jump to an example:
 
-```sql {4} title="Top 10% with highest Quiz Score, first to solve"
+```sql {4-6} title="Top 10% with highest Quiz Score, first to solve"
 SELECT TOP 10 PERCENT
       SubscriberKey
     , QuizScore
-ORDER BY QuizScore DESC, QuizFilledDate ASC
+ORDER BY
+      QuizScore DESC
+    , QuizFilledDate ASC
 ```
 
 The query will first sort using QuizScore to find people with the most points. Next, it will apply the second sort on the date of quiz completion. As an outcome, we will have the highest scorers sorted from first to last within each high score.
@@ -180,7 +182,7 @@ For example, let's capture three top scorers of our quiz:
 
 ```sql title="Three top scorers"
 SELECT TOP 3
-    SubscriberKey
+      SubscriberKey
     , QuizScore
 ORDER BY QuizScore DESC
 ```
@@ -207,7 +209,7 @@ What can we do to capture everyone with a score good enough for the Top 3 status
 
 ```sql title="Despite asking for TOP 3, it will return 5 rows due to ties"
 SELECT TOP 3 WITH TIES
-    SubscriberKey
+      SubscriberKey
     , QuizScore
 ORDER BY QuizScore DESC
 ```
@@ -217,6 +219,40 @@ With those two words added after the `TOP` clause, our query will return all row
 > **Note: You Should Know**
 >
 > `WITH TIES` modifier doesn't work in [Query Studio 2](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/#query-studio-2), as it did not in the original Query Studio, and produces a syntax error there. However, it works perfectly in Automation Studio Query Activity and in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), my free SQL editor that runs inside your own MCE account.
+
+### ORDER BY without TOP
+
+Sorted output looks tidy, so it is tempting to end every query with `ORDER BY`. In MCE, a query with `ORDER BY` but no `TOP` fails:
+
+```sql {5} title="❌ ORDER BY without TOP"
+SELECT
+      SubscriberKey
+    , QuizScore
+FROM QuizResults
+ORDER BY QuizScore DESC
+/* Error: The ORDER BY clause is invalid in views, inline functions, derived tables, subqueries, and common table expressions, unless TOP, OFFSET or FOR XML is also specified. */
+```
+
+Your query has no derived table, so why the complaint? Because MCE wraps every query in one before it runs it. SQL Server accepts `ORDER BY` inside a derived table only when it decides which rows to keep, as it does with `TOP`.
+
+You do not lose anything by it. A Data Extension does not promise any order of its rows, so a sorted result would land there in no particular order anyway. Sort when you read the data instead, for example with AMPscript's `LookupOrderedRows` in an email, and keep `ORDER BY` in your queries for picking rows with `TOP`.
+
+Coming from MySQL or PostgreSQL? There, `LIMIT 10` at the end of the query picks the rows. SQL Server does not know it and stops the query with "Incorrect syntax near 'LIMIT'." Use `TOP 10` after `SELECT` instead.
+
+You may also see `OFFSET 0 ROWS` after the `ORDER BY` suggested as a fix, as the error message itself lists `OFFSET`. It runs, and in my test, the rows even came back in that order. However, the Data Extension does not promise it, so the next run or a bigger table can return them in any order. `OFFSET` has a better use. Together with `FETCH`, it skips rows before it takes them, which `TOP` cannot do. Consolation prizes for places 4 to 10 of your quiz?
+
+```sql {8} title="Places 4 to 10 of the quiz"
+SELECT
+      SubscriberKey
+    , QuizScore
+FROM QuizResults
+ORDER BY
+      QuizScore DESC
+    , QuizFilledDate ASC
+OFFSET 3 ROWS FETCH NEXT 7 ROWS ONLY
+```
+
+`OFFSET 3 ROWS` skips the three winners, and `FETCH NEXT 7 ROWS ONLY` takes the next seven. As with `TOP`, a tied score can fall on both sides of the cut-off. End the `ORDER BY` with a column that settles the ties, or use [`RANK`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#rank-and-dense_rank) when tied scores should share a place.
 
 ## DISTINCT
 

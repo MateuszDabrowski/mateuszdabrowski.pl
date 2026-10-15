@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Marketing Automation is as powerful as the database quality behind it. To make it good you must first remove the bad. Let's do it.
@@ -371,7 +371,7 @@ You can, however, add this using Query Activity in Automation Studio. For the em
 ```sql title="Find subscribers deleted in SF CRM"
 SELECT
       subscriber.SubscriberKey
-    , 'Deleted in SF CRM'       AS DeletionReason
+    , 'Deleted in SF CRM' AS DeletionReason
 FROM _Subscribers                   AS subscriber
     LEFT JOIN Contact_Salesforce    AS contact
         ON contact.Id = subscriber.SubscriberKey
@@ -441,12 +441,12 @@ SELECT contact.SubscriberKey
 FROM AllContactsList            AS contact
     LEFT JOIN Leads_Salesforce  AS lead
         ON contact.SubscriberKey = lead.ID
-    LEFT JOIN Users_Salesforce  AS user
-        ON contact.SubscriberKey = user.ID
+    LEFT JOIN Users_Salesforce  AS sfUser
+        ON contact.SubscriberKey = sfUser.ID
 WHERE
     (
         SubscriberKey LIKE '005%'
-        AND user.ID IS NULL
+        AND sfUser.ID IS NULL
     )
     OR
     (
@@ -527,9 +527,9 @@ It will leverage the `HASHBYTES` function to hash the Email Address. On the one 
 ```sql title="Archive your deletions on schedule"
 SELECT
       pending.SubscriberKey
-    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2)    AS HashedEmail
+    , CONVERT(NVARCHAR(128), HASHBYTES('SHA2_256', sub.EmailAddress), 2) AS HashedEmail
     , pending.DeletionReason
-    , pending.DeletionDate                                                  AS LastDeletionDate
+    , pending.DeletionDate AS LastDeletionDate
 FROM [Contact Deletion Pending DE]  AS pending
     INNER JOIN _Subscribers         AS sub
         ON sub.SubscriberKey = pending.SubscriberKey

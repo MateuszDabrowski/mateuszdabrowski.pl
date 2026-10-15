@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Conditional values with CASE
@@ -96,22 +96,20 @@ As you can see, thanks to search `CASE` statements, we can check conditions on m
 >
 > You can use `CASE` statements inside a `CASE` statement to have an even more dynamic query.
 >
-> ```sql {3-16} title="Let's add another dimension of membership level to differentiate available channels"
+> ```sql {3-14} title="Let's add another dimension of membership level to differentiate available channels"
 > SELECT
 >       ContactKey
 >     , CASE
->         WHEN MemberType = 'Platinum'                        THEN 'Key Account Manager'
->         WHEN MemberType = 'Gold' OR MemberType = 'Silver'   THEN
->             CASE
->                 WHEN IsAppInstalled = 1                             THEN 'Push'
->                 WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
->                 WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL          THEN 'Phone'
->             END
->         WHEN MemberType = 'Bronze'                          THEN
->             CASE
->                 WHEN IsAppInstalled = 1                             THEN 'Push'
->                 WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
->             END
+>         WHEN MemberType = 'Platinum' THEN 'Key Account Manager'
+>         WHEN MemberType = 'Gold' OR MemberType = 'Silver' THEN CASE
+>             WHEN IsAppInstalled = 1                             THEN 'Push'
+>             WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
+>             WHEN PhoneOptIn = 1 AND Mobile IS NOT NULL          THEN 'Phone'
+>         END
+>         WHEN MemberType = 'Bronze' THEN CASE
+>             WHEN IsAppInstalled = 1                             THEN 'Push'
+>             WHEN EmailOptIn = 1 AND EmailAddress IS NOT NULL    THEN 'Email'
+>         END
 >       END AS PreferredChannel
 > ```
 
@@ -144,9 +142,9 @@ With it, instead of multiline `CASE`:
 
 ```sql {3-6}
 SELECT
-      _Subscriber.SubscriberKey
+      _Subscribers.SubscriberKey
     , CASE
-        WHEN _Subscriber.Status = 'active' THEN 'TRUE'
+        WHEN _Subscribers.Status = 'active' THEN 'TRUE'
         ELSE 'FALSE'
       END AS Sendable
 ```
@@ -155,8 +153,8 @@ You can have the same outcome in a single, more readable `IIF` line:
 
 ```sql {3}
 SELECT
-      _Subscriber,SubscriberKey,
-    , IIF(_Subscriber.Status = 'active', 'TRUE', 'FALSE') AS Sendable
+      _Subscribers.SubscriberKey
+    , IIF(_Subscribers.Status = 'active', 'TRUE', 'FALSE') AS Sendable
 ```
 
 Whenever you have a single condition - go with `IIF`.

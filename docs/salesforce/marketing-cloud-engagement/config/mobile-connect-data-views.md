@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -626,8 +626,8 @@ SELECT
     , smsTracking.Name
     , smsTracking.Delivered
     , smsTracking.ActionDateTime
-FROM [SMS Send Log] AS sendLog
-    INNER JOIN _SMSMessageTracking AS smsTracking
+FROM [SMS Send Log]                 AS sendLog
+    INNER JOIN _SMSMessageTracking  AS smsTracking
         ON smsTracking.SubscriberID = sendLog.SubID
         AND smsTracking.SMSJobID = sendLog.SmsJobID
         AND smsTracking.SMSBatchID = sendLog.SmsBatchID

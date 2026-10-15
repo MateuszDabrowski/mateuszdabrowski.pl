@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Queries in MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) have no variables, no loops and no temporary tables. So whenever a row needs to know something about its neighbours - is this the latest order of the subscriber, how many days passed since the previous one, how much did they spend in total - the classic answer is a chain of Query Activities with a staging Data Extension or two in between. Window functions answer it in a single query. They look at a group of related rows, called the window, calculate a value for each row and, unlike [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by), keep every row in the output.
@@ -112,7 +112,7 @@ FROM Orders
 WINDOW subscriberOrders AS (PARTITION BY SubscriberKey) /* Error: Incorrect syntax near 'WINDOW'. */
 ```
 
-Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. It looks like MCE runs SQL Server 2022 with an older compatibility level, as SQL Server accepts `WINDOW` only [from level 160](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), while other 2022 additions, such as [`IGNORE NULLS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ignore-nulls), work fine. So whenever several columns share a window, write it out in each `OVER`.
+Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. The engine is not to blame. MCE runs SQL Server 2022 at compatibility level 160, which is the level `WINDOW` [needs](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), and other 2022 additions, such as [`IGNORE NULLS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ignore-nulls), work fine. It looks like the clause clashes with the way MCE wraps every query before it runs it, the same wrapper that [refuses `ORDER BY` without `TOP`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#order-by-without-top). So whenever several columns share a window, write it out in each `OVER`.
 
 ### Count Distinct Values per Window
 
@@ -273,8 +273,8 @@ A VIP campaign needs your top customers by lifetime spend, not your top orders. 
 ```sql {4} title="Rank subscribers by lifetime spend"
 SELECT
       SubscriberKey
-    , SUM(OrderTotal)                               AS LifetimeSpend
-    , RANK() OVER (ORDER BY SUM(OrderTotal) DESC)   AS SpendRank
+    , SUM(OrderTotal) AS LifetimeSpend
+    , RANK() OVER (ORDER BY SUM(OrderTotal) DESC) AS SpendRank
 FROM Orders
 GROUP BY SubscriberKey
 
@@ -297,7 +297,7 @@ Segmentation often needs tiers: the top half of your customers, quintiles for an
 ```sql {4} title="Split subscribers into two halves by spend"
 SELECT
       SubscriberKey
-    , SUM(OrderTotal)                               AS LifetimeSpend
+    , SUM(OrderTotal) AS LifetimeSpend
     , NTILE(2) OVER (ORDER BY SUM(OrderTotal) DESC) AS SpendHalf
 FROM Orders
 GROUP BY SubscriberKey
@@ -472,10 +472,13 @@ Anna orders every 45 days on average, which tells you when to send her a reminde
 
 The category of the first order tells you what brought a subscriber to you, which makes a good segment for a welcome series or a cohort report. `FIRST_VALUE` returns it on every order of the subscriber, and `DISTINCT` leaves one row each:
 
-```sql {3} title="The category of the first order"
+```sql {3-6} title="The category of the first order"
 SELECT DISTINCT
       SubscriberKey
-    , FIRST_VALUE(Category) OVER (PARTITION BY SubscriberKey ORDER BY OrderDate, OrderId) AS FirstCategory
+    , FIRST_VALUE(Category) OVER (
+        PARTITION BY SubscriberKey
+        ORDER BY OrderDate, OrderId
+      ) AS FirstCategory
 FROM Orders
 
 /* Output:

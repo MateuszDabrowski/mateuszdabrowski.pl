@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -74,10 +74,14 @@ FROM _Subscribers
 
 However, `AVG` shows its true power with [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/) filtering:
 
-```sql {3} title="Let's get your above-average spenders for an e-commerce up-sell campaign"
+```sql {3-7} title="Let's get your above-average spenders for an e-commerce up-sell campaign"
 SELECT SubscriberKey
 FROM Purchases
-WHERE Price > AVG(Price)
+WHERE
+    Price > (
+        SELECT AVG(Price)
+        FROM Purchases
+    )
 ```
 
 You can mix two previous queries to create separate segments for your fresh and old subscribers.
@@ -113,8 +117,8 @@ The required one is the format specifier - which tells what the outcome should b
 
 ```sql title="Precision might lead to rounding. Note also the US thousands separator"
 SELECT
-      FORMAT(1234.56, 'N')  AS WithoutCustomPrecision     /* Output: 1,234.56 */
-    , FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision /* Output: 1,234.6 */
+      FORMAT(1234.56, 'N')  AS WithoutCustomPrecision       /* Output: 1,234.56 */
+    , FORMAT(1234.56, 'N1') AS RoundedWithCustomPrecision   /* Output: 1,234.6 */
 ```
 
 There are nine standard formats available, but only a few are useful on a day-to-day basis in MCE:
@@ -156,8 +160,8 @@ Let's say you want your customers to validate their phone numbers before you lev
 SELECT
       s.SubscriberKey
     , FORMAT(CONVERT(BIGINT, ea.MobileNumber), '(###) ### ### ###') AS FormattedPhone /* Output: (48) 520 935 815 */
-FROM _Subscribers AS s
-    INNER JOIN EnterpriseAttribute AS ea
+FROM _Subscribers                   AS s
+    INNER JOIN _EnterpriseAttribute AS ea
         ON ea._SubscriberID = s.SubscriberID
 ```
 
@@ -169,6 +173,6 @@ However, showing the customer that he has a `0.33` discount is not a good idea. 
 
 ```sql title="Depending on your needs you may use Standard format or a Custom one"
 SELECT
-      FORMAT(VIPDiscount, 'P')       AS StandardFormattedVIPDiscount /* Output: 33.00 % */
-    , FORMAT(VIPDiscount, '-00.##%') AS CustomFormattedVIPDiscount   /* Output: -33% */
+      FORMAT(VIPDiscount, 'P')          AS StandardFormattedVIPDiscount /* Output: 33.00 % */
+    , FORMAT(VIPDiscount, '-00.##%')    AS CustomFormattedVIPDiscount   /* Output: -33% */
 ```

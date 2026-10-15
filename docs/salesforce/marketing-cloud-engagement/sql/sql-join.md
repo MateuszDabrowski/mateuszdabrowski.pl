@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-27  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 There are cases where all you need is to pull (and maybe transform) data [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
@@ -15,7 +15,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -39,7 +39,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -59,7 +59,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    LEFT JOIN _Open AS o
+    LEFT JOIN _Open         AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -77,7 +77,7 @@ Due to the similarity of `LEFT JOIN` and `RIGHT JOIN`, I highly recommend choosi
 >     , wel.EmailAddress
 >     , o.EventDate AS OpenDate
 > FROM WelcomeCampaignSegment AS wel
->     LEFT JOIN _Open AS o
+>     LEFT JOIN _Open         AS o
 >         ON o.SubscriberKey = wel.SubscriberKey
 > WHERE o.SubscriberKey IS NULL
 > ```
@@ -96,7 +96,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    FULL JOIN _Open AS o
+    FULL JOIN _Open         AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -122,8 +122,8 @@ In such a scenario, you can use Self-join to build a more readable table that mi
 SELECT
       c.CategoryName    AS Category
     , pc.CategoryName   AS ParentCategory
-FROM WristwatchesDE AS c
-    INNER JOIN WristwatchesDE AS pc
+FROM WristwatchesDE             AS c
+    INNER JOIN WristwatchesDE   AS pc
         ON pc.ParentCategoryID = c.CategoryID
 ```
 
@@ -152,10 +152,10 @@ You won't be using Self-join a lot, but it might be a colossal timesaver when ne
 >     , a2.Name   AS Level2AccountName
 >     , a3.Id     AS Level3AccountId
 >     , a3.Name   AS Level3AccountName
-> FROM Account_Salesforce AS a1
->     LEFT JOIN Account_Salesforce AS a2
+> FROM Account_Salesforce             AS a1
+>     LEFT JOIN Account_Salesforce    AS a2
 >         ON a2.Id = a1.ParentId
->     LEFT JOIN Account_Salesforce AS a3
+>     LEFT JOIN Account_Salesforce    AS a3
 >         ON a3.Id = a2.ParentId
 > ```
 
@@ -184,8 +184,8 @@ You can also add a bit of logic to it by leveraging `AND`/`OR` statements. It is
 >       wel.SubscriberKey
 >     , sms.OptInStatusID
 >     , sms.OptOutStatusID
-> FROM WelcomeCampaignSegment AS wel
->     LEFT JOIN _SMSSubscriptionLog AS sms
+> FROM WelcomeCampaignSegment         AS wel
+>     LEFT JOIN _SMSSubscriptionLog   AS sms
 >         ON sms.MobileNumber LIKE CONCAT('%', wel.MobilePhone)
 > ```
 >
@@ -212,7 +212,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -246,10 +246,10 @@ SELECT
     , wel.EmailAddress
     , nsl.PhoneNumber
     , ebo.EbookName
-FROM WelcomeCampaignSegment AS wel
-    INNER JOIN NewsletterPromoCampaignSegment AS nsl
+FROM WelcomeCampaignSegment                     AS wel
+    INNER JOIN NewsletterPromoCampaignSegment   AS nsl
         ON nsl.SubscriberKey = wel.SubscriberKey
-    INNER JOIN EbookDownloadCampaignSegment AS ebo
+    INNER JOIN EbookDownloadCampaignSegment     AS ebo
         ON ebo.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -266,10 +266,10 @@ SELECT
     , prod.ProductName
     , prod.ProductPrice
     , promo.Offer
-FROM UpSellCampaignSegment AS up
-    LEFT JOIN ProductDetailsList AS prod
+FROM UpSellCampaignSegment          AS up
+    LEFT JOIN ProductDetailsList    AS prod
         ON prod.ProductId = up.OfferedProduct
-    LEFT JOIN CustomOfferList AS promo
+    LEFT JOIN CustomOfferList       AS promo
         ON promo.PromotionId = up.OfferedPromotion
 ```
 
@@ -286,10 +286,10 @@ SELECT
     , prod.ProductName
     , prod.ProductPrice
     , promo.Offer
-FROM UpSellCampaignSegment AS up
-    INNER JOIN ProductDetailsList AS prod
+FROM UpSellCampaignSegment          AS up
+    INNER JOIN ProductDetailsList   AS prod
         ON prod.ProductId = up.OfferedProduct
-    LEFT JOIN CustomOfferList AS promo
+    LEFT JOIN CustomOfferList       AS promo
         ON promo.PromotionId = up.OfferedPromotion
 ```
 
@@ -393,8 +393,8 @@ In the example above, we add the Seedlist to the master segment and provide stat
 >     , wel.EmailAddress
 >     , wel.FirstName
 >     , i.Interest
-> FROM WelcomeCampaignSegment AS wel
->     LEFT JOIN InterestsDataPoint AS i
+> FROM WelcomeCampaignSegment         AS wel
+>     LEFT JOIN InterestsDataPoint    AS i
 >         ON i.SubscriberKey = wel.SubscriberKey
 >
 > UNION

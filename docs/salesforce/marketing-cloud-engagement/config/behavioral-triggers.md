@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/behavioral-triggers/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-04  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## MCE Behavioral Triggers
@@ -189,8 +189,8 @@ The base function is pushing your customer's unique identifier (don't be intimid
 >
 > ```sql title="Basic Subscriber data preparation"
 > SELECT
->     GUID() AS SubscriberKey, // OR: subscriber_key AS SubscriberKey,
->     subscriber_key AS EmailAddress
+>       NEWID()           AS SubscriberKey /* OR: subscriber_key AS SubscriberKey */
+>     , subscriber_key    AS EmailAddress
 > FROM abandoned_cart_123456789
 > ```
 >

@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Group rows and apply aggregate functions to see the big picture in your data.
@@ -218,7 +218,7 @@ It rolls data like [`ROLLUP`](https://mateuszdabrowski.pl/docs/salesforce/market
 Let's get the count of our Subscribers in Master Data Extension.
 
 ```sql {1} title="Count all rows in the _Subscribers Data View"
-SELECT COUNT(*)
+SELECT COUNT(*) AS SubscriberCount
 FROM ContactMasterDE
 ```
 
@@ -272,8 +272,8 @@ There are three approaches to using `COUNT` that differ slightly from each other
 
 ```sql {2-4} title="Let's find out whether we have multiple Subscribers with the same Email Address"
 SELECT
-      COUNT(EmailAddress) AS EmailCount
-    , COUNT(DISTINCT EmailAddress) AS UniqueEmailCount
+      COUNT(EmailAddress)           AS EmailCount
+    , COUNT(DISTINCT EmailAddress)  AS UniqueEmailCount
 FROM _Subscribers
 ```
 
@@ -398,7 +398,7 @@ It ignores `NULL` values for the calculation and we can use it in [`SELECT`](htt
 SELECT TOP 3
       ProductCategory
     , COUNT(Orders) AS TotalOrders
-    , SUM(Price) AS TotalIncome
+    , SUM(Price)    AS TotalIncome
 FROM Purchases
 WHERE Status = 'Complete'
 GROUP BY ProductCategory

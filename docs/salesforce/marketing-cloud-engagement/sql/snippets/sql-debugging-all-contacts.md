@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-11  
+Last updated: 2026-10-15  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Why should you care about All Contacts list?
@@ -78,7 +78,7 @@ SELECT
     , SUM(IIF(
         SubscriberKey LIKE '%@%'
         OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
-        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
+        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
         OR SubscriberKey LIKE '%test%'
         OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
         , 0, 1)
@@ -141,9 +141,9 @@ Check your integration setup, fix it to leverage a Person Contact ID, and clean 
 >       IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')                     AS Account_Conversion_Status
 >     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')                     AS Contact_Conversion_Status
 >     , SUM(IIF(allC.SubscriberKey LIKE '00Q%' AND LEN(allC.SubscriberKey) = 18, 1, 0))   AS SF_Lead
-> FROM AllContactsList            AS allC
-> INNER JOIN Ent.Lead_Salesforce  AS l
->     ON allC.SubscriberKey = l.Id
+> FROM AllContactsList                AS allC
+>     INNER JOIN Ent.Lead_Salesforce  AS l
+>         ON allC.SubscriberKey = l.Id
 > GROUP BY
 >       IIF(l.ConvertedAccountId IS NULL, 'Unconverted', 'Converted')
 >     , IIF(l.ConvertedContactId IS NULL, 'Unconverted', 'Converted')
@@ -174,7 +174,7 @@ In short: if there are none, celebrate. If there are some, check how they got th
 > ```sql
 > SELECT TOP 100
 >       LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1)) AS TLD
->     , COUNT(allC.SubscriberKey)                                                     AS Subscriber_Count
+>     , COUNT(allC.SubscriberKey) AS Subscriber_Count
 > FROM AllContactsList        AS allC
 >     LEFT JOIN _Subscribers  AS sub
 >         ON sub.SubscriberKey = allC.SubscriberKey
@@ -205,7 +205,7 @@ If you see such records in your system, check whether you are using SMS keywords
 >     , COUNT(*) AS Subscriber_Count
 > FROM (
 >     SELECT
->         CASE
+>           CASE
 >             WHEN SubscriberKey LIKE '1%' THEN LEFT(SubscriberKey, 1)
 >             WHEN SubscriberKey LIKE '7%' THEN LEFT(SubscriberKey, 1)
 >             WHEN SubscriberKey LIKE '20%' OR SubscriberKey LIKE '27%' THEN LEFT(SubscriberKey, 2)
@@ -216,7 +216,7 @@ If you see such records in your system, check whether you are using SMS keywords
 >             WHEN SubscriberKey LIKE '8[1,2,4,6]%' THEN LEFT(SubscriberKey, 2)
 >             WHEN SubscriberKey LIKE '9[0-5,8]%' THEN LEFT(SubscriberKey, 2)
 >             ELSE LEFT(SubscriberKey, 3)
->         END AS CallingCode
+>           END AS CallingCode
 >     FROM AllContactsList
 >     WHERE
 >         SubscriberKey NOT LIKE '%[^0-9]%'
@@ -253,13 +253,14 @@ I would start that investigation by pulling a sample of those Subscriber Keys to
 SELECT TOP 100
       SubscriberKey
 FROM AllContactsList
-WHERE NOT (
-    SubscriberKey LIKE '%@%'
-    OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
-    OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001','003','005','00Q'))
-    OR SubscriberKey LIKE '%test%'
-    OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
-)
+WHERE
+    NOT (
+        SubscriberKey LIKE '%@%'
+        OR (SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(SubscriberKey) >= 7)
+        OR (LEN(SubscriberKey) = 18 AND LEFT(SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+        OR SubscriberKey LIKE '%test%'
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, SubscriberKey) IS NOT NULL
+    )
 ```
 
 If you see a specific recurring pattern in those Subscriber Keys, you can then adjust the initial query to add another column with a count of that specific pattern to understand how many records are affected and whether it is worth creating a specific scenario in your [automated contact deletion process](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contact-deletion-with-automation-studio) to remove such records on an ongoing basis.
@@ -282,19 +283,20 @@ SELECT
     , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
     , SUM(IIF(
-          allC.SubscriberKey LIKE '%@%'
-          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
-          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
-          OR allC.SubscriberKey LIKE '%test%'
-          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
-          , 0, 1)
+        allC.SubscriberKey LIKE '%@%'
+        OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+        OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+        OR allC.SubscriberKey LIKE '%test%'
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+        , 0, 1)
       )                                                                                         AS Other_Format
 FROM AllContactsList AS allC
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM _Sent AS sent
-    WHERE allC.SubscriberKey = sent.SubscriberKey
-)
+WHERE
+    NOT EXISTS (
+        SELECT 1
+        FROM _Sent AS sent
+        WHERE allC.SubscriberKey = sent.SubscriberKey
+    )
 ```
 
 By using this query, you can identify how many records in your All Contacts list have not been sent any emails in the last 6 months and potentially just bloat your list (be sure to check against other channels as well, such as MobileConnect, Push, etc. if you are using them).
@@ -306,17 +308,18 @@ Finally, you can check for duplicate Subscribers in your All Contacts list to id
 ```sql
 SELECT TOP 50
       Records_Per_Email
-    , COUNT(EmailAddress)           AS Unique_Emails
-    , SUM(Records_Per_Email)        AS Total_Subscriber_Records
+    , COUNT(EmailAddress)       AS Unique_Emails
+    , SUM(Records_Per_Email)    AS Total_Subscriber_Records
 FROM (
     SELECT
           sub.EmailAddress
         , COUNT(allC.SubscriberKey) AS Records_Per_Email
     FROM AllContactsList            AS allC
-    INNER JOIN Ent._Subscribers         AS sub
-        ON allC.SubscriberKey = sub.SubscriberKey
-    WHERE sub.EmailAddress IS NOT NULL
-      AND sub.EmailAddress != ''
+        INNER JOIN Ent._Subscribers AS sub
+            ON allC.SubscriberKey = sub.SubscriberKey
+    WHERE
+        sub.EmailAddress IS NOT NULL
+        AND sub.EmailAddress != ''
     GROUP BY sub.EmailAddress
 ) AS EmailCounts
 WHERE Records_Per_Email > 1
@@ -338,25 +341,26 @@ SELECT
     , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
     , SUM(IIF(
-          allC.SubscriberKey LIKE '%@%'
-          OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
-          OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
-          OR allC.SubscriberKey LIKE '%test%'
-          OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
-          , 0, 1)
+        allC.SubscriberKey LIKE '%@%'
+        OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+        OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+        OR allC.SubscriberKey LIKE '%test%'
+        OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+        , 0, 1)
       )                                                                                         AS Other_Format
-FROM AllContactsList        AS allC
-INNER JOIN Ent._Subscribers AS sub
-    ON allC.SubscriberKey = sub.SubscriberKey
-INNER JOIN (
-    SELECT EmailAddress
-    FROM Ent._Subscribers
-    WHERE EmailAddress IS NOT NULL
-      AND EmailAddress != ''
-    GROUP BY EmailAddress
-    HAVING COUNT(SubscriberKey) > 1
-)                           AS Duplicates
-    ON sub.EmailAddress = Duplicates.EmailAddress
+FROM AllContactsList            AS allC
+    INNER JOIN Ent._Subscribers AS sub
+        ON allC.SubscriberKey = sub.SubscriberKey
+    INNER JOIN (
+        SELECT EmailAddress
+        FROM Ent._Subscribers
+        WHERE
+            EmailAddress IS NOT NULL
+            AND EmailAddress != ''
+        GROUP BY EmailAddress
+        HAVING COUNT(SubscriberKey) > 1
+    ) AS Duplicates
+        ON sub.EmailAddress = Duplicates.EmailAddress
 ```
 
 This way, you can identify whether it's isolated issue with, for example, duplicate Leads, or a more systemic issue with your integration or data management processes that is creating duplicates across multiple channels.
@@ -377,30 +381,32 @@ This way, you can identify whether it's isolated issue with, for example, duplic
 >     , SUM(IIF(allC.SubscriberKey LIKE '%test%', 1, 0))                                          AS Test_Records
 >     , SUM(IIF(TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL, 1, 0))             AS GUID_Format
 >     , SUM(IIF(
->           allC.SubscriberKey LIKE '%@%'
->           OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
->           OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001','003','005','00Q'))
->           OR allC.SubscriberKey LIKE '%test%'
->           OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
->           , 0, 1)
+>         allC.SubscriberKey LIKE '%@%'
+>         OR (allC.SubscriberKey NOT LIKE '%[^0-9]%' AND LEN(allC.SubscriberKey) >= 7)
+>         OR (LEN(allC.SubscriberKey) = 18 AND LEFT(allC.SubscriberKey, 3) IN ('001', '003', '005', '00Q'))
+>         OR allC.SubscriberKey LIKE '%test%'
+>         OR TRY_CONVERT(UNIQUEIDENTIFIER, allC.SubscriberKey) IS NOT NULL
+>         , 0, 1)
 >       )                                                                                         AS Other_Format
-> FROM AllContactsList        AS allC
-> INNER JOIN Ent._Subscribers AS sub
->     ON allC.SubscriberKey = sub.SubscriberKey
-> INNER JOIN (
->     SELECT EmailAddress
->     FROM Ent._Subscribers
->     WHERE EmailAddress IS NOT NULL
->       AND EmailAddress != ''
->     GROUP BY EmailAddress
->     HAVING COUNT(SubscriberKey) > 1
-> )                           AS Duplicates
->     ON sub.EmailAddress = Duplicates.EmailAddress
-> WHERE EXISTS (
->     SELECT 1
->     FROM Ent._Sent          AS sent
->     WHERE allC.SubscriberKey = sent.SubscriberKey
-> )
+> FROM AllContactsList            AS allC
+>     INNER JOIN Ent._Subscribers AS sub
+>         ON allC.SubscriberKey = sub.SubscriberKey
+>     INNER JOIN (
+>         SELECT EmailAddress
+>         FROM Ent._Subscribers
+>         WHERE
+>             EmailAddress IS NOT NULL
+>             AND EmailAddress != ''
+>         GROUP BY EmailAddress
+>         HAVING COUNT(SubscriberKey) > 1
+>     ) AS Duplicates
+>         ON sub.EmailAddress = Duplicates.EmailAddress
+> WHERE
+>     EXISTS (
+>         SELECT 1
+>         FROM Ent._Sent AS sent
+>         WHERE allC.SubscriberKey = sent.SubscriberKey
+>     )
 > ```
 
 Remember that you shouldn't just delete duplicates without understanding the root cause of why they were created in the first place. Make sure to fix the processes that led to those duplicates, and set up ongoing monitoring and automated deletion for any recurring issues. Otherwise, you will just end up with the same problem again in the future.
