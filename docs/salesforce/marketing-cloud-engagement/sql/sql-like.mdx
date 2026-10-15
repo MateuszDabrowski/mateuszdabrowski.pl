@@ -51,8 +51,8 @@ You can change this filter to `%@mateuszdabrowski.%`. With the second wildcard a
 SELECT
       SubscriberKey
     , EmailAddress
-  FROM _Subscribers
- WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
+FROM _Subscribers
+WHERE EmailAddress LIKE '%@%mateuszdabrowski.pl'
 ```
 
 In the above example, I used two wildcards - one before and one just after `@` symbol. It allows not only to catch contacts in `@mateuszdabrowski.pl` domain, but also any subdomain, like `@dev.mateuszdabrowski.pl`.
@@ -118,10 +118,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '_'
-    OR RecommendedProducts  LIKE '_,%'
-    OR RecommendedProducts  LIKE '%,_,%'
-    OR RecommendedProducts  LIKE '%,_'
+    RecommendedProducts LIKE '_'
+    OR RecommendedProducts LIKE '_,%'
+    OR RecommendedProducts LIKE '%,_,%'
+    OR RecommendedProducts LIKE '%,_'
 ```
 
 In the query above, we are filtering our database with `RecommendedProducts` field. To add a contact to our segment, in four steps, we check if at least one condition is true:
@@ -137,7 +137,7 @@ SELECT
         WHEN RecommendedProducts LIKE '_'       THEN 'True'
         WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
         WHEN RecommendedProducts LIKE '%,_,%'   THEN 'True'
-        WHEN RecommendedProducts LIKE '_,%'     THEN 'True'
+        WHEN RecommendedProducts LIKE '%,_'     THEN 'True'
         ELSE 'False'
       END AS IsSubscriptionRecommended
 FROM EcommerceUpsellDE
@@ -208,10 +208,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '[1234]'
-    OR RecommendedProducts  LIKE '[1234],%'
-    OR RecommendedProducts  LIKE '%,[1234],%'
-    OR RecommendedProducts  LIKE '%,[1234]'
+    RecommendedProducts LIKE '[1234]'
+    OR RecommendedProducts LIKE '[1234],%'
+    OR RecommendedProducts LIKE '%,[1234],%'
+    OR RecommendedProducts LIKE '%,[1234]'
 ```
 
 </TabItem>
@@ -249,11 +249,11 @@ SELECT
         WHEN RecommendedProducts LIKE '[1234]'      THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1234],%'  THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1234],%'    THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1234]'    THEN 'Premium'
         WHEN RecommendedProducts LIKE '[56789]'     THEN 'Standard'
         WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
         WHEN RecommendedProducts LIKE '%,[56789],%' THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[56789],%'   THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[56789]'   THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -307,10 +307,10 @@ SELECT
     , RecommendedProducts
 FROM EcommerceUpsellDE
 WHERE
-    RecommendedProducts     LIKE '[1-4]'
-    OR RecommendedProducts  LIKE '[1-4],%'
-    OR RecommendedProducts  LIKE '%,[1-4],%'
-    OR RecommendedProducts  LIKE '%,[1-4]'
+    RecommendedProducts LIKE '[1-4]'
+    OR RecommendedProducts LIKE '[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4],%'
+    OR RecommendedProducts LIKE '%,[1-4]'
 ```
 
 </TabItem>
@@ -324,11 +324,11 @@ SELECT
         WHEN RecommendedProducts LIKE '[1-4]'       THEN 'Premium'
         WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,[1-4],%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '[1-4],%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,[1-4]'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '[5-9]'       THEN 'Standard'
         WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
         WHEN RecommendedProducts LIKE '%,[5-9],%'   THEN 'Standard'
-        WHEN RecommendedProducts LIKE '[5-9],%'     THEN 'Standard'
+        WHEN RecommendedProducts LIKE '%,[5-9]'     THEN 'Standard'
         ELSE 'No Subscription'
       END AS RecommendedSubscriptionType
 FROM EcommerceUpsellDE
@@ -355,7 +355,7 @@ SELECT
         WHEN FreeTextJobTitle LIKE '%[Mm]anager%'       THEN 'Management'
         WHEN FreeTextJobTitle LIKE '%[Ss]pecialist%'    THEN 'Specialists'
       END AS CorporateJobTitleGroup
-FROM _Subscriber
+FROM ContactMasterDE
 ```
 
 :::

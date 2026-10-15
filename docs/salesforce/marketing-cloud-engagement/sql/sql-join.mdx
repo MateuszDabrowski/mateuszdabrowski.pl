@@ -25,7 +25,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -49,7 +49,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -69,7 +69,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    LEFT JOIN _Open AS o
+    LEFT JOIN _Open         AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -87,7 +87,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    LEFT JOIN _Open AS o
+    LEFT JOIN _Open         AS o
         ON o.SubscriberKey = wel.SubscriberKey
 WHERE o.SubscriberKey IS NULL
 ```
@@ -108,7 +108,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    FULL JOIN _Open AS o
+    FULL JOIN _Open         AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -134,8 +134,8 @@ In such a scenario, you can use Self-join to build a more readable table that mi
 SELECT
       c.CategoryName    AS Category
     , pc.CategoryName   AS ParentCategory
-FROM WristwatchesDE AS c
-    INNER JOIN WristwatchesDE AS pc
+FROM WristwatchesDE             AS c
+    INNER JOIN WristwatchesDE   AS pc
         ON pc.ParentCategoryID = c.CategoryID
 ```
 
@@ -164,10 +164,10 @@ SELECT
     , a2.Name   AS Level2AccountName
     , a3.Id     AS Level3AccountId
     , a3.Name   AS Level3AccountName
-FROM Account_Salesforce AS a1
-    LEFT JOIN Account_Salesforce AS a2
+FROM Account_Salesforce             AS a1
+    LEFT JOIN Account_Salesforce    AS a2
         ON a2.Id = a1.ParentId
-    LEFT JOIN Account_Salesforce AS a3
+    LEFT JOIN Account_Salesforce    AS a3
         ON a3.Id = a2.ParentId
 ```
 
@@ -197,8 +197,8 @@ SELECT
       wel.SubscriberKey
     , sms.OptInStatusID
     , sms.OptOutStatusID
-FROM WelcomeCampaignSegment AS wel
-    LEFT JOIN _SMSSubscriptionLog AS sms
+FROM WelcomeCampaignSegment         AS wel
+    LEFT JOIN _SMSSubscriptionLog   AS sms
         ON sms.MobileNumber LIKE CONCAT('%', wel.MobilePhone)
 ```
 
@@ -227,7 +227,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -263,10 +263,10 @@ SELECT
     , wel.EmailAddress
     , nsl.PhoneNumber
     , ebo.EbookName
-FROM WelcomeCampaignSegment AS wel
-    INNER JOIN NewsletterPromoCampaignSegment AS nsl
+FROM WelcomeCampaignSegment                     AS wel
+    INNER JOIN NewsletterPromoCampaignSegment   AS nsl
         ON nsl.SubscriberKey = wel.SubscriberKey
-    INNER JOIN EbookDownloadCampaignSegment AS ebo
+    INNER JOIN EbookDownloadCampaignSegment     AS ebo
         ON ebo.SubscriberKey = wel.SubscriberKey
 ```
 
@@ -283,10 +283,10 @@ SELECT
     , prod.ProductName
     , prod.ProductPrice
     , promo.Offer
-FROM UpSellCampaignSegment AS up
-    LEFT JOIN ProductDetailsList AS prod
+FROM UpSellCampaignSegment          AS up
+    LEFT JOIN ProductDetailsList    AS prod
         ON prod.ProductId = up.OfferedProduct
-    LEFT JOIN CustomOfferList AS promo
+    LEFT JOIN CustomOfferList       AS promo
         ON promo.PromotionId = up.OfferedPromotion
 ```
 
@@ -303,10 +303,10 @@ SELECT
     , prod.ProductName
     , prod.ProductPrice
     , promo.Offer
-FROM UpSellCampaignSegment AS up
-    INNER JOIN ProductDetailsList AS prod
+FROM UpSellCampaignSegment          AS up
+    INNER JOIN ProductDetailsList   AS prod
         ON prod.ProductId = up.OfferedProduct
-    LEFT JOIN CustomOfferList AS promo
+    LEFT JOIN CustomOfferList       AS promo
         ON promo.PromotionId = up.OfferedPromotion
 ```
 
@@ -412,8 +412,8 @@ SELECT
     , wel.EmailAddress
     , wel.FirstName
     , i.Interest
-FROM WelcomeCampaignSegment AS wel
-    LEFT JOIN InterestsDataPoint AS i
+FROM WelcomeCampaignSegment         AS wel
+    LEFT JOIN InterestsDataPoint    AS i
         ON i.SubscriberKey = wel.SubscriberKey
 
 UNION

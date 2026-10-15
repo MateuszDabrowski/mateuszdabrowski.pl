@@ -379,8 +379,8 @@ SELECT
     , pushExtract.Status
     , pushExtract.MessageOpened
     , pushExtract.OpenDate
-FROM [Push Send Log] AS sendLog
-    INNER JOIN [MobilePush Detail Extract] AS pushExtract
+FROM [Push Send Log]                        AS sendLog
+    INNER JOIN [MobilePush Detail Extract]  AS pushExtract
         ON pushExtract.PushJobId = sendLog.PushJobID
         AND pushExtract.RequestId = sendLog.PushTriggeredSendRequestID
         AND pushExtract.DeviceId = sendLog.DeviceId
@@ -410,7 +410,7 @@ SELECT
     , journey.LastPublishedDate
     , journeyActivity.ActivityName
     , journeyActivity.ActivityExternalKey
-FROM _JourneyActivity AS journeyActivity
+FROM _JourneyActivity   AS journeyActivity
     INNER JOIN _Journey AS journey
         ON journey.VersionID = journeyActivity.VersionID
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
@@ -429,10 +429,10 @@ SELECT DISTINCT
       pushExtract.MessageID
     , pushExtract.MessageName
     , journey.JourneyName
-FROM [MobilePush Detail Extract] AS pushExtract
-    INNER JOIN _JourneyActivity AS journeyActivity
+FROM [MobilePush Detail Extract]    AS pushExtract
+    INNER JOIN _JourneyActivity     AS journeyActivity
         ON journeyActivity.ActivityName = pushExtract.MessageName
-    INNER JOIN _Journey AS journey
+    INNER JOIN _Journey             AS journey
         ON journey.VersionID = journeyActivity.VersionID
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
 ```

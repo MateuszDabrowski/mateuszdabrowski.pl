@@ -751,8 +751,8 @@ SELECT
     , smsTracking.Name
     , smsTracking.Delivered
     , smsTracking.ActionDateTime
-FROM [SMS Send Log] AS sendLog
-    INNER JOIN _SMSMessageTracking AS smsTracking
+FROM [SMS Send Log]                 AS sendLog
+    INNER JOIN _SMSMessageTracking  AS smsTracking
         ON smsTracking.SubscriberID = sendLog.SubID
         AND smsTracking.SMSJobID = sendLog.SmsJobID
         AND smsTracking.SMSBatchID = sendLog.SmsBatchID

@@ -182,5 +182,5 @@ I personally find the standard [`IIF`](/docs/salesforce/marketing-cloud-engageme
 SELECT
       SubscriberKey
     , EmailAddress
-    , IIF(WorkEmailAddress = EmailAddress, NULL, EmailAddress) AS WorkEmailAddress
+    , IIF(WorkEmailAddress = EmailAddress, NULL, WorkEmailAddress) AS WorkEmailAddress
 ```

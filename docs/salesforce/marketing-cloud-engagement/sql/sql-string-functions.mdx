@@ -54,10 +54,10 @@ It is less useful for segmentation but awesome for various administrative purpos
 `CHARINDEX` function lets you find if and where one string is in another. You pass the value you want to find, the value in which you wish to search and, optionally, the index from which you want to start the search.
 
 ```sql title="Search for 'Manager' in the JobTitle column starting with the first index"
-CHARINDEX("Manager", JobTitle, 1)
+CHARINDEX('Manager', JobTitle, 1)
 ```
 
-I used the optional starting index in the example above, but you will not be using it in most cases. The `CHARINDEX` defaults to starting from the beginning so that we can write the above line shorter as `CHARINDEX("Manager", JobTitle)`.
+I used the optional starting index in the example above, but you will not be using it in most cases. The `CHARINDEX` defaults to starting from the beginning so that we can write the above line shorter as `CHARINDEX('Manager', JobTitle)`.
 
 The function returns one of the three possible values:
 
@@ -68,7 +68,7 @@ The function returns one of the three possible values:
 By default, `CHARINDEX` in :product[MCE] is case-insensitive in its searches. You can, however, enforce case sensitivity by adding `COLLATE`:
 
 ```sql title="Case sensitive CHARINDEX search - note lack of a comma between the value and COLLATE"
-CHARINDEX("Manager", JobTitle COLLATE Latin1_General_CS_AS)
+CHARINDEX('Manager', JobTitle COLLATE Latin1_General_CS_AS)
 ```
 
 :::note You Should Know
@@ -110,6 +110,46 @@ PATINDEX('%C_O%', JobTitle)
 
 While wildcards give `PATINDEX` an edge over [`CHARINDEX`](#charindex), it misses one feature of the latter - an optional argument for starting the search from a specific string. Either can be better depending on the use case at hand.
 
+## SUBSTRING
+
+`SUBSTRING` cuts a part out of the middle of a value. You pass the value, the index of the first character you want and the number of characters to take. Paired with [`CHARINDEX`](#charindex), it takes everything after a character, such as the domain of an email address, which you need for deliverability reports by mailbox provider:
+
+```sql {3} title="Email domain of each subscriber"
+SELECT
+      SubscriberKey
+    , SUBSTRING(EmailAddress, CHARINDEX('@', EmailAddress) + 1, LEN(EmailAddress)) AS EmailDomain
+FROM _Subscribers
+/* EmailAddress: 'anna@example.com', Output: 'example.com' */
+```
+
+`LEN(EmailAddress)` asks for more characters than are left after the `@`, and that is fine, as `SUBSTRING` stops at the end of the value.
+
+For the part before the `@`, use `LEFT(EmailAddress, CHARINDEX('@', EmailAddress) - 1)`, but only on values that have the `@`, for example with `WHERE EmailAddress LIKE '%@%'`. Without it, `CHARINDEX` returns 0, `LEFT` gets -1 as the number of characters, and the query fails during the run with no reason given. `SUBSTRING` is safe here, as a missing `@` makes it start from the first character and return the whole value.
+
+## REPLACE and TRANSLATE
+
+`REPLACE` swaps every occurrence of one text for another, so it is the find and replace of SQL. Mobile numbers from web forms are a good use, as people type them with spaces, while your SMS sends and deduplication need one format:
+
+```sql {3} title="Remove spaces from mobile numbers"
+SELECT
+      SubscriberKey
+    , REPLACE(MobileNumber, ' ', '') AS CleanMobileNumber
+FROM Leads
+/* MobileNumber: '+48 601 234 567', Output: '+48601234567' */
+```
+
+Real numbers come with brackets and hyphens as well. You could nest one `REPLACE` in another for each character, but `TRANSLATE` swaps many characters in one go. It takes the characters to find and the same number of replacements, so turn them all into one placeholder and remove it with a single `REPLACE`:
+
+```sql {3} title="Remove spaces, brackets and hyphens at once"
+SELECT
+      SubscriberKey
+    , REPLACE(TRANSLATE(MobileNumber, ' ()-', '####'), '#', '') AS CleanMobileNumber
+FROM Leads
+/* MobileNumber: '+48 (601) 234-567', Output: '+48601234567' */
+```
+
+Pick a placeholder that never appears in the real values.
+
 ## CONCAT
 
 `CONCAT` function allows you to join two or more strings together.
@@ -142,16 +182,91 @@ It might seem cleaner, but there are two downsides to this method:
 
 :::
 
+## STRING_AGG
+
+`CONCAT` joins values from one row. `STRING_AGG` joins values from many rows into one, which you need whenever an email should list them, such as the categories a customer bought from:
+
+```sql {3} title="Categories of each subscriber in one field"
+SELECT
+      SubscriberKey
+    , STRING_AGG(Category, ', ') WITHIN GROUP (ORDER BY Category) AS Categories
+FROM (
+    SELECT DISTINCT
+          SubscriberKey
+        , Category
+    FROM Orders
+) AS subscriberCategory
+GROUP BY SubscriberKey
+
+/* Output:
+SubscriberKey | Categories
+anna-1042     | Books, Music, Travel
+ben-2077      | Books, Music
+chloe-3101    | Travel
+*/
+```
+
+`STRING_AGG` works like the [aggregate functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx), so it needs `GROUP BY`. `WITHIN GROUP` sets the order of the values, as without it, the order can change between runs. There is no `DISTINCT` inside `STRING_AGG`, so the subquery removes the repeated categories first. Without it, Ben would get Books three times.
+
+Two limits apply. On a `VARCHAR` field, such as `Status` of `_Subscribers`, `STRING_AGG` fails with "Argument data type nvarchar is invalid for argument 2 of string_agg function.", as :product[MCE] [adds an `N`](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx#apostrophes-in-comments) to every text value in your query, the separator included. And on a Text field, the result stops at 4,000 characters, so a longer list fails the run. Convert the field to `NVARCHAR(MAX)` first, as in `STRING_AGG(CONVERT(NVARCHAR(MAX), Status), ', ')`, and neither limit applies.
+
+## STRING_SPLIT
+
+Web forms often save the answers of a checkbox list as one value, such as `music,travel,books`. In SQL Server, `STRING_SPLIT` turns such a value into rows. In :product[MCE], it fails just like [`OPENJSON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.mdx#openjson), as the syntax check takes it for a Data Extension name:
+
+```sql {5} title="❌ STRING_SPLIT fails the syntax check"
+SELECT
+      preference.SubscriberKey
+    , interest.value AS Interest
+FROM Preferences AS preference
+    CROSS APPLY STRING_SPLIT(preference.Interests, ',') AS interest
+/* Error: The STRING_SPLIT(preference.Interests, table has a multi-part specification. This is not allowed.
+STRING_SPLIT(preference.Interests, is not a known data extension or system data view. You can only query existing data extensions or system data views. */
+```
+
+The workaround goes through JSON. Turn the list into a JSON array with `REPLACE`, and read its items with the [array trick from my JSON article](/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.mdx#openjson):
+
+```sql {3,7,16} title="✅ Split a comma-separated value into rows"
+SELECT
+      preference.SubscriberKey
+    , TRIM(JSON_VALUE(preference.InterestsJson, CONCAT('$[', interestPosition.Position, ']'))) AS Interest
+FROM (
+    SELECT
+          SubscriberKey
+        , CONCAT('["', REPLACE(STRING_ESCAPE(Interests, 'json'), ',', '","'), '"]') AS InterestsJson
+    FROM Preferences
+) AS preference
+    INNER JOIN (
+        SELECT TOP 10
+              ROW_NUMBER() OVER (ORDER BY SubscriberID) - 1 AS Position
+        FROM _Subscribers
+        ORDER BY Position
+    ) AS interestPosition
+        ON JSON_VALUE(preference.InterestsJson, CONCAT('$[', interestPosition.Position, ']')) IS NOT NULL
+
+/* Interests: 'music, travel,books'
+Output:
+SubscriberKey | Interest
+anna-1042     | music
+anna-1042     | travel
+anna-1042     | books
+*/
+```
+
+`STRING_ESCAPE` adds a backslash before quotes and the other characters JSON does not allow as they are. That way, one value with a quote cannot break the array and stop the whole query. `TRIM` removes the spaces people type after commas. `TOP 10` sets the maximum number of items per value, so raise it for longer lists.
+
 ## LTRIM, RTRIM and TRIM
 
 `LTRIM` and `RTRIM` functions allow you to quickly clean your data by deleting unneeded spaces from the beginning or the end of the provided string.
 
 ```sql title="Noone likes useless whitespace in their database"
 SELECT
-      LTRIM('   data from webform ')        AS CleanLeftSide    /* Output: 'data from webform ' */
-    , RTRIM('   data from webform ')        AS CleanRightSide   /* Output: '   data from webform' */
-    , TRIM('   data from webform ')         AS CleanBothSides   /* Output: 'data from webform' */
+      LTRIM('   data from webform ')    AS CleanLeftSide    /* Output: 'data from webform ' */
+    , RTRIM('   data from webform ')    AS CleanRightSide   /* Output: '   data from webform' */
+    , TRIM('   data from webform ')     AS CleanBothSides   /* Output: 'data from webform' */
 ```
+
+Since SQL Server 2022, `LTRIM` and `RTRIM` also take the characters to remove as a second argument, which helps with zero-padded IDs from other systems: `LTRIM('007', '0')` returns `7`. `TRIM` has its own syntax for the same job, `TRIM(LEADING '0' FROM '007')`, but :product[MCE] refuses it, as its syntax check reads that `FROM` as the start of a table list: "N'007' is not a known data extension or system data view."
 
 ## NEWID
 
@@ -171,9 +286,9 @@ Thankfully, SQL can clean up such data with built-in `LOWER` and `UPPER`.
 
 ```sql {3-4}
 SELECT
-      'DIRTY Data' AS SampleData
-    , LOWER('DIRTY Data') AS Lowercase /* Output: 'dirty data' */
-    , UPPER('DIRTY Data') AS Uppercase /* Output: 'DIRTY DATA' */
+      'DIRTY Data'          AS SampleData
+    , LOWER('DIRTY Data')   AS Lowercase    /* Output: 'dirty data' */
+    , UPPER('DIRTY Data')   AS Uppercase    /* Output: 'DIRTY DATA' */
 ```
 
 However, there is no out-of-the-box function for Proper Case - a popular requirement, especially around names and titles. The basic solution for single-word strings is straightforward:

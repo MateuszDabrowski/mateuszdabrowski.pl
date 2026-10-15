@@ -113,10 +113,11 @@ FROM Ent._Subscribers
 
 It might help quickly cut the date to just an important part (like a year for anniversary personalisation or capturing anniversary bins). However, its standout feature is returning the day's name for a given date, thanks to the `WEEKDAY` [date part](#date-parts).
 
-```sql {3} title="Create an automation that will capture weekend meetings for Friday reminder"
+```sql {3-4} title="Create an automation that will capture weekend meetings for Friday reminder"
 SELECT SubscriberKey
 FROM SalesMeetings
-WHERE DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
+WHERE
+    DATENAME(WEEKDAY, DayOfMeeting) IN ('Friday', 'Saturday', 'Sunday')
     AND DATEDIFF(DAY, GETDATE(), DayOfMeeting) < 3
 ```
 
@@ -223,11 +224,13 @@ FROM Ent._Subscribers
 
 You may use it in the [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx) statement:
 
-```sql {3} title="Get everyone that hit one year on the subscription list"
+```sql {3} title="Get everyone who joined 30 days ago, for a day-30 welcome email"
 SELECT SubscriberKey
 FROM Ent._Subscribers
-WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
+WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 30
 ```
+
+`DATEDIFF` counts the midnights between the two dates, so the time of day does not matter here. For anniversaries, count years instead of days, as a year that includes 29 February has 366 of them. The [anniversary recipe](#birthdays-and-anniversaries) below does that.
 
 :::note You Should Know
 
@@ -235,8 +238,8 @@ WHERE DATEDIFF(DAY, DateJoined, GETDATE()) = 365
 
 ```sql
 SELECT
-      DATEDIFF(DAY, DATEADD(DAY, -1, GETDATE()), GETDATE()) AS YesterdayPostive  /* Output: 1 */
-    , DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative /* Output: -1 */
+      DATEDIFF(DAY, DATEADD(DAY, -1, GETDATE()), GETDATE()) AS YesterdayPostive     /* Output: 1 */
+    , DATEDIFF(DAY, GETDATE(), DATEADD(DAY, -1, GETDATE())) AS YesterdayNegative    /* Output: -1 */
 ```
 
 It is crucial for creating correct comparisons within [`WHERE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-where.mdx).
@@ -255,13 +258,13 @@ FROM EventRegistration
 WHERE DATEDIFF(DAY, GETDATE(), EventDate) <= 31
 ```
 
- It is shorter than [`DATEADD`](#dateadd) but with a different level of control. Because `DATEDIFF` operates on [Date Parts](#date-parts), it will consider only the chosen part. For example:
+It is shorter than [`DATEADD`](#dateadd) but with a different level of control. Because `DATEDIFF` operates on [Date Parts](#date-parts), it will consider only the chosen part. For example:
 
- ```sql {2-3} title="Different ranges, same outcome"
+```sql {2-3} title="Different ranges, same outcome"
 SELECT
-      DATEDIFF(MONTH, 'Mar 31 2021', 'Apr 01 2021') AS ShortDiff /* Output: 1 */
-    , DATEDIFF(MONTH, 'Mar 01 2021', 'Apr 30 2021') AS LongDiff  /* Output: 1 */
- ```
+      DATEDIFF(MONTH, 'Mar 31 2021', 'Apr 01 2021') AS ShortDiff    /* Output: 1 */
+    , DATEDIFF(MONTH, 'Mar 01 2021', 'Apr 30 2021') AS LongDiff     /* Output: 1 */
+```
 
 Despite dates in the first `DATEDIFF` being just a day apart and in the second nearly two months apart, both return `1`. The reason is that `DATEDIFF` compares only the month date part - March to April is a single month of difference.
 
@@ -298,8 +301,8 @@ You can quickly fix it with `AT TIME ZONE`. When you apply this function to a ti
 
 ```sql title="Daylight Saving Time magic"
 SELECT
-      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST /* Output: 2020-01-01 18:00:00 -06:00 */
-    , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT /* Output: 2020-07-01 18:00:00 -05:00 */
+      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CST  /* Output: 2020-01-01 18:00:00 -06:00 */
+    , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central Standard Time' AS CDT  /* Output: 2020-07-01 18:00:00 -05:00 */
 ```
 
 In the above snippet, we [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) the dates to datetime without offset. Then the `AT TIME ZONE` function adds the offset and calculates the Daylight Saving Time offset change for you.
@@ -322,7 +325,7 @@ There are, however, two workarounds:
 
 ```sql title="No Daylight Saving Time magic"
 SELECT
-      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central America Standard Time' AS CST     /* Output: 2020-01-01 18:00:00 -06:00 */
+      CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central America Standard Time' AS CST      /* Output: 2020-01-01 18:00:00 -06:00 */
     , CONVERT(DATETIME2(0), '2020-07-01T18:00:00') AT TIME ZONE 'Central America Standard Time' AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
 ```
 
@@ -332,8 +335,8 @@ To use it, provide a datetime and an offset (for example, `'-06:00'` or `'+01:00
 
 ```sql title="No Daylight Saving Time magic"
 SELECT
-      TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00') AS CST     /* Output: 2020-01-01 18:00:00 -06:00 */
-    , TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00') AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
+      TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-01-01T18:00:00'), '-06:00')  AS CST      /* Output: 2020-01-01 18:00:00 -06:00 */
+    , TODATETIMEOFFSET(CONVERT(DATETIME2(0), '2020-07-01T18:00:00'), '-06:00')  AS AlsoCST  /* Output: 2020-07-01 18:00:00 -06:00 */
 ```
 
 Of course, for any datetime values that include the Daylight Saving Time - pushed from a website or your data warehouse - [`AT TIME ZONE`](#add-offset-with-at-time-zone) will be the better solution.
@@ -355,7 +358,7 @@ It will also automatically consider any differences between Daylight Saving Time
 You can leverage both features of the `AT THE TIMEZONE` in one line to apply the timezone to offset-less datetime and convert it to another timezone by using the function twice:
 
 ```sql title="First, apply the timezone. Then change the timezone"
-SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET, /* Output: 2020-01-02 01:00:00 +01:00 */
+SELECT CONVERT(DATETIME2(0), '2020-01-01T18:00:00') AT TIME ZONE 'Central Standard Time' AT TIME ZONE 'Central European Standard Time' AS DateToCSTtoCET /* Output: 2020-01-02 01:00:00 +01:00 */
 ```
 
 It works because the function's first execution [adds the offset with `AT TIME ZONE`](#add-offset-with-at-time-zone). The second uses the output with an offset applied and [change the timezone](#change-timezone-with-at-time-zone).
@@ -465,3 +468,112 @@ You can find the complete list of custom date format specifiers on [Microsoft .N
 AMPScript uses very similar custom formatting with `FORMAT()` and `FORMATDATE()` functions. Depending on the use case, consider whether you want to manipulate the date visual representation in the Data Extension or only in the communication.
 
 :::
+
+## Date Recipes
+
+The functions above are the building blocks. Below, you will find how to combine them for the date questions that come up most often in :product[MCE].
+
+### Today and Yesterday
+
+`GETDATE` returns the current date and time, so `DATEADD(DAY, -1, GETDATE())` gives you the last 24 hours, not yesterday. Run it at 9:00, and it skips the opens from yesterday morning while it includes the ones from this morning. Cut the time off with [`CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert) to `DATE`, and the boundaries fall on midnight:
+
+```sql {5-7} title="Opens from yesterday"
+SELECT
+      SubscriberKey
+    , EventDate
+FROM _Open
+WHERE
+    EventDate >= DATEADD(DAY, -1, CONVERT(DATE, GETDATE()))
+    AND EventDate < CONVERT(DATE, GETDATE())
+```
+
+For today, keep only `EventDate >= CONVERT(DATE, GETDATE())`.
+
+The range starts with `>=` and ends with `<` on the next midnight. It catches every moment of the last day, while `BETWEEN` with `23:59:59` at the end would miss an open at 23:59:59.500. The same pattern works for any period, as you will see in a moment.
+
+The midnight here is the server's, in Central Standard Time without Daylight Saving Time. For subscribers in Poland, the server's yesterday runs from 7:00 to 7:00 their time in winter, and from 8:00 in summer. If your report must follow their calendar, convert the dates first with [`AT TIME ZONE`](#at-time-zone-vs-todatetimeoffset).
+
+### Last Full Month
+
+Monthly reports need the previous calendar month, whichever day the automation runs. SQL Server 2022 added `DATETRUNC`, which cuts a date down to the start of its month (or any other [date part](#date-parts)), and it works in :product[MCE]:
+
+```sql {5-7} title="Opens from the last full month"
+SELECT
+      SubscriberKey
+    , EventDate
+FROM _Open
+WHERE
+    EventDate >= DATEADD(MONTH, -1, DATETRUNC(MONTH, GETDATE()))
+    AND EventDate < DATETRUNC(MONTH, GETDATE())
+```
+
+Run it on 14 October, and it returns the opens from 1 to 30 September. For the last 12 full months, change `-1` to `-12`. Data Views keep only [six months of data](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#data-views-basics), so a report that long needs your own copy of the events.
+
+### Birthdays and Anniversaries
+
+Birthday emails need everyone whose birth date falls on today's day and month, in any year. Move the birth date into the current year with [`DATEADD`](#dateadd) and [`DATEDIFF`](#datediff), and compare it with today:
+
+```sql {5} title="Customers with a birthday today"
+SELECT
+      SubscriberKey
+    , FirstName
+FROM Customers
+WHERE DATEADD(YEAR, DATEDIFF(YEAR, BirthDate, GETDATE()), BirthDate) = CONVERT(DATE, GETDATE())
+```
+
+`DATEDIFF` counts the calendar years between the birth date and today, and `DATEADD` adds them back, which lands on this year's birthday. It also takes care of 29 February. In other years, `DATEADD` moves it to 28 February, as it [falls back to the last day of a shorter month](#dateadd), so those customers get their email on 28 February.
+
+The same pattern sends subscription anniversaries from [`_Subscribers`](/docs/salesforce/marketing-cloud-engagement/config/system-data-views.mdx#_subscribers):
+
+```sql {5-7} title="Subscription anniversaries today"
+SELECT
+      SubscriberKey
+    , DateJoined
+FROM _Subscribers
+WHERE
+    DATEADD(YEAR, DATEDIFF(YEAR, DateJoined, GETDATE()), CONVERT(DATE, DateJoined)) = CONVERT(DATE, GETDATE())
+    AND DATEDIFF(YEAR, DateJoined, GETDATE()) > 0
+```
+
+`DateJoined` has a time, so `CONVERT` cuts it off before the comparison. The second condition skips everyone who joined today, as zero years after today is still today.
+
+### Unix Timestamps
+
+Apps and web forms often send dates as Unix timestamps: the number of seconds since midnight on 1 January 1970 in UTC, such as `1791936000`. [`DATEADD`](#dateadd) turns them into a date:
+
+```sql {3} title="Unix timestamps as dates"
+SELECT
+      EventId
+    , DATEADD(SECOND, CreatedAt, '1970-01-01') AS CreatedAtUTC
+FROM AppEvents
+/* CreatedAt: 1791936000, Output: 2026-10-14 00:00:00.000 */
+```
+
+JavaScript and many APIs count milliseconds instead, which gives a 13-digit number. It is too big for `DATEADD`, which takes only an `INT`, and :product[MCE] does not tell you so. The query passes the syntax check, then fails during the run, and Automation Studio says only "Automation failed due to system error". The value is also too big for a Number field, so store such timestamps in a Text or Decimal field. Convert the value to `BIGINT`, and split it into the seconds and the remaining milliseconds:
+
+```sql {3-7} title="Unix timestamps in milliseconds as dates"
+SELECT
+      EventId
+    , DATEADD(
+        MILLISECOND,
+        CONVERT(BIGINT, CreatedAtMs) % 1000,
+        DATEADD(SECOND, CONVERT(BIGINT, CreatedAtMs) / 1000, '1970-01-01')
+      ) AS CreatedAtUTC
+FROM AppEvents
+/* CreatedAtMs: 1791936000123, Output: 2026-10-14 00:00:00.123 */
+```
+
+Both outputs are in UTC. To compare them with :product[MCE] dates, subtract six hours with `DATEADD(HOUR, -6, ...)`, as the server stays at UTC-6 all year. Going the other way, `DATEDIFF(SECOND, '1970-01-01', GETUTCDATE())` returns the current Unix timestamp. For milliseconds, use `DATEDIFF_BIG`, as their number does not fit the `INT` of `DATEDIFF` either.
+
+### ISO 8601 for APIs
+
+APIs and data warehouses often expect dates as ISO 8601 text in UTC, such as `2026-10-14T09:05:07.123Z`. Build it with [`FORMAT`](#custom-date-formats). `T` and `Z` are not format specifiers, so `FORMAT` copies them as they are. :product[MCE] dates are in UTC-6, so add six hours before the `Z` claims UTC:
+
+```sql {3} title="Open dates for an API"
+SELECT
+      SubscriberKey
+    , FORMAT(DATEADD(HOUR, 6, EventDate), 'yyyy-MM-ddTHH:mm:ss.fffZ') AS EventDateISO
+FROM _Open
+```
+
+`FORMAT` calls .NET for every row, which makes it slow on a large Data View. `CONCAT(CONVERT(VARCHAR(23), DATEADD(HOUR, 6, EventDate), 126), 'Z')` gives the same text faster, with one catch: [style 126](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#convert-date-style-codes) drops `.000` when the milliseconds are zero, so the length of the output varies. Use it when the receiving system accepts both forms.

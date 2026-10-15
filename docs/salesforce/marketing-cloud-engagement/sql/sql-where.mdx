@@ -131,8 +131,8 @@ FROM MasterSubscriberDE
 WHERE
     (ActiveSubscription LIKE '%Phone%' OR ActiveSubscription LIKE '%Internet%')
     AND CONVERT(DATE, SubscriptionStart)
-       BETWEEN DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
-       AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
+        BETWEEN DATEADD(MONTH, -12, CONVERT(DATE, GETUTCDATE()))
+        AND DATEADD(MONTH, -11, CONVERT(DATE, GETUTCDATE()))
 ```
 
 The `BETWEEN` is replacing only a range greater or equal to the first value and smaller or equal to the second value. Additionally, it behaves weird when working with dates or datetime values.
@@ -213,7 +213,7 @@ It works, but you can write it better with other means mentioned above in most c
 
 You can do better even with the [search version of `CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx#search-version-of-case), as it allows you to use `AND`/`OR`/`IN` within the `CASE`:
 
- ```sql {6-9} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
+```sql {6-9} title="All subscribers NOT with unsubscribed, bounced or temporarily held status"
 SELECT
       SubscriberKey
     , EmailAddress

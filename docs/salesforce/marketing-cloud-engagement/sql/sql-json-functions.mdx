@@ -162,9 +162,9 @@ However, there is a workaround. :product[MCE] accepts a JSON path built while th
 
 ```sql {4,8,12} title="✅ Turn a JSON array into rows without OPENJSON"
 SELECT
-      orderEvent.EventId                                                                    AS EventId
-    , itemPosition.Position                                                                 AS ItemPosition
-    , JSON_VALUE(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, '].name'))   AS ItemName
+      orderEvent.EventId    AS EventId
+    , itemPosition.Position AS ItemPosition
+    , JSON_VALUE(orderEvent.Payload, CONCAT('$.items[', itemPosition.Position, '].name')) AS ItemName
 FROM OrderEvents AS orderEvent
     INNER JOIN (
         SELECT TOP 10

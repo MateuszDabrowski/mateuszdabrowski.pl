@@ -47,7 +47,7 @@ WHERE DateJoined > CONVERT(DATE, '2020-10-30')
 With both functions you can stack functions within for more complex calculations:
 
 ```sql {2} title="Calculate the end of the trial period and output date only"
-SELECT CONVERT(DATE, DATEADD(MM, 1, GETUTCDATE())) AS TrialPeriodEndDate
+SELECT CONVERT(DATE, DATEADD(MONTH, 1, GETUTCDATE())) AS TrialPeriodEndDate
 ```
 
 Up to this point, `CAST` and `CONVERT` seem similar in the features.
@@ -76,9 +76,9 @@ You can also leverage [style codes](#convert-date-style-codes) to format your da
 
 ```sql
 SELECT
-      CONVERT(NVARCHAR, GETDATE(), 101) AS DateFormat1   /* Output: 10/30/2020 */
-    , CONVERT(NVARCHAR, GETDATE(), 102) AS DateFormat2   /* Output: 2020.10.30 */
-    , CONVERT(NVARCHAR, GETDATE(), 107) AS DateFormat3   /* Output: Oct 30, 2020 */
+      CONVERT(NVARCHAR, GETDATE(), 101) AS DateFormat1  /* Output: 10/30/2020 */
+    , CONVERT(NVARCHAR, GETDATE(), 102) AS DateFormat2  /* Output: 2020.10.30 */
+    , CONVERT(NVARCHAR, GETDATE(), 107) AS DateFormat3  /* Output: Oct 30, 2020 */
 ```
 
 :::
@@ -101,6 +101,7 @@ There are over 30 data types available for conversion, but there are only a few 
 | DATETIMEOFFSET | Date with offset | When you need timezone offset |
 | DATE | Only date | Best when you need date only |
 | TIME | Only time | Best when you need time only |
+| BIT | 1, 0 or `NULL` | What Boolean fields hold, see [Booleans](#booleans) |
 
 :::note You Should Know
 
@@ -116,8 +117,8 @@ For example, you may have a string field containing a product price - `'123.99'`
 
 ```sql
 SELECT
-      CONVERT(DECIMAL, '123.99')      AS RoundedConversion /* Output: 124 */
-    , CONVERT(DECIMAL(5,2), '123.99') AS FullConversion    /* Output: 123.99 */
+      CONVERT(DECIMAL, '123.99')        AS RoundedConversion    /* Output: 124 */
+    , CONVERT(DECIMAL(5, 2), '123.99')  AS FullConversion       /* Output: 123.99 */
 ```
 
 Be sure to add correct precision. If it is smaller then the values in your source, it will lead to an error. It's better to have too big precision than too small.
@@ -144,6 +145,23 @@ It is happening because conversions from `DECIMAL` or `FLOAT` to `INT` are trunc
 
 :::
 
+### Data Extension Field Types
+
+Behind each Data Extension field type, there is one of the SQL Server types above. It tells you what your query gets when it reads the field, and what fits when the query writes into it:
+
+| Field type | SQL Server type | What it means for your queries |
+| -- | -- | -- |
+| Text | NVARCHAR(length) | Unicode text up to the length you set |
+| Number | INT | Whole numbers up to 2,147,483,647, so no Unix timestamps in milliseconds |
+| Decimal | DECIMAL(length, scale) | Exact decimals, with the scale as the digits after the point |
+| Date | DATETIME | Always has a time, which is 00:00 when you load a date alone |
+| Boolean | BIT | 1, 0 or `NULL`, see [Booleans](#booleans) |
+| EmailAddress | NVARCHAR(254) | Unicode text up to 254 characters |
+| Phone | NVARCHAR(50) | Unicode text up to 50 characters |
+| Locale | VARCHAR(5) | Codes such as `en-GB`, without Unicode |
+
+Data Views follow their own types. In `_Subscribers`, `DateJoined` is a `SMALLDATETIME`, which has no seconds, and `Status` is a `VARCHAR`, while `EventDate` of `_Sent` is a `DATETIME` with milliseconds.
+
 ### CONVERT Date Style Codes
 
 Just as with data types - there are many style codes available. Here I will cover just the most popular ones (if you don't understand some formats codes, check [date formats guide](/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions.mdx#custom-date-formats)):
@@ -163,6 +181,8 @@ Just as with data types - there are many style codes available. Here I will cove
 | yyyy/MM/dd | 111 |
 | yyyyMMdd | 112 |
 | yyyy-MM-dd HH:mm:ss | 120 |
+| yyyy-MM-dd HH:mm:ss.fff | 121 |
+| yyyy-MM-ddTHH:mm:ss.fff (ISO 8601) | 126 |
 | MM/dd/yy hh:mm:ss tt | 22 |
 | yyyy-mm-dd| 23 |
 
@@ -197,4 +217,56 @@ If you have specific parts of your date stored in separte fields, you can levera
 
 :::
 
+## TRY_CONVERT
 
+`CONVERT` stops the whole query when a single value does not fit the target type, such as a birth date typed as `31/02/1990` in a web form. In :product[MCE], it happens during the run, so you do not even get SQL Server's message. Automation Studio says only "Automation failed due to system error", and one bad row out of a million is enough.
+
+`TRY_CONVERT` takes the same arguments, [style code](#convert-date-style-codes) included, but returns `NULL` for a value it cannot convert, so the query keeps running:
+
+```sql {3} title="Birth dates from a web form, with NULL for the invalid ones"
+SELECT
+      SubscriberKey
+    , TRY_CONVERT(DATE, BirthDateText, 103) AS BirthDate
+FROM WebFormLeads
+/* BirthDateText: '31/12/1990', Output: 1990-12-31 */
+/* BirthDateText: '31/02/1990', Output: NULL */
+```
+
+The same function finds the values you need to fix at the source:
+
+```sql {5-6} title="Birth dates that will not convert"
+SELECT
+      SubscriberKey
+    , BirthDateText
+FROM WebFormLeads
+WHERE TRY_CONVERT(DATE, BirthDateText, 103) IS NULL
+    AND BirthDateText IS NOT NULL
+```
+
+`TRY_CAST` does the same for `CAST`.
+
+## Booleans
+
+Boolean fields hold `BIT` values: 1 for true, 0 for false, or `NULL` when empty. SQL Server also converts the text `'True'` and `'False'`, so `WHERE IsVip = 1` and `WHERE IsVip = 'True'` return the same rows.
+
+The trap is the empty value. `WHERE IsVip != 'True'` looks like it returns everyone who is not a VIP, but it skips the customers with an empty field, as any comparison with [`NULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#null-with-relational-operators) is neither true nor false. Treat empty as false with [`ISNULL`](/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.mdx#isnull):
+
+```sql {3} title="Everyone who is not a VIP, empty values included"
+SELECT SubscriberKey
+FROM Customers
+WHERE ISNULL(IsVip, 0) = 0
+```
+
+To write a Boolean field from text, `CONVERT(BIT, ...)` understands `'True'`, `'False'`, `'1'` and `'0'`. Form answers such as `'Yes'` make it fail, as silently as any other conversion, so translate them with [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx):
+
+```sql {3-6} title="Text answers into a Boolean field"
+SELECT
+      SubscriberKey
+    , CASE
+        WHEN NewsletterOptIn IN ('Yes', 'Y', 'True', '1') THEN 1
+        ELSE 0
+      END AS IsOptedIn
+FROM WebFormLeads
+```
+
+`IN` compares text without regard to case in :product[MCE], so `'yes'` matches as well.

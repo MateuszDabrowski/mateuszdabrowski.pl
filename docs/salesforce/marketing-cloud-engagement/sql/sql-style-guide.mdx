@@ -71,7 +71,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ✅ Pascal Case for Column names and custom consistent covention for Table names */
@@ -79,8 +79,8 @@ SELECT
       wel.SubscriberKey
     , wel.EmailAddress
     , o.EventDate AS OpenDate
-FROM WEL_WelcomeCampaignSegment_20201011_OTH AS wel
-    INNER JOIN _Open AS o
+FROM WEL_WelcomeCampaignSegment_20201011_OTH    AS wel
+    INNER JOIN _Open                            AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ Lower Case for Table and Column names */
@@ -111,8 +111,8 @@ SELECT
       [wel].[SubscriberKey]
     , [wel].[EmailAddress]
     , [o].[EventDate] AS [OpenDate]
-FROM [WelcomeCampaignSegment] AS [wel]
-    INNER JOIN [_Open] AS [o]
+FROM [WelcomeCampaignSegment]   AS [wel]
+    INNER JOIN [_Open]          AS [o]
         ON [o].[SubscriberKey] = [wel].[SubscriberKey]
 ```
 
@@ -145,8 +145,8 @@ SELECT
     , s.EventDate       AS SentDate
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -202,6 +202,44 @@ FROM ContenstSubmissions
 
 :::
 
+The same goes for `GROUP BY` and `ORDER BY` with more than one item. A list inside `ROLLUP` or `CUBE` gets one item per line as well, indented inside its parentheses:
+
+```sql
+/* ✅ One grouping item per line, inside ROLLUP too */
+SELECT TOP 20 PERCENT
+      Domain
+    , DATEPART(YEAR, DateJoined) AS YearJoined
+    , COUNT(*) AS SubscriberCount
+FROM _Subscribers
+GROUP BY ROLLUP (
+          Domain
+        , DATEPART(YEAR, DateJoined)
+    )
+ORDER BY COUNT(*) DESC
+
+/* ❌ The whole ROLLUP list in one line */
+SELECT TOP 20 PERCENT
+      Domain
+    , DATEPART(YEAR, DateJoined) AS YearJoined
+    , COUNT(*) AS SubscriberCount
+FROM _Subscribers
+GROUP BY ROLLUP (Domain, DATEPART(YEAR, DateJoined))
+ORDER BY COUNT(*) DESC
+```
+
+There is one exception I make on purpose: rows of sample values. When I build a small table to test a query against, the first `SELECT` names the Columns as usual, and every next row goes in one `UNION ALL SELECT` line. That way, it reads like the table it stands for:
+
+```sql
+/* ✅ Sample rows, one per line */
+SELECT
+      'anna-1042'   AS SubscriberKey
+    , 'ORD-1042'    AS OrderId
+    , 74.98         AS OrderTotal
+UNION ALL SELECT 'anna-1042', 'ORD-1187', 24.99
+UNION ALL SELECT 'ben-2077', 'ORD-1100', 59.00
+UNION ALL SELECT 'chloe-3101', 'ORD-1199', 210.00
+```
+
 ### Left Aligned Keywords
 
 __Align main SQL keywords to the left.__
@@ -246,8 +284,8 @@ SELECT
     , s.EventDate       AS SentDate
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -293,7 +331,7 @@ However, there is another place where spacing is beneficial for readability but 
 
 I try to use it whenever possible, but when there is huge imbalance in length (for example one Column requires multi-function calculation or there is a single complex `WHEN` in [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx)) equal spacing might make the query harder to read. Always decide which approach works best for your query from readability perspective.
 
-When you equalize aliases or `THEN` keywords, put them at the first tab stop after the longest line. With the 4-spaces indent, it is exactly where a single press of the Tab key at the end of that line takes you, so you get the alignment without counting spaces. If you also equalize Table aliases in [`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) and [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx), treat them as a separate group with its own longest line.
+When you equalize aliases or `THEN` keywords, put them at the first tab stop after the longest line. With the 4-spaces indent, it is exactly where a single press of the Tab key at the end of that line takes you, so you get the alignment without counting spaces. Do the same with Table aliases in [`FROM`](/docs/salesforce/marketing-cloud-engagement/sql/sql-from.mdx) and [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx), but treat them as a separate group with its own longest line. The `ON` lines do not count, as they carry no alias.
 
 ```sql
 /* ✅ Spacing around operators plus equalizing aliases and THEN */
@@ -303,8 +341,8 @@ SELECT
     , s.EventDate       AS SentDate
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -328,8 +366,8 @@ SELECT
     , j.DeliveredTime   AS DeliveryDate
     , o.EventDate       AS OpenDate
     , DATEDIFF(HOUR, s.EventDate, o.EventDate) AS TimeToOpen
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -368,6 +406,70 @@ WHERE
         WHEN j.EmailName='OTH_SeedList' THEN 1
         ELSE 0
     END
+```
+
+Comments at the end of the lines follow the same rule, exception included. When two or more lines of the select list carry one, put them all at the first tab stop after the longest of those lines, so they read as one more column. If one of those lines is far longer than the rest, leave its comment one space after it, and align the others:
+
+```sql
+/* ✅ Equalized comments at the end of the lines */
+SELECT
+      ISJSON('{"orderId":"ORD-1042"}')  AS IsCompleteJsonValid  /* Output: 1 */
+    , ISJSON('{"orderId":"ORD-1042"')   AS IsBrokenJsonValid    /* Output: 0 */
+
+/* ❌ Comments one space after each line */
+SELECT
+      ISJSON('{"orderId":"ORD-1042"}')  AS IsCompleteJsonValid /* Output: 1 */
+    , ISJSON('{"orderId":"ORD-1042"')   AS IsBrokenJsonValid /* Output: 0 */
+```
+
+### Blank Lines
+
+__Use blank lines to separate the parts of a query that stand on their own.__
+
+Within a single query, I keep the lines together, as the indentation already shows its structure. A blank line helps in two places only.
+
+The first is around [`UNION`, `UNION ALL`, `INTERSECT` and `EXCEPT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx). Each query they put together keeps its own block, so you can see at a glance where one ends and the next one starts. Rows of sample values are the exception again, as they read better as one table.
+
+```sql
+/* ✅ Blank lines around UNION ALL */
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM JanuaryEventParticipantsSegment
+
+UNION ALL
+
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM FebruaryEventParticipantsSegment
+
+/* ❌ UNION ALL squeezed between the queries */
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM JanuaryEventParticipantsSegment
+UNION ALL
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM FebruaryEventParticipantsSegment
+```
+
+The second is before a comment of several lines that closes the query, like the `Output` block I add under examples. A one-line comment at the end stays right under the query.
+
+```sql
+/* ✅ Blank line before a closing comment block */
+SELECT
+      SubscriberKey
+    , EmailAddress
+FROM Ent._Subscribers
+WHERE Domain = 'example.com'
+
+/* Output:
+SubscriberKey | EmailAddress
+anna-1042     | anna@example.com
+*/
 ```
 
 ### Commas Placement
@@ -442,7 +544,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ Implicit Inner Join and Column from new Table on the right side of the ON condition */
@@ -485,7 +587,7 @@ SELECT
     , wel.EmailAddress
     , o.EventDate AS OpenDate
 FROM WelcomeCampaignSegment AS wel
-    INNER JOIN _Open AS o
+    INNER JOIN _Open        AS o
         ON o.SubscriberKey = wel.SubscriberKey
 
 /* ❌ No aliasing and no prefix in multi Table query */
@@ -544,8 +646,8 @@ SELECT
     , j.DeliveredTime       AS DeliveryDate
     , o.EventDate           AS OpenDate
     , j.SuppressTracking    AS IsTrackingSuppressed
-FROM _Sent AS s
-    LEFT JOIN _Job AS j
+FROM _Sent          AS s
+    LEFT JOIN _Job  AS j
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
@@ -568,6 +670,35 @@ FROM _Sent AS s
 ## Comments
 
 Comments carry the context your query needs, like the reason behind a filter. However, :product[MCE] does not ignore everything inside them, and this can break your query.
+
+### Line Comments
+
+__Use block comments, never line comments.__
+
+A `--` line comment looks harmless, and the syntax check passes it. However, when :product[MCE] saves your query as a Query Activity, which my [SQL Studio](/sql-studio/) also does behind every run, it loses everything that follows the comment. What breaks depends on where the comment sits:
+
+1. In the middle of the query, it takes the rest of the query with it, `FROM` included. The save fails with an error about a Column that has nothing wrong with it, like "Invalid column name 'SubscriberKey'" or "The multi-part identifier "s.SubscriberKey" could not be bound".
+2. Before `SELECT`, it takes the whole query, and the save fails with "Cannot find table 0."
+3. At the very end, the save goes through, but the run fails without any reason given. Pressing Enter after the comment does not help.
+
+In my tests, a comment in the middle of the query failed the same way in Automation Studio and through the API. Block comments, `/* */`, have none of these problems, so I use them everywhere, even for a quick note at the end of a line.
+
+```sql
+/* ✅ Block comment */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* skip internal test addresses */
+
+/* ❌ Line comment in the middle hides the rest of the query */
+SELECT SubscriberKey -- every subscriber but the internal ones
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
+
+/* ❌ Line comment at the end fails the run */
+SELECT SubscriberKey
+FROM Ent._Subscribers
+WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' -- skip internal test addresses
+```
 
 ### Apostrophes in Comments
 
@@ -604,21 +735,23 @@ It is a long article, so let's gather all the recommendations in one place:
 1. Be consistent
 2. Strive for readability
 3. Use comments to provide required context to your query
-4. Leave apostrophes out of comments [🔗](#apostrophes-in-comments)
-5. Use `UPPERCASE` for SQL syntax [🔗](#sql-syntax-case)
-6. Use `PascalCase` for Table & Column names [🔗](#column--table-names-case)
-7. Limit information per line to one [🔗](#single-information-per-line)
-8. Align main SQL keywords to the left [🔗](#left-aligned-keywords)
-9. Use indentation to highlight the relationship between SQL keywords [🔗](#consistent-indentation)
-10. Use spaces wherever it makes the query more readable [🔗](#intentional-spacing)
-11. Use commas at the beginning of the line [🔗](#commas-placement)
-12. Use full Date Parts names [🔗](#date-parts)
-13. Use `INNER JOIN` name over `JOIN` [🔗](#join-and-on)
-14. In `JOIN ON` reference Column from newly joined Table on the left [🔗](#join-and-on)
-15. When using `JOIN`, add meaningful aliases for Tables and prefix all Columns [🔗](#join-and-on)
-16. Always use `AS` keyword between the Table name and the alias [🔗](#join-and-on)
-17. Use `!=` instead of `<>` [🔗](#not-equal-to-symbol)
-18. Use Column names that suggest the data type [🔗](#meaningful-column-names)
+4. Use block comments, never line comments [🔗](#line-comments)
+5. Leave apostrophes out of comments [🔗](#apostrophes-in-comments)
+6. Use `UPPERCASE` for SQL syntax [🔗](#sql-syntax-case)
+7. Use `PascalCase` for Table & Column names [🔗](#column--table-names-case)
+8. Limit information per line to one [🔗](#single-information-per-line)
+9. Align main SQL keywords to the left [🔗](#left-aligned-keywords)
+10. Use indentation to highlight the relationship between SQL keywords [🔗](#consistent-indentation)
+11. Use spaces wherever it makes the query more readable [🔗](#intentional-spacing)
+12. Use blank lines to separate the parts of a query that stand on their own [🔗](#blank-lines)
+13. Use commas at the beginning of the line [🔗](#commas-placement)
+14. Use full Date Parts names [🔗](#date-parts)
+15. Use `INNER JOIN` name over `JOIN` [🔗](#join-and-on)
+16. In `JOIN ON` reference Column from newly joined Table on the left [🔗](#join-and-on)
+17. When using `JOIN`, add meaningful aliases for Tables and prefix all Columns [🔗](#join-and-on)
+18. Always use `AS` keyword between the Table name and the alias [🔗](#join-and-on)
+19. Use `!=` instead of `<>` [🔗](#not-equal-to-symbol)
+20. Use Column names that suggest the data type [🔗](#meaningful-column-names)
 
 If you want to share something I'm missing or have arguments for a different recommendation - [let me know](https://www.linkedin.com/in/mateusz-dabrowski-pl/).
 

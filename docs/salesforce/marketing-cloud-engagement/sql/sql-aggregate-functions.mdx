@@ -293,7 +293,7 @@ It rolls data like [`ROLLUP`](#group-by-rollup), but for all combinations of col
 Let's get the count of our Subscribers in Master Data Extension.
 
 ```sql {1} title="Count all rows in the _Subscribers Data View"
-SELECT COUNT(*)
+SELECT COUNT(*) AS SubscriberCount
 FROM ContactMasterDE
 ```
 
@@ -349,8 +349,8 @@ There are three approaches to using `COUNT` that differ slightly from each other
 
 ```sql {2-4} title="Let's find out whether we have multiple Subscribers with the same Email Address"
 SELECT
-      COUNT(EmailAddress) AS EmailCount
-    , COUNT(DISTINCT EmailAddress) AS UniqueEmailCount
+      COUNT(EmailAddress)           AS EmailCount
+    , COUNT(DISTINCT EmailAddress)  AS UniqueEmailCount
 FROM _Subscribers
 ```
 
@@ -508,7 +508,7 @@ It ignores `NULL` values for the calculation and we can use it in [`SELECT`](/do
 SELECT TOP 3
       ProductCategory
     , COUNT(Orders) AS TotalOrders
-    , SUM(Price) AS TotalIncome
+    , SUM(Price)    AS TotalIncome
 FROM Purchases
 WHERE Status = 'Complete'
 GROUP BY ProductCategory

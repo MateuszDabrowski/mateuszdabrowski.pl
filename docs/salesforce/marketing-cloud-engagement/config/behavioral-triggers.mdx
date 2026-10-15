@@ -201,8 +201,8 @@ If you decide to push an Email Address to communicate with people not yet in :pr
 
 ```sql title="Basic Subscriber data preparation"
 SELECT
-    GUID() AS SubscriberKey, // OR: subscriber_key AS SubscriberKey,
-    subscriber_key AS EmailAddress
+      NEWID()           AS SubscriberKey /* OR: subscriber_key AS SubscriberKey */
+    , subscriber_key    AS EmailAddress
 FROM abandoned_cart_123456789
 ```
 

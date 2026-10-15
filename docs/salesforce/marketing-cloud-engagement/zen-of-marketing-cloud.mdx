@@ -74,7 +74,7 @@ SELECT
     , o.EventDate       AS OpenDate
 FROM WelcomeCampaignSegment AS wel
     INNER JOIN _Open        AS o
-    ON o.SubscriberKey = wel.SubscriberKey
+        ON o.SubscriberKey = wel.SubscriberKey
 
 /* and the Beast */
 Select a.subscriberkey, a.emailaddress, b.eventdate
@@ -196,9 +196,9 @@ Think about KISS and YAGNI whenever you are coding, and it will help you deliver
 SELECT
       SubscriberKey
     , CASE
-        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE()) THEN 1
-        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE()) THEN 0
-    END AS IsNewJoiner
+        WHEN DateJoined >= DATEADD(MONTH, -1, GETDATE())    THEN 1
+        WHEN DateJoined < DATEADD(MONTH, -1, GETDATE())     THEN 0
+      END AS IsNewJoiner
 FROM Ent._Subscribers
 /* When you only need two opposite CASE rules, simple IIF shorthand is better */
 SELECT
