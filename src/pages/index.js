@@ -107,11 +107,11 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
-        date: '2026-10-13',
+        date: '2026-10-16',
         kind: 'App',
-        title: 'SQL Studio 1.3',
+        title: 'SQL Studio 1.4',
         url: '/sql-studio/',
-        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: save results into a Data Extension you already have, several queries in one tab, and SF MCE SQL, a Claude skill with the same lint, fixes and Format.',
+        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: open any query in Diagramforce as a data model or a field lineage, lint shaped by over 100 tests on a real account, and saves that stop on lint errors.',
     },
     {
         date: '2026-10-12',
