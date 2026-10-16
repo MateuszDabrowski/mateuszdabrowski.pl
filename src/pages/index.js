@@ -109,6 +109,13 @@ const whatsNew = [
     {
         date: '2026-10-16',
         kind: 'App',
+        title: 'Diagramforce 1.26',
+        url: 'https://diagramforce.com',
+        description: 'Free Salesforce diagramming in your browser, plus a Claude skill that turns your org\'s metadata into editable diagrams. New: field lineage for any data pipeline, data models that put a query\'s main table in the middle with a line and a colour for each join field, and connectors that share one trunk and split near their targets.',
+    },
+    {
+        date: '2026-10-16',
+        kind: 'App',
         title: 'SQL Studio 1.4',
         url: '/sql-studio/',
         description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: open any query in Diagramforce as a data model or a field lineage, lint shaped by over 100 tests on a real account, and saves that stop on lint errors.',
@@ -126,13 +133,6 @@ const whatsNew = [
         title: 'MCE SQL JSON Functions',
         url: '/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/',
         description: 'Salesforce\'s SQL Reference never mentions JSON, yet MCE SQL reads, changes and builds it - and one broken payload can stop the whole query.',
-    },
-    {
-        date: '2026-10-10',
-        kind: 'App',
-        title: 'Diagramforce 1.25',
-        url: 'https://diagramforce.com',
-        description: 'Free Salesforce diagramming in your browser, plus a Claude skill that turns your org\'s metadata into editable diagrams. New: the Winter \'27 Flow elements and Groups, PNG and SVG images straight from the Claude skill for your documentation, and your role hierarchy as an Org Chart.',
     },
     {
         date: '2026-09-25',
