@@ -6,9 +6,11 @@
  *   npm run redirects-csv                  write cloudflare-redirects.csv
  *   npm run redirects-csv -- --check       ask the live site for every old URL
  *
- * Import: Cloudflare dashboard > Manage Account > Configurations > Lists, a
- * list of type Redirect, then Import CSV. A Bulk Redirect Rule turns the list
- * on. After changing the redirects in the config, run this again and re-import.
+ * Import: Cloudflare dashboard > Bulk Redirects (account level), open the list
+ * under Bulk Redirect Lists and drop the CSV on it. Existing items are updated
+ * and new ones added, so never empty the list first. A Bulk Redirect Rule turns
+ * the list on. After changing the redirects in the config, run this again and
+ * re-import.
  * The meta refresh pages stay in the build as a fallback.
  *
  * Rules:
