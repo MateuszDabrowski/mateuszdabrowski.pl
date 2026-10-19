@@ -277,6 +277,8 @@ ORDER BY Domain
 
 In the above case, you will get a separate row for each Subscriber Key - Domain pair. It means that you might receive multiple rows with the same Subscriber Key (but each with a different Domain). And you will undoubtedly see numerous rows with the same domain (but each with a different Subscriber key).
 
+The same happens after a [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), which usually adds a column that differs on every row, like the date of each open. Need one row per Subscriber Key, with the other columns taken from a row you choose, such as the latest one? `DISTINCT` cannot do that, but [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) can.
+
 ### DISTINCT with TOP
 
 You can use both `DISTINCT` and `TOP` in the same query.

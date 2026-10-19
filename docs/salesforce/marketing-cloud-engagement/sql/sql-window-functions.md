@@ -157,7 +157,7 @@ Search for that error, and you will find a trick with two [`DENSE_RANK`](https:/
 
 **`ROW_NUMBER` numbers the rows of each window, which makes it the tool for keeping one row per subscriber.**
 
-Sendable Data Extensions need one row per subscriber, while order data has one row per order, so Anna comes with three rows. Say you want to ask for a review of the latest order only. Number the orders of each subscriber from the newest one, then keep number 1:
+Sendable Data Extensions need one row per subscriber, while order data has one row per order, so Anna comes with three rows. [`DISTINCT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#distinct) does not help here, as it removes only rows that match in every column, and her orders differ in all but the key. Say you want to ask for a review of the latest order only. Number the orders of each subscriber from the newest one, then keep number 1:
 
 ```sql {10-13,16} title="Keep the latest order of each subscriber"
 SELECT
