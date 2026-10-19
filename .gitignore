@@ -9,7 +9,7 @@ package-lock.json
 .docusaurus
 .cache-loader
 .claude
-cloudflare-redirects.csv
+cloudflare-redirects*.csv
 algolia-synonyms.json
 
 # Private
