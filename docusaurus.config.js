@@ -701,7 +701,7 @@ module.exports = {
                         to: '/docs/category/salesforce/marketing-cloud-engagement/ssjs/',
                     },
                     {
-                        from: ['/docs/category/-ssjs-snippets/'],
+                        from: ['/docs/category/-ssjs-snippets/', '/docs/category/ssjs-snippets/'],
                         to: '/docs/category/salesforce/marketing-cloud-engagement/ssjs/snippets/',
                     },
                     {
@@ -777,9 +777,15 @@ module.exports = {
                         to: 'https://diagramforce.com/',
                     },
                     {
-                        from: ['/sites/tools/salesforce/clockforce/', '/sites/apps/salesforce/clockforce/'],
+                        from: ['/sites/tools/salesforce/clockforce/', '/sites/apps/salesforce/clockforce/', '/sites/tools/salesforce/mce-world-clock/'],
                         to:'https://clockforce.mateuszdabrowski.pl/',
                     },
+                    {
+                        from: ['/sites/category/apps/', '/sites/category/tools/', '/sites/tags/tools/'],
+                        to: '/apps/',
+                    },
+                    /* Redirects to static files, such as /strum/llm-spec.md, live in plugins/cloudflare-redirects.mjs:
+                       this plugin adds a trailing slash to every target, which breaks a link to a file. */
                     /* Tag cleanup (September 2026): merged tags point to the tag they joined,
                        blanket tags to their category, one-article tags to that article. */
                     {
@@ -837,6 +843,10 @@ module.exports = {
                     {
                         from: ['/sites/tags/best-practice/'],
                         to: '/docs/tags/best-practice/',
+                    },
+                    {
+                        from: ['/sites/tags/ssjs/'],
+                        to: '/docs/tags/ssjs/',
                     },
                     {
                         from: ['/sites/tags/email/'],

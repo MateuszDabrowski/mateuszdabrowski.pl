@@ -63,10 +63,24 @@ function finalTarget(source) {
     return `${config.url}${to}`;
 }
 
+// Redirects to static files, which the client redirects plugin cannot write: it
+// adds a trailing slash to every target. Cloudflare is their only redirect, as
+// GitHub Pages serves no meta refresh page for them. Each source is listed as
+// written, because the slashless form of a .md/ path is the file itself.
+const fileRedirects = {
+    '/strum/llm-spec/': '/strum/llm-spec.md',
+    '/strum/llm-spec': '/strum/llm-spec.md',
+    '/strum/llm-spec.md/': '/strum/llm-spec.md',
+};
+
 const rows = [];
 for (const source of [...targets.keys()].sort()) {
     const target = finalTarget(source);
     for (const variant of [source, source.replace(/\/$/, '')]) rows.push({ source: `${host}${variant}`, target });
+}
+for (const [source, to] of Object.entries(fileRedirects)) {
+    if (fs.existsSync(path.join(siteDir, 'build')) && !fs.existsSync(path.join(siteDir, 'build', to))) problems.push(`missing file: ${source} > ${to}`);
+    rows.push({ source: `${host}${source}`, target: `${config.url}${to}` });
 }
 
 if (problems.length) {
@@ -89,5 +103,5 @@ if (check) {
     // Columns: source, target, status, preserve query string, include subdomains,
     // subpath matching, preserve path suffix. Cloudflare rejects a header row.
     fs.writeFileSync(outFile, rows.map(({ source, target }) => `${source},${target},301,TRUE,FALSE,FALSE,FALSE`).join('\n') + '\n');
-    console.log(`${rows.length} redirects (${targets.size} old paths, with and without the slash) written to ${path.relative(siteDir, outFile)}`);
+    console.log(`${rows.length} redirects (${targets.size} old paths, with and without the slash, and ${Object.keys(fileRedirects).length} to files) written to ${path.relative(siteDir, outFile)}`);
 }
