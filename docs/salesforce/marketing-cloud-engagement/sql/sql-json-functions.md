@@ -4,14 +4,14 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 JSON ends up in Data Extensions more often than you would think: API payloads, CloudPages form submissions, product feeds or recommendations pushed from other systems. Most of us reach for SSJS or AMPscript to read it. However, the SQL behind MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) Query Activities understands JSON as well, so you can pull a single value, grab a whole object, change the JSON or even build it without leaving your query.
 
 > **Note: You Should Know**
 >
-> SQL Server usually expects Unicode text with an `N` prefix (`N'Łódź'`). Not in MCE, which adds the `N` to every text value itself. Add your own, and the doubled `NN'Łódź'` fails the syntax check with an "Incorrect syntax" error. Worry not - as [Salesforce's SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm\&type=5) says, you do not need the prefix. Plain strings keep Unicode characters, and `JSON_VALUE('{"city":"Łódź"}', '$.city')` returns `Łódź` intact. The same `N` is also why [apostrophes in comments](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments) can break your query.
+> SQL Server usually expects Unicode text with an `N` prefix (`N'Łódź'`). Not in MCE, which adds the `N` to every text value itself. Add your own, and the doubled `NN'Łódź'` fails the syntax check with an ["Incorrect syntax"](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#incorrect-syntax-near) error. Worry not - as [Salesforce's SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm\&type=5) says, you do not need the prefix. Plain strings keep Unicode characters, and `JSON_VALUE('{"city":"Łódź"}', '$.city')` returns `Łódź` intact. The same `N` is also why [apostrophes in comments](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments) can break your query.
 
 ## ISJSON
 
@@ -72,7 +72,7 @@ SELECT
 >
 > The 4000-character limit comes from the `JSON_VALUE` function itself, which always returns `nvarchar(4000)`. Microsoft offers two ways around the limit, [`OPENJSON`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/#openjson) and SQL Server 2025's `RETURNING nvarchar(max)`, but both fail in MCE.
 
-If a missing path should raise an error, add `strict` in front of the path. With constant JSON, MCE reports the problem already during the syntax check:
+If a missing path should raise an error, add `strict` in front of the path. With constant JSON, MCE reports the problem already during the [syntax check](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#json-text-is-not-properly-formatted):
 
 ```sql title="❌ Strict mode fails on a missing path"
 SELECT JSON_VALUE('{"orderId":"ORD-1042"}', 'strict $.couponCode') AS StrictCouponCode /* Error: Property cannot be found on the specified JSON path. */
@@ -82,7 +82,7 @@ In most Marketing Automation cases, I would stay with the default lax mode and c
 
 > **Note: You Should Know**
 >
-> Broken JSON can still return values. `JSON_VALUE` reads only as far as it needs to find your path, so when a payload arrives cut off, for example by a system that limits its length, the keys before the cut still come back. Ask for a key after the cut, or one that is not there at all, and you get "JSON text is not properly formatted" in place of `NULL`. With JSON from a Data Extension, that error stops the whole query when it runs, and the Action Log in Automation Studio says only "Automation failed due to system error."
+> Broken JSON can still return values. `JSON_VALUE` reads only as far as it needs to find your path, so when a payload arrives cut off, for example by a system that limits its length, the keys before the cut still come back. Ask for a key after the cut, or one that is not there at all, and you get "JSON text is not properly formatted" in place of `NULL`. With JSON from a Data Extension, that error stops the whole query when it runs, and the Action Log in Automation Studio says only ["Automation failed due to system error."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error)
 >
 > **Read values only from records where `ISJSON` returns `1`:**
 >
@@ -135,7 +135,7 @@ SELECT
 
 ## OPENJSON
 
-In SQL Server, `OPENJSON` turns a JSON array into rows, which is exactly what you want for order lines or a list of recommended products. Unfortunately, MCE does not let you use it. Its syntax check takes `OPENJSON` for a Data Extension name, so it fails before the query even runs, with and without a `WITH` schema. Notice the `N` in the error, which MCE added to the text on its own:
+In SQL Server, `OPENJSON` turns a JSON array into rows, which is exactly what you want for order lines or a list of recommended products. Unfortunately, MCE does not let you use it. Its syntax check takes `OPENJSON` for a [Data Extension name](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#not-a-known-data-extension-or-system-data-view), so it fails before the query even runs, with and without a `WITH` schema. Notice the `N` in the error, which MCE added to the text on its own:
 
 ```sql {6} title="❌ OPENJSON fails the syntax check"
 SELECT
@@ -251,7 +251,7 @@ anna-1042     | [{"sku":"UKU-01","name":"Ukulele"},{"sku":"TOUR-LDZ","name":"Ł�
 
 > **Note: You Should Know**
 >
-> Why the subquery? It looks like MCE runs your query inside a table named `Qry`, where every column needs a name. `FOR JSON` on the main `SELECT` returns a single column without one, so the syntax check stops it:
+> Why the subquery? It looks like MCE runs your query inside a table named `Qry`, where [every column needs a name](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#no-column-name-was-specified). `FOR JSON` on the main `SELECT` returns a single column without one, so the syntax check stops it:
 >
 > ```sql {5} title="❌ FOR JSON on the main SELECT fails the syntax check"
 > SELECT TOP 1

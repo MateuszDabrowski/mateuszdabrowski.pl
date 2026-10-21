@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Queries in MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) have no variables, no loops and no temporary tables. So whenever a row needs to know something about its neighbours - is this the latest order of the subscriber, how many days passed since the previous one, how much did they spend in total - the classic answer is a chain of Query Activities with a staging Data Extension or two in between. Window functions answer it in a single query. They look at a group of related rows, called the window, calculate a value for each row and, unlike [`GROUP BY`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#group-by), keep every row in the output.
@@ -109,16 +109,16 @@ SELECT
       OrderId
     , COUNT(*) OVER subscriberOrders AS OrdersPerSubscriber
 FROM Orders
-WINDOW subscriberOrders AS (PARTITION BY SubscriberKey) /* Error: Incorrect syntax near 'WINDOW'. */
+WINDOW subscriberOrders AS (PARTITION BY SubscriberKey) /* Error: Incorrect syntax near 'subscriberOrders'. */
 ```
 
-Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. The engine is not to blame. MCE runs SQL Server 2022 at compatibility level 160, which is the level `WINDOW` [needs](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), and other 2022 additions, such as [`IGNORE NULLS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ignore-nulls), work fine. It looks like the clause clashes with the way MCE wraps every query before it runs it, the same wrapper that [refuses `ORDER BY` without `TOP`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#order-by-without-top). So whenever several columns share a window, write it out in each `OVER`.
+The error names the window, not `WINDOW`, as SQL Server first reads `WINDOW` as an [alias of `Orders`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#incorrect-syntax-near). Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. The engine is not to blame. MCE runs SQL Server 2022 at compatibility level 160, which is the level `WINDOW` [needs](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), and other 2022 additions, such as [`IGNORE NULLS`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#ignore-nulls), work fine. It looks like the clause clashes with the way MCE wraps every query before it runs it, the same wrapper that [refuses `ORDER BY` without `TOP`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/#order-by-without-top). So whenever several columns share a window, write it out in each `OVER`.
 
 ### Count Distinct Values per Window
 
 **`COUNT(DISTINCT ...)` does not work with `OVER`, so count in a subquery and join the counts back.**
 
-A cross-sell campaign might target subscribers who bought from a single category and show them their past orders. That needs every order, with the number of categories of its subscriber next to it. `COUNT(DISTINCT Category) OVER (PARTITION BY SubscriberKey)` looks like the answer, but SQL Server stops it with "Use of DISTINCT is not allowed with the OVER clause." So for distinct values, you are back to the `GROUP BY` and the join that `OVER` saves you elsewhere. Count the categories of each subscriber in a subquery, and join the counts to the orders:
+A cross-sell campaign might target subscribers who bought from a single category and show them their past orders. That needs every order, with the number of categories of its subscriber next to it. `COUNT(DISTINCT Category) OVER (PARTITION BY SubscriberKey)` looks like the answer, but SQL Server stops it with ["Use of DISTINCT is not allowed with the OVER clause."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#window-function-errors) So for distinct values, you are back to the `GROUP BY` and the join that `OVER` saves you elsewhere. Count the categories of each subscriber in a subquery, and join the counts to the orders:
 
 ```sql {7-14} title="Every order with the number of categories its subscriber bought from"
 SELECT
@@ -189,7 +189,7 @@ chloe-3101    | ORD-1199 | 2026-04-18
 
 > **Note: You Should Know**
 >
-> Why the subquery? Window functions run after `WHERE`, so `WHERE ROW_NUMBER() OVER (...) = 1` cannot work and fails with "Windowed functions can only appear in the SELECT or ORDER BY clauses." In SQL Server, you would usually name such a step with `WITH` (a common table expression). MCE does not accept that either, as its syntax check wants `SELECT` as the first word of every query ("Only SELECT queries are valid. Select must be the first word of the query."). So a subquery in `FROM` is the way to filter on a window function. If you write your queries in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), it catches the `WITH` before MCE does and offers to rewrite it into a subquery for you.
+> Why the subquery? Window functions run after `WHERE`, so `WHERE ROW_NUMBER() OVER (...) = 1` cannot work and fails with ["Windowed functions can only appear in the SELECT or ORDER BY clauses."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#window-function-errors) In SQL Server, you would usually name such a step with `WITH` (a common table expression). MCE does not accept that either, as its syntax check wants `SELECT` as the first word of every query ("Only SELECT queries are valid. Select must be the first word of the query."). So a subquery in `FROM` is the way to filter on a window function. If you write your queries in [SQL Studio](https://mateuszdabrowski.pl/sql-studio/), it catches the `WITH` before MCE does and offers to rewrite it into a subquery for you.
 
 ### Ties in ROW_NUMBER
 

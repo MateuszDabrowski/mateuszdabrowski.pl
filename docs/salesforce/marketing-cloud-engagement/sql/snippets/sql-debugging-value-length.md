@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Problem with recommended Data Extension total field length
@@ -25,7 +25,7 @@ Once you build your standard Data Extension with those optimisations in mind, it
 >
 > I'm mentioning the Marketing Cloud Connect Synchronized Data Extensions, but you can also leverage it for FTP-based data uploads. The solution will require additional intermediate Data Extension with generous field lengths in place of Marketing Cloud Connect Synchronized Data Extension. Rest will be the same.
 
-All good, until one of the values, exceed the maximum length you set for its field. The Automation crashes with a cryptic error that tells you nothing and can push you for a long crusade to find the culprit. What now?
+All good, until one of the values exceeds the maximum length you set for its field. The Automation fails, and only the Action Log of its Query Activity names the field, with ["String or binary data would be truncated"](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#string-or-binary-data-would-be-truncated). Miss it, and you can go on a long crusade to find the culprit. What now?
 
 ## Short Term Solution
 

@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -36,9 +36,9 @@ WHERE
     )
 ```
 
-However, my favourite use case for `MAX` is debugging Data Extensions and their values. Especially useful when working with data imports from external systems — for example, pulling data from Sales Cloud via Marketing Cloud Connect.
+However, my favourite use case for `MAX` is debugging Data Extensions and their values. Especially useful when working with data imports from external systems, for example, pulling data from Sales Cloud via Marketing Cloud Connect.
 
-You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to standard Data Extensions crashes with cryptic information about truncated data. In most cases, the reason is a value exceeding the maximum length you set for the column in your local Data Extension.
+You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to standard Data Extensions fail, and the Action Log reports ["String or binary data would be truncated"](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#string-or-binary-data-would-be-truncated). In most cases, the reason is a value exceeding the maximum length you set for the column in your local Data Extension.
 
 How to find the culprit? With `MAX` and [`LEN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#len) functions:
 

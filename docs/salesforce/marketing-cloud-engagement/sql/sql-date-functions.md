@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -255,7 +255,7 @@ Depending on the use case, it might be good or bad, so be sure to select the cor
 
 > **Note: You Should Know**
 >
-> There is a limit to how big the difference can be. If you go down to the `SECOND` [date part](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#date-parts), the query's maximum time difference is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. It shouldn't be an issue in MCE for most use cases.
+> There is a limit to how big the difference can be. If you go down to the `SECOND` [date part](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#date-parts), the query's maximum time difference is 68 years, 19 days, 3 hours, 14 minutes and 7 seconds. It shouldn't be an issue in MCE for most use cases. When it is, the run fails [without a reason](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error), so switch to `DATEDIFF_BIG`, which takes the same arguments and returns a `BIGINT`.
 
 If the date field is nullable, be sure to use [`COALESCE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/#coalesce) or add a [`NULL` checking condition](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions/#null).
 
@@ -522,7 +522,7 @@ FROM AppEvents
 /* CreatedAt: 1791936000, Output: 2026-10-14 00:00:00.000 */
 ```
 
-JavaScript and many APIs count milliseconds instead, which gives a 13-digit number. It is too big for `DATEADD`, which takes only an `INT`, and MCE does not tell you so. The query passes the syntax check, then fails during the run, and Automation Studio says only "Automation failed due to system error". The value is also too big for a Number field, so store such timestamps in a Text or Decimal field. Convert the value to `BIGINT`, and split it into the seconds and the remaining milliseconds:
+JavaScript and many APIs count milliseconds instead, which gives a 13-digit number. It is too big for `DATEADD`, which takes only an `INT`, and MCE does not tell you so. The query passes the syntax check, then fails during the run, and Automation Studio says only ["Automation failed due to system error."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error) The value is also too big for a Number field, so store such timestamps in a Text or Decimal field. Convert the value to `BIGINT`, and split it into the seconds and the remaining milliseconds:
 
 ```sql {3-7} title="Unix timestamps in milliseconds as dates"
 SELECT

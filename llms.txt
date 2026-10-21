@@ -38,6 +38,7 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 - [MCE SQL NULL Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-null-functions.md): IS NULL, or IS NOT NULL, that is the question. Ways of working with NULL values in Marketing Cloud Engagement (MCE) SQL.
 - [MCE SQL JSON Functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.md): Read, change and use JSON stored in Data Extensions with Salesforce Marketing Cloud Engagement SQL.
 - [MCE SQL Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.md): Query with style. Readable, bug-free code is a few shifts & spaces away.
+- [MCE SQL Errors](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.md): Only SELECT queries are valid. What each Marketing Cloud Engagement SQL error means, and how to fix the query behind it.
 
 ## Salesforce > Marketing Cloud Engagement > SQL > Snippets
 

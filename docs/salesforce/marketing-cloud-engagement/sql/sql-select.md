@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Selected information on the SELECT statement in Marketing Cloud Engagement SQL
@@ -237,7 +237,7 @@ Your query has no derived table, so why the complaint? Because MCE wraps every q
 
 You do not lose anything by it. A Data Extension does not promise any order of its rows, so a sorted result would land there in no particular order anyway. Sort when you read the data instead, for example with AMPscript's `LookupOrderedRows` in an email, and keep `ORDER BY` in your queries for picking rows with `TOP`.
 
-Coming from MySQL or PostgreSQL? There, `LIMIT 10` at the end of the query picks the rows. SQL Server does not know it and stops the query with "Incorrect syntax near 'LIMIT'." Use `TOP 10` after `SELECT` instead.
+Coming from MySQL or PostgreSQL? There, `LIMIT 10` at the end of the query picks the rows. SQL Server does not know it and stops the query with ["Incorrect syntax near 'LIMIT'."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#incorrect-syntax-near), or near the number when `LIMIT` comes right after the table name, which SQL Server then reads as an alias. Use `TOP 10` after `SELECT` instead.
 
 You may also see `OFFSET 0 ROWS` after the `ORDER BY` suggested as a fix, as the error message itself lists `OFFSET`. It runs, and in my test, the rows even came back in that order. However, the Data Extension does not promise it, so the next run or a bigger table can return them in any order. `OFFSET` has a better use. Together with `FETCH`, it skips rows before it takes them, which `TOP` cannot do. Consolation prizes for places 4 to 10 of your quiz?
 

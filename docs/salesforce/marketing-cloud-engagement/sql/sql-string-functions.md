@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL implementation does not support user-defined functions. There are, however, multiple built-in functions that are useful on a day-to-day basis when working with queries.
@@ -198,11 +198,11 @@ chloe-3101    | Travel
 
 `STRING_AGG` works like the [aggregate functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/), so it needs `GROUP BY`. `WITHIN GROUP` sets the order of the values, as without it, the order can change between runs. There is no `DISTINCT` inside `STRING_AGG`, so the subquery removes the repeated categories first. Without it, Ben would get Books three times.
 
-Two limits apply. On a `VARCHAR` field, such as `Status` of `_Subscribers`, `STRING_AGG` fails with "Argument data type nvarchar is invalid for argument 2 of string_agg function.", as MCE [adds an `N`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments) to every text value in your query, the separator included. And on a Text field, the result stops at 4,000 characters, so a longer list fails the run. Convert the field to `NVARCHAR(MAX)` first, as in `STRING_AGG(CONVERT(NVARCHAR(MAX), Status), ', ')`, and neither limit applies.
+Two limits apply. On a `VARCHAR` field, such as `Status` of `_Subscribers`, `STRING_AGG` fails with ["Argument data type nvarchar is invalid for argument 2 of string_agg function."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#string_agg-argument-data-type), as MCE [adds an `N`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#apostrophes-in-comments) to every text value in your query, the separator included. And on a Text field, the result stops at 4,000 characters, so a longer list [fails the run](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error). Convert the field to `NVARCHAR(MAX)` first, as in `STRING_AGG(CONVERT(NVARCHAR(MAX), Status), ', ')`, and neither limit applies.
 
 ## STRING_SPLIT
 
-Web forms often save the answers of a checkbox list as one value, such as `music,travel,books`. In SQL Server, `STRING_SPLIT` turns such a value into rows. In MCE, it fails just like [`OPENJSON`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/#openjson), as the syntax check takes it for a Data Extension name:
+Web forms often save the answers of a checkbox list as one value, such as `music,travel,books`. In SQL Server, `STRING_SPLIT` turns such a value into rows. In MCE, it fails just like [`OPENJSON`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/#openjson), as the syntax check takes it for a [Data Extension name](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#not-a-known-data-extension-or-system-data-view):
 
 ```sql {5} title="❌ STRING_SPLIT fails the syntax check"
 SELECT
@@ -256,7 +256,7 @@ SELECT
     , TRIM('   data from webform ')     AS CleanBothSides   /* Output: 'data from webform' */
 ```
 
-Since SQL Server 2022, `LTRIM` and `RTRIM` also take the characters to remove as a second argument, which helps with zero-padded IDs from other systems: `LTRIM('007', '0')` returns `7`. `TRIM` has its own syntax for the same job, `TRIM(LEADING '0' FROM '007')`, but MCE refuses it, as its syntax check reads that `FROM` as the start of a table list: "N'007' is not a known data extension or system data view."
+Since SQL Server 2022, `LTRIM` and `RTRIM` also take the characters to remove as a second argument, which helps with zero-padded IDs from other systems: `LTRIM('007', '0')` returns `7`. `TRIM` has its own syntax for the same job, `TRIM(LEADING '0' FROM '007')`, but MCE refuses it, as its syntax check reads that `FROM` as the start of a table list: ["N'007' is not a known data extension or system data view."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#not-a-known-data-extension-or-system-data-view)
 
 ## NEWID
 

@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -99,7 +99,7 @@ FROM WELCOMECAMPAIGNSEGMENT AS WEL
 
 > **Note: You Should Know**
 >
-> If you want to make your Style Guide even safer, you can decide on writing all Columns and Table names in square brackets. As MCE is not checking whether you use SQL's reserved keywords, this approach will protect you from potential silent issue. The cost, however, is much more characters and less readable queries.
+> If you want to make your Style Guide even safer, you can decide on writing all Columns and Table names in square brackets. Some of SQL's reserved keywords fail as plain names, such as `AS Key`, which stops the query with ["Incorrect syntax near the keyword 'Key'."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#incorrect-syntax-near). Square brackets protect you from that. The cost, however, is much more characters and less readable queries.
 >
 > ```sql title="You need to decide how hard you want to leverage the square brackets"
 > SELECT
@@ -666,11 +666,11 @@ Comments carry the context your query needs, like the reason behind a filter. Ho
 
 **Use block comments, never line comments.**
 
-A `--` line comment looks harmless, and the syntax check passes it. However, when MCE saves your query as a Query Activity, which my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) also does behind every run, it loses everything that follows the comment. What breaks depends on where the comment sits:
+A `--` line comment looks harmless, and the syntax check passes it. However, when MCE saves your query as a Query Activity, which my [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) also does behind every run, the comment no longer ends with its line. Everything after it is commented out, down to the end of the query. What breaks depends on where the comment sits:
 
-1. In the middle of the query, it takes the rest of the query with it, `FROM` included. The save fails with an error about a Column that has nothing wrong with it, like "Invalid column name 'SubscriberKey'" or "The multi-part identifier "s.SubscriberKey" could not be bound".
-2. Before `SELECT`, it takes the whole query, and the save fails with "Cannot find table 0."
-3. At the very end, the save goes through, but the run fails without any reason given. Pressing Enter after the comment does not help.
+1. In the middle of the query, it comments out the rest of the query, `FROM` included. The save fails with [an error about a Column](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#errors-from-line-comments) that has nothing wrong with it, like "Invalid column name 'SubscriberKey'" or "The multi-part identifier "s.SubscriberKey" could not be bound".
+2. Before `SELECT`, it comments out the whole query, and the save fails with "Cannot find table 0."
+3. At the very end, the save goes through, but the run fails [without any reason given](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error). Pressing Enter after the comment does not help.
 
 In my tests, a comment in the middle of the query failed the same way in Automation Studio and through the API. Block comments, `/* */`, have none of these problems, so I use them everywhere, even for a quick note at the end of a line.
 
@@ -680,7 +680,7 @@ SELECT SubscriberKey
 FROM Ent._Subscribers
 WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' /* skip internal test addresses */
 
-/* ❌ Line comment in the middle hides the rest of the query */
+/* ❌ Line comment in the middle comments out the rest of the query at the save */
 SELECT SubscriberKey -- every subscriber but the internal ones
 FROM Ent._Subscribers
 WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl'
@@ -697,7 +697,7 @@ WHERE EmailAddress NOT LIKE '%@mateuszdabrowski.pl' -- skip internal test addres
 
 MCE adds the `N` prefix to every text value in your query on its own. To find those values, it looks for apostrophes, and it does not skip comments. That leaves you with two traps:
 
-1. A single apostrophe in a comment, like the one in `don't`, leaves an apostrophe without a pair. The syntax check passes, but saving the query fails with an error that points you somewhere else entirely: "Error while processing square brackets". It happens in `--` line comments as well.
+1. A single apostrophe in a comment, like the one in `don't`, leaves an apostrophe without a pair. The syntax check passes, but saving the query fails with an error that points you somewhere else entirely: ["Error while processing square brackets"](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#error-while-processing-square-brackets). It happens in `--` line comments as well.
 2. Apostrophes in two different comments pair up with each other across your query, so it saves and runs. However, the `N` then lands inside your text values. In my test, a query with `/* it's a test */` both above and below `SELECT TOP 1 'a' AS A` returned `aN` instead of `a`.
 
 A pair inside a single comment, like `/* Output: 'MATEUSZ' */` in my examples, is safe, as it closes before the comment ends. Still, a comment with no apostrophes is the only kind you do not have to think about.

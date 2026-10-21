@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 There are cases where all you need is to pull (and maybe transform) data [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) a single Data Extension. But the real magic of SQL is visible when you need to combine information from multiple data points. Here comes the `JOIN` statement.
@@ -218,7 +218,7 @@ FROM WelcomeCampaignSegment AS wel
 
 All you need to do is write your alias after a data source name. For readability purposes, I recommend using the `AS` keyword between. Now you can leverage the shortened name to prefix the selected columns. It's instrumental when pulling data from multiple Data Extensions.
 
-Using table name prefixes is not always required (for example, when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and error-deferring purposes.
+Using table name prefixes is not always required (for example, when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and to avoid [ambiguous column errors](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#ambiguous-column-name).
 
 ## Multiple Joins
 
@@ -353,7 +353,7 @@ To simplify the difference between `JOIN` and `UNION`:
 > FROM FebruaryEventParticipantsSegment AS feb
 > ```
 >
-> Keep in mind that you will see the duplicates only if the target Data Extension doesn't have Primary Key defined on the duplicated value. Otherwise, the duplicates will be removed during the insert due to Subscriber Key uniqueness violation.
+> Keep in mind that you will see the duplicates only if the target Data Extension doesn't have Primary Key defined on the duplicated value. Otherwise, the data action decides. Overwrite keeps one of the rows for each key, while Append fails the whole run with a [duplicate key error](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#violation-of-primary-key-constraint). Update keeps one row for a key the target already holds and fails on a new one.
 
 The obvious use case for `UNION` is gathering subscribers from multiple Data Extensions to build a master segment.
 

@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/appexchange-solutions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 AgentExchange (formerly AppExchange) is an app store for various Clouds within Salesforce Customer 360 platform. You will find in-house solutions from Salesforce Labs and 3rd party. Free and paid. Good and bad. But all - validated by [Salesforce Security Review](https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_guidelines.htm).
@@ -183,7 +183,7 @@ When you click Run, it lists the fields it will create in the target Data Extens
 
 Like every Salesforce Labs app, it comes with no official or guaranteed support from Salesforce, only the community boards. It also runs on its own server, a Heroku app between your browser and MCE, so your queries and their results pass through it. It keeps neither in a database of its own, as [Nobuyuki Watanabe's review](https://medium.com/@marketingcloudtips/query-studio-2-arrives-in-marketing-cloud-engagement-751313246455) notes. And if your account restricts logins by IP, you first have to add the four IP addresses from its Specs tab to the login allowlist.
 
-Its own parser brings back the main weakness of the original Query Studio in a milder form: it refuses some valid SQL. The most common case is a comment. A `--` comment gets "Please use /\* comments \*/ rather than --comments.", which is right, as a Query Activity [loses everything after a line comment](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#line-comments) when it saves your query. Follow the advice, and the `/* ... */` comment then gets "'SELECT \*' statements are not allowed.", while a Query Activity runs it fine.
+Its own parser brings back the main weakness of the original Query Studio in a milder form: it refuses some valid SQL. The most common case is a comment. A `--` comment gets "Please use /\* comments \*/ rather than --comments.", which is right, as saving a Query Activity [comments out everything after a line comment](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#line-comments), down to the end of the query. Follow the advice, and the `/* ... */` comment then gets "'SELECT \*' statements are not allowed.", while a Query Activity runs it fine.
 
 The other way round, Run does not stop at everything Check Query flags. When its Query Builder added a field of a second table without joining that table, Check Query flagged the unknown alias, but Run sent the query to MCE anyway, which refused it with "The multi-part identifier could not be bound". It is a young app, at version 2.2 within days of its release, so expect such gaps to close quickly.
 

@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Tell the SQL query FROM where you need the data
@@ -75,7 +75,7 @@ SELECT
 FROM Ent.Contact_Salesforce
 ```
 
-Remember that account permissions restrictions may apply.
+Remember that account permissions restrictions may apply. In the parent Business Unit itself, the prefix has nothing to reach, and the syntax check stops it with ["The 'Ent.' prefix can only be used to query data in a parent account from a child account."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#ent-prefix-only-from-a-child-account)
 
 > **Note: You Should Know**
 >
@@ -88,7 +88,7 @@ Remember that account permissions restrictions may apply.
 > FROM 5123456.DataExtensionOnChildBU
 > ```
 >
-> Since 2020, trying to do so will result in an error: `An error occurred while checking the query syntax. Errors: The 123456.DataExtensionOnChildBU table has a multi-part specification. This is not allowed.` The workaround is to use Shared Data Extensions.
+> Since 2020, trying to do so will result in [an error](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#table-has-a-multi-part-specification): `An error occurred while checking the query syntax. Errors: The 123456.DataExtensionOnChildBU table has a multi-part specification. This is not allowed.` The workaround is to use Shared Data Extensions.
 >
 > MCE legend says that there are still some instances that support this legacy type of querying. You might try it, but even if you are the lucky one, I would recommend using the Shared Data Extensions to worry not about unexpected Automation errors in the future.
 

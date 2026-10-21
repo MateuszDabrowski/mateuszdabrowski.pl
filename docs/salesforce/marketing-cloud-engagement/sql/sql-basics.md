@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-10-21  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -23,13 +23,13 @@ You can check my comparison of all the above options in my [here](https://mateus
 
 SQL (Structured Query Language) is one of the best ways to work with relational databases. And MCE's Data Extensions, with the help of Data Designer, offer precisely that. A relational database. The same is valid for system Data Views containing tracking data. Because of this, SQL is used in MCE whenever powerful segmentation is needed (mainly using Automation Studio).
 
-The main difference from standard SQL (MCE uses more or less SQL Server 2022, although Salesforce's [SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm\&type=5) still says 2016) is that MCE supports only the `SELECT` statement. Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
+The main difference from standard SQL (MCE uses more or less SQL Server 2022, although Salesforce's [SQL Reference](https://help.salesforce.com/s/articleView?id=mktg.mc_as_sql_reference.htm\&type=5) still says 2016) is that MCE [supports only the `SELECT` statement](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#only-select-queries-are-valid). Neither `INSERT`, `UPDATE` or `DELETE` are officially supported. It is because the queries are executed as a part of the backend query and are limited to provide non-breakable functionality.
 
 Do not expect anything newer than SQL Server 2022, though. I tested functions added in SQL Server 2025, and none of them work, while the [JSON functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/) added in SQL Server 2022 run fine. Some 2022 additions fail as well, such as the `WINDOW` clause of [window functions](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#over-and-partition-by), while others, such as their `IGNORE NULLS`, work.
 
 Another limiting characteristic of MCE SQL is visible in the data accessible by queries. Only data stored in data extensions or system data views is available. Moreover, you can save the results only to the data extensions. The reason is other data structures of MCE are not relational databases.
 
-Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically stop your query if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data. Another is to [split the query into parts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#random-test-groups) that run in separate Query Activities.
+Finally, the significant limitation you might hit as your MCE grows is AutoKill. It will automatically [stop your query](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#query-failed-timeout) if the execution time exceeds the 30 minutes limit. Think about the query with the future in mind. It is vital for queries that are supposed to be the backbones of your data management flow in MCE. Even if it works great now, consider how it will behave once you have more data in the system. One of the great ways to not trigger AutoKill is to implement retention periods for the Data Extensions used in the query to limit input data. Another is to [split the query into parts](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#random-test-groups) that run in separate Query Activities.
 
 ## Where to learn MCE SQL
 
@@ -416,6 +416,10 @@ Bonus: swap `_Open` for `_Click`, and you get the last clicked email. Need the a
 ## Writing with style
 
 Knowing the available functions is one thing. Writing good and readable queries - another. MCE is always a team sport, so be sure to leverage the power of a [Style Guide](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/) to improve the quality of your SQL.
+
+## Fixing errors
+
+Sooner or later, MCE will refuse one of your queries, sometimes with a message that points somewhere else entirely and sometimes with no message at all. My [MCE SQL Errors](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/) guide explains each error, which of the three checks it comes from, and how to fix the query behind it.
 
 ## Order of operations
 
