@@ -208,11 +208,11 @@ chloe-3101    | Travel
 
 `STRING_AGG` works like the [aggregate functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions.mdx), so it needs `GROUP BY`. `WITHIN GROUP` sets the order of the values, as without it, the order can change between runs. There is no `DISTINCT` inside `STRING_AGG`, so the subquery removes the repeated categories first. Without it, Ben would get Books three times.
 
-Two limits apply. On a `VARCHAR` field, such as `Status` of `_Subscribers`, `STRING_AGG` fails with "Argument data type nvarchar is invalid for argument 2 of string_agg function.", as :product[MCE] [adds an `N`](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx#apostrophes-in-comments) to every text value in your query, the separator included. And on a Text field, the result stops at 4,000 characters, so a longer list fails the run. Convert the field to `NVARCHAR(MAX)` first, as in `STRING_AGG(CONVERT(NVARCHAR(MAX), Status), ', ')`, and neither limit applies.
+Two limits apply. On a `VARCHAR` field, such as `Status` of `_Subscribers`, `STRING_AGG` fails with ["Argument data type nvarchar is invalid for argument 2 of string_agg function."](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#string_agg-argument-data-type), as :product[MCE] [adds an `N`](/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide.mdx#apostrophes-in-comments) to every text value in your query, the separator included. And on a Text field, the result stops at 4,000 characters, so a longer list [fails the run](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#automation-failed-due-to-system-error). Convert the field to `NVARCHAR(MAX)` first, as in `STRING_AGG(CONVERT(NVARCHAR(MAX), Status), ', ')`, and neither limit applies.
 
 ## STRING_SPLIT
 
-Web forms often save the answers of a checkbox list as one value, such as `music,travel,books`. In SQL Server, `STRING_SPLIT` turns such a value into rows. In :product[MCE], it fails just like [`OPENJSON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.mdx#openjson), as the syntax check takes it for a Data Extension name:
+Web forms often save the answers of a checkbox list as one value, such as `music,travel,books`. In SQL Server, `STRING_SPLIT` turns such a value into rows. In :product[MCE], it fails just like [`OPENJSON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.mdx#openjson), as the syntax check takes it for a [Data Extension name](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#not-a-known-data-extension-or-system-data-view):
 
 ```sql {5} title="❌ STRING_SPLIT fails the syntax check"
 SELECT
@@ -266,7 +266,7 @@ SELECT
     , TRIM('   data from webform ')     AS CleanBothSides   /* Output: 'data from webform' */
 ```
 
-Since SQL Server 2022, `LTRIM` and `RTRIM` also take the characters to remove as a second argument, which helps with zero-padded IDs from other systems: `LTRIM('007', '0')` returns `7`. `TRIM` has its own syntax for the same job, `TRIM(LEADING '0' FROM '007')`, but :product[MCE] refuses it, as its syntax check reads that `FROM` as the start of a table list: "N'007' is not a known data extension or system data view."
+Since SQL Server 2022, `LTRIM` and `RTRIM` also take the characters to remove as a second argument, which helps with zero-padded IDs from other systems: `LTRIM('007', '0')` returns `7`. `TRIM` has its own syntax for the same job, `TRIM(LEADING '0' FROM '007')`, but :product[MCE] refuses it, as its syntax check reads that `FROM` as the start of a table list: ["N'007' is not a known data extension or system data view."](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#not-a-known-data-extension-or-system-data-view)
 
 ## NEWID
 

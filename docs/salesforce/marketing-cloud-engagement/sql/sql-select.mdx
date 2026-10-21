@@ -246,7 +246,7 @@ Your query has no derived table, so why the complaint? Because :product[MCE] wra
 
 You do not lose anything by it. A Data Extension does not promise any order of its rows, so a sorted result would land there in no particular order anyway. Sort when you read the data instead, for example with AMPscript's `LookupOrderedRows` in an email, and keep `ORDER BY` in your queries for picking rows with `TOP`.
 
-Coming from MySQL or PostgreSQL? There, `LIMIT 10` at the end of the query picks the rows. SQL Server does not know it and stops the query with "Incorrect syntax near 'LIMIT'." Use `TOP 10` after `SELECT` instead.
+Coming from MySQL or PostgreSQL? There, `LIMIT 10` at the end of the query picks the rows. SQL Server does not know it and stops the query with ["Incorrect syntax near 'LIMIT'."](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#incorrect-syntax-near), or near the number when `LIMIT` comes right after the table name, which SQL Server then reads as an alias. Use `TOP 10` after `SELECT` instead.
 
 You may also see `OFFSET 0 ROWS` after the `ORDER BY` suggested as a fix, as the error message itself lists `OFFSET`. It runs, and in my test, the rows even came back in that order. However, the Data Extension does not promise it, so the next run or a bigger table can return them in any order. `OFFSET` has a better use. Together with `FETCH`, it skips rows before it takes them, which `TOP` cannot do. Consolation prizes for places 4 to 10 of your quiz?
 
@@ -285,6 +285,8 @@ ORDER BY Domain
 ```
 
 In the above case, you will get a separate row for each Subscriber Key - Domain pair. It means that you might receive multiple rows with the same Subscriber Key (but each with a different Domain). And you will undoubtedly see numerous rows with the same domain (but each with a different Subscriber key).
+
+The same happens after a [`JOIN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-join.mdx), which usually adds a column that differs on every row, like the date of each open. Need one row per Subscriber Key, with the other columns taken from a row you choose, such as the latest one? `DISTINCT` cannot do that, but [`ROW_NUMBER`](/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions.mdx#row_number) can.
 
 ### DISTINCT with TOP
 

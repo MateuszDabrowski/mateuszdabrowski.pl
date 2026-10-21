@@ -96,6 +96,7 @@ module.exports = {
                                 'salesforce/marketing-cloud-engagement/sql/sql-null-functions',
                                 'salesforce/marketing-cloud-engagement/sql/sql-json-functions',
                                 'salesforce/marketing-cloud-engagement/sql/sql-style-guide',
+                                'salesforce/marketing-cloud-engagement/sql/sql-errors',
                                 {
                                     type: 'category',
                                     label: 'Snippets',
@@ -112,6 +113,12 @@ module.exports = {
                                         'salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-value-length',
                                         'salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts',
                                     ],
+                                },
+                                {
+                                    type: 'link',
+                                    label: 'SQL Studio',
+                                    className: 'sidebar-crosslink',
+                                    href: '/sql-studio/',
                                 },
                             ],
                         },

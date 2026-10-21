@@ -18,7 +18,7 @@ import { LeadText } from '/src/components/LeadText.js';
 
 `GROUP BY` allows you to create aggregation by grouping the input data on selected column(s).
 
-It limits the data you can [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) to either `GROUP BY` column(s) or aggregate functions.
+It limits the data you can [`SELECT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx) to either `GROUP BY` column(s) or aggregate functions. Select any other column, and SQL Server stops the query with ["Column 'X' is invalid in the select list"](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#column-is-invalid-in-the-select-list).
 
 Need the totals next to every row instead, for example the number of orders of a subscriber on each of their orders? [Window functions](/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions.mdx#over-and-partition-by) do that without collapsing the rows.
 

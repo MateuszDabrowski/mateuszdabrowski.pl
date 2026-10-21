@@ -107,6 +107,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-10-21',
+        kind: 'Doc',
+        title: 'MCE SQL Errors',
+        url: '/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/',
+        description: 'Only SELECT queries are valid. What each Marketing Cloud Engagement SQL error means, and how to fix the query behind it.',
+    },
+    {
         date: '2026-10-16',
         kind: 'App',
         title: 'Diagramforce 1.26',

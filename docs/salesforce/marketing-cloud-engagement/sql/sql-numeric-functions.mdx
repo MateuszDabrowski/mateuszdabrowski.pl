@@ -41,9 +41,9 @@ WHERE
     )
 ```
 
-However, my favourite use case for `MAX` is debugging Data Extensions and their values. Especially useful when working with data imports from external systems — for example, pulling data from Sales Cloud via Marketing Cloud Connect.
+However, my favourite use case for `MAX` is debugging Data Extensions and their values. Especially useful when working with data imports from external systems, for example, pulling data from Sales Cloud via Marketing Cloud Connect.
 
-You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to standard Data Extensions crashes with cryptic information about truncated data. In most cases, the reason is a value exceeding the maximum length you set for the column in your local Data Extension.
+You might frequently encounter a situation where your automations responsible for moving data from Synchronized Data Extensions to standard Data Extensions fail, and the Action Log reports ["String or binary data would be truncated"](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#string-or-binary-data-would-be-truncated). In most cases, the reason is a value exceeding the maximum length you set for the column in your local Data Extension.
 
 How to find the culprit? With `MAX` and [`LEN`](/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions.mdx#len) functions:
 

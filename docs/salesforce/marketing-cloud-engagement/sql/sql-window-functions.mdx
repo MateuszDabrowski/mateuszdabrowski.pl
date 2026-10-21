@@ -126,16 +126,16 @@ SELECT
       OrderId
     , COUNT(*) OVER subscriberOrders AS OrdersPerSubscriber
 FROM Orders
-WINDOW subscriberOrders AS (PARTITION BY SubscriberKey) /* Error: Incorrect syntax near 'WINDOW'. */
+WINDOW subscriberOrders AS (PARTITION BY SubscriberKey) /* Error: Incorrect syntax near 'subscriberOrders'. */
 ```
 
-Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. The engine is not to blame. :product[MCE] runs SQL Server 2022 at compatibility level 160, which is the level `WINDOW` [needs](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), and other 2022 additions, such as [`IGNORE NULLS`](#ignore-nulls), work fine. It looks like the clause clashes with the way :product[MCE] wraps every query before it runs it, the same wrapper that [refuses `ORDER BY` without `TOP`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#order-by-without-top). So whenever several columns share a window, write it out in each `OVER`.
+The error names the window, not `WINDOW`, as SQL Server first reads `WINDOW` as an [alias of `Orders`](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#incorrect-syntax-near). Referring to the name inside the brackets, as in `OVER (subscriberOrders)`, fails as well. The engine is not to blame. :product[MCE] runs SQL Server 2022 at compatibility level 160, which is the level `WINDOW` [needs](https://learn.microsoft.com/en-us/sql/t-sql/queries/select-window-transact-sql), and other 2022 additions, such as [`IGNORE NULLS`](#ignore-nulls), work fine. It looks like the clause clashes with the way :product[MCE] wraps every query before it runs it, the same wrapper that [refuses `ORDER BY` without `TOP`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#order-by-without-top). So whenever several columns share a window, write it out in each `OVER`.
 
 ### Count Distinct Values per Window
 
 __`COUNT(DISTINCT ...)` does not work with `OVER`, so count in a subquery and join the counts back.__
 
-A cross-sell campaign might target subscribers who bought from a single category and show them their past orders. That needs every order, with the number of categories of its subscriber next to it. `COUNT(DISTINCT Category) OVER (PARTITION BY SubscriberKey)` looks like the answer, but SQL Server stops it with "Use of DISTINCT is not allowed with the OVER clause." So for distinct values, you are back to the `GROUP BY` and the join that `OVER` saves you elsewhere. Count the categories of each subscriber in a subquery, and join the counts to the orders:
+A cross-sell campaign might target subscribers who bought from a single category and show them their past orders. That needs every order, with the number of categories of its subscriber next to it. `COUNT(DISTINCT Category) OVER (PARTITION BY SubscriberKey)` looks like the answer, but SQL Server stops it with ["Use of DISTINCT is not allowed with the OVER clause."](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#window-function-errors) So for distinct values, you are back to the `GROUP BY` and the join that `OVER` saves you elsewhere. Count the categories of each subscriber in a subquery, and join the counts to the orders:
 
 ```sql {7-14} title="Every order with the number of categories its subscriber bought from"
 SELECT
@@ -174,7 +174,7 @@ Search for that error, and you will find a trick with two [`DENSE_RANK`](#rank-a
 
 __`ROW_NUMBER` numbers the rows of each window, which makes it the tool for keeping one row per subscriber.__
 
-Sendable Data Extensions need one row per subscriber, while order data has one row per order, so Anna comes with three rows. Say you want to ask for a review of the latest order only. Number the orders of each subscriber from the newest one, then keep number 1:
+Sendable Data Extensions need one row per subscriber, while order data has one row per order, so Anna comes with three rows. [`DISTINCT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-select.mdx#distinct) does not help here, as it removes only rows that match in every column, and her orders differ in all but the key. Say you want to ask for a review of the latest order only. Number the orders of each subscriber from the newest one, then keep number 1:
 
 ```sql {10-13,16} title="Keep the latest order of each subscriber"
 SELECT
@@ -206,7 +206,7 @@ chloe-3101    | ORD-1199 | 2026-04-18
 
 :::note You Should Know
 
-Why the subquery? Window functions run after `WHERE`, so `WHERE ROW_NUMBER() OVER (...) = 1` cannot work and fails with "Windowed functions can only appear in the SELECT or ORDER BY clauses." In SQL Server, you would usually name such a step with `WITH` (a common table expression). :product[MCE] does not accept that either, as its syntax check wants `SELECT` as the first word of every query ("Only SELECT queries are valid. Select must be the first word of the query."). So a subquery in `FROM` is the way to filter on a window function. If you write your queries in [SQL Studio](/sql-studio/), it catches the `WITH` before :product[MCE] does and offers to rewrite it into a subquery for you.
+Why the subquery? Window functions run after `WHERE`, so `WHERE ROW_NUMBER() OVER (...) = 1` cannot work and fails with ["Windowed functions can only appear in the SELECT or ORDER BY clauses."](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#window-function-errors) In SQL Server, you would usually name such a step with `WITH` (a common table expression). :product[MCE] does not accept that either, as its syntax check wants `SELECT` as the first word of every query ("Only SELECT queries are valid. Select must be the first word of the query."). So a subquery in `FROM` is the way to filter on a window function. If you write your queries in [SQL Studio](/sql-studio/), it catches the `WITH` before :product[MCE] does and offers to rewrite it into a subquery for you.
 
 :::
 

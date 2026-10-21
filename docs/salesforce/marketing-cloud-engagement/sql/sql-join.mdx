@@ -233,7 +233,7 @@ FROM WelcomeCampaignSegment AS wel
 
 All you need to do is write your alias after a data source name. For readability purposes, I recommend using the `AS` keyword between. Now you can leverage the shortened name to prefix the selected columns. It's instrumental when pulling data from multiple Data Extensions.
 
-Using table name prefixes is not always required (for example, when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and error-deferring purposes.
+Using table name prefixes is not always required (for example, when the two sources you `JOIN` don't have any columns of the same name). You might see some examples without it. However, it is best practice to leverage this feature for consistency, readability and to avoid [ambiguous column errors](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#ambiguous-column-name).
 
 ## Multiple Joins
 
@@ -370,7 +370,7 @@ SELECT
 FROM FebruaryEventParticipantsSegment AS feb
 ```
 
-Keep in mind that you will see the duplicates only if the target Data Extension doesn't have Primary Key defined on the duplicated value. Otherwise, the duplicates will be removed during the insert due to Subscriber Key uniqueness violation.
+Keep in mind that you will see the duplicates only if the target Data Extension doesn't have Primary Key defined on the duplicated value. Otherwise, the data action decides. Overwrite keeps one of the rows for each key, while Append fails the whole run with a [duplicate key error](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#violation-of-primary-key-constraint). Update keeps one row for a key the target already holds and fails on a new one.
 
 :::
 

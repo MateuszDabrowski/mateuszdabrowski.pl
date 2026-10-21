@@ -219,7 +219,7 @@ If you have specific parts of your date stored in separte fields, you can levera
 
 ## TRY_CONVERT
 
-`CONVERT` stops the whole query when a single value does not fit the target type, such as a birth date typed as `31/02/1990` in a web form. In :product[MCE], it happens during the run, so you do not even get SQL Server's message. Automation Studio says only "Automation failed due to system error", and one bad row out of a million is enough.
+`CONVERT` stops the whole query when a single value does not fit the target type, such as a birth date typed as `31/02/1990` in a web form. In :product[MCE], it happens during the run, and the Action Log in Automation Studio gives the reason for only some types. A conversion to `DATE` gets ["Could not convert date and/or time from string data type."](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#could-not-convert-date), and one to `INT` [quotes the value that failed](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#conversion-failed-when-converting). A conversion to `DATETIME` or `DECIMAL` gets only ["Automation failed due to system error."](/docs/salesforce/marketing-cloud-engagement/sql/sql-errors.mdx#automation-failed-due-to-system-error) In every case, one bad row out of a million is enough.
 
 `TRY_CONVERT` takes the same arguments, [style code](#convert-date-style-codes) included, but returns `NULL` for a value it cannot convert, so the query keeps running:
 
@@ -257,7 +257,7 @@ FROM Customers
 WHERE ISNULL(IsVip, 0) = 0
 ```
 
-To write a Boolean field from text, `CONVERT(BIT, ...)` understands `'True'`, `'False'`, `'1'` and `'0'`. Form answers such as `'Yes'` make it fail, as silently as any other conversion, so translate them with [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx):
+To write a Boolean field from text, `CONVERT(BIT, ...)` understands `'True'`, `'False'`, `'1'` and `'0'`. Form answers such as `'Yes'` make it fail the whole run, so translate them with [`CASE`](/docs/salesforce/marketing-cloud-engagement/sql/sql-case.mdx):
 
 ```sql {3-6} title="Text answers into a Boolean field"
 SELECT
