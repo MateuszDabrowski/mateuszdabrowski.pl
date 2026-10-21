@@ -128,7 +128,7 @@ SELECT
     , DATEFROMPARTS(2022, 01, 31) AS DateValue
 ```
 
-`DATETIMEFROMEPARTS` is a sibling function that requires more data but outputs a fully-fledged datetime value. On top of the year, month and day, add an hour, minute, seconds and milliseconds. You won't be able to see the time part in the MCE UI (Contact Builder or Email Studio), but it will be available for calculations.
+`DATETIMEFROMPARTS` is a sibling function that requires more data but outputs a fully-fledged datetime value. On top of the year, month and day, add an hour, minute, seconds and milliseconds. You won't be able to see the time part in the MCE UI (Contact Builder or Email Studio), but it will be available for calculations.
 
 ```sql {3}
 SELECT
@@ -136,7 +136,7 @@ SELECT
     , DATETIMEFROMPARTS(2022, 01, 31, 23, 59, 59, 0) AS DatetimeValue
 ```
 
-There is also a third function: `TIMEFROMEPARTS`. It requires an hour, minute, seconds, fraction and precision as arguments. Its usefulness in MCE is close to none.
+There is also a third function: `TIMEFROMPARTS`. It requires an hour, minute, seconds, fraction and precision as arguments. Its usefulness in MCE is close to none.
 
 > **Note: You Should Know**
 >

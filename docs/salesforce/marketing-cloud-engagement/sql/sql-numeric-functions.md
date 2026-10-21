@@ -99,6 +99,22 @@ FROM _Subscribers
 
 It is helpful nearly only as a [part of an aggregate query](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#sum).
 
+## ROUND
+
+The `ROUND` function rounds a number to the decimal places you give it, with a half rounded away from zero: `ROUND(1.5, 0)` returns `2.0`, and `ROUND(1.49, 0)` returns `1.00`. A negative number of places rounds to tens, hundreds and so on, so `ROUND(1234, -2)` returns `1200`.
+
+You will need it most before a value goes into a Number field. A Number field is an `INT`, so a value going into it [loses its decimals](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#number-fields-cut-decimals) without a word, and `1.9` lands there as `1`:
+
+```sql {3} title="Round the average order value before it goes into a Number field"
+SELECT
+      SubscriberKey
+    , ROUND(AVG(OrderTotal), 0) AS AverageOrderValue
+FROM Orders
+GROUP BY SubscriberKey
+```
+
+The result keeps the type of the value, so `ROUND(1.5, 0)` is still a decimal, `2.0`, and the Number field drops the `.0` when it takes it. Want to cut the decimals on purpose? Add any third argument other than `0`: `ROUND(1.99, 1, 1)` returns `1.90`.
+
 ## FORMAT with Numbers
 
 The `FORMAT` works only with datetime and numeric values, outputs a string and requires:

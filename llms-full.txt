@@ -4234,7 +4234,7 @@ SELECT
     , DATEFROMPARTS(2022, 01, 31) AS DateValue
 ```
 
-`DATETIMEFROMEPARTS` is a sibling function that requires more data but outputs a fully-fledged datetime value. On top of the year, month and day, add an hour, minute, seconds and milliseconds. You won't be able to see the time part in the MCE UI (Contact Builder or Email Studio), but it will be available for calculations.
+`DATETIMEFROMPARTS` is a sibling function that requires more data but outputs a fully-fledged datetime value. On top of the year, month and day, add an hour, minute, seconds and milliseconds. You won't be able to see the time part in the MCE UI (Contact Builder or Email Studio), but it will be available for calculations.
 
 ```sql {3}
 SELECT
@@ -4242,7 +4242,7 @@ SELECT
     , DATETIMEFROMPARTS(2022, 01, 31, 23, 59, 59, 0) AS DatetimeValue
 ```
 
-There is also a third function: `TIMEFROMEPARTS`. It requires an hour, minute, seconds, fraction and precision as arguments. Its usefulness in MCE is close to none.
+There is also a third function: `TIMEFROMPARTS`. It requires an hour, minute, seconds, fraction and precision as arguments. Its usefulness in MCE is close to none.
 
 > **Note: You Should Know**
 >
@@ -4759,6 +4759,22 @@ FROM _Subscribers
 ```
 
 It is helpful nearly only as a [part of an aggregate query](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-aggregate-functions/#sum).
+
+## ROUND
+
+The `ROUND` function rounds a number to the decimal places you give it, with a half rounded away from zero: `ROUND(1.5, 0)` returns `2.0`, and `ROUND(1.49, 0)` returns `1.00`. A negative number of places rounds to tens, hundreds and so on, so `ROUND(1234, -2)` returns `1200`.
+
+You will need it most before a value goes into a Number field. A Number field is an `INT`, so a value going into it [loses its decimals](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#number-fields-cut-decimals) without a word, and `1.9` lands there as `1`:
+
+```sql {3} title="Round the average order value before it goes into a Number field"
+SELECT
+      SubscriberKey
+    , ROUND(AVG(OrderTotal), 0) AS AverageOrderValue
+FROM Orders
+GROUP BY SubscriberKey
+```
+
+The result keeps the type of the value, so `ROUND(1.5, 0)` is still a decimal, `2.0`, and the Number field drops the `.0` when it takes it. Want to cut the decimals on purpose? Add any third argument other than `0`: `ROUND(1.99, 1, 1)` returns `1.90`.
 
 ## FORMAT with Numbers
 
@@ -7866,6 +7882,38 @@ The first is an Append of a key that the target already holds. Switch to Update,
 The second is a key that your query returns more than once, such as a `SubscriberKey` from `Orders`. Append fails on it even into an empty target, and so does Update when the key is new. Overwrite does not fail at all: it writes one row per key, and Update does the same for a key the target already holds. In my test, Overwrite kept the last of the three rows of `anna-1042` and Update the first, but nothing in the query decides which row comes first. Pick the row yourself with [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number) before the data reaches the target.
 
 When Update fails on a new key, it does not undo the rest. The rows whose keys the target already held keep their new values, and only the new keys are lost.
+
+---
+
+## MCE Query Activity Silent Errors
+
+**Silent errors pass all three checks, and the run completes, but the target ends up holding something you did not mean.**
+
+The Action Log stays empty, so you find them only when you read the data.
+
+### Overwrite With No Rows
+
+An Overwrite whose query returns no rows completes and leaves the target empty. That is what you asked for, but rarely what you meant. When an import fails and leaves a source Data Extension empty, the next Overwrite wipes the target your sends read from. Where the target must never be empty, put a Verification Activity before the query in the automation, which stops it when the source has no rows.
+
+### Overwrite With Duplicate Keys
+
+A key that your query returns more than once [fails an Append, and an Update when the key is new](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#violation-of-primary-key-constraint), but an Overwrite takes it and writes one row per key. Nothing in the query decides which of the rows stays, so pick it yourself with [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number).
+
+### Number Fields Cut Decimals
+
+`1.9` written into a Number field lands as `1`. A Number field is an `INT`, and SQL Server [cuts the decimals](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#data-types) when it converts to one, without rounding. Use a Decimal field, or [round the value](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/#round) in the query first.
+
+### EmailAddress Fields Take Any Text
+
+A query can write `not-an-email` into an EmailAddress field, as MCE does not check the format when a query writes it. Check the values in the query, for example with `LIKE '%_@_%._%'`, before they reach the field your sends use.
+
+### String Dates Read Month First
+
+A string date that goes into a Date field is read as month, day and year. `12/31/2026` and `2026-12-31` land as 31 December 2026, while `31/12/2026` [fails the whole run](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error). The dangerous one is `01/02/2026`, which lands as 2 January even when it meant 1 February, and nothing tells you. Convert day-first dates in the query with [`TRY_CONVERT(DATE, x, 103)`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert-date-style-codes).
+
+### Columns the Target Lacks
+
+A column with no field of its name in the target is left out without a word, and so is a column whose name starts with an underscore. Names match regardless of case, so `subscriberkey` fills `SubscriberKey`. A typo in an alias therefore leaves its field empty, where you would expect an error. Compare the column names of your query with the fields of the target before the first run.
 
 ---
 

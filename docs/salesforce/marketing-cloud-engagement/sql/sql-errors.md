@@ -481,6 +481,38 @@ When Update fails on a new key, it does not undo the rest. The rows whose keys t
 
 ---
 
+## MCE Query Activity Silent Errors
+
+**Silent errors pass all three checks, and the run completes, but the target ends up holding something you did not mean.**
+
+The Action Log stays empty, so you find them only when you read the data.
+
+### Overwrite With No Rows
+
+An Overwrite whose query returns no rows completes and leaves the target empty. That is what you asked for, but rarely what you meant. When an import fails and leaves a source Data Extension empty, the next Overwrite wipes the target your sends read from. Where the target must never be empty, put a Verification Activity before the query in the automation, which stops it when the source has no rows.
+
+### Overwrite With Duplicate Keys
+
+A key that your query returns more than once [fails an Append, and an Update when the key is new](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#violation-of-primary-key-constraint), but an Overwrite takes it and writes one row per key. Nothing in the query decides which of the rows stays, so pick it yourself with [`ROW_NUMBER`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-window-functions/#row_number).
+
+### Number Fields Cut Decimals
+
+`1.9` written into a Number field lands as `1`. A Number field is an `INT`, and SQL Server [cuts the decimals](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#data-types) when it converts to one, without rounding. Use a Decimal field, or [round the value](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/#round) in the query first.
+
+### EmailAddress Fields Take Any Text
+
+A query can write `not-an-email` into an EmailAddress field, as MCE does not check the format when a query writes it. Check the values in the query, for example with `LIKE '%_@_%._%'`, before they reach the field your sends use.
+
+### String Dates Read Month First
+
+A string date that goes into a Date field is read as month, day and year. `12/31/2026` and `2026-12-31` land as 31 December 2026, while `31/12/2026` [fails the whole run](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error). The dangerous one is `01/02/2026`, which lands as 2 January even when it meant 1 February, and nothing tells you. Convert day-first dates in the query with [`TRY_CONVERT(DATE, x, 103)`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert-date-style-codes).
+
+### Columns the Target Lacks
+
+A column with no field of its name in the target is left out without a word, and so is a column whose name starts with an underscore. Names match regardless of case, so `subscriberkey` fills `SubscriberKey`. A typo in an alias therefore leaves its field empty, where you would expect an error. Compare the column names of your query with the fields of the target before the first run.
+
+---
+
 ## How to Avoid MCE SQL Errors
 
 The easiest way is to let a tool check for you. [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) lints your query before you run it, and my [SF MCE SQL skill](https://mateuszdabrowski.pl/sql-studio/#claude-skill) gives Claude the same lint, so the queries it writes avoid these errors from the start.
