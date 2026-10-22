@@ -4862,7 +4862,7 @@ SELECT
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-21  
+Last updated: 2026-10-22  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Break from the limits of source data types. Use the full power of SQL to transform your values.
@@ -5066,7 +5066,7 @@ You can find the full list of style codes on [Microsoft .Net Doc Pages](https://
 
 ## TRY_CONVERT
 
-`CONVERT` stops the whole query when a single value does not fit the target type, such as a birth date typed as `31/02/1990` in a web form. In MCE, it happens during the run, and the Action Log in Automation Studio gives the reason for only some types. A conversion to `DATE` gets ["Could not convert date and/or time from string data type."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#could-not-convert-date), and one to `INT` [quotes the value that failed](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#conversion-failed-when-converting). A conversion to `DATETIME` or `DECIMAL` gets only ["Automation failed due to system error."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error) In every case, one bad row out of a million is enough.
+`CONVERT` stops the whole query when a single value does not fit the target type, such as a birth date typed as `31/02/1990` in a web form. In MCE, it happens during the run, and the Action Log in Automation Studio gives the reason for only some types. A conversion to `DATE` gets ["Could not convert date and/or time from string data type."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#could-not-convert-date), and one to `INT`, `SMALLINT`, `TINYINT` or `BIT` [quotes the value that failed](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#conversion-failed-when-converting). A conversion to `DATETIME`, `DECIMAL` or `BIGINT` gets only ["Automation failed due to system error."](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#automation-failed-due-to-system-error) In every case, one bad row out of a million is enough.
 
 `TRY_CONVERT` takes the same arguments, [style code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert-date-style-codes) included, but returns `NULL` for a value it cannot convert, so the query keeps running:
 
@@ -5104,7 +5104,7 @@ FROM Customers
 WHERE ISNULL(IsVip, 0) = 0
 ```
 
-To write a Boolean field from text, `CONVERT(BIT, ...)` understands `'True'`, `'False'`, `'1'` and `'0'`. Form answers such as `'Yes'` make it fail the whole run, so translate them with [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/):
+To write a Boolean field from text, `CONVERT(BIT, ...)` understands `'True'`, `'False'`, `'1'` and `'0'`. Form answers such as `'Yes'` make it fail the whole run, with a [message that quotes the value](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#conversion-failed-when-converting), so translate them with [`CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/):
 
 ```sql {3-6} title="Text answers into a Boolean field"
 SELECT
@@ -7408,7 +7408,7 @@ Looking for more MCE style? Check out my:
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-21  
+Last updated: 2026-10-22  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Write SQL in MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) long enough, and you will get an error that points somewhere else entirely. "Error while processing square brackets" for a query without a single bracket. "Old style JOIN (ANSI JOINs) syntax is not allowed" for a query without a join. Or no message at all, just "Automation failed due to system error." in Automation Studio.
@@ -7821,19 +7821,19 @@ The Action Log can take a minute or two to show a failed run, so refresh it befo
 
 The Action Log of the Query Activity says this when the run fails and MCE passes no reason on. Tools that read the run status, SQL Studio included, see even less: a fatal error with an empty message. These causes fail without a reason, each passing the syntax check and the save:
 
-| Cause                                                                           | Example                                                                | Fix                                                                                                                                                              |
-| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Text that is not a date, converted to `DATETIME` or going into a Date field     | `'31/12/2026'`, read month first                                       | [`TRY_CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#try_convert) with a style code in the query |
-| Text that is not a number, converted to `DECIMAL` or going into a Decimal field | `'n/a'`                                                                | [`TRY_CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#try_convert)                                |
-| A date that does not exist                                                      | `DATEFROMPARTS(2026, 2, 30)`                                           | Check the parts before you build the date                                                                                                                        |
-| JSON that is not valid                                                          | `JSON_VALUE(Payload, '$.orderId')` on a cut payload                    | [`ISJSON`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/#isjson) first                                          |
-| A division by zero                                                              | `SUM(OrderTotal) / COUNT(CouponCode)` for a subscriber without coupons | `NULLIF(COUNT(CouponCode), 0)` as the divisor                                                                                                                    |
-| A number too big for `INT`                                                      | Unix milliseconds in `DATEADD`                                         | [Seconds and milliseconds apart](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#unix-timestamps)                 |
-| A date difference too big for `INT`                                             | `DATEDIFF(SECOND, '1900-01-01', DateJoined)`                           | [`DATEDIFF_BIG`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#datediff)                                        |
-| A negative length                                                               | `LEFT(EmailAddress, CHARINDEX('@', EmailAddress) - 1)` without an `@`  | [`SUBSTRING`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#substring) or a `LIKE '%@%'` filter               |
-| A style code SQL Server does not have                                           | `CONVERT(VARCHAR(10), DateJoined, 999)`                                | A [listed style code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert-date-style-codes)             |
-| A list longer than 4,000 characters                                             | `STRING_AGG(EmailAddress, ', ')` over many rows                        | [`CONVERT(NVARCHAR(MAX), ...)`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#string_agg) first               |
-| A `--` comment at the very end                                                  | `FROM Orders -- all orders`                                            | [Block comments](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#line-comments)                                      |
+| Cause                                                                                        | Example                                                                | Fix                                                                                                                                                              |
+| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Text that is not a date, converted to `DATETIME` or going into a Date field                  | `'31/12/2026'`, read month first                                       | [`TRY_CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#try_convert) with a style code in the query |
+| Text that is not a number, converted to `DECIMAL` or `BIGINT`, or going into a Decimal field | `'n/a'`                                                                | [`TRY_CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#try_convert)                                |
+| A date that does not exist                                                                   | `DATEFROMPARTS(2026, 2, 30)`                                           | Check the parts before you build the date                                                                                                                        |
+| JSON that is not valid                                                                       | `JSON_VALUE(Payload, '$.orderId')` on a cut payload                    | [`ISJSON`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions/#isjson) first                                          |
+| A division by zero                                                                           | `SUM(OrderTotal) / COUNT(CouponCode)` for a subscriber without coupons | `NULLIF(COUNT(CouponCode), 0)` as the divisor                                                                                                                    |
+| A number too big for `INT`                                                                   | Unix milliseconds in `DATEADD`                                         | [Seconds and milliseconds apart](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#unix-timestamps)                 |
+| A date difference too big for `INT`                                                          | `DATEDIFF(SECOND, '1900-01-01', DateJoined)`                           | [`DATEDIFF_BIG`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-date-functions/#datediff)                                        |
+| A negative length                                                                            | `LEFT(EmailAddress, CHARINDEX('@', EmailAddress) - 1)` without an `@`  | [`SUBSTRING`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#substring) or a `LIKE '%@%'` filter               |
+| A style code SQL Server does not have                                                        | `CONVERT(VARCHAR(10), DateJoined, 999)`                                | A [listed style code](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#convert-date-style-codes)             |
+| A list longer than 4,000 characters                                                          | `STRING_AGG(EmailAddress, ', ')` over many rows                        | [`CONVERT(NVARCHAR(MAX), ...)`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-string-functions/#string_agg) first               |
+| A `--` comment at the very end                                                               | `FROM Orders -- all orders`                                            | [Block comments](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/#line-comments)                                      |
 
 One bad row is enough to fail the whole run, so a query that worked for months can fail on the first odd value from a web form. A failed Append or Overwrite writes none of its rows, so the target keeps what it had. A failed Update can keep some of its changes, see [Violation of PRIMARY KEY Constraint](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#violation-of-primary-key-constraint). To find the column, run the query again with half of its columns, and keep halving the half that fails. The one you are left with has the value to guard.
 
@@ -7841,9 +7841,9 @@ One bad row is enough to fail the whole run, so a query that worked for months c
 
 **"Query failed during execution. Error: Conversion failed when converting the nvarchar value 'X' to data type int."**
 
-A text value has to become a whole number and is not one, either in a `CAST` or `CONVERT` to `INT` or on its way into a Number field. The reason quotes the value that failed. That value can be personal data, such as an email address, which then sits in the Action Log for everyone who can open Automation Studio.
+A text value has to become a whole number and is not one, either in a `CAST` or `CONVERT` to `INT` or on its way into a Number field. `SMALLINT`, `TINYINT` and `BIT` get the same message, with their own type in place of `int`. The reason quotes the value that failed. That value can be personal data, such as an email address, which then sits in the Action Log for everyone who can open Automation Studio.
 
-Convert with [`TRY_CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#try_convert), which returns `NULL` for such a value, and check the [types of the target fields](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#data-extension-field-types). Text converted to `DECIMAL`, or going into a Decimal field, fails as well, but the Action Log says only "Automation failed due to system error." In SQL Studio, both show as a run without a reason.
+Convert with [`TRY_CONVERT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#try_convert), which returns `NULL` for such a value, and check the [types of the target fields](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#data-extension-field-types). Text converted to `DECIMAL` or `BIGINT`, or going into a Decimal field, fails as well, but the Action Log says only "Automation failed due to system error." In SQL Studio, both show as a run without a reason.
 
 ### Could Not Convert Date
 
@@ -7901,7 +7901,7 @@ A key that your query returns more than once [fails an Append, and an Update whe
 
 ### Number Fields Cut Decimals
 
-`1.9` written into a Number field lands as `1`. A Number field is an `INT`, and SQL Server [cuts the decimals](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#data-types) when it converts to one, without rounding. Use a Decimal field, or [round the value](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/#round) in the query first.
+`1.9` written into a Number field lands as `1`, while the text `'1.9'` [fails the whole run](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#conversion-failed-when-converting). A Number field is an `INT`, and SQL Server [cuts the decimals](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions/#data-types) when it converts to one, without rounding. Use a Decimal field, or [round the value](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions/#round) in the query first.
 
 ### EmailAddress Fields Take Any Text
 
