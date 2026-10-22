@@ -7429,7 +7429,7 @@ So a syntax error points at the text of your query, a save error at its comments
 
 > **Note: You Should Know**
 >
-> The syntax check passes some queries that the save or the run then refuse. A `--` comment is the most common case. For the check, the comment ends with its line. For the save, it never closes, so everything below it becomes part of the comment, as in [Errors from Line Comments](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#errors-from-line-comments). So a green check in Automation Studio does not mean your Query Activity will work. My [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) runs all three checks on every run. Its lint flagged 98% of the syntax check errors in my tests before anything ran, along with line comments and several of the run errors.
+> The syntax check passes some queries that the save or the run then refuse. A `--` comment is the most common case. For the check, the comment ends with its line. For the save, it never closes, so everything below it becomes part of the comment, as in [Errors from Line Comments](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/#errors-from-line-comments). So a green check in Automation Studio does not mean your Query Activity will work. My [SQL Studio](https://mateuszdabrowski.pl/sql-studio/) runs all three checks on every run. Its lint flags every syntax check error of my tests before anything runs, along with line comments and most of the run errors.
 
 ---
 
@@ -7814,6 +7814,8 @@ The target has a required field, and your query has no column of that name. Add 
 **Run errors come once your query meets the data, and only the Action Log of the Query Activity explains some of them.**
 
 The Action Log can take a minute or two to show a failed run, so refresh it before you decide there is no entry.
+
+SQL Studio cannot see your data, but it can see a query that would fail on a wrong value. Its lint flags most of the causes below before you run anything, such as a `CONVERT` that should be a `TRY_CONVERT` or a divisor that can be 0.
 
 ### Automation Failed Due to System Error
 
