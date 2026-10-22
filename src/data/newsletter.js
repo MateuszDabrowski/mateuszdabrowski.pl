@@ -11,14 +11,13 @@
  * The Google Form embed that ran before was retired on 2026-09-30, after its
  * last responses were imported into Sling.
  *
- * `topics` stays empty: the operator decided on 2026-09-26 not to capture
- * interests for now, and the sheet has no Topics column.
+ * No topic is typed here. Everyone gets every topic, and a person turns
+ * topics off on the unsubscribe page, behind a signed link. The list comes
+ * from the Topics tab Sling writes into the sheet, through the script (D619).
  */
 export const newsletterForm = {
   endpoint: 'https://script.google.com/macros/s/AKfycbyYpOnSWcYyRLiabiQUyBKPc-bLjUAYXrCjE7uzDxg3xcCI_TJYwUHmuG9cDpa1vRMLFw/exec',
   turnstileSiteKey: '0x4AAAAAAFKFsom9nnlkLzxY',
-  // Optional topics for the native form: label shown, values posted.
-  topics: [],
 };
 
 export const nativeFormEnabled = Boolean(newsletterForm.endpoint && newsletterForm.turnstileSiteKey);

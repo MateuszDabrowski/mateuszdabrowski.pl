@@ -11,7 +11,6 @@
  *   endpoint         - the Apps Script web app URL
  *   turnstileSiteKey - public Turnstile key; the widget renders invisibly and
  *                      hands over a token that the script verifies
- *   topics           - optional [string]; rendered as checkboxes
  *   compact          - flat variant (email + button, subscribe only)
  *   unsubscribeOnly  - unsubscribe with no mode switch: the unsubscribe page
  *                      when it has no signed link (a forwarded issue, or an
@@ -26,17 +25,13 @@ import pageStyles from '../pages/styles.module.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = [], compact = false, unsubscribeOnly = false }) {
+export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = false, unsubscribeOnly = false }) {
   const [email, setEmail] = useState('');
   const [remove, setRemove] = useState(unsubscribeOnly);
-  const [picked, setPicked] = useState([]);
   const [trap, setTrap] = useState(''); // honeypot: humans never see it
   const [status, setStatus] = useState('idle'); // idle | invalid | sending | done | error | challenge
   // Loads on the first focus in the form; see useTurnstile.
   const turnstile = useTurnstile(turnstileSiteKey, { onError: () => setStatus('challenge') });
-
-  const togglePick = (option) =>
-    setPicked((current) => (current.includes(option) ? current.filter((o) => o !== option) : [...current, option]));
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -58,7 +53,6 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
     const body = new URLSearchParams();
     body.set('email', address);
     body.set('action', remove ? 'unsubscribe' : 'subscribe');
-    if (!remove) picked.forEach((option) => body.append('topics', option));
     body.set('cf-turnstile-response', token);
     try {
       const res = await fetch(endpoint, { method: 'POST', body });
@@ -130,17 +124,6 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, topics = []
       <label className={styles.honeypot} aria-hidden="true">
         <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} />
       </label>
-
-      {topics.length > 0 && !remove && !compact && (
-        <fieldset className={styles.topics}>
-          <legend className={styles.legend}>Topics you care about</legend>
-          {topics.map((option) => (
-            <label key={option} className={styles.check}>
-              <input type="checkbox" checked={picked.includes(option)} onChange={() => togglePick(option)} /> {option}
-            </label>
-          ))}
-        </fieldset>
-      )}
 
       <div ref={turnstile.widgetHost} className={turnstile.checkShown ? styles.turnstile : undefined} />
 
