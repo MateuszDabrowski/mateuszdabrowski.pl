@@ -426,7 +426,7 @@ The Action Log of the Query Activity says this when the run fails and :product[M
 | Cause | Example | Fix |
 | -- | -- | -- |
 | Text that is not a date, converted to `DATETIME` or going into a Date field | `'31/12/2026'`, read month first | [`TRY_CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#try_convert) with a style code in the query |
-| Text that is not a number, converted to `DECIMAL` or going into a Decimal field | `'n/a'` | [`TRY_CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#try_convert) |
+| Text that is not a number, converted to `DECIMAL` or `BIGINT`, or going into a Decimal field | `'n/a'` | [`TRY_CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#try_convert) |
 | A date that does not exist | `DATEFROMPARTS(2026, 2, 30)` | Check the parts before you build the date |
 | JSON that is not valid | `JSON_VALUE(Payload, '$.orderId')` on a cut payload | [`ISJSON`](/docs/salesforce/marketing-cloud-engagement/sql/sql-json-functions.mdx#isjson) first |
 | A division by zero | `SUM(OrderTotal) / COUNT(CouponCode)` for a subscriber without coupons | `NULLIF(COUNT(CouponCode), 0)` as the divisor |
@@ -443,9 +443,9 @@ One bad row is enough to fail the whole run, so a query that worked for months c
 
 __"Query failed during execution. Error: Conversion failed when converting the nvarchar value 'X' to data type int."__
 
-A text value has to become a whole number and is not one, either in a `CAST` or `CONVERT` to `INT` or on its way into a Number field. The reason quotes the value that failed. That value can be personal data, such as an email address, which then sits in the Action Log for everyone who can open Automation Studio.
+A text value has to become a whole number and is not one, either in a `CAST` or `CONVERT` to `INT` or on its way into a Number field. `SMALLINT`, `TINYINT` and `BIT` get the same message, with their own type in place of `int`. The reason quotes the value that failed. That value can be personal data, such as an email address, which then sits in the Action Log for everyone who can open Automation Studio.
 
-Convert with [`TRY_CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#try_convert), which returns `NULL` for such a value, and check the [types of the target fields](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#data-extension-field-types). Text converted to `DECIMAL`, or going into a Decimal field, fails as well, but the Action Log says only "Automation failed due to system error." In SQL Studio, both show as a run without a reason.
+Convert with [`TRY_CONVERT`](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#try_convert), which returns `NULL` for such a value, and check the [types of the target fields](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#data-extension-field-types). Text converted to `DECIMAL` or `BIGINT`, or going into a Decimal field, fails as well, but the Action Log says only "Automation failed due to system error." In SQL Studio, both show as a run without a reason.
 
 ### Could Not Convert Date
 
@@ -503,7 +503,7 @@ A key that your query returns more than once [fails an Append, and an Update whe
 
 ### Number Fields Cut Decimals
 
-`1.9` written into a Number field lands as `1`. A Number field is an `INT`, and SQL Server [cuts the decimals](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#data-types) when it converts to one, without rounding. Use a Decimal field, or [round the value](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx#round) in the query first.
+`1.9` written into a Number field lands as `1`, while the text `'1.9'` [fails the whole run](#conversion-failed-when-converting). A Number field is an `INT`, and SQL Server [cuts the decimals](/docs/salesforce/marketing-cloud-engagement/sql/sql-conversion-functions.mdx#data-types) when it converts to one, without rounding. Use a Decimal field, or [round the value](/docs/salesforce/marketing-cloud-engagement/sql/sql-numeric-functions.mdx#round) in the query first.
 
 ### EmailAddress Fields Take Any Text
 
