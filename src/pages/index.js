@@ -125,7 +125,7 @@ const whatsNew = [
         kind: 'App',
         title: 'SQL Studio 1.4',
         url: '/sql-studio/',
-        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: open any query in Diagramforce as a data model or a field lineage, lint shaped by over 100 tests on a real account, and saves that stop on lint errors.',
+        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: open any query in Diagramforce as a data model or a field lineage, lint shaped by 400 tests of MCE SQL Server engine, and saves that stop on lint errors.',
     },
     {
         date: '2026-10-12',
