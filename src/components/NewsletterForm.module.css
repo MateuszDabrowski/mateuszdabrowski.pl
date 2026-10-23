@@ -141,22 +141,51 @@ html[data-theme='dark'] .input {
   cursor: pointer;
 }
 
-/* The blue of the Save button in both themes: the theme's primary turns red on
-   dark, and red ticks next to the red unsubscribe button read as opting out. */
+/* Drawn, not native: Safari lightens accent-color on dark, so a native box
+   never shows the brand blue. The blue of the Save button in both themes, as
+   the theme's primary turns red on dark, and red ticks next to the red
+   unsubscribe button read as opting out. */
 .check input {
+  flex: 0 0 auto;
   width: 1.15rem;
   height: 1.15rem;
   margin: 0;
-  accent-color: #1D73C9;
+  border: 2px solid var(--ifm-color-emphasis-500);
+  border-radius: 4px;
+  background: transparent center / 85% no-repeat;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.check input:checked {
+  border-color: #1D73C9;
+  background-color: #1D73C9;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.check input:focus-visible {
+  outline: 2px solid #1D73C9;
+  outline-offset: 2px;
+}
+
+/* High-contrast modes draw their own colours, and a drawn box could vanish. */
+@media (forced-colors: active) {
+  .check input {
+    appearance: auto;
+    -webkit-appearance: checkbox;
+  }
 }
 
 .allOff {
   font-weight: 700;
 }
 
+/* Save on the left, "Unsubscribe from everything" on the right. */
 .choiceButtons {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   gap: 0.75rem;
 }
 

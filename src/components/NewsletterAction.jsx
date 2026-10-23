@@ -31,6 +31,14 @@ import styles from './NewsletterForm.module.css';
  * only the unsubscribe, as before topics existed. A typed address never gets
  * topics, as anybody could type it.
  *
+ * An address that is not subscribed (D630) sees the same topics with
+ * "Subscribe again with these topics" in place of Save, and no unsubscribe.
+ * The button only starts the double opt-in: a footer link survives
+ * forwarding, so the click in the inbox is what counts. The confirm page then
+ * says the address is subscribed again, with the topics chosen. With no
+ * topics on offer, such a visitor gets a link to the sign-up form, never the
+ * unsubscribe.
+ *
  * @param {'confirm' | 'unsubscribe'} kind
  */
 
@@ -47,7 +55,10 @@ const COPY = {
     ready: () => <>Press the button to confirm your subscription to {newsletter} about Salesforce Marketing, Data and AI. Nothing happens until you do.</>,
     button: 'Confirm subscription',
     working: 'Confirming...',
-    done: () => "You're on the list. A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.",
+    done: (address, result) =>
+      result && result.again
+        ? `You're subscribed again, with ${result.topics}. A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.`
+        : "You're on the list. A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.",
     expired: 'This link has expired. Confirmation links work for 7 days. Subscribe again on the newsletter page and you will get a fresh one.',
     invalid: 'This link is not valid. Subscribe again on the newsletter page and you will get a fresh one.',
     missing: 'This page needs the link from your confirmation email.',
@@ -75,13 +86,26 @@ const COPY = {
         ? `Saved. ${listOf(labels)} ${labels.length > 1 ? 'are' : 'is'} off for ${address}. The link in any newsletter brings you back here to change it.`
         : `Saved. ${address} gets every topic. The link in any newsletter brings you back here to change it.`,
     changed: 'The topic list changed while this page was open. Check the topics and save again.',
+    // Subscribing again, for an address that is not subscribed (D630)
+    againHeading: 'Subscribe again',
+    again: (address) => <>{address} is not subscribed to {newsletter} about Salesforce Marketing, Data and AI. Select the topics you want, and I will send a confirmation email to subscribe you again. Topics I add later start selected.</>,
+    againAllOff: 'Select at least one topic to subscribe again.',
+    againButton: 'Subscribe again with these topics',
+    againWorking: 'Sending...',
+    // Not subscribed, and no topics on offer: never the unsubscribe (D630)
+    notSubscribed: (address) => <>{address} is not subscribed to {newsletter} about Salesforce Marketing, Data and AI.</>,
+    signUp: 'Subscribe on the newsletter page',
+    pendingHeading: 'Check your inbox',
+    pending: (address) => `Almost there. A confirmation email is on its way to ${address}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder.`,
+    subscribed: 'This address is subscribed already. Change its topics below and save.',
   },
 };
 
 const ERROR = 'Could not reach the sign-up service. Try again in a moment, or use the newsletter page.';
 
 function listOf(labels) {
-  return typeof Intl.ListFormat === 'function' ? new Intl.ListFormat('en', { type: 'conjunction' }).format(labels) : labels.join(', ');
+  // en-GB: "A, B and C", as the script writes it in the welcome email.
+  return typeof Intl.ListFormat === 'function' ? new Intl.ListFormat('en-GB', { type: 'conjunction' }).format(labels) : labels.join(', ');
 }
 
 /** POSTs to the script and returns its JSON, or { ok } when the answer is not JSON. */
@@ -103,17 +127,43 @@ export default function NewsletterAction({ kind }) {
   const [topics, setTopics] = useState([]); // [{ key, label }] from Sling's Topics tab
   const [off, setOff] = useState([]); // keys unticked
   const [busy, setBusy] = useState(null); // 'save' | 'leave' while a choice posts
-  const [notice, setNotice] = useState(null); // 'changed' | 'error' under the choices
+  const [notice, setNotice] = useState(null); // 'changed' | 'subscribed' | 'error' under the choices
+  const [returning, setReturning] = useState(false); // not subscribed: the page offers to subscribe again (D630)
+  const [result, setResult] = useState(null); // the confirm answer, which says whether it was a return
   const panel = useRef(null);
 
   // A result is shorter than the choices. On a phone, scrolled down to the
   // buttons, the page would keep its place and leave the heading above the
   // screen, so the panel comes back into view.
   useEffect(() => {
-    if (['done', 'saved', 'invalid', 'error'].includes(status) && panel.current) {
+    if (['done', 'saved', 'pending', 'invalid', 'error'].includes(status) && panel.current) {
       panel.current.scrollIntoView({ block: 'nearest' });
     }
   }, [status]);
+
+  /**
+   * Asks the script for the topics, this person's choice and whether they are
+   * subscribed. Any failure leaves the plain unsubscribe, whose own POST
+   * checks the link. A script from before D630 sends no `subscribed`, and the
+   * page is a subscriber's, as before.
+   */
+  function readChoices(found, isCurrent = () => true) {
+    setStatus('reading');
+    return post({ action: 'choices', ...found }, READ_TIMEOUT_MS)
+      .then((data) => {
+        if (!isCurrent()) return;
+        const list = data.ok && Array.isArray(data.topics) ? data.topics : [];
+        if (!list.length) {
+          setStatus(data.ok && data.subscribed === false ? 'notSubscribed' : 'ready');
+          return;
+        }
+        setTopics(list);
+        setOff(Array.isArray(data.off) ? data.off : []);
+        setReturning(data.subscribed === false);
+        setStatus('choosing');
+      })
+      .catch(() => isCurrent() && setStatus('ready'));
+  }
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
@@ -128,22 +178,8 @@ export default function NewsletterAction({ kind }) {
       setStatus(!nativeFormEnabled ? 'inactive' : complete ? 'ready' : 'missing');
       return undefined;
     }
-    // Any failure here leaves the plain unsubscribe, whose own POST checks the link.
     let cancelled = false;
-    setStatus('reading');
-    post({ action: 'choices', ...found }, READ_TIMEOUT_MS)
-      .then((data) => {
-        if (cancelled) return;
-        const list = data.ok && Array.isArray(data.topics) ? data.topics : [];
-        if (!list.length) {
-          setStatus('ready');
-          return;
-        }
-        setTopics(list);
-        setOff(Array.isArray(data.off) ? data.off : []);
-        setStatus('choosing');
-      })
-      .catch(() => !cancelled && setStatus('ready'));
+    readChoices(found, () => !cancelled);
     return () => {
       cancelled = true;
     };
@@ -153,9 +189,49 @@ export default function NewsletterAction({ kind }) {
     setStatus('sending');
     try {
       const data = await post({ action: kind, ...params });
+      setResult(data);
       setStatus(data.ok ? 'done' : data.error === 'expired' ? 'expired' : 'invalid');
     } catch (error) {
       setStatus('error');
+    }
+  }
+
+  const offKeys = () => topics.filter((topic) => off.includes(topic.key)).map((topic) => topic.key);
+
+  /** The list changed under the page: draw the new one, keep the person's unticks that still apply, and let them try again. */
+  function redraw(list) {
+    if (!list.length) {
+      setStatus(returning ? 'notSubscribed' : 'ready');
+      return;
+    }
+    setTopics(list);
+    setOff((current) => current.filter((key) => list.some((topic) => topic.key === key)));
+    setNotice('changed');
+  }
+
+  /** "Subscribe again with these topics" (D630): starts the double opt-in and nothing more. */
+  async function resubscribe() {
+    setBusy('save');
+    setNotice(null);
+    try {
+      const data = await post({ action: 'resubscribe', ...params, off: offKeys().join(' ') });
+      if (data.ok && data.state === 'pending') {
+        setStatus('pending');
+      } else if (data.error === 'invalid') {
+        setStatus('invalid');
+      } else if (data.error === 'changed' && Array.isArray(data.topics)) {
+        redraw(data.topics);
+      } else if (data.error === 'subscribed') {
+        // Subscribed since the page opened: draw it as a subscriber's page.
+        await readChoices(params);
+        setNotice('subscribed');
+      } else {
+        setNotice('error');
+      }
+    } catch (error) {
+      setNotice('error');
+    } finally {
+      setBusy(null);
     }
   }
 
@@ -180,6 +256,10 @@ export default function NewsletterAction({ kind }) {
 
   async function save(event) {
     event.preventDefault();
+    if (returning) {
+      if (!allOff) resubscribe();
+      return;
+    }
     if (allOff) {
       leave('save');
       return;
@@ -187,7 +267,7 @@ export default function NewsletterAction({ kind }) {
     setBusy('save');
     setNotice(null);
     try {
-      const keys = topics.filter((topic) => off.includes(topic.key)).map((topic) => topic.key);
+      const keys = offKeys();
       const data = await post({ action: 'topics', ...params, off: keys.join(' ') });
       if (data.ok && data.state === 'saved') {
         setOff(Array.isArray(data.off) ? data.off : keys);
@@ -195,15 +275,7 @@ export default function NewsletterAction({ kind }) {
       } else if (data.error === 'invalid') {
         setStatus('invalid');
       } else if (data.error === 'changed' && Array.isArray(data.topics)) {
-        // The list changed under the page: draw the new one, keep the person's
-        // unticks that still apply, and let them save again.
-        if (!data.topics.length) {
-          setStatus('ready');
-          return;
-        }
-        setTopics(data.topics);
-        setOff((current) => current.filter((key) => data.topics.some((topic) => topic.key === key)));
-        setNotice('changed');
+        redraw(data.topics);
       } else {
         setNotice('error');
       }
@@ -217,9 +289,17 @@ export default function NewsletterAction({ kind }) {
   const address = params && params.u ? params.u : '';
   const offLabels = topics.filter((topic) => off.includes(topic.key)).map((topic) => topic.label);
   const showForm = kind === 'unsubscribe' && (status === 'missing' || status === 'invalid' || status === 'expired');
-  const showLink = !showForm && !['loading', 'reading', 'ready', 'sending', 'choosing'].includes(status);
-  const heading = { done: kind === 'confirm' ? 'Welcome' : 'Unsubscribed', saved: 'Saved', reading: copy.chooseHeading, choosing: copy.chooseHeading }[status] || copy.heading;
+  const showLink = !showForm && !['loading', 'reading', 'ready', 'sending', 'choosing', 'notSubscribed'].includes(status);
+  const heading = {
+    done: kind === 'confirm' ? (result && result.again ? 'Welcome back' : 'Welcome') : 'Unsubscribed',
+    saved: 'Saved',
+    pending: copy.pendingHeading,
+    reading: copy.chooseHeading,
+    choosing: returning ? copy.againHeading : copy.chooseHeading,
+    notSubscribed: copy.againHeading,
+  }[status] || copy.heading;
   const spinner = <span className={styles.spinner} aria-hidden="true" />;
+  const notices = { changed: copy.changed, subscribed: copy.subscribed, error: ERROR };
   const message = {
     loading: '',
     inactive: 'This page is not active yet. Use the newsletter page instead.',
@@ -227,9 +307,11 @@ export default function NewsletterAction({ kind }) {
     reading: <>{spinner}{copy.reading}</>,
     ready: copy.ready(address),
     sending: copy.ready(address),
-    choosing: copy.choose && copy.choose(address),
+    choosing: copy.choose && (returning ? copy.again(address) : copy.choose(address)),
     saved: copy.saved && copy.saved(address, offLabels),
-    done: copy.done(address),
+    pending: copy.pending && copy.pending(address),
+    notSubscribed: copy.notSubscribed && copy.notSubscribed(address),
+    done: copy.done(address, result),
     expired: copy.expired,
     invalid: copy.invalid,
     error: ERROR,
@@ -254,18 +336,29 @@ export default function NewsletterAction({ kind }) {
                   </label>
                 ))}
               </fieldset>
-              {allOff && <p className={styles.allOff}>{copy.allOff(address)}</p>}
-              {notice && <p role="alert" className={styles.error}>{notice === 'changed' ? copy.changed : ERROR}</p>}
+              {allOff && <p className={styles.allOff}>{returning ? copy.againAllOff : copy.allOff(address)}</p>}
+              {notice && <p role="alert" className={styles.error}>{notices[notice]}</p>}
               <div className={styles.choiceButtons}>
-                <button
-                  type="submit"
-                  className={clsx('button button--lg', allOff ? styles.unsubscribeButton : pageStyles.newsletterButton, busy === 'save' && styles.busy)}
-                  disabled={Boolean(busy)}
-                  aria-busy={busy === 'save'}
-                >
-                  {busy === 'save' ? <>{spinner}{allOff ? copy.working : copy.saving}</> : allOff ? copy.button : copy.save}
-                </button>
-                {!allOff && (
+                {returning ? (
+                  <button
+                    type="submit"
+                    className={clsx('button button--lg', pageStyles.newsletterButton, busy === 'save' && styles.busy)}
+                    disabled={Boolean(busy) || allOff}
+                    aria-busy={busy === 'save'}
+                  >
+                    {busy === 'save' ? <>{spinner}{copy.againWorking}</> : copy.againButton}
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className={clsx('button button--lg', allOff ? styles.unsubscribeButton : pageStyles.newsletterButton, busy === 'save' && styles.busy)}
+                    disabled={Boolean(busy)}
+                    aria-busy={busy === 'save'}
+                  >
+                    {busy === 'save' ? <>{spinner}{allOff ? copy.working : copy.saving}</> : allOff ? copy.button : copy.save}
+                  </button>
+                )}
+                {!allOff && !returning && (
                   <button
                     type="button"
                     className={clsx('button button--lg', styles.unsubscribeButton, busy === 'leave' && styles.busy)}
@@ -290,6 +383,13 @@ export default function NewsletterAction({ kind }) {
               >
                 {status === 'sending' ? <>{spinner}{copy.working}</> : copy.button}
               </button>
+            </p>
+          )}
+          {status === 'notSubscribed' && (
+            <p>
+              <Link className={clsx('button button--lg', pageStyles.newsletterButton)} to="/sites/newsletter/">
+                {copy.signUp}
+              </Link>
             </p>
           )}
           {showForm && (
