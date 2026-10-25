@@ -107,6 +107,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-10-25',
+        kind: 'App',
+        title: 'Strum 1.10',
+        url: '/strum/',
+        description: 'A clean, focused tablature editor for ukulele and guitar. Write tabs, play them back to check your timing, tune your instrument, and practise with a metronome that auto-scrolls the tab. New: edit a song beat by beat without closing the editor.',
+    },
+    {
         date: '2026-10-21',
         kind: 'Doc',
         title: 'MCE SQL Errors',
