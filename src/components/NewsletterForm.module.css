@@ -212,10 +212,17 @@ html[data-theme='dark'] .input {
   line-height: 1.5;
 }
 
+/* An error reads as text, and the red bar says it is one. In the theme's
+   tertiary it was the brand blue on dark, 3.3:1 on the panel at 14 px: too
+   faint to read, and easy to take for a link. */
 .error {
-  margin: 0.75rem 0 0;
-  color: var(--ifm-color-tertiary);
-  font-size: 0.9rem;
+  margin: 0.75rem 0 1rem;
+  padding: 0.6rem 0.85rem;
+  border-left: 4px solid #DA4E55;
+  border-radius: 4px;
+  background-color: color-mix(in srgb, #DA4E55 10%, transparent);
+  color: var(--ifm-font-color-base);
+  font-size: 0.95rem;
 }
 
 .done {

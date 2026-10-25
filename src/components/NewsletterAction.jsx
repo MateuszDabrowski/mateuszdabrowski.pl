@@ -218,7 +218,8 @@ export default function NewsletterAction({ kind }) {
     try {
       const data = await post({ action: kind, ...params });
       setResult(data);
-      setStatus(data.ok ? 'done' : data.error === 'expired' ? 'expired' : 'invalid');
+      // "failed" is the script's own error, reported to the operator: the link is fine, so try again.
+      setStatus(data.ok ? 'done' : data.error === 'failed' ? 'error' : data.error === 'expired' ? 'expired' : 'invalid');
     } catch (error) {
       setStatus('error');
     }
