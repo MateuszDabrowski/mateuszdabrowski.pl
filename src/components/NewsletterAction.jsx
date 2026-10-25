@@ -27,9 +27,10 @@ import styles from './NewsletterForm.module.css';
  * Topics tab Sling writes and the ones this person turned off. The page shows
  * one checkbox per topic, a save, and "Unsubscribe from everything".
  * Unticking every topic is an unsubscribe, and the page says so before the
- * click. With no topics, or no answer in READ_TIMEOUT_MS, the page offers
- * only the unsubscribe, as before topics existed. A typed address never gets
- * topics, as anybody could type it.
+ * click. With no topics, the page offers only the unsubscribe, as before
+ * topics existed. When the read fails or runs past READ_TIMEOUT_MS, it does
+ * the same and says the topics could not be loaded. A typed address never
+ * gets topics, as anybody could type it.
  *
  * An address that is not subscribed (D630) sees the same topics with
  * "Subscribe again with these topics" in place of Save, and no unsubscribe.
@@ -42,7 +43,10 @@ import styles from './NewsletterForm.module.css';
  * @param {'confirm' | 'unsubscribe'} kind
  */
 
-const READ_TIMEOUT_MS = 12000; // an Apps Script cold start plus the sheet read
+// A read takes 3 to 5 s with a cold start (measured 2026-10-22 and 2026-10-25),
+// and the sheet's size barely changes that: 3 rows and 3,000 took the same.
+const READ_TIMEOUT_MS = 12000;
+const RETRY_DELAY_MS = 1000; // before the one retry of a failed read
 
 // Named and linked on every state, so someone who got the link by mistake
 // sees what it is about before pressing anything.
@@ -75,7 +79,8 @@ const COPY = {
     missing: <>Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI.</>, // the form's own notice says what to enter
     // Topic choices, behind a signed link only
     chooseHeading: 'Unsubscribe or choose topics',
-    reading: 'Checking your link...',
+    reading: 'Loading your topics…',
+    unloaded: 'Your topics could not be loaded. Reload the page to choose them.',
     choose: (address) => <>Choose the topics {address} gets from {newsletter} about Salesforce Marketing, Data and AI. Deselect the ones you don't want and save. Topics I add later start selected.</>,
     allOff: (address) => `With no topic selected, saving will unsubscribe ${address} from the newsletter.`,
     save: 'Save topics',
@@ -143,26 +148,49 @@ export default function NewsletterAction({ kind }) {
 
   /**
    * Asks the script for the topics, this person's choice and whether they are
-   * subscribed. Any failure leaves the plain unsubscribe, whose own POST
-   * checks the link. A script from before D630 sends no `subscribed`, and the
-   * page is a subscriber's, as before.
+   * subscribed. When the read fails twice, runs past READ_TIMEOUT_MS or
+   * answers something else, the page keeps the plain unsubscribe and says the
+   * topics could not be loaded. A link the script rejects gets the unsubscribe
+   * without that line: a reload would not help, and the unsubscribe's own
+   * POST says the link is not valid. A script from before D630 sends no
+   * `subscribed`, and the page is a subscriber's, as before.
    */
   function readChoices(found, isCurrent = () => true) {
     setStatus('reading');
-    return post({ action: 'choices', ...found }, READ_TIMEOUT_MS)
+    setNotice(null);
+    const unloaded = () => {
+      if (!isCurrent()) return;
+      setNotice('unloaded');
+      setStatus('ready');
+    };
+    // A failed read gets one more try after a moment: on 2026-10-25 a read
+    // failed in the script during a send, and a reload a few seconds later
+    // worked. Not after a timeout, as the reader has waited long enough then.
+    const read = () => post({ action: 'choices', ...found }, READ_TIMEOUT_MS);
+    const answered = (data) => Array.isArray(data.topics) || data.error === 'invalid';
+    return read()
+      .catch((error) => (error && error.name === 'AbortError' ? Promise.reject(error) : {}))
+      .then((data) => (answered(data) ? data : new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS)).then(read)))
       .then((data) => {
         if (!isCurrent()) return;
-        const list = data.ok && Array.isArray(data.topics) ? data.topics : [];
-        if (!list.length) {
-          setStatus(data.ok && data.subscribed === false ? 'notSubscribed' : 'ready');
+        if (data.ok === false && data.error === 'invalid') {
+          setStatus('ready');
           return;
         }
-        setTopics(list);
+        if (!data.ok || !Array.isArray(data.topics)) {
+          unloaded();
+          return;
+        }
+        if (!data.topics.length) {
+          setStatus(data.subscribed === false ? 'notSubscribed' : 'ready');
+          return;
+        }
+        setTopics(data.topics);
         setOff(Array.isArray(data.off) ? data.off : []);
         setReturning(data.subscribed === false);
         setStatus('choosing');
       })
-      .catch(() => isCurrent() && setStatus('ready'));
+      .catch(unloaded);
   }
 
   useEffect(() => {
@@ -372,6 +400,7 @@ export default function NewsletterAction({ kind }) {
               </div>
             </form>
           )}
+          {(status === 'ready' || status === 'sending') && notice === 'unloaded' && <p>{copy.unloaded}</p>}
           {(status === 'ready' || status === 'sending') && (
             <p>
               <button
