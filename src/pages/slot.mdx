@@ -136,10 +136,10 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <p className="text--center" style={{fontSize: '1.2rem', marginBottom: '2rem'}}>Everything Gmail and Outlook already give you - and:</p>
     <div className="row">
       <div className="col col--6" style={{padding: '0 2rem'}}>
-        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› Unread counts on the Dock and on every account tile<br/> › A New badge for what arrived since you last looked<br/> › Native notifications that name the sender and subject<br/> › Quiet hours and alert pauses, per account<br/> › Meeting countdowns under each account's tile<br/> › An agenda of every account's day on one timeline - today, tomorrow, or a month<br/> › A live pill for the call you are on - mute camera or mic from any window<br/> › Draw over the page while you share your screen, and keep your name off Slot's bars</p>
+        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› Unread counts on the Dock and on every account tile<br/> › A New badge for what arrived since you last looked<br/> › Native notifications that name the sender and subject<br/> › Quiet hours and alert pauses, per account<br/> › Meeting countdowns under each account's tile<br/> › An agenda of every account's day on one timeline - today, tomorrow, or a month<br/> › A live pill for the call you are on - mute camera or mic from any window<br/> › Draw over the page while you share your screen, and keep your name off Slot's bars<br/> › Idle tabs give their memory back, and reload when you return</p>
       </div>
       <div className="col col--6" style={{padding: '0 2rem'}}>
-        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› mailto: links that ask which account should send<br/> › Each account's links routed to the browser you chose<br/> › Docs, Sheets, Slides, Word, Excel and PowerPoint in their own windows<br/> › All nineteen Google and Microsoft apps, each on or off per account<br/> › Up to four notes and a list of favourite files, one click from any window<br/> › Every account in its own isolated session, enforced by macOS<br/> › Diagramforce, a free diagramming tool, as an optional add-on<br/> › One purchase - no subscription, ever</p>
+        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› mailto: links that ask which account should send<br/> › Each account's links routed to the browser you chose<br/> › Meeting and document links from any app, opened as the right account<br/> › Docs, Sheets, Slides, Word, Excel and PowerPoint in their own windows<br/> › All nineteen Google and Microsoft apps, each on or off per account<br/> › Up to four notes and a list of favourite files, one click from any window<br/> › Every account in its own isolated session, enforced by macOS<br/> › Diagramforce, a free diagramming tool, as an optional add-on<br/> › One purchase - no subscription, ever</p>
       </div>
     </div>
   </div>
@@ -185,6 +185,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
       </div>
       <p style={{fontSize: '1.1rem'}}>Paste your calendar's private address once and Slot shows what is coming up under each account, with a reminder at the lead times you choose. The calendar is parsed on your Mac - recurring events, exceptions, time zones and all - with no sign-in and no account access beyond that one address. All-day blocks stay out of the way, and a Join button takes you straight into the call. Once you are on it, the call becomes a live pill under its account's tile, and the camera and microphone controls follow it into every window - so you can mute while reading a spreadsheet, without going back to find the call. When you share your screen, a pencil in every window's bar draws over the page for the people watching - pen, highlighter, rectangle, arrow and numbered markers you can move - and clears when you are done.</p>
+      <p style={{fontSize: '1.1rem'}}>If your microphone does not start, its icon turns amber and Slot shows the fix, with a button to rejoin. If another app takes your AirPods mid-call, <strong>Meeting → Restart Call Sound</strong> brings the call back to them. And quitting Slot during a call asks first, so a stray ⌘Q never drops you out of a meeting.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
@@ -270,6 +271,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
       </div>
       <p style={{fontSize: '1.1rem'}}>Make Slot your mail handler and every <code>mailto:</code> asks which account should send. Links going the other way are routed per account too: send one account's links to Chrome and another's to Safari, or keep them inside Slot - so the Jira link in a work mail opens in the browser that is signed in as work. Any tab can be pulled out into its own window and tiled beside another account's, and every window says whose it is.</p>
+      <p style={{fontSize: '1.1rem'}}>A meeting or document link that reaches you somewhere else - Slack, Notes, a ticket - gets the same care: right-click it, choose <strong>Services → Open in Slot</strong>, and it opens as the right account. A SharePoint file shared to your Gmail address, or a Google Doc shared to your Outlook one, opens in Slot too, in the account it was sent to.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
@@ -324,7 +326,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
         </div>
 
-        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>Require Touch ID to open Slot, and camera and microphone go only to Meet and Teams - no other page can even ask. Presenting? One switch hides Slot from your screen share: the main window, everything but one account, or every window - the audience sees a black card, you keep seeing it all. A second switch takes your name, address and picture off Slot's own bars for the share; what the page shows of you stays. Removing an account deletes all of its data.</p>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>Require Touch ID to open Slot, and while it is locked every window but your call's is covered, with no account names or pictures showing. Camera and microphone go only to Meet and Teams - no other page can even ask. Presenting? One switch hides Slot from your screen share: the main window, everything but one account, or every window - the audience sees a black card, you keep seeing it all. A second switch takes your name, address and picture off Slot's own bars and window titles for the share; what the page shows of you stays. Removing an account deletes all of its data.</p>
       </div>
     </div>
   </div>
@@ -386,9 +388,9 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 </details>
 
 <details className={styles.faqDetails}>
-  <summary>Diagramforce cannot open the Google file picker in Slot.</summary>
+  <summary>Does Diagramforce's Google file picker work in Slot?</summary>
 
-  Known, and reported to Apple (FB24880571, WebKit bug 324733): inside an app, WebKit sends the picker's frame no cookies, so it cannot sign in. Saving, loading and sharing work in Slot as they do in a browser; the two doors that need the picker - the whole-Drive search and Add to Shared Drive - need Diagramforce in a browser until WebKit is fixed.
+  On macOS 27.2 and later, yes - the whole-Drive search and Add to Shared Drive included. The first time you open it in an account, Google asks you to allow cookies, and then macOS asks the same. Allow both, and after that it opens straight away. On earlier macOS, WebKit sends the picker's frame no cookies inside an app, so it cannot sign in (reported to Apple as FB24880571, WebKit bug 324733). There, saving, loading and sharing work in Slot as they do in a browser, and the two doors that need the picker need Diagramforce in a browser.
 
 </details>
 
@@ -420,7 +422,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ## Privacy Policy {#privacy-policy}
 
-<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: September 22, 2026</p>
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: October 28, 2026</p>
 
 <p>Slot is built by Mateusz Dąbrowski. This policy explains what the Slot app does with your data. The short version: Slot sends nothing to me, and it keeps every account apart from every other one. The longer version matters, because Slot is a container for accounts you already have with Google and Microsoft, and a lot of what happens inside it is between you and them.</p>
 
@@ -457,7 +459,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 <p>Every account gets its own isolated data store. Cookies, sessions and site data from one account are invisible to every other one - this is what lets a work and a personal Google account be signed in at the same time without either being aware of the other, and it is enforced by macOS, not by Slot being careful.</p>
 
-<p>Slot <strong>never asks for, reads, stores or logs your password.</strong> Signing in happens on your provider's own sign-in page, inside a web view, and Slot runs no script on it. Session cookies live inside the account's store, managed by the system; Slot does not read them except to send the Gmail unread request described below, and it never copies them anywhere.</p>
+<p>Slot <strong>never asks for, reads, stores or logs your password.</strong> Signing in happens on your provider's own sign-in page, inside a web view, and Slot runs no script on it. Session cookies live inside the account's store, managed by the system; Slot does not read them except to send the Gmail unread request described below, and it never copies them anywhere. It does look at which sites an account's cookies and site data belong to - the site names, never what they hold. That is how a SharePoint link reaches the Microsoft account that uses that SharePoint, and how Slot warns you when removing an account would delete its Diagramforce diagrams.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -470,7 +472,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <ul>
   <li><strong>Your account list</strong> - for each account: a name, any name you set yourself, the address the account reports, the colour you chose, which surfaces you enabled, which browser opens its links, your notification and quiet-hours settings, the calendar feed address if you added one, and the last unread count Slot showed you.</li>
   <li><strong>Profile pictures</strong> - the picture shown on the account rail, cached as a file.</li>
-  <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, whether the menu bar item and its countdown are shown, whether Slot asks for Touch ID on unlock, which add-ons are on and for which accounts, whether your name and picture show on Slot's own bars, and the tab and note each account last had open.</li>
+  <li><strong>App settings</strong> - appearance, notification and sound preferences, meeting reminder lead times, whether the menu bar item and its countdown are shown, whether Slot asks for Touch ID on unlock, which add-ons are on and for which accounts, whether your name and picture show on Slot's own bars, the time zones each account tracks, and the tab and note each account last had open.</li>
   <li><strong>Your notes</strong> - the notes in Slot's own note panel, up to four, with their formatting, saved as files. A note you made shared belongs to the app; a note you made per account is one file per account, deleted with that account. Nothing in them is sent anywhere.</li>
   <li><strong>Your favourites</strong> - the metadata of documents you chose to keep: each one's address, the name it had when you kept it, any name or tags you gave it, and which account it belongs to.</li>
   <li><strong>Your availability</strong> - the dates you marked in the month view as limited availability or as travel, and the repeating pattern if you set one. You type these into Slot yourself; they are read from no calendar and belong to no account.</li>
@@ -504,7 +506,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>Slot reads a small number of specific things out of provider pages so it can show them natively. It installs no permanent scripts on any provider's page, registers no channel a page could call into, and bundles no JavaScript of its own. The one exception is the Diagramforce add-on: on its own pages, and nowhere else, Slot sets a single read-only marker saying which version of Slot the page is in, so the tool can adapt to it. The marker carries nothing about you or your accounts. There are four reads, all one-shot and read-only:</p>
+<p>Slot reads a small number of specific things out of provider pages so it can show them natively. It installs no permanent scripts on any provider's page and registers no channel a page could call into, with one exception, which belongs to the Diagramforce add-on and is described after this list. There are four reads, all one-shot and read-only:</p>
 
 <ul>
   <li>The address of your profile picture, from the Gmail page's own header.</li>
@@ -514,6 +516,14 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 </ul>
 
 <p>None of them reads a form field, a password, a cookie or a session token, and none reads the body of your mail. Nothing read this way is sent anywhere by Slot.</p>
+
+<p>The Diagramforce add-on adds three things, all inside that account's Diagramforce tab and nowhere else:</p>
+
+<ul>
+  <li><strong>A marker.</strong> On Diagramforce's own pages, Slot sets a single read-only marker saying which version of Slot the page is in and what it supports, so the tool can adapt to it. The marker carries nothing about you or your accounts.</li>
+  <li><strong>A question about unsaved work.</strong> Before Slot closes a Diagramforce tab to save memory, it asks the page whether it holds changes not saved yet, and keeps the tab open if it does. The page answers yes or no with the reason, never with the diagram itself.</li>
+  <li><strong>Google's file picker</strong>, on macOS 27.2 and later. When Diagramforce opens Google's picker, Slot adds a small script to it. When you click in the picker, the script asks macOS to let it use the account's Google sign-in. When Google shows its "Can't access your Google Account" page instead, the script hides that page and tells Slot over a channel only the picker is heard on, and Slot clicks the page for you. To make that click, Slot reads where the picker sits on Diagramforce's page. The script reads nothing in the picker beyond whether that page is showing.</li>
+</ul>
 
     <div style={{marginTop: '2rem'}}>
 

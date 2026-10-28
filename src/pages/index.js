@@ -107,6 +107,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-10-28',
+        kind: 'App',
+        title: 'Slot 1.7',
+        url: '/slot/',
+        description: 'Slot works with all your Google and Microsoft accounts in one place. New: meeting and document links from any app open as the right account, idle tabs give their memory back, and Diagramforce\'s Google Drive file picker works inside Slot on macOS 27.2.',
+    },
+    {
         date: '2026-10-25',
         kind: 'App',
         title: 'Strum 1.10',
@@ -154,13 +161,6 @@ const whatsNew = [
         title: 'MCE MobilePush Data Views',
         url: '/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/',
         description: 'Push past the docs. The undocumented MobilePush Data Views in MCE, what their values mean and where push engagement data lives.',
-    },
-    {
-        date: '2026-09-22',
-        kind: 'App',
-        title: 'Slot 1.6',
-        url: '/slot/',
-        description: 'Slot works with all your Google and Microsoft accounts in one place. New: Diagramforce as an add-on per account, drawing and privacy for screen sharing, and each account remembering where you left off.',
     },
     {
         date: '2026-09-04',
