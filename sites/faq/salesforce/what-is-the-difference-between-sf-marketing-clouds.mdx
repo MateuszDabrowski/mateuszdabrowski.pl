@@ -85,8 +85,8 @@ classDiagram
     }
     class D360 {
       - Both B2C and B2B
-      - Businesses committed to Data 360
-      - Complex or real-time personalisation needs
+      - Businesses already running Data 360
+      - Everyday marketing on unified data
     }
 
     %% Define Relationships between Platforms and their Audiences
@@ -95,7 +95,7 @@ classDiagram
     MCN --> D360 : targets
 ```
 
-*Diagram: :product[Marketing Cloud Engagement] targets B2C enterprises, Account Engagement targets B2B businesses, and :product[Marketing Cloud Next] targets B2C and B2B businesses committed to :product[Data 360].*
+*Diagram: :product[Marketing Cloud Engagement] targets B2C enterprises, Account Engagement targets B2B businesses, and :product[Marketing Cloud Next] targets B2C and B2B businesses that already run :product[Data 360].*
 
 #### Salesforce Marketing Cloud Engagement
 
@@ -147,13 +147,17 @@ The newest of the three products, :product[Marketing Cloud Next], is a fresh tak
 
 Official marketing puts the entry-level __Growth Edition__ as a tool for small businesses, while __Advanced Edition__ targets larger, multi-brand organisations. Either way, an Enterprise (or higher) Salesforce CRM licence is a prerequisite just to get started - already a stretch for a product pitched at small businesses. It is not a standalone Marketing Automation platform like :product[Marketing Cloud Engagement], but rather a complementary product for Salesforce CRM.
 
-Don't let the SMB marketing fool you though. Based on where the actual feature investment has gone, :product[Marketing Cloud]{of=mcn as-written} is built for businesses already committed to (or ready to commit to) :product[Data 360] - not ones with basic needs. Its headline differentiator, __Real-Time Segments__, is built on :product[Data 360]'s Real-time Data Graph and exists specifically for complex, cross-system, real-time use cases: unifying identity across systems and triggering campaigns off live behavioural signals. __Business Units__ (with cross-BU content sharing) - an enterprise-scale, multi-brand/multi-market feature - is Advanced Edition only, not Growth. If your needs really are basic, you likely don't need what makes this product distinctive in the first place.
+Don't let the SMB marketing fool you though. The prerequisites alone (Enterprise CRM, :product[Data 360] and the credits it consumes) cost more than a small business with basic needs should spend on marketing automation. So who is it for? __Businesses that already run :product[Data 360] for other reasons and need everyday marketing on the same data.__ If your sales, service or analytics teams already unify customers there, :product[Marketing Cloud]{of=mcn as-written} segments and personalises on that model directly, without a connector, a second copy of the data or a second platform to maintain. By everyday marketing I mean newsletters, nurture and follow-up flows for one brand, on email and SMS, personalised from a handful of fields.
+
+Why only everyday? Because the platform still breaks on the complex cases that :product[MCE] handles routinely. Workspaces share all or nothing. You can't pick a single email or folder, so the target workspaces see your drafts as well. Sharing also covers one hop only: if workspace A shares with B and B shares with C, content from A reaches C only when A shares with C directly. Once you relate a workspace to a Business Unit, it shares only within that unit, and you can't undo the relation. Without a :product[Salesforce Personalization]{bare} licence, the org, or each Business Unit, personalises from one profile data graph at a time, and SMS and WhatsApp read only that default one. A graph also stops at 25 objects and 200 fields, and it keeps at most 1,000 related records under each parent record, so a customer with 3,000 orders appears with 1,000 of them. The default is 100, picked by record ID rather than by date unless you set a sort order, and the graph drops the rest without an error. Multi-brand programmes with shared content and personalisation over a large data model meet all of these limits at once.
+
+What it is not built for is real-time marketing, despite the __Real-Time Segments__ headline. Most of the platform runs on a batch cadence: standard segments publish every 12-24 hours, data graphs refresh on a schedule between 30 minutes and once a day (or within minutes in streaming mode), and flows triggered by automation events start within about 15 minutes of the event. Real-time segments do exist, but you get 35 per org, each limited to one engagement DMO and one streaming event with no exclusions, and their events bill on the same Sub-Second Real-Time meter as :product[Salesforce Personalization]{bare}. Fast sends are possible through on-demand flows called over the API. However, each call must include the person's Individual ID from :product[Data 360], so your source system has to know that ID for every customer it messages. The rest of the data arrives with the call, so :product[Data 360] adds little to these sends, and the Transactional Messaging API in :product[MCE] is the more mature option for the same job.
 
 :product[Marketing Cloud]{of=mcn as-written} focuses on a drag-and-drop interface, rich segmentation with :product[Data 360] and automated marketing operations with Agentforce for Marketing that can automatically create briefs, emails and customer journeys in Flows. It's rapidly closing feature gaps - AMPscript support, a native data store (Marketing Objects), Business Units, and dedicated IPs all shipped for the first time between Spring and Summer '26. It's heavily developed and rapidly catching up to :product[Marketing Cloud Account Engagement] with B2B focused features, but still not a perfect match and not even close in terms of stability.
 
 :::note You Should Know
 
-:product[Salesforce Marketing Cloud]{of=mcn as-written} is undoubtedly where Salesforce's Marketing Automation investment is heading, and it has real potential to compete with the modern platforms on the market. For now, though, treat it as an experimentation ground rather than a destination: ideal for existing :product[MCE] & :product[MCAE] customers exploring what's new through Plus licences, but not something I'd bet a standalone, net-new implementation on just yet - unless you're already deep enough in :product[Data 360] that its complex segmentation and real-time personalisation are exactly what you came for.
+:product[Salesforce Marketing Cloud]{of=mcn as-written} is undoubtedly where Salesforce's Marketing Automation investment is heading, and it has real potential to compete with the modern platforms on the market. For now, though, treat it as an experimentation ground rather than a destination: ideal for existing :product[MCE] & :product[MCAE] customers exploring what's new through Plus licences, but not something I'd bet a standalone, net-new implementation on just yet - unless :product[Data 360] is already in place and your marketing is everyday campaigns that can wait minutes to hours for fresh data. Then it is the shortest path to marketing on the data you already pay to unify.
 
 :::
 
@@ -161,16 +165,16 @@ Don't let the SMB marketing fool you though. Based on where the actual feature i
 
 | Feature/Aspect | :product[Marketing Cloud Engagement] | :product[Marketing Cloud Account Engagement] | :product[Marketing Cloud]{of=mcn as-written} (MC) |
 |--|--|--|--|
-| **Target Audience** | Large & Enterprise B2C | Medium & Large B2B | B2C & B2B businesses on (or investing in) :product[Data 360] |
-| **Use Case** | Complex and business-specific marketing | Lead focused and sales aligned marketing | Complex, real-time segmentation and personalisation |
+| **Target Audience** | Large & Enterprise B2C | Medium & Large B2B | B2C & B2B businesses already running :product[Data 360] |
+| **Use Case** | Complex and business-specific marketing | Lead focused and sales aligned marketing | Everyday campaigns on unified :product[Data 360] data |
 | **Salesforce CRM** | Optional | Required | Required |
 | **Flexibility & Customisability** | High | Moderate | Low |
 | **Ease of Use** | Moderate | High | Moderate |
 | **Setup Complexity** | High | Low | Moderate |
-| **Key Features** | Advanced segmentation, complex journeys, and heavy customization | Lead scoring, grading and prospect tracking | Data 360-native real-time segmentation, agentic support, and newest features |
+| **Key Features** | Advanced segmentation, complex journeys, and heavy customization | Lead scoring, grading and prospect tracking | Data 360-native segmentation, agentic support, and newest features |
 | **Community & Resources** | Strong | Strong | Growing |
 | **Pricing** | High | Moderate | It's complicated |
-| **Ideal For** | Businesses with complex needs and IT support | B2B companies with straightforward needs | Businesses with data team support and real-time ambitions |
+| **Ideal For** | Businesses with complex needs and IT support | B2B companies with straightforward needs | :product[Data 360] customers adding everyday marketing on the same data |
 | **State** | Well established product | Looming end of life | Generally available work in progress |
 
 ### Real-Time Personalization Platforms
@@ -306,7 +310,7 @@ If you are looking for a Marketing Automation Platform and the Salesforce offeri
 
 - If you need a complex and highly customisable solution, go for __:product[Marketing Cloud Engagement]__.
 - If you use Salesforce CRM and need something simpler, B2B focused, with good support and maturity, go for __:product[Marketing Cloud Account Engagement]__.
-- If you are a Salesforce CRM user already on (or ready to invest in) :product[Data 360] and need complex, heavily-calculated segmentation or real-time personalisation, go for the new __:product[Marketing Cloud]{of=mcn as-written}__ - don't be misled by its Growth Edition's small-business marketing; its real differentiators live in Data 360-native capabilities, not basic needs.
+- If you are a Salesforce CRM user already running :product[Data 360] and want everyday marketing on the same unified data (one brand, campaigns that can wait minutes to hours for fresh data), go for the new __:product[Marketing Cloud]{of=mcn as-written}__ - don't be misled by its Growth Edition's small-business marketing or its real-time headline. Its fit is the data you already have in :product[Data 360].
 
 :::note You Should Know
 
