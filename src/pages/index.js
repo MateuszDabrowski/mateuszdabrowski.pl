@@ -253,7 +253,7 @@ const events = [
     },
     {
         title: 'MC Next Consultant Bootcamp: Ask Me Anything',
-        date: '2026-10-27',
+        date: '2026-10-30',
         place: 'Online',
         description: 'Day 7 of the Marketing Cloud Next Consultant Bootcamp series, this session will be the closing AMA session. Get your exam questions answered by the bootcamp speakers and get ready to become certified Marketing Cloud Next Consultant.',
         url: 'https://trailblazercommunitygroups.com/events/details/salesforce-salesforce-global-bootcamp-group-virtual-presents-marketing-cloud-next-consultant-bootcamp-day-7/',
