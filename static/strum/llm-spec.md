@@ -544,12 +544,8 @@ Every baritone chord id is the above name prefixed with `b-` — e.g.
 #### Guitar, standard tuning (prefix `g-`)
 
 Every standard-guitar chord id is the above name prefixed with `g-` — e.g.
-`g-C`, `g-D`, `g-Am`, `g-F`, `g-Bm`, `g-Cmaj7`. The full guitar set
-covers the same families as ukulele, except the Sixth and Add 9 rows
-and the sharp- and flat-root dominant 7ths (`C#7` `Eb7` `F#7` `Ab7`
-`Bb7`) and major 7ths (`C#maj7` `Ebmaj7` `F#maj7` `Abmaj7` `Bbmaj7`):
-there is no `g-G6`, `g-Fadd9`, `g-F#7` or `g-Bbmaj7`. Define a custom
-chord (§ 7) for those.
+`g-C`, `g-D`, `g-Am`, `g-F`, `g-Bm`, `g-Cmaj7`, `g-G6`, `g-Fadd9`. The
+guitar set covers every family and root in the ukulele table.
 
 #### Guitar, Drop D tuning (prefix `dd-`)
 
@@ -576,10 +572,13 @@ custom chord (§ 7).
 a minor third below it, and on ukulele `C6` `D6` `Eb6` `F6` `G6` share
 their frets with `Am7` `Bm7` `Cm7` `Dm7` `Em7`. Pin the name your source
 uses. A beat with those frets and no pin is named after the minor 7th.
+Guitar 6 chords keep their root in the bass, so none shares an m7's frets.
 
 **Ids added in later versions.** The sharp- and flat-root minors,
 dominant 7ths and major 7ths, and every 6 and add9 except `Fadd9`, on
-ukulele and baritone arrived after Strum 1.10.0. An
+ukulele and baritone arrived after Strum 1.10.0. So did the guitar
+sharp- and flat-root dominant 7ths and major 7ths and every guitar 6 and
+add9 chord, `g-Fadd9` included. An
 older build keeps a pin it doesn't know and still plays the beat's
 `notes`, but shows no chord name or box for it. That is one more reason
 every pinned beat must carry its `notes`.
