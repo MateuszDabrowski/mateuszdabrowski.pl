@@ -31,9 +31,10 @@ You will usually be asked something like:
 > "Transcribe *Stand By Me* for high-G ukulele into a `.strum` file."
 
 Your job: emit a **single JSON document** that matches the schema below.
-Save it (or instruct the user to save it) with a `.strum` extension. The
-user opens Strum → Library → Import → picks the file → the song appears
-in their library.
+Save it (or instruct the user to save it) with a `.strum` extension. On an
+iPhone, iPad or Mac with Strum, opening a `.strum` file from Files, Mail,
+Messages or AirDrop imports it and opens the song. A file saved as `.json`
+still imports through Strum → Library → Import.
 
 You do **not** need access to Strum to test the file. If your JSON
 parses, the fields match the schema, and the values fall inside the
@@ -140,7 +141,9 @@ That's the whole file. Key points:
 ## 2. The file
 
 * **Encoding**: UTF-8, no BOM.
-* **Extension**: `.strum`. The app registers this as a custom UTType.
+* **Extension**: `.strum`. Strum declares it as its own document type,
+  so opening a `.strum` file from Files, Mail, Messages or AirDrop imports
+  it. Library → Import also accepts plain `.json`.
 * **MIME**: not relevant — the file moves via Files, AirDrop, iMessage,
   Mail attachments, etc., never over HTTP.
 * **Size cap**: 5 MB. Files larger than that are rejected before
@@ -162,7 +165,7 @@ StrumSongDTO {
   artist                     String   required
   bpm                        Int      required, **quarter-note** beats per minute (the notated pulse), independent of
                                       usesEighths: at bpm 60 a quarter slot lasts 1 s and an eighth slot 0.5 s.
-                                      Clamped to 40..300 at playback; pick 30..300.
+                                      Must be 40..300. A value outside is clamped to that range on import.
   capoFret                   Int?     optional, 0..24 (clamped on import); omit or 0 = no capo. Raises the SOUNDING pitch by
                                       that many semitones while fret numbers stay as written — capo tab convention. Do NOT
                                       transpose the frets or rename the chords: a C shape stays "C". Purely additive, so it
@@ -215,6 +218,8 @@ When `false`, it has four (one per quarter note). General rule:
 | Pure quarters, plain "down on each beat" feel | `false` |
 | Any 8th-note strum (down-up, island, calypso, almost all pop/folk) | `true` |
 | 16th-note feel | There is no 16th grid inside a 4/4 bar — the finest 4/4 slot is an eighth. Quantise to eighths, or write the bar as **8/8 with `usesEighths: true`** (16 sixteenth-slots, same four quarter-beats). Never set `"sixteenth"` on one slot of an eighth-grid bar: that shortens the bar. |
+| Triplet feel throughout (every beat in eighth-note triplets) | There are no tuplets. Write the song in **12/8** (12 eighth-slots per bar) and multiply the `bpm` by 1.5, so each dotted-quarter beat lasts as long as the original quarter. |
+| Triplets mixed with straight eighths or sixteenths in one bar | No grid holds both exactly. Use **8/8 with `usesEighths: true`** and put an eighth-note triplet on the 1st, 2nd and 4th sixteenth of its beat (each note at most a third of a sixteenth off). Do not use 24/16: it is a simple meter, so the staff ties fall in the wrong places and the metronome clicks on every slot. |
 
 A 4/4 bar with `usesEighths: true` carries **8 beats** in the `beats`
 array, each `"eighth"`.
@@ -250,8 +255,9 @@ Song
 
 Each level has a required `index` field. Indices are **0-based** and
 should equal the element's position in its parent array. The importer
-does not re-sort on `index`, but mismatched indices confuse the editor
-when the file round-trips.
+orders each list by `index`, with file order breaking ties, then
+renumbers 0, 1, 2…. A gap or a repeat does not break the import, but
+write indices in order.
 
 ### 4.1 `SectionDTO`
 
@@ -362,7 +368,8 @@ Rules:
   honour it in the file.
 * **Rests.** `isRest: true` typically pairs with `strum: "none"` and
   `notes: []`. (A pattern-side `"rest"` stroke is a separate concept —
-  see § 5.5.)
+  see § 5.5. The importer turns a `"rest"` stroke on a beat into
+  `isRest: true` with `strum: "none"`.)
 * **Chord pinning.** Setting `pinnedChordName` on a beat tells Strum
   "show this chord glyph above this beat, and use this chord's notes
   when the player triggers an audible strum." A pin sticks until the
@@ -378,7 +385,7 @@ Rules:
 
 ```text
 TabNoteDTO {
-  string      Int      required, string index (see § 5.1) — clamped to 0..10 on import
+  string      Int      required, string index (see § 5.1) — must exist on the song's tuning; one note per string per beat
   fret        Int      required, fret number — clamped to -1..30 on import; -1 means "dead/muted note" (renders as "×")
   transition  String?  optional, connective articulation to the NEXT note on this string — NoteTransition enum, see § 5.6
   ornament    String?  optional, in-place articulation on this note — NoteOrnament enum, see § 5.6
@@ -433,7 +440,9 @@ string** through every later slot until one of these ends it:
 * the same string is struck again;
 * a beat with `isRest: true` (an explicit rest damps everything);
 * a beat with `strum: "mute"` (a chuck damps everything);
-* the end of the measure;
+* the end of the NEXT measure: a note still ringing at a barline carries
+  on through the next measure's opening empty slots (and is drawn tied
+  over the barline), but never into a third measure;
 * a hard cap of 4 quarter-beats — the instrument's natural decay, so a
   note cannot ring longer than one 4/4 bar.
 
@@ -516,15 +525,16 @@ they differ only in the pitch of the g string).
 | Family | Ids |
 |---|---|
 | Major | `C` `C#` `D` `Eb` `E` `F` `F#` `G` `Ab` `A` `Bb` `B` |
-| Minor | `Cm` `Dm` `Em` `Fm` `Gm` `Am` `Bm` |
-| Dominant 7 | `C7` `D7` `E7` `F7` `G7` `A7` `B7` |
+| Minor | `Cm` `C#m` `Dm` `Ebm` `Em` `Fm` `F#m` `Gm` `G#m` `Am` `Bbm` `Bm` |
+| Dominant 7 | `C7` `C#7` `D7` `Eb7` `E7` `F7` `F#7` `G7` `Ab7` `A7` `Bb7` `B7` |
 | Minor 7 | `Cm7` `Dm7` `Em7` `Fm7` `Gm7` `Am7` `Bm7` |
-| Major 7 | `Cmaj7` `Dmaj7` `Emaj7` `Fmaj7` `Gmaj7` `Amaj7` `Bmaj7` |
+| Major 7 | `Cmaj7` `C#maj7` `Dmaj7` `Ebmaj7` `Emaj7` `Fmaj7` `F#maj7` `Gmaj7` `Abmaj7` `Amaj7` `Bbmaj7` `Bmaj7` |
 | Sus2 | `Asus2` `Bsus2` `Csus2` `Dsus2` `Esus2` `Fsus2` `Gsus2` |
 | Sus4 | `Asus4` `Bsus4` `Csus4` `Dsus4` `Esus4` `Fsus4` `Gsus4` |
 | Diminished | `Adim` `Bdim` `Cdim` `Ddim` `Edim` `Fdim` `Gdim` |
 | Augmented | `Aaug` `Baug` `Caug` `Daug` `Eaug` `Faug` `Gaug` |
-| Extension | `Fadd9` |
+| Sixth | `C6` `C#6` `D6` `Eb6` `E6` `F6` `F#6` `G6` `Ab6` `A6` `Bb6` `B6` |
+| Add 9 | `Cadd9` `C#add9` `Dadd9` `Ebadd9` `Eadd9` `Fadd9` `F#add9` `Gadd9` `Abadd9` `Aadd9` `Bbadd9` `Badd9` |
 
 #### Baritone ukulele (prefix `b-`)
 
@@ -535,7 +545,11 @@ Every baritone chord id is the above name prefixed with `b-` — e.g.
 
 Every standard-guitar chord id is the above name prefixed with `g-` — e.g.
 `g-C`, `g-D`, `g-Am`, `g-F`, `g-Bm`, `g-Cmaj7`. The full guitar set
-covers the same families as ukulele.
+covers the same families as ukulele, except the Sixth and Add 9 rows
+and the sharp- and flat-root dominant 7ths (`C#7` `Eb7` `F#7` `Ab7`
+`Bb7`) and major 7ths (`C#maj7` `Ebmaj7` `F#maj7` `Abmaj7` `Bbmaj7`):
+there is no `g-G6`, `g-Fadd9`, `g-F#7` or `g-Bbmaj7`. Define a custom
+chord (§ 7) for those.
 
 #### Guitar, Drop D tuning (prefix `dd-`)
 
@@ -547,15 +561,28 @@ resolve in a Drop D song (different fingering domain) and vice versa —
 match the prefix to the song's tuning, not just its instrument.
 
 **Why this matters**: a `pinnedChordName` of `"C"` on a guitar song
-resolves to a *ukulele* C shape and won't render correctly. Always
-prefix to the song's instrument **and** tuning (`g-` standard, `dd-`
-Drop D).
+names a *ukulele* C shape. The importer swaps in the song's chord of the
+same name (`"g-C"`) when its tuning has one. Otherwise it names the beat
+from its notes, or drops the pin. Don't rely on that: always prefix to
+the song's instrument **and** tuning (`g-` standard, `dd-` Drop D).
 
 **Picking an enharmonic.** Strum stores `C#` and `Db` as distinct ids
 (only one of each enharmonic pair is in the library — see the list).
 Pick the spelling that matches the key. If you need an id that doesn't
 exist (e.g. `D#m`), either substitute the enharmonic (`Ebm`) or define a
 custom chord (§ 7).
+
+**A 6 chord or its minor 7th.** A 6 chord has the notes of the minor 7th
+a minor third below it, and on ukulele `C6` `D6` `Eb6` `F6` `G6` share
+their frets with `Am7` `Bm7` `Cm7` `Dm7` `Em7`. Pin the name your source
+uses. A beat with those frets and no pin is named after the minor 7th.
+
+**Ids added in later versions.** The sharp- and flat-root minors,
+dominant 7ths and major 7ths, and every 6 and add9 except `Fadd9`, on
+ukulele and baritone arrived after Strum 1.10.0. An
+older build keeps a pin it doesn't know and still plays the beat's
+`notes`, but shows no chord name or box for it. That is one more reason
+every pinned beat must carry its `notes`.
 
 ### 5.3 Note durations (`BeatDTO.duration`)
 
@@ -586,10 +613,13 @@ covers empty (`"strum": "none"`, `"notes": []`, `"isRest": false`) — the
 strike rings through them (§ 4.7). Do **not** write `"half"` on the
 attacking slot.
 
-A bar whose durations sum long *plays* long: the playhead and the
-metronome sit on the over-long slot, and every later bar drifts. Worse,
-the editor's open-time repair pass then **hard-deletes the trailing
-beats, with their tab notes**, to force the bar back to length.
+If a bar has the right number of slots for its meter but the durations
+don't sum to the bar, the importer gives every slot the meter's own unit.
+That repair is lossless. A bar with the wrong number of slots has no
+lossless repair, so it is kept as written: it *plays* long, the playhead
+and the metronome sit on the over-long slot, and every later bar drifts.
+Worse, the editor's open-time repair pass then **hard-deletes the
+trailing beats, with their tab notes**, to force the bar back to length.
 
 Unknown values fall back to `"quarter"`.
 
@@ -610,7 +640,7 @@ author. Always write the `strum` you want on every beat.
 | `"waltz"` | Fixed 6-slot 3/4 pattern. Use only in 3/4. |
 | `"fingerstyle"` | Fingerstyle on every slot. Adaptive. |
 | `"freeform"` | "Don't auto-fill anything" — relies entirely on per-beat `strum` values. Adaptive. |
-| `"custom-N"` | A user-defined pattern (see § 7). Use only when the file ships a matching `customStrumPatterns` entry. |
+| `"custom-N"` | A user-defined pattern (see § 7). Use only when the file ships a matching `customStrumPatterns` entry; the importer clears a `"custom-N"` with no matching entry (the song then uses the default pattern, a section the song's). |
 | `"cs-…"` | A stable pattern id found in files **exported by Strum** (schema 4+). When authoring a file by hand, use `"custom-N"` instead — it's positional against your own `customStrumPatterns` array and needs no id computation. A `"cs-…"` reference only resolves when the file ships a `customStrumPatterns` entry whose `id` matches. |
 | `null` | Treated the same as `"down-up"`. |
 
@@ -631,9 +661,11 @@ that pattern's strokes are stamped over your beats.
 | `"arpeggio-up"` | Roll the beat's own tab notes in **reverse string order** (uke string 3→0, guitar high-e→low-E), spread across the slot. It does **not** read the pinned chord — write the shape into `notes`. This is string order, not pitch order: on a re-entrant high-G uke the roll ends on the g string, which is not the top note. |
 | `"arpeggio-down"` | The same roll in ascending string order (uke 0→3). |
 | `"mute"` | Percussive string-mute ("chuck") — no pitch. |
-| `"drum"` | Body-tap percussive hit. **Use `isDrumHit: true` on the beat, not this stroke**, for persistence — `"drum"` only appears in pattern definitions (§ 7). |
-| `"rest"` | Explicit rest — pattern-side only. On a persisted `BeatDTO`, use `isRest: true` and `strum: "none"` instead. |
-| `"preserve"` | "Keep whatever is already there" — pattern-side only. Never persist this on a beat. |
+| `"drum"` | Body-tap percussive hit. **Use `isDrumHit: true` on the beat for a drum hit.** Strum's own pattern applier writes `"drum"` together with `isDrumHit: true`, and the importer keeps a `"drum"` stroke as written. |
+| `"rest"` | Explicit rest — pattern-side only. On a persisted `BeatDTO`, use `isRest: true` and `strum: "none"` instead. The importer converts a `"rest"` stroke on a beat into exactly that. |
+| `"preserve"` | "Keep whatever is already there" — pattern-side only. Never write this on a beat. (Older Strum versions stored it on beats as a Freestyle `?` mark, so the importer keeps it as written.) |
+
+**A roll takes time.** An `"arpeggio-up"` / `"arpeggio-down"` beat plays its notes 30 ms apart in string order, whatever the slot's length, so a four-string roll sounds its last string 90 ms late and a six-string roll 150 ms late. On a slot too short for that, the whole roll is squeezed into 60% of the slot. In a classical roll the last string is usually the melody note. If the very next slot plucks the same string again and that slot is short, the melody note is cut soon after it sounds and the bar stumbles. Strum 1.10.0 and earlier spread a roll over 60% of its slot, 30 to 150 ms apart, so there the melody note on a sixteenth slot at 60 bpm lasts 100 ms. To be safe on every version, leave at least one empty slot before that string is plucked again, or do not roll that chord.
 
 For a transcription you will almost always use `"none"`, `"down"`,
 `"up"`, `"fingerstyle"`, `"mute"`, and the two `"arpeggio-*"` values.
@@ -673,8 +705,9 @@ transition. Walking back from the destination, each beat is tested
 **drum hit**, or sounds **3 or more strings** both blocks the path and is
 disqualified from *being* the origin — a full chord reads as a re-grip of
 the fretting hand. The destination beat itself is exempt, so a connective
-may land on a note inside a chord. The origin must sit **at most 3 slots**
-back, counted across a barline if the scan reaches the previous measure;
+may land on a note inside a chord. The origin must sit **at most 3 slots
+or a dotted crotchet (1.5 quarter-beats) back, whichever reaches further**,
+counted across a barline if the scan reaches the previous measure;
 empty `"none"` slots are transparent. When no origin survives, the mark
 degrades to a short entry-stub arc — harmless, but the arc you intended
 is not drawn. Practical rule: put connectives one or two slots after
@@ -697,34 +730,49 @@ notation-only — the synth pitch is unchanged.
 
 The import boundary (`StrumSongDTO.materialize`) is **defensive**. A
 hostile or buggy `.strum` file should never crash the app. Aim to stay
-inside these bounds; if you can't, the importer will silently clip and
-keep going.
+inside these bounds; if you can't, the importer clips and keeps going.
+When it cuts sections, measures or beats it tells the user ("Imported,
+but shortened"); every other repair below is silent.
 
 | Rule | Limit | Behaviour on violation |
 |---|---|---|
 | File size | ≤ 5 MB | Rejected before parsing. |
+| A required field missing, `null` or the wrong type | every field this spec marks required | Import refused. The message names the field and where it is, e.g. `The "dotted" field is missing (section 1, measure 3, beat 2).` Positions count from 1. |
 | `schemaVersion` | writer ver (`6`) | Informational; a value *newer* than the importing app shows a non-blocking "update for full detail" note but still imports. |
 | `minimumReaderVersion` | `≤` app's version | If the file demands a **newer** reader than the app supports, import is **refused** with an "Update Strum" alert. Omit it (→ 1) unless the song needs a breaking feature: set **3** when it (or one of its custom chords) references a `"ct-…"` custom tuning (§ 7.3), and set **5** when `tuning` is `"ebStandard"` or `"dropC"` (§ 5.1). Take the higher if both apply. |
 | Number of sections | ≤ 50 | Extras truncated. |
 | Measures per section | ≤ 100 | Extras truncated. |
 | Beats per measure | ≤ 32 | Extras truncated. |
+| `index` on sections, measures and beats | any integers | Each list is ordered by `index` (file order breaks ties), then renumbered 0, 1, 2…. |
 | `customTunings` count | ≤ 16 | Extras past the first 16 dropped. |
 | `CustomTuningDTO.openStringMIDI` value | 24..96 | Each clamped into range. |
 | `CustomTuningDTO.openStringMIDI` length | = native count (4 uke / 6 guitar) | Wrong count → the whole tuning is dropped; referencing rows fall back to the instrument default. |
+| `bpm` | 40..300 | Clamped. |
 | `repeatCount` | 1..100 | Clamped. |
-| `timeSignatureNumerator` | 1..32 | Out of range → both num and den reset to 4/4. |
-| `timeSignatureDenominator` | ∈ {1, 2, 4, 8, 16} | Out of range → both reset to 4/4. |
-| `TabNote.string` | 0..10 | Clamped. |
+| `timeSignatureNumerator` | 1..32 | Out of range → the numerator alone resets to 4. |
+| `timeSignatureDenominator` | ∈ {1, 2, 4, 8, 16} | Not in the set → the denominator alone resets to 4. |
+| `TabNote.string` | on the song's tuning (0..3 ukulele, 0..5 guitar), one note per string per beat | Any other note dropped. |
 | `TabNote.fret` | -1..30 (`-1` = dead) | Clamped. |
+| Custom chord `presses` | string on the chord's tuning, fret 1..30 (0 is tolerated and drawn as open), finger 1..5 or null, one press per string + fret, ≤ 64 | Offending press dropped; a bad finger becomes null. |
+| Custom chord `openStrings` | string on the chord's tuning | Offending entry dropped. |
 | `TabNote.transition` | NoteTransition enum (§ 5.6) | Unknown → none; dropped if `fret < 0`. |
 | `TabNote.ornament` | NoteOrnament enum (§ 5.6) | Unknown → none; dropped if `fret < 0`. |
 | `isDrumHit` invariant | drum hit ⇒ no notes, no chord | Notes and chord dropped; logged. |
 | `activeBeatSlotCount` | `> 0` and ≤ beat count | Out of range → set to null (no truncation). |
-| Sum of a measure's `duration` values | = `numerator × 4 / denominator` quarter-beats | Over-long: the bar plays long, and the editor's first-open repair **hard-deletes trailing beats and their tab notes**. Under-long: padded with empty sustain slots. |
+| Sum of a measure's `duration` values | = `numerator × 4 / denominator` quarter-beats | Right slot count for the meter: every slot gets the meter's unit on import (lossless). Wrong slot count: kept as written, so an over-long bar plays long, and the editor's first-open repair **hard-deletes trailing beats and their tab notes**. An under-long bar is padded with empty sustain slots. |
 | Unknown `duration` | — | Falls back to `"quarter"`. |
 | Unknown `strum` | — | Falls back to `"none"`. |
+| `"rest"` as a beat's `strum` | pattern-only (§ 5.5) | → `isRest: true`, `strum: "none"`. |
 | Unknown `instrument` | — | Falls back to `"ukulele"`. |
 | Unknown `tuning` | — | Falls back to the instrument's default tuning. (A `"ct-…"` id with no matching — or an unusable — `customTunings` entry falls back the same way.) |
+| `tuning` from another instrument | the instrument's own tunings (`electricGuitar` shares guitar's) | Falls back to the instrument's default tuning. The same rule applies to a custom chord's `tuning`. |
+| `title`, `artist`, section `name`, custom chord and pattern `name` | ≤ 500 bytes of UTF-8 | Cut at a character boundary. |
+| `lyrics` | ≤ 4,000 bytes of UTF-8 per measure | Cut at a character boundary. |
+| `notes` | ≤ 100,000 bytes of UTF-8 | Cut at a character boundary. |
+| `fingerOverrides` | ≤ 256 entries, keys ≤ 100 bytes, ≤ 11 values each, fingers 1..5 or null | Extra entries and long keys dropped, arrays shortened, a bad finger becomes null. |
+| `pinnedChordName` | ≤ 100 bytes; a built-in id must belong to the song's built-in tuning (§ 5.2). A custom tuning has no built-in ids, so pin custom chords there (§ 7.3) | Longer or empty → null. A built-in chord from another instrument or built-in tuning → the song's chord of the same name, else the built-in chord the beat's notes match exactly, else null. On a custom (`ct-…`) tuning, a built-in id is kept when it has the tuning's string count, else null. An id the app doesn't know, and a `cc-…` custom id, are kept. |
+| `customChords` count | ≤ 64 distinct ids, id ≤ 100 bytes | Extras dropped. |
+| `customStrumPatterns` | ≤ 32 entries, 1..32 strokes each, `numerator` 1..12 | Extras dropped, a pattern with no strokes or more than 32 dropped, `numerator` clamped. |
 
 Stay inside the structural caps (50 / 100 / 32). For a long song use
 **repeats** (`repeatStart` / `repeatEnd` / `repeatCount`) instead of
@@ -764,21 +812,31 @@ Field rules:
 * `id` is a UUID-like stable string. The full pinned name is
   `"cc-" + id` (the `cc-` prefix is added by the consumer, not stored
   inside `id`).
+* `name` is what the chord is called wherever it shows. Always give
+  one: Strum's editor won't save a custom chord without a name, and an
+  imported chord with an empty `name` shows as "Unnamed".
 * `instrument` and `tuning` use the same raw values as the song.
 * `presses[].string` and `presses[].fret` follow the same indexing as
-  TabNoteDTO (§ 5.1). `presses[].fret` must be ≥ 1 — open strings live
-  in `openStrings`, not `presses`.
+  TabNoteDTO (§ 5.1). `presses[].string` must exist on the chord's own
+  tuning (0..3 on ukulele, 0..5 on guitar). `presses[].fret` must be
+  1..30 — open strings live in `openStrings`, not `presses` (a fret-0
+  press is tolerated and drawn as open, but don't write one). List each
+  string + fret pair once, and at most 64 presses per chord.
 * `presses[].finger` is `1..5` or `null`.
 * `openStrings` lists string indices that ring open (rendered with `○`).
   Any string with no press and not listed here defaults to muted (`×`).
+* The importer **drops** a press that breaks these rules (and a bad
+  finger becomes `null`) rather than rejecting the file, so a chord with
+  a wrong string index silently loses that dot.
 * `sourceChordID` is the built-in chord id this was seeded from (e.g.
   `"C"` for a C/G slash chord). Optional; used by the editor for the
   "mute-only variant" superscript.
 
 When the user imports the song, Strum prompts before adopting the
-embedded customs into their library. The pin resolves immediately
-either way (the chord library lookup checks both the global library and
-any embedded customs).
+embedded customs into their library. If they decline, the `cc-` pins
+stay on the beats but don't resolve: the chord row names each beat from
+its tab notes instead, and the notes still play. A pin starts resolving
+as soon as a chord with that id is in the user's library.
 
 ### 7.2 Custom strum patterns
 
@@ -809,10 +867,12 @@ in `customStrumPatterns` and reference it as `"custom-N"`:
   `strummingPatternID` matching it is remapped the same way `"custom-N"`
   is. Older Strum versions ignore the key entirely.
 * `numerator` is the time-signature numerator the pattern was designed
-  for. Drives the slot count Strum expects.
+  for. Drives the slot count Strum expects. Keep it in 1..12, the range
+  the Strums settings can show: the importer clamps anything else.
 * `strokes[]` uses the same `StrumDirection` raw values as § 5.5 —
   *including* `"drum"`, `"rest"`, and `"preserve"`, which are only
-  valid here, not on a `BeatDTO`.
+  valid here, not on a `BeatDTO`. Give it 1 to 32 strokes. A file may
+  carry at most 32 patterns and 64 custom chords.
 
 You almost never need this. Prefer setting per-beat `strum` values with
 `strummingPatternID: "freeform"` — same result, less ceremony.
@@ -868,7 +928,8 @@ stay at the default reader version, but the simplest correct rule is:
 `schemaVersion` is `6` regardless.
 
 The importer **sanitizes** each entry on the way in (clamps the MIDI
-into 24..96, enforces the native string count, caps the name length, and
+into 24..96, enforces the native string count, caps the name at 40
+characters and 500 bytes, and
 derives missing string names), caps the array at `16` entries
 (`ImportLimits.maxCustomTunings`), and — only when the user opts to adopt
 the file's customs — adds the tuning to their library for reuse on
@@ -1030,9 +1091,10 @@ with vibrato, then a 12th-fret natural harmonic.
    (§ 7.1).
 
 3. **Missing instrument prefix.** Wrote `pinnedChordName: "C"` for a
-   guitar song. The library will look up the uke "C" shape and your
-   guitar score will sound and display wrong. Use `"g-C"` for guitar,
-   `"b-C"` for baritone uke.
+   guitar song. That is the uke "C" shape. The importer swaps in the
+   guitar chord of the same name where there is one, but a chord the
+   guitar list lacks is named from the beat's notes or dropped. Use
+   `"g-C"` for guitar, `"b-C"` for baritone uke.
 
 4. **Slot count mismatch.** `timeSignatureNumerator: 4`,
    `timeSignatureDenominator: 4`, `usesEighths: true`, and only 4
