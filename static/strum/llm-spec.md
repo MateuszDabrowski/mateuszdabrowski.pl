@@ -528,12 +528,13 @@ they differ only in the pitch of the g string).
 | Minor | `Cm` `C#m` `Dm` `Ebm` `Em` `Fm` `F#m` `Gm` `G#m` `Am` `Bbm` `Bm` |
 | Dominant 7 | `C7` `C#7` `D7` `Eb7` `E7` `F7` `F#7` `G7` `Ab7` `A7` `Bb7` `B7` |
 | Minor 7 | `Cm7` `Dm7` `Em7` `Fm7` `Gm7` `Am7` `Bm7` |
-| Major 7 | `Cmaj7` `Dmaj7` `Emaj7` `Fmaj7` `Gmaj7` `Amaj7` `Bmaj7` |
+| Major 7 | `Cmaj7` `C#maj7` `Dmaj7` `Ebmaj7` `Emaj7` `Fmaj7` `F#maj7` `Gmaj7` `Abmaj7` `Amaj7` `Bbmaj7` `Bmaj7` |
 | Sus2 | `Asus2` `Bsus2` `Csus2` `Dsus2` `Esus2` `Fsus2` `Gsus2` |
 | Sus4 | `Asus4` `Bsus4` `Csus4` `Dsus4` `Esus4` `Fsus4` `Gsus4` |
 | Diminished | `Adim` `Bdim` `Cdim` `Ddim` `Edim` `Fdim` `Gdim` |
 | Augmented | `Aaug` `Baug` `Caug` `Daug` `Eaug` `Faug` `Gaug` |
-| Extension | `Fadd9` |
+| Sixth | `C6` `C#6` `D6` `Eb6` `E6` `F6` `F#6` `G6` `Ab6` `A6` `Bb6` `B6` |
+| Add 9 | `Cadd9` `C#add9` `Dadd9` `Ebadd9` `Eadd9` `Fadd9` `F#add9` `Gadd9` `Abadd9` `Aadd9` `Bbadd9` `Badd9` |
 
 #### Baritone ukulele (prefix `b-`)
 
@@ -544,9 +545,11 @@ Every baritone chord id is the above name prefixed with `b-` — e.g.
 
 Every standard-guitar chord id is the above name prefixed with `g-` — e.g.
 `g-C`, `g-D`, `g-Am`, `g-F`, `g-Bm`, `g-Cmaj7`. The full guitar set
-covers the same families as ukulele, except `Fadd9` and the sharp- and
-flat-root dominant 7ths (`C#7` `Eb7` `F#7` `Ab7` `Bb7`): there is no
-`g-Fadd9` or `g-F#7`. Define a custom chord (§ 7) for those.
+covers the same families as ukulele, except the Sixth and Add 9 rows
+and the sharp- and flat-root dominant 7ths (`C#7` `Eb7` `F#7` `Ab7`
+`Bb7`) and major 7ths (`C#maj7` `Ebmaj7` `F#maj7` `Abmaj7` `Bbmaj7`):
+there is no `g-G6`, `g-Fadd9`, `g-F#7` or `g-Bbmaj7`. Define a custom
+chord (§ 7) for those.
 
 #### Guitar, Drop D tuning (prefix `dd-`)
 
@@ -569,8 +572,14 @@ Pick the spelling that matches the key. If you need an id that doesn't
 exist (e.g. `D#m`), either substitute the enharmonic (`Ebm`) or define a
 custom chord (§ 7).
 
-**Ids added in later versions.** The sharp- and flat-root minors and
-dominant 7ths on ukulele and baritone arrived after Strum 1.10.0. An
+**A 6 chord or its minor 7th.** A 6 chord has the notes of the minor 7th
+a minor third below it, and on ukulele `C6` `D6` `Eb6` `F6` `G6` share
+their frets with `Am7` `Bm7` `Cm7` `Dm7` `Em7`. Pin the name your source
+uses. A beat with those frets and no pin is named after the minor 7th.
+
+**Ids added in later versions.** The sharp- and flat-root minors,
+dominant 7ths and major 7ths, and every 6 and add9 except `Fadd9`, on
+ukulele and baritone arrived after Strum 1.10.0. An
 older build keeps a pin it doesn't know and still plays the beat's
 `notes`, but shows no chord name or box for it. That is one more reason
 every pinned beat must carry its `notes`.
