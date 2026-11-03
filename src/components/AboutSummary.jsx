@@ -153,34 +153,22 @@ export function SpeakingList({ events }) {
 
 /**
  * Projects by industry, from the project entries, as tiles in the stats
- * strip's grammar: the count large, the industry as the label, the years
- * covered underneath. Most projects first, six to a row like the strip.
+ * strip's grammar: the count large, the industry as the label. Most projects
+ * first, six to a row like the strip.
  */
 export function IndustryList({ events }) {
   const projects = events.filter((e) => e.icon === 'Project' && e.industry);
-  const groups = new Map();
+  const counts = new Map();
   projects.forEach((pr) => {
-    pr.industry.forEach((ind) => {
-      if (!groups.has(ind)) groups.set(ind, { count: 0, years: new Set() });
-      const g = groups.get(ind);
-      g.count += 1;
-      g.years.add((pr.startDate || pr.date).slice(0, 4));
-      if (pr.endDate && pr.endDate !== 'Present') g.years.add(pr.endDate.slice(0, 4));
-      if (pr.endDate === 'Present') g.years.add(String(new Date().getFullYear()));
-    });
+    pr.industry.forEach((ind) => counts.set(ind, (counts.get(ind) || 0) + 1));
   });
-  const rows = [...groups.entries()].sort(([a, ga], [b, gb]) => gb.count - ga.count || a.localeCompare(b));
-  const span = (g) => {
-    const ys = [...g.years].sort();
-    return ys[0] === ys[ys.length - 1] ? ys[0] : `${ys[0]} to ${ys[ys.length - 1]}`;
-  };
+  const rows = [...counts.entries()].sort(([a, ca], [b, cb]) => cb - ca || a.localeCompare(b));
   return (
     <div className={styles.industryGrid}>
-      {rows.map(([name, g]) => (
+      {rows.map(([name, count]) => (
         <div key={name} className={styles.metric}>
-          <span className={styles.metricValue}>{g.count}</span>
+          <span className={styles.metricValue}>{count}</span>
           <span className={styles.industryName}>{name}</span>
-          <span className={styles.industryYears}>{span(g)}</span>
         </div>
       ))}
     </div>

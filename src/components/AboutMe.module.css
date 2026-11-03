@@ -326,13 +326,6 @@ html[data-theme='dark'] .darkBand {
   line-height: 1.3;
 }
 
-.industryYears {
-  margin-top: 0.25rem;
-  color: var(--md-color-amber-text);
-  font-family: Courier, monospace;
-  font-size: 0.8rem;
-}
-
 /* Contact form at the end of the page, reached from the header's Contact link.
    The scroll margin keeps the heading clear of the sticky navbar. */
 .contactSection {

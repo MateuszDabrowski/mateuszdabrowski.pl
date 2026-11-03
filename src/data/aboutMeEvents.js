@@ -396,6 +396,19 @@ export const timelineEvents = [
   // Speaking Events
   // ──────────────────────────────────────────────────────────
   {
+    id: "spk-10",
+    type: "single",
+    format: "Webinar",
+    title: "MC Next Consultant Bootcamp",
+    organisation: "Trailblazer Community Group",
+    date: "2026-10",
+    description: "Two sessions of the exam bootcamp: Analytics & Performance Insights and the closing Ask Me Anything.",
+    url: "https://www.youtube.com/watch?v=5ZaetUN1Nfo",
+    icon: "SpeakingEvent",
+    platform: ["Salesforce Marketing Cloud Next"],
+    technology: ["Marketing Automation"]
+  },
+  {
     id: "spk-09",
     type: "single",
     format: "In-person",
