@@ -1,7 +1,7 @@
 ---
 title: Apps
-description: Apps by Mateusz Dąbrowski. Diagramforce and SQL Studio, free and open-source tools for Salesforce and Marketing Cloud Engagement, plus Slot, Shelf and Strum for Mac, iPhone, iPad and Apple Watch.
-keywords: [apps, diagramforce, sql studio, query studio, slot, shelf, strum, salesforce diagrams, mac app, ios app, mateusz dąbrowski]
+description: Apps by Mateusz Dąbrowski. Diagramforce and SQL Studio, free and open-source tools for Salesforce and Marketing Cloud Engagement, plus Slot, Shelf, Strum and Soar for Mac, iPhone, iPad and Apple Watch.
+keywords: [apps, diagramforce, sql studio, query studio, slot, shelf, strum, soar, salesforce diagrams, bodyweight workouts, mac app, ios app, mateusz dąbrowski]
 slug: /apps
 hide_table_of_contents: true
 wrapperClassName: apps-page
@@ -47,7 +47,7 @@ export const AppLinks = () => (
 
 <h1 className="apps-hero__title">Apps</h1>
 
-<p className="apps-hero__intro">Diagram your Salesforce org, write Marketing Cloud Engagement SQL inside your own account, keep every Google and Microsoft account in one Mac window, copy what you keep retyping and learn songs on ukulele or guitar.</p>
+<p className="apps-hero__intro">Diagram your Salesforce org, write Marketing Cloud Engagement SQL inside your own account, keep every Google and Microsoft account in one Mac window, copy what you keep retyping, learn songs on ukulele or guitar and train with bodyweight workouts planned for you.</p>
 
 <AppLinks />
 
@@ -61,7 +61,7 @@ export const AppLinks = () => (
     <div className="col col--3">
         <div className="apps-rule">
             <p className="apps-rule__title">No subscriptions</p>
-            <p>Diagramforce and SQL Studio are free and open source, at work too. Slot, Shelf and Strum are one purchase each.</p>
+            <p>Diagramforce and SQL Studio are free and open source, at work too. Slot, Shelf, Strum and Soar are one purchase each.</p>
         </div>
     </div>
     <div className="col col--3">
@@ -81,13 +81,15 @@ export const AppLinks = () => (
 </section>
 
 {/* One section per category, every app as a full-width row with the image
-    side alternating down the page. */}
-{['Productivity', 'Music'].map((category) => (
+    side alternating down the page. The App Store apps show their homepage card
+    image (cardImageUrl): their screens on the site blue, which also sets them
+    apart from the free web tools, whose rows keep their own screenshots. */}
+{['Productivity', 'Music', 'Health & Fitness'].map((category) => (
     <section key={category}>
         <h2 className={styles.sectionHeading}>{category}</h2>
         <div className="row">
             {apps.filter((app) => app.category === category).map((app) => (
-                <AppRow key={app.title} {...app} id={appId(app)} subtitle={app.pitch} highlights={app.features} fit="contain" showTags={false} reverse={apps.indexOf(app) % 2 === 1} />
+                <AppRow key={app.title} {...app} imageUrl={app.cardImageUrl ?? app.imageUrl} id={appId(app)} subtitle={app.pitch} highlights={app.features} fit="contain" showTags={false} reverse={apps.indexOf(app) % 2 === 1} />
             ))}
         </div>
     </section>

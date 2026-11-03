@@ -13,6 +13,17 @@
  * under the app's name in the Apps page header, taken from the navbar, and
  * iconUrl the icon beside it. Diagramforce and SQL Studio have no icons of
  * their own yet and share the MD mark; replace it here once they do.
+ *
+ * A store app without appStoreUrl is not out yet: both pages show "Coming
+ * soon to the App Store" where its badge goes. On launch day, add the URL
+ * here and uncomment the app's What's new entry in src/pages/index.js.
+ *
+ * The homepage carousel shows card images at 16:10. cardImageUrl replaces
+ * imageUrl there. Each App Store app has a *-HomeCard.webp of 1600x1000 for
+ * it, in one style: the app's screens on the site blue (#1D73C9), with
+ * rounded corners and a navy shadow, and no text in the image. Slot shows its
+ * Mac window, Strum its iPad, Shelf two iPhones and two Watches, Soar the
+ * same mirrored. imageUrl stays the image of the app's own row elsewhere.
  */
 export const apps = [
     {
@@ -68,6 +79,7 @@ export const apps = [
         url: '/slot/',
         appStoreUrl: 'https://apps.apple.com/app/id6796483262',
         imageUrl: 'img/apple/slot/Slot-Mac-Card.webp',
+        cardImageUrl: 'img/apple/slot/Slot-HomeCard.webp',
         description: 'If you work across several Google and Microsoft accounts, Slot adds the tools that work needs on top: one agenda for every account\'s day, notes that follow you from account to account, and links that open in the right account.',
         tags: ['Gmail', 'Outlook', 'Meet', 'Teams'],
         platforms: ['macOS'],
@@ -88,6 +100,7 @@ export const apps = [
         url: '/shelf/',
         appStoreUrl: 'https://apps.apple.com/app/id6762406443',
         imageUrl: 'img/apple/shelf/Shelf-Mac-Main.webp',
+        cardImageUrl: 'img/apple/shelf/Shelf-HomeCard.webp',
         description: 'Door codes, IBANs and the command you paste every Monday usually sit scattered across old chats, notes and emails. Shelf keeps them in one place you can search in a second.',
         tags: ['Your', 'Stuff', 'Vault', 'Clipboard'],
         platforms: ['macOS', 'iPadOS', 'iOS', 'watchOS'],
@@ -108,6 +121,7 @@ export const apps = [
         url: '/strum/',
         appStoreUrl: 'https://apps.apple.com/app/id6764788253',
         imageUrl: 'img/apple/strum/Strum-Pad-Library.webp',
+        cardImageUrl: 'img/apple/strum/Strum-HomeCard.webp',
         description: 'Learning a song is easier when you can see the tab, hear it and play along at your own pace. Strum puts all three in one app.',
         tags: ['Ukulele', 'Guitar', 'Tabs'],
         platforms: ['macOS', 'iPadOS', 'iOS'],
@@ -117,6 +131,26 @@ export const apps = [
             'Hear the song on a recorded instrument, and set a capo while the tab keeps the frets you hold',
             'A metronome that scrolls the tab as you play and ramps up the tempo, and a Practice Hub that loops the passage you are learning',
             'A built-in tuner, custom tunings and songs synced through your own iCloud',
+        ],
+    },
+    {
+        title: 'Soar',
+        iconUrl: 'img/apple/soar/Soar_light.webp',
+        label: 'Easy bodyweight workouts',
+        pitch: 'Bodyweight workouts on iPhone and Apple Watch, planned for you set by set, so all you have to do is start.',
+        category: 'Health & Fitness',
+        url: '/soar/',
+        imageUrl: 'img/apple/soar/Soar-Card.webp',
+        cardImageUrl: 'img/apple/soar/Soar-HomeCard.webp',
+        description: 'Training is easier to keep up when you never have to plan it. Soar plans every workout for you: pick your exercises and do the sets it shows. Every two weeks a workout becomes a one-set test, and your result plans the next two weeks.',
+        tags: ['Bodyweight', 'Workouts', 'Fitness'],
+        platforms: ['iOS', 'watchOS'],
+        layout: 'card',
+        features: [
+            'Push-ups, pull-ups, dips, squats, lunges and plank, three days a week or in shorter sessions six days a week',
+            'Each workout asks a little more than the last, with an easier version to start on if you cannot do a push-up, pull-up or dip yet',
+            'Nine levels for every exercise from Starter to Hero, a chart of every test and a calendar with your streak',
+            'Today\'s workout on your Apple Watch, saved to Apple Health if you want it and synced through your own iCloud',
         ],
     },
 ];

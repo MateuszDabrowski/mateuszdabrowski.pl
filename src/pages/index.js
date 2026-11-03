@@ -11,7 +11,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import { PageMetadata } from '@docusaurus/theme-common';
 import { popularDocs as highlightedArticles } from '@site/src/data/popularDocs';
 import { apps } from '@site/src/data/apps';
-import { AppRow, AppCard } from '@site/src/components/AppShowcase';
+import { AppRow, AppCarousel } from '@site/src/components/AppShowcase';
 
 import styles from './styles.module.css';
 
@@ -103,9 +103,19 @@ const newsletter = {
 
 /* Newest things on the site, hand-curated. Docs ship a few times a year and
    apps more often, so one mixed list stays fresh where a docs-only one would
-   not. Never list a doc with draft: true - the dev server renders drafts, the
+   not. WhatsNew shows at most two app rows, so a run of app releases cannot
+   push the docs out. Never list a doc with draft: true - the dev server renders drafts, the
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
+    // Soar is not on the App Store yet. On launch day, set the date to that
+    // day and uncomment (src/data/apps.js has the other launch-day steps).
+    // {
+    //     date: '2026-11-02',
+    //     kind: 'App',
+    //     title: 'Soar 1.0',
+    //     url: '/soar/',
+    //     description: 'New app. Bodyweight workouts on iPhone and Apple Watch that plan every set for you, so all you have to do is start. Six exercises to pick from: push-ups, pull-ups, dips, squats, lunges and plank, with knee push-ups, inverted rows and bench dips to start on until you can do the full ones.',
+    // },
     {
         date: '2026-10-28',
         kind: 'App',
@@ -356,18 +366,63 @@ function HomeSearch() {
     );
 }
 
+/* The main doc categories, under the search box. The navbar's Docs & Snippets
+   menu lists them too, but the home page otherwise shows single articles only,
+   not how much ground the docs cover. Every tile names its platform, as the
+   same topic can exist on several (AMPScript runs in MC Next too, and the docs
+   cover only MCE's). Data Views is the one tile that opens an article, not a
+   category: the Data Views pages took a quarter of all page views from
+   4 October to 3 November 2026, and System Data Views lists the others. MC Personalization is spelt out, as MCP now reads as the
+   Model Context Protocol. */
+const topics = [
+    { platform: 'MC Next', label: 'Config', to: '/docs/category/salesforce/marketing-cloud/config' },
+    { platform: 'MCE', label: 'Data Views', to: '/docs/salesforce/marketing-cloud-engagement/config/system-data-views' },
+    { platform: 'MCE', label: 'SQL', to: '/docs/category/salesforce/marketing-cloud-engagement/sql' },
+    { platform: 'MCE', label: 'SSJS', to: '/docs/category/salesforce/marketing-cloud-engagement/ssjs' },
+    { platform: 'MCE', label: 'Config', to: '/docs/category/salesforce/marketing-cloud-engagement/config' },
+    { platform: 'MC Personalization', label: 'All docs', to: '/docs/category/salesforce/marketing-cloud-personalization/' },
+    { platform: 'Salesforce', label: 'FAQ', to: '/sites/category/faq' },
+];
+
+/**
+ * Renders the topic tiles under the search box, one per doc category, each
+ * with its platform above the topic.
+ *
+ * @param {Array} topics - Entries with platform, label and to.
+ * @return {JSX.Element} The rendered tiles.
+ */
+function HomeTopics({ topics }) {
+    return (
+        <nav className={styles.topics} aria-label="Browse by topic">
+            <ul className={styles.topicsList}>
+                {topics.map((topic) => (
+                    <li key={topic.to}>
+                        <Link className={styles.topicTile} to={topic.to}>
+                            <span className={styles.topicPlatform}>{topic.platform}</span>
+                            <span className={styles.topicLabel}>{topic.label}</span>
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+    );
+}
+
 /**
  * Renders the What's new panel. Upcoming events come first and drop out once
  * their day has passed; the newest released items fill the remaining rows.
  * Both run newest first, so the whole list reads in one date order. The row budget is fixed so the panel
  * keeps its height next to the about panel whether or not an event is on.
+ * Apps ship far more often than docs, so released apps get at most maxApps
+ * rows and docs fill the rest. Older app releases still show in the Apps section.
  *
  * @param {Array} items - Released entries with date, kind, title, url, description.
  * @param {Array} upcoming - Event entries with date, title, place, url, description.
  * @param {number} limit - How many rows to show in total.
+ * @param {number} maxApps - How many of those rows apps may take.
  * @return {JSX.Element} The rendered panel.
  */
-function WhatsNew({ items, upcoming = [], limit = 6 }) {
+function WhatsNew({ items, upcoming = [], limit = 6, maxApps = 2 }) {
     const { siteConfig: { customFields = {} } = {} } = useDocusaurusContext();
     // The static HTML lists the events still ahead on the day of the build, and
     // the first browser render must match it. After that the list follows the
@@ -379,7 +434,10 @@ function WhatsNew({ items, upcoming = [], limit = 6 }) {
         .filter((event) => event.date >= today)
         .sort((a, b) => b.date.localeCompare(a.date))
         .map((event) => ({ ...event, kind: 'Event' }));
-    const released = [...items].sort((a, b) => b.date.localeCompare(a.date));
+    let appRows = 0;
+    const released = [...items]
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .filter((item) => item.kind !== 'App' || appRows++ < maxApps);
     const rows = [...events, ...released].slice(0, limit);
     return (
         <div className={clsx('col col--8', styles.panelCol)}>
@@ -521,6 +579,7 @@ function Home() {
                     <section className={clsx(styles.section, styles.sectionAlt)}>
                         <div className="container">
                             <HomeSearch />
+                            <HomeTopics topics={topics} />
                             <div className="row">
                                 <AboutColumn about={about} newsletter={newsletter} />
                                 <WhatsNew items={whatsNew} upcoming={events} />
@@ -551,11 +610,10 @@ function Home() {
                                 <div className={clsx('row', styles.centeredRow)}>
                                     {/* Full-width rows alternate their image side, so two
                                         free tools in a row read as a pair. */}
-                                    {apps.map((props, idx) => (
-                                        props.layout === 'card'
-                                            ? <AppCard key={idx} {...props} />
-                                            : <AppRow key={idx} {...props} reverse={apps.filter((app) => app.layout !== 'card').indexOf(props) % 2 === 1} />
+                                    {apps.filter((app) => app.layout !== 'card').map((props, idx) => (
+                                        <AppRow key={idx} {...props} reverse={idx % 2 === 1} />
                                     ))}
+                                    <AppCarousel label="App Store apps" apps={apps.filter((app) => app.layout === 'card')} rotate />
                                 </div>
                             </div>
                         </section>

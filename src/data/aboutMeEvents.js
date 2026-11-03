@@ -257,6 +257,17 @@ export const timelineEvents = [
   // Personal projects
   // ────────────────────────────────────────────────────────────
      {
+    id: "soar",
+    type: "period",
+    title: "Created Soar - Easy Bodyweight Workouts for iPhone and Apple Watch",
+    startDate: "2026-04",
+    endDate: "Present",
+    description: "Bodyweight training app that plans every workout for you - push-ups, pull-ups, dips, squats, lunges and plank, with the sets and reps for each day, a test every two weeks that plans the next two, and nine levels per exercise. Today's workout runs on Apple Watch too.",
+    url: "https://mateuszdabrowski.pl/soar/",
+    icon: "Project",
+   technology: ["Custom App Development"],
+  },
+  {
     id: "slot",
     type: "period",
     title: "Created Slot - Your Inboxes in One App",

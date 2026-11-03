@@ -13,4 +13,4 @@ Two licences apply, see [mateuszdabrowski.pl/sites/licence](https://mateuszdabro
 - Source code, configuration and design: [MIT](LICENSE).
 - Content (articles, page copy, graphics) in `docs/`, `sites/` and `src/pages/`: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), attribution format on the page above.
 
-The apps presented on the site (Diagramforce, Slot, Shelf, Strum) are separate products and are not covered by either licence.
+The apps presented on the site (Diagramforce, Slot, Shelf, Strum, Soar) are separate products and are not covered by either licence.

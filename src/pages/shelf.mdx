@@ -1,5 +1,5 @@
 ---
-title: Shelf - Your Digital Pocket
+title: Shelf - Quick Copy Vault
 description: The small things you keep needing - codes, addresses, IBANs, snippets - encrypted on your device and one tap from your clipboard on iPhone, iPad, Mac and Apple Watch.
 keywords: [shelf, snippet manager, encrypted clipboard, digital pocket, mac menu bar app, ios app, watchos app, mateusz dąbrowski]
 slug: /shelf
@@ -29,7 +29,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   <link rel="canonical" href="https://mateuszdabrowski.pl/shelf/" />
   <meta property="og:url" content="https://mateuszdabrowski.pl/shelf/" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Shelf - Your Digital Pocket" />
+  <meta property="og:title" content="Shelf - Quick Copy Vault" />
   <meta property="og:description" content="Codes, addresses, IBANs and snippets, encrypted on your device and one tap from your clipboard. iPhone, iPad, Mac and Apple Watch." />
   <meta property="og:image" content="https://mateuszdabrowski.pl/img/og/og-image-shelf.png" />
 </Head>
@@ -167,20 +167,20 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 {/* Feature 2: Stuff, understood */}
 <section className={styles.section}>
   <div className="container">
-    <div style={{maxWidth: '800px', margin: '0 auto'}}>
-      <div className="text--center">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className={`col col--6 ${styles.featureMedia} ${styles.featureMediaStart}`} style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/shelf/Shelf-iPhone-Add.webp"
+          alt="Adding a link on iPhone - Shelf detects the URL type as you paste"
+          imgStyle={{maxWidth: '100%', maxHeight: '480px', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+      </div>
+      <div className="col col--6" style={{padding: '2rem'}}>
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Stuff, Understood</span>
 
-      </div>
       <p style={{fontSize: '1.1rem'}}>Paste a value, and Shelf works out what it is: email, phone number, link, address, IBAN, date, colour or code. IDs and prompts get their own types too. Smart Data Actions live on the type icon - tap it on a phone number to call, on an email to write, on an address to open Maps, on a link to open it. Code snippets get syntax highlighting, and hex, rgb and hsl values show their colour. Anything can be marked as a hidden value that stays masked on screen until you peek, and is cleared from the clipboard 60 seconds after you copy it.</p>
-    </div>
-    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
-      <ZoomImage
-        src="/img/apple/shelf/Shelf-iPhone-Add.webp"
-        alt="Adding a link on iPhone - Shelf detects the URL type as you paste"
-        imgStyle={{maxWidth: '100%', maxHeight: '640px', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-      />
+      </div>
     </div>
   </div>
 </section>
@@ -227,7 +227,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
         <ZoomImage
           src="/img/apple/shelf/Shelf-iPhone-Main.webp"
           alt="Shelf on iPhone - folder strip above the list, pinned rows first"
-          imgStyle={{maxWidth: '22%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+          imgStyle={{maxWidth: '22%', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
       </div>
     </div>
@@ -237,20 +237,20 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 {/* Feature 5: Home Screen widgets */}
 <section className={styles.section}>
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
-    <div style={{maxWidth: '800px', margin: '0 auto'}}>
-      <div className="text--center">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className={`col col--6 ${styles.featureMedia}`} style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/shelf/Shelf-iPhone-Widget.webp"
+          alt="Shelf widgets on the iPhone Home Screen"
+          imgStyle={{maxWidth: '100%', maxHeight: '480px', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+      </div>
+      <div className="col col--6" style={{padding: '2rem'}}>
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>On the Home Screen</span>
 
-      </div>
       <p style={{fontSize: '1.1rem'}}>Pick the stuff you reach for most and put it in a widget - small, medium or large - and one tap copies it without opening the app. Widgets are off until you switch them on in Settings, because they show your stuff outside the app and its lock; once on, hidden values stay masked in them, and on a locked iPhone the whole widget is redacted until you glance at it.</p>
-    </div>
-    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
-      <ZoomImage
-        src="/img/apple/shelf/Shelf-iPhone-Widget.webp"
-        alt="Shelf widgets on the iPhone Home Screen"
-        imgStyle={{maxWidth: '100%', maxHeight: '640px', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-      />
+      </div>
     </div>
   </div>
 </section>
@@ -258,26 +258,30 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 {/* Feature 6: Apple Watch */}
 <section className={styles.section}>
   <div className="container">
-    <div style={{maxWidth: '800px', margin: '0 auto'}}>
-      <div className="text--center">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className={`col col--6 ${styles.featureMedia} ${styles.featureMediaStart}`} style={{textAlign: 'center'}}>
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 208px))', gap: '1.5rem', justifyContent: 'center'}}>
+          <div>
+            <ZoomImage
+              src="/img/apple/shelf/Shelf-Watch-Main.webp"
+              alt="Shelf on Apple Watch - the list of stuff"
+              imgStyle={{maxWidth: '100%', borderRadius: '28px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+            />
+          </div>
+          <div>
+            <ZoomImage
+              src="/img/apple/shelf/Shelf-Watch-Detail.webp"
+              alt="Shelf on Apple Watch - a hidden value with its Reveal button"
+              imgStyle={{maxWidth: '100%', borderRadius: '28px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="col col--6" style={{padding: '2rem'}}>
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>On Apple Watch</span>
 
-      </div>
       <p style={{fontSize: '1.1rem'}}>Browse and read your stuff from your wrist, filtered to the folders you choose - perfect for checking the door key code ;) The Watch app is a reader: watchOS has no clipboard for apps to write to, so copying stays on iPhone, iPad and Mac.</p>
-    </div>
-    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
-      <div style={{display: 'flex', gap: '1.5rem', alignItems: 'center', justifyContent: 'center'}}>
-        <ZoomImage
-          src="/img/apple/shelf/Shelf-Watch-Main.webp"
-          alt="Shelf on Apple Watch - the list of stuff"
-          imgStyle={{maxWidth: '208px', borderRadius: '28px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-        />
-        <ZoomImage
-          src="/img/apple/shelf/Shelf-Watch-Detail.webp"
-          alt="Shelf on Apple Watch - a hidden value with its Reveal button"
-          imgStyle={{maxWidth: '208px', borderRadius: '28px', boxShadow: 'var(--ifm-global-shadow-md)'}}
-        />
       </div>
     </div>
   </div>

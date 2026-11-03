@@ -8,7 +8,7 @@ const crypto = require('crypto');
 
 // The announcement bar. Its id is a hash of the message, so a new message shows
 // to everyone, and an edit to the message counts as a new one.
-const announcement = 'Missing Query Studio? My free <a href="/sql-studio/" style="text-decoration: underline">SQL Studio</a> does everything it did, and then some ;)';
+const announcement = 'Free tools for Trailblazers: <a href="/sql-studio/" style="text-decoration: underline">SQL Studio</a> for MCE queries and <a href="https://diagramforce.com" style="text-decoration: underline">Diagramforce</a> for Salesforce diagrams, both with a Claude skill ;)';
 const announcementId = `announcement-${crypto.createHash('sha1').update(announcement).digest('hex').slice(0, 8)}`;
 
 // Docusaurus remembers only the last announcement a visitor saw, so a message
@@ -217,7 +217,7 @@ module.exports = {
                             to: 'https://diagramforce.com',
                         },
                         {
-                            label: 'SQL Studio: MCE Query Studio Replacement',
+                            label: 'SQL Studio: Lint, Fix and Run MCE SQL',
                             to: 'sql-studio/',
                         },
                         {
@@ -229,8 +229,12 @@ module.exports = {
                             to: 'shelf/',
                         },
                         {
-                            label: 'Strum: Tabs made easy',
+                            label: 'Strum: Tabs Made Easy',
                             to: 'strum/',
+                        },
+                        {
+                            label: 'Soar: Easy Bodyweight Workouts',
+                            to: 'soar/',
                         },
                     ],
                 },
@@ -348,6 +352,10 @@ module.exports = {
                         {
                             label: 'Strum',
                             to: 'strum/',
+                        },
+                        {
+                            label: 'Soar',
+                            to: 'soar/',
                         },
                     ],
                 },

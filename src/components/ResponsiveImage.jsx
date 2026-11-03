@@ -19,6 +19,7 @@
  */
 import React from 'react';
 import { usePluginData } from '@docusaurus/useGlobalData';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 const toSrcSet = (list) => list.map(([url, width]) => `${url} ${width}w`).join(', ');
 
@@ -29,8 +30,12 @@ export function useImageVariants(src) {
 
 export default function ResponsiveImage({ src, fallbackSrc, sizes = '100vw', dimensions = true, loading = 'lazy', ...imgProps }) {
   const entry = useImageVariants(src);
+  // A src written without the leading slash (img/apple/...) would resolve
+  // against the page, as /apps/img/apple/... on the Apps page, so the plain
+  // fallback goes through the base URL.
+  const plainSrc = useBaseUrl(src);
   if (!entry) {
-    return <img src={fallbackSrc ?? src} loading={loading} decoding="async" {...imgProps} />;
+    return <img src={fallbackSrc ?? plainSrc} loading={loading} decoding="async" {...imgProps} />;
   }
   // The plain src (for anything that ignores srcset) is the copy nearest 960 px.
   const fallback = entry.webp.find(([, width]) => width >= 960) ?? entry.webp[entry.webp.length - 1];
