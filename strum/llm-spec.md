@@ -544,12 +544,8 @@ Every baritone chord id is the above name prefixed with `b-` — e.g.
 #### Guitar, standard tuning (prefix `g-`)
 
 Every standard-guitar chord id is the above name prefixed with `g-` — e.g.
-`g-C`, `g-D`, `g-Am`, `g-F`, `g-Bm`, `g-Cmaj7`. The full guitar set
-covers the same families as ukulele, except the Sixth and Add 9 rows
-and the sharp- and flat-root dominant 7ths (`C#7` `Eb7` `F#7` `Ab7`
-`Bb7`) and major 7ths (`C#maj7` `Ebmaj7` `F#maj7` `Abmaj7` `Bbmaj7`):
-there is no `g-G6`, `g-Fadd9`, `g-F#7` or `g-Bbmaj7`. Define a custom
-chord (§ 7) for those.
+`g-C`, `g-D`, `g-Am`, `g-F`, `g-Bm`, `g-Cmaj7`, `g-G6`, `g-Fadd9`. The
+guitar set covers every family and root in the ukulele table.
 
 #### Guitar, Drop D tuning (prefix `dd-`)
 
@@ -576,10 +572,13 @@ custom chord (§ 7).
 a minor third below it, and on ukulele `C6` `D6` `Eb6` `F6` `G6` share
 their frets with `Am7` `Bm7` `Cm7` `Dm7` `Em7`. Pin the name your source
 uses. A beat with those frets and no pin is named after the minor 7th.
+Guitar 6 chords keep their root in the bass, so none shares an m7's frets.
 
 **Ids added in later versions.** The sharp- and flat-root minors,
 dominant 7ths and major 7ths, and every 6 and add9 except `Fadd9`, on
-ukulele and baritone arrived after Strum 1.10.0. An
+ukulele and baritone arrived after Strum 1.10.0. So did the guitar
+sharp- and flat-root dominant 7ths and major 7ths and every guitar 6 and
+add9 chord, `g-Fadd9` included. An
 older build keeps a pin it doesn't know and still plays the beat's
 `notes`, but shows no chord name or box for it. That is one more reason
 every pinned beat must carry its `notes`.
@@ -665,7 +664,7 @@ that pattern's strokes are stamped over your beats.
 | `"rest"` | Explicit rest — pattern-side only. On a persisted `BeatDTO`, use `isRest: true` and `strum: "none"` instead. The importer converts a `"rest"` stroke on a beat into exactly that. |
 | `"preserve"` | "Keep whatever is already there" — pattern-side only. Never write this on a beat. (Older Strum versions stored it on beats as a Freestyle `?` mark, so the importer keeps it as written.) |
 
-**A roll takes time.** An `"arpeggio-up"` / `"arpeggio-down"` beat plays its notes 30 ms apart in string order, whatever the slot's length, so a four-string roll sounds its last string 90 ms late and a six-string roll 150 ms late. On a slot too short for that, the whole roll is squeezed into 60% of the slot. In a classical roll the last string is usually the melody note. If the very next slot plucks the same string again and that slot is short, the melody note is cut soon after it sounds and the bar stumbles. Strum 1.10.0 and earlier spread a roll over 60% of its slot, 30 to 150 ms apart, so there the melody note on a sixteenth slot at 60 bpm lasts 100 ms. To be safe on every version, leave at least one empty slot before that string is plucked again, or do not roll that chord.
+**A roll takes time.** An `"arpeggio-up"` / `"arpeggio-down"` beat spreads its notes over 60% of the slot in string order, at most 150 ms apart, so the last string rolled sounds up to 0.6 of a slot late. In a classical roll that last string is usually the melody note. The whole roll also takes at most a third of the time until any of its strings is plucked again or damped, so a melody note plucked again on the very next slot still keeps two thirds of its ring: on a sixteenth slot at 60 bpm it comes 83 ms late and lasts 160 ms. Strum 1.10.0 and earlier have no such limit, so there that melody note lasts about 100 ms and the bar stumbles. To be safe on every version, leave at least one empty slot before that string is plucked again, or do not roll that chord.
 
 For a transcription you will almost always use `"none"`, `"down"`,
 `"up"`, `"fingerstyle"`, `"mute"`, and the two `"arpeggio-*"` values.
