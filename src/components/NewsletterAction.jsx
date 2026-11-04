@@ -44,8 +44,9 @@ import styles from './NewsletterForm.module.css';
  *
  * Before the click, the confirm page shows the topics the form left selected,
  * from action=pending, which reads only the pending sign-up and changes
- * nothing, so a scanner that runs the page confirms nobody. An expired link
- * says so at once. After the click, the page reads the person's topics through
+ * nothing, so a scanner that runs the page confirms nobody. While it reads,
+ * the page says it is checking the link, and the button works. An expired
+ * link says so as soon as the answer comes. After the click, the page reads the person's topics through
  * the signed link the answer carries and shows them with Save, so the topics
  * can be changed there. When they cannot be read, it links to the topics page.
  *
@@ -70,6 +71,7 @@ const COPY = {
     working: 'Confirming...',
     done: (address, result) =>
       `${result && result.again ? "You're subscribed again." : "You're on the list."} A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.`,
+    checking: 'Checking your link…',
     selected: (labels) => `You selected ${listOf(labels)}.`,
     checkTopics: 'Check your topics',
     mineLoading: 'Loading your topics…',
@@ -152,6 +154,7 @@ export default function NewsletterAction({ kind }) {
   const [returning, setReturning] = useState(false); // not subscribed: the page offers to subscribe again (D630)
   const [result, setResult] = useState(null); // the confirm answer, which says whether it was a return
   const [selected, setSelected] = useState(null); // labels the form left selected, shown before the confirm click
+  const [checking, setChecking] = useState(false); // the look at the link is under way: the page says so where its answer will go
   const [mine, setMine] = useState(null); // after the confirm click: { state, found, topics, off }
   const panel = useRef(null);
 
@@ -245,6 +248,7 @@ export default function NewsletterAction({ kind }) {
    * A failed read changes nothing.
    */
   async function preview(token, isCurrent) {
+    setChecking(true);
     try {
       const data = await post({ action: 'pending', t: token }, READ_TIMEOUT_MS);
       if (!isCurrent()) return;
@@ -261,6 +265,8 @@ export default function NewsletterAction({ kind }) {
       if (labels.length) setSelected(labels);
     } catch (error) {
       // the page works as before without the line
+    } finally {
+      if (isCurrent()) setChecking(false);
     }
   }
 
@@ -453,6 +459,7 @@ export default function NewsletterAction({ kind }) {
             </div>
           )}
           {message && status !== 'pending' && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}
+          {kind === 'confirm' && (status === 'ready' || status === 'sending') && checking && <p>{spinner}{copy.checking}</p>}
           {kind === 'confirm' && (status === 'ready' || status === 'sending') && selected && <p>{copy.selected(selected)}</p>}
           {status === 'choosing' && (
             <form onSubmit={save}>
