@@ -40,6 +40,10 @@ import styles from './NewsletterForm.module.css';
  * topics on offer, such a visitor gets a link to the sign-up form, never the
  * unsubscribe.
  *
+ * After a confirmation, the page links to the topics page through a signed
+ * link for the address, and names the topics left on only when the form's
+ * choice was applied (D653, D654).
+ *
  * @param {'confirm' | 'unsubscribe'} kind
  */
 
@@ -59,10 +63,12 @@ const COPY = {
     ready: () => <>Press the button to confirm your subscription to {newsletter} about Salesforce Marketing, Data and AI. Nothing happens until you do.</>,
     button: 'Confirm subscription',
     working: 'Confirming...',
-    done: (address, result) =>
-      result && result.again
-        ? `You're subscribed again, with ${result.topics}. A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.`
-        : "You're on the list. A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.",
+    done: (address, result) => {
+      const topics = result && result.topics;
+      const opening = result && result.again ? `You're subscribed again, with ${topics}.` : topics ? `You're on the list, with ${topics}.` : "You're on the list.";
+      return `${opening} A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.`;
+    },
+    checkTopics: 'Check your topics',
     expired: 'This link has expired. Confirmation links work for 7 days. Subscribe again on the newsletter page and you will get a fresh one.',
     invalid: 'This link is not valid. Subscribe again on the newsletter page and you will get a fresh one.',
     missing: 'This page needs the link from your confirmation email.',
@@ -413,6 +419,13 @@ export default function NewsletterAction({ kind }) {
               >
                 {status === 'sending' ? <>{spinner}{copy.working}</> : copy.button}
               </button>
+            </p>
+          )}
+          {kind === 'confirm' && status === 'done' && result && result.signed && (
+            <p>
+              <Link className={clsx('button button--lg', pageStyles.newsletterButton)} to={`/newsletter/unsubscribe/#${result.signed}`}>
+                {copy.checkTopics}
+              </Link>
             </p>
           )}
           {status === 'notSubscribed' && (

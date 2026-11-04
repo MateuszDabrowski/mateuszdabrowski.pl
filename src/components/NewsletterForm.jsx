@@ -7,6 +7,16 @@
  * confirmation email and writes the sheet only when its link is clicked;
  * unsubscribing is written at once.
  *
+ * The newsletter page's form also shows the topics (D653 in Sling's
+ * subscriber-sheet contract), all ticked. It shows the list, never a person's
+ * choices, as anybody can type an address. The list is in the page: each site
+ * deploy writes newsletter-topics.json from the Topics tab Sling writes (see
+ * plugins/newsletter-topics.mjs), so nothing is read when the page opens. An
+ * empty list means the plain form, and no choice is sent. The docs footer form
+ * never shows topics. The keys it showed and the ones left unticked wait in
+ * the script. At the confirmation click they decide only the keys still on the
+ * live tab, and any other key keeps the person's older state (D655).
+ *
  * Props:
  *   endpoint         - the Apps Script web app URL
  *   turnstileSiteKey - public Turnstile key; the widget renders invisibly and
@@ -20,6 +30,7 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useTurnstile from './useTurnstile';
+import topicList from '../data/newsletter-topics.json';
 import styles from './NewsletterForm.module.css';
 import pageStyles from '../pages/styles.module.css';
 
@@ -30,11 +41,18 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
   const [remove, setRemove] = useState(unsubscribeOnly);
   const [trap, setTrap] = useState(''); // honeypot: humans never see it
   const [status, setStatus] = useState('idle'); // idle | invalid | sending | done | error | challenge
+  const [off, setOff] = useState([]); // keys unticked
   // Loads on the first focus in the form; see useTurnstile.
   const turnstile = useTurnstile(turnstileSiteKey, { onError: () => setStatus('challenge') });
 
+  const topics = compact || unsubscribeOnly ? [] : topicList; // [{ key, label }] from Sling's Topics tab
+  const showTopics = !remove && topics.length > 0;
+  const allOff = showTopics && topics.every((topic) => off.includes(topic.key));
+  const toggle = (key) => setOff((current) => (current.includes(key) ? current.filter((k) => k !== key) : [...current, key]));
+
   async function onSubmit(event) {
     event.preventDefault();
+    if (allOff) return; // Enter in the field: the button is off, but the form still submits
     if (trap) {
       setStatus('done'); // a bot filled the hidden field; say nothing, send nothing
       return;
@@ -54,6 +72,10 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
     body.set('email', address);
     body.set('action', remove ? 'unsubscribe' : 'subscribe');
     body.set('cf-turnstile-response', token);
+    if (showTopics) {
+      body.set('shown', topics.map((topic) => topic.key).join(' '));
+      body.set('off', off.join(' '));
+    }
     try {
       const res = await fetch(endpoint, { method: 'POST', body });
       const data = await res.json().catch(() => ({ ok: res.ok }));
@@ -112,12 +134,26 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
         <button
           type="submit"
           className={clsx('button button--lg', styles.button, remove ? styles.unsubscribeButton : pageStyles.newsletterButton, status === 'sending' && styles.busy)}
-          disabled={status === 'sending'}
+          disabled={status === 'sending' || allOff}
           aria-busy={status === 'sending'}
         >
           {status === 'sending' ? <><span className={styles.spinner} aria-hidden="true" />Sending…</> : remove ? 'Unsubscribe' : 'Subscribe'}
         </button>
       </div>
+
+      {showTopics && (
+        <fieldset className={styles.formTopics} disabled={status === 'sending'}>
+          <legend>Deselect any topic you don't want. Topics I add later start selected.</legend>
+          <div className={styles.topicRow}>
+            {topics.map((topic) => (
+              <label key={topic.key} className={styles.check}>
+                <input type="checkbox" checked={!off.includes(topic.key)} onChange={() => toggle(topic.key)} /> {topic.label}
+              </label>
+            ))}
+          </div>
+          {allOff && <p className={styles.allOff}>Select at least one topic.</p>}
+        </fieldset>
+      )}
 
       {/* Honeypot: off-screen and out of the tab order; bots fill it, people do
           not. The name matches no browser autofill profile field on purpose. */}

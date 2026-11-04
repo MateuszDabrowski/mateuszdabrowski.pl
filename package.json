@@ -8,6 +8,7 @@
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
     "swizzle": "docusaurus swizzle",
+    "predeploy": "node plugins/newsletter-topics.mjs",
     "deploy": "docusaurus deploy",
     "mark-products": "node plugins/product-names/mark.mjs",
     "mark-products-apply": "node plugins/product-names/mark.mjs --apply",

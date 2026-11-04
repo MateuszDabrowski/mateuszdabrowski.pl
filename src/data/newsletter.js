@@ -12,8 +12,10 @@
  * last responses were imported into Sling.
  *
  * No topic is typed here. Everyone gets every topic, and a person turns
- * topics off on the unsubscribe page, behind a signed link. The list comes
- * from the Topics tab Sling writes into the sheet, through the script (D619).
+ * topics off on the newsletter page's form or on the unsubscribe page, behind
+ * a signed link. The list comes from the Topics tab Sling writes into the
+ * sheet, through the script (D619): live on the unsubscribe page, and from
+ * newsletter-topics.json on the form, which each site deploy writes (D653).
  */
 export const newsletterForm = {
   endpoint: 'https://script.google.com/macros/s/AKfycbyYpOnSWcYyRLiabiQUyBKPc-bLjUAYXrCjE7uzDxg3xcCI_TJYwUHmuG9cDpa1vRMLFw/exec',

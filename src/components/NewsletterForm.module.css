@@ -181,6 +181,36 @@ html[data-theme='dark'] .input {
   font-weight: 700;
 }
 
+/* The same boxes on the newsletter page's form: in a row under the email field,
+   in a column on a phone. */
+.formTopics {
+  margin: 0.85rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.formTopics legend {
+  padding: 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
+}
+
+.topicRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+}
+
+.formTopics .allOff {
+  margin: 0.35rem 0 0;
+}
+
+@media (max-width: 576px) {
+  .topicRow {
+    flex-direction: column;
+  }
+}
+
 /* Save on the left, "Unsubscribe from everything" on the right. */
 .choiceButtons {
   display: flex;
