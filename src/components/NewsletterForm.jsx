@@ -5,7 +5,11 @@
  * scripts/newsletter-endpoint.gs, protected by Cloudflare Turnstile. Nothing
  * passes through this site. Subscribing is double opt-in: the script sends a
  * confirmation email and writes the sheet only when its link is clicked;
- * unsubscribing is written at once.
+ * unsubscribing is written at once. Change topics emails the signed link to
+ * the topics page: a typed address proves nothing, so the page shows nothing
+ * and the answer is the same for every address (D654). The unsubscribe page's
+ * fallback form stays unsubscribe-only and links to that mode here, with
+ * #change-topics on the address.
  *
  * The newsletter page's form also shows the topics (D653 in Sling's
  * subscriber-sheet contract), all ticked. It shows the list, never a person's
@@ -26,7 +30,7 @@
  *                      when it has no signed link (a forwarded issue, or an
  *                      email sent before signed links)
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useTurnstile from './useTurnstile';
@@ -35,20 +39,39 @@ import styles from './NewsletterForm.module.css';
 import pageStyles from '../pages/styles.module.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const TOPICS_ANCHOR = 'change-topics';
 
 export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = false, unsubscribeOnly = false }) {
   const [email, setEmail] = useState('');
-  const [remove, setRemove] = useState(unsubscribeOnly);
+  const [mode, setMode] = useState(unsubscribeOnly ? 'unsubscribe' : 'subscribe');
   const [trap, setTrap] = useState(''); // honeypot: humans never see it
-  const [status, setStatus] = useState('idle'); // idle | invalid | sending | done | error | challenge
+  const [status, setStatus] = useState('idle'); // idle | invalid | sending | done | error | challenge | ceiling
   const [off, setOff] = useState([]); // keys unticked
+  const [retrying, setRetrying] = useState(false); // back from the Change topics answer: the field takes the focus
   // Loads on the first focus in the form; see useTurnstile.
   const turnstile = useTurnstile(turnstileSiteKey, { onError: () => setStatus('challenge') });
 
   const topics = compact || unsubscribeOnly ? [] : topicList; // [{ key, label }] from Sling's Topics tab
-  const showTopics = !remove && topics.length > 0;
+  useEffect(() => {
+    if (!compact && !unsubscribeOnly && window.location.hash === `#${TOPICS_ANCHOR}`) setMode('topics');
+  }, [compact, unsubscribeOnly]);
+
+  const remove = mode === 'unsubscribe';
+  const showTopics = mode === 'subscribe' && topics.length > 0;
   const allOff = showTopics && topics.every((topic) => off.includes(topic.key));
   const toggle = (key) => setOff((current) => (current.includes(key) ? current.filter((k) => k !== key) : [...current, key]));
+
+  function pick(next) {
+    setMode(next);
+    if (status !== 'sending') setStatus('idle');
+  }
+
+  /** Back from the Change topics answer, with the address still there to correct. */
+  function tryAgain() {
+    setRetrying(true);
+    setStatus('idle');
+    turnstile.remount();
+  }
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -70,7 +93,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
     }
     const body = new URLSearchParams();
     body.set('email', address);
-    body.set('action', remove ? 'unsubscribe' : 'subscribe');
+    body.set('action', mode === 'topics' ? 'topicLink' : mode);
     body.set('cf-turnstile-response', token);
     if (showTopics) {
       body.set('shown', topics.map((topic) => topic.key).join(' '));
@@ -79,7 +102,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
     try {
       const res = await fetch(endpoint, { method: 'POST', body });
       const data = await res.json().catch(() => ({ ok: res.ok }));
-      setStatus(data.ok ? 'done' : 'error');
+      setStatus(data.ok ? 'done' : data.error === 'ceiling' ? 'ceiling' : 'error');
     } catch (error) {
       setStatus('error');
     } finally {
@@ -88,33 +111,39 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
   }
 
   const errorId = compact ? 'nl-error-compact' : 'nl-error';
-  const hasError = ['invalid', 'challenge', 'error'].includes(status);
+  const hasError = ['invalid', 'challenge', 'error', 'ceiling'].includes(status);
 
   if (status === 'done') {
     return (
       <div className={clsx(styles.form, compact && styles.compact)} role="status">
         <p className={styles.done}>
-          {remove
-            ? "Done. That address is unsubscribed, and you won't get any more emails from me."
-            : `Almost there. A confirmation email is on its way to ${email.trim()}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.`}
+          {{
+            unsubscribe: "Done. That address is unsubscribed, and you won't get any more emails from me.",
+            topics: `A link is on its way to ${email.trim()}. It opens your topics, where you can change them or unsubscribe. If it does not show up in a few minutes, check the spam folder and the address.`,
+            subscribe: `Almost there. A confirmation email is on its way to ${email.trim()}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.`,
+          }[mode]}
         </p>
+        {mode === 'topics' && (
+          <p className={styles.notice}>
+            <button type="button" className={styles.linkButton} onClick={tryAgain}>Try another address</button>
+          </p>
+        )}
       </div>
     );
   }
 
   return (
-    <form className={clsx(styles.form, compact && styles.compact)} onSubmit={onSubmit} onFocus={turnstile.arm} noValidate>
+    <form id={compact || unsubscribeOnly ? undefined : TOPICS_ANCHOR} className={clsx(styles.form, compact && styles.compact)} onSubmit={onSubmit} onFocus={turnstile.arm} noValidate>
       {!compact && !unsubscribeOnly && (
-        <div className={styles.modes} role="group" aria-label="Subscribe or unsubscribe">
-          <button type="button" aria-pressed={!remove} className={clsx(styles.mode, !remove && styles.modeActive)} onClick={() => setRemove(false)}>
-            Subscribe
-          </button>
-          <button type="button" aria-pressed={remove} className={clsx(styles.mode, remove && styles.modeActive)} onClick={() => setRemove(true)}>
-            Unsubscribe
-          </button>
+        <div className={styles.modes} role="group" aria-label="Subscribe, change topics or unsubscribe">
+          {[['subscribe', 'Subscribe'], ['topics', 'Change topics'], ['unsubscribe', 'Unsubscribe']].map(([key, label]) => (
+            <button key={key} type="button" aria-pressed={mode === key} className={clsx(styles.mode, mode === key && styles.modeActive)} onClick={() => pick(key)}>
+              {label}
+            </button>
+          ))}
         </div>
       )}
-      <div className={styles.row}>
+      <div className={clsx(styles.row, showTopics && styles.rowWithTopics)}>
         <label className={styles.label} htmlFor={compact ? 'nl-email-compact' : 'nl-email'}>
           <span className={styles.srOnly}>Email address</span>
           <input
@@ -123,6 +152,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
             type="email"
             name="email"
             autoComplete="email"
+            autoFocus={retrying}
             placeholder="you@example.com"
             value={email}
             onChange={(e) => { setEmail(e.target.value); if (status === 'invalid') setStatus('idle'); }}
@@ -131,29 +161,28 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
             required
           />
         </label>
+        {showTopics && (
+          <fieldset className={styles.formTopics} disabled={status === 'sending'}>
+            <legend>Deselect any topic you don't want. Topics I add later start selected.</legend>
+            <div className={styles.topicRow}>
+              {topics.map((topic) => (
+                <label key={topic.key} className={styles.check}>
+                  <input type="checkbox" checked={!off.includes(topic.key)} onChange={() => toggle(topic.key)} /> {topic.label}
+                </label>
+              ))}
+            </div>
+            {allOff && <p className={styles.allOff}>Select at least one topic.</p>}
+          </fieldset>
+        )}
         <button
           type="submit"
           className={clsx('button button--lg', styles.button, remove ? styles.unsubscribeButton : pageStyles.newsletterButton, status === 'sending' && styles.busy)}
           disabled={status === 'sending' || allOff}
           aria-busy={status === 'sending'}
         >
-          {status === 'sending' ? <><span className={styles.spinner} aria-hidden="true" />Sending…</> : remove ? 'Unsubscribe' : 'Subscribe'}
+          {status === 'sending' ? <><span className={styles.spinner} aria-hidden="true" />Sending…</> : { subscribe: 'Subscribe', topics: 'Email me a link', unsubscribe: 'Unsubscribe' }[mode]}
         </button>
       </div>
-
-      {showTopics && (
-        <fieldset className={styles.formTopics} disabled={status === 'sending'}>
-          <legend>Deselect any topic you don't want. Topics I add later start selected.</legend>
-          <div className={styles.topicRow}>
-            {topics.map((topic) => (
-              <label key={topic.key} className={styles.check}>
-                <input type="checkbox" checked={!off.includes(topic.key)} onChange={() => toggle(topic.key)} /> {topic.label}
-              </label>
-            ))}
-          </div>
-          {allOff && <p className={styles.allOff}>Select at least one topic.</p>}
-        </fieldset>
-      )}
 
       {/* Honeypot: off-screen and out of the tab order; bots fill it, people do
           not. The name matches no browser autofill profile field on purpose. */}
@@ -166,12 +195,22 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
       {/* role="alert" makes screen readers announce the message when it appears. */}
       {status === 'invalid' && <p id={errorId} role="alert" className={styles.error}>That does not look like an email address.</p>}
       {status === 'challenge' && <p id={errorId} role="alert" className={styles.error}>The bot check did not complete. Reload the page and try again, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}
+      {status === 'ceiling' && <p id={errorId} role="alert" className={styles.error}>The sign-up service has sent all the emails it can for today. Try again tomorrow, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}
       {status === 'error' && <p id={errorId} role="alert" className={styles.error}>Could not reach the sign-up service. Try again in a moment, or email <a href="mailto:legal@mateuszdabrowski.pl">legal@mateuszdabrowski.pl</a>.</p>}
 
       <p className={styles.notice}>
-        {remove ? (
-          <>Submit the address you subscribed with, and you won't get any more emails from me.</>
-        ) : (
+        {remove && (
+          <>
+            Submit the address you subscribed with, and you won't get any more emails from me.
+            {unsubscribeOnly ? (
+              <> <Link to={`/sites/newsletter/#${TOPICS_ANCHOR}`}>Want to change topics instead?</Link></>
+            ) : (
+              <span className={styles.noticeLine}>Want fewer emails instead? <button type="button" className={styles.linkButton} onClick={() => pick('topics')}>Change topics</button> keeps the ones you like.</span>
+            )}
+          </>
+        )}
+        {mode === 'topics' && <>Enter the address you subscribed with, and I will email you a link to change your topics.</>}
+        {mode === 'subscribe' && (
           <>
             By subscribing you agree to receive the newsletter from Mateusz Dąbrowski. The address is used for nothing else and shared with no one.
             {compact ? (

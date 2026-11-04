@@ -7,6 +7,7 @@
   border-radius: 8px;
   background-color: var(--ifm-card-background-color);
   box-shadow: var(--ifm-global-shadow-md);
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 1rem); /* the Change topics link lands below the sticky navbar */
 }
 
 html[data-theme='dark'] .form {
@@ -25,6 +26,7 @@ html[data-theme='dark'] .compact {
 /* Subscribe / Unsubscribe switch above the field. */
 .modes {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 1rem;
 }
@@ -44,6 +46,20 @@ html[data-theme='dark'] .compact {
   border-color: var(--ifm-color-emphasis-900);
   background-color: var(--ifm-color-emphasis-900);
   color: var(--ifm-background-surface-color);
+}
+
+/* All three in one row on a phone, down to 360 px; narrower, they wrap. */
+@media (max-width: 576px) {
+  .modes {
+    gap: 0.35rem;
+  }
+
+  .mode {
+    flex: 1 1 auto;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.4rem;
+    font-size: 0.8rem;
+  }
 }
 
 /* Unsubscribe is red in both themes; the theme's tertiary swaps to blue on dark. */
@@ -181,10 +197,18 @@ html[data-theme='dark'] .input {
   font-weight: 700;
 }
 
-/* The same boxes on the newsletter page's form: in a row under the email field,
-   in a column on a phone. */
+/* The same boxes on the newsletter page's form. They come before the button in
+   the page, so a reader on a phone passes them on the way to it. On a wider
+   screen the field and the button share a line, and the boxes wrap below it. */
+.rowWithTopics {
+  flex-wrap: wrap;
+}
+
 .formTopics {
-  margin: 0.85rem 0 0;
+  order: 1;
+  flex: 0 0 100%;
+  min-width: 0;
+  margin: 0;
   padding: 0;
   border: 0;
 }
@@ -206,6 +230,15 @@ html[data-theme='dark'] .input {
 }
 
 @media (max-width: 576px) {
+  .rowWithTopics {
+    flex-wrap: nowrap;
+  }
+
+  .formTopics {
+    order: 0;
+    flex: none;
+  }
+
   .topicRow {
     flex-direction: column;
   }
@@ -240,6 +273,10 @@ html[data-theme='dark'] .input {
   color: var(--ifm-color-emphasis-700);
   font-size: 0.85rem;
   line-height: 1.5;
+}
+
+.noticeLine {
+  display: block;
 }
 
 /* An error reads as text, and the red bar says it is one. In the theme's

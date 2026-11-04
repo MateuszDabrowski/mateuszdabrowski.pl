@@ -109,6 +109,7 @@ const COPY = {
     pendingHeading: 'Check your inbox',
     pending: (address) => `Almost there. A confirmation email is on its way to ${address}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder.`,
     subscribed: 'This address is subscribed already. Change its topics below and save.',
+    ceiling: 'The sign-up service has sent all the emails it can for today. Try again tomorrow.',
   },
 };
 
@@ -260,6 +261,8 @@ export default function NewsletterAction({ kind }) {
         // Subscribed since the page opened: draw it as a subscriber's page.
         await readChoices(params);
         setNotice('subscribed');
+      } else if (data.error === 'ceiling') {
+        setNotice('ceiling');
       } else {
         setNotice('error');
       }
@@ -334,7 +337,7 @@ export default function NewsletterAction({ kind }) {
     notSubscribed: copy.againHeading,
   }[status] || copy.heading;
   const spinner = <span className={styles.spinner} aria-hidden="true" />;
-  const notices = { changed: copy.changed, subscribed: copy.subscribed, error: ERROR };
+  const notices = { changed: copy.changed, subscribed: copy.subscribed, ceiling: copy.ceiling, error: ERROR };
   const message = {
     loading: '',
     inactive: 'This page is not active yet. Use the newsletter page instead.',

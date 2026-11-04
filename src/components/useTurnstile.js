@@ -10,14 +10,15 @@
  *
  * Usage: put <div ref={widgetHost} /> in the form, call arm() on its focus,
  * await getToken() on submit, and call reset() after a post, as a token
- * works once.
+ * works once. A form that took its widget host off the page and puts it back
+ * calls remount(), as the widget does not follow to the new host.
  *
  * @param {string} siteKey - The public Turnstile key.
  * @param {object} options - `action`: a label the server checks, so a token
  *   made for one form is refused by another. `onError`: called when the
  *   script cannot load.
- * @return {object} widgetHost, arm, getToken, reset and checkShown (true once
- *   the widget asked for a click).
+ * @return {object} widgetHost, arm, getToken, reset, remount and checkShown
+ *   (true once the widget asked for a click).
  */
 import { useEffect, useRef, useState } from 'react';
 
@@ -49,6 +50,7 @@ export default function useTurnstile(siteKey, { action, onError } = {}) {
   errorHandler.current = onError;
   const [armed, setArmed] = useState(false);
   const [checkShown, setCheckShown] = useState(false);
+  const [mounts, setMounts] = useState(0); // a new value renders the widget again
 
   const currentToken = () => (window.turnstile && widgetId.current !== null ? window.turnstile.getResponse(widgetId.current) : '');
   const releaseWaiters = () => waiters.current.splice(0).forEach((release) => release());
@@ -78,7 +80,7 @@ export default function useTurnstile(siteKey, { action, onError } = {}) {
     return () => {
       cancelled = true;
     };
-  }, [siteKey, action, armed]);
+  }, [siteKey, action, armed, mounts]);
 
   /** The check's token, waiting up to TOKEN_WAIT_MS if it has not arrived yet. */
   function getToken() {
@@ -98,5 +100,12 @@ export default function useTurnstile(siteKey, { action, onError } = {}) {
     if (window.turnstile && widgetId.current !== null) window.turnstile.reset(widgetId.current);
   }
 
-  return { widgetHost, arm: () => setArmed(true), getToken, reset, checkShown };
+  function remount() {
+    if (window.turnstile && widgetId.current !== null) window.turnstile.remove(widgetId.current);
+    widgetId.current = null;
+    setCheckShown(false);
+    setMounts((count) => count + 1);
+  }
+
+  return { widgetHost, arm: () => setArmed(true), getToken, reset, remount, checkShown };
 }
