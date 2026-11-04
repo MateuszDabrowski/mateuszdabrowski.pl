@@ -5,7 +5,7 @@ import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import { newsletterForm, nativeFormEnabled } from '../data/newsletter';
 import NewsletterForm from './NewsletterForm';
-import SentIcon from './SentIcon';
+import NewsletterAnswer from './NewsletterAnswer';
 import topicList from '../data/newsletter-topics.json';
 import pageStyles from '../pages/styles.module.css';
 import styles from './NewsletterForm.module.css';
@@ -69,8 +69,10 @@ const COPY = {
     ready: () => <>Press the button to confirm your subscription to {newsletter} about Salesforce Marketing, Data and AI. Nothing happens until you do.</>,
     button: 'Confirm subscription',
     working: 'Confirming...',
-    done: (address, result) =>
-      `${result && result.again ? "You're subscribed again." : "You're on the list."} A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.`,
+    done: (address, result) => ({
+      title: result && result.again ? "You're subscribed again." : "You're on the list.",
+      detail: 'A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.',
+    }),
     checking: 'Checking your link…',
     selected: (labels) => `You selected ${listOf(labels)}.`,
     checkTopics: 'Check your topics',
@@ -90,7 +92,10 @@ const COPY = {
     ready: (address) => <>Press the button to unsubscribe {address} from {newsletter} about Salesforce Marketing, Data and AI. You won't get any more emails from me.</>,
     button: 'Unsubscribe',
     working: 'Unsubscribing...',
-    done: (address) => `${address} is unsubscribed from my newsletter. You won't get any more emails from me. Changed your mind? The newsletter page takes you back.`,
+    done: (address) => ({
+      title: `${address} is unsubscribed from my newsletter.`,
+      detail: "You won't get any more emails from me. Changed your mind? The newsletter page takes you back.",
+    }),
     expired: <>This link is not valid. Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI with the form below instead.</>,
     invalid: <>This link is not valid. Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI with the form below instead.</>,
     missing: <>Unsubscribe from {newsletter} about Salesforce Marketing, Data and AI.</>, // the form's own notice says what to enter
@@ -103,10 +108,10 @@ const COPY = {
     save: 'Save topics',
     saving: 'Saving...',
     leave: 'Unsubscribe from everything',
-    saved: (address, labels) =>
-      labels.length
-        ? `Saved. ${listOf(labels)} ${labels.length > 1 ? 'are' : 'is'} off for ${address}. The link in any newsletter brings you back here to change it.`
-        : `Saved. ${address} gets every topic. The link in any newsletter brings you back here to change it.`,
+    saved: (address, labels) => ({
+      title: labels.length ? `Saved. ${listOf(labels)} ${labels.length > 1 ? 'are' : 'is'} off for ${address}.` : `Saved. ${address} gets every topic.`,
+      detail: 'The link in any newsletter brings you back here to change it.',
+    }),
     changed: 'The topic list changed while this page was open. Check the topics and save again.',
     // Subscribing again, for an address that is not subscribed (D630)
     againHeading: 'Subscribe again',
@@ -436,14 +441,19 @@ export default function NewsletterAction({ kind }) {
     ready: copy.ready(address),
     sending: copy.ready(address),
     choosing: copy.choose && (returning ? copy.again(address) : copy.choose(address)),
-    saved: copy.saved && copy.saved(address, offLabels),
-    pending: copy.pending && copy.pending(address),
     notSubscribed: copy.notSubscribed && copy.notSubscribed(address),
-    done: copy.done(address, result),
     expired: copy.expired,
     invalid: copy.invalid,
     error: ERROR,
   }[status];
+  // The answers that end a step: the plane when an email is on its way (the
+  // confirm page's welcome, the topics page's confirmation), the tick otherwise.
+  const answer = {
+    done: copy.done(address, result),
+    saved: copy.saved && copy.saved(address, offLabels),
+    pending: copy.pending && { title: copy.pending(address), detail: copy.pendingDetail },
+  }[status];
+  const answerIcon = status === 'pending' || (status === 'done' && kind === 'confirm') ? 'sent' : 'done';
 
   return (
     <Layout title={copy.title} description="Newsletter">
@@ -453,16 +463,8 @@ export default function NewsletterAction({ kind }) {
       <main className="container margin-vert--xl" style={{ maxWidth: 640 }}>
         <div ref={panel} className={clsx(pageStyles.panel, styles.resultPanel)} role="status" aria-live="polite">
           <h1 className={pageStyles.panelHeading}>{heading}</h1>
-          {message && status === 'pending' && (
-            <div className={styles.sentCard}>
-              <SentIcon />
-              <div>
-                <p className={styles.sentTitle}>{message}</p>
-                <p className={styles.sentDetail}>{copy.pendingDetail}</p>
-              </div>
-            </div>
-          )}
-          {message && status !== 'pending' && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}
+          {answer && <NewsletterAnswer icon={answerIcon} title={answer.title} detail={answer.detail} />}
+          {message && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}
           {kind === 'confirm' && (status === 'ready' || status === 'sending') && checking && <p>{spinner}{copy.checking}</p>}
           {kind === 'confirm' && (status === 'ready' || status === 'sending') && selected && <p>{copy.selected(selected)}</p>}
           {status === 'choosing' && (

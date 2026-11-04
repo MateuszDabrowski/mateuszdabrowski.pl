@@ -35,7 +35,7 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useTurnstile from './useTurnstile';
 import topicList from '../data/newsletter-topics.json';
-import SentIcon from './SentIcon';
+import NewsletterAnswer from './NewsletterAnswer';
 import styles from './NewsletterForm.module.css';
 import pageStyles from '../pages/styles.module.css';
 
@@ -117,29 +117,30 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
 
   if (status === 'done') {
     return (
-      <div className={clsx(styles.form, compact && styles.compact, !remove && styles.sentCard)} role="status">
-        {!remove && <SentIcon />}
-        <div>
-          {remove ? (
-            <p className={styles.done}>Done. That address is unsubscribed, and you won't get any more emails from me.</p>
-          ) : (
-            <>
-              <p className={styles.sentTitle}>
-                {mode === 'topics' ? `A link is on its way to ${email.trim()}.` : `A confirmation email is on its way to ${email.trim()}.`}
-              </p>
-              <p className={styles.sentDetail}>
-                {mode === 'topics'
-                  ? 'It opens your topics, where you can change them or unsubscribe. If it does not show up in a few minutes, check the spam folder and the address.'
-                  : 'Almost there. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.'}
-              </p>
-            </>
-          )}
+      <div className={clsx(styles.form, compact && styles.compact)} role="status">
+        <NewsletterAnswer
+          icon={remove ? 'done' : 'sent'}
+          title={
+            {
+              unsubscribe: 'That address is unsubscribed.',
+              topics: `A link is on its way to ${email.trim()}.`,
+              subscribe: `A confirmation email is on its way to ${email.trim()}.`,
+            }[mode]
+          }
+          detail={
+            {
+              unsubscribe: "You won't get any more emails from me.",
+              topics: 'It opens your topics, where you can change them or unsubscribe. If it does not show up in a few minutes, check the spam folder and the address.',
+              subscribe: 'Almost there. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.',
+            }[mode]
+          }
+        >
           {mode === 'topics' && (
             <p className={styles.notice}>
               <button type="button" className={styles.linkButton} onClick={tryAgain}>Try another address</button>
             </p>
           )}
-        </div>
+        </NewsletterAnswer>
       </div>
     );
   }

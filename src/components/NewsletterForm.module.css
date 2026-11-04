@@ -296,49 +296,77 @@ html[data-theme='dark'] .input {
   margin: 0;
 }
 
-/* An answer that means an email is on its way: the paper plane, then what
-   happened on its own line, so it reads at a glance, and the details under it.
-   The plane is as tall as the headline's line, so it sits centred on it. */
-.sentCard {
+/* The answer that ends a step (NewsletterAnswer): the icon, then what happened
+   on its own line, so it reads at a glance, and the details under it. */
+.answer {
   display: flex;
   gap: 0.9rem;
   align-items: flex-start;
 }
 
-.sentTitle {
+.answerTitle {
   margin: 0;
   font-weight: var(--ifm-font-weight-semibold);
   line-height: 1.75rem;
 }
 
-.sentDetail {
+.answerDetail {
   margin: 0.3rem 0 0;
   color: var(--ifm-color-emphasis-700);
   font-size: 0.9rem;
 }
 
-.resultPanel .sentCard {
+.resultPanel .answer {
   margin-bottom: var(--ifm-paragraph-margin-bottom);
 }
 
-.sentIcon {
+/* Both icons are as tall as the headline's line. The tick sits centred on it.
+   The plane's tip is 2.5/24 of its height from its top, so 1rem down puts the
+   tip at the foot of the headline's first letter. */
+.sentIcon,
+.doneIcon {
   flex: none;
   width: 1.75rem;
   height: 1.75rem;
   color: #1D73C9;
+}
+
+.sentIcon {
+  margin-top: 1rem;
   animation: fly 0.9s ease-out both;
 }
 
-/* In level from the left, towards the text, a little past its place, then settles. */
+.doneIcon {
+  animation: pop 0.4s ease-out both;
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* In from the lower left, a little past its place, then settles. */
 @keyframes fly {
   0% {
     opacity: 0;
-    transform: translateX(-1.75rem) scale(0.6);
+    transform: translate(-1.5rem, 1rem) rotate(-12deg) scale(0.6);
   }
 
   65% {
     opacity: 1;
-    transform: translateX(0.25rem) scale(1.05);
+    transform: translate(0.2rem, -0.2rem) rotate(4deg) scale(1.05);
   }
 
   100% {
@@ -348,7 +376,8 @@ html[data-theme='dark'] .input {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sentIcon {
+  .sentIcon,
+  .doneIcon {
     animation: none;
   }
 }
