@@ -5,6 +5,8 @@ import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import { newsletterForm, nativeFormEnabled } from '../data/newsletter';
 import NewsletterForm from './NewsletterForm';
+import SentIcon from './SentIcon';
+import topicList from '../data/newsletter-topics.json';
 import pageStyles from '../pages/styles.module.css';
 import styles from './NewsletterForm.module.css';
 
@@ -40,9 +42,12 @@ import styles from './NewsletterForm.module.css';
  * topics on offer, such a visitor gets a link to the sign-up form, never the
  * unsubscribe.
  *
- * After a confirmation, the page links to the topics page through a signed
- * link for the address, and names the topics left on only when the form's
- * choice was applied (D653, D654).
+ * Before the click, the confirm page shows the topics the form left selected,
+ * from action=pending, which reads only the pending sign-up and changes
+ * nothing, so a scanner that runs the page confirms nobody. An expired link
+ * says so at once. After the click, the page reads the person's topics through
+ * the signed link the answer carries and shows them with Save, so the topics
+ * can be changed there. When they cannot be read, it links to the topics page.
  *
  * @param {'confirm' | 'unsubscribe'} kind
  */
@@ -63,12 +68,16 @@ const COPY = {
     ready: () => <>Press the button to confirm your subscription to {newsletter} about Salesforce Marketing, Data and AI. Nothing happens until you do.</>,
     button: 'Confirm subscription',
     working: 'Confirming...',
-    done: (address, result) => {
-      const topics = result && result.topics;
-      const opening = result && result.again ? `You're subscribed again, with ${topics}.` : topics ? `You're on the list, with ${topics}.` : "You're on the list.";
-      return `${opening} A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.`;
-    },
+    done: (address, result) =>
+      `${result && result.again ? "You're subscribed again." : "You're on the list."} A welcome email is on its way, and the next newsletter lands in your inbox when there is something worth sending.`,
+    selected: (labels) => `You selected ${listOf(labels)}.`,
     checkTopics: 'Check your topics',
+    mineLoading: 'Loading your topics…',
+    mine: 'These are your topics. Change them here, or later with the link in every email.',
+    mineAllOff: 'Select at least one topic.',
+    mineSave: 'Save topics',
+    mineSaving: 'Saving...',
+    mineSaved: 'Saved. The link in any newsletter brings you back to change them.',
     expired: 'This link has expired. Confirmation links work for 7 days. Subscribe again on the newsletter page and you will get a fresh one.',
     invalid: 'This link is not valid. Subscribe again on the newsletter page and you will get a fresh one.',
     missing: 'This page needs the link from your confirmation email.',
@@ -142,6 +151,8 @@ export default function NewsletterAction({ kind }) {
   const [notice, setNotice] = useState(null); // 'changed' | 'subscribed' | 'error' under the choices
   const [returning, setReturning] = useState(false); // not subscribed: the page offers to subscribe again (D630)
   const [result, setResult] = useState(null); // the confirm answer, which says whether it was a return
+  const [selected, setSelected] = useState(null); // labels the form left selected, shown before the confirm click
+  const [mine, setMine] = useState(null); // after the confirm click: { state, found, topics, off }
   const panel = useRef(null);
 
   // A result is shorter than the choices. On a phone, scrolled down to the
@@ -209,22 +220,94 @@ export default function NewsletterAction({ kind }) {
     const found = kind === 'confirm' ? { t: query.get('t') } : { u: signed.get('u'), s: signed.get('s') };
     const complete = Object.values(found).every(Boolean);
     setParams(found);
-    if (!nativeFormEnabled || !complete || kind === 'confirm') {
-      setStatus(!nativeFormEnabled ? 'inactive' : complete ? 'ready' : 'missing');
+    if (!nativeFormEnabled || !complete) {
+      setStatus(!nativeFormEnabled ? 'inactive' : 'missing');
       return undefined;
     }
     let cancelled = false;
+    if (kind === 'confirm') {
+      setStatus('ready');
+      preview(found.t, () => !cancelled);
+      return () => {
+        cancelled = true;
+      };
+    }
     readChoices(found, () => !cancelled);
     return () => {
       cancelled = true;
     };
   }, [kind]);
 
+  /**
+   * What the confirm link is about to confirm, before the click: the labels
+   * the form left selected, from the list in the page. A sign-up without boxes
+   * shows none. An expired link says so at once, unless the click came first.
+   * A failed read changes nothing.
+   */
+  async function preview(token, isCurrent) {
+    try {
+      const data = await post({ action: 'pending', t: token }, READ_TIMEOUT_MS);
+      if (!isCurrent()) return;
+      if (data.ok === false && data.error === 'expired') {
+        setStatus((current) => (current === 'ready' ? 'expired' : current));
+        return;
+      }
+      const label = (key) => (topicList.find((topic) => topic.key === key) || {}).label;
+      const words = (value) => String(value || '').split(' ').filter(Boolean);
+      let keys = [];
+      if (typeof data.shown === 'string') keys = words(data.shown).filter((key) => !words(data.off).includes(key));
+      else if (typeof data.returnOff === 'string') keys = topicList.map((topic) => topic.key).filter((key) => !words(data.returnOff).includes(key));
+      const labels = keys.map(label).filter(Boolean);
+      if (labels.length) setSelected(labels);
+    } catch (error) {
+      // the page works as before without the line
+    }
+  }
+
+  /** After the confirm click: the person's topics, through the signed link, retried once as on the topics page. */
+  async function loadMine(signed) {
+    const query = new URLSearchParams(signed);
+    const found = { u: query.get('u'), s: query.get('s') };
+    setMine({ state: 'loading', found, topics: [], off: [] });
+    const read = () => post({ action: 'choices', ...found }, READ_TIMEOUT_MS).catch(() => ({}));
+    let data = await read();
+    if (!Array.isArray(data.topics)) data = await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS)).then(read);
+    if (!data.ok || !Array.isArray(data.topics)) setMine({ state: 'failed', found, topics: [], off: [] });
+    else if (!data.topics.length) setMine(null); // no topics on offer: nothing to show or link to
+    else setMine({ state: 'ready', found, topics: data.topics, off: Array.isArray(data.off) ? data.off : [] });
+  }
+
+  const toggleMine = (key) =>
+    setMine((current) => ({
+      ...current,
+      state: 'ready',
+      off: current.off.includes(key) ? current.off.filter((k) => k !== key) : [...current.off, key],
+    }));
+
+  async function saveMine(event) {
+    event.preventDefault();
+    const keys = mine.topics.filter((topic) => mine.off.includes(topic.key)).map((topic) => topic.key);
+    setMine((current) => ({ ...current, state: 'saving' }));
+    try {
+      const data = await post({ action: 'topics', ...mine.found, off: keys.join(' ') });
+      if (data.ok && data.state === 'saved') {
+        setMine((current) => ({ ...current, state: 'saved', off: Array.isArray(data.off) ? data.off : keys }));
+      } else if (data.error === 'changed' && Array.isArray(data.topics) && data.topics.length) {
+        setMine((current) => ({ ...current, state: 'ready', topics: data.topics, off: current.off.filter((k) => data.topics.some((topic) => topic.key === k)) }));
+      } else {
+        setMine((current) => ({ ...current, state: 'error' }));
+      }
+    } catch (error) {
+      setMine((current) => ({ ...current, state: 'error' }));
+    }
+  }
+
   async function act() {
     setStatus('sending');
     try {
       const data = await post({ action: kind, ...params });
       setResult(data);
+      if (kind === 'confirm' && data.ok && data.signed) loadMine(data.signed);
       // "failed" is the script's own error, reported to the operator: the link is fine, so try again.
       setStatus(data.ok ? 'done' : data.error === 'failed' ? 'error' : data.error === 'expired' ? 'expired' : 'invalid');
     } catch (error) {
@@ -363,7 +446,14 @@ export default function NewsletterAction({ kind }) {
       <main className="container margin-vert--xl" style={{ maxWidth: 640 }}>
         <div ref={panel} className={clsx(pageStyles.panel, styles.resultPanel)} role="status" aria-live="polite">
           <h1 className={pageStyles.panelHeading}>{heading}</h1>
-          {message && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}
+          {message && status === 'pending' && (
+            <div className={styles.sentCard}>
+              <SentIcon />
+              <p className={styles.done}>{message}</p>
+            </div>
+          )}
+          {message && status !== 'pending' && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}
+          {kind === 'confirm' && (status === 'ready' || status === 'sending') && selected && <p>{copy.selected(selected)}</p>}
           {status === 'choosing' && (
             <form onSubmit={save}>
               <fieldset className={styles.topics} disabled={Boolean(busy)}>
@@ -424,7 +514,34 @@ export default function NewsletterAction({ kind }) {
               </button>
             </p>
           )}
-          {kind === 'confirm' && status === 'done' && result && result.signed && (
+          {kind === 'confirm' && status === 'done' && mine && mine.state === 'loading' && <p>{spinner}{copy.mineLoading}</p>}
+          {kind === 'confirm' && status === 'done' && mine && !['loading', 'failed'].includes(mine.state) && (
+            <form onSubmit={saveMine}>
+              <p>{copy.mine}</p>
+              <fieldset className={styles.topics} disabled={mine.state === 'saving'}>
+                <legend className={styles.srOnly}>Your topics</legend>
+                {mine.topics.map((topic) => (
+                  <label key={topic.key} className={styles.check}>
+                    <input type="checkbox" checked={!mine.off.includes(topic.key)} onChange={() => toggleMine(topic.key)} /> {topic.label}
+                  </label>
+                ))}
+              </fieldset>
+              {mine.topics.every((topic) => mine.off.includes(topic.key)) && <p className={styles.allOff}>{copy.mineAllOff}</p>}
+              {mine.state === 'saved' && <p>{copy.mineSaved}</p>}
+              {mine.state === 'error' && <p role="alert" className={styles.error}>{ERROR}</p>}
+              <p>
+                <button
+                  type="submit"
+                  className={clsx('button button--lg', pageStyles.newsletterButton, mine.state === 'saving' && styles.busy)}
+                  disabled={mine.state === 'saving' || mine.topics.every((topic) => mine.off.includes(topic.key))}
+                  aria-busy={mine.state === 'saving'}
+                >
+                  {mine.state === 'saving' ? <>{spinner}{copy.mineSaving}</> : copy.mineSave}
+                </button>
+              </p>
+            </form>
+          )}
+          {kind === 'confirm' && status === 'done' && result && result.signed && mine && mine.state === 'failed' && (
             <p>
               <Link className={clsx('button button--lg', pageStyles.newsletterButton)} to={`/newsletter/unsubscribe/#${result.signed}`}>
                 {copy.checkTopics}

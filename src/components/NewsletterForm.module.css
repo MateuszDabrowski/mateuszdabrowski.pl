@@ -296,6 +296,44 @@ html[data-theme='dark'] .input {
   margin: 0;
 }
 
+/* An answer that means an email is on its way: the paper plane, then the text. */
+.sentCard {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.resultPanel .sentCard {
+  margin-bottom: var(--ifm-paragraph-margin-bottom);
+}
+
+.sentIcon {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 0.1rem;
+  color: #1D73C9;
+  animation: fly 0.6s ease-out both;
+}
+
+@keyframes fly {
+  from {
+    opacity: 0;
+    transform: translate(-0.75rem, 0.75rem) scale(0.7);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sentIcon {
+    animation: none;
+  }
+}
+
 /* While the Apps Script works. A cold start plus the sheet and the email can
    take several seconds, and a greyed-out button alone looks stuck, so the busy
    button keeps its colour and spins. */

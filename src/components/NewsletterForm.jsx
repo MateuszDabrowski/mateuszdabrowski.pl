@@ -35,6 +35,7 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useTurnstile from './useTurnstile';
 import topicList from '../data/newsletter-topics.json';
+import SentIcon from './SentIcon';
 import styles from './NewsletterForm.module.css';
 import pageStyles from '../pages/styles.module.css';
 
@@ -116,19 +117,22 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
 
   if (status === 'done') {
     return (
-      <div className={clsx(styles.form, compact && styles.compact)} role="status">
-        <p className={styles.done}>
-          {{
-            unsubscribe: "Done. That address is unsubscribed, and you won't get any more emails from me.",
-            topics: `A link is on its way to ${email.trim()}. It opens your topics, where you can change them or unsubscribe. If it does not show up in a few minutes, check the spam folder and the address.`,
-            subscribe: `Almost there. A confirmation email is on its way to ${email.trim()}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.`,
-          }[mode]}
-        </p>
-        {mode === 'topics' && (
-          <p className={styles.notice}>
-            <button type="button" className={styles.linkButton} onClick={tryAgain}>Try another address</button>
+      <div className={clsx(styles.form, compact && styles.compact, !remove && styles.sentCard)} role="status">
+        {!remove && <SentIcon />}
+        <div>
+          <p className={styles.done}>
+            {{
+              unsubscribe: "Done. That address is unsubscribed, and you won't get any more emails from me.",
+              topics: `A link is on its way to ${email.trim()}. It opens your topics, where you can change them or unsubscribe. If it does not show up in a few minutes, check the spam folder and the address.`,
+              subscribe: `Almost there. A confirmation email is on its way to ${email.trim()}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.`,
+            }[mode]}
           </p>
-        )}
+          {mode === 'topics' && (
+            <p className={styles.notice}>
+              <button type="button" className={styles.linkButton} onClick={tryAgain}>Try another address</button>
+            </p>
+          )}
+        </div>
       </div>
     );
   }
