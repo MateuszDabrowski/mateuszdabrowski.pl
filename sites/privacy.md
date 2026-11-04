@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/sites/privacy/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-22  
+Last updated: 2026-11-04  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Legal stuff. Short and simple.
@@ -52,8 +52,8 @@ If you subscribe to the newsletter, you give me your email address. Together wit
 - **What I collect:** your email address, the time you asked to subscribe and the time you confirmed it, and any topics you turned off, with the time of that choice. No name, no tracking of what you read.
 - **Why:** to send you the newsletter. The address is used for nothing else and is never shared or sold.
 - **Legal basis:** your consent, given when you confirm the subscription. Unsubscribing withdraws it.
-- **Where it goes:** the form posts straight from your browser to a script in my Google Workspace account, so nothing passes through this site. Cloudflare Turnstile checks first that you are not a bot. You get a confirmation email, and the address is added to the list only when you open its link and confirm on the page it opens. The list and its consent log live in Sling, my own newsletter app, encrypted on my Mac, with a copy of the consent log in a Google Sheet in my Google Workspace account. The emails go out through Gmail. Google processes the data on my behalf under its Workspace terms.
-- **How long:** until you unsubscribe. After that I keep the address only as unsubscribed, so a later email never goes to you by accident. If you subscribe again, the newest choice wins. The topics you turned off stay with the address, so they are still off when you come back. A sign-up you never confirm expires after 7 days and never reaches the list. Write to legal \[at] mateuszdabrowski.pl if you want the address gone entirely.
+- **Where it goes:** the form posts straight from your browser to a script in my Google Workspace account, so nothing passes through this site. Cloudflare Turnstile checks first that you are not a bot. You get a confirmation email, and the address is added to the list only when you open its link and confirm on the page it opens. Any topics you deselect on the form wait with the sign-up and apply at the same moment. The list and its consent log live in Sling, my own newsletter app, encrypted on my Mac, with a copy of the consent log in a Google Sheet in my Google Workspace account. The emails go out through Gmail. Google processes the data on my behalf under its Workspace terms.
+- **How long:** until you unsubscribe. After that I keep the address only as unsubscribed, so a later email never goes to you by accident. If you subscribe again, the newest choice wins. The topics you turned off stay with the address, so they are still off when you come back, unless you choose topics on the newsletter page's form, where the new choice replaces them. A sign-up you never confirm expires after 7 days and never reaches the list. Write to legal \[at] mateuszdabrowski.pl if you want the address gone entirely.
 - **Unsubscribing:** the link in any email, the "Unsubscribe" option on the newsletter page, or an email to newsletter \[at] mateuszdabrowski.pl from the subscribed address.
 
 ## Contact form
