@@ -329,16 +329,16 @@ html[data-theme='dark'] .input {
   animation: fly 0.9s ease-out both;
 }
 
-/* In from the lower left, a little past its place, then settles. */
+/* In level from the left, towards the text, a little past its place, then settles. */
 @keyframes fly {
   0% {
     opacity: 0;
-    transform: translate(-1.5rem, 1rem) rotate(-12deg) scale(0.6);
+    transform: translateX(-1.75rem) scale(0.6);
   }
 
   65% {
     opacity: 1;
-    transform: translate(0.2rem, -0.2rem) rotate(4deg) scale(1.05);
+    transform: translateX(0.25rem) scale(1.05);
   }
 
   100% {
