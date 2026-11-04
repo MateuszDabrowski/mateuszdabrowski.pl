@@ -103,7 +103,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
       const res = await fetch(endpoint, { method: 'POST', body });
       const data = await res.json().catch(() => ({ ok: res.ok }));
       // "challenge" is the script refusing the bot check's token, which a reload fixes.
-      setStatus(data.ok ? 'done' : data.error === 'ceiling' || data.error === 'challenge' ? data.error : 'error');
+      setStatus(data.ok ? 'done' : ['ceiling', 'challenge'].includes(data.error) ? data.error : 'error');
     } catch (error) {
       setStatus('error');
     } finally {
