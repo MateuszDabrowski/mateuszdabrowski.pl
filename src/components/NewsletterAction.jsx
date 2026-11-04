@@ -118,7 +118,8 @@ const COPY = {
     notSubscribed: (address) => <>{address} is not subscribed to {newsletter} about Salesforce Marketing, Data and AI.</>,
     signUp: 'Subscribe on the newsletter page',
     pendingHeading: 'Check your inbox',
-    pending: (address) => `Almost there. A confirmation email is on its way to ${address}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder.`,
+    pending: (address) => `A confirmation email is on its way to ${address}.`,
+    pendingDetail: 'Almost there. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder.',
     subscribed: 'This address is subscribed already. Change its topics below and save.',
     ceiling: 'The sign-up service has sent all the emails it can for today. Try again tomorrow.',
   },
@@ -455,7 +456,10 @@ export default function NewsletterAction({ kind }) {
           {message && status === 'pending' && (
             <div className={styles.sentCard}>
               <SentIcon />
-              <p className={styles.done}>{message}</p>
+              <div>
+                <p className={styles.sentTitle}>{message}</p>
+                <p className={styles.sentDetail}>{copy.pendingDetail}</p>
+              </div>
             </div>
           )}
           {message && status !== 'pending' && <p className={status === 'error' || status === 'invalid' || status === 'expired' ? styles.error : undefined}>{message}</p>}

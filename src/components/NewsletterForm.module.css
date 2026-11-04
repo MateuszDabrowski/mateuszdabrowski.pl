@@ -296,11 +296,25 @@ html[data-theme='dark'] .input {
   margin: 0;
 }
 
-/* An answer that means an email is on its way: the paper plane, then the text. */
+/* An answer that means an email is on its way: the paper plane, then what
+   happened on its own line, so it reads at a glance, and the details under it.
+   The plane is as tall as the headline's line, so it sits centred on it. */
 .sentCard {
   display: flex;
   gap: 0.9rem;
   align-items: flex-start;
+}
+
+.sentTitle {
+  margin: 0;
+  font-weight: var(--ifm-font-weight-semibold);
+  line-height: 1.75rem;
+}
+
+.sentDetail {
+  margin: 0.3rem 0 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
 }
 
 .resultPanel .sentCard {
@@ -309,20 +323,25 @@ html[data-theme='dark'] .input {
 
 .sentIcon {
   flex: none;
-  width: 2rem;
-  height: 2rem;
-  margin-top: 0.1rem;
+  width: 1.75rem;
+  height: 1.75rem;
   color: #1D73C9;
-  animation: fly 0.6s ease-out both;
+  animation: fly 0.9s ease-out both;
 }
 
+/* In from the lower left, a little past its place, then settles. */
 @keyframes fly {
-  from {
+  0% {
     opacity: 0;
-    transform: translate(-0.75rem, 0.75rem) scale(0.7);
+    transform: translate(-1.5rem, 1rem) rotate(-12deg) scale(0.6);
   }
 
-  to {
+  65% {
+    opacity: 1;
+    transform: translate(0.2rem, -0.2rem) rotate(4deg) scale(1.05);
+  }
+
+  100% {
     opacity: 1;
     transform: none;
   }

@@ -120,13 +120,20 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
       <div className={clsx(styles.form, compact && styles.compact, !remove && styles.sentCard)} role="status">
         {!remove && <SentIcon />}
         <div>
-          <p className={styles.done}>
-            {{
-              unsubscribe: "Done. That address is unsubscribed, and you won't get any more emails from me.",
-              topics: `A link is on its way to ${email.trim()}. It opens your topics, where you can change them or unsubscribe. If it does not show up in a few minutes, check the spam folder and the address.`,
-              subscribe: `Almost there. A confirmation email is on its way to ${email.trim()}. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.`,
-            }[mode]}
-          </p>
+          {remove ? (
+            <p className={styles.done}>Done. That address is unsubscribed, and you won't get any more emails from me.</p>
+          ) : (
+            <>
+              <p className={styles.sentTitle}>
+                {mode === 'topics' ? `A link is on its way to ${email.trim()}.` : `A confirmation email is on its way to ${email.trim()}.`}
+              </p>
+              <p className={styles.sentDetail}>
+                {mode === 'topics'
+                  ? 'It opens your topics, where you can change them or unsubscribe. If it does not show up in a few minutes, check the spam folder and the address.'
+                  : 'Almost there. Click its button, then confirm on the page it opens. If it does not show up in a few minutes, check the spam folder and the address.'}
+              </p>
+            </>
+          )}
           {mode === 'topics' && (
             <p className={styles.notice}>
               <button type="button" className={styles.linkButton} onClick={tryAgain}>Try another address</button>
