@@ -181,6 +181,12 @@ export function AppCarousel({ apps, label, rotate = false }) {
         setOrder([...apps.slice(start), ...apps.slice(0, start)]);
     }, []);
 
+    // The browser's snap follows the card it held, so it would open away from
+    // the app that won the first place.
+    useEffect(() => {
+        track.current.scrollLeft = 0;
+    }, [order]);
+
     useEffect(() => {
         const el = track.current;
         const update = () => setEdges({
