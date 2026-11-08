@@ -11,13 +11,14 @@
  * fallback form stays unsubscribe-only and links to that mode here, with
  * #change-topics on the address.
  *
- * The newsletter page's form also shows the topics (D653 in Sling's
- * subscriber-sheet contract), all ticked. It shows the list, never a person's
+ * Both sign-up forms, the newsletter page's and the one at the end of every
+ * doc, also show the topics (D653 in Sling's subscriber-sheet contract), all
+ * ticked, always open. It shows the list, never a person's
  * choices, as anybody can type an address. The list is in the page: each site
  * deploy writes newsletter-topics.json from the Topics tab Sling writes (see
  * plugins/newsletter-topics.mjs), so nothing is read when the page opens. An
- * empty list means the plain form, and no choice is sent. The docs footer form
- * never shows topics. The keys it showed and the ones left unticked wait in
+ * empty list means the plain form, and no choice is sent. The keys it showed
+ * and the ones left unticked wait in
  * the script. At the confirmation click they decide only the keys still on the
  * live tab, and any other key keeps the person's older state (D655).
  *
@@ -25,7 +26,7 @@
  *   endpoint         - the Apps Script web app URL
  *   turnstileSiteKey - public Turnstile key; the widget renders invisibly and
  *                      hands over a token that the script verifies
- *   compact          - flat variant (email + button, subscribe only)
+ *   compact          - flat variant (email, topics and button, subscribe only)
  *   unsubscribeOnly  - unsubscribe with no mode switch: the unsubscribe page
  *                      when it has no signed link (a forwarded issue, or an
  *                      email sent before signed links)
@@ -52,7 +53,7 @@ export default function NewsletterForm({ endpoint, turnstileSiteKey, compact = f
   // Loads on the first focus in the form; see useTurnstile.
   const turnstile = useTurnstile(turnstileSiteKey, { onError: () => setStatus('challenge') });
 
-  const topics = compact || unsubscribeOnly ? [] : topicList; // [{ key, label }] from Sling's Topics tab
+  const topics = unsubscribeOnly ? [] : topicList; // [{ key, label }] from Sling's Topics tab
   useEffect(() => {
     if (!compact && !unsubscribeOnly && window.location.hash === `#${TOPICS_ANCHOR}`) setMode('topics');
   }, [compact, unsubscribeOnly]);

@@ -1,5 +1,6 @@
 /**
- * Writes the topics for the newsletter page's form to
+ * Writes the topics for the sign-up forms, the newsletter page's and the one
+ * at the end of every doc, to
  * src/data/newsletter-topics.json, from the Topics tab Sling writes, through
  * the script's action=topicList (D653). `npm run deploy` runs this first, so
  * the form has the list in its HTML and reads nothing when the page opens. A

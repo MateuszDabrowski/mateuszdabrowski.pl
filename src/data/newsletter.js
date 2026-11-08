@@ -12,7 +12,7 @@
  * last responses were imported into Sling.
  *
  * No topic is typed here. Everyone gets every topic, and a person turns
- * topics off on the newsletter page's form or on the unsubscribe page, behind
+ * topics off on either sign-up form or on the unsubscribe page, behind
  * a signed link. The list comes from the Topics tab Sling writes into the
  * sheet, through the script (D619): live on the unsubscribe page, and from
  * newsletter-topics.json on the form, which each site deploy writes (D653).
