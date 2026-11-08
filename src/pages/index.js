@@ -117,6 +117,13 @@ const whatsNew = [
     //     description: 'New app. Bodyweight workouts on iPhone and Apple Watch that plan every set for you, so all you have to do is start. Six exercises to pick from: push-ups, pull-ups, dips, squats, lunges and plank, with knee push-ups, inverted rows and bench dips to start on until you can do the full ones.',
     // },
     {
+        date: '2026-11-08',
+        kind: 'App',
+        title: 'Diagramforce 1.27',
+        url: 'https://diagramforce.com',
+        description: 'Free Salesforce diagramming in your browser, plus a Claude skill that turns your org\'s metadata into editable diagrams. New: Venn diagrams that show which rows a SQL join returns, multiple improvements to complex diagram readability, and Claude skill enhancements worth updating to.',
+    },
+    {
         date: '2026-10-28',
         kind: 'App',
         title: 'Slot 1.7',
@@ -136,13 +143,6 @@ const whatsNew = [
         title: 'MCE SQL Errors',
         url: '/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/',
         description: 'Only SELECT queries are valid. What each Marketing Cloud Engagement SQL error means, and how to fix the query behind it.',
-    },
-    {
-        date: '2026-10-16',
-        kind: 'App',
-        title: 'Diagramforce 1.26',
-        url: 'https://diagramforce.com',
-        description: 'Free Salesforce diagramming in your browser, plus a Claude skill that turns your org\'s metadata into editable diagrams. New: field lineage for any data pipeline, data models that put a query\'s main table in the middle with a line and a colour for each join field, and connectors that share one trunk and split near their targets.',
     },
     {
         date: '2026-10-16',
