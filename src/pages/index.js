@@ -117,7 +117,7 @@ const whatsNew = [
     //     description: 'New app. Bodyweight workouts on iPhone and Apple Watch that plan every set for you, so all you have to do is start. Six exercises to pick from: push-ups, pull-ups, dips, squats, lunges and plank, with knee push-ups, inverted rows and bench dips to start on until you can do the full ones.',
     // },
     {
-        date: '2026-11-08',
+        date: '2026-11-09',
         kind: 'App',
         title: 'Diagramforce 1.27',
         url: 'https://diagramforce.com',
