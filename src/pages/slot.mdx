@@ -423,7 +423,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ## Privacy Policy {#privacy-policy}
 
-<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: October 28, 2026</p>
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 9, 2026</p>
 
 <p>Slot is built by Mateusz Dąbrowski. This policy explains what the Slot app does with your data. The short version: Slot sends nothing to me, and it keeps every account apart from every other one. The longer version matters, because Slot is a container for accounts you already have with Google and Microsoft, and a lot of what happens inside it is between you and them.</p>
 
@@ -493,7 +493,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <ul>
   <li><strong>Your unread count</strong>, from <code>mail.google.com</code>, about once a minute for each signed-in Google account, using that account's own session. The reply contains your address, the unread count, and the sender and subject of the newest unread message.</li>
   <li><strong>Your profile picture</strong>, from <code>googleusercontent.com</code>, once per account. This request carries no cookies.</li>
-  <li><strong>Your calendar feed</strong>, but only if you paste an address into Settings - and then only to the address you pasted. Slot accepts <code>https</code> addresses only, sends no cookies and no sign-in, and re-fetches at most every five minutes while it is open. If you have not added a feed, no such request is ever made.</li>
+  <li><strong>Your calendar feed</strong>, but only if you add an address, in Settings or from an account's menu on the rail - and then only to the address you added. Slot accepts <code>https</code> addresses only, sends no cookies and no sign-in, fetches it once to check it when you add it, and re-fetches at most every five minutes while it is open. If you have not added a feed, no such request is ever made.</li>
   <li><strong>An attachment you asked to print</strong>, from Gmail's own attachment hosts, only at the moment you press Command-P in Gmail's attachment viewer, using that account's own session. The file goes to the print panel and is then deleted - it is never saved to Downloads and never kept.</li>
 </ul>
 
