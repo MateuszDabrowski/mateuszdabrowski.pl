@@ -421,7 +421,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <ul>
   <li><strong>The names, values and places of your stuff</strong> are encrypted on your device with AES-256-GCM before they are saved or synced. Only ciphertext is ever stored, on the device or in iCloud.</li>
   <li><strong>The encryption key</strong> is generated on your device and kept in your iCloud Keychain, which Apple encrypts end to end. It is never sent anywhere else, and it is not readable by Apple or by me.</li>
-  <li><strong>Folder names and icons, each item's type and expiry date, whether it is hidden or pinned, whether its reminders are on, how often you have used it, and your sort order</strong> are synced through iCloud with Apple's transport encryption but are not separately encrypted by Shelf. Folders need readable names to be navigated, and the type decides which action a row offers. These are visible to Apple as record metadata.</li>
+  <li><strong>Folder names and icons, each item's type, expiry date and code format, whether it is hidden or pinned, whether its reminders are on, how often you have used it, and your sort order</strong> are synced through iCloud with Apple's transport encryption but are not separately encrypted by Shelf. Folders need readable names to be navigated, and the type decides which action a row offers. These are visible to Apple as record metadata.</li>
   <li><strong>Device-local settings</strong> - appearance, the global shortcut, App Lock, whether widgets are enabled, per-device folder visibility - stay on the device that set them.</li>
 </ul>
 
@@ -439,7 +439,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>Copying to the clipboard is what Shelf is for: a value is written to the clipboard when you tap a row, and only then. Shelf reads text only from what you paste into its own add form, to guess the item's type; it has no clipboard observer and never reads the clipboard in the background. When you copy a value you marked hidden, Shelf tags it so clipboard managers skip it and clears it from the clipboard after 60 seconds.</p>
+<p>Copying to the clipboard is what Shelf is for: a value is written to the clipboard when you tap a row, and only then. Shelf reads text only from what you paste into its own add form, to guess the item's type, and on the Mac when you choose Save Clipboard as Stuff, to fill in a new item. It has no clipboard observer and never reads the clipboard in the background. When you copy a value you marked hidden, Shelf tags it so clipboard managers skip it and clears it from the clipboard after 60 seconds.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -462,7 +462,15 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>Shelf asks to send notifications only when you turn on an expiry or arrival reminder. iOS schedules the reminders on your device. A reminder never shows a value, and it shows the item's name only when the item isn't hidden and App Lock is off.</p>
+<p>Shelf asks to send notifications only when you turn on an expiry or arrival reminder. iOS schedules the reminders on your device. A reminder's text never includes a value, and it shows the item's name only when the item isn't hidden and App Lock is off. If you turn on Show Values in Reminders, you can touch and hold a reminder to see the value and copy it. Shelf decrypts it on your device at that moment, only while your iPhone is unlocked, never for hidden items and never with App Lock on.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Scannable codes
+
+    </div>
+
+<p>You can show an item as a QR code or barcode, and read one from an image you pick. The image is read on your device and not kept: Shelf saves only the code's text, encrypted like any value, and its format. Picking an image needs no access to your photo library, because the system picker shares only the image you choose.</p>
 
     <div style={{marginTop: '2rem'}}>
 
