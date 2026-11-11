@@ -398,7 +398,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ## Privacy Policy {#privacy-policy}
 
-<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: September 4, 2026</p>
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 11, 2026</p>
 
 <p>Shelf is built by Mateusz Dąbrowski. This policy explains what the Shelf app does with your data. It is short because there is not much to say: Shelf sends nothing to me, and what it keeps, it encrypts on your device first.</p>
 
@@ -408,7 +408,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>I operate no servers for Shelf. There is no account to create, no sign-in, and no way for your data to reach me. Shelf contains <strong>no analytics, no telemetry, no crash reporting, no advertising identifiers and no third-party SDKs of any kind</strong> - it is built entirely against Apple's own frameworks. Its only network traffic is Apple's iCloud sync, described below.</p>
+<p>I operate no servers for Shelf. There is no account to create, no sign-in, and no way for your data to reach me. Shelf contains <strong>no analytics, no telemetry, no crash reporting, no advertising identifiers and no third-party SDKs of any kind</strong> - it is built entirely against Apple's own frameworks. Its only network traffic goes to Apple: iCloud sync, and Apple Maps when you choose a place on a map. Both are described below.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -419,9 +419,9 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <p>Everything you put into Shelf is saved on your device and, if you are signed into iCloud, in <strong>your private iCloud database</strong> through Apple's CloudKit. It is visible only to you, on devices signed into your Apple Account. I cannot see it.</p>
 
 <ul>
-  <li><strong>The names and values of your stuff</strong> are encrypted on your device with AES-256-GCM before they are saved or synced. Only ciphertext is ever stored, on the device or in iCloud.</li>
+  <li><strong>The names, values and places of your stuff</strong> are encrypted on your device with AES-256-GCM before they are saved or synced. Only ciphertext is ever stored, on the device or in iCloud.</li>
   <li><strong>The encryption key</strong> is generated on your device and kept in your iCloud Keychain, which Apple encrypts end to end. It is never sent anywhere else, and it is not readable by Apple or by me.</li>
-  <li><strong>Folder names and icons, each item's type, whether it is hidden or pinned, how often you have used it, and your sort order</strong> are synced through iCloud with Apple's transport encryption but are not separately encrypted by Shelf. Folders need readable names to be navigated, and the type decides which action a row offers. These are visible to Apple as record metadata.</li>
+  <li><strong>Folder names and icons, each item's type and expiry date, whether it is hidden or pinned, whether its reminders are on, how often you have used it, and your sort order</strong> are synced through iCloud with Apple's transport encryption but are not separately encrypted by Shelf. Folders need readable names to be navigated, and the type decides which action a row offers. These are visible to Apple as record metadata.</li>
   <li><strong>Device-local settings</strong> - appearance, the global shortcut, App Lock, whether widgets are enabled, per-device folder visibility - stay on the device that set them.</li>
 </ul>
 
@@ -431,7 +431,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>Shelf does <strong>not</strong> collect, transmit or store any of the following: personal information, account credentials, analytics or usage data, crash reports, advertising identifiers, location, contacts, photos, or your browsing. The App Privacy label on the App Store is "Data Not Collected", and this policy is why.</p>
+<p>Shelf does <strong>not</strong> collect, transmit or store any of the following: personal information, account credentials, analytics or usage data, crash reports, advertising identifiers, your location, contacts, photos, or your browsing. Shelf uses your location on your device only, as described under Location below. The App Privacy label on the App Store is "Data Not Collected", and this policy is why.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -440,6 +440,29 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     </div>
 
 <p>Copying to the clipboard is what Shelf is for: a value is written to the clipboard when you tap a row, and only then. Shelf reads text only from what you paste into its own add form, to guess the item's type; it has no clipboard observer and never reads the clipboard in the background. When you copy a value you marked hidden, Shelf tags it so clipboard managers skip it and clears it from the clipboard after 60 seconds.</p>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Location
+
+    </div>
+
+<p>On iPhone and iPad you can save where a piece of stuff belongs, such as a door code at its door or a voucher at its shop. Shelf can then show the stuff near you and remind you when you arrive. All of it is optional, and Shelf asks for your location only when you use one of these features, never when it opens.</p>
+
+<ul>
+  <li><strong>Saving your current location, and Near Me,</strong> show Apple's location prompt the first time. You can choose Allow Once, which lets Shelf use your location only until you close it. Each time, Shelf takes one location reading and stops.</li>
+  <li><strong>Arrival reminders</strong> need location access While Using the App. iOS watches the places you choose and shows the reminder. Shelf does not track you, does not run in the background for this, and never asks for Always access.</li>
+  <li><strong>Choosing a place on a map</strong> (iPhone, iPad and Mac) needs no location permission. The map, the text you search for and an address you look up go to Apple Maps to find the place, only while you are choosing it. Apple's privacy policy covers that. Nothing goes to me.</li>
+  <li><strong>A saved place</strong> is encrypted on your device, like a value, before it is saved or synced. It never reaches me or anyone else.</li>
+</ul>
+
+    <div style={{marginTop: '2rem'}}>
+
+### Notifications
+
+    </div>
+
+<p>Shelf asks to send notifications only when you turn on an expiry or arrival reminder. iOS schedules the reminders on your device. A reminder never shows a value, and it shows the item's name only when the item isn't hidden and App Lock is off.</p>
 
     <div style={{marginTop: '2rem'}}>
 
