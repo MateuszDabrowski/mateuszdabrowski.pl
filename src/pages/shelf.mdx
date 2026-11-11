@@ -453,7 +453,8 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   <li><strong>Saving your current location, and Near Me,</strong> show Apple's location prompt the first time. You can choose Allow Once, which lets Shelf use your location only until you close it. Each time, Shelf takes one location reading and stops.</li>
   <li><strong>Arrival reminders</strong> need location access While Using the App. iOS watches the places you choose and shows the reminder. Shelf does not track you, does not run in the background for this, and never asks for Always access.</li>
   <li><strong>Choosing a place on a map</strong> (iPhone, iPad and Mac) needs no location permission. The map, the text you search for and an address you look up go to Apple Maps to find the place, only while you are choosing it. Apple's privacy policy covers that. Nothing goes to me.</li>
-  <li><strong>A saved place</strong> is encrypted on your device, like a value, before it is saved or synced. It never reaches me or anyone else.</li>
+  <li><strong>Opening a place</strong> in your map app sends that app the place's coordinates when you tap it, and nothing else: no name, no value. The map app's own privacy policy applies from there.</li>
+  <li><strong>A saved place</strong> is encrypted on your device, like a value, before it is saved or synced. It never reaches me, and it reaches a map app only when you open it there.</li>
 </ul>
 
     <div style={{marginTop: '2rem'}}>
