@@ -175,7 +175,7 @@ Write a query that will find Subscriber Key for all Active (opted-in) Subscriber
 <TabItem value='solution'>
 
 ```sql title="Solution working on Parent Business Unit"
-SELECT sub.SubscriberKey
+SELECT DISTINCT sub.SubscriberKey
 FROM _Subscribers   AS sub
     LEFT JOIN _Sent AS sent
         ON sent.SubscriberKey = sub.SubscriberKey
@@ -183,6 +183,8 @@ WHERE
     sub.Status = 'active'
     AND sent.EventDate IS NOT NULL
 ```
+
+`DISTINCT` keeps one row for each Subscriber Key, as the join returns a row for every email sent to that subscriber.
 
 You can write this query without the filter on `sent.EventDate` but with `INNER JOIN _Sent` instead. The above version makes it easier to change the query for the bonus below.
 

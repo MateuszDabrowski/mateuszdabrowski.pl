@@ -227,7 +227,7 @@ SELECT
         WHEN RecommendedProducts LIKE '1'       THEN 'Premium'
         WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '%,1,%'   THEN 'Premium'
-        WHEN RecommendedProducts LIKE '1,%'     THEN 'Premium'
+        WHEN RecommendedProducts LIKE '%,1'     THEN 'Premium'
         WHEN RecommendedProducts LIKE '2'       THEN 'Premium'
         WHEN RecommendedProducts LIKE '2,%'     THEN 'Premium'
         ...
