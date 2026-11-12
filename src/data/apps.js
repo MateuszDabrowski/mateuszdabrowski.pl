@@ -140,6 +140,7 @@ export const apps = [
         pitch: 'Bodyweight workouts on iPhone and Apple Watch, planned for you set by set, so all you have to do is start.',
         category: 'Health & Fitness',
         url: '/soar/',
+        appStoreUrl: 'https://apps.apple.com/app/id6766879237',
         imageUrl: 'img/apple/soar/Soar-Card.webp',
         cardImageUrl: 'img/apple/soar/Soar-HomeCard.webp',
         description: 'Training is easier to keep up when you never have to plan it. Soar plans every workout for you: pick your exercises and do the sets it shows. Every two weeks a workout becomes a one-set test, and your result plans the next two weeks.',

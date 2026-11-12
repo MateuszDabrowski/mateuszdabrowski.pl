@@ -107,15 +107,13 @@ const newsletter = {
    push the docs out. Never list a doc with draft: true - the dev server renders drafts, the
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
-    // Soar is not on the App Store yet. On launch day, set the date to that
-    // day and uncomment (src/data/apps.js has the other launch-day steps).
-    // {
-    //     date: '2026-11-02',
-    //     kind: 'App',
-    //     title: 'Soar 1.0',
-    //     url: '/soar/',
-    //     description: 'New app. Bodyweight workouts on iPhone and Apple Watch that plan every set for you, so all you have to do is start. Six exercises to pick from: push-ups, pull-ups, dips, squats, lunges and plank, with knee push-ups, inverted rows and bench dips to start on until you can do the full ones.',
-    // },
+    {
+        date: '2026-11-11',
+        kind: 'App',
+        title: 'Soar 1.0',
+        url: '/soar/',
+        description: 'New app. Bodyweight workouts on iPhone and Apple Watch that plan every set for you, so all you have to do is start. Six exercises to pick from: push-ups, pull-ups, dips, squats, lunges and plank, with knee push-ups, inverted rows and bench dips to start on until you can do the full ones.',
+    },
     {
         date: '2026-11-09',
         kind: 'App',
