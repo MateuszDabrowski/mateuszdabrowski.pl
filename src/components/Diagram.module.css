@@ -1,0 +1,76 @@
+.figure {
+  margin: 0 0 var(--ifm-leading);
+}
+
+/* The panel takes the diagram's canvas colour, so the image merges into it and
+   every diagram spans the same width, however narrow it is drawn. Clip, not
+   hidden, so a sticky map on the panel still follows the reader */
+.canvas {
+  display: flex;
+  align-items: flex-start;
+  border-radius: var(--ifm-global-radius);
+  background-color: #fafafa;
+  overflow: clip;
+}
+
+:global([data-theme='dark']) .canvas {
+  background-color: #1a1a1a;
+}
+
+.image {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+}
+
+.image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Caption on the left, the button on the right of its first line */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.caption {
+  flex: 1 1 16rem;
+  font-style: italic;
+}
+
+.open {
+  flex: none;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background-color: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.open:hover,
+.open:focus-visible {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+/* A full-size tap target on a phone */
+@media (max-width: 600px) {
+  .open {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 1rem;
+  }
+}

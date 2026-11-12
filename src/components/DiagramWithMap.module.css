@@ -1,0 +1,48 @@
+/* The map sits on the diagram's panel, in its top-right corner, and follows the
+   reader down a tall part, below the navbar. Its negative left margin lets the
+   part run 32 px under it, into the blank right margin every diagram has */
+.map {
+  position: sticky;
+  top: calc(var(--ifm-navbar-height) + 1rem);
+  z-index: 1;
+  flex: 0 0 96px;
+  margin: 1rem 1rem 1rem -2rem;
+}
+
+.map a {
+  display: block;
+  text-decoration: none;
+}
+
+.map img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+}
+
+.label {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.map a:hover img,
+.map a:focus-visible img {
+  border-color: var(--ifm-color-primary);
+}
+
+.map a:hover .label,
+.map a:focus-visible .label {
+  color: var(--ifm-color-primary);
+}
+
+/* On a phone the part needs every pixel of the column */
+@media (max-width: 600px) {
+  .map {
+    display: none;
+  }
+}

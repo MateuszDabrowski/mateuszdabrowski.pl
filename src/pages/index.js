@@ -108,6 +108,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-11-12',
+        kind: 'Doc',
+        title: 'Data 360 Credit Consumption Alerts',
+        url: '/docs/salesforce/data-360/config/credit-consumption-alerts/',
+        description: 'Burn now, pay later. Data 360 warns you only after half of your credits are gone. Get alerted earlier, and against the month of your contract.',
+    },
+    {
         date: '2026-11-11',
         kind: 'App',
         title: 'Soar 1.0',
@@ -370,15 +377,16 @@ function HomeSearch() {
    same topic can exist on several (AMPScript runs in MC Next too, and the docs
    cover only MCE's). Data Views is the one tile that opens an article, not a
    category: the Data Views pages took a quarter of all page views from
-   4 October to 3 November 2026, and System Data Views lists the others. MC Personalization is spelt out, as MCP now reads as the
-   Model Context Protocol. */
+   4 October to 3 November 2026, and System Data Views lists the others. MCP stands for MC Personalization here, although it now
+   also reads as the Model Context Protocol: the full name left the eighth tile too little room on one row. */
 const topics = [
     { platform: 'MC Next', label: 'Config', to: '/docs/category/salesforce/marketing-cloud/config' },
     { platform: 'MCE', label: 'Data Views', to: '/docs/salesforce/marketing-cloud-engagement/config/system-data-views' },
     { platform: 'MCE', label: 'SQL', to: '/docs/category/salesforce/marketing-cloud-engagement/sql' },
     { platform: 'MCE', label: 'SSJS', to: '/docs/category/salesforce/marketing-cloud-engagement/ssjs' },
     { platform: 'MCE', label: 'Config', to: '/docs/category/salesforce/marketing-cloud-engagement/config' },
-    { platform: 'MC Personalization', label: 'All docs', to: '/docs/category/salesforce/marketing-cloud-personalization/' },
+    { platform: 'MCP', label: 'All docs', to: '/docs/category/salesforce/marketing-cloud-personalization/' },
+    { platform: 'Data 360', label: 'Config', to: '/docs/category/salesforce/data-360/config' },
     { platform: 'Salesforce', label: 'FAQ', to: '/sites/category/faq' },
 ];
 

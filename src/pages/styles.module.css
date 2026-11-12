@@ -393,7 +393,7 @@ html[data-theme='light'] .sectionHeadingDark {
 }
 
 /* Topic tiles under the search box (HomeTopics in index.js): one tile per doc
-   category, its platform in the site's monospace kicker above the topic. Seven
+   category, its platform in the site's monospace kicker above the topic. Eight
    columns at the panels' width on a desktop, each as wide as its text plus an
    equal share of the rest, so no topic wraps onto a second line. Below that they scroll sideways,
    so the About and What's new panels stay close to the top on a phone. The
@@ -404,7 +404,7 @@ html[data-theme='light'] .sectionHeadingDark {
 
 .topicsList {
   display: grid;
-  grid-template-columns: repeat(7, auto);
+  grid-template-columns: repeat(8, auto);
   gap: 0.75rem;
   margin: 0;
   padding: 0;

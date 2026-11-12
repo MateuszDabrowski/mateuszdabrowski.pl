@@ -6,7 +6,7 @@ module.exports = {
             link: {
                 type: 'generated-index',
                 title: 'Salesforce',
-                description: 'Docs, code snippets and configuration guides for Salesforce Marketing Cloud Next, Engagement and Personalization. If you are not sure which one you use, start with SFMC Product Names Explained.',
+                description: 'Docs, code snippets and configuration guides for Salesforce Marketing Cloud Next, Engagement, Personalization and Data 360. If you are not sure which Marketing Cloud you use, start with SFMC Product Names Explained.',
                 keywords: ['Salesforce'],
                 image: 'img/og/og-image-sf.png',
             },
@@ -43,6 +43,14 @@ module.exports = {
                             items: [
                                 'salesforce/marketing-cloud/config/ip-warming-deliverability',
                                 'salesforce/marketing-cloud/config/business-units',
+                                // The article lives under Data 360, as Digital Wallet alerts cover every card.
+                                // Linked here because MC Next sends draw on the Message Credits cards it watches.
+                                {
+                                    type: 'link',
+                                    label: 'Credit Consumption Alerts',
+                                    className: 'sidebar-crosslink',
+                                    href: '/docs/salesforce/data-360/config/credit-consumption-alerts/',
+                                },
                             ],
                         },
                         {
@@ -316,6 +324,35 @@ module.exports = {
                             type: 'link',
                             label: 'Official MCP Developer Docs',
                             href: 'https://developer.salesforce.com/docs/marketing/personalization/guide/get-started.html',
+                        },
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Data 360',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Salesforce Data 360',
+                        description: 'Learn about configuration best practices in Salesforce Data 360 (formerly Data Cloud). From data streams through identity resolution to segmentation and configuration options that everyone should know.',
+                        slug: 'category/salesforce/data-360',
+                        keywords: ['Salesforce', 'Data 360', 'Data Cloud'],
+                        image: 'img/og/og-image-sf-d360.png',
+                    },
+                    items: [
+                        {
+                            type: 'category',
+                            label: 'Config',
+                            link: {
+                                type: 'generated-index',
+                                title: 'Salesforce Data 360 Config',
+                                description: 'Most of the things in Salesforce Data 360 aren\'t coding. Data Streams. Identity Resolution. Credit Consumption. Here I focus on the most important ones that are crucial for Data 360 users.',
+                                slug: 'category/salesforce/data-360/config',
+                                keywords: ['Salesforce', 'Data 360', 'Data Cloud', 'Configuration'],
+                                image: 'img/og/og-image-sf-d360-config.png',
+                            },
+                            items: [
+                                'salesforce/data-360/config/credit-consumption-alerts',
+                            ],
                         },
                     ],
                 },

@@ -170,6 +170,10 @@ module.exports = {
                             to: 'docs/category/salesforce/marketing-cloud-personalization/',
                         },
                         {
+                            label: 'Data 360',
+                            to: 'docs/category/salesforce/data-360/',
+                        },
+                        {
                             label: 'JavaScript',
                             to: 'docs/category/javascript/',
                         },
@@ -294,6 +298,10 @@ module.exports = {
                         {
                             label: 'MC Personalization',
                             to: 'docs/category/salesforce/marketing-cloud-personalization/',
+                        },
+                        {
+                            label: 'Data 360',
+                            to: 'docs/category/salesforce/data-360/',
                         },
                         {
                             label: 'JavaScript',
