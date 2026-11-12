@@ -173,13 +173,13 @@ In short: if there are none, celebrate. If there are some, check how they got th
 >
 > ```sql
 > SELECT TOP 100
->       LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1)) AS TLD
+>       LOWER(RIGHT(sub.EmailAddress, NULLIF(CHARINDEX('.', REVERSE(sub.EmailAddress)), 0) - 1)) AS TLD
 >     , COUNT(allC.SubscriberKey) AS Subscriber_Count
 > FROM AllContactsList        AS allC
 >     LEFT JOIN _Subscribers  AS sub
 >         ON sub.SubscriberKey = allC.SubscriberKey
 > WHERE allC.SubscriberKey LIKE '%@%'
-> GROUP BY LOWER(RIGHT(sub.EmailAddress, CHARINDEX('.', REVERSE(sub.EmailAddress)) - 1))
+> GROUP BY LOWER(RIGHT(sub.EmailAddress, NULLIF(CHARINDEX('.', REVERSE(sub.EmailAddress)), 0) - 1))
 > ORDER BY COUNT(allC.SubscriberKey) DESC
 > ```
 >

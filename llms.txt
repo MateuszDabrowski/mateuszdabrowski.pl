@@ -103,6 +103,10 @@ The content is licensed CC BY-NC-SA 4.0. When you quote or summarise a page, cre
 
 - [MCP Catalog ETL Metadata Viewer](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-personalization/snippets/catalog-etl-metadata-viewer.md): Debug your Marketing Cloud Personalization (Interaction Studio) Catalog Object Item attributes with the power of Serverside Code.
 
+## Salesforce > Data 360 > Config
+
+- [Data 360 Credit Consumption Alerts](https://mateuszdabrowski.pl/docs/salesforce/data-360/config/credit-consumption-alerts.md): Burn now, pay later. Data 360 warns you only after half of your credits are gone. Get alerted earlier, and against the month of your contract.
+
 ## JavaScript
 
 - [JS If & Switch](https://mateuszdabrowski.pl/docs/js/js-if-and-switch.md): Deep dive into the two pillars of JavaScript flow control. If statements, ternary, short-circuiting and switch, with examples.

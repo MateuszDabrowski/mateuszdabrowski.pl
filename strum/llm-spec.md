@@ -428,7 +428,7 @@ connects back from the *previous sounding note on the same string* — the
 scan reaches into the previous measure, and the mark then renders as two
 half-arcs meeting at the barline (§ 5.6). Both are notation-only in playback **except** a `"harmonic"`
 ornament, which
-sounds one octave (+12 semitones) above the fretted pitch. Omit the keys
+sounds the pitch its fret gives (§ 5.6). Omit the keys
 entirely for a plain note — older `.strum` files without them are fine.
 
 ### 4.7 How long a note rings
@@ -529,12 +529,21 @@ they differ only in the pitch of the g string).
 | Dominant 7 | `C7` `C#7` `D7` `Eb7` `E7` `F7` `F#7` `G7` `Ab7` `A7` `Bb7` `B7` |
 | Minor 7 | `Cm7` `Dm7` `Em7` `Fm7` `Gm7` `Am7` `Bm7` |
 | Major 7 | `Cmaj7` `C#maj7` `Dmaj7` `Ebmaj7` `Emaj7` `Fmaj7` `F#maj7` `Gmaj7` `Abmaj7` `Amaj7` `Bbmaj7` `Bmaj7` |
-| Sus2 | `Asus2` `Bsus2` `Csus2` `Dsus2` `Esus2` `Fsus2` `Gsus2` |
+| Sus2 | `Asus2` `Bsus2` `Bbsus2` `Csus2` `Dsus2` `Esus2` `Fsus2` `Gsus2` |
 | Sus4 | `Asus4` `Bsus4` `Csus4` `Dsus4` `Esus4` `Fsus4` `Gsus4` |
-| Diminished | `Adim` `Bdim` `Cdim` `Ddim` `Edim` `Fdim` `Gdim` |
+| Diminished | `Adim` `Bdim` `Cdim` `C#dim` `Ddim` `Edim` `Fdim` `F#dim` `Gdim` |
 | Augmented | `Aaug` `Baug` `Caug` `Daug` `Eaug` `Faug` `Gaug` |
 | Sixth | `C6` `C#6` `D6` `Eb6` `E6` `F6` `F#6` `G6` `Ab6` `A6` `Bb6` `B6` |
 | Add 9 | `Cadd9` `C#add9` `Dadd9` `Ebadd9` `Eadd9` `Fadd9` `F#add9` `Gadd9` `Abadd9` `Aadd9` `Bbadd9` `Badd9` |
+| Power | `C5` `D5` `E5` `F5` `G5` `A5` `B5` |
+| Add 11 | `Cadd11` `Dadd11` `Gadd11` |
+| Minor add 9 | `Amadd9` `Dmadd9` `Emadd9` `Fmadd9` `Gmadd9` |
+| Minor add 11 | `Amadd11` `Bmadd11` `Dmadd11` `Emadd11` |
+| Minor 6 | `Am6` `Bm6` `Cm6` `Dm6` `Fm6` |
+| Major 9 | `Cmaj9` `Dmaj9` `Fmaj9` |
+| Minor 9 | `Am9` `Dm9` `Em9` |
+| Minor 11 | `Dm11` `F#m11` |
+| Dominant 9 | `F9` |
 
 #### Baritone ukulele (prefix `b-`)
 
@@ -545,7 +554,8 @@ Every baritone chord id is the above name prefixed with `b-` — e.g.
 
 Every standard-guitar chord id is the above name prefixed with `g-` — e.g.
 `g-C`, `g-D`, `g-Am`, `g-F`, `g-Bm`, `g-Cmaj7`, `g-G6`, `g-Fadd9`. The
-guitar set covers every family and root in the ukulele table.
+guitar set covers the ukulele table except the nine rows from Power down,
+and `Bbsus2` `C#dim` `F#dim`.
 
 #### Guitar, Drop D tuning (prefix `dd-`)
 
@@ -578,7 +588,8 @@ Guitar 6 chords keep their root in the bass, so none shares an m7's frets.
 dominant 7ths and major 7ths, and every 6 and add9 except `Fadd9`, on
 ukulele and baritone arrived after Strum 1.10.0. So did the guitar
 sharp- and flat-root dominant 7ths and major 7ths and every guitar 6 and
-add9 chord, `g-Fadd9` included. An
+add9 chord, `g-Fadd9` included, and on ukulele and baritone the nine rows
+from Power down, with `Bbsus2` `C#dim` `F#dim`. An
 older build keeps a pin it doesn't know and still plays the beat's
 `notes`, but shows no chord name or box for it. That is one more reason
 every pinned beat must carry its `notes`.
@@ -717,7 +728,16 @@ their origin, and keep the origin beat to one or two notes.
 | `ornament` value | Tab mark | Meaning |
 |---|---|---|
 | `"vibrato"` | `~` squiggle | Vibrato. Notation-only. |
-| `"harmonic"` | `◇` diamond | Natural harmonic. **Sounds +12 semitones** (12th-fret octave approximation). |
+| `"harmonic"` | `◇` diamond | Harmonic. The fret sets the sounding pitch, as below. |
+
+**How a harmonic sounds.** Strum plays the natural harmonic at that fret.
+At frets 12, 19 and 24 it sounds the fret's own pitch. At frets 7 and 16 it
+sounds 12 semitones above the fret, and at frets 5 and 9, 19 semitones
+above. So on the A string, fret 12 sounds A5 and fret 5 sounds A6. Any other
+fret sounds 12 semitones above the fret: that is a harmonic touched 12 frets
+above a fretted note, or an open string written at fret 0. A harmonic touched
+anywhere else on a fretted note cannot be written. Strum 1.10.0 and earlier
+play every harmonic 12 semitones above its fret.
 
 A note may carry **one** transition and **one** ornament simultaneously
 (e.g. slide up + vibrato). Everything except `"harmonic"` is

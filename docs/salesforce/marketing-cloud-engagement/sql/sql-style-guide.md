@@ -628,7 +628,7 @@ Just as with a letter case, you might have your hands tied by cross-system depen
 2. When the Column is a boolean, prefix it with `Is` (or `Has`/`Does` depending on the underlying data).
 3. When the Column is a date, suffix it with `Date`.
 
-```sql {3-8,17-22}
+```sql {3-8,20-25}
 /* ✅ Meaningful and consistent Column Names */
 SELECT
       s.SubscriberKey       AS SubscriberKey
@@ -642,6 +642,9 @@ FROM _Sent          AS s
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
+        AND o.ListID = s.ListID
+        AND o.BatchID = s.BatchID
+        AND o.SubscriberID = s.SubscriberID
 
 /* ❌ No consistency and type alignment in Column Names */
 SELECT
@@ -656,6 +659,9 @@ FROM _Sent AS s
         ON j.JobID = s.JobID
     LEFT JOIN _Open AS o
         ON o.JobID = s.JobID
+        AND o.ListID = s.ListID
+        AND o.BatchID = s.BatchID
+        AND o.SubscriberID = s.SubscriberID
 ```
 
 ## Comments

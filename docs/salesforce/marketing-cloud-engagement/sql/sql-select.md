@@ -33,7 +33,7 @@ SELECT
 There are also some exceptional cases related to selected [System Data Views](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/system-data-views/) in MCE, where you need to use an underscore prefix before a name (for example, when taking Subscriber ID from Enterprise Attributes):
 
 ```sql title="There are some special column names with an underscore prefix"
-SELECT _SubscriberId
+SELECT _SubscriberId AS SubscriberId
 ```
 
 ## Aliasing with AS
@@ -260,19 +260,17 @@ The `DISTINCT` clause is the most straightforward deduplication tool.
 
 When added to the `SELECT` statement, it will check all available values and leave unique ones.
 
-```sql {1} title="Unique domains in your database sorted alphabetically"
+```sql {1} title="Unique domains in your database"
 SELECT DISTINCT
       Domain
-ORDER BY Domain
 ```
 
 It's perfect for single-column deduplication. However, when you apply it to a select with multiple columns, it will leverage all of them for deduplication.
 
-```sql {1} title="One row for each SubscriberKey - Domain pair, sorted alphabetically by domain"
+```sql {1} title="One row for each SubscriberKey - Domain pair"
 SELECT DISTINCT
       SubscriberKey
     , Domain
-ORDER BY Domain
 ```
 
 In the above case, you will get a separate row for each Subscriber Key - Domain pair. It means that you might receive multiple rows with the same Subscriber Key (but each with a different Domain). And you will undoubtedly see numerous rows with the same domain (but each with a different Subscriber key).
