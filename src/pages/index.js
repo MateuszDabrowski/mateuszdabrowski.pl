@@ -108,6 +108,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-11-15',
+        kind: 'App',
+        title: 'SQL Studio 1.5',
+        url: '/sql-studio/',
+        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: a Venn that shows which rows a JOIN returns, a timeline that shows which dates a condition keeps and automatic documentation of your query in rich text and markdown. Plus significantly faster across the board.',
+    },
+    {
         date: '2026-11-12',
         kind: 'Doc',
         title: 'Data 360 Credit Consumption Alerts',
@@ -148,13 +155,6 @@ const whatsNew = [
         title: 'MCE SQL Errors',
         url: '/docs/salesforce/marketing-cloud-engagement/sql/sql-errors/',
         description: 'Only SELECT queries are valid. What each Marketing Cloud Engagement SQL error means, and how to fix the query behind it.',
-    },
-    {
-        date: '2026-10-16',
-        kind: 'App',
-        title: 'SQL Studio 1.4',
-        url: '/sql-studio/',
-        description: 'Query Studio, rebuilt inside your own MCE account, free and open source. New: open any query in Diagramforce as a data model or a field lineage, lint shaped by 400 tests of MCE SQL Server engine, and saves that stop on lint errors.',
     },
     {
         date: '2026-10-12',

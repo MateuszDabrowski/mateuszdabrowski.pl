@@ -57,7 +57,7 @@ export const apps = [
         url: '/sql-studio/',
         githubUrl: 'https://github.com/MateuszDabrowski/sqlstudio',
         imageUrl: 'img/apps/sql-studio/hero.webp',
-        description: 'Everything you used Query Studio for: run a query into a temporary Data Extension, check the results below your SQL and save it as a Query Activity. And then some: four queries running at once, results saved to a new Data Extension, and MCE\'s own error messages with an explanation of the fix.',
+        description: 'Everything you used Query Studio for: run a query into a temporary Data Extension, check the results below your SQL and save it as a Query Activity. And then some: four queries at once, a Venn for every JOIN, a timeline for every date condition and results saved to a new Data Extension.',
         tags: ['MCE', 'SQL', 'Open Source'],
         platforms: ['MCE'],
         cta: 'Learn More',

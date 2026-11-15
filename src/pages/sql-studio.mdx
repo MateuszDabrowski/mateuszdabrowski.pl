@@ -18,7 +18,7 @@ import styles from './styles.module.css';
 {/* The release these screenshots belong to, appended to every screenshot URL
     below, the same cache-busting trick the other app pages use. Bump this
     with SQL Studio's version and every screenshot becomes a new URL. */}
-export const ASSETS = '1.4.0';
+export const ASSETS = '1.5.0';
 
 {/* The shared screenshot viewer (src/components/ZoomImage.jsx), with this
     page's ASSETS version for screenshots that have no responsive copies. */}
@@ -112,7 +112,8 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
         (its Help, Security and Change Log tabs, read on 11 October 2026), and Nobuyuki Watanabe's review of versions 2.0 to 2.2 (Medium, October 2026: autocomplete, Format, marks as you type with Fix all, sorting across pages). Its Security tab lists every MCE API it calls, and MCE's validate
         endpoint is not among them, so Check Query is its own check. It says the traffic runs from the browser to Query Studio 2, and from
         Query Studio 2 to MCE. Its source code is not on the Salesforce Labs GitHub (checked on 11 October 2026). The author's tests of version 2.2 on
-        11 October 2026: Check Query and Run both refuse STRING_AGG ... WITHIN GROUP (ORDER BY ...) as a syntax error, and Run skips Check Query's alias check. */}
+        11 October 2026: Check Query and Run both refuse STRING_AGG ... WITHIN GROUP (ORDER BY ...) as a syntax error, and Run skips Check Query's alias check. The author confirmed on 15 November 2026 that version 2.2 has no Venn of a JOIN
+        and no timeline of a date condition, the row Join and date diagrams: check it again with each new version. */}
     <div className="text--center" style={{marginTop: '2.5rem', marginBottom: '1rem'}}>
 
 ### SQL Studio or Query Studio 2?
@@ -128,26 +129,30 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
           <tr><th scope="row" style={{whiteSpace: 'nowrap'}}>Where it runs</th><td>Outside your MCE account: its calls come from four IP addresses, which you add to the login allowlist if your account restricts logins by IP</td><td>Inside your MCE account, as a Cloud Page and two Code Resources, with nothing to add</td></tr>
           <tr><th scope="row" style={{whiteSpace: 'nowrap'}}>Source and support</th><td>Salesforce Labs: source not published, and the community boards, with no guaranteed support from Salesforce</td><td>Open on GitHub under the EUPL 1.2, with support from me through GitHub and the feedback address below</td></tr>
           <tr><th scope="row" style={{whiteSpace: 'nowrap'}}>Checking a query</th><td>Check Query, which also asks MCE whether the SQL is valid, and live error marks with a Fix All</td><td><a href="#lint">Lint</a> shaped by 400 tests of MCE's SQL engine, with one-click fixes, and the same rules for Claude in the <a href="#claude-skill">SF MCE SQL skill</a></td></tr>
-          <tr><th scope="row" style={{whiteSpace: 'nowrap'}}>Documenting a query</th><td>None</td><td><a href="#document">Document</a>, in Diagramforce, as a data model or a field lineage</td></tr>
+          <tr><th scope="row" style={{whiteSpace: 'nowrap'}}>Join and date diagrams</th><td>None</td><td>A <a href="#join-venn">Venn</a> of the rows each JOIN returns and a <a href="#date-timeline">timeline</a> of the dates each condition keeps, in the hover</td></tr>
+          <tr><th scope="row" style={{whiteSpace: 'nowrap'}}>Documenting a query</th><td>None</td><td><a href="#document">Document</a>, as a ready document for Confluence, Jira or Markdown, and in Diagramforce as a data model or a field lineage</td></tr>
           <tr><th scope="row" style={{whiteSpace: 'nowrap'}}>Shared snippets</th><td>None</td><td><a href="#snippets">Snippets</a> shared with your team</td></tr>
         </tbody>
       </table>
     </div>
     <p className="text--center" style={{fontSize: '1.1rem', maxWidth: '760px', margin: '1.5rem auto 0'}}>So which one should you pick? If you want a one-click install that you can then forget about, get Query Studio 2. If you want the power, with everything kept inside your own account, get SQL Studio.</p>
 
-    {/* What the original Query Studio never had, each card linking to its section under What's inside. Keeping or sharing queries took
+    {/* SQL Studio's key features, each card linking to its section under What's inside. The original Query Studio had none of them. Keeping or sharing queries took
         the separate SFMC Query Saver extension, built because Query Studio stored no runs, and a target Data Extension was built by hand
         in Contact Builder. */}
     <div className="text--center" style={{marginTop: '3rem', marginBottom: '1rem'}}>
 
-### What SQL Studio adds
+### Key features of SQL Studio
 
     </div>
     <div className="row">
       {[
-        { title: 'Document this query', text: 'Opens your query in Diagramforce as a data model of its tables and joins, or as lineage from each source field to the target.', to: '#document' },
+        { title: 'See what a JOIN returns', text: 'Draws a Venn of every table in the FROM as you hover a JOIN, and shows which rows a WHERE removes.', to: '#join-venn' },
+        { title: 'See which dates a condition keeps', text: 'Draws a timeline of the window a date condition keeps, relative to the run, in MCE server time and your own.', to: '#date-timeline' },
+        { title: 'Document this query', text: 'Turns your query into a document for Confluence, Jira or Markdown, or opens it in Diagramforce as a data model or a field lineage.', to: '#document' },
         { title: 'Lint with one-click fixes', text: 'Flags what MCE refuses before you run anything, and fixes most of it in one click.', to: '#lint' },
         { title: 'Autocomplete and Join to the query', text: 'Suggests tables, fields and even the known values of fields such as bounce categories, and writes a table\'s whole join into your query.', to: '#sidebar' },
+        { title: 'Four queries at once', text: 'Runs a query in each of four tabs, so a long one keeps going while you work in another.', to: '#tabs' },
         { title: 'Shared snippets', text: 'Keeps the SQL your team writes again and again, for everyone in the Business Unit.', to: '#snippets' },
         { title: 'Save to DE', text: 'Puts your results into a new Data Extension, typed field by field, or into one you already have with Append, Update or Overwrite.', to: '#save-to-de' },
         { title: 'Query history', text: 'Keeps your past runs with their SQL, in your browser or, when your admin turns it on, in MCE across your devices.', to: '#history' },
@@ -181,7 +186,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <div style={{maxWidth: '800px', margin: '0 auto'}}>
       <div className="text--center">
 
-### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Four Queries, Running at Once</span>
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Four Queries, Running at Once</span> {#tabs}
 
       </div>
       <p style={{fontSize: '1.1rem'}}>Four query tabs sit above the editor, and each keeps its own query, results and messages. Every tab runs on its own Query Activity, so you can start a long query in one tab and keep working in another. The tabs also show where each query is at a glance: a spinner while it runs, a check with the row count and run time when it finishes, and an error mark when it fails. Close SQL Studio and come back later, and your tabs in that Business Unit return with their last results, as long as their temporary Data Extensions still exist.</p>
@@ -248,7 +253,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Lint for What Marketing Cloud Engagement Refuses</span> {#lint}
 
       </div>
-      <p style={{fontSize: '1.1rem'}}>Some SQL looks fine and still fails in MCE, sometimes only once MCE saves or runs it. SQL Studio's lint flags these problems in the editor, before you run anything, and Validate and Run then check your query against MCE's own Query Activity rules. The lint catches an unpaired apostrophe in a comment, which stops MCE from saving the query, and a query that opens with a common table expression, which MCE does not support. It knows the valid T-SQL that MCE's own query check refuses, such as tables separated by commas, which MCE calls an old style JOIN, and a window function in WHERE. It flags functions newer than the SQL Server 2022 that MCE runs, such as REGEXP_LIKE, and a Text column compared to a Number column in a join, which fails as soon as one value is not a number, and more. And it reports nothing for valid SQL that MCE runs, such as GROUPING SETS, join hints and TABLESAMPLE. These rules come from 400 tests on a real MCE account, which also showed that MCE's save treats a <code>--</code> line comment as never closed, so everything below it becomes part of the comment. The lint flags every line comment and writes it as a block comment in one click. Every finding says in plain words what is wrong and how to fix it. Most come with a one-click fix, and **Fix all** applies every safe fix at once.</p>
+      <p style={{fontSize: '1.1rem'}}>Some SQL looks fine and still fails in MCE, sometimes only once MCE saves or runs it. SQL Studio's lint flags these problems in the editor, before you run anything, and Validate and Run then check your query against MCE's own Query Activity rules. The lint catches an unpaired apostrophe in a comment, which stops MCE from saving the query, and a query that opens with a common table expression, which MCE does not support. It knows the valid T-SQL that MCE's own query check refuses, such as tables separated by commas, which MCE calls an old style JOIN, and a window function in WHERE. It flags functions newer than the SQL Server 2022 that MCE runs, such as REGEXP_LIKE, and a Text column compared to a Number column in a join, which fails as soon as one value is not a number, and more. And it reports nothing for valid SQL that MCE runs, such as GROUPING SETS, join hints and TABLESAMPLE. These rules come from 400 tests on a real MCE account, which also showed that MCE's save treats a <code>--</code> line comment as never closed, so everything below it becomes part of the comment. The lint flags every line comment and writes it as a block comment in one click. It also catches the date and time traps: a BETWEEN whose bounds are reversed, Y in DATEADD or DATEDIFF read as day of year, a <code>GETDATE() AT TIME ZONE</code> that converts nothing, a time zone name SQL Studio does not know, a WHERE that turns a LEFT JOIN into an inner one, and dates compared across time zones. For a query that can return a key of its target twice, the fix is yours to choose: keep the newest row per key, or keep one row per key. Every finding says in plain words what is wrong and how to fix it. Most come with a one-click fix, and **Fix all** applies every safe fix at once.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
@@ -260,7 +265,51 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   </div>
 </section>
 
-{/* Feature 5: Run, results and export */}
+{/* Feature 5: See what a JOIN returns */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>See What a JOIN Returns</span> {#join-venn}
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>Rest the pointer on a JOIN, on the LEFT, RIGHT, FULL, INNER or OUTER before it, or on the FROM of a query that joins, and the hover draws a Venn of every table in that FROM. The areas the joins return are green, so you see which rows each table keeps. Two or three tables are circles and four are the classic four ellipses, each alias sits in its own area, and a key under the drawing names the table behind each alias. Beside it, the hover keeps the keyword's own documentation.</p>
+      <p style={{fontSize: '1.1rem'}}>The Venn reads your WHERE too. An area the WHERE removes is hatched in red, with a line that says why, such as <code>YEAR(o.EventDate) = 2026</code> needing a row of <code>o</code>, so it removes the rows that have none. When that happens to a LEFT JOIN, SQL Studio warns you that the join now works as an inner one, which is the usual reason a LEFT JOIN seems to lose rows. The Venn covers joins of up to four tables, as more would not read clearly.</p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apps/sql-studio/join-venn.webp"
+        alt="The hover of a JOIN in a query of three or four tables with a WHERE: a Venn of its FROM, with the areas the joins return filled in green and the areas the WHERE removes hatched in red"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 6: See which dates a condition keeps */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>See Which Dates a Condition Keeps</span> {#date-timeline}
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>Rest the pointer on a date function in a condition, such as GETDATE or DATEADD, or on its BETWEEN or its date column, and the hover draws a timeline of the moments the condition accepts. The window is green, with a mark for now, so <code>DATEADD(DAY, -30, GETDATE())</code> reads as the last 30 days, relative to the run. The lines under it give the window in MCE server time and in your own time zone, and it reads AT TIME ZONE too.</p>
+      <p style={{fontSize: '1.1rem'}}>The lines also warn of the traps that catch people: DATEDIFF counts midnights and not elapsed time, a date alone ends a window at midnight and leaves out the rest of that day, and a window in the future or one that is empty matches no row. A BETWEEN with its bounds the wrong way round draws as empty, and tells you to swap them.</p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apps/sql-studio/timeline.webp"
+        alt="The hover of a date condition: the documentation of its function, and a timeline of the window the condition keeps, relative to the run, with its times in MCE server time and in the user's own time zone"
+        imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 7: Run, results and export */}
 <section className={styles.section}>
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
     <div style={{maxWidth: '800px', margin: '0 auto'}}>
@@ -284,7 +333,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   </div>
 </section>
 
-{/* Feature 6: Save to DE */}
+{/* Feature 8: Save to DE */}
 <section className={styles.section}>
   <div className="container">
     <div style={{maxWidth: '800px', margin: '0 auto'}}>
@@ -295,7 +344,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
       </div>
       <p style={{fontSize: '1.1rem'}}>Results you want to keep, such as an audience to send to or an extract for a colleague, go into a Data Extension with **Save to DE**, right next to Export CSV. SQL Studio drafts a new one from your results: a name from the query's first table and today's date, the folder you saved into last, and a field for each column. A field you selected keeps its type and length, such as a Date, a Number or an EmailAddress. A computed column gets the type its SQL gives, such as a Number for COUNT or a Date for DATEADD, and when every row is on screen, a column of dates or whole numbers takes that type from its values. Anything else becomes Text, 254 characters long unless its values need more. You pick the retention and, when you want to send to it, its relationship to Subscribers, and SQL Studio says how many API calls the save takes before you click Save.</p>
       <p style={{fontSize: '1.1rem'}}>SQL Studio then creates the Data Extension with your own login and moves the rows into it with the tab's own Query Activity, so there is no export and no import to do. A Text field with no length, which holds values past 4,000 characters, is there too, but only when you clear the length yourself, as such a field can slow queries down and its long values count against your account's Data Extension storage.</p>
-      <p style={{fontSize: '1.1rem'}}>To add the rows to a Data Extension you already have, choose Existing Data Extension and find it by its name or the start of its key. Each column goes to the field of the same name, and you pick Append, Update or Overwrite. Before anything moves, SQL Studio checks that every required field has a column and warns of a value on screen that its field cannot hold, such as a decimal in a Number field. Overwrite asks first, with the number of rows the Data Extension holds, as it replaces all of them.</p>
+      <p style={{fontSize: '1.1rem'}}>To add the rows to a Data Extension you already have, choose Existing Data Extension and find it by its name or the start of its key. Each column goes to the field of the same name, and you pick Append, Update or Overwrite. Before anything moves, SQL Studio checks that every required field has a column and warns of a value on screen that its field cannot hold, such as a decimal in a Number field. Overwrite asks first, with the number of rows the Data Extension holds, as it replaces all of them. When you choose a Data Extension, SQL Studio also checks that it still exists, and points you to MCE's Recycle Bin when it is gone.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
@@ -307,7 +356,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   </div>
 </section>
 
-{/* Feature 7: Save, open, history, format */}
+{/* Feature 9: Save, open, history, format */}
 <section className={styles.section}>
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
     <div style={{maxWidth: '800px', margin: '0 auto'}}>
@@ -322,30 +371,30 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   </div>
 </section>
 
-{/* Feature 8: Document */}
+{/* Feature 10: Document */}
 <section className={styles.section}>
   <div className="container">
     <div style={{maxWidth: '800px', margin: '0 auto'}}>
       <div className="text--center">
 
-### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Document This Query in Diagramforce</span> {#document}
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Document This Query, in Text or in Diagrams</span> {#document}
 
       </div>
-      <p style={{fontSize: '1.1rem'}}>A query that feeds an automation stays in your account long after you wrote it, and the next person who opens it wants to know what it reads, how its tables join and which field ends up where. **Document**, in the toolbar, answers that in <a href="https://diagramforce.com">Diagramforce</a>, my free and open source diagramming app, which it opens in a new tab with your query drawn. Data model: fields in the query gives each table a card with the fields your query uses, Data model: all fields lists every field of those tables, and Lineage follows each source field through the query to the target Data Extension of the Query Activity you opened, with its action.</p>
-      <p style={{fontSize: '1.1rem'}}>Each join becomes a line between the two fields it joins, with the one and many ends wherever a primary key settles them, and Data Views are blue where Data Extensions are orange. In a lineage, a plain column maps to its field, while an expression shows its formula exactly as you wrote it, CASE values included, and a column the target lacks is struck through, as MCE leaves it out. From there, the diagram is yours: edit it, export it as an image for your documentation, or keep it in your own Google Drive.</p>
-      <p style={{fontSize: '1.1rem'}}>Only names leave SQL Studio. Table and field names and the query's expressions go to Diagramforce inside your browser, never a row of your data, and Diagramforce has no server to send them to. <a href="#your-data">Your data</a> below has the details.</p>
+      <p style={{fontSize: '1.1rem'}}>A query that feeds an automation stays in your account long after you wrote it, and the next person who opens it wants to know what it reads, how its tables join and where its rows end up. **Document**, in the toolbar, opens your query as a document inside SQL Studio. Type a Title and a Description, and the document lists the Query Activity and its target, the SQL, each source with its fields, what each join returns, each date filter and the query's output columns.</p>
+      <p style={{fontSize: '1.1rem'}}>For a query tied to a Query Activity, it adds a Target section, with the target's fields and what the update type does with a repeated key, and a Checks section with the lint findings of the moment. It also marks the columns that copy personal data, such as an email address, and says when and with what it was documented. **Copy as rich text** pastes it into Confluence or Jira, **Copy Markdown** and **Download .md** give you the same text for wikis and files. SQL Studio makes the document in your browser, and sends it nowhere.</p>
+      <p style={{fontSize: '1.1rem'}}>The diagrams are still one click away. At the bottom left of the panel, <a href="https://diagramforce.com">Diagramforce</a>, my free and open source diagramming app, opens your query in a new tab as a data model or as a lineage from each source field to the target. Only names leave SQL Studio for it, inside your browser, never a row of your data. <a href="#your-data">Your data</a> below has the details.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
-        src="/img/apps/sql-studio/document.webp"
-        alt="A lineage from Document in Diagramforce: the Customers and Stores Data Extensions and the _Open Data View as sources, their joins on the left, each field mapped to the query's columns, three of them through a formula, and on to the EngagedCustomers target with its Update action"
+        src="/img/apps/sql-studio/document-panel.webp"
+        alt="The Document panel's rendered view of a query with joins and a date filter: its title and description, the Query Activity and target, the sources, what each join returns and the date filter's window"
         imgStyle={{maxWidth: '100%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
       />
     </div>
   </div>
 </section>
 
-{/* Feature 9: The companion Claude skill */}
+{/* Feature 11: The companion Claude skill */}
 <section className={styles.section}>
   <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
     <div style={{maxWidth: '800px', margin: '0 auto'}}>
@@ -363,7 +412,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   </div>
 </section>
 
-{/* Feature 10: Licence */}
+{/* Feature 12: Licence */}
 <section className={styles.section} style={{ margin: '4rem 0' }}>
   <div className="container app-dark-band" style={{ borderRadius: '16px', padding: '4rem 3rem' }}>
     <div className="row">
@@ -407,7 +456,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <details className={styles.faqDetails}>
   <summary>Does any of my data or SQL reach you?</summary>
 
-  No. Your browser makes up to four kinds of request outside your MCE account: one for the code editor's files, one for a daily update check, one for the Claude skill when you download it from the Help menu, and one for Diagramforce when you click Document. None of them carries your query, your results or your login. Document hands the query's table and field names and its expressions to Diagramforce inside your browser, once its tab has loaded, and Diagramforce has no server to send them to. [Your data](#your-data) below says what each one sends.
+  No. Your browser makes up to four kinds of request outside your MCE account: one for the code editor's files, one for a daily update check, one for the Claude skill when you download it from the Help menu, and one for Diagramforce when you open one of Document's diagrams. None of them carries your query, your results or your login. Document's diagrams hand the query's table and field names and its expressions to Diagramforce inside your browser, once its tab has loaded, and Diagramforce has no server to send them to. [Your data](#your-data) below says what each one sends.
 
 </details>
 
@@ -442,7 +491,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <details className={styles.faqDetails}>
   <summary>How do I update to a new release?</summary>
 
-  Replace all of SQL Studio Frontend with the new release's file, as it has no settings. In SQL Studio Backend, and in the SQL Studio Landing Page when the release changed it, replace everything from the "APP CODE - replace from here on update" line down, then publish. Your settings sit above that line and stay as they are. [Updating](#updating) below has the rest.
+  Replace all of SQL Studio Frontend with the new release's file, as it has no settings. In SQL Studio Backend, and in the SQL Studio Landing Page when the release changed it (1.5.0 changed both), replace everything from the "APP CODE - replace from here on update" line down, then publish. Your settings sit above that line and stay as they are. [Updating](#updating) below has the rest.
 
 </details>
 
@@ -520,7 +569,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
         <tr><td>SQL Studio</td><td><DownloadFile path="src/cloud-page/sql-studio.html" /></td><td><code>{'<script runat="server">'}</code></td></tr>
       </tbody>
     </table>
-    Each link downloads the file from the latest release on GitHub. You can also download everything as one ZIP, <a href="https://github.com/MateuszDabrowski/sqlstudio/archive/refs/heads/main.zip"><code>sqlstudio-main.zip</code></a>, and use the same three files from its <code>src</code> folder. Next to the Frontend's <code>.min.js</code> it also has <code>sql-studio-frontend.js</code>, the same code with its comments, for reading. Paste the <code>.min.js</code>, because MCE serves it in about 2 seconds, against 18 for the commented file on my account.
+    Each link downloads the file from the latest release on GitHub. You can also download everything as one ZIP, <a href="https://github.com/MateuszDabrowski/sqlstudio/archive/refs/heads/main.zip"><code>sqlstudio-main.zip</code></a>, and use the same three files from its <code>src</code> folder. Next to the Frontend's <code>.min.js</code> it also has <code>sql-studio-frontend.js</code>, the same code with its comments, for reading. Paste the <code>.min.js</code>: it is the same code made a third of the size, so MCE serves it much faster. The Backend has a copy too, <code>sql-studio-backend.readable.html</code>, which is the same code with its comments, for reading. Paste <code>sql-studio-backend.html</code>, not the readable one.
   </li>
   <li>
     <strong>Create the three pieces in a folder in Web Studio → CloudPages of the parent Business Unit, without publishing them.</strong> Save each one and open it, then copy its URL from the top of the editor.
@@ -537,8 +586,8 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <table>
       <thead><tr><th>In this file</th><th>On this line</th><th>Paste the URL of</th></tr></thead>
       <tbody>
-        <tr><td rowSpan={2}><code>sql-studio-backend.html</code></td><td>line 18: <code>var pageURL = 'SQL_STUDIO_PAGE_URL';</code></td><td>SQL Studio, the Landing Page</td></tr>
-        <tr><td>line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td><td>SQL Studio Backend</td></tr>
+        <tr><td rowSpan={2}><code>sql-studio-backend.html</code></td><td>line 22: <code>var pageURL = 'SQL_STUDIO_PAGE_URL';</code></td><td>SQL Studio, the Landing Page</td></tr>
+        <tr><td>line 23: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td><td>SQL Studio Backend</td></tr>
         <tr><td rowSpan={2}><code>sql-studio.html</code></td><td>line 19: <code>var backendURL = 'SQL_STUDIO_BACKEND_URL';</code></td><td>SQL Studio Backend</td></tr>
         <tr><td>line 20: <code>var frontendURL = 'SQL_STUDIO_FRONTEND_URL';</code></td><td>SQL Studio Frontend</td></tr>
         <tr><td><code>sql-studio-frontend.min.js</code></td><td>none</td><td>nothing: it has no settings, and you paste it as it is in step 4</td></tr>
@@ -552,7 +601,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
       <li><strong>Marketing Cloud App:</strong> the login and the logout endpoint are both SQL Studio Backend's URL.</li>
       <li><strong>API Integration</strong>, Web App type: the Redirect URI is SQL Studio Backend's URL too. Tick Data Extensions read and write, and Automations read, write and execute. Leave "offline access" off.</li>
     </ul>
-    A new package can take a couple of minutes to show up in the Installed Packages list. If it is not there right after you save it, wait and refresh the list, as creating it again gives you a second package. On its Access tab, pick the Business Units and roles that should see SQL Studio in the AppExchange menu. Then paste three of its values into the settings of <code>sql-studio-backend.html</code>, the same way as the URLs: the Client ID into <code>clientID</code> (line 20), the Client Secret into <code>clientSecret</code> (line 21), and the tenant subdomain of the API Base URI into <code>clientBase</code> (line 22). The subdomain is the 28 characters that start with <code>mc</code>, not the Client ID. Select it by dragging, as a double-click stops at its hyphen.
+    A new package can take a couple of minutes to show up in the Installed Packages list. If it is not there right after you save it, wait and refresh the list, as creating it again gives you a second package. On its Access tab, pick the Business Units and roles that should see SQL Studio in the AppExchange menu. Then paste three of its values into the settings of <code>sql-studio-backend.html</code>, the same way as the URLs: the Client ID into <code>clientID</code> (line 24), the Client Secret into <code>clientSecret</code> (line 25), and the tenant subdomain of the API Base URI into <code>clientBase</code> (line 26). The subdomain is the 28 characters that start with <code>mc</code>, not the Client ID. Select it by dragging, as a double-click stops at its hyphen.
   </li>
   <li>
     <strong>Paste the code, then publish.</strong> Paste each file, with its settings filled in, into its piece: select the whole file in your code editor with Ctrl+A (Cmd+A on a Mac), copy it, and paste it over everything in the piece's code in Web Studio.
@@ -584,6 +633,10 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   <li>In SQL Studio Backend, and in SQL Studio when the release changed it, replace everything from the "APP CODE - replace from here on update" line down, and publish. Your settings sit above that line and stay as they are.</li>
 </ol>
 
+<p><strong>For 1.5.0, paste all three files:</strong> the Frontend, the Backend and the Cloud Page, in that order, with the Cloud Page last. The new Cloud Page keeps the Frontend in your browser, so a later open of the same build skips the download. An older Cloud Page still works with the new Frontend, but opens slower. 1.5.0 adds no setting. For the Backend and the Cloud Page, select from the "APP CODE - replace from here on update" line to the end, paste the same range from the new file, and keep the settings above it.</p>
+
+<p>After an update, hard refresh and open Help &gt; About SQL Studio. Its Build row shows "Frontend" and eight letters and digits, which must equal the end of the first line of the Frontend file you pasted. If they differ, MCE is still serving the older file: paste, save and publish again.</p>
+
 <p>A release that adds or renames a setting says so in the changelog, and until you copy its new settings section across, SQL Studio shows a message that yours is from an older release. If you added the <code>snippetsDE</code> line to the Backend's settings, carry it over into the new section, as the release file never has it. You also do not have to watch the repository: once a day, SQL Studio checks for a new release and shows an Update badge in the toolbar, with the key changes and a link to the update guide.</p>
 
   </div>
@@ -614,12 +667,12 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
           <li><strong>An error log</strong>, holding backend error messages cut to 2,000 characters, never with a token, a session id or the client secret, with a 180-day retention.</li>
           <li><strong>A temporary Data Extension per run</strong>, with a 1-day retention. A new run in the same tab deletes the previous one, and once a day SQL Studio deletes your own leftovers older than six hours when you open it.</li>
           <li><strong>An optional history Data Extension</strong>, only if your admin turns it on, holding every user's own SQL text with its row count and run time, with a 90-day retention.</li>
-          <li><strong>Up to four Query Activities per user</strong>, each keeping the SQL of the last query it ran. SQL Studio never deletes them.</li>
+          <li><strong>Up to four Query Activities per user</strong>, each keeping the SQL of the last query it ran, and up to four more, named like those with " - move" at the end, that Save to DE uses to move rows. SQL Studio never deletes them.</li>
           <li><strong>The Action Log of those Query Activities</strong>, which MCE keeps for every run. When a run fails, the entry can quote the value of the row that failed, such as an email address the query tried to turn into a number. Anyone who can open the activity in Automation Studio can read it, and deleting the activity does not delete its log. TRY_CAST and TRY_CONVERT return NULL for such a value instead, and leave nothing in the log.</li>
           <li><strong>A shared snippets Data Extension</strong>, unless your admin turns snippets off, created on the first save. It holds each snippet's name and SQL with its author's MCE user id and email, with no retention.</li>
           <li><strong>The Data Extensions you save results into</strong>, in the folder and with the retention you pick. SQL Studio never deletes them, and it replaces the rows of one you already have only with Overwrite, after asking.</li>
         </ul>
-        <p style={{color: 'var(--ifm-color-white)', fontSize: '0.95rem', opacity: 0.85}}>Any user with Data Extension access in the Business Unit can read these Data Extensions while they exist, your results included. The sign-in log gives them nothing to use: the session id is stored as a hash, and the token is encrypted with a key derived from the client secret. Its rows still last one day, and SQL Studio requests no refresh tokens, so even someone who reads the client secret in the Backend finds only tokens that expire within 20 minutes. In your browser, SQL Studio keeps your tabs' query text, your local history, the Business Unit's Data Extension list, the folder of your last Save to DE and your settings, in local storage for your Cloud Page's address.</p>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '0.95rem', opacity: 0.85}}>Any user with Data Extension access in the Business Unit can read these Data Extensions while they exist, your results included. The sign-in log gives them nothing to use: the session id is stored as a hash, and the token is encrypted with a key derived from the client secret. Its rows still last one day, and SQL Studio requests no refresh tokens, so even someone who reads the client secret in the Backend finds only tokens that expire within 20 minutes. In your browser, the new Cloud Page keeps a copy of the Frontend's code, which is the app's code and no data of yours, in the browser's Cache Storage, so a later open of the same build skips the download. SQL Studio also keeps your tabs' query text, your local history, the Business Unit's Data Extension list, the folder of your last Save to DE and your settings, in local storage for your Cloud Page's address.</p>
       </div>
       <div className="col col--6" style={{padding: '1rem 2rem'}}>
 
