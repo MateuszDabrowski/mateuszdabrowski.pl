@@ -1700,7 +1700,7 @@ Bonus Solution: Create a Limit Allocation Manager in Setup. This would be a new 
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-21  
+Last updated: 2026-11-12  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -1827,7 +1827,7 @@ Write a query that will find Subscriber Key for all Active (opted-in) Subscriber
 **Solution**
 
 ```sql title="Solution working on Parent Business Unit"
-SELECT sub.SubscriberKey
+SELECT DISTINCT sub.SubscriberKey
 FROM _Subscribers   AS sub
     LEFT JOIN _Sent AS sent
         ON sent.SubscriberKey = sub.SubscriberKey
@@ -1835,6 +1835,8 @@ WHERE
     sub.Status = 'active'
     AND sent.EventDate IS NOT NULL
 ```
+
+`DISTINCT` keeps one row for each Subscriber Key, as the join returns a row for every email sent to that subscriber.
 
 You can write this query without the filter on `sent.EventDate` but with `INNER JOIN _Sent` instead. The above version makes it easier to change the query for the bonus below.
 
@@ -2135,7 +2137,7 @@ It means that rows filtered with `WHERE` will not be considered for `GROUP BY` a
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-21  
+Last updated: 2026-11-12  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 Selected information on the SELECT statement in Marketing Cloud Engagement SQL
@@ -3044,7 +3046,7 @@ All standard SQL JOINs in a single image with name, example Marketing Cloud Enga
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-11-12  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 With just [`SELECT`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-select/) and [`FROM`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-from/) statements, you can already start building your queries. With the addition of [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/), you can do much more than in the Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) UI. `WHERE` grants you even more power by allowing you to filter your queries' outcomes.
@@ -3472,7 +3474,7 @@ The `CASE` statement is not only useful in a [`SELECT`](https://mateuszdabrowski
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-like/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-11-12  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 `LIKE` operator allows you to leverage wildcards and groups to search for matching records based on value fragment. You may use it in the [`SELECT CASE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-case/#like-in-case) and [`WHERE`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-where/#like-operator) statements.
@@ -6651,7 +6653,7 @@ Keep an eye on empty fields. Unlike `JSON_OBJECT`, `FOR JSON` leaves out keys wi
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-style-guide/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-21  
+Last updated: 2026-11-12  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 First things first: this Salesforce Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud) SQL style guide is highly subjective. You may use it as it is, implement only some parts of it, or ignore it altogether. There are only two rules that I believe are a must-have:
@@ -8328,7 +8330,7 @@ WHERE
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/snippets/sql-debugging-all-contacts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-11-12  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Why should you care about All Contacts list?

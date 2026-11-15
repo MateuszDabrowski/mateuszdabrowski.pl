@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-basics/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-21  
+Last updated: 2026-11-12  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to segment data in MCE
@@ -131,7 +131,7 @@ Write a query that will find Subscriber Key for all Active (opted-in) Subscriber
 **Solution**
 
 ```sql title="Solution working on Parent Business Unit"
-SELECT sub.SubscriberKey
+SELECT DISTINCT sub.SubscriberKey
 FROM _Subscribers   AS sub
     LEFT JOIN _Sent AS sent
         ON sent.SubscriberKey = sub.SubscriberKey
@@ -139,6 +139,8 @@ WHERE
     sub.Status = 'active'
     AND sent.EventDate IS NOT NULL
 ```
+
+`DISTINCT` keeps one row for each Subscriber Key, as the join returns a row for every email sent to that subscriber.
 
 You can write this query without the filter on `sent.EventDate` but with `INNER JOIN _Sent` instead. The above version makes it easier to change the query for the bonus below.
 
