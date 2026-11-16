@@ -1,6 +1,7 @@
 {
     "source": "Name history seeded from Renameforce (https://renameforce.com, data of 2026-09-10) and the name history lines in the Marketing Clouds FAQ on this site. Fields: names oldest first, from = year or year-month the name took over, short = abbreviation, display = the name the site shows (defaults to the newest), popular = the name readers still search for, shown once per page as '(formerly ...)'. keepAsWritten = phrases the marking tool (npm run mark-products) leaves alone: talk and chapter titles, licence tier names, menu paths. ambiguous = names the tool never marks on its own, because the site also uses them for something else (the whole product family, a feature brand); mark those by hand. A name several products share (Salesforce Marketing Cloud) needs {of=<id>} on the marker. includes = for a product family: groups of products its tooltip lists in place of a name history. The first product of a group is the main one; the rest are its sub-products, listed indented under it.",
     "keepAsWritten": [
+        "Marketing Cloud Engagement+",
         "Marketing Cloud Next for Engagement",
         "Architecting Web Solutions in MCE",
         "Salesforce Marketing Cloud Engagement Infrastructure Setup",
