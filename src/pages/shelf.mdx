@@ -398,7 +398,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ## Privacy Policy {#privacy-policy}
 
-<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 11, 2026</p>
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 16, 2026</p>
 
 <p>Shelf is built by Mateusz Dąbrowski. This policy explains what the Shelf app does with your data. It is short because there is not much to say: Shelf sends nothing to me, and what it keeps, it encrypts on your device first.</p>
 
@@ -447,11 +447,12 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>On iPhone and iPad you can save where a piece of stuff belongs, such as a door code at its door or a voucher at its shop. Shelf can then show the stuff near you and remind you when you arrive. All of it is optional, and Shelf asks for your location only when you use one of these features, never when it opens.</p>
+<p>On iPhone and iPad you can save where a piece of stuff belongs, such as a door code at its door or a voucher at its shop. Shelf can then show the stuff near you and remind you when you arrive. All of it is optional, and Shelf asks for your location only when you first use one of these features, never when it opens.</p>
 
 <ul>
-  <li><strong>Saving your current location, and Near Me,</strong> show Apple's location prompt the first time. You can choose Allow Once, which lets Shelf use your location only until you close it. Each time, Shelf takes one location reading and stops.</li>
-  <li><strong>Arrival reminders</strong> need location access While Using the App. iOS watches the places you choose and shows the reminder. Shelf does not track you, does not run in the background for this, and never asks for Always access.</li>
+  <li><strong>Saving your current location, and Near Me,</strong> show Apple's location prompt the first time. You can choose Allow Once, which lets Shelf use your location only until you close it. Saving a place takes one location reading and stops.</li>
+  <li><strong>Near Me</strong>, once you allow location and while you have stuff with a place, reads your location while Shelf is open on screen, so it appears only when something is near. It stops when you leave Shelf. Your location stays on your device: Shelf never stores it or sends it anywhere.</li>
+  <li><strong>Arrival reminders</strong> need location access While Using the App, with Precise Location on. iOS watches the places you choose and shows the reminder. Shelf does not track you, does not run in the background for this, and never asks for Always access.</li>
   <li><strong>Choosing a place on a map</strong> (iPhone, iPad and Mac) needs no location permission. The map, the text you search for and an address you look up go to Apple Maps to find the place, only while you are choosing it. Apple's privacy policy covers that. Nothing goes to me.</li>
   <li><strong>Opening a place</strong> in your map app sends that app the place's coordinates when you tap it, and nothing else: no name, no value. The map app's own privacy policy applies from there.</li>
   <li><strong>A saved place</strong> is encrypted on your device, like a value, before it is saved or synced. It never reaches me, and it reaches a map app only when you open it there.</li>
@@ -463,7 +464,9 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>Shelf asks to send notifications only when you turn on an expiry or arrival reminder. iOS schedules the reminders on your device. A reminder's text never includes a value, and it shows the item's name only when the item isn't hidden and App Lock is off. If you turn on Show Values in Reminders, you can touch and hold a reminder to see the value and copy it. Shelf decrypts it on your device at that moment, only while your iPhone is unlocked, never for hidden items and never with App Lock on.</p>
+<p>Shelf asks to send notifications only when you turn on an expiry or arrival reminder. iOS schedules the reminders on your device. A reminder shows the item's name only when the item isn't hidden and App Lock is off.</p>
+
+<p>With Show Values in Reminders on, which is the default, such a reminder also shows the item's value when it is short, up to 64 characters, so a door code is there when you arrive. Your device keeps that text with the scheduled reminder until it is delivered and cleared, and shows it on the Lock Screen and Apple Watch as your notification settings allow. To keep values out of reminders, turn the switch off, mark the item hidden, or turn on App Lock. A longer value shows when you touch and hold the reminder: Shelf decrypts it on your device at that moment, only while your iPhone is unlocked, never for hidden items and never with App Lock on. Tapping a reminder opens the item in Shelf and copies its value, except for hidden items.</p>
 
     <div style={{marginTop: '2rem'}}>
 
@@ -471,7 +474,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
     </div>
 
-<p>You can show an item as a QR code or barcode, and read one from an image you pick. The image is read on your device and not kept: Shelf saves only the code's text, encrypted like any value, and its format. Picking an image needs no access to your photo library, because the system picker shares only the image you choose. On iPhone and iPad, Scan with Camera asks for camera access the first time you use it. The camera reads a code or text you tap, on your device, and nothing is recorded, saved or sent.</p>
+<p>You can show an item as a QR code or barcode, and read one from an image you pick. The image is read on your device and not kept: Shelf saves only the code's text, encrypted like any value, and its format. Picking an image needs no access to your photo library, because the system picker shares only the image you choose. On iPhone and iPad, Scan with Camera asks for camera access the first time you use it. The camera reads a code or text you tap, on your device, and nothing is recorded, saved or sent. Apple Watch draws QR codes and barcodes itself. For an Aztec or PDF417 code it asks your paired iPhone to draw it: the value goes from your watch to your iPhone over Apple's encrypted connection between them, and the drawn code comes back. Neither device keeps it, and nothing leaves your devices.</p>
 
     <div style={{marginTop: '2rem'}}>
 
