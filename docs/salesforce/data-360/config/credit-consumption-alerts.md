@@ -4,7 +4,7 @@
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/data-360/config/credit-consumption-alerts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-11-12  
+Last updated: 2026-11-16  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data 360 Credit Consumption
@@ -17,7 +17,7 @@ The monitoring is on you. Digital Wallet, the app that tracks every consumption-
 
 Let's dive into it, threshold by threshold. First, what the flow does out of the box. Then lower the default thresholds, so the first alert arrives long before you burn half of your contract's credit pool. Finally, a custom flow that compares your consumption with a burn plan for your contract, month by month, and alerts you on the day you run ahead of it.
 
-Both flows work for more than Data 360. They read every consumption card in Digital Wallet, so they can also watch Einstein Requests for Agentforce, Flex Credits, and the Salesforce Message Credits cards for Email, SMS and Mobile App that Marketing Cloud Next (MCN) sends draw on.
+Both flows work for more than Data 360. They read every consumption card in Digital Wallet, so they can also watch Einstein Requests for Agentforce, Flex Credits, and the Salesforce Message Credits cards for Email, SMS, WhatsApp and Mobile App that Marketing Cloud Next (MCN) and [Marketing Cloud Engagement+](https://help.salesforce.com/s/articleView?id=mktg.mceplus_dw_message_credits.htm\&type=5) sends draw on.
 
 > **Note: You Should Know**
 >
