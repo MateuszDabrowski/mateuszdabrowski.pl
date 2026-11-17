@@ -19,7 +19,7 @@ import styles from './styles.module.css';
     file name would keep serving the old picture from CDNs; bumping this with
     the app's version makes every screenshot a new URL. The frames themselves
     come from Scripts/process-screenshots.py --web in the Shelf repo. */}
-export const ASSETS = '1.0.4';
+export const ASSETS = '1.1.0';
 
 {/* The shared screenshot viewer (src/components/ZoomImage.jsx), with this
     page's ASSETS version for screenshots that have no responsive copies. */}
@@ -30,7 +30,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
   <meta property="og:url" content="https://mateuszdabrowski.pl/shelf/" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Shelf - Quick Copy Vault" />
-  <meta property="og:description" content="Codes, addresses, IBANs and snippets, encrypted on your device and one tap from your clipboard. iPhone, iPad, Mac and Apple Watch." />
+  <meta property="og:description" content="Codes to copy or scan, addresses, IBANs and snippets, encrypted on your device and one tap from your clipboard. iPhone, iPad, Mac and Apple Watch." />
   <meta property="og:image" content="https://mateuszdabrowski.pl/img/og/og-image-shelf.png" />
   <meta name="twitter:image" content="https://mateuszdabrowski.pl/img/og/og-image-shelf.png" />
 </Head>
@@ -66,7 +66,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
           color: '#ffffff',
           opacity: 0.9
         }}
-      >The small things you keep needing and can never remember - door codes, Wi-Fi passwords, addresses, IBANs, promo codes, vouchers, the command you paste every Monday or your favourite prompt template - are now available in Shelf, one tap from your clipboard on every Apple device you own. The names and values of your stuff are encrypted on your device before they are stored and synced through your own iCloud. No account to create, no server of mine in between.</p>
+      >The small things you keep needing and can never remember - door codes, gym passes, addresses, IBANs, promo codes, vouchers, the command you paste every Monday or your favourite prompt template - are now available in Shelf, one tap from your clipboard on every Apple device you own. The names and values of your stuff are encrypted on your device before they are stored and synced through your own iCloud. No account to create, no server of mine in between.</p>
 
       <p style={{margin: '0 0 0.5rem'}}>
         <a
@@ -126,10 +126,10 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <p className="text--center" style={{fontSize: '1.2rem', marginBottom: '2rem'}}>The security of a password manager, the speed of a sticky note - and:</p>
     <div className="row">
       <div className="col col--6" style={{padding: '0 2rem'}}>
-        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› Paste anything, and Shelf knows what it is: email, phone number, link, address, IBAN, date, colour or code. IDs and prompts get their own types too<br/> › Tap the type icon to call the number, write the email, open the address in Maps, or open the link<br/> › Code with syntax highlighting; hex, rgb and hsl values with a swatch of their colour<br/> › Hidden values stay masked on screen until you peek, and clear themselves from the clipboard 60 seconds after a copy<br/> › Search as you type, across every folder<br/> › Pin what you use most, or sort by most used, most recent, or your own order<br/> › Folders with 460+ icons to choose from, each folder shown or hidden per device</p>
+        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› Paste anything, and Shelf knows what it is: email, phone number, link, address, IBAN, date, colour or code. IDs and prompts get their own types too<br/> › Tap the type icon to call the number, write the email, open the address or a saved place in your map app, open the link or show the code<br/> › Vouchers, passes and tickets as QR codes or barcodes, full screen and ready to scan<br/> › A last day for vouchers and promo codes, with a reminder the day before<br/> › Places for your stuff: what is near you comes first, and a reminder shows the door code when you arrive<br/> › Code with syntax highlighting, and hex, rgb and hsl values with a swatch of their colour<br/> › Hidden values stay masked on screen until you peek, and clear themselves from the clipboard 60 seconds after a copy<br/> › Search as you type, pin what you use most, and keep it all in folders with 460+ icons</p>
       </div>
       <div className="col col--6" style={{padding: '0 2rem'}}>
-        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› Mac: a global shortcut opens a search box over whatever you are doing; Return copies, Escape takes you back<br/> › iPhone and iPad: tap to copy, swipe to share or edit, long-press for more<br/> › Home Screen widgets that copy your stuff without opening the app<br/> › Add from any app through the Share sheet<br/> › App Lock with Face ID, Touch ID or your passcode<br/> › Apple Watch: read your stuff from your wrist<br/> › Encrypted on your device and synced through your own iCloud - no account to create, no server of mine</p>
+        <p style={{fontSize: '1.05rem', lineHeight: 2, margin: 0}}>› Mac: a global shortcut opens a search box over whatever you are doing. Return copies, Escape takes you back<br/> › iPhone and iPad: tap to copy, swipe to share or edit, long-press for more<br/> › Home Screen widgets that copy your stuff, or open a code full screen, without opening the app<br/> › Add from any app through the Share sheet<br/> › App Lock with Face ID, Touch ID or your passcode<br/> › Apple Watch: read your stuff and show your codes from your wrist, with what is near you first<br/> › Encrypted on your device and synced through your own iCloud - no account to create, no server of mine</p>
       </div>
     </div>
   </div>
@@ -171,8 +171,8 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     <div className="row" style={{alignItems: 'center'}}>
       <div className={`col col--6 ${styles.featureMedia} ${styles.featureMediaStart}`} style={{textAlign: 'center'}}>
         <ZoomImage
-          src="/img/apple/shelf/Shelf-iPhone-Add.webp"
-          alt="Adding a link on iPhone - Shelf detects the URL type as you paste"
+          src="/img/apple/shelf/Shelf-iPhone-Code.webp"
+          alt="A code snippet in View Stuff on iPhone, highlighted and ready to copy"
           imgStyle={{maxWidth: '100%', maxHeight: '480px', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
       </div>
@@ -180,7 +180,56 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Stuff, Understood</span>
 
-      <p style={{fontSize: '1.1rem'}}>Paste a value, and Shelf works out what it is: email, phone number, link, address, IBAN, date, colour or code. IDs and prompts get their own types too. Smart Data Actions live on the type icon - tap it on a phone number to call, on an email to write, on an address to open Maps, on a link to open it. Code snippets get syntax highlighting, and hex, rgb and hsl values show their colour. Anything can be marked as a hidden value that stays masked on screen until you peek, and is cleared from the clipboard 60 seconds after you copy it.</p>
+      <p style={{fontSize: '1.1rem'}}>Paste a value, and Shelf works out what it is: email, phone number, link, address, IBAN, date, colour or code. IDs and prompts get their own types too. Smart Data Actions live on the type icon - tap it on a phone number to call, on an email to write, on an address or a saved place to open your map app, on a link to open it and on a code to show it. Code snippets get syntax highlighting, and hex, rgb and hsl values show their colour. Anything can be marked as a hidden value that stays masked on screen until you peek, and is cleared from the clipboard 60 seconds after you copy it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature: Ready to scan (1.1.0) */}
+<section className={styles.section}>
+  <div className="container" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)', borderRadius: '16px', padding: '3rem 2rem' }}>
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Ready to Scan</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>A voucher, a gym pass, a train ticket or a loyalty card works best as the code the till or the gate expects. Pick a QR code, a barcode (Code 128, EAN-13 or EAN-8), Aztec or PDF417, and Shelf shows the value as that code, full screen and bright, from the row or its menu. If the code already exists somewhere, you do not have to type it: Shelf reads it from a screenshot or a photo, and on iPhone and iPad the camera reads a code or any text you tap. All of it happens on your device, and the image is not kept.</p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <div style={{display: 'flex', gap: '1.5rem', alignItems: 'center', justifyContent: 'center'}}>
+        <ZoomImage
+          src="/img/apple/shelf/Shelf-iPhone-ShowCode.webp"
+          alt="A coffee voucher's QR code full screen on iPhone"
+          imgStyle={{maxWidth: '100%', maxHeight: '480px', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+        <ZoomImage
+          src="/img/apple/shelf/Shelf-iPhone-Add.webp"
+          alt="Editing the voucher on iPhone - Show As set to QR Code, with the code drawn below"
+          imgStyle={{maxWidth: '100%', maxHeight: '480px', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Feature: Near you, when it matters (1.1.0) */}
+<section className={styles.section}>
+  <div className="container">
+    <div className="row" style={{alignItems: 'center'}}>
+      <div className={`col col--6 ${styles.featureMedia}`} style={{textAlign: 'center'}}>
+        <ZoomImage
+          src="/img/apple/shelf/Shelf-iPhone-Main.webp"
+          alt="Shelf on iPhone - Near Me with the office door code first, then Pinned, then a voucher that expires in 3 days"
+          imgStyle={{maxWidth: '100%', maxHeight: '480px', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
+        />
+      </div>
+      <div className="col col--6" style={{padding: '2rem'}}>
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Near You, When It Matters</span>
+
+      <p style={{fontSize: '1.1rem'}}>Give a voucher or a promo code its last day, and Shelf marks what runs out this week and can remind you the day before. Save where stuff belongs, like the door a code opens or the shop a voucher is for, from where you stand, from the map or from a saved address. When you are there, that stuff sits in Near Me at the top of the list, above what you pinned, on iPhone, iPad and Apple Watch. Turn on an arrival reminder, and your iPhone shows the door code itself when you get there, on the Lock Screen and on your Apple Watch. Hidden stuff never shows its value in a reminder, and **places are encrypted like everything else**.</p>
       </div>
     </div>
   </div>
@@ -195,7 +244,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>On the Mac, in the Menu Bar</span>
 
       </div>
-      <p style={{fontSize: '1.1rem'}}>Shelf lives in the menu bar: a global shortcut (Control-Tab by default) opens a search box from inside any app - for instant pastes when and where you need it. Arrow keys to browse, Return to copy, Escape to dismiss - your hands never leave the keyboard. Hide it from the Dock and Shelf is there only when you call it; the full window stays a click away for organising, drag-and-drop ordering and CSV import and export.</p>
+      <p style={{fontSize: '1.1rem'}}>Shelf lives in the menu bar: a global shortcut (Control-Tab by default) opens a search box from inside any app - for instant pastes when and where you need it. Arrow keys to browse, Return to copy, Escape to dismiss - your hands never leave the keyboard. Copied something worth keeping? The clipboard button in the panel, or Shift-Command-V, saves it as new stuff. Hide Shelf from the Dock and it is there only when you call it, while the full window stays a click away for organising, drag-and-drop ordering and CSV import and export.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
@@ -222,12 +271,12 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
       <div style={{display: 'flex', gap: '1.5rem', alignItems: 'center', justifyContent: 'center'}}>
         <ZoomImage
           src="/img/apple/shelf/Shelf-iPad-Main.webp"
-          alt="Shelf on iPad - folders in the sidebar, every item in the list"
+          alt="Shelf on iPad - Near Me and Pinned above the rest, folders in the sidebar"
           imgStyle={{maxWidth: '64%', borderRadius: '8px', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
         <ZoomImage
-          src="/img/apple/shelf/Shelf-iPhone-Main.webp"
-          alt="Shelf on iPhone - folder strip above the list, pinned rows first"
+          src="/img/apple/shelf/Shelf-iPhone-Folders.webp"
+          alt="Shelf on iPhone - the Travel folder with a flight, a hotel and a booking code"
           imgStyle={{maxWidth: '22%', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
       </div>
@@ -242,7 +291,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
       <div className={`col col--6 ${styles.featureMedia}`} style={{textAlign: 'center'}}>
         <ZoomImage
           src="/img/apple/shelf/Shelf-iPhone-Widget.webp"
-          alt="Shelf widgets on the iPhone Home Screen"
+          alt="Shelf's large widget in the iPhone widget gallery - eight pieces of stuff, two of them codes"
           imgStyle={{maxWidth: '100%', maxHeight: '480px', borderRadius: '14% / 6.5%', boxShadow: 'var(--ifm-global-shadow-md)'}}
         />
       </div>
@@ -250,7 +299,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>On the Home Screen</span>
 
-      <p style={{fontSize: '1.1rem'}}>Pick the stuff you reach for most and put it in a widget - small, medium or large - and one tap copies it without opening the app. Widgets are off until you switch them on in Settings, because they show your stuff outside the app and its lock; once on, hidden values stay masked in them, and on a locked iPhone the whole widget is redacted until you glance at it.</p>
+      <p style={{fontSize: '1.1rem'}}>Pick the stuff you reach for most and put it in a widget - small, medium or large, with up to eight pieces - and one tap copies it without opening the app. A code shows as a small QR code or barcode, and a tap opens it full screen in Shelf. Widgets are off until you switch them on in Settings, because they show your stuff outside the app and its lock. Once they are on, hidden values stay masked in them, and on a locked iPhone the whole widget is redacted until you glance at it.</p>
       </div>
     </div>
   </div>
@@ -265,14 +314,14 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
           <div>
             <ZoomImage
               src="/img/apple/shelf/Shelf-Watch-Main.webp"
-              alt="Shelf on Apple Watch - the list of stuff"
+              alt="Shelf on Apple Watch - Near Me at the top of the list, with the office door code first"
               imgStyle={{maxWidth: '100%', borderRadius: '28px', boxShadow: 'var(--ifm-global-shadow-md)'}}
             />
           </div>
           <div>
             <ZoomImage
-              src="/img/apple/shelf/Shelf-Watch-Detail.webp"
-              alt="Shelf on Apple Watch - a hidden value with its Reveal button"
+              src="/img/apple/shelf/Shelf-Watch-Code.webp"
+              alt="A voucher's QR code filling the Apple Watch screen"
               imgStyle={{maxWidth: '100%', borderRadius: '28px', boxShadow: 'var(--ifm-global-shadow-md)'}}
             />
           </div>
@@ -282,7 +331,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>On Apple Watch</span>
 
-      <p style={{fontSize: '1.1rem'}}>Browse and read your stuff from your wrist, filtered to the folders you choose - perfect for checking the door key code ;) The Watch app is a reader: watchOS has no clipboard for apps to write to, so copying stays on iPhone, iPad and Mac.</p>
+      <p style={{fontSize: '1.1rem'}}>Browse and read your stuff from your wrist, filtered to the folders you choose. What is near you comes first, so the door code is at the top when you raise your wrist ;) A voucher or a pass shows as a full-screen code for the scanner: QR codes and barcodes straight from the watch, Aztec and PDF417 codes from your iPhone when it is nearby. Copying stays on iPhone, iPad and Mac, because watchOS has no clipboard for apps to write to.</p>
       </div>
     </div>
   </div>
@@ -300,7 +349,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
         </div>
 
-        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>Labels and values are encrypted with AES-256-GCM on your device; only ciphertext is ever stored or synced. The key lives in your iCloud Keychain, end-to-end encrypted by Apple - never readable by Apple, and never by me. Sync runs through your private iCloud database. There is no Shelf server, no analytics, no telemetry, no crash reporting and no third-party code. Works fully offline; sync resumes when iCloud does.</p>
+        <p style={{color: 'var(--ifm-color-white)', fontSize: '1.1rem'}}>Labels, values and places are encrypted with AES-256-GCM on your device, and only ciphertext is ever stored or synced. The key lives in your iCloud Keychain, end-to-end encrypted by Apple - never readable by Apple, and never by me. Sync runs through your private iCloud database. There is no Shelf server, no analytics, no telemetry, no crash reporting and no third-party code. Works fully offline, and sync resumes when iCloud does.</p>
       </div>
       <div className="col col--6" style={{padding: '1rem 2rem'}}>
 
@@ -339,14 +388,21 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <details className={styles.faqDetails}>
   <summary>How secure is my stuff?</summary>
 
-  The names and values of your stuff are encrypted on your device with AES-256-GCM before they are saved or synced. The key is kept in your iCloud Keychain, which Apple encrypts end to end, so only devices signed into your Apple Account can read your data. Folder names, icons and the type of each item are not separately encrypted, so folders can be navigated before anything is unlocked.
+  The names, values and places of your stuff are encrypted on your device with AES-256-GCM before they are saved or synced. The key is kept in your iCloud Keychain, which Apple encrypts end to end, so only devices signed into your Apple Account can read your data. Folder names, icons, the type of each item, expiry dates and code formats are not separately encrypted, so folders can be navigated before anything is unlocked.
 
 </details>
 
 <details className={styles.faqDetails}>
   <summary>Does Shelf read my clipboard?</summary>
 
-  No. Shelf writes to the clipboard when you tap a row, and it looks at text only when you paste it into the add form to guess its type. It has no clipboard observer and never reads the clipboard in the background.
+  Only when you ask it to. Shelf writes to the clipboard when you tap a row, and it looks at text only when you paste it into the add form to guess its type. On the Mac, Save Clipboard reads it when you click the button or press Shift-Command-V. Shelf has no clipboard observer and never reads the clipboard in the background.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>When does Shelf use my location?</summary>
+
+  Only for places, and only after you allow it. Saving your current location takes one reading. With access, Shelf reads your location while it is open on screen, to list the stuff near you first, and stops when you leave it. Arrival reminders are watched by iOS itself, so Shelf does not run in the background for them, and it never asks for Always access. Your location never leaves your device.
 
 </details>
 
@@ -374,7 +430,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 <details className={styles.faqDetails}>
   <summary>Can I copy from my Apple Watch?</summary>
 
-  No - watchOS has no clipboard for apps to write to. The Watch app is for reading: browse your folders, search, and open a value to read it. Copying happens on iPhone, iPad and Mac.
+  No - watchOS has no clipboard for apps to write to. The Watch app is for reading and showing: browse your folders, search, open a value to read it, or show a code to scan. Copying happens on iPhone, iPad and Mac.
 
 </details>
 

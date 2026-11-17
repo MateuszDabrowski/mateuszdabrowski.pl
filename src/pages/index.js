@@ -108,6 +108,13 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
+        date: '2026-11-17',
+        kind: 'App',
+        title: 'Shelf 1.1',
+        url: '/shelf/',
+        description: 'The small things you keep retyping, encrypted on your device and one tap from your clipboard. New: vouchers, passes and tickets as codes to scan, a last day with a reminder, places that put the stuff near you first, and arrival reminders that show the door code, on iPhone, iPad, Mac and Apple Watch.',
+    },
+    {
         date: '2026-11-15',
         kind: 'App',
         title: 'SQL Studio 1.5',
