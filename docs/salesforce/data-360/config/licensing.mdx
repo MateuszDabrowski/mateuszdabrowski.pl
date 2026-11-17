@@ -1,0 +1,283 @@
+---
+id: licensing
+title: Data 360 Licensing
+sidebar_label: Licensing
+description: Pay per row or pay per person? Compare Data 360 Flex Credits vs Profiles, and find the break-even that tells you which one fits your org.
+image: img/og/og-image-sf-d360-licensing.png
+tags: [Data 360, Best Practice]
+draft: true
+---
+
+import { LeadText } from '/src/components/LeadText.js';
+import { ButtonRow } from '/src/components/Buttons.js';
+import Diagram from '/src/components/Diagram.jsx';
+
+<LeadText content="Pay per row or pay per person? Compare Data 360 Flex Credits vs Profiles, and find the break-even that tells you which one fits your org." />
+
+## Data 360 Licensing Models
+
+__Salesforce sells Data 360 Profiles as a "predictable, flat-rate model". It is flat for the batch work that builds your profiles. Streaming, real-time and every query still bill credits.__
+
+Every org runs :product[Data 360] under a Data Cloud licence, an [add-on to the Salesforce org licence](https://help.salesforce.com/s/articleView?id=data.c360_a_licenses_billing_limits.htm&type=5) that switches :product[Data 360] on. The work you do there, from ingestion to segment publishes, then burns credits from one of two consumption cards in Digital Wallet. Data Services is the older card, with a usage type for nearly every feature. Flex Credits is the newer one, with fewer and broader usage types and a pool that :product[Data 360] shares with Agentforce, Slackbot and Personalization.
+
+On top of the credits, you can buy the Data 360 Profiles or Data 360 Enterprise Profiles add-on. It replaces the credits for identity resolution, batch transforms and insights, segments and batch activations with a price per profile, and comes with a small pool of Flex Credits for the rest.
+
+Model | What You Pay For | List Price
+-- | -- | --
+Data Services credits | Credits per usage type | Not published
+Flex Credits | Credits per usage type, from a pool shared with Agentforce | USD 500 per 100,000 credits
+Data 360 Profiles | Billable profiles, with count limits | USD 240 per 1,000 profiles a year, with 1 Flex Credit per profile
+Data 360 Enterprise Profiles | Billable profiles, with higher count limits | USD 420 per 1,000 profiles a year, with 2 Flex Credits per profile
+
+The prices come from Salesforce's [Data 360 pricing page](https://www.salesforce.com/data/pricing/), and they are list prices. Your Account Executive can discount both credits and profiles, so wherever I calculate with list prices below, put the rates from your Order Form in their place.
+
+You may still meet a fourth licence in older orgs, Customer Data Platform. Salesforce no longer sells or renews it, and it has its own billing rules, so I leave it out here.
+
+Let's go through the rest in order. First, how the two credit cards differ and who gets which. Then the choice that changes the bill the most, Flex alone or Flex with the Profiles add-on, with a break-even that shows when the add-on pays off. Finally, what it all means for :product[Marketing Cloud Next].
+
+:::note You Should Know
+
+Salesforce changes :product[Data 360] pricing often. Everything in this article reflects the public sources as of 16 November 2026: the pricing page, the [Flex Credits rate card](https://www.salesforce.com/agentforce/rates/) updated on 3 November 2026, the [Data Services rate card](https://www.salesforce.com/data/rates/multipliers/) and Help in the Winter '27 release. Check those dates before you quote a number to a client.
+
+:::
+
+---
+
+## Data 360 Flex Credits vs Data Services Credits
+
+__Flex Credits use a different rate card, with different usage types. The same workload can cost more or less on it.__
+
+Both cards follow the same formula: units of a usage type times its multiplier from the rate card. The difference is in the usage types. The Data Services card bills over 20 of them, one per feature, such as Batch Data Pipeline, Batch Profile Unification or Streaming Calculated Insights. The Flex Credits card groups the same work into 11 [Data 360 usage types](https://help.salesforce.com/s/articleView?id=data.c360_a_flex_credits_for_data360.htm&type=5), and most of them cover several of the old lines at one rate.
+
+### Who Gets Which Credit Card
+
+If you bought credits before 24 February 2026, your org consumes [Data Services credits](https://help.salesforce.com/s/articleView?id=data.c360_a_data_usage_types.htm&type=5). Orgs buying or renewing after that date can have either card. There is no forced migration, so a Data Services customer can stay on that card at renewal. Moving to Flex Credits or to profile pricing means swapping all existing Data Services credits, according to the pricing page's FAQ.
+
+With both cards on one contract, [Data Services credits are consumed first](https://help.salesforce.com/s/articleView?id=data.c360_a_billing_considerations_for_data_federation.htm&type=5) for :product[Data 360] work.
+
+Help documents the Profiles add-on with either card. In my projects, I see two combinations: Data Services credits without Profiles on older contracts, and Profiles with Flex Credits on new ones. Don't take the 24 February date as a hard rule either. Large accounts can negotiate exceptions, so your Order Form tells you which card you have, not the date you signed it.
+
+### Flex vs Data Services Rate Cards
+
+The Flex Credits card changes more than the multipliers:
+
+- **Monthly volume tiers.** Each usage type gets cheaper as you consume more of it in a calendar month: the Base multiplier applies up to 300,000 credits, Tier 2 up to 1.5M, Tier 3 up to 12.5M and Tier 4 beyond. The tiers reset on the first day of each month. Data Services has no tiers, and neither do Flex sandboxes, which bill a flat 80% of Base.
+- **Free batch ingestion.** Flex has no line for batch connector ingestion, while Data Services bills it at 2,000 credits per million rows. Ingestion from Salesforce orgs is free on both cards.
+- **One Streaming Pipeline line.** Streaming ingestion, streaming transforms, streaming insights and streaming data actions all bill at 3,500 credits per million rows on Flex. On Data Services, each has its own rate.
+- **One Real-Time Pipeline line.** Every profile event, engagement event and API call in the real-time layer bills at 250,000 credits per million once a real-time data graph uses it.
+- **One pool with other products.** Flex Credits also pay for Agentforce actions, Slackbot actions and Personalization decisioning, so an agent rollout and your data processing draw on the same credits.
+
+Here is how the same work compares, in credits per million rows:
+
+Work | Data Services | Flex Credits (Base) | Flex vs Data Services
+-- | -- | -- | --
+Batch ingestion from external sources | 2,000 | Not metered | Free
+Streaming ingestion | 5,000 | 3,500 | 0.7x
+Batch data transforms | 400 | 40 | 0.1x
+Data graph refresh | 400 | 40 | 0.1x
+Identity resolution | 100,000 | 75,000 | 0.75x
+Batch calculated insights | 15 | 40 | 2.7x
+Segmentation | 20 | 50 | 2.5x
+Batch activation | 10 | 60 | 6x
+Streaming calculated insights | 800 | 3,500 | 4.4x
+Streaming data actions | 800 | 3,500, or 7,000 with a data graph | 4.4x to 8.8x
+Queries | 2 | 3 | 1.5x
+Real-time events and API calls | 70,000 | 250,000 | 3.6x
+
+The ratios compare credits, not money. A Flex Credit costs USD 0.005 at list, but Salesforce publishes no list price for a Data Services credit, so only your contracts can tell you what the move costs in money. What the table shows is how the mix shifts. A workload dominated by external batch ingestion, batch transforms, identity resolution or streaming ingestion gets cheaper on Flex. One dominated by segmentation, batch activation, batch insights, streaming insights and actions or queries gets dearer. And if you plan to move SQL-heavy segmentation from :product[Marketing Cloud Engagement] into :product[Data 360], it lands on two of the lines that rise the most.
+
+Two rows need a word. Data Services also billed each unique real-time profile on a separate meter, which Flex drops, so for a visitor with few events the real rise is smaller than 3.6x. And queries add up in places nobody plans for: every page load of a record with a Related List Enrichment, every Data 360 report view and every send-time read in :product[Marketing Cloud Next], which has [its own section below](#data-360-licensing-for-marketing-cloud-next).
+
+So should you switch or stay? Szymon Lewandowski's answer in his newsletter matches the table. Switch when ingestion from outside Salesforce, transforms, data graphs or identity resolution dominate your consumption, or when you want one pool with Agentforce. Stay when your data comes from Salesforce clouds and the work is mostly segments and activations. Either way, the swap replaces your whole Data Services pool, which on a multi-year contract sized on Data Services rates means re-sizing all of it. His [Data 360 Credits Guide](https://szymonlewandowski.pl/blog/data-360/credits-guide#flex-credits-multipliers-for-data-360) lists both cards side by side.
+
+Price a renewal onto Flex from the split by usage type in Digital Wallet's View Consumption Details, never from the monthly total.
+
+---
+
+## Data 360 Flex vs Flex + Profiles
+
+__Which one costs less depends on how much work you run against each customer.__
+
+So which one should you pick? Profiles charges a fixed price per profile, while Flex charges for every row you process, at a lower rate the more you process in a month. The add-on pays off when you run a lot of actions against a modest customer base. Flex alone wins when the base gets large or when your data arrives already prepared in its sources. The break-even below puts numbers on both.
+
+Here is where each model bills you, stage by stage:
+
+<Diagram
+    name="article-image-d360-licensing-pipeline"
+    alt="Data 360 work in three lanes and a shared row. In the batch lane, batch ingestion is free on both models, and batch data transforms, identity resolution, batch calculated insights, segments and batch activation are free with Profiles. Everything in the streaming and real-time lanes, from ingestion to activation and profile API calls, and everything in the read and share row, from queries and previews to zero-copy sharing out and unstructured data, is billed on both."
+    width={872}
+    height={864}
+    caption="Diagram: what each stage of Data 360 costs on Flex alone and with the Profiles add-on, as of 16 November 2026."
+/>
+
+### What the Profiles Add-On Changes
+
+Data 360 Profiles and Data 360 Enterprise Profiles are add-ons to the Data Cloud licence. You buy them through your Account Executive, not in Your Account, and an org can hold [only one of the two](https://help.salesforce.com/s/articleView?id=data.c360_a_dc_editions.htm&type=5). Either one [changes how your org is billed](https://help.salesforce.com/s/articleView?id=data.c360_a_d360_profile_billing_considerations.htm&type=5): batch identity resolution, batch data transforms, batch calculated insights, segments and batch activations stop consuming credits, and count limits cap them instead. Everything else bills credits as before, including the queries a segment runs to count its members and show a preview.
+
+Here is everything that differs between the two models. Where a cell shows two limits, the first is for Profiles and the second for Enterprise Profiles:
+
+Data 360 Work | Flex | Flex + Profiles
+-- | -- | --
+Batch identity resolution | Unification, 75,000 | __Free__, billed as profiles
+Batch data transforms | Prep, 40 | __Free__, up to 25 / 100
+Batch calculated insights | Prep, 40 | __Free__, up to 25 / 100
+Segments (standard, waterfall and real-time) | Segmentation, 50 | __Free__, up to 100 / 500
+Batch activation | Activation, 60 | __Free__, soft cap of 20% of DLO records a month
+Billable profiles | Not billed | Billed per profile, with overage above your entitlement
+Included Flex Credits | None | 1 / 2 per profile a year
+Data Masking, Ad Audiences | Add-ons | Add-ons, listed with Enterprise Profiles
+
+*Flex Credits per million rows at the Base tier of the rate card updated on 3 November 2026. Limits from Help, as of 16 November 2026.*
+
+Read every Free cell with the limit next to it. Segments, calculated insights and batch transforms are [hard limits](https://help.salesforce.com/s/articleView?id=data.c360_a_limits_and_guidelines_d360_profiles.htm&type=5), and once you reach one, you buy more from your Account Executive: segments in blocks of 10, insights and batch transforms in blocks of 2. Deactivated segments don't count. Streaming insights aren't limited at all, as they bill the Streaming Pipeline, and a real-time segment keeps billing the Real-Time Pipeline for the events it processes. The batch activation cap is the only soft limit, and Help doesn't say what happens above it.
+
+Identity resolution rulesets get no number in the Profiles limits table. Help says only that your base Profiles licence decides how many you can create and that you can't buy more. The general :product[Data 360] limit is [5 rulesets per primary DMO per data space](https://help.salesforce.com/s/articleView?id=data.c360_a_limits_and_guidelines.htm&type=5).
+
+All the limits apply to the whole cluster. Segments and calculated insights in Data Cloud One companion orgs count toward the home org's limits, while each sandbox inherits the home org's limits and counts its own usage against them. Both tiers include 10 companion connections, and every org in the cluster must hold the same type of :product[Data 360] licence.
+
+:::note You Should Know
+
+The pricing page lists Data Masking and Ad Audience add-ons on the Enterprise Profiles card, while Help's [Data 360 Editions and Licenses](https://help.salesforce.com/s/articleView?id=data.c360_a_dc_editions.htm&type=5) still lists Data Masking as a separate add-on from your Account Executive. Check your Order Form before you design masking into a solution.
+
+The same Help page lists Sub-Second Real-Time Profile & Entities as an add-on for real-time data graphs, real-time identity resolution, real-time insights and real-time segments. Check your Order Form for it whichever model you choose.
+
+:::
+
+### Data 360 Billable Profiles
+
+__The profile count includes more than your customers.__
+
+With identity resolution active, your [billable profiles](https://help.salesforce.com/s/articleView?id=data.c360_a_d360_profiles_billable_profile_calcs.htm&type=5) are the sum of three numbers:
+
+1. Known unified profiles from all active rulesets.
+2. 4% of anonymous unified profiles from all active rulesets.
+3. Every record in DLOs mapped to Profile-category DMOs that identity resolution doesn't use.
+
+In a data space without an active ruleset, every record mapped to a Profile DMO counts, known or anonymous. Help leaves out DLOs mapped only to Account Contact, the Contact Point DMOs, Device and Party Identification. Every profile above your entitlement bills at the overage rate from your contract.
+
+The third number is the one that grows unnoticed. A second active ruleset adds its own unified profiles. A staging or test source mapped to a Profile DMO counts in full, and so does any object you map to a Profile DMO but leave out of the ruleset. Filters don't lower the count either, as Help counts "the number of records in the source DLO [...] regardless of how many records are included in data space-specific views of the DLO". Only an unmapped DLO stays out.
+
+So decide the categories when you map. You can change a DMO from Profile to Other only while no segment or activation uses it, so fixing a wrong category after go-live means deleting those segments and activations first.
+
+Sandboxes deserve their own paragraph. Help counts each sandbox's profiles at 80% toward the profile limit, and the licence covers the whole cluster, which includes every sandbox of your home org. :product[Data 360] copies [no data into a sandbox](https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud_sandbox_create.htm&type=5), but a Full Copy sandbox brings your whole CRM, and its CRM streams ingest it once they run. So the count follows the customer records your sandboxes hold, not the work they do. A production base of 1 million profiles with two full-data sandboxes for testing and UAT counts as 2.6 million billable profiles, even if those sandboxes run almost nothing. On Flex, the same idle sandboxes cost close to nothing, as a [sandbox bills only the work it does](https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud_sandbox_billing_considerations.htm&type=5), at 80% of the production rate. So keep lower environments on Developer or Partial Copy sandboxes with a small, representative data set, and map Profile streams there only when a test needs them.
+
+Don't look for the count in Digital Wallet yet. Salesforce confirmed to me that it doesn't show profile licence usage today, with a fix expected in an upcoming release. Until then, take the known and anonymous unified profiles from the Identity Resolution Summary of each active ruleset, as Help suggests. That covers only the first two numbers. The third needs a record count of every DLO mapped to a Profile DMO outside your rulesets, and it's the one most likely to surprise you.
+
+### Included Flex Credits
+
+__The add-on comes with Flex Credits for the work it doesn't cover.__
+
+Profiles come with 1 Flex Credit per profile a year and Enterprise Profiles with 2, according to the pricing page. You can buy more with the Flex Credits SKU. So 1 million profiles bring 1 million Flex Credits a year, worth USD 5,000 at list.
+
+For streaming, that goes a long way. At 3,500 credits per million rows, 1 million credits cover about 286 million streamed rows a year, or 24 million a month, as long as nothing else draws on them. A real-time data graph changes that. At 250,000 credits per million, the same credits cover about 4 million events and API calls in the real-time layer for the whole year. Send 5 million web events a month through a real-time data graph, and you burn over a million credits in that month alone, even after the tiers.
+
+They are also ordinary Flex Credits, which Salesforce lets you move between :product[Data 360] and Agentforce, so plan them for both. Your profile count sets the size of that pool, while your event volume and agents decide how fast it goes, so [set up credit alerts on the Flex Credits card](/docs/salesforce/data-360/config/credit-consumption-alerts.mdx#credit-thresholds-for-specific-cards) on the first day of a Profiles contract.
+
+### Data 360 Profiles Break-Even
+
+__Profiles pays off when the batch work it covers would cost more on Flex than the profiles do.__
+
+At list prices, a profile costs USD 0.24 a year and brings one Flex Credit worth USD 0.005. That leaves USD 0.235, the price of 47 Flex Credits. So the add-on pays off once the work it stops metering would burn more than 47 credits per billable profile a year on Flex, about 3.9 a month. For Enterprise Profiles, the bar is 82 credits a year, as USD 0.42 minus two credits buys 82 of them.
+
+What do 3.9 credits a month buy? It depends on the usage type, and on how much of it you consume in a month, as the tiers lower the price per row as your volume grows. These are the rows per billable profile per month at which each usage type alone matches the Profiles price:
+
+Billable Profiles | Segmentation | Batch Activation | Prep | Identity Resolution
+-- | -- | -- | -- | --
+100,000 | 83,000 | 69,000 | 104,000 | 55
+1,000,000 | 157,000 | 131,000 | 196,000 | 105
+10,000,000 | 325,000 | 271,000 | 407,000 | 217
+
+*Rows per billable profile per month at list prices, with the monthly Flex tiers applied. Prep covers batch transforms and batch calculated insights, and identity resolution counts source profiles processed.*
+
+Identity resolution never pays for the add-on on its own. After the first run, a ruleset counts only new or modified source profiles, so you would have to reprocess every customer's records dozens of times a month to reach the bar. Even a full rerun after a ruleset change costs little on Flex: 3 million source profiles cost 225,000 credits, about USD 1,125.
+
+The bar also rises with the size of your base. The profile price stays the same for every profile at list, while Flex gets cheaper per row as your monthly volume grows. That is why a large base favours Flex.
+
+Segmentation is where Profiles can win, as long as the engagement records a segment reads count as processed rows. Help doesn't say so outright, but its advice to [shorten the lookback window](https://help.salesforce.com/s/articleView?id=data.c360_a_billing_considerations_for_segmentation.htm&type=5) to reduce them only makes sense if they do, and the numbers below assume it. If only profiles counted, 100 segments published daily would reach 3,000 rows per profile a month, far below the bar.
+
+With engagement records counted, your rows per profile a month come to roughly segments × publishes a month × rows each segment reads per profile. With 100 segments published daily, each reading 28 rows per profile, a base of 100,000 profiles reaches the bar.
+
+Take the three workloads below. A base of 200,000 profiles with 100 daily segments sits close to the bar, so the lookback window decides it. With 30 engagement records per profile in every publish, Profiles saves about USD 11,000 a year. Cut them to 10, and Flex alone saves about USD 18,000. A large base whose data arrives prepared is the other end of the scale. It needs few transforms and insights, and its segments read mostly profile attributes, so Flex alone costs under 1% of the profile price. Even a 90% discount on profiles leaves Flex about nine times cheaper there.
+
+<details>
+<summary>Three workloads, Flex alone vs Flex + Profiles</summary>
+
+Workload | Small Base, Many Segments | Same, Shorter Lookback | Large Base, Prepared Data
+-- | -- | -- | --
+Billable profiles | 200,000 | 200,000 | 10,000,000
+Source profiles changed a month | 30,000 | 30,000 | 900,000
+Segments | 100, published daily | 100, published daily | 30, published weekly
+Rows each publish reads per profile | 31 | 11 | 4
+Records activated per publish | 20,000 | 20,000 | 1,000,000
+Batch calculated insights | 25, daily over 5M rows | 25, daily over 5M rows | 5, weekly over 10M rows
+Batch transforms | 25, daily over 200,000 changed rows | 25, daily over 200,000 changed rows | 5, daily over 300,000 changed rows
+Flex Credits a month | 966,000 | 486,000 | 343,000
+__Flex alone a year__ | __USD 58,000__ | __USD 29,000__ | __USD 21,000__
+__Profiles a year, minus included credits__ | __USD 47,000__ | __USD 47,000__ | __USD 2,350,000__
+
+*At list prices, with the monthly Flex tiers applied. Streaming, queries and the rest of the work cost the same under both models, so they are left out.*
+
+</details>
+
+Your workload will differ, so run your own numbers. Salesforce's [pricing calculator](https://www.salesforce.com/data/pricing/calculator/) prices use cases as Flex only or as Profiles and Flex. For a line-by-line estimate, check the excellent Data 360 Credit Calculator created by [Szymon Lewandowski](https://szymonlewandowski.pl). It is in beta, uses the rates as of September 2026, and compares Flex Credits with Profiles + Flex for every activity.
+
+<ButtonRow
+ linkLeft='https://www.salesforce.com/data/pricing/calculator/'
+ textLeft="Salesforce Pricing Calculator"
+ newTabLeft='true'
+ linkRight='https://szymonlewandowski.pl/tools/data-cloud-credit-calculator'
+ textRight="Szymon's Credit Calculator"
+ newTabRight='true'
+/>
+
+### Flex Credits Ideal Client
+
+Flex alone fits when your base is large or your data arrives prepared. A large base makes the price per profile add up fast, while the Flex tiers lower the price per row as your volume grows. And when your sources already deliver clean, joined data, you need few transforms and insights, and your segments read mostly profile attributes, so the work Profiles would cover stays small.
+
+It also fits every org whose :product[Data 360] work is mostly something the add-on doesn't cover: streaming and real-time, queries, zero-copy, or unstructured data for Agentforce. Profiles would bill you per profile and change none of that. The same goes for a delivery team that keeps several sandboxes loaded with production-size data, as each of them adds 80% of its profiles to a Profiles bill.
+
+### Flex + Profiles Ideal Client
+
+Profiles fits a smaller base with a lot of actions against it. Salesforce's pricing FAQ names the same profile-based use cases, "personalized marketing journeys or proactive service efforts using a unified profile". Think of a marketing team that publishes dozens of engagement-based segments every day and refreshes its calculated insights as often.
+
+It also buys predictability. The price is fixed per profile, so your budget follows your customer count, which finance can forecast. Rows processed are much harder to predict, especially in the first year.
+
+Go for Enterprise Profiles when the standard limits get tight. For 75% more per profile, you get 5 times the segments, 4 times the calculated insights and batch transforms, twice the included Flex Credits, and the Data Masking and Ad Audience add-ons listed on the pricing page. If you need only a few more segments or insights, blocks of them on the standard tier may cost less, so ask your Account Executive for both quotes.
+
+---
+
+## Data 360 Licensing for Marketing Cloud Next
+
+__:product[Marketing Cloud Next] keeps almost no data of its own, so its data graphs, flow lookups and send-time personalisation all bill :product[Data 360]. Most of that lands on lines the Profiles add-on doesn't cover.__
+
+Marketing Cloud Next Work | Billed As | Data Services | Flex | Flex + Profiles
+-- | -- | -- | -- | --
+Data graph refresh | Transforms | 400 | 40 | Most likely free
+Data graph read at send time or in a decision split | Queries | 2 | 3 | 3
+Get Records on a DMO in a flow | Queries | 2 | 3 | 3
+Wait Until Event | Streaming data actions | 800 | 3,500 | 3,500
+Real-time data graph events and lookups | Real-time layer | 70,000 | 250,000 | 250,000
+Segments | Segmentation | 20 | 50 | __Free__, up to 100 / 500
+Tableau Next dashboards | Queries | 2 | Free for users with an unmetered Tableau Next licence | Same as Flex
+
+*Credits per million rows, events or calls, with Flex at the Base tier.*
+
+A data graph [creates a transform in the background](https://help.salesforce.com/s/articleView?id=data.c360_a_billing_considerations_for_data_graphs.htm&type=5), and a standard graph needs a full refresh every day. That makes the refresh 10 times cheaper on Flex: a graph over 8 million rows costs 3,200 credits a day on Data Services and 320 on Flex, an example Szymon worked through in the same newsletter. Profiles stops metering Data 360 Prep, where the refresh bills, so the refresh is most likely free with the add-on. Help doesn't say whether the graph's transform counts toward your batch transform limit, so check it in your org before you count on it.
+
+The read side is where Profiles changes nothing. Send-time personalisation reads the data graph, flows read DMOs with Get Records, and a real-time data graph bills every event it includes. All of that bills Flex Credits on both models, and a single flow lookup on a large object can cost over ten credits a run. So on a Profiles contract, size the Flex Credits against your send and flow volume, not your profile count.
+
+Reporting gives Flex one more win. Tableau Next queries started by a user with an unmetered licence don't consume credits, but [only with Flex Credits](https://help.salesforce.com/s/articleView?id=analytics.tua_about_unmetered_usage.htm&type=5). On Data Services, the same dashboard views bill Data Queries. The sends themselves bill message credits on their own cards, whichever :product[Data 360] model you have.
+
+---
+
+## Sum Up
+
+1. Every :product[Data 360] org has a Data Cloud licence, credits on the Data Services or Flex Credits card, and optionally the Profiles or Enterprise Profiles add-on [🔗](#data-360-licensing-models)
+2. Credits bought before 24 February 2026 are Data Services. New contracts can have either, and in practice the Profiles add-on comes with Flex Credits [🔗](#who-gets-which-credit-card)
+3. Price a move from Data Services to Flex from your usage-type split, as segmentation, batch activation and real-time get dearer while batch ingestion, transforms, data graphs and identity resolution get cheaper [🔗](#flex-vs-data-services-rate-cards)
+4. Profiles stops the meters for batch identity resolution, transforms, insights, segments and activations, while streaming, real-time, queries, sharing and unstructured data keep billing Flex Credits [🔗](#what-the-profiles-add-on-changes)
+5. Every record mapped to a Profile DMO outside your ruleset counts as a billable profile, and Digital Wallet doesn't show the count yet, so decide categories when you map and count those records yourself [🔗](#data-360-billable-profiles)
+6. The included 1 or 2 Flex Credits per profile a year cover a lot of streaming, but a real-time data graph can use them up in a month [🔗](#included-flex-credits)
+7. At list prices, Profiles pays off above 47 Flex Credits per billable profile a year of batch work, which identity resolution alone never reaches [🔗](#data-360-profiles-break-even)
+8. Choose Flex + Profiles for a smaller base with many actions against it, and Flex alone for a large base, data prepared in its sources or several full-data sandboxes [🔗](#flex-credits-ideal-client)
+9. In Marketing Cloud Next, data graph refreshes cost 10 times less on Flex, while send-time reads, flow lookups and real-time graphs bill Flex Credits on every model [🔗](#data-360-licensing-for-marketing-cloud-next)
