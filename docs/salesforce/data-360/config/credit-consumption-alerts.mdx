@@ -91,6 +91,8 @@ All thresholds share the same recipients, and 100% is where that matters most. A
 
 Want the alerts in a team inbox? A mail rule can route them, as every email comes from `Salesforce Consumption Alerts <noreply@salesforce.com>` and its subject starts with `Consumption Alert:`, as in `Consumption Alert: 100% of Data Services Credits Consumed`. Its body lists the org ID and, for each card, the total, consumed and remaining credits with the contract start and end dates. The other ways to deliver an alert are in [Alert Notification Channels](#alert-notification-channels).
 
+The email lists totals per card and says nothing about what consumed them. To find the cause, click **View Consumption Insights by Tags** on the Digital Wallet home page, where reports built on [standard consumption tags](https://help.salesforce.com/s/articleView?id=xcloud.wallet_usage_tags_overview.htm&type=5) show the agents, features and sources behind your consumption. To split it your own way, by department, cost centre or project, add [custom consumption tags](https://help.salesforce.com/s/articleView?id=xcloud.wallet_custom_tags_intro.htm&type=5) when the org gets its first card, as they mark only the usage that comes after you tag a resource.
+
 ### Default Consumption Alert Gaps
 
 The first alert arrives when half of your credits are gone. On a 12-month contract, that is good news in month 10 and a disaster in month 2, yet the flow sends the same email in both cases. It knows how much you consumed, never when you consumed it.
