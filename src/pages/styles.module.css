@@ -835,6 +835,18 @@ html[data-theme='dark'] .appCard {
   font-size: 1.6rem;
   font-weight: 700;
   line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* The app icon beside a card's title, styled like the Apps page header's. */
+.appCardIcon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 22.37%;
+  background-color: #ffffff;
 }
 
 .appCardBody .cardTags {

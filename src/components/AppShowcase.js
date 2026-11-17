@@ -110,8 +110,10 @@ export function AppRow({ title, url, description, tags, platforms, cta, imageUrl
  * the first screen. At the bottom, they line up from card to card.
  * AppCarousel lays the cards out.
  */
-export function AppCard({ title, url, description, tags, platforms, imageUrl, cardImageUrl, appStoreUrl }) {
+export function AppCard({ title, url, description, tags, platforms, imageUrl, cardImageUrl, appStoreUrl, iconUrl }) {
     const storeBadge = useBaseUrl('img/apple/appstore.svg');
+    // The app's icon beside its name, styled like the Apps page header's.
+    const icon = useBaseUrl(iconUrl ?? '');
     return (
         <div className={styles.appCard}>
             <div className={styles.appCardImage}>
@@ -123,6 +125,7 @@ export function AppCard({ title, url, description, tags, platforms, imageUrl, ca
             </div>
             <div className={styles.appCardBody}>
                 <Link className={clsx(styles.cardTitle, styles.appCardTitle)} to={url}>
+                    {iconUrl && <img className={styles.appCardIcon} src={icon} alt="" width={40} height={40} />}
                     {title}
                 </Link>
                 <p className={styles.cardTags}>
