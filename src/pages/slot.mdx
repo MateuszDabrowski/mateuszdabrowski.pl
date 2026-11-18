@@ -542,7 +542,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 <p>Slot requests the camera and microphone only for video calls, and grants them only to Google Meet and Microsoft Teams. Any other page in any account is refused, by Slot, before macOS is asked. You are asked once per account and the answer is remembered; deny it and everything else keeps working.</p>
 
-<p>Before it quits with a meeting window open, Slot checks whether a call is still running, so that quitting never ends one by surprise. It asks the system's web engine whether that window is playing sound or video, and looks at the last 30 seconds of its own entries in your Mac's log for call activity. It reads nothing from the page, and nothing from that check is kept or sent anywhere.</p>
+<p>Before it quits with a Google Meet window open after its meeting, Slot asks the system's web engine whether that window is playing sound or video, so that quitting never ends a call by surprise. It reads nothing from the page, and nothing from that check is kept or sent anywhere.</p>
 
     <div style={{marginTop: '2rem'}}>
 
