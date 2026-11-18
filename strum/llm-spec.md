@@ -66,7 +66,7 @@ strummed once on high-G ukulele.
 
 ```json
 {
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "title": "Quick Demo",
   "artist": "LLM",
   "bpm": 90,
@@ -112,7 +112,7 @@ strummed once on high-G ukulele.
 That's the whole file. Key points:
 
 * JSON, not JSON5: no comments, no trailing commas, all keys quoted.
-* `schemaVersion` is the **writer version** — always set it to `6`, the
+* `schemaVersion` is the **writer version** — always set it to `7`, the
   current format. See § 3 for the companion
   `minimumReaderVersion` and how the importer gates on it (it stays `1`
   for the long-standing built-in tunings; a custom-tuning song raises it to
@@ -159,7 +159,7 @@ That's the whole file. Key points:
 
 ```text
 StrumSongDTO {
-  schemaVersion              Int      required, writer version — set to 6 (the current format)
+  schemaVersion              Int      required, writer version — set to 7 (the current format)
   minimumReaderVersion       Int?     optional, oldest reader that can open the file; omit (defaults to 1) unless the song uses a custom tuning (set 3) or the ebStandard/dropC built-in tuning (set 5) — see § 7.3
   title                      String   required
   artist                     String   required
@@ -186,6 +186,10 @@ StrumSongDTO {
   customChords               Array?   optional, see § 7
   customStrumPatterns        Array?   optional, see § 7
   customTunings              Array?   optional, see § 7.3 — user-defined tunings the song / its custom chords reference by a "ct-…" id
+  swing                      String?  optional, Strum 1.12.0+: "eighth" | "sixteenth" for a swung (triplet-feel) song;
+                                      omit for straight. See § 7.4
+  rowVisibility              String?  optional, Strum 1.12.0+: rows this song shows or hides, e.g. "strum=hide,lyrics=show".
+                                      See § 7.4
 }
 ```
 
@@ -271,6 +275,9 @@ SectionDTO {
   timeSignatureDenominator   Int?     optional, see below
   usesEighths                Bool?    optional, overrides song setting for this section only; null → inherit
   measures                   Array    required, ordered list of MeasureDTO
+  swing                      String?  optional, Strum 1.12.0+: overrides the song's swing; "" = straight in a swung song;
+                                      omit to inherit. See § 7.4
+  bpm                        Int?     optional, Strum 1.12.0+: this section's tempo, 40..300; omit to play at the song's bpm
 }
 ```
 
@@ -291,6 +298,8 @@ MeasureDTO {
   lyrics               String?  optional, one line of song text shown below this measure; null = no lyrics
   activeBeatSlotCount  Int?     optional, see § 4.4 (pickup / shortened measures); null = full length
   beats                Array    required, BeatDTO list — length is the measure's slot count (see § 3.2)
+  endingPasses         Int?     optional, Strum 1.12.0+: 1st / 2nd ending — the passes of its repeat this bar plays on,
+                                as a bit set (1 = 1st time only, 2 = 2nd time only); omit to play every pass. See § 7.4
 }
 ```
 
@@ -357,6 +366,9 @@ BeatDTO {
   strum             String   required, StrumDirection enum — see § 5.5
   pinnedChordName   String?  optional, chord id that the beat displays/sustains; null = inherit from earlier beat
   notes             Array    required (can be []), per-string tab notes — see § 4.6
+  isAccented        Bool?    optional, Strum 1.12.0+: accent mark (>) — the beat plays louder; omit for false
+  isStaccato        Bool?    optional, Strum 1.12.0+: staccato dot — the beat's notes stop early; omit for false
+  graceNotes        Object?  optional, Strum 1.12.0+: grace notes before (or on) this beat — see § 7.4
 }
 ```
 
@@ -757,7 +769,7 @@ but shortened"); every other repair below is silent.
 |---|---|---|
 | File size | ≤ 5 MB | Rejected before parsing. |
 | A required field missing, `null` or the wrong type | every field this spec marks required | Import refused. The message names the field and where it is, e.g. `The "dotted" field is missing (section 1, measure 3, beat 2).` Positions count from 1. |
-| `schemaVersion` | writer ver (`6`) | Informational; a value *newer* than the importing app shows a non-blocking "update for full detail" note but still imports. |
+| `schemaVersion` | writer ver (`7`) | Informational; a value *newer* than the importing app shows a non-blocking "update for full detail" note but still imports. |
 | `minimumReaderVersion` | `≤` app's version | If the file demands a **newer** reader than the app supports, import is **refused** with an "Update Strum" alert. Omit it (→ 1) unless the song needs a breaking feature: set **3** when it (or one of its custom chords) references a `"ct-…"` custom tuning (§ 7.3), and set **5** when `tuning` is `"ebStandard"` or `"dropC"` (§ 5.1). Take the higher if both apply. |
 | Number of sections | ≤ 50 | Extras truncated. |
 | Measures per section | ≤ 100 | Extras truncated. |
@@ -776,6 +788,11 @@ but shortened"); every other repair below is silent.
 | Custom chord `openStrings` | string on the chord's tuning | Offending entry dropped. |
 | `TabNote.transition` | NoteTransition enum (§ 5.6) | Unknown → none; dropped if `fret < 0`. |
 | `TabNote.ornament` | NoteOrnament enum (§ 5.6) | Unknown → none; dropped if `fret < 0`. |
+| `graceNotes.notes` | ≤ 4 per beat, string on the song's tuning, fret 0..30, several may share a string | Past the fourth dropped; a dead note (`-1`) or a string the tuning lacks dropped; a fret above 30 clamped; none kept on a beat that keeps no fretted note of its own, such as a rest, a drum hit or a chuck (§ 7.4). |
+| `swing` (root and section) | `"eighth"` or `"sixteenth"`; a section may also write `""` | Any other value ignored: the song plays straight, a section follows the song. |
+| Section `bpm` | 40..300 | Clamped. |
+| `endingPasses` | a bit set of passes 1..16 (1..65535) | A negative value → every pass; bits past the 16th pass dropped. |
+| `rowVisibility` | ≤ 200 bytes of UTF-8; `row=show` / `row=hide` entries for the six rows (§ 7.4) | Cut at a character boundary; an entry with any other row or choice dropped. |
 | `isDrumHit` invariant | drum hit ⇒ no notes, no chord | Notes and chord dropped; logged. |
 | `activeBeatSlotCount` | `> 0` and ≤ beat count | Out of range → set to null (no truncation). |
 | Sum of a measure's `duration` values | = `numerator × 4 / denominator` quarter-beats | Right slot count for the meter: every slot gets the meter's unit on import (lossless). Wrong slot count: kept as written, so an over-long bar plays long, and the editor's first-open repair **hard-deletes trailing beats and their tab notes**. An under-long bar is padded with empty sustain slots. |
@@ -944,7 +961,7 @@ every tab at the wrong pitch — a silent, breaking misread. (A file that
 defines `customTunings` but uses only built-in tunings everywhere can
 stay at the default reader version, but the simplest correct rule is:
 *using a custom tuning ⇒ set `minimumReaderVersion: 3`*.) The writer
-`schemaVersion` is `6` regardless.
+`schemaVersion` is `7` regardless.
 
 The importer **sanitizes** each entry on the way in (clamps the MIDI
 into 24..96, enforces the native string count, caps the name at 40
@@ -959,6 +976,119 @@ to adopt it.
 The built-in chord catalogue does **not** auto-extend to a custom
 tuning. To pin chords in a custom-tuned song, define the shapes as
 custom chords (§ 7.1) with their `tuning` set to the same `"ct-…"` id.
+
+### 7.4 Swing, section tempo, endings, accents, staccato and grace notes (Strum 1.12.0+)
+
+Every key here is optional, and none of them raises
+`minimumReaderVersion`: leave it at its default. Strum 1.11.0 and earlier
+import such a file with an "Imported, with details missing" note and
+ignore these keys. Omit a key rather than writing its default.
+
+**Swing.** Root `swing` is `"eighth"` (swung eighths: the second eighth of
+each quarter beat sounds two thirds of the way through the beat, triplet
+feel) or `"sixteenth"` (the same for sixteenths within each eighth). Write
+the notes straight, as swing music is written: swing only moves when an
+offbeat sounds. A section's `swing` overrides the song's, and `""` makes
+one section straight in a swung song. Any other value is ignored (the song
+plays straight, the section follows the song). A section in a compound
+meter (6/8, 9/8, 12/8) plays straight whatever its swing, since its beat
+has no offbeat at the half: write a shuffle there as the notes themselves.
+Older Strum plays it straight.
+
+**Section tempo.** A section's `bpm` sets its tempo (40..300, clamped on
+import) when it differs from the song's `bpm`, such as a lesson that climbs
+through levels or a slower bridge. The change happens at the section's
+first bar. To change tempo partway through a section, start a new section
+there. There is no gradual rit. or accel.: note it in the song's `notes`.
+Older Strum plays the whole song at the song's `bpm`.
+
+**1st and 2nd endings.** `endingPasses` is a bit set of the passes of its
+repeat a bar plays on: `1` plays on the 1st pass only, `2` on the 2nd only,
+`3` on both, and omitted (or `0`) on every pass. For the usual shape, a
+repeat whose 1st time ends one way and whose 2nd time ends another:
+
+* the repeated bars carry `repeatStart: true` on the first, as usual;
+* the 1st-ending bar is the last bar inside the repeat: `repeatEnd: true`,
+  `repeatCount: 2`, `endingPasses: 1`;
+* the 2nd-ending bar comes right after it: `endingPasses: 2`, no repeat
+  flags.
+
+A repeat played three times or more: name the passes each ending plays
+on. With `repeatCount: 3`, give the first ending `endingPasses: 3` (the 1st
+and 2nd pass) and the ending after the repeat `endingPasses: 4` (the 3rd).
+If you leave a pass unnamed, Strum fills it in: the ending that leads to
+the repeat sign also plays on each earlier pass nothing names, and the
+ending after the repeat plays on the last pass. So `1` and `2` under
+`repeatCount: 3` play first ending, first ending, second ending. Naming
+every pass says the same thing with nothing left to fill in.
+
+Three endings or more: each ending but the last closes with its own
+`repeatEnd: true` (`repeatCount: 2`), and Strum plays them as one repeat.
+The 1st ending takes `endingPasses: 1`, the 2nd `2`, the 3rd `4`.
+
+An ending of several bars marks each of them. A mark counts only inside a
+repeat or in the run of ending bars right after one; anywhere else the bar
+plays every pass. Passes past 16 are dropped on import. Older Strum plays every bar on every pass, so both endings play
+each time: write the repeat out in full instead if the song must play
+correctly in older versions.
+
+**Accents and staccato.** `isAccented: true` plays the beat louder and
+draws `>`; `isStaccato: true` stops the beat's notes at half the slot (at
+most 0.2 beats) and draws a dot. Both apply to every note in the beat, and
+mark only a beat with an attack: one that frets a note, a drum hit, or a
+chuck (`strum: "mute"`). On a rest, an empty beat or a silent mute (dead
+notes with `strum: "none"`) they do nothing. Older Strum plays the beat
+plain.
+
+**Grace notes.** A short note, or a few, that takes no time of its own and
+leads into the beat:
+
+```json
+"graceNotes": {"onBeat": false, "notes": [{"string": 1, "fret": 2, "transition": "hammerOn"}]}
+```
+
+```text
+GraceNotesDTO {
+  onBeat  Bool?            optional, default false — true starts the graces on the beat
+  notes   [GraceNoteDTO]   required, in play order; at most 4 are kept
+}
+GraceNoteDTO {
+  string      Int      required, string index (see § 5.1) — must exist on the song's tuning
+  fret        Int      required, 0..30 — above 30 is clamped, -1 (a dead note) is dropped
+  transition  String?  optional, NoteTransition enum (§ 5.6) into what follows on this string
+}
+```
+
+A `graceNotes` object that is present must carry `notes`, and each note
+its `string` and `fret`: leaving one out refuses the whole file, as for
+every required field (§ 6).
+
+* `notes` play in order, one after another, on a string the tuning has,
+  at fret 0..30. Several may share a string, such as a 3-2-0 pull-off run
+  into an open string. At most four per beat; any past the fourth are
+  dropped. A dead note (`-1`) is dropped.
+* `transition` is optional, from § 5.6 (`hammerOn`, `pullOff`, `slideUp`,
+  `slideDown`, `legato`), and connects the grace to what follows on its
+  string: the next grace there, or else the beat's own note. Put the link
+  on the grace, not on the beat's note. An unknown value is dropped.
+* `onBeat` (optional, default `false`): `false` sounds the graces just
+  before the beat, so the beat's notes keep their time, which is the usual
+  case. `true` starts them on the beat and delays the beat's notes.
+* Do **not** give a grace its own slot, and do not shorten the note before
+  it: a grace in a slot steals time from its neighbours.
+* Graces lead into a note, so they need a beat that frets one: a beat
+  whose own `notes` hold no fret at 0 or above (a rest, a drum hit, a
+  chuck, an empty beat) keeps no graces.
+
+Older Strum drops the graces and plays the beat's own notes.
+
+**Per-song rows.** Root `rowVisibility` shows or hides a row for this song
+only, on top of the reader's own View options: comma-separated
+`row=show` or `row=hide`, with rows `staff`, `chords`, `beatCounter`,
+`tab`, `strum` and `lyrics`. A row not named follows the reader's
+settings. Use it sparingly, for example `"lyrics=show"` for a song whose
+lyrics matter. Unknown rows and values are dropped. Older Strum uses the
+reader's settings only.
 
 ---
 
@@ -1219,14 +1349,14 @@ If a value isn't covered by this spec, look it up directly in:
 normative tables.
 
 The file format carries **two** version numbers. `schemaVersion` is the
-*writer* version (currently `6`) and bumps on every format change.
+*writer* version (currently `7`) and bumps on every format change.
 `minimumReaderVersion` (optional, defaults to `1`) is the *oldest* app
 version that can still read the file correctly, and bumps **only** on a
 breaking change. The importer rejects a file only when its
 `minimumReaderVersion` exceeds what the app supports (telling the user to
 update); a merely-newer `schemaVersion` still imports (older app drops
 the keys it doesn't know) with a soft note. So a file you author at
-`schemaVersion: 6` with a built-in tuning (no `minimumReaderVersion`)
+`schemaVersion: 7` with a built-in tuning (no `minimumReaderVersion`)
 loads on every shipping build; a custom-tuning song raises
 `minimumReaderVersion` to `3` (§ 7.3) and an `ebStandard` / `dropC` song
 raises it to `5` (§ 5.1), because resolving an unknown tuning id on an

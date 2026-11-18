@@ -21447,7 +21447,7 @@ I created the current version of the solution with an easy-to-use, straightforwa
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/data-360/config/credit-consumption-alerts/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-11-16  
+Last updated: 2026-11-17  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data 360 Credit Consumption
@@ -21465,6 +21465,8 @@ Both flows work for more than Data 360. They read every consumption card in Digi
 > **Note: You Should Know**
 >
 > Digital Wallet is a monitoring tool, and your monthly statement stays the [source of truth for billing](https://help.salesforce.com/s/articleView?id=xcloud.wallet_faq_fundamentals.htm\&type=5). Usage refreshes every few hours under normal conditions, while new products and contract changes can take 24-48 hours to show up. Treat every alert below as an early warning, and check the statement for the numbers you report to finance.
+>
+> Running Data 360 on a Profiles or Enterprise Profiles licence? Digital Wallet doesn't show the profile count yet, which is the meter that licence bills on. Until it's added, count your billable profiles by hand: the known unified profiles plus 4% of the anonymous ones from each active ruleset's Identity Resolution Summary, plus every record in DLOs mapped to Profile DMOs outside your rulesets.
 
 ---
 
@@ -21512,6 +21514,8 @@ On every run, Compute Consumption reads every consumption card in the org, and w
 All thresholds share the same recipients, and 100% is where that matters most. After an overage, a pre-purchased card can stay at or above it until the next invoice. That means a new email every day, which everyone learns to ignore. Agree up front who acts on it, and route the alerts to that person with the steps in [Custom Alert Recipients](https://mateuszdabrowski.pl/docs/salesforce/data-360/config/credit-consumption-alerts/#custom-alert-recipients).
 
 Want the alerts in a team inbox? A mail rule can route them, as every email comes from `Salesforce Consumption Alerts <noreply@salesforce.com>` and its subject starts with `Consumption Alert:`, as in `Consumption Alert: 100% of Data Services Credits Consumed`. Its body lists the org ID and, for each card, the total, consumed and remaining credits with the contract start and end dates. The other ways to deliver an alert are in [Alert Notification Channels](https://mateuszdabrowski.pl/docs/salesforce/data-360/config/credit-consumption-alerts/#alert-notification-channels).
+
+The email lists totals per card and says nothing about what consumed them. To find the cause, click **View Consumption Insights by Tags** on the Digital Wallet home page, where reports built on [standard consumption tags](https://help.salesforce.com/s/articleView?id=xcloud.wallet_usage_tags_overview.htm\&type=5) show the agents, features and sources behind your consumption. To split it your own way, by department, cost centre or project, add [custom consumption tags](https://help.salesforce.com/s/articleView?id=xcloud.wallet_custom_tags_intro.htm\&type=5) when the org gets its first card, as they mark only the usage that comes after you tag a resource.
 
 ### Default Consumption Alert Gaps
 
