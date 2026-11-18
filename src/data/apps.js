@@ -130,9 +130,10 @@ export const apps = [
         layout: 'card',
         features: [
             'Tap any beat to set the frets, pick chords from a grid and build your own strum patterns',
+            'Write the details that make a tab sound right: hammer-ons, slides, grace notes, accents, swing and 1st and 2nd endings',
             'Hear the song on a recorded instrument, and set a capo while the tab keeps the frets you hold',
             'A metronome that scrolls the tab as you play and ramps up the tempo, and a Practice Hub that loops the passage you are learning',
-            'A built-in tuner, custom tunings and songs synced through your own iCloud',
+            'A built-in tuner, custom tunings and songs synced through your own iCloud, on iPhone, iPad, Mac and iPhone Duo',
         ],
     },
     {

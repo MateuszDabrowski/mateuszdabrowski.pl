@@ -80,7 +80,7 @@ import styles from './styles.module.css';
           lineHeight: 1.5,
           margin: 0,
         }}
-      >iPhone · iPad · Mac (Apple Silicon)<br/> Requires iOS / iPadOS / macOS 26 or later</p>
+      >iPhone · iPhone Duo · iPad · Mac (Apple Silicon)<br/> Requires iOS / iPadOS / macOS 26 or later</p>
     </div>
   </div>
 </header>
@@ -123,7 +123,7 @@ import styles from './styles.module.css';
 
 <p style={{color: 'var(--ifm-color-primary)', textTransform: 'uppercase', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.03em', margin: '0 0 0.75rem'}}>Write Everything in One Place</p>
 
-        <p>Combine staff, tabs, chords, and lyrics on a single screen. Set up song sections and duplicate measures to build arrangements fast.</p>
+        <p>Combine staff, tabs, chords, and lyrics on a single screen, and choose the rows you see for the device or for one song. Set up song sections and duplicate measures to build arrangements fast.</p>
       </div>
       <div className="col col--4" style={{textAlign: 'center', padding: '1.5rem'}}>
 
@@ -159,7 +159,8 @@ import styles from './styles.module.css';
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Tab-first Editing</span>
 
       </div>
-      <p style={{fontSize: '1.1rem'}}>Tap any beat to open a focused editor, then step through the song beat by beat without closing it. Dial in notes on per-string fret wheels, pick a chord from a filterable grid, or drop a rest, mute, chuck, or drum hit. Long-press any chord to customise its shape or fingering. Arrange longer pieces by configuring custom song sections, adding repeat barlines, and duplicating entire measures or sections. Set a capo and playback moves to the sounding pitch while the tab keeps the frets you actually hold. Supports ukulele (high-G, low-G, baritone), guitar and electric guitar (standard, Drop D, E♭ standard, Drop C), and any custom tuning you build. Need a song in another tuning? Make a copy that keeps its chord shapes, such as low G on ukulele or Drop C on guitar.</p>
+      <p style={{fontSize: '1.1rem'}}>Tap any beat to open a focused editor, then step through the song beat by beat without closing it. Dial in notes on per-string fret wheels, pick a chord from a filterable grid, or drop a rest, mute, chuck, or drum hit. Add the details that make a tab sound right: hammer-ons, pull-offs, slides, vibrato and harmonics, grace notes before a beat or on it, and accents and staccato. Long-press any chord to customise its shape or fingering.</p>
+      <p style={{fontSize: '1.1rem'}}>Arrange longer pieces by configuring custom song sections, adding repeat barlines with 1st and 2nd endings, and duplicating entire measures or sections. A section can have its own time signature, tempo and feel, such as a slower bridge or a swung chorus. Set a capo and playback moves to the sounding pitch while the tab keeps the frets you actually hold. Supports ukulele (high-G, low-G, baritone), guitar and electric guitar (standard, Drop D, E♭ standard, Drop C), and any custom tuning you build. Need a song in another tuning? Make a copy that keeps its chord shapes, such as low G on ukulele or Drop C on guitar.</p>
     </div>
     <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
       <ZoomImage
@@ -270,7 +271,7 @@ import styles from './styles.module.css';
 
 ### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Playback & Metronome</span>
 
-        <p style={{fontSize: '1.1rem'}}>Tempo wheel for live BPM changes and subdivision control. The follow-tab automatically scrolls the song along with the metronome while you play. Playback respects your repeats and section markers. The metronome also lives in the library for a quick standalone click. With a keyboard on iPad or Mac, Space plays and stops.</p>
+        <p style={{fontSize: '1.1rem'}}>Tempo wheel for live BPM changes and subdivision control. The follow-tab automatically scrolls the song along with the metronome while you play. Playback follows your repeats with their 1st and 2nd endings, each section's own tempo, and swing in eighths or sixteenths, for the whole song or a single section. The metronome also lives in the library for a quick standalone click. With a keyboard on iPad or Mac, Space plays and stops.</p>
       </div>
     </div>
   </div>
@@ -318,7 +319,28 @@ import styles from './styles.module.css';
   </div>
 </section>
 
-{/* Feature 9: Privacy posture and export */}
+{/* Feature 9: iPhone Duo */}
+<section className={styles.section}>
+  <div className="container">
+    <div style={{maxWidth: '800px', margin: '0 auto'}}>
+      <div className="text--center">
+
+### <span style={{color: 'var(--ifm-color-primary)', fontSize: '2rem'}}>Made for iPhone Duo</span>
+
+      </div>
+      <p style={{fontSize: '1.1rem'}}>Unfold an iPhone Duo and your library sits beside the song, as it does on iPad. Edit beat shows the fret wheels and the chord grid side by side, and the editor's buttons stand along the edge, in reach of the hand that holds that side. Fold it and Strum carries on where you were.</p>
+    </div>
+    <div style={{textAlign: 'center', marginTop: '2.5rem'}}>
+      <ZoomImage
+        src="/img/apple/strum/Strum-Duo-Library.webp"
+        alt="Library beside the song on an unfolded iPhone Duo"
+        imgStyle={{maxWidth: '100%', borderRadius: '5.9% / 8.4%', boxShadow: 'var(--ifm-global-shadow-md)'}}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Feature 10: Privacy posture and export */}
 <section className={styles.section} style={{ margin: '4rem 0' }}>
   <div className="container app-dark-band" style={{ borderRadius: '16px', padding: '4rem 3rem' }}>
     <div className="row">
@@ -372,6 +394,13 @@ import styles from './styles.module.css';
   <summary>A song I made on iPad isn't showing up on iPhone.</summary>
 
   Both devices need to be signed in to the same iCloud account, with iCloud Drive on. Open Strum's **Settings → About** tab. If it says "iCloud sync is off", iCloud isn't reachable: sign in to iCloud in the system Settings app and reopen Strum. Sync usually catches up within 30 seconds.
+
+</details>
+
+<details className={styles.faqDetails}>
+  <summary>A song is missing its grace notes, swing or endings on one of my devices.</summary>
+
+  That device runs an older version of Strum. Grace notes, accents, staccato, swing, 1st and 2nd endings and section tempos arrived in Strum 1.12, and version 1.11 and earlier show and play a song without them. Update Strum there. **Settings → About** lists your devices that run 1.12 or later under **Your devices**, with the version on each.
 
 </details>
 
@@ -431,7 +460,7 @@ import styles from './styles.module.css';
 
 ## Privacy Policy {#privacy-policy}
 
-<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 3, 2026</p>
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 18, 2026</p>
 
 <p>Strum is built by Mateusz Dąbrowski. This policy explains what the Strum app does with your data. It is short because Strum sends nothing to me.</p>
 
@@ -458,6 +487,7 @@ import styles from './styles.module.css';
   <li>Custom tunings you create.</li>
   <li>Custom strum patterns you create.</li>
   <li>App preferences (default tempo, tuning, time signature, default fingerings, metronome settings, follow-tab options).</li>
+  <li>One row for each device you use Strum on: its type (iPhone, iPad or Mac), its Strum version and the song format that version reads and writes, the day it last opened Strum, and the identifier Apple gives my apps on that device. That identifier is not a hardware identifier, and it changes if you delete all of my apps. **Settings → About** shows these rows under **Your devices**.</li>
 </ul>
 
 <p>This data never reaches a server controlled by me. It is stored in your iCloud private database and is visible only to you, on devices signed in to the same Apple Account. I, the developer, cannot see it.</p>

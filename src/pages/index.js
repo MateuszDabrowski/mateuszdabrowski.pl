@@ -108,7 +108,14 @@ const newsletter = {
    production build does not, so the link would 404 on the live site. */
 const whatsNew = [
     {
-        date: '2026-11-17',
+        date: '2026-11-19',
+        kind: 'App',
+        title: 'Strum 1.12',
+        url: '/strum/',
+        description: 'A clean, focused tablature editor for ukulele and guitar. Write tabs, play them back to check your timing, tune your instrument, and practise with a metronome that auto-scrolls the tab. New: grace notes, swing, accents and staccato, 1st and 2nd endings, a tempo for each section, and a layout made for iPhone Duo.',
+    },
+    {
+        date: '2026-11-19',
         kind: 'App',
         title: 'Shelf 1.1',
         url: '/shelf/',
@@ -148,13 +155,6 @@ const whatsNew = [
         title: 'Slot 1.7',
         url: '/slot/',
         description: 'Slot works with all your Google and Microsoft accounts in one place. New: meeting and document links from any app open as the right account, idle tabs give their memory back, and Diagramforce\'s Google Drive file picker works inside Slot on macOS 27.2.',
-    },
-    {
-        date: '2026-10-25',
-        kind: 'App',
-        title: 'Strum 1.10',
-        url: '/strum/',
-        description: 'A clean, focused tablature editor for ukulele and guitar. Write tabs, play them back to check your timing, tune your instrument, and practise with a metronome that auto-scrolls the tab. New: edit a song beat by beat without closing the editor.',
     },
     {
         date: '2026-10-21',
