@@ -229,7 +229,7 @@ module.exports = {
                             to: 'slot/',
                         },
                         {
-                            label: 'Shelf: Quick Copy Vault',
+                            label: 'Shelf: Copy & Paste Wallet',
                             to: 'shelf/',
                         },
                         {
