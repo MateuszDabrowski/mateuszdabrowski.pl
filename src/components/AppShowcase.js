@@ -112,10 +112,7 @@ export function AppRow({ title, url, description, tags, platforms, cta, imageUrl
  */
 export function AppCard({ title, url, description, tags, platforms, imageUrl, cardImageUrl, appStoreUrl, iconUrl }) {
     const storeBadge = useBaseUrl('img/apple/appstore.svg');
-    // The app's icon left of its name and hashtags, styled like the Apps
-    // page header's. Its top lines up with the name's capitals and its
-    // bottom with the hashtags' baseline, like an App Store row. On a card
-    // too narrow for the hashtags beside the icon, they go underneath.
+    // The app's icon beside its name, styled like the Apps page header's.
     const icon = useBaseUrl(iconUrl ?? '');
     return (
         <div className={styles.appCard}>
@@ -127,23 +124,15 @@ export function AppCard({ title, url, description, tags, platforms, imageUrl, ca
                 </Link>
             </div>
             <div className={styles.appCardBody}>
-                <div className={styles.appCardHeader}>
-                    {iconUrl && (
-                        // The name is the link screen readers and the Tab
-                        // key get. The icon is a second, mouse-only way in.
-                        <Link to={url} tabIndex={-1} aria-hidden="true" className={styles.appCardIconLink}>
-                            <img className={styles.appCardIcon} src={icon} alt="" width={52} height={52} />
-                        </Link>
-                    )}
-                    <Link className={clsx(styles.cardTitle, styles.appCardTitle)} to={url}>
-                        {title}
-                    </Link>
-                    <p className={styles.cardTags}>
-                        {tags.map((tag, idx) => (
-                            <span key={idx}>#{tag}{idx < tags.length - 1 ? ' ' : ''}</span>
-                        ))}
-                    </p>
-                </div>
+                <Link className={clsx(styles.cardTitle, styles.appCardTitle)} to={url}>
+                    {iconUrl && <img className={styles.appCardIcon} src={icon} alt="" width={40} height={40} />}
+                    {title}
+                </Link>
+                <p className={styles.cardTags}>
+                    {tags.map((tag, idx) => (
+                        <span key={idx}>#{tag}{idx < tags.length - 1 ? ' ' : ''}</span>
+                    ))}
+                </p>
                 <p>{description}</p>
                 <span className={clsx(styles.platformChipsInline, styles.appCardPlatforms)}>
                     {platforms.map((platform, idx) => (
