@@ -829,28 +829,85 @@ html[data-theme='dark'] .appCard {
   display: flex;
   flex-direction: column;
   padding: 1.25rem 1.5rem 1.5rem;
+  container-type: inline-size;
+}
+
+/* A card's header: the icon spans two rows, the name sits at the top of the
+   first and the hashtags at the bottom of the second. text-box trims each
+   line to its capitals and baseline, so the name's top meets the icon's top
+   and the hashtags' baseline meets its bottom. Browsers without text-box
+   keep a line-height of 1, a few pixels off. */
+.appCardHeader {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.appCardHeader:not(:has(.appCardIconLink)) {
+  grid-template-columns: 1fr;
+}
+
+.appCardIconLink {
+  grid-row: 1 / span 2;
+  line-height: 0;
+}
+
+/* Styled like the Apps page header's icon. */
+.appCardIcon {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 22.37%;
+  background-color: #ffffff;
 }
 
 .appCardTitle {
   font-size: 1.6rem;
   font-weight: 700;
-  line-height: 1.2;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
 }
 
-/* The app icon beside a card's title, styled like the Apps page header's. */
-.appCardIcon {
-  flex-shrink: 0;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 22.37%;
-  background-color: #ffffff;
+.appCardHeader .appCardTitle,
+.appCardHeader .cardTags {
+  grid-column: -2 / -1;
+  min-width: 0;
+  margin: 0;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
 }
 
-.appCardBody .cardTags {
-  margin: 0.25rem 0 0.75rem;
+.appCardHeader .appCardTitle {
+  align-self: start;
+}
+
+.appCardHeader .cardTags {
+  align-self: end;
+}
+
+/* The hashtags beside the icon need one line: three short tags, 163 px at
+   most (Slot's), so 14.5rem of card. Narrower than that, a wrapped line
+   would crowd the name, so the icon sits beside the name only and the
+   hashtags run underneath across the card. Cards measured 233 px on a
+   tablet, 263 px at 1280 px and 319 px at 1440 px (2026-11-18). */
+@container (width < 14.5rem) {
+  .appCardIconLink {
+    grid-row: 1;
+  }
+
+  .appCardIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .appCardHeader .appCardTitle {
+    align-self: center;
+  }
+
+  .appCardHeader .cardTags {
+    grid-column: 1 / -1;
+    margin-top: 0.6rem;
+    line-height: 1.4;
+    text-box: normal;
+  }
 }
 
 /* The App Store apps as a row that scrolls sideways (AppCarousel): three

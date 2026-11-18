@@ -81,7 +81,7 @@ export const apps = [
         imageUrl: 'img/apple/slot/Slot-Mac-Card.webp',
         cardImageUrl: 'img/apple/slot/Slot-HomeCard.webp',
         description: 'If you work across several Google and Microsoft accounts, Slot adds the tools that work needs on top: one agenda for every account\'s day, notes that follow you from account to account, and links that open in the right account.',
-        tags: ['Gmail', 'Outlook', 'Meet', 'Teams'],
+        tags: ['Gmail', 'Outlook', 'Teams'],
         platforms: ['macOS'],
         layout: 'card',
         features: [
@@ -102,7 +102,7 @@ export const apps = [
         imageUrl: 'img/apple/shelf/Shelf-Mac-Main.webp',
         cardImageUrl: 'img/apple/shelf/Shelf-HomeCard.webp',
         description: 'Door codes, IBANs and the command you paste every Monday usually sit scattered across old chats, notes and emails. Shelf keeps them in one place you can search in a second.',
-        tags: ['Snippets', 'Loyalty Cards', 'QR', 'Clipboard'],
+        tags: ['Snippets', 'Cards', 'QR'],
         platforms: ['macOS', 'iPadOS', 'iOS', 'watchOS'],
         layout: 'card',
         features: [
@@ -147,7 +147,7 @@ export const apps = [
         imageUrl: 'img/apple/soar/Soar-Card.webp',
         cardImageUrl: 'img/apple/soar/Soar-HomeCard.webp',
         description: 'Training is easier to keep up when you never have to plan it. Soar plans every workout for you: pick your exercises and do the sets it shows. Every two weeks a workout becomes a one-set test, and your result plans the next two weeks.',
-        tags: ['Bodyweight', 'Workouts', 'Fitness'],
+        tags: ['Bodyweight', 'Workouts'],
         platforms: ['iOS', 'watchOS'],
         layout: 'card',
         features: [
