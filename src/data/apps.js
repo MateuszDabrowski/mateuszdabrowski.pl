@@ -94,7 +94,7 @@ export const apps = [
     {
         title: 'Shelf',
         iconUrl: 'img/apple/shelf/Shelf_light.webp',
-        label: 'Quick copy vault',
+        label: 'Copy & paste wallet',
         pitch: 'The codes, passes, addresses and snippets you keep retyping or showing at the door, encrypted on your device and one tap or one shortcut away.',
         category: 'Productivity',
         url: '/shelf/',
@@ -102,7 +102,7 @@ export const apps = [
         imageUrl: 'img/apple/shelf/Shelf-Mac-Main.webp',
         cardImageUrl: 'img/apple/shelf/Shelf-HomeCard.webp',
         description: 'Door codes, IBANs and the command you paste every Monday usually sit scattered across old chats, notes and emails. Shelf keeps them in one place you can search in a second.',
-        tags: ['Your', 'Stuff', 'Vault', 'Clipboard'],
+        tags: ['Snippets', 'Loyalty Cards', 'QR', 'Clipboard'],
         platforms: ['macOS', 'iPadOS', 'iOS', 'watchOS'],
         layout: 'card',
         features: [
