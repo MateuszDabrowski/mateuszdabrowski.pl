@@ -423,7 +423,7 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
 
 ## Privacy Policy {#privacy-policy}
 
-<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 9, 2026</p>
+<p style={{fontStyle: 'italic', color: 'var(--ifm-color-emphasis-600)'}}>Last updated: November 18, 2026</p>
 
 <p>Slot is built by Mateusz Dąbrowski. This policy explains what the Slot app does with your data. The short version: Slot sends nothing to me, and it keeps every account apart from every other one. The longer version matters, because Slot is a container for accounts you already have with Google and Microsoft, and a lot of what happens inside it is between you and them.</p>
 
@@ -541,6 +541,8 @@ export const ZoomImage = (props) => <SharedZoomImage version={ASSETS} {...props}
     </div>
 
 <p>Slot requests the camera and microphone only for video calls, and grants them only to Google Meet and Microsoft Teams. Any other page in any account is refused, by Slot, before macOS is asked. You are asked once per account and the answer is remembered; deny it and everything else keeps working.</p>
+
+<p>Before it quits with a meeting window open, Slot checks whether a call is still running, so that quitting never ends one by surprise. It asks the system's web engine whether that window is playing sound or video, and looks at the last 30 seconds of its own entries in your Mac's log for call activity. It reads nothing from the page, and nothing from that check is kept or sent anywhere.</p>
 
     <div style={{marginTop: '2rem'}}>
 
