@@ -14292,7 +14292,7 @@ Replace `[SMS Send Log]` with the name of your Data Extension and add your custo
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-10-15  
+Last updated: 2026-11-20  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Data Views Basics
@@ -14311,11 +14311,11 @@ Below you can find the MobilePush Data Views. The SMS channel ones are in the [M
 
 ## Devices and Contacts
 
-MobilePush data is assigned to a device, not to a Contact. Every app installation registers its own device with a unique Device ID. It means one Contact can have several of them - a phone, a tablet, or the same phone after reinstalling the app or a factory reset. It also works the other way around. A device moves to another Contact whenever the app sets a different Contact Key, for example after a family member logs in on the same phone. And old devices stay for good, as Salesforce doesn't let you delete them and doesn't clean up inactive ones on its own.
+MobilePush data is assigned to a device, not to a Contact. Every app installation registers its own device with a unique Device ID. It means one Contact can have several of them - a phone, a tablet, or the same phone after reinstalling the app or a factory reset. It also works the other way around. A device moves to another Contact if the app sets a different Contact Key, for example after a family member logs in on the same phone. And old devices stay for good. Salesforce doesn't let you delete them and doesn't clean up inactive ones on its own.
 
-Until the app sets a Contact Key, the SDK registers the device under a GUID-formatted one. Once the app sends the real key, the device moves to that Contact, and the GUID one stays behind without any channel address. Setting a key never renames a Contact either. It links the device to an existing Contact or creates a new one, so an app that sends ten different keys from one device creates ten Contacts. Salesforce covers all of it in [its MobilePush key behaviors article](https://help.salesforce.com/s/articleView?id=000388835\&type=1), and my [Contact Deletion](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contactless-contacts) article shows how to clean up the contactless leftovers. Just never delete a Contact that still has a MobilePush device - it blocks that device from push until the user reinstalls the app.
+Until the app sets a Contact Key, the SDK registers the device under a GUID-formatted one. Once the app sends the real key, the device moves to that Contact, and the GUID one stays behind without any channel address. Setting a key never renames a Contact either. It links the device to an existing Contact or creates a new one. An app that sends ten different keys from one device creates ten Contacts. Salesforce covers all of it in [its MobilePush key behaviors article](https://help.salesforce.com/s/articleView?id=000388835\&type=1), and my [Contact Deletion](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/contact-deletion/#contactless-contacts) article shows how to clean up the contactless leftovers. Just never delete a Contact that still has a MobilePush device - it blocks that device from push until the user reinstalls the app.
 
-Keep it in mind when you count your push audience. Rows in [`_PushAddress`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#_pushaddress) are devices, so to get people, count distinct Contacts with at least one opted-in and active device:
+Keep it in mind when you count your push audience. Rows in [`_PushAddress`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#_pushaddress) are devices. To get people, count distinct Contacts with at least one opted-in and active device:
 
 ```sql title="Push-reachable Contacts and devices per app"
 SELECT
@@ -14329,21 +14329,21 @@ WHERE
 GROUP BY pushAddress._APID
 ```
 
-The same device logic is also why [your send counts](https://help.salesforce.com/s/articleView?id=005336059\&type=1) rarely match the number of Contacts in your audience. MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) sends a push notification to every opted-in device of each Contact for the target app. Inbox and In-App messages are different, as the app downloads them by itself, so they reach opted-out devices too. [Salesforce's overview of message types](https://help.salesforce.com/s/articleView?id=000392250\&type=1) adds one more difference - Inbox messages belong to the device, while In-App ones follow the Contact and show only once per Contact.
+The same device logic is also why [your send counts](https://help.salesforce.com/s/articleView?id=005336059\&type=1) rarely match the number of Contacts in your audience. MCE (Marketing Cloud Engagement, formerly Salesforce Marketing Cloud) sends a push notification to every opted-in device of each Contact for the target app. Inbox and In-App messages are different. The app downloads them by itself, so they reach opted-out devices too. [Salesforce's overview of message types](https://help.salesforce.com/s/articleView?id=000392250\&type=1) adds one more difference - Inbox messages belong to the device, but In-App ones follow the Contact and show only once per Contact.
 
 ## MobilePush Data Views
 
-MobilePush is the odd one out, as Salesforce does not document a single Data View for it. The official list stops at Email, Journeys, Automations, MobileConnect SMS and GroupConnect LINE. Two undocumented Data Views still hold the push contact data, though: `_PushAddress` and `_PushTag`. Just like [`_MobileAddress`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_mobileaddress), MCE fills and uses them under the hood, so you can query them, but there is no guarantee about their fields or how long they will be around. Salesforce says so openly - [its FAQ on MobilePush data](https://help.salesforce.com/s/articleView?id=005232874\&type=1) calls `_PushAddress` unsupported and sends you to community resources instead. Yet it is the only way to get MobilePush Demographics into an automation. The supported alternative, a MobilePush Filtered List, can only be exported by hand, and without the push tokens.
+MobilePush is the odd one out. Salesforce does not document a single Data View for it - the official list stops at Email, Journeys, Automations, MobileConnect SMS and GroupConnect LINE. Two undocumented Data Views still hold the push contact data: `_PushAddress` and `_PushTag`. Just like [`_MobileAddress`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_mobileaddress), MCE fills and uses them under the hood. You can query them, but there is no guarantee about their fields or how long they will be around. Salesforce says it openly - [its FAQ on MobilePush data](https://help.salesforce.com/s/articleView?id=005232874\&type=1) calls `_PushAddress` unsupported and sends you to community resources instead. Yet it is the only way to get MobilePush Demographics into an automation. The supported alternative, a MobilePush Filtered List, can only be exported by hand, and without the push tokens.
 
-There is no Data View for push sends, opens or deliveries, so for engagement data jump to [Push Send and Engagement Data](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#push-send-and-engagement-data) below.
+There is no Data View for push sends, opens or deliveries at all. For engagement data, jump to [Push Send and Engagement Data](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#push-send-and-engagement-data) below.
 
 ### \_PushAddress
 
 `_PushAddress` Data View stores one row per registered device. It is also the backend for the MobilePush Demographics attribute set that you can see in the MobilePush Data attribute group of Contact Builder's Data Designer.
 
-Unlike the tracking Data Views, it shows only the current state of each device. When a user opts out and back in, you will find the dates of the latest opt-in and opt-out, but not the full history. If you need it, copy `_PushAddress` to your own Data Extension with a scheduled Automation. Salesforce describes the same logic in [a knowledge article on MobilePush statuses](https://help.salesforce.com/s/articleView?id=005314329\&type=1) - whichever of the two dates is newer tells you the current status.
+Unlike the tracking Data Views, it shows only the current state of each device. If a user opts out and back in, you will find the dates of the latest opt-in and opt-out, but not the full history. If you need it, copy `_PushAddress` to your own Data Extension with a scheduled Automation. Salesforce describes the same logic in [a knowledge article on MobilePush statuses](https://help.salesforce.com/s/articleView?id=005314329\&type=1) - whichever of the two dates is newer tells you the current status.
 
-Salesforce does not document its fields, so the list below comes from the community diagrams linked in [Data Views Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#data-views-basics), [an excellent Salesforce Stack Exchange answer by Adam Spriggs](https://salesforce.stackexchange.com/questions/174179/attributes-in-pushaddress-and-pushtag-data-views), and my checks against a live account with the query below.
+Salesforce does not document its fields. The list below comes from the community diagrams linked in [Data Views Basics](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#data-views-basics), [an excellent Salesforce Stack Exchange answer by Adam Spriggs](https://salesforce.stackexchange.com/questions/174179/attributes-in-pushaddress-and-pushtag-data-views), and my checks against a live account with the query below.
 
 **Fields**
 
@@ -14445,7 +14445,7 @@ The values come from [a Salesforce Stack Exchange answer](https://salesforce.sta
 | 17    | Missing or Invalid Device Token |
 | 18    | GlobalStop                      |
 
-The values come from [a Salesforce Stack Exchange answer](https://salesforce.stackexchange.com/questions/431007/values-for-optoutmethodid-in-pushaddress-data-view-in-sfmc). The opt-outs in the account I checked were either User Disabled Push (`16`) or Missing or Invalid Device Token (`17`). ServiceFeedback (`13`) is the third one you will meet, as Salesforce uses it for uninstalled apps and long inactivity.
+The values come from [a Salesforce Stack Exchange answer](https://salesforce.stackexchange.com/questions/431007/values-for-optoutmethodid-in-pushaddress-data-view-in-sfmc). The opt-outs in the account I checked were either User Disabled Push (`16`) or Missing or Invalid Device Token (`17`). ServiceFeedback (`13`) is the third one you will meet. Salesforce uses it for uninstalled apps and long inactivity.
 
 `_Status` - 2 values
 
@@ -14454,11 +14454,11 @@ The values come from [a Salesforce Stack Exchange answer](https://salesforce.sta
 | 1     | Active (default) |
 | 2     | Inactive         |
 
-`_Status` is the Status you see in the MobilePush Demographics of a Contact. According to [Salesforce](https://help.salesforce.com/s/articleView?id=005314329\&type=1), Inactive devices are excluded from all sends regardless of their opt-in status. A device usually becomes Inactive only when an administrator sets it with [an import](https://help.salesforce.com/s/articleView?id=000387254\&type=1), as it is the only status an import can change. The numbers are the ones I saw in a live account, where the only Inactive device was also the only one last modified by a user.
+`_Status` is the Status you see in the MobilePush Demographics of a Contact. According to [Salesforce](https://help.salesforce.com/s/articleView?id=005314329\&type=1), Inactive devices are excluded from all sends regardless of their opt-in status. A device usually becomes Inactive only when an administrator sets it with [an import](https://help.salesforce.com/s/articleView?id=000387254\&type=1) - it is the only status an import can change. The numbers are the ones I saw in a live account, where the only Inactive device was also the only one last modified by a user.
 
 `_Source` - undocumented
 
-`_Source` was always `13` in the account I checked, which is the value of DeviceRegistration in `_OptInMethodID`. Salesforce does not document it, so I would not build any logic on it.
+`_Source` was always `13` in the account I checked - the value of DeviceRegistration in `_OptInMethodID`. Salesforce does not document it. I would not build any logic on it.
 
 ---
 
@@ -14507,19 +14507,19 @@ FROM _PushAddress AS pushAddress
 When working with `_PushAddress` Data View:
 
 1. There is no guarantee of how long it will work and how long the data will be correct. Be sure you are checking it periodically or - even better - have validation in your code.
-2. `_ContactID` is stored as Text here, while [`_MobileAddress`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_mobileaddress) keeps it as a Number. Cast one side when joining the two, for example with `CAST(pushAddress._ContactID AS BIGINT)`.
-3. If your Business Unit has more than one app, always filter by `_APID`, as the same Contact can be opted in for one app and opted out for another. Together with `_OptInStatusID`, it is the SQL version of the Opt-In Status and Application criteria [Salesforce recommends for MobilePush Filtered Lists](https://help.salesforce.com/s/articleView?id=000384157\&type=1).
-4. Don't treat every opt-out as the user's decision. MCE opts the device out on its own once it goes inactive - no app opens, no delivery receipts and no sync calls. The same happens after three failed sends in a row or when Apple or Google reject the push token. Once the app updates or registers again, the device is opted back in. Such opt-outs usually come with `_OptOutMethodID` `13` (ServiceFeedback), which Salesforce ties to an uninstalled app or a long period of inactivity. Don't expect it right after an uninstall, though. The timing depends on Apple and Google, and MCE never learns about the uninstall itself.
-5. Don't be surprised to see an opt-out date on opted-in devices. A device that registers before the user allows notifications starts as opted out with `_OptOutMethodID` `16` (User Disabled Push). A few minutes later it switches to opted in, so the row keeps both dates. If there is no opt-in date at all, the user never allowed notifications.
+2. `_ContactID` is stored as Text here, but [`_MobileAddress`](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/mobile-connect-data-views/#_mobileaddress) keeps it as a Number. Cast one side when joining the two, for example with `CAST(pushAddress._ContactID AS BIGINT)`.
+3. If your Business Unit has more than one app, always filter by `_APID`. The same Contact can be opted in for one app and opted out for another. Together with `_OptInStatusID`, it is the SQL version of the Opt-In Status and Application criteria [Salesforce recommends for MobilePush Filtered Lists](https://help.salesforce.com/s/articleView?id=000384157\&type=1).
+4. Don't treat every opt-out as the user's decision. MCE opts the device out on its own once it goes inactive - no app opens, no delivery receipts and no sync calls. The same happens after three failed sends in a row or when Apple or Google reject the push token. Once the app updates or registers again, the device is opted back in. Such opt-outs usually come with `_OptOutMethodID` `13` (ServiceFeedback). Salesforce ties it to an uninstalled app or a long period of inactivity. But don't expect it right after an uninstall. The timing depends on Apple and Google, and MCE never learns about the uninstall itself.
+5. Don't be surprised to see an opt-out date on opted-in devices. A device that registers before the user allows notifications starts as opted out with `_OptOutMethodID` `16` (User Disabled Push). A few minutes later it switches to opted in, and the row keeps both dates. If there is no opt-in date at all, the user never allowed notifications.
 6. Keep an eye on `_OptOutMethodID` `17` (Missing or Invalid Device Token). Salesforce links it to SDK implementation or push configuration errors, mostly during development. A sudden wave of them across many devices usually means an expired APNs certificate or a wrong FCM key.
-7. If you ever need to import MobilePush Contacts, build the source file with a query on `_PushAddress`, as [Salesforce recommends](https://help.salesforce.com/s/articleView?id=000387254\&type=1). The import needs the Contact Key, Platform, Device ID and System Token, and a stale `_SystemToken` overwrites the current one, which makes the device unsendable. Imports also treat every record as opted in, so filter out the opted-out devices first.
-8. `_SystemToken` changes every time Apple or Google rotate it, which makes it useless as a device identifier. Use `_DeviceID` instead.
+7. If you ever need to import MobilePush Contacts, [Salesforce recommends](https://help.salesforce.com/s/articleView?id=000387254\&type=1) building the source file with a query on `_PushAddress`. The import needs the Contact Key, Platform, Device ID and System Token. A stale `_SystemToken` overwrites the current one and makes the device unsendable. Imports also treat every record as opted in, so filter out the opted-out devices first.
+8. `_SystemToken` changes every time Apple or Google rotate it. That makes it useless as a device identifier. Use `_DeviceID` instead.
 
 ---
 
 ### \_PushTag
 
-`_PushTag` Data View stores the tags your app sets on a device through the MobilePush SDK - simple text labels, for example interests the user picked in the app settings. Next to your own tags, you will find the ones the SDK adds by itself, such as `ALL`, the platform name (`Android`) and `DEBUG` on test builds. Each row is a single tag on a single device and, just like with `_PushAddress`, Salesforce does not document its fields, so the list below comes from [Adam Spriggs' answer on Salesforce Stack Exchange](https://salesforce.stackexchange.com/questions/174179/attributes-in-pushaddress-and-pushtag-data-views) as well.
+`_PushTag` Data View stores the tags your app sets on a device through the MobilePush SDK - simple text labels, for example interests the user picked in the app settings. Next to your own tags, you will find the ones the SDK adds by itself, such as `ALL`, the platform name (`Android`) and `DEBUG` on test builds. Each row is a single tag on a single device. Just like with `_PushAddress`, Salesforce does not document its fields, and the list below comes from [Adam Spriggs' answer on Salesforce Stack Exchange](https://salesforce.stackexchange.com/questions/174179/attributes-in-pushaddress-and-pushtag-data-views) as well.
 
 **Fields**
 
@@ -14549,24 +14549,24 @@ FROM _PushTag AS pushTag
 
 When working with `_PushTag` Data View:
 
-1. Tags belong to devices, not Contacts. To find Contacts with a given tag, [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) it with `_PushAddress` on both `_DeviceID` and `_APID`. The `JOIN` works even though `_PushTag` stores `_APID` in uppercase and `_PushAddress` in lowercase, as SQL in MCE ignores the case. Outside of SQL, normalise the case first - with `Uppercase()` in AMPscript or `toUpperCase()` in SSJS.
-2. Tag values are whatever the app sends, so agree on the list with the app developers upfront. Otherwise, your segmentation will depend on their spelling.
+1. Tags belong to devices, not Contacts. To find Contacts with a given tag, [`JOIN`](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/sql/sql-join/) it with `_PushAddress` on both `_DeviceID` and `_APID`. The `JOIN` works even though `_PushTag` stores `_APID` in uppercase and `_PushAddress` in lowercase, because SQL in MCE ignores the case. Outside of SQL, normalise the case first - with `Uppercase()` in AMPscript or `toUpperCase()` in SSJS.
+2. Tag values are whatever the app sends. Agree on the list with the app developers upfront, or your segmentation will depend on their spelling.
 
 ---
 
 ## Push Send and Engagement Data
 
-As MCE has no Data View for push sends, opens or deliveries, you have to reach for one of these sources instead.
+Without a Data View for push sends, opens or deliveries, you have to reach for one of these sources instead.
 
 ### Analytics Builder Reports
 
-For a quick look without any SQL, Reports offer three MobilePush reports: Push Account Summary, Push Message Detail (with individual send status) and Push Message Summary. Inbox messages show up in Push Message Detail only after a device downloads them, so a fresh Inbox campaign will look smaller there than it really is. Push Message Summary, on the other hand, counts every tap on an Inbox message as a new open, so when users come back to the same message, [its Inbox Open % can go above 100%](https://help.salesforce.com/s/articleView?id=005386407\&type=1). For anything beyond a quick look, Salesforce itself [recommends the Detail Extract](https://help.salesforce.com/s/articleView?id=005134946\&type=1) described below, as the Analytics Builder reports tend to time out on large data.
+For a quick look without any SQL, Reports offer three MobilePush reports: Push Account Summary, Push Message Detail (with individual send status) and Push Message Summary. Inbox messages show up in Push Message Detail only after a device downloads them. A fresh Inbox campaign will look smaller there than it really is. Push Message Summary, on the other hand, counts every tap on an Inbox message as a new open. If users come back to the same message, [its Inbox Open % can go above 100%](https://help.salesforce.com/s/articleView?id=005386407\&type=1). For anything beyond a quick look, Salesforce itself [recommends the Detail Extract](https://help.salesforce.com/s/articleView?id=005134946\&type=1) described below - the Analytics Builder reports tend to time out on large data.
 
-The Sends tab in MobilePush has its own traps. [All its numbers count devices](https://help.salesforce.com/s/articleView?id=005336059\&type=1), Sendable Audience leaves out opted-out devices, and Failed includes messages that broke on AMPscript before the send. Inbox messages count differently there. Sendable Audience shows the devices that can download the message, while Failed most likely counts only the push that comes with it - the alert of an Inbox + Alert send or the silent push that updates the iOS badge. The Inbox message itself stays available to those devices, so the downloads can end up higher than Delivered.
+The Sends tab in MobilePush has its own traps. [All its numbers count devices](https://help.salesforce.com/s/articleView?id=005336059\&type=1), Sendable Audience leaves out opted-out devices, and Failed includes messages that broke on AMPscript before the send. Inbox messages count differently there. Sendable Audience shows the devices that can download the message, but Failed most likely counts only the push that comes with it - the alert of an Inbox + Alert send or the silent push that updates the iOS badge. The Inbox message itself stays available to those devices, and the downloads can end up higher than Delivered.
 
 ### Push Send Log
 
-The closest thing to a Data View is the Push Send Log - a [Feature on Demand](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/features-on-demand/) that writes a row for every push notification and inbox message you send. Ask for both of its parts - the PushSendLog template and the backend Business Rule that fills it, as without the rule the log stays empty. Then create a Data Extension from the template in Contact Builder and keep it non-sendable.
+The closest thing to a Data View is the Push Send Log - a [Feature on Demand](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/features-on-demand/) that writes a row for every push notification and inbox message you send. Ask for both of its parts - the PushSendLog template and the backend Business Rule that fills it. Without the rule, the log stays empty. Then create a Data Extension from the template in Contact Builder and keep it non-sendable.
 
 The template comes with these fields:
 
@@ -14582,21 +14582,21 @@ The template comes with these fields:
 
 The names come from the template itself and differ slightly from Salesforce's documentation, which lists `PushTriggeredSendRequest`, `DeviceID` and `AppID`. SQL ignores the case, but `PushTriggeredSendRequestID` needs its full name.
 
-The log writes one row per device, so a Contact with two devices gets two rows. In my Journey Builder test, two entries sent together into one journey version shared the `PushJobID`, while each got its own `PushTriggeredSendRequestID`.
+The log writes one row per device, so a Contact with two devices gets two rows. In my Journey Builder test, two entries sent together into one journey version shared the `PushJobID`, but each got its own `PushTriggeredSendRequestID`.
 
-You can also add your own fields to log more. Whenever a field name matches a Contact attribute or a field of the sending Data Extension, MCE writes its value at send time. In Journey Builder, the entry Data Extension counts as the sending one, so its fields land in the log even when the message doesn't use them. A few fields also fill from the send itself - `AppName`, `Platform` (as in `Android OS`) and `SystemToken`, the last one per device. Other names from the MobilePush Detail Extract, like `MessageName`, `MessageContent` or `RequestId`, stay empty, and so do `JourneyName` and `JourneyVersion`.
+You can also add your own fields to log more. If a field name matches a Contact attribute or a field of the sending Data Extension, MCE writes its value at send time. In Journey Builder, the entry Data Extension counts as the sending one. Its fields land in the log even if the message doesn't use them. A few fields also fill from the send itself - `AppName`, `Platform` (as in `Android OS`) and `SystemToken`, the last one per device. Other names from the MobilePush Detail Extract, like `MessageName`, `MessageContent` or `RequestId`, stay empty. The same goes for `JourneyName` and `JourneyVersion`.
 
 The email Send Log works the same way, so my [Enhanced Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/) article has ideas worth trying here, especially the [Custom Send Log](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/enhanced-send-log/#custom-send-log) part on choosing extra fields. From there, you can query the Push Send Log like any other Data Extension.
 
 ### MobilePush Detail Extract
 
-If you need tracking data in bulk, use the **MobilePush Detail Extract Report** type of the Data Extract activity in Automation Studio. It creates a ZIP file with MobilePush tracking data that you then move with a File Transfer activity. You can narrow it down by app, campaign, message and platform. Keep in mind it counts only unique opens. Its `MessageOpened` field gives one open per device, while the MobilePush screen counts every single open, so [the two numbers rarely match](https://help.salesforce.com/s/articleView?id=005131481\&type=1). The report is not enabled by default, so if you don't see the type in your account, open a support case for your MID.
+If you need tracking data in bulk, use the **MobilePush Detail Extract Report** type of the Data Extract activity in Automation Studio. It creates a ZIP file with MobilePush tracking data that you then move with a File Transfer activity. You can narrow it down by app, campaign, message and platform. It counts only unique opens. Its `MessageOpened` field gives one open per device, but the MobilePush screen counts every single open - [the two numbers rarely match](https://help.salesforce.com/s/articleView?id=005131481\&type=1). The report is not enabled by default. If you don't see the type in your account, open a support case for your MID.
 
-For a regular feed, put the Data Extract and a File Transfer (Move a File From Safehouse) into one scheduled Automation, with exactly the same file naming pattern in both. Check the File Transfer's destination as well. The default ExactTarget Enhanced FTP location can be of the Import Directory type, which puts the ZIP in the Import folder instead of Export. [Salesforce's walkthrough](https://help.salesforce.com/s/articleView?id=005239066\&type=1) covers every step. Use a Rolling Range of at least a week, as opens arrive late. The SDK sends them in batches when the app goes to the background, and after a failed upload only at the next launch, so [engagement data can lag by days](https://help.salesforce.com/s/articleView?id=005134946\&type=1).
+For a regular feed, put the Data Extract and a File Transfer (Move a File From Safehouse) into one scheduled Automation, with exactly the same file naming pattern in both. Check the File Transfer's destination as well. The default ExactTarget Enhanced FTP location can be of the Import Directory type. It puts the ZIP in the Import folder instead of Export. [Salesforce's walkthrough](https://help.salesforce.com/s/articleView?id=005239066\&type=1) covers every step. Use a Rolling Range of at least a week, because opens arrive late. The SDK sends them in batches when the app goes to the background, and after a failed upload only at the next launch. That means [engagement data can lag by days](https://help.salesforce.com/s/articleView?id=005134946\&type=1).
 
-If you want all push tracking to live in MCE, where you can query it like a Data View, extend that Automation to bring the data back. After the Data Extract and the Move a File From Safehouse transfer, add a second File Transfer with the Manage File action to unzip the file. Then add an Import File activity that loads the CSV into a Data Extension. Your file naming pattern names only the ZIP, while the CSV inside comes as `MobilePushDetailExtractReport.csv`, so use that name in the Import activity. The unzipped file [lands in the Import folder](https://help.salesforce.com/s/articleView?id=mktg.mc_as_file_management_with_the_file_transfer_activity.htm\&type=5), which is where the Import activity looks for it. Schedule it, for example, monthly with a Rolling Range that reaches a week further back than the previous run, so late opens update rows you already have. For that, give the Data Extension a primary key on `PushJobId`, `RequestId` and `DeviceId`, which together identify each row, and import with Add and Update. Also leave Apply Time Zone unchecked in the Data Extract, so `DateTimeSend` stays in CST like the Data Views and the Push Send Log.
+If you want all push tracking to live in MCE (where you can query it like a Data View), extend that Automation to bring the data back. After the Data Extract and the Move a File From Safehouse transfer, add a second File Transfer with the Manage File action to unzip the file. Then add an Import File activity that loads the CSV into a Data Extension. Your file naming pattern names only the ZIP, but the CSV inside comes as `MobilePushDetailExtractReport.csv` - use that name in the Import activity. The unzipped file [lands in the Import folder](https://help.salesforce.com/s/articleView?id=mktg.mc_as_file_management_with_the_file_transfer_activity.htm\&type=5), exactly where the Import activity looks for it. Schedule it, for example, monthly with a Rolling Range that reaches a week further back than the previous run. Late opens then update rows you already have. For that, give the Data Extension a primary key on `PushJobId`, `RequestId` and `DeviceId` (together they identify each row) and import with Add and Update. Also leave Apply Time Zone unchecked in the Data Extract. That way `DateTimeSend` stays in CST like the Data Views and the Push Send Log.
 
-Keep an eye on the size, though. Every push to every device adds a row, so a monthly feed grows fast, and **all of it counts towards your [Data Extension Storage](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-storage) licence limit**. Import only the columns you need, as `SystemToken`, `MessageContent` and the two media URLs take most of each row. Then set a Data Retention Policy that keeps only the months you really query. Smaller Data Extensions also keep your queries clear of the 30-minute Query Activity timeout.
+Keep an eye on the size. Every push to every device adds a row, and a monthly feed grows fast. **All of it counts towards your [Data Extension Storage](https://mateuszdabrowski.pldocs/salesforce/marketing-cloud-engagement/config/licence-limits/#data-extension-storage) licence limit**. Import only the columns you need - `SystemToken`, `MessageContent` and the two media URLs take most of each row. Then set a Data Retention Policy that keeps only the months you query. Smaller Data Extensions also keep your queries clear of the 30-minute Query Activity timeout.
 
 Once imported, the extract also connects with the [Push Send Log](https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/mobile-push-data-views/#push-send-log). Its `PushJobId` matches the log's `PushJobID`, and its `RequestId` matches `PushTriggeredSendRequestID`. Together with the Device ID, they match each logged send with its tracking row:
 
@@ -14620,12 +14620,12 @@ Replace both names with your Data Extensions and add the custom fields you log t
 
 When reading the MobilePush Detail Extract (Salesforce's [troubleshooting guide](https://help.salesforce.com/s/articleView?id=002628213\&type=1) and [FAQ on the report's data](https://help.salesforce.com/s/articleView?id=005223889\&type=1) go deeper):
 
-1. A `Success` status only means MCE handed the message over to Apple or Google. Even an uninstalled app or disabled notifications can return it, so when a notification doesn't show up, check the device and the app next.
+1. A `Success` status only means MCE handed the message over to Apple or Google. Even an uninstalled app or disabled notifications can return it. If a notification doesn't show up, check the device and the app next.
 2. A `Fail` comes with the reason in the ServiceResponse column. Most are invalid tokens (`NotRegistered` or `Requested entity was not found` on Android and `InvalidToken` on iOS), and during development usually a provisioning problem. On a `Success`, Android rows hold the Firebase message ID there instead.
 3. No record at all means the Device ID was left out of the send. It was opted out or Inactive, it wasn't linked to a Contact in your audience, or the message failed on AMPscript or SSJS before it went out.
-4. A blank `Status` marks an Inbox download. Inbox-only rows appear only once a device downloads the message, while an Inbox + Alert message gets its row as soon as the alert goes out. In-App rows are just the silent pushes announcing a new message, as no report shows In-App displays or clicks.
-5. Opens depend on the date range, so an open after the range ends leaves the message looking unopened. `MessageOpened` records a tap on the push, `InboxMessageOpened` an open from the Inbox list, and `TimeInApp` the seconds spent in the app after the tap. As each device gets one row per message, an Inbox message opened many times shows only [the earliest open within the range](https://help.salesforce.com/s/articleView?id=005386407\&type=1).
-6. `ContactKey` is frozen at send time for push notifications, but for Inbox-only rows it shows the Contact Key from the moment you generate the report, as [Salesforce explains](https://help.salesforce.com/s/articleView?id=005322024\&type=1). Join the extract with `_PushAddress` on the Device ID, which stays the same.
+4. A blank `Status` marks an Inbox download. Inbox-only rows appear only once a device downloads the message, but an Inbox + Alert message gets its row the moment the alert goes out. In-App rows are just the silent pushes announcing a new message. No report shows In-App displays or clicks.
+5. Opens depend on the date range. An open after the range ends leaves the message looking unopened. `MessageOpened` records a tap on the push, `InboxMessageOpened` an open from the Inbox list, and `TimeInApp` the seconds spent in the app after the tap. Each device gets one row per message, and an Inbox message opened many times shows only [the earliest open within the range](https://help.salesforce.com/s/articleView?id=005386407\&type=1).
+6. [Salesforce explains](https://help.salesforce.com/s/articleView?id=005322024\&type=1) that `ContactKey` is frozen at send time for push notifications, but for Inbox-only rows it shows the Contact Key from the moment you generate the report. Join the extract with `_PushAddress` on the Device ID instead - it stays the same.
 7. Every column in the CSV is text. The types and lengths in [Salesforce's column list](https://help.salesforce.com/s/articleView?id=000395722\&type=1) are only a suggestion for your Data Extension, and dates may need converting.
 
 ### Journey Builder
@@ -14646,13 +14646,13 @@ FROM _JourneyActivity   AS journeyActivity
 WHERE journeyActivity.ActivityType = 'PUSHNOTIFICATIONACTIVITY'
 ```
 
-That is as far as IDs go, though. For emails, `JourneyActivityObjectID` matches `TriggererSendDefinitionObjectID` in the send Data Views, but for push activities it holds only an empty GUID (`00000000-0000-0000-0000-000000000000`). Neither the Push Send Log nor the MobilePush Detail Extract holds a journey or activity ID either.
+That is where the IDs end. For emails, `JourneyActivityObjectID` matches `TriggererSendDefinitionObjectID` in the send Data Views, but for push activities it holds only an empty GUID (`00000000-0000-0000-0000-000000000000`). Neither the Push Send Log nor the MobilePush Detail Extract holds a journey or activity ID either.
 
-What you can use is the name. `ActivityName` holds the name of the push message, the same one you see in the MobilePush message list. That holds as long as you don't give the activity a name of its own, as [Salesforce documents for SMS](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_view_sms_message_tracking.htm\&type=5). The extract has it too, as [Salesforce fills its `MessageName` column](https://help.salesforce.com/s/articleView?id=000395722\&type=1) with the name of the push message in Journey Builder. Versions share that name unless you rename the message. However, every journey version sends its own copy of the message, with its own `MessageID` in the extract. MobilePush lists each copy as an Outbound message with the Interaction send method.
+You can still use the name. `ActivityName` holds the name of the push message, the same one you see in the MobilePush message list. That holds until you give the activity a name of its own (Salesforce [documents it for SMS](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_view_sms_message_tracking.htm\&type=5)). The extract has it too - [Salesforce fills its `MessageName` column](https://help.salesforce.com/s/articleView?id=000395722\&type=1) with the name of the push message in Journey Builder. Versions share that name unless you rename the message. However, every journey version sends its own copy of the message, with its own `MessageID` in the extract. MobilePush lists each copy as an Outbound message with the Interaction send method.
 
 To find the `MessageID` of a copy without the extract, open it in MobilePush and decode the ID from its summary. It is Base64, the same format Salesforce [documents for SMS messages](https://help.salesforce.com/s/articleView?id=mktg.mc_as_data_view_sms_message_tracking.htm\&type=5): `MTIzOjExNDow` decodes to `123:114:0`, and the first value is the `MessageID`.
 
-Matching the names in SQL gives you the journey behind each copy in the extract. It can't tell the versions apart, though. A name reused in several journeys matches all of them, and a renamed activity matches none, so check the results before you rely on them:
+Matching the names in SQL gives you the journey behind each copy in the extract. But it can't tell the versions apart. A name reused in several journeys matches all of them, and a renamed activity matches none. Check the results before you rely on them:
 
 ```sql title="MobilePush Detail Extract messages matched to journeys by name"
 SELECT DISTINCT
@@ -14673,11 +14673,15 @@ If you need the journey in the Push Send Log itself, use the entry Data Extensio
 
 If your MCE is connected to Data 360 (formerly Data Cloud), you can get push engagement without the extract. The MobilePush starter data bundle of the Marketing Cloud Engagement connector creates a set of data streams for each Business Unit. They bring the push engagement events (sends, opens, displays, undelivers, and geofence entries and exits), Einstein Engagement Scores for push, the app contact points and the push templates.
 
-Salesforce [maps them to the data model for you](https://help.salesforce.com/s/articleView?id=data.c360_a_starter_data_bundles.htm\&type=5), so each event lands as a row in the [Device Application Engagement](https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360dm-mce-engagement.html) object, linked to the Individual through the Subscriber Key and to the device through its app contact point. From there, you can segment on push engagement or build calculated insights on it, with no Data Extract, FTP or File Transfer in between.
+Salesforce [maps them to the data model for you](https://help.salesforce.com/s/articleView?id=data.c360_a_starter_data_bundles.htm\&type=5). Each event lands as a row in the [Device Application Engagement](https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360dm-mce-engagement.html) object, linked to the Individual through the Subscriber Key and to the device through its app contact point. From there, you can segment on push engagement or build calculated insights on it, with no Data Extract, FTP or File Transfer in between.
 
 ### Event Notification Service
 
-Finally, MobilePush can send install, inactive device and push delivery events straight to your own system through the Event Notification Service. You turn them on per app in Setup, under MobilePush Administration, but push delivery events require SDK 9.0 or later.
+Finally, the Event Notification Service (ENS) sends push events straight to your own system, with no file to pull. You register an HTTPS endpoint (a callback) through [its REST API](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ens-get-started.html) and subscribe it to the event types you need. For push, that means [sends, failed sends, bounces and opens](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/mobilepush_events.html). Then come Inbox opens, delivery receipts, installs, inactive devices, clicks on push images and buttons, and the in-app message events. The first four cover every send method (MobilePush, Journey Builder, API-triggered sends and the Transactional Messaging API). If you need only some, filter the subscription on `sendMethod`. The send and open events carry the Device ID, Contact Key, App ID, Request ID and the MID of the Business Unit. Unlike the extract and the Push Send Log, the open, failed send and delivery receipt events also name the journey, its version and the activity that sent them.
+
+Install, inactive device and push delivery events also need [turning on per app](https://help.salesforce.com/s/articleView?id=mktg.mc_mobilepush_events.htm\&type=5) in Setup, under MobilePush Administration, and push delivery events require SDK 9.0 or later.
+
+Push opens still originate in the SDK, and you should expect the same delay as in the Detail Extract. The difference is the missing date range - an open that comes in a week after the send still reaches you as its own event. But the receiving end is yours. Deduplicate on the event's `compositeId`, because ENS delivers each event [at least once](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ens-get-started.html). Your endpoint has [three seconds to reply](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/ens-retries-suspensions.html) with a 2xx status - at high volume, put a queue in front of your processing. If the endpoint fails, ENS keeps retrying for up to seven days and then drops the events. Events generated while a subscription is paused never arrive. There is no replay either. Keep the Detail Extract running to fill those gaps.
 
 ---
 
@@ -18006,7 +18010,7 @@ There are some additional analytics and tracking related features within [Automa
 
 Source: https://mateuszdabrowski.pl/docs/salesforce/marketing-cloud-engagement/config/export-import-document-sfmc-roles/  
 Author: Mateusz Dąbrowski  
-Last updated: 2026-09-24  
+Last updated: 2026-11-20  
 Licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 While you get a set of standard user Roles in Marketing Cloud Engagement (MCE, formerly Salesforce Marketing Cloud), those are rarely enough. Instead, they are the base on which you can create custom-tailored solutions that align with your business architecture.
@@ -18062,7 +18066,7 @@ I created a JavaScript snippet that will [loop](https://mateuszdabrowski.pl/docs
 
 - Save the permission name (for example, `View All Contacts`).
 - Prefix it with all the parent permissions to get a full path (for example, `Contacts - Contact Builder - View All Contacts`).
-- Capture the identifier of Allow and Deny (for import).
+- Capture the identifier of Allow and Deny (the importer reports when it changed).
 - Capture the state of Allow and Deny (as a boolean).
 - Output it to the Console as a single long CSV text.
 
@@ -18153,6 +18157,7 @@ Once you have your Role export saved, go to the new Role. It can be either an ex
 /**
  * MCE Roles V2 CSV Importer
  * Takes the CSV text generated by the exporter and applies the exact Allow/Deny states.
+ * Finds each permission by its full path, as a Release that adds a permission shifts the checkbox IDs below it.
  */
 // 👇 1. PASTE YOUR ENTIRE CSV OUTPUT BETWEEN THE BACKTICKS BELOW 👇
 const csvData = `PASTE_YOUR_CSV_OUTPUT_HERE`;
@@ -18164,8 +18169,6 @@ function importMergedV2Console(csvText) {
         return;
     }
 
-    console.log("🚀 Starting Import...");
-
     const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== '');
 
     if (!lines[0].includes('AllowID')) {
@@ -18173,77 +18176,141 @@ function importMergedV2Console(csvText) {
         return;
     }
 
-    const dataLines = lines.slice(1);
+    const pageCheckboxes = Array.from(document.querySelectorAll('input[id^="a_"]'));
+
+    if (pageCheckboxes.length === 0) {
+        console.error("❌ No checkboxes found. Make sure you inspected element on the permissions page.");
+        return;
+    }
+
+    pageCheckboxes.sort((a, b) => parseInt(a.id.replace('a_', ''), 10) - parseInt(b.id.replace('a_', ''), 10));
+
+    // A few paths appear twice in the tree, so each path keeps its checkboxes in page order
+    const pagePermissions = new Map();
+    for (const allowInput of pageCheckboxes) {
+        const path = getPermissionPath(allowInput);
+        if (!pagePermissions.has(path)) {
+            pagePermissions.set(path, []);
+        }
+        pagePermissions.get(path).push(allowInput);
+    }
+
+    console.log("🚀 Starting Import...");
 
     let appliedCount = 0;
-    let missingPermissions = []; // Array to track the details of missing items
+    let shiftedCount = 0;
+    const matchedCheckboxes = new Set();
+    const missingPermissions = [];
 
-    dataLines.forEach((line) => {
+    lines.slice(1).forEach((line) => {
         const columns = parseCSVLine(line);
         if (columns.length < 6) return;
 
-        const path = columns[1]; // Grab the human-readable path
-        const a_id = columns[2].trim();
-        const d_id = columns[3].trim();
-        const targetAllow = columns[4].trim().toUpperCase() === 'TRUE';
-        const targetDeny = columns[5].trim().toUpperCase() === 'TRUE';
+        const path = columns[1];
+        const csvAllowID = columns[2];
+        const targetAllow = columns[4].toUpperCase() === 'TRUE';
+        const targetDeny = columns[5].toUpperCase() === 'TRUE';
 
-        const allowCheckbox = document.getElementById(a_id);
-        const denyCheckbox = document.getElementById(d_id);
+        const allowCheckbox = pagePermissions.get(path)?.shift();
 
-        if (allowCheckbox) {
-            // Apply ALLOW state
-            if (allowCheckbox.checked !== targetAllow) {
-                allowCheckbox.click();
-            }
-            appliedCount++;
-        } else {
-            // Log missing permission details
-            missingPermissions.push({ ID: a_id, Path: path });
+        if (!allowCheckbox) {
+            missingPermissions.push({ ID: csvAllowID, Path: path });
+            return;
         }
 
-        if (denyCheckbox) {
-            // Apply DENY state
-            if (denyCheckbox.checked !== targetDeny) {
-                denyCheckbox.click();
-            }
+        matchedCheckboxes.add(allowCheckbox);
+        if (allowCheckbox.id !== csvAllowID) {
+            shiftedCount++;
         }
+
+        const denyCheckbox = document.getElementById(allowCheckbox.id.replace('a_', 'd_'));
+
+        // Rows follow the tree order, so if a click on a parent also changes its children, their own rows come later and fix it
+        if (allowCheckbox.checked !== targetAllow) {
+            allowCheckbox.click();
+        }
+
+        if (denyCheckbox && denyCheckbox.checked !== targetDeny) {
+            denyCheckbox.click();
+        }
+
+        appliedCount++;
     });
 
+    const newPermissions = pageCheckboxes
+        .filter(checkbox => !matchedCheckboxes.has(checkbox))
+        .map(checkbox => ({ ID: checkbox.id, Path: getPermissionPath(checkbox) }));
+
     console.log(`✅ Import Complete! Successfully processed ${appliedCount} permissions.`);
+
+    if (shiftedCount > 0) {
+        console.log(`ℹ️ ${shiftedCount} permissions have a different checkbox ID than in your CSV. They were matched by their path, so no action needed.`);
+    }
 
     if (missingPermissions.length > 0) {
         console.warn(`⚠️ ${missingPermissions.length} permissions from your CSV could not be found on this page.`);
         console.log("👇 List of Missing Permissions 👇");
-        // Output a clean table in the console so it's easy to read
         console.table(missingPermissions);
+    }
+
+    if (newPermissions.length > 0) {
+        console.warn(`⚠️ ${newPermissions.length} permissions on this page are not in your CSV and were left unchanged.`);
+        console.log("👇 List of New Permissions 👇");
+        console.table(newPermissions);
     }
 }
 
-// Helper to safely parse CSV rows that contain commas inside quotes
+// Builds the same "Parent - Child - Permission" path as the exporter, so the two can be compared
+function getPermissionPath(allowInput) {
+    let nameElement = allowInput.closest('tr').querySelector('div.PermissionNameText');
+    let permissionName = nameElement ? nameElement.textContent.trim() : "Unknown";
+
+    let permissionContainer = allowInput.closest('table');
+    do {
+        permissionContainer = permissionContainer.parentElement.previousElementSibling;
+        let permissionParentName = permissionContainer?.querySelector('div.PermissionNameText')?.textContent;
+        if (permissionParentName) {
+            permissionName = `${permissionParentName.trim()} - ${permissionName}`;
+        }
+    } while (permissionContainer && permissionContainer.id !== 'RolePanel');
+
+    return permissionName.replace(/[\n\r]+/g, ' ').replace(/\s{2,}/g, ' ');
+}
+
+// Helper to safely parse CSV rows with commas and "" (the exporter's escaped quote) inside quoted paths
 function parseCSVLine(text) {
-    let ret = [''], i = 0, inQuotes = false;
-    for (let l = text.length; i < l; i++) {
-        let c = text[i];
-        if (c === '"') {
+    const columns = [''];
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (c === '"' && inQuotes && text[i + 1] === '"') {
+            columns[columns.length - 1] += '"';
+            i++;
+        } else if (c === '"') {
             inQuotes = !inQuotes;
         } else if (c === ',' && !inQuotes) {
-            ret.push('');
+            columns.push('');
         } else {
-            ret[ret.length - 1] += c;
+            columns[columns.length - 1] += c;
         }
     }
-    // Clean up outer quotes and handle double-escaped quotes from CSVs
-    return ret.map(col => col.replace(/^"|"$/g, '').trim().replace(/""/g, '"'));
+    return columns.map(column => column.trim());
 }
 
 // Execute the importer
 importMergedV2Console(csvData);
 ```
 
-It will [loop](https://mateuszdabrowski.pl/docs/js/js-loops/) through all the saved checkboxes and update their state to the one from your export.
+It will [loop](https://mateuszdabrowski.pl/docs/js/js-loops/) through all the permissions from your export, find each one on the page by its full path, and update its Allow and Deny state to the one from your export.
 
-If some new checkboxes don't exist in the export (for example, you did your export before an MCE Release that added some new permissions), those new ones will stay unchanged. If some names were updated or removed - you will get informaton about that in the Console along with the full path to those permissions.
+> **Note: You Should Know**
+>
+> The importer matches permissions by their full path, not by the checkbox ID. MCE numbers the checkboxes by their position in the permission tree, so a Release that adds a permission shifts the ID of every permission below it. When four Custom Domains permissions arrived after my June 2026 export, 385 permissions got new IDs. An import by ID gives each of them the Allow and Deny state of the permission four rows below it in the export, with no warning. Restoring my June backup of Marketing Cloud Administrator that way would get 144 of them wrong.
+
+Your export and the target Role don't have to match one to one:
+
+- If the page has permissions that are not in your export (for example, a Release added them after you exported), they stay unchanged. The Console lists them with their full path, so you can set them manually.
+- If your export has permissions that are not on the page (for example, renamed or removed in a Release), they are skipped. The Console lists them as well.
 
 That's it. You cloned a Role.
 
